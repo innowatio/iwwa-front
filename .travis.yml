@@ -1,0 +1,13 @@
+language: node_js
+
+node_js:
+  - iojs
+
+install:
+  - gem install scss_lint
+  - npm i -g jscs esprima-fb
+  - npm install
+
+script:
+  - scss-lint app/
+  - jscs --esprima=esprima-fb app/
