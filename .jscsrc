@@ -1,0 +1,6 @@
+{
+    "preset": "crockford",
+    "requireMultipleVarDecl": null,
+    "disallowSpacesInNamedFunctionExpression": null,
+    "disallowDanglingUnderscores": null
+}
