@@ -6,9 +6,9 @@
   "scripts": {
     "build": "node_modules/.bin/gulp build",
     "dev": "node_modules/.bin/gulp dev",
-    "generate-reports": "node scripts/generate-reports.js",
     "lint": "scss-lint app/ && node_modules/.bin/eslint app/**/*.js app/**/*.jsx",
     "postinstall": "gem install scss_lint",
+    "publish-reports": "node scripts/publish-reports.js",
     "prestart": "npm build",
     "start": "node scripts/server.js",
     "test": "NODE_PATH=app:test node_modules/.bin/mocha --compilers jsx:babel/register test/unit/**/*unit*"
@@ -50,7 +50,7 @@
     "mocha": "^2.2.5",
     "mochawesome": "^1.2.0",
     "node-libs-browser": "^0.5.2",
-    "pro-gulp": "^0.1.1",
+    "pro-gulp": "^0.3.0",
     "proxyquire": "^1.5.0",
     "ramda": "^0.15.1",
     "sinon": "^1.15.3",

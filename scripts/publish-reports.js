@@ -43,20 +43,18 @@ proGulp.task("generateScssLintReport", function () {
     try {
         sh([
             "scss-lint app/ -c .scss-lint.yml -f JSON",
-            "node" + reporterPath + " -o " + targetDir + "index.html"
+            "node " + reporterPath + " -o " + targetDir + "index.html"
         ].join(" | "));
     } catch (ignore) {
         // Prevent exiting the process on errors
     }
 });
 
-proGulp.task("generateReports", proGulp.parallel([
+proGulp.sequence([
     "generateMochaReport",
     "generateEsLintReport",
     "generateScssLintReport"
-]));
-
-proGulp.task("generateReports")().then(function () {
+])().then(function () {
     return gulp.src("./builds/_reports/**/*")
         .pipe(gp.ghPages());
 });
