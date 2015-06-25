@@ -11,7 +11,7 @@ express()
         /*
         *   Support push state urls
         */
-        var reg = new RegExp("/assets/|/VERSION");
+        var reg = new RegExp("/_assets/|/VERSION");
         if (!reg.test(req.url)) {
             req.url = "/";
         }
