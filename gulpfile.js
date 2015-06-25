@@ -1,11 +1,9 @@
 var BPromise    = require("bluebird");
 var browserSync = require("browser-sync");
-var sh          = require("child_process").execSync;
 var fs          = require("fs");
 var gulp        = require("gulp");
 var gp          = require("gulp-load-plugins")();
 var mkdirp      = require("mkdirp");
-var mocha       = require("mocha");
 var path        = require("path");
 var proGulp     = require("pro-gulp");
 var R           = require("ramda");
@@ -104,7 +102,7 @@ gulp.task("build", proGulp.task("build"));
 proGulp.task("runUnitTests", function () {
     var targetDir = "./builds/_reports/unit-tests/";
     mkdirp.sync(targetDir);
-    return gulp.src("./test/unit/**/*.jsx")
+    return gulp.src("./test/unit/**/*unit*")
         .pipe(gp.spawnMocha({
             compilers: "jsx:babel/register",
             reporter: "mochawesome",
@@ -118,17 +116,6 @@ proGulp.task("runUnitTests", function () {
             // Swallow errors
             this.emit("end");
         });
-});
-
-
-
-/*
-*   Publish reports to gh-pages
-*/
-
-gulp.task("publishReports", function () {
-    return gulp.src("./builds/_reports/**/*")
-        .pipe(gp.ghPages());
 });
 
 
