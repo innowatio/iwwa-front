@@ -1,14 +1,7 @@
-var gulp    = require("gulp");
-var gp      = require("gulp-load-plugins")();
-var proGulp = require("pro-gulp");
+var gulp = require("gulp");
+var gp   = require("gulp-load-plugins")();
 
-require("./generate-reports.js");
-
-proGulp.sequence([
-    "generateMochaReport",
-    "generateEsLintReport",
-    "generateScssLintReport"
-])().then(function () {
+require("./generate-reports.js").then(function () {
     return gulp.src("./builds/_reports/**/*")
         .pipe(gp.ghPages())
         .on("data", function () {

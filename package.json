@@ -8,6 +8,7 @@
     "dev": "node_modules/.bin/gulp dev",
     "lint": "scss-lint app/ && node_modules/.bin/eslint app/**/*.js app/**/*.jsx",
     "postinstall": "gem install scss_lint",
+    "generate-reports": "node scripts/generate-reports.js",
     "publish-reports": "node scripts/publish-reports.js",
     "prestart": "npm build",
     "start": "node scripts/server.js",
