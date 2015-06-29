@@ -2,6 +2,9 @@ var React = require("react");
 var components = require("components");
 
 var Chart = React.createClass({
+    propTypes: {
+        dataset: React.PropTypes.array
+    },
     render: function () {
         return (
             <div className="av-chart">
@@ -9,7 +12,7 @@ var Chart = React.createClass({
                     Qui ci vanno le opzioni
                 </div>
                 <div className="av-chart-body">
-                    <components.LineChart />
+                    <components.TemporalLineChart coordinates={this.props.dataset}/>
                 </div>
             </div>
         );

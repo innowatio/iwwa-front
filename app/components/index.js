@@ -1,2 +1,2 @@
-exports.Header    = require("./header/");
-exports.LineChart = require("./line-chart/");
+exports.Header            = require("./header/");
+exports.TemporalLineChart = require("./temporal-line-chart/");
