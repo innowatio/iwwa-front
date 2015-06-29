@@ -6,6 +6,7 @@ var views = require("views");
 module.exports = (
     <Router.Route handler={views.Root} name="root" path="/">
         <Router.Route handler={views.Login} name="login" path="login/" />
+        <Router.Route handler={views.Chart} name="chart" path="chart/" />
         <Router.DefaultRoute handler={views.Login} />
     </Router.Route>
 );

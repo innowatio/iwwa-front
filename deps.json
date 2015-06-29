@@ -1,11 +1,13 @@
 {
     "css": [
-        "node_modules/bootstrap/dist/css/bootstrap.css"
+        "node_modules/bootstrap/dist/css/bootstrap.css",
+        "node_modules/vis/dist/vis.css"
     ],
     "js": [
         "react",
         "react/addons",
         "react-bootstrap",
-        "react-router"
+        "react-router",
+        "vis/dist/vis.js"
     ]
 }

@@ -65,6 +65,7 @@
     "react": "^0.13.3",
     "react-bootstrap": "^0.23.5",
     "react-router": "^0.13.3",
-    "serve-static": "^1.10.0"
+    "serve-static": "^1.10.0",
+    "vis": "^4.3.0"
   }
 }
