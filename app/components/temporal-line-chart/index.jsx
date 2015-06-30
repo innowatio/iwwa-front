@@ -28,10 +28,7 @@ var TemporalLineChart = React.createClass({
         /*
         *   Instantiating the graph automatically renders it to the page
         */
-        var chart = new vis.Graph2d(container, dataset, options);
-        this.setState({
-            chart: chart
-        });
+        this.chart = new vis.Graph2d(container, dataset, options);
     },
     render: function () {
         return (
