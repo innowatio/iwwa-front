@@ -1,17 +1,12 @@
 var React = require("react");
-var vis = require("vis/dist/vis.js");
+var vis   = require("vis/dist/vis.js");
 
-var isDateEquivalent = function (props, propName) {
-    var time = new Date(props[propName]).getTime();
-    if (isNaN(time)) {
-        return new Error("x must represent a date");
-    }
-};
+var utils = require("lib/utils.js");
 
 var TemporalLineChart = React.createClass({
     propTypes: {
         coordinates: React.PropTypes.arrayOf(React.PropTypes.shape({
-            x: isDateEquivalent,
+            x: utils.isDateEquivalent,
             y: React.PropTypes.number
         })).isRequired,
         moveable: React.PropTypes.bool
