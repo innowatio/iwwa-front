@@ -10,12 +10,30 @@ var Chart = React.createClass({
     mixins: [Router.State],
     getInitialState: function () {
         return {
-            selectedValue: "Contrattuale"
+            selectedValueGroupSelect: "Contrattuale",
+            selectedValueDropdownSite: "Coin",
+            selectedValueDropdownInterestMisure: "Corrente",
+            selectedValueDropdownExport: "Jpg"
         };
     },
-    changeSelectedValue: function (newSelectedValue) {
+    changeSelectedValueGroupSelect: function (newSelectedValueGroupSelect) {
         this.setState({
-            selectedValue: newSelectedValue
+            selectedValueGroupSelect: newSelectedValueGroupSelect
+        });
+    },
+    changeSelectedValueDropdownSite: function (newSelectedValueDropdownSite) {
+        this.setState({
+            selectedValueDropdownSite: newSelectedValueDropdownSite
+        });
+    },
+    changeSelectedValueDropdownInterestMisure: function (newSelectedValueDropdownInterestMisure) {
+        this.setState({
+            selectedValueDropdownInterestMisure: newSelectedValueDropdownInterestMisure
+        });
+    },
+    changeSelectedValueDropdownExport: function (newSelectedValueDropdownExport) {
+        this.setState({
+            selectedValueDropdownExport: newSelectedValueDropdownExport
         });
     },
     render: function () {
@@ -24,8 +42,26 @@ var Chart = React.createClass({
                 <div className="av-chart-menu">
                     <components.ButtonGroupSelect
                         allowedValues={["Contrattuale", "Previsionale", "Reale"]}
-                        onChange={this.changeSelectedValue}
-                        value={this.state.selectedValue}
+                        onChange={this.changeSelectedValueGroupSelect}
+                        value={this.state.selectedValueGroupSelect}
+                    />
+                    <components.DropdownButtonSelect
+                        allowedItems={["Csv", "Jpg", "Png"]}
+                        onChange={this.changeSelectedValueDropdownExport}
+                        title={"Export"}
+                        value={this.state.selectedValueDropdownExport}
+                    />
+                    <components.DropdownButtonSelect
+                        allowedItems={[ "Coin", "Griante", "Iperal Fuentes", "Casa Nonna Maria"]}
+                        onChange={this.changeSelectedValueDropdownSite}
+                        title={"Punto di misurazione"}
+                        value={this.state.selectedValueDropdownSite}
+                    />
+                    <components.DropdownButtonSelect
+                        allowedItems={["Corrente", "Potenza attiva", "Potenza reattiva", "Voltaggio"]}
+                        onChange={this.changeSelectedValueDropdownInterestMisure}
+                        title={"Quantità di interesse"}
+                        value={this.state.selectedValueDropdownInterestMisure}
                     />
                 </div>
                 <div className="av-chart-body">
