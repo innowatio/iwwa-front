@@ -1,3 +1,4 @@
+var R      = require("ramda");
 var React  = require("react");
 var Router = require("react-router");
 
@@ -7,34 +8,34 @@ var Chart = React.createClass({
     propTypes: {
         dataset: React.PropTypes.array
     },
-    mixins: [Router.State],
-    getInitialState: function () {
-        return {
-            selectedValueGroupSelect: "Contrattuale",
-            selectedValueDropdownSite: "Coin",
-            selectedValueDropdownInterestMisure: "Corrente",
-            selectedValueDropdownExport: "Jpg"
-        };
-    },
+    mixins: [Router.State, Router.Navigation],
     changeSelectedValueGroupSelect: function (newSelectedValueGroupSelect) {
-        this.setState({
+        var par = this.getPathname();
+        var par2 = this.getParams();
+        this.replaceWith(par, par2, R.merge(this.getQuery(), {
             selectedValueGroupSelect: newSelectedValueGroupSelect
-        });
+        }));
     },
     changeSelectedValueDropdownSite: function (newSelectedValueDropdownSite) {
-        this.setState({
+        var par = this.getPathname();
+        var par2 = this.getParams();
+        this.replaceWith(par, par2, R.merge(this.getQuery(), {
             selectedValueDropdownSite: newSelectedValueDropdownSite
-        });
+        }));
     },
     changeSelectedValueDropdownInterestMisure: function (newSelectedValueDropdownInterestMisure) {
-        this.setState({
+        var par = this.getPathname();
+        var par2 = this.getParams();
+        this.replaceWith(par, par2, R.merge(this.getQuery(), {
             selectedValueDropdownInterestMisure: newSelectedValueDropdownInterestMisure
-        });
+        }));
     },
     changeSelectedValueDropdownExport: function (newSelectedValueDropdownExport) {
-        this.setState({
+        var par = this.getPathname();
+        var par2 = this.getParams().selectedValueDropdownExport;
+        this.replaceWith(par, par2, R.merge(this.getQuery(), {
             selectedValueDropdownExport: newSelectedValueDropdownExport
-        });
+        }));
     },
     render: function () {
         return (
@@ -43,25 +44,25 @@ var Chart = React.createClass({
                     <components.ButtonGroupSelect
                         allowedValues={["Contrattuale", "Previsionale", "Reale"]}
                         onChange={this.changeSelectedValueGroupSelect}
-                        value={this.state.selectedValueGroupSelect}
+                        value={this.getQuery().selectedValueGroupSelect || "Reale"}
                     />
                     <components.DropdownButtonSelect
                         allowedItems={["Csv", "Jpg", "Png"]}
                         onChange={this.changeSelectedValueDropdownExport}
                         title={"Export"}
-                        value={this.state.selectedValueDropdownExport}
+                        value={this.getQuery().selectedValueDropdownExport || "Jpg"}
                     />
                     <components.DropdownButtonSelect
-                        allowedItems={[ "Coin", "Griante", "Iperal Fuentes", "Casa Nonna Maria"]}
+                        allowedItems={[ "Coin", "OVS", "Iperal Fuentes"]}
                         onChange={this.changeSelectedValueDropdownSite}
                         title={"Punto di misurazione"}
-                        value={this.state.selectedValueDropdownSite}
+                        value={this.getQuery().selectedValueDropdownSite || "Coin"}
                     />
                     <components.DropdownButtonSelect
                         allowedItems={["Corrente", "Potenza attiva", "Potenza reattiva", "Voltaggio"]}
                         onChange={this.changeSelectedValueDropdownInterestMisure}
                         title={"Quantità di interesse"}
-                        value={this.state.selectedValueDropdownInterestMisure}
+                        value={this.getQuery().selectedValueDropdownInterestMisure || "Corrente"}
                     />
                 </div>
                 <div className="av-chart-body">

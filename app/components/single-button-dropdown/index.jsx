@@ -6,9 +6,9 @@ var DropdownButtonSelect = React.createClass({
     propTypes: {
         allowedItems: React.PropTypes.array.isRequired,
         getLabel: React.PropTypes.func,
-        onChange: React.PropTypes.func,
+        onChange: React.PropTypes.func.isRequired,
         title: React.PropTypes.string,
-        value: React.PropTypes.any
+        value: React.PropTypes.any.isRequired
     },
     getDefaultProps: function () {
         return {
