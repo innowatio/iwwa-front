@@ -5,7 +5,7 @@ var colors = require("lib/colors");
 
 var styles = {
     base: {
-        background: colors.black,
+        background: colors.primary,
         width: "100%",
         height: "100%",
         color: colors.white

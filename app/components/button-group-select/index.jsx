@@ -2,6 +2,8 @@ var R         = require("ramda");
 var React     = require("react");
 var bootstrap = require("react-bootstrap");
 
+var components = require("components");
+
 var ButtonGroupSelect = React.createClass({
     propTypes: {
         allowedValues: React.PropTypes.array.isRequired,
@@ -19,18 +21,18 @@ var ButtonGroupSelect = React.createClass({
     renderButtonOption: function (allowedValue) {
         var label = this.props.getLabel(allowedValue);
         return (
-            <bootstrap.Button
+            <components.Button
                 active={allowedValue === this.props.value}
                 key={label}
                 onClick={R.partial(this.props.onChange, allowedValue)}
             >
                 {label}
-            </bootstrap.Button>
+            </components.Button>
         );
     },
     render: function () {
         return (
-            <bootstrap.ButtonGroup className="ac-button-group-select">
+            <bootstrap.ButtonGroup>
                 {this.props.allowedValues.map(this.renderButtonOption)}
             </bootstrap.ButtonGroup>
         );

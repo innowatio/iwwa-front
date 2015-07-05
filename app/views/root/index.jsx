@@ -5,6 +5,10 @@ var components = require("components");
 var asteroid   = require("lib/asteroid");
 var measures   = require("lib/measures");
 
+// window.asteroid = asteroid;
+// asteroid._ddp._socket.on("message:in", console.log.bind(console));
+// asteroid._ddp._socket.on("message:out", console.log.bind(console));
+
 var styles = {
     header: {
         position: "absolute",
@@ -41,7 +45,10 @@ var Root = React.createClass({
                 <div style={styles.content}>
                     {this.renderChildren()}
                 </div>
-                <components.LoginModal isOpen={!this.state.userId} />
+                <components.LoginModal
+                    asteroid={asteroid}
+                    isOpen={!this.state.userId}
+                />
             </div>
         );
     }

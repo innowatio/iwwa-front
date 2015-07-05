@@ -1,4 +1,4 @@
-var Asteroid = require("asteroid/src/");
+var Asteroid = require("asteroid");
 
 Asteroid.addPlugin(require("./asteroid-immutable-collections.js"));
 Asteroid.addPlugin(require("./asteroid-react.js"));

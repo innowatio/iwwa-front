@@ -8,7 +8,7 @@
         "node_modules/font-awesome/fonts/*"
     ],
     "js": [
-        "asteroid/src/",
+        "asteroid",
         "immutable",
         "radium",
         "ramda",

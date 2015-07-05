@@ -3,7 +3,6 @@ var React     = require("react");
 var bootstrap = require("react-bootstrap");
 
 var components = require("components");
-var asteroid   = require("lib/asteroid");
 var colors     = require("lib/colors");
 
 var styles = {
@@ -29,6 +28,7 @@ var styles = {
 
 var LoginModal = React.createClass({
     propTypes: {
+        asteroid: React.PropTypes.object.isRequired,
         isOpen: React.PropTypes.bool.isRequired
     },
     getInitialState: function () {
@@ -47,7 +47,7 @@ var LoginModal = React.createClass({
             password: this.refs.password.getValue()
         };
         this.setLoginError(null);
-        asteroid.login(credentials).catch(this.setLoginError);
+        this.props.asteroid.login(credentials).catch(this.setLoginError);
     },
     attachModalOpenClass: function (props) {
         if (props.isOpen) {

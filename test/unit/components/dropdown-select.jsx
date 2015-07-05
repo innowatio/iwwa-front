@@ -3,17 +3,17 @@ require("unit-setup.js");
 var R         = require("ramda");
 var bootstrap = require("react-bootstrap");
 
-describe("The `DropdownButtonSelect` component ", function () {
+describe("The `DropdownSelect` component ", function () {
 
-    var DropdownButtonSelect = proxyquire("components/single-button-dropdown/", {});
+    var DropdownSelect = proxyquire("components/dropdown-select/", {});
 
     it("should have a default prop `getLabel` which stringifies `allowedItems`", function () {
-        expect(DropdownButtonSelect.defaultProps.getLabel).to.be.a("function");
+        expect(DropdownSelect.defaultProps.getLabel).to.be.a("function");
         var allowedValue = {
             a: 1,
             b: 2
         };
-        var stringifiedValue = DropdownButtonSelect.defaultProps.getLabel(allowedValue);
+        var stringifiedValue = DropdownSelect.defaultProps.getLabel(allowedValue);
         expect(stringifiedValue).to.be.a("string");
     });
 
@@ -22,7 +22,7 @@ describe("The `DropdownButtonSelect` component ", function () {
         var getLabel = R.add(5);
         var getLabelSpy = sinon.spy(getLabel);
         var selectNode = TestUtils.renderIntoDocument(
-            <DropdownButtonSelect
+            <DropdownSelect
                 allowedItems={allowedItems}
                 getLabel={getLabelSpy}
                 onChange={R.identity}
@@ -42,7 +42,7 @@ describe("The `DropdownButtonSelect` component ", function () {
         var allowedItems = [{id: 1}, {id: 2}, {id: 3}];
         var selectedIndex = 0;
         var selectElement = (
-            <DropdownButtonSelect
+            <DropdownSelect
                 allowedItems={allowedItems}
                 getLabel={R.prop("id")}
                 onChange={R.identity}

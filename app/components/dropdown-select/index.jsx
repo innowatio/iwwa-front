@@ -32,10 +32,7 @@ var DropdownButtonSelect = React.createClass({
     },
     render: function () {
         return (
-            <bootstrap.DropdownButton
-                className="ac-button-dropdown"
-                title={this.props.title}
-            >
+            <bootstrap.DropdownButton title={this.props.title}>
                 {this.props.allowedItems.map(this.renderButtonOption)}
             </bootstrap.DropdownButton>
         );

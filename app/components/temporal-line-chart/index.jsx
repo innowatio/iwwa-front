@@ -32,7 +32,7 @@ var TemporalLineChart = React.createClass({
     },
     render: function () {
         return (
-            <div className="ac-temporal-line-chart" ref="linechart"></div>
+            <div ref="linechart" />
         );
     }
 });
