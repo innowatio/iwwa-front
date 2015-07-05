@@ -1,41 +1,27 @@
-var R      = require("ramda");
-var React  = require("react");
-var Router = require("react-router");
+var Immutable = require("immutable");
+var R         = require("ramda");
+var React     = require("react");
+var Router    = require("react-router");
 
 var components = require("components");
 
 var Chart = React.createClass({
     propTypes: {
-        dataset: React.PropTypes.array
+        collections: React.PropTypes.instanceOf(Immutable.Map),
+        location: React.PropTypes.object
     },
-    mixins: [Router.State, Router.Navigation],
-    changeSelectedValueGroupSelect: function (newSelectedValueGroupSelect) {
-        var par = this.getPathname();
-        var par2 = this.getParams();
-        this.replaceWith(par, par2, R.merge(this.getQuery(), {
-            selectedValueGroupSelect: newSelectedValueGroupSelect
-        }));
+    mixins: [Router.Navigation],
+    changeQuery: function (name, value) {
+        this.replaceWith(
+            this.props.location.pathname,
+            R.assoc(name, value, this.props.location.query)
+        );
     },
-    changeSelectedValueDropdownSite: function (newSelectedValueDropdownSite) {
-        var par = this.getPathname();
-        var par2 = this.getParams();
-        this.replaceWith(par, par2, R.merge(this.getQuery(), {
-            selectedValueDropdownSite: newSelectedValueDropdownSite
-        }));
-    },
-    changeSelectedValueDropdownInterestMisure: function (newSelectedValueDropdownInterestMisure) {
-        var par = this.getPathname();
-        var par2 = this.getParams();
-        this.replaceWith(par, par2, R.merge(this.getQuery(), {
-            selectedValueDropdownInterestMisure: newSelectedValueDropdownInterestMisure
-        }));
-    },
-    changeSelectedValueDropdownExport: function (newSelectedValueDropdownExport) {
-        var par = this.getPathname();
-        var par2 = this.getParams().selectedValueDropdownExport;
-        this.replaceWith(par, par2, R.merge(this.getQuery(), {
-            selectedValueDropdownExport: newSelectedValueDropdownExport
-        }));
+    bindToQueryParameter: function (name, defaultValue) {
+        return {
+            value: R.path(["location", "query", name], this.props) || defaultValue,
+            onChange: R.partial(this.changeQuery, name)
+        };
     },
     render: function () {
         return (
@@ -43,30 +29,23 @@ var Chart = React.createClass({
                 <div className="av-chart-menu">
                     <components.ButtonGroupSelect
                         allowedValues={["Contrattuale", "Previsionale", "Reale"]}
-                        onChange={this.changeSelectedValueGroupSelect}
-                        value={this.getQuery().selectedValueGroupSelect || "Reale"}
-                    />
-                    <components.DropdownButtonSelect
-                        allowedItems={["Csv", "Jpg", "Png"]}
-                        onChange={this.changeSelectedValueDropdownExport}
-                        title={"Export"}
-                        value={this.getQuery().selectedValueDropdownExport || "Jpg"}
+                        {...this.bindToQueryParameter("tipologia", "Contrattuale")}
                     />
                     <components.DropdownButtonSelect
                         allowedItems={[ "Coin", "OVS", "Iperal Fuentes"]}
-                        onChange={this.changeSelectedValueDropdownSite}
-                        title={"Punto di misurazione"}
-                        value={this.getQuery().selectedValueDropdownSite || "Coin"}
+                        title="Punto di misurazione"
+                        {...this.bindToQueryParameter("punto", "Coin")}
                     />
                     <components.DropdownButtonSelect
                         allowedItems={["Corrente", "Potenza attiva", "Potenza reattiva", "Voltaggio"]}
-                        onChange={this.changeSelectedValueDropdownInterestMisure}
-                        title={"Quantità di interesse"}
-                        value={this.getQuery().selectedValueDropdownInterestMisure || "Corrente"}
+                        title="Quantità di interesse"
+                        {...this.bindToQueryParameter("quantita", "Corrente")}
                     />
                 </div>
                 <div className="av-chart-body">
-                    <components.TemporalLineChart coordinates={this.props.dataset}/>
+                    <components.TemporalLineChart
+                        coordinates={[]}
+                    />
                 </div>
             </div>
         );

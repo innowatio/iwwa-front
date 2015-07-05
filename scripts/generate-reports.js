@@ -37,24 +37,7 @@ proGulp.task("generateEsLintReport", function () {
         }));
 });
 
-proGulp.task("generateScssLintReport", function () {
-    var targetDir = "./builds/_reports/scss-lint/";
-    var reporterPath = "node_modules/.bin/scss-lint-html-reporter";
-    sh("rm -r " + targetDir);
-    mkdirp.sync(targetDir);
-    // Generate the report
-    try {
-        sh([
-            "scss-lint app/ -c .scss-lint.yml -f JSON",
-            "node " + reporterPath + " -o " + targetDir + "index.html"
-        ].join(" | "));
-    } catch (ignore) {
-        // Prevent exiting the process on errors
-    }
-});
-
 module.exports = proGulp.parallel([
     "generateMochaReport",
-    "generateEsLintReport",
-    "generateScssLintReport"
+    "generateEsLintReport"
 ])();

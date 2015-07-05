@@ -1,10 +1,12 @@
-var React  = require("react/addons");
-var Router = require("react-router");
+var React = require("react/addons");
 
-var routes = require("lib/routes");
+var asteroid = require("lib/asteroid");
+var routes   = require("lib/routes");
 
-Router.run(routes, Router.HistoryLocation, function (Handler) {
-    React.render(<Handler />, document.body);
-});
+React.render(routes, document.body);
+
+// window.asteroid = asteroid;
+// asteroid._ddp._socket.on("message:in", console.log.bind(console));
+// asteroid._ddp._socket.on("message:out", console.log.bind(console));
 
 window.React = React;

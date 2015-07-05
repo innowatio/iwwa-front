@@ -24,6 +24,7 @@
         "func-style": [2, "expression"],
         "indent": [2, 4],
         "linebreak-style": [2, "unix"],
+        "new-cap": [2, {"capIsNew": false}],
         "no-multi-spaces": [0],
         "no-underscore-dangle": [0],
         "object-curly-spacing": [2, "never"],
@@ -46,7 +47,7 @@
                 "constructor",
                 "lifecycle",
                 "everything-else",
-                "rendering",
+                "rendering"
             ],
             "groups": {
                 "rendering": [

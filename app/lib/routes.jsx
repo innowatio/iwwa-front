@@ -1,12 +1,13 @@
-var React  = require("react");
-var Router = require("react-router");
+var React          = require("react");
+var Router         = require("react-router");
+var BrowserHistory = require("react-router/lib/BrowserHistory");
 
 var views = require("views");
 
 module.exports = (
-    <Router.Route handler={views.Root} name="root" path="/">
-        <Router.Route handler={views.Login} name="login" path="login/" />
-        <Router.Route handler={views.Chart} name="chart" path="chart/" />
-        <Router.DefaultRoute handler={views.Login} />
-    </Router.Route>
+    <Router.Router history={BrowserHistory.history}>
+        <Router.Route component={views.Root} name="root" path="/">
+            <Router.Route component={views.Chart} name="chart" path="chart/" />
+        </Router.Route>
+    </Router.Router>
 );

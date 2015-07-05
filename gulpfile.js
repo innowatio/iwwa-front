@@ -70,15 +70,6 @@ proGulp.task("buildAppScripts", (function () {
     };
 })());
 
-proGulp.task("buildAppStyles", function () {
-    return gulp.src("app/main.scss")
-        .pipe(gp.sass())
-        .pipe(gp.rename("app.css"))
-        .pipe(gp.autoprefixer("last 3 version"))
-        .pipe(gp.if(MINIFY_FILES, gp.minifyCss()))
-        .pipe(gulp.dest("builds/" + ENVIRONMENT + "/_assets/css/"));
-});
-
 proGulp.task("buildVendorStyles", function () {
     return gulp.src(deps.css)
         .pipe(gp.concat("vendor.css"))
@@ -86,11 +77,16 @@ proGulp.task("buildVendorStyles", function () {
         .pipe(gulp.dest("builds/" + ENVIRONMENT + "/_assets/css/"));
 });
 
+proGulp.task("buildVendorFonts", function () {
+    return gulp.src(deps.fonts)
+        .pipe(gulp.dest("builds/" + ENVIRONMENT + "/_assets/fonts/"));
+});
+
 proGulp.task("build", proGulp.parallel([
     "buildMainHtml",
     "buildAppScripts",
-    "buildAppStyles",
-    "buildVendorStyles"
+    "buildVendorStyles",
+    "buildVendorFonts"
 ]));
 
 gulp.task("build", proGulp.task("build"));
@@ -165,10 +161,6 @@ proGulp.task("setupWatchers", function () {
     gulp.watch(
         ["test/unit/**/*.jsx", "test/unit/**/*.js"],
         proGulp.task("runUnitTests")
-    );
-    gulp.watch(
-        "app/**/*.scss",
-        proGulp.task("buildAppStyles")
     );
 });
 

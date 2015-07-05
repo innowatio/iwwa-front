@@ -1,7 +1,6 @@
 var compression = require("compression");
 var express     = require("express");
 var fs          = require("fs");
-var serveStatic = require("serve-static");
 
 var ENVIRONMENT = process.env.ENVIRONMENT;
 var VERSION = JSON.parse(fs.readFileSync("package.json", "utf8")).version;
@@ -18,7 +17,7 @@ express()
         next();
     })
     .use(compression())
-    .use(serveStatic("builds/" + ENVIRONMENT, {
+    .use(express.static("builds/" + ENVIRONMENT, {
         maxAge: 24 * 60 * 60 * 1000
     }))
     .get("/VERSION", function (req, res) {
