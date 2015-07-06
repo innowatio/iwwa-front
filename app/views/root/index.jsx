@@ -40,7 +40,7 @@ var Root = React.createClass({
         return (
             <div>
                 <div style={styles.header}>
-                    <components.Header />
+                    <components.Header asteroid={asteroid}/>
                 </div>
                 <div style={styles.content}>
                     {this.renderChildren()}

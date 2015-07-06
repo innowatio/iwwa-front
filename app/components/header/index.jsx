@@ -1,6 +1,7 @@
 var Radium = require("radium");
 var React  = require("react");
 
+var components = require("components");
 var colors = require("lib/colors");
 
 var styles = {
@@ -13,10 +14,20 @@ var styles = {
 };
 
 var Header = React.createClass({
+    propTypes: {
+        asteroid: React.PropTypes.object.isRequired
+    },
+    logout: function () {
+        this.props.asteroid.logout();
+    },
     render: function () {
         return (
             <div style={styles.base}>
                 {"Innowatio"}
+                <components.Icon
+                    icon="arrow-left"
+                    onClick={this.logout}
+                />
             </div>
         );
     }
