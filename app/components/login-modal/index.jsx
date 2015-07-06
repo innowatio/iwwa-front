@@ -39,6 +39,11 @@ var styles = {
         fontSize: "18px"
         // opacity: 0.1
     },
+    h4PasswordLostLabel: {
+        marginBottom: "30px",
+        color: colors.white,
+        fontWeight: "100"
+    },
     groupIcon: {
         width: "36px"
     },
@@ -85,8 +90,10 @@ var LoginModal = React.createClass({
         this.setLoginError(null);
         this.props.asteroid.login(credentials).catch(this.setLoginError);
     },
-    lostUsernameLogin: function () {
-        console.log("hai cliccato");
+    lostPasswordLogin: function () {
+        this.setState({
+            lostPassword: true
+        });
     },
     attachModalOpenClass: function (props) {
         if (props.isOpen) {
@@ -112,80 +119,143 @@ var LoginModal = React.createClass({
         ) : null;
     },
     render: function () {
-        return this.props.isOpen ? (
-            <div style={styles.overlay}>
-                <Radium.Style
-                    rules={{
-                        ".form-group": {
-                            marginBottom: "-1px"
-                        },
-                        ".input-password": {
-                            marginBottom: "40px",
-                            borderTopLeftRadius: 0
-                        },
-                        ".form-signin-email": {
-                            borderBottomRightRadius: 0
-                        },
-                        ".form-signin-psw": {
-                            borderTopRightRadius: 0
-                        },
-                        ".input-group": {
-                            borderTopLeftRadius: 0
-                        },
-                        ".access-button": {
-                            backgroundImage: "radial-gradient(circle, #d9d9e5 15px, #9b9fbc 50px, #6c719a 100px);"
-                        },
-                        ".access-button:hover": {
-                            background: colors.buttonHover
-                        },
-                        ".access-button:active": {
-                            background: colors.buttonHover
-                        }
-                    }}
-                />
-            <span className="text-center" style={styles.textTitlePosition}>
-                    <h1 style={styles.titleLabel}>{"Energia alla tua Energia"}</h1>
-                    <h4 style={styles.h4Label}>{"Innowatio"}</h4>
-                </span>
-                <div style={styles.inputsContainer}>
-                    <bootstrap.Input
-                        addonBefore={<components.Icon icon="user" style={styles.groupIcon}/>}
-                        className="form-signin-email"
-                        placeholder="Email"
-                        ref="email"
-                        style={styles.inputLabel}
-                        type="email">
-                    </bootstrap.Input>
-                <div className="input-password">
-                    <bootstrap.Input
-                        addonBefore={
-                            <span className="iconPsw">
-                                <components.Icon className="iconPsw" icon="lock" style={styles.groupIcon}/>
-                            </span>
+        if (!this.state.lostPassword) {
+            return this.props.isOpen ? (
+                <div style={styles.overlay}>
+                    <Radium.Style
+                        rules={{
+                            ".form-group": {
+                                marginBottom: "-1px"
+                            },
+                            ".input-password": {
+                                marginBottom: "40px",
+                                borderTopLeftRadius: 0
+                            },
+                            ".form-signin-email": {
+                                borderBottomRightRadius: 0
+                            },
+                            ".form-signin-psw": {
+                                borderTopRightRadius: 0
+                            },
+                            ".input-group": {
+                                borderTopLeftRadius: 0
+                            },
+                            ".access-button": {
+                                backgroundImage: "radial-gradient(circle, #d9d9e5 15px, #9b9fbc 50px, #6c719a 100px);"
+                            },
+                            ".access-button:hover": {
+                                background: colors.buttonHover
+                            },
+                            ".access-button:active": {
+                                background: colors.buttonHover
                             }
-                        className="form-signin-psw"
-                        placeholder="Password"
-                        ref="password"
-                        style={styles.inputLabel}
-                        type="password"
+                        }}
                     />
-                </div>
-                    <bootstrap.Button
-                        block
-                        className="access-button"
-                        onClick={this.login}
-                        style={styles.accessButton}
-                    >
-                        {"ACCEDI"}
-                    </bootstrap.Button>
-                    {this.renderError()}
-                    <components.Spacer direction="v" size={10} />
-                    <div className="text-center" style={styles.popupLabel}>
-                        <a onClick={this.lostUsernameLogin} style={styles.aLink}>{"Username o Password dimenticati?"}</a>
+                <span className="text-center" style={styles.textTitlePosition}>
+                        <h1 style={styles.titleLabel}>{"Energia alla tua Energia"}</h1>
+                        <h4 style={styles.h4Label}>{"Innowatio"}</h4>
+                    </span>
+                    <div style={styles.inputsContainer}>
+                        <bootstrap.Input
+                            addonBefore={<components.Icon icon="user" style={styles.groupIcon}/>}
+                            className="form-signin-email"
+                            placeholder="Email"
+                            ref="email"
+                            style={styles.inputLabel}
+                            type="email">
+                        </bootstrap.Input>
+                    <div className="input-password">
+                        <bootstrap.Input
+                            addonBefore={
+                                <span className="iconPsw">
+                                    <components.Icon className="iconPsw" icon="lock" style={styles.groupIcon}/>
+                                </span>
+                                }
+                            className="form-signin-psw"
+                            placeholder="Password"
+                            ref="password"
+                            style={styles.inputLabel}
+                            type="password"
+                        />
+                    </div>
+                        <bootstrap.Button
+                            block
+                            className="access-button"
+                            onClick={this.login}
+                            style={styles.accessButton}
+                        >
+                            {"ACCEDI"}
+                        </bootstrap.Button>
+                        {this.renderError()}
+                        <components.Spacer direction="v" size={10} />
+                        <div className="text-center" style={styles.popupLabel}>
+                            <a onClick={this.lostPasswordLogin} style={styles.aLink}>{"Username o Password dimenticati?"}</a>
+                        </div>
                     </div>
                 </div>
-            </div>
+                ) : null;
+        } else {
+            return this.props.isOpen ? (
+                <div style={styles.overlay}>
+                    <Radium.Style
+                        rules={{
+                            ".form-group": {
+                                marginBottom: "-1px"
+                            },
+                            ".input-password": {
+                                marginBottom: "40px",
+                                borderTopLeftRadius: 0
+                            },
+                            ".form-signin-email": {
+                                borderBottomRightRadius: 0
+                            },
+                            ".form-signin-psw": {
+                                borderTopRightRadius: 0
+                            },
+                            ".input-group": {
+                                borderTopLeftRadius: 0
+                            },
+                            ".access-button": {
+                                backgroundImage: "radial-gradient(circle, #d9d9e5 15px, #9b9fbc 50px, #6c719a 100px);"
+                            },
+                            ".access-button:hover": {
+                                background: colors.buttonHover
+                            },
+                            ".access-button:active": {
+                                background: colors.buttonHover
+                            }
+                        }}
+                    />
+                    <span className="text-center" style={styles.textTitlePosition}>
+                        <h1 style={styles.titleLabel}>{"Energia alla tua Energia"}</h1>
+                        <h4 style={styles.h4PasswordLostLabel}>{"Innowatio"}</h4>
+                        <h4 style={styles.h4PasswordLostLabel}>{"Username o Password dimenticati?"}</h4>
+                    </span>
+                    <div style={styles.inputsContainer}>
+                        <bootstrap.Input
+                            addonBefore={<components.Icon icon="user" style={styles.groupIcon}/>}
+                            className="form-signin-email"
+                            placeholder="Email"
+                            ref="email"
+                            style={styles.inputLabel}
+                            type="email">
+                        </bootstrap.Input>
+                        <bootstrap.Button
+                            block
+                            className="access-button"
+                            onClick={""}
+                            style={styles.accessButton}
+                        >
+                            {"INVIA"}
+                        </bootstrap.Button>
+                        <span className="text-center" style={styles.textTitlePosition}>
+                            <h6 style={styles.h4PasswordLostLabel}>{"Riceverai le nuove credenziali all'indirizzo e-mail indicato"}</h6>
+                        </span>
+                        {this.renderError()}
+                    </div>
+                </div>
             ) : null;
+        }
     }
 });
 
