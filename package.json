@@ -29,6 +29,7 @@
     "bluebird": "^2.9.30",
     "browser-sync": "^2.7.12",
     "chai": "^3.0.0",
+    "dev-ip": "^1.0.1",
     "eslint": "^0.23.0",
     "eslint-html-reporter": "^0.4.11",
     "eslint-plugin-react": "^2.5.2",

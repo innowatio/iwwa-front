@@ -6,6 +6,10 @@ var colors = require("lib/colors");
 
 var styles = {
     base: {
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "space-between",
+        padding: "15px",
         background: colors.primary,
         width: "100%",
         height: "100%",
@@ -23,11 +27,16 @@ var Header = React.createClass({
     render: function () {
         return (
             <div style={styles.base}>
-                {"Innowatio"}
-                <components.Icon
-                    icon="arrow-left"
-                    onClick={this.logout}
-                />
+                <span>
+                    {"innowatio"}
+                </span>
+                <span>
+                    <components.Icon
+                        icon="sign-out"
+                        onClick={this.logout}
+                        size="24px"
+                    />
+                </span>
             </div>
         );
     }

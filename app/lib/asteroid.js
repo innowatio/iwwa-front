@@ -4,7 +4,7 @@ Asteroid.addPlugin(require("./asteroid-immutable-collections.js"));
 Asteroid.addPlugin(require("./asteroid-react.js"));
 
 var asteroid = new Asteroid({
-    endpoint: "ws://localhost:3000/websocket"
+    endpoint: "ws://" + BACKEND_HOST + "/websocket"
 });
 
 window.asteroid = asteroid;

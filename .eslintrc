@@ -8,6 +8,7 @@
         "node": true
     },
     "globals": {
+        "BACKEND_HOST": true,
         "expect": true,
         "proxyquire": true,
         "React": true,
