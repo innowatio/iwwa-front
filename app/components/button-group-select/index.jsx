@@ -11,6 +11,7 @@ var ButtonGroupSelect = React.createClass({
         onChange: React.PropTypes.func.isRequired,
         value: React.PropTypes.any.isRequired
     },
+    mixins: [React.addons.PureRenderMixin],
     getDefaultProps: function () {
         return {
             getLabel: function (allowedValue) {

@@ -28,11 +28,11 @@ var Root = React.createClass({
         children: React.PropTypes.node
     },
     mixins: [
-        asteroid.getControllerViewMixin(),
-        asteroid.getSubscriptionMixin()
+        asteroid.getControllerViewMixin()
     ],
     renderChildren: function () {
         return React.cloneElement(this.props.children, {
+            asteroid: asteroid,
             collections: this.state.collections
         });
     },

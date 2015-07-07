@@ -7,4 +7,6 @@ var asteroid = new Asteroid({
     endpoint: "ws://localhost:3000/websocket"
 });
 
+window.asteroid = asteroid;
+
 module.exports = asteroid;
