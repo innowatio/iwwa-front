@@ -8,7 +8,7 @@ var IPropTypes = require("react-immutable-proptypes");
 var components       = require("components");
 var styles           = require("lib/styles");
 var QuerystringMixin = require("lib/querystring-mixin");
-var HistoricalChart  = require("./historical-chart.jsx");
+var HistoricalGraph  = require("./historical-graph.jsx");
 var transformers     = require("./transformers.js");
 
 var getSitoKey = R.memoize(function (sito) {
@@ -102,7 +102,7 @@ var Chart = React.createClass({
                     </span>
                 </bootstrap.Col>
                 <bootstrap.Col sm={12}>
-                    <HistoricalChart
+                    <HistoricalGraph
                         misure={this.props.collections.get("misure") || Immutable.Map()}
                         sito={sitoInputProps.value}
                         tipologia={tipologiaInputProps.value}

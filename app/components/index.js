@@ -6,3 +6,4 @@ exports.Icon              = require("./icon/");
 exports.LoginModal        = require("./login-modal/");
 exports.Spacer            = require("./spacer/");
 exports.TemporalLineChart = require("./temporal-line-chart/");
+exports.TemporalLineGraph = require("./temporal-line-chart-new/");
