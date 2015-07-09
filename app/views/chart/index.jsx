@@ -8,7 +8,6 @@ var IPropTypes = require("react-immutable-proptypes");
 var components       = require("components");
 var styles           = require("lib/styles");
 var QuerystringMixin = require("lib/querystring-mixin");
-var HistoricalGraph  = require("./historical-graph.jsx");
 var transformers     = require("./transformers.js");
 
 var getSitoKey = R.memoize(function (sito) {
@@ -44,8 +43,8 @@ var Chart = React.createClass({
     },
     getValori: function () {
         return [
-            {label: "Contrattuale", key: "contrattuale"},
             {label: "Reale", key: "reale"},
+            {label: "Contrattuale", key: "contrattuale"},
             {label: "Previsionale 1gg", key: "realeMeno1"},
             {label: "Previsionale 7gg", key: "realeMeno7"}
         ];
@@ -70,7 +69,7 @@ var Chart = React.createClass({
         var valoreInputProps = this.bindToQueryParameter(
             "valore",
             transformers.valore(valori),
-            valori[0]
+            valori.slice(0, 1)
         );
         return (
             <div>
@@ -80,6 +79,7 @@ var Chart = React.createClass({
                             allowedValues={valori}
                             getKey={R.prop("key")}
                             getLabel={R.prop("label")}
+                            multi={true}
                             {...valoreInputProps}
                         />
                     </span>
@@ -101,12 +101,12 @@ var Chart = React.createClass({
                         />
                     </span>
                 </bootstrap.Col>
-                <bootstrap.Col sm={12}>
-                    <HistoricalGraph
+                <bootstrap.Col sm={12} style={{height: "500px"}}>
+                    <components.HistoricalGraph
                         misure={this.props.collections.get("misure") || Immutable.Map()}
                         sito={sitoInputProps.value}
                         tipologia={tipologiaInputProps.value}
-                        valore={valoreInputProps.value}
+                        valori={valoreInputProps.value}
                     />
                 </bootstrap.Col>
             </div>

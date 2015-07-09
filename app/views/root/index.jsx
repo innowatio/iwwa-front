@@ -5,6 +5,7 @@ var components = require("components");
 var asteroid   = require("lib/asteroid");
 var measures   = require("lib/measures");
 
+// Decommment for debugging
 // window.asteroid = asteroid;
 // asteroid._ddp._socket.on("message:in", console.log.bind(console));
 // asteroid._ddp._socket.on("message:out", console.log.bind(console));
@@ -40,7 +41,7 @@ var Root = React.createClass({
         return (
             <div>
                 <div style={styles.header}>
-                    <components.Header asteroid={asteroid}/>
+                    <components.Header asteroid={asteroid} />
                 </div>
                 <div style={styles.content}>
                     {this.renderChildren()}

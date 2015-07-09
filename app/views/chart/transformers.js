@@ -14,9 +14,15 @@ exports.sito = function (siti) {
 exports.valore = function (valori) {
     return {
         parse: function (query) {
-            return R.find(R.propEq("key", query), valori);
+            var keys = query ? query.split(",") : [];
+            return valori.filter(function (valore) {
+                return (keys.indexOf(valore.key) !== -1);
+            });
         },
-        stringify: R.prop("key")
+        stringify: R.pipe(
+            R.map(R.prop("key")),
+            R.join(",")
+        )
     };
 };
 
