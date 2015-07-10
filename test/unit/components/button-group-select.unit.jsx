@@ -1,7 +1,8 @@
 require("unit-setup.js");
 
-var R         = require("ramda");
-var bootstrap = require("react-bootstrap");
+var R = require("ramda");
+
+var Button = require("components/button/");
 
 describe("The `ButtonGroupSelect` component ", function () {
 
@@ -17,6 +18,16 @@ describe("The `ButtonGroupSelect` component ", function () {
         expect(stringifiedValue).to.be.a("string");
     });
 
+    it("should have a default prop `getKey` which stringifies `allowedValues`", function () {
+        expect(ButtonGroupSelect.defaultProps.getKey).to.be.a("function");
+        var allowedValue = {
+            a: 1,
+            b: 2
+        };
+        var stringifiedValue = ButtonGroupSelect.defaultProps.getKey(allowedValue);
+        expect(stringifiedValue).to.be.a("string");
+    });
+
     it("should call the `getLabel` prop (if supplied) to get the label for the children buttons", function () {
         var allowedValues = [1, 2, 3, 4];
         var getLabel = R.add(5);
@@ -29,13 +40,29 @@ describe("The `ButtonGroupSelect` component ", function () {
                 value={allowedValues[0]}
             />
         );
-        var buttonNodes = TestUtils.scryRenderedComponentsWithType(selectNode, bootstrap.Button);
+        var buttonNodes = TestUtils.scryRenderedComponentsWithType(selectNode, Button);
         var expectedLabels = R.map(getLabel, allowedValues);
         var actualLabels = R.map(function (buttonNode) {
             return buttonNode.props.children;
         }, buttonNodes);
         expect(expectedLabels).to.eql(actualLabels);
         expect(getLabelSpy.callCount).to.equal(allowedValues.length);
+    });
+
+    it("should call the `getKey` prop (if supplied) to get the key for the children buttons", function () {
+        var allowedValues = [1, 2, 3, 4];
+        var getKey = R.toString;
+        var getKeySpy = sinon.spy(getKey);
+        var selectNode = TestUtils.renderIntoDocument(
+            <ButtonGroupSelect
+                allowedValues={allowedValues}
+                getKey={getKeySpy}
+                onChange={R.identity}
+                value={allowedValues[0]}
+            />
+        );
+        TestUtils.scryRenderedComponentsWithType(selectNode, Button);
+        expect(getKeySpy.callCount).to.equal(allowedValues.length);
     });
 
     it("should render a button in the button group for each of the `allowedValues` passed as props", function () {
@@ -52,71 +79,105 @@ describe("The `ButtonGroupSelect` component ", function () {
         expect(selectDOMNode.children.length).to.equal(allowedValues.length);
     });
 
-    it("should set the active state of the button which corresponds to the value we supply", function () {
-        var allowedValues = [{id: 1}, {id: 2}, {id: 3}];
-        var selectedIndex = 0;
-        var selectElement = (
-            <ButtonGroupSelect
-                allowedValues={allowedValues}
-                getLabel={R.prop("id")}
-                multi={false}
-                onChange={R.identity}
-                value={allowedValues[selectedIndex]}
-            />
-        );
-        var selectNode = TestUtils.renderIntoDocument(selectElement);
-        var buttonNodes = TestUtils.scryRenderedComponentsWithType(selectNode, bootstrap.Button);
-        var actualStates = buttonNodes.map(function (buttonNode) {
-            return buttonNode.props.active;
+    describe("when prop `multi` is not set (default)", function () {
+
+        it("should set the active state of the button which corresponds to the value we supply", function () {
+            var allowedValues = [{id: 1}, {id: 2}, {id: 3}];
+            var selectedIndex = 0;
+            var selectElement = (
+                <ButtonGroupSelect
+                    allowedValues={allowedValues}
+                    getKey={R.prop("id")}
+                    getLabel={R.prop("id")}
+                    multi={false}
+                    onChange={R.identity}
+                    value={allowedValues[selectedIndex]}
+                />
+            );
+            var selectNode = TestUtils.renderIntoDocument(selectElement);
+            var buttonNodes = TestUtils.scryRenderedComponentsWithType(selectNode, Button);
+            var actualStates = buttonNodes.map(function (buttonNode) {
+                return buttonNode.props.active;
+            });
+            var expectedStates = allowedValues.map(function (allowedValue, index) {
+                return index === selectedIndex;
+            });
+            expect(actualStates).to.eql(expectedStates);
         });
-        var expectedStates = allowedValues.map(function (allowedValue, index) {
-            return index === selectedIndex;
+
+        it("should call the `onChange` handler with the corresponding value when a button is clicked", function () {
+            var allowedValues = [{id: 1}, {id: 2}, {id: 3}];
+            var changeSpy = sinon.spy();
+            var selectElement = (
+                <ButtonGroupSelect
+                    allowedValues={allowedValues}
+                    getKey={R.prop("id")}
+                    getLabel={R.prop("id")}
+                    onChange={changeSpy}
+                    value={allowedValues[0]}
+                />
+            );
+            var selectNode = TestUtils.renderIntoDocument(selectElement);
+            var buttonNodes = TestUtils.scryRenderedComponentsWithType(selectNode, Button);
+            buttonNodes.forEach(function (buttonNode, index) {
+                var buttonDOMNode = buttonNode.getDOMNode();
+                TestUtils.Simulate.click(buttonDOMNode);
+                expect(changeSpy).to.have.been.calledWith(allowedValues[index]);
+                changeSpy.reset();
+            });
         });
-        expect(actualStates).to.eql(expectedStates);
+
     });
 
-    it("should set the active state of the button which corresponds to the value we supply", function () {
-        var allowedValues = [{id: 1}, {id: 2}, {id: 3}];
-        var changeSpy = sinon.spy();
-        var selectElement = (
-            <ButtonGroupSelect
-                allowedValues={allowedValues}
-                getLabel={R.prop("id")}
-                onChange={changeSpy}
-                value={allowedValues[0]}
-            />
-        );
-        var selectNode = TestUtils.renderIntoDocument(selectElement);
-        var buttonNodes = TestUtils.scryRenderedComponentsWithType(selectNode, bootstrap.Button);
-        buttonNodes.forEach(function (buttonNode, index) {
-            var buttonDOMNode = buttonNode.getDOMNode();
-            TestUtils.Simulate.click(buttonDOMNode);
-            expect(changeSpy).to.have.been.calledWith(allowedValues[index]);
-            changeSpy.reset();
-        });
-    });
+    describe("when prop `multi` is set", function () {
 
-    it("should allow to set the active state of more than one button if the prop `multi` is enabled", function () {
-        var allowedValues = [{id: 1}, {id: 2}, {id: 3}];
-        var selectedValues = R.remove(1, 1, allowedValues);
-        var selectElement = (
-            <ButtonGroupSelect
-                allowedValues={allowedValues}
-                getLabel={R.prop("id")}
-                multi={true}
-                onChange={R.identity}
-                value={selectedValues}
-            />
-        );
-        var selectNode = TestUtils.renderIntoDocument(selectElement);
-        var buttonNodes = TestUtils.scryRenderedComponentsWithType(selectNode, bootstrap.Button);
-        var actualStates = buttonNodes.map(function (buttonNode) {
-            return buttonNode.props.active;
+        it("should allow to set the active state of more than one button", function () {
+            var allowedValues = [{id: 1}, {id: 2}, {id: 3}];
+            var selectedValues = allowedValues.slice(1);
+            var selectElement = (
+                <ButtonGroupSelect
+                    allowedValues={allowedValues}
+                    getKey={R.prop("id")}
+                    getLabel={R.prop("id")}
+                    multi={true}
+                    onChange={R.identity}
+                    value={selectedValues}
+                />
+            );
+            var selectNode = TestUtils.renderIntoDocument(selectElement);
+            var buttonNodes = TestUtils.scryRenderedComponentsWithType(selectNode, Button);
+            var actualStates = buttonNodes.map(function (buttonNode) {
+                return buttonNode.props.active;
+            });
+            var expectedStates = allowedValues.map(function (allowedValue) {
+                return R.contains(allowedValue, selectedValues);
+            });
+            expect(actualStates).to.eql(expectedStates);
         });
-        var expectedStates = allowedValues.map(function (allowedValue) {
-            return R.contains(allowedValue, selectedValues);
+
+        it("should call the `onChange` handler with the new active values", function () {
+            var allowedValues = [{id: 1}, {id: 2}, {id: 3}];
+            var changeSpy = sinon.spy();
+            var selectElement = (
+                <ButtonGroupSelect
+                    allowedValues={allowedValues}
+                    getKey={R.prop("id")}
+                    getLabel={R.prop("id")}
+                    multi={true}
+                    onChange={changeSpy}
+                    value={[]}
+                />
+            );
+            var selectNode = TestUtils.renderIntoDocument(selectElement);
+            var buttonNodes = TestUtils.scryRenderedComponentsWithType(selectNode, Button);
+            buttonNodes.forEach(function (buttonNode, index) {
+                var buttonDOMNode = buttonNode.getDOMNode();
+                TestUtils.Simulate.click(buttonDOMNode);
+                expect(changeSpy).to.have.been.calledWith([allowedValues[index]]);
+                changeSpy.reset();
+            });
         });
-        expect(actualStates).to.eql(expectedStates);
+
     });
 
 });

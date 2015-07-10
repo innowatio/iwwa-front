@@ -10,6 +10,7 @@ var components = require("components");
 var ButtonGroupSelect = React.createClass({
     propTypes: {
         allowedValues: React.PropTypes.array.isRequired,
+        getKey: React.PropTypes.func,
         getLabel: React.PropTypes.func,
         multi: React.PropTypes.bool,
         onChange: React.PropTypes.func.isRequired,
@@ -27,11 +28,13 @@ var ButtonGroupSelect = React.createClass({
     },
     mixins: [React.addons.PureRenderMixin],
     getDefaultProps: function () {
+        var defaultGetter = function (allowedItem) {
+            return allowedItem.toString();
+        };
         return {
             multi: false,
-            getLabel: function (allowedValue) {
-                return allowedValue.toString();
-            }
+            getKey: defaultGetter,
+            getLabel: defaultGetter
         };
     },
     isActiveMulti: function (allowedValue) {
@@ -78,14 +81,13 @@ var ButtonGroupSelect = React.createClass({
         );
     },
     renderButtonOption: function (allowedValue) {
-        var label = this.props.getLabel(allowedValue);
         return (
             <components.Button
                 active={this.isActive(allowedValue)}
-                key={label}
+                key={this.props.getKey(allowedValue)}
                 onClick={R.partial(this.onChange, allowedValue)}
             >
-                {label}
+                {this.props.getLabel(allowedValue)}
             </components.Button>
         );
     },

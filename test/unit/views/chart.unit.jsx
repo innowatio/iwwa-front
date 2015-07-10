@@ -65,6 +65,17 @@ describe("The `tipologia` transformer", function () {
             expect(ret).to.equal(tipologie[2]);
         });
 
+        it("the first tipologia if no `key` equals the supplied string", function () {
+            var tipologie = [
+                {label: "Attiva", key: 1},
+                {label: "Potenza", key: 2},
+                {label: "Reattiva", key: 3}
+            ];
+            var st = transformers.tipologia(tipologie);
+            var ret = st.parse("4");
+            expect(ret).to.equal(tipologie[0]);
+        });
+
     });
 
     describe("the `stringify` function should return", function () {

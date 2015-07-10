@@ -19,7 +19,10 @@ exports.sito = function (siti) {
 exports.tipologia = function (tipologie) {
     return {
         parse: function (query) {
-            return R.find(R.propEq("key", parseInt(query)), tipologie);
+            return (
+                R.find(R.propEq("key", parseInt(query)), tipologie) ||
+                tipologie[0]
+            );
         },
         stringify: R.pipe(
             R.prop("key"),
