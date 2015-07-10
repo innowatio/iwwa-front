@@ -59,6 +59,7 @@ describe("The `ButtonGroupSelect` component ", function () {
             <ButtonGroupSelect
                 allowedValues={allowedValues}
                 getLabel={R.prop("id")}
+                multi={false}
                 onChange={R.identity}
                 value={allowedValues[selectedIndex]}
             />
@@ -93,6 +94,29 @@ describe("The `ButtonGroupSelect` component ", function () {
             expect(changeSpy).to.have.been.calledWith(allowedValues[index]);
             changeSpy.reset();
         });
+    });
+
+    it("should set the active state of more than one button if the prop `multi` is enabled", function () {
+        var allowedValues = [{id: 1}, {id: 2}, {id: 3}];
+        var selectedValues = R.remove(1, 1, allowedValues);
+        var selectElement = (
+            <ButtonGroupSelect
+                allowedValues={allowedValues}
+                getLabel={R.prop("id")}
+                multi={true}
+                onChange={R.identity}
+                value={selectedValues}
+            />
+        );
+        var selectNode = TestUtils.renderIntoDocument(selectElement);
+        var buttonNodes = TestUtils.scryRenderedComponentsWithType(selectNode, bootstrap.Button);
+        var actualStates = buttonNodes.map(function (buttonNode) {
+            return buttonNode.props.active;
+        });
+        var expectedStates = allowedValues.map(function (allowedValue) {
+            return R.contains(allowedValue, selectedValues);
+        });
+        expect(actualStates).to.eql(expectedStates);
     });
 
 });
