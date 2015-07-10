@@ -54,22 +54,19 @@ var Chart = React.createClass({
         var siti = this.props.collections.get("siti") || Immutable.Map();
         var sitoInputProps = this.bindToQueryParameter(
             "sito",
-            transformers.sito(siti),
-            Immutable.Map()
+            transformers.sito(siti)
         );
         // Tipologia
         var tipologie = this.getTipologie();
         var tipologiaInputProps = this.bindToQueryParameter(
             "tipologia",
-            transformers.tipologia(tipologie),
-            tipologie[0]
+            transformers.tipologia(tipologie)
         );
         // Valore
         var valori = this.getValori();
         var valoreInputProps = this.bindToQueryParameter(
             "valore",
-            transformers.valore(valori),
-            valori.slice(0, 1)
+            transformers.valore(valori)
         );
         return (
             <div>
