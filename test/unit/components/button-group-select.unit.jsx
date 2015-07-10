@@ -96,7 +96,7 @@ describe("The `ButtonGroupSelect` component ", function () {
         });
     });
 
-    it("should set the active state of more than one button if the prop `multi` is enabled", function () {
+    it("should allow to set the active state of more than one button if the prop `multi` is enabled", function () {
         var allowedValues = [{id: 1}, {id: 2}, {id: 3}];
         var selectedValues = R.remove(1, 1, allowedValues);
         var selectElement = (
