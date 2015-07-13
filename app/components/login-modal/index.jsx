@@ -74,13 +74,22 @@ var LoginModal = React.createClass({
     },
     getInitialState: function () {
         return {
-            loginError: null
+            loginError: null,
+            mailError: null,
+            lostPassword: false,
+            passwordSent: false
         };
     },
     setLoginError: function (error) {
         this.setState({
             loginError: error
         });
+    },
+    setPasswordLostError: function (error) {
+        this.setState({
+            mailError: true
+        });
+        console.log(this.state.mailError);
     },
     login: function () {
         var credentials = {
@@ -90,10 +99,30 @@ var LoginModal = React.createClass({
         this.setLoginError(null);
         this.props.asteroid.login(credentials).catch(this.setLoginError);
     },
-    lostPasswordLogin: function () {
+    passwordLost: function () {
+        var credentials = {
+            email: this.refs.email.getValue(),
+        };
+        this.setPasswordLostError(null);
+        (credentials.email.indexOf("@")>0) ?
         this.setState({
-            lostPassword: true
-        });
+            passwordSent: !this.state.passwordSent
+        }) :
+        this.setPasswordLostError
+    },
+    lostPasswordToLogin: function () {
+        !this.state.passwordSent ?
+            this.setState({
+                lostPassword: !this.state.lostPassword,
+                mailError: null,
+                loginError: null
+            }) :
+            this.setState({
+                lostPassword: !this.state.lostPassword,
+                passwordSent: !this.state.passwordSent,
+                mailError: null,
+                loginError: null
+            });
     },
     attachModalOpenClass: function (props) {
         if (props.isOpen) {
@@ -108,62 +137,82 @@ var LoginModal = React.createClass({
     componentWillReceiveProps: function (props) {
         this.attachModalOpenClass(props);
     },
+    renderMailError: function () {
+        return this.state.mailError ? (
+            <bootstrap.Alert
+                bsStyle="danger"
+                style={styles.errorAlert}
+            >
+                {"Hai sbagliato a inserire la mail!"}
+            </bootstrap.Alert>
+        ) : null;
+    },
     renderError: function () {
         return this.state.loginError ? (
             <bootstrap.Alert
                 bsStyle="danger"
                 style={styles.errorAlert}
             >
-                {"Error logging in"}
+                {"Hai sbagliato a inserire mail o password!"}
             </bootstrap.Alert>
         ) : null;
     },
-    render: function () {
-        if (!this.state.lostPassword) {
-            return this.props.isOpen ? (
-                <div style={styles.overlay}>
-                    <Radium.Style
-                        rules={{
-                            ".form-group": {
-                                marginBottom: "-1px"
-                            },
-                            ".input-password": {
-                                marginBottom: "40px",
-                                borderTopLeftRadius: 0
-                            },
-                            ".form-signin-email": {
-                                borderBottomRightRadius: 0
-                            },
-                            ".form-signin-psw": {
-                                borderTopRightRadius: 0
-                            },
-                            ".input-group": {
-                                borderTopLeftRadius: 0
-                            },
-                            ".access-button": {
-                                background: colors.primary
-                            },
-                            ".access-button:hover": {
-                                background: colors.buttonHover
-                            },
-                            ".access-button:active": {
-                                background: colors.buttonHover
-                            }
-                        }}
-                    />
+    renderStyle: function () {
+        return (
+            <Radium.Style
+                rules={{
+                    ".form-group": {
+                        marginBottom: "-1px"
+                    },
+                    ".input-password": {
+                        marginBottom: "40px",
+                        borderTopLeftRadius: 0
+                    },
+                    ".form-signin-email": {
+                        borderBottomRightRadius: 0
+                    },
+                    ".form-signin-psw": {
+                        borderTopRightRadius: 0
+                    },
+                    ".input-group": {
+                        borderTopLeftRadius: 0
+                    },
+                    ".access-button": {
+                        background: colors.primary
+                    },
+                    ".access-button:hover": {
+                        background: colors.buttonHover
+                    },
+                    ".access-button:active": {
+                        background: colors.buttonHover
+                    }
+                }}
+            />
+        );
+    },
+    renderEmailInput: function () {
+        return (
+            <bootstrap.Input
+                addonBefore={<components.Icon icon="user" style={styles.groupIcon}/>}
+                className="form-signin-email"
+                placeholder="Email"
+                ref="email"
+                style={styles.inputLabel}
+                type="email"
+                required>
+            </bootstrap.Input>
+        );
+    },
+    renderLoginPage: function () {
+        return (
+            <div style={styles.overlay}>
+                {this.renderStyle()}
                 <span className="text-center" style={styles.textTitlePosition}>
-                        <h1 style={styles.titleLabel}>{"Energia alla tua Energia"}</h1>
-                        <h4 style={styles.h4Label}>{"Innowatio"}</h4>
-                    </span>
-                    <div style={styles.inputsContainer}>
-                        <bootstrap.Input
-                            addonBefore={<components.Icon icon="user" style={styles.groupIcon}/>}
-                            className="form-signin-email"
-                            placeholder="Email"
-                            ref="email"
-                            style={styles.inputLabel}
-                            type="email">
-                        </bootstrap.Input>
+                    <h1 style={styles.titleLabel}>{"Energia alla tua Energia"}</h1>
+                    <h4 style={styles.h4Label}>{"Innowatio"}</h4>
+                </span>
+                <div style={styles.inputsContainer}>
+                    {this.renderEmailInput()}
                     <div className="input-password">
                         <bootstrap.Input
                             addonBefore={
@@ -178,83 +227,95 @@ var LoginModal = React.createClass({
                             type="password"
                         />
                     </div>
-                        <bootstrap.Button
-                            block
-                            className="access-button"
-                            onClick={this.login}
-                            style={styles.accessButton}
-                        >
-                            {"ACCEDI"}
-                        </bootstrap.Button>
-                        {this.renderError()}
-                        <components.Spacer direction="v" size={10} />
-                        <div className="text-center" style={styles.popupLabel}>
-                            <a onClick={this.lostPasswordLogin} style={styles.aLink}>{"Username o Password dimenticati?"}</a>
-                        </div>
+                    <bootstrap.Button
+                        block
+                        className="access-button"
+                        onClick={this.login}
+                        style={styles.accessButton}
+                    >
+                        {"ACCEDI"}
+                    </bootstrap.Button>
+                    {this.renderError()}
+                    <components.Spacer direction="v" size={10} />
+                    <div className="text-center" style={styles.popupLabel}>
+                        <a onClick={this.lostPasswordToLogin} style={styles.aLink}>{"Username o Password dimenticati?"}</a>
                     </div>
                 </div>
-                ) : null;
-        } else {
-            return this.props.isOpen ? (
-                <div style={styles.overlay}>
-                    <Radium.Style
-                        rules={{
-                            ".form-group": {
-                                marginBottom: "-1px"
-                            },
-                            ".input-password": {
-                                marginBottom: "40px",
-                                borderTopLeftRadius: 0
-                            },
-                            ".form-signin-email": {
-                                borderBottomRightRadius: 0
-                            },
-                            ".form-signin-psw": {
-                                borderTopRightRadius: 0
-                            },
-                            ".input-group": {
-                                borderTopLeftRadius: 0
-                            },
-                            ".access-button": {
-                                background: colors.primary
-                            },
-                            ".access-button:hover": {
-                                background: colors.buttonHover
-                            },
-                            ".access-button:active": {
-                                background: colors.buttonHover
-                            }
-                        }}
-                    />
+            </div>
+        );
+    },
+    renderRequestPasswordPage: function () {
+        return (
+            <div style={styles.overlay}>
+                {this.renderStyle()}
+                <span className="text-center" style={styles.textTitlePosition}>
+                    <h1 style={styles.titleLabel}>{"Energia alla tua Energia"}</h1>
+                    <h4 style={styles.h4PasswordLostLabel}>{"Innowatio"}</h4>
+                    <h4 style={styles.h4PasswordLostLabel}>{"Username o Password dimenticati?"}</h4>
+                </span>
+                <div style={styles.inputsContainer}>
+                    {this.renderEmailInput()}
+                    <bootstrap.Button
+                        block
+                        className="access-button"
+                        onClick={this.passwordLost}
+                        style={styles.accessButton}
+                    >
+                        {"INVIA"}
+                    </bootstrap.Button>
+                    {this.renderMailError()}
                     <span className="text-center" style={styles.textTitlePosition}>
-                        <h1 style={styles.titleLabel}>{"Energia alla tua Energia"}</h1>
-                        <h4 style={styles.h4PasswordLostLabel}>{"Innowatio"}</h4>
-                        <h4 style={styles.h4PasswordLostLabel}>{"Username o Password dimenticati?"}</h4>
+                        <h6 style={styles.h4PasswordLostLabel}>{"Riceverai le nuove credenziali all'indirizzo e-mail indicato"}</h6>
                     </span>
-                    <div style={styles.inputsContainer}>
-                        <bootstrap.Input
-                            addonBefore={<components.Icon icon="user" style={styles.groupIcon}/>}
-                            className="form-signin-email"
-                            placeholder="Email"
-                            ref="email"
-                            style={styles.inputLabel}
-                            type="email">
-                        </bootstrap.Input>
-                        <bootstrap.Button
-                            block
-                            className="access-button"
-                            onClick={""}
-                            style={styles.accessButton}
-                        >
-                            {"INVIA"}
-                        </bootstrap.Button>
-                        <span className="text-center" style={styles.textTitlePosition}>
-                            <h6 style={styles.h4PasswordLostLabel}>{"Riceverai le nuove credenziali all'indirizzo e-mail indicato"}</h6>
-                        </span>
-                        {this.renderError()}
-                    </div>
+                </div>
+            </div>
+        )
+    },
+    renderSentPasswordPage: function () {
+        return (
+            <div style={styles.overlay}>
+                {this.renderStyle()}
+                <span className="text-center" style={styles.textTitlePosition}>
+                    <h1 style={styles.titleLabel}>{"Energia alla tua Energia"}</h1>
+                    <h4 style={styles.h4PasswordLostLabel}>{"Innowatio"}</h4>
+                    <h4 style={styles.h4PasswordLostLabel}>
+                        {"Abbiamo mandato una mail all'indirizzo selezionato per il reset della password."}
+                    </h4>
+                </span>
+                <div style={styles.inputsContainer}>
+                    <bootstrap.Button
+                        block
+                        className="access-button"
+                        onClick={this.lostPasswordToLogin}
+                        style={styles.accessButton}
+                    >
+                        {"TORNA ALLA LOGIN"}
+                    </bootstrap.Button>
+                </div>
+            </div>
+        )
+    },
+    render: function () {
+        if (!this.state.lostPassword) {
+            return this.props.isOpen ? (
+                <div>
+                    {this.renderLoginPage()}
                 </div>
             ) : null;
+        } else {
+            if (!this.state.passwordSent) {
+                return this.props.isOpen ? (
+                    <div>
+                        {this.renderRequestPasswordPage()}
+                    </div>
+            ) : null;
+            } else {
+                return this.props.isOpen ? (
+                    <div>
+                        {this.renderSentPasswordPage()}
+                    </div>
+            ) : null;
+            }
         }
     }
 });
