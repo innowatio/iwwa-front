@@ -141,7 +141,7 @@ var LoginModal = React.createClass({
                                 borderTopLeftRadius: 0
                             },
                             ".access-button": {
-                                backgroundImage: "radial-gradient(circle, #d9d9e5 15px, #9b9fbc 50px, #6c719a 100px);"
+                                background: colors.primary
                             },
                             ".access-button:hover": {
                                 background: colors.buttonHover
@@ -216,7 +216,7 @@ var LoginModal = React.createClass({
                                 borderTopLeftRadius: 0
                             },
                             ".access-button": {
-                                backgroundImage: "radial-gradient(circle, #d9d9e5 15px, #9b9fbc 50px, #6c719a 100px);"
+                                background: colors.primary
                             },
                             ".access-button:hover": {
                                 background: colors.buttonHover
