@@ -63,7 +63,8 @@ var styles = {
         fontSize: "15px"
     },
     errorAlert: {
-        marginTop: "16px"
+        marginTop: "16px",
+        textAlign: "center"
     }
 };
 
