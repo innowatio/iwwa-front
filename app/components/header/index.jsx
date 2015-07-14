@@ -28,7 +28,7 @@ var Header = React.createClass({
         return (
             <div style={styles.base}>
                 <span>
-                    {"innowatio"}
+                    {"Innowatio"}
                 </span>
                 <span>
                     <components.Icon
