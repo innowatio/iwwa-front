@@ -15,7 +15,7 @@ var MultiselectElement = React.createClass({
         ]).isRequired,
         // getKey: React.PropTypes.func,
         getLabel: React.PropTypes.func,
-        // onChange: React.PropTypes.func.isRequired,
+        onChange: React.PropTypes.func.isRequired,
         title: React.PropTypes.string,
         // value: React.PropTypes.any
         getData: React.PropTypes.array
@@ -48,6 +48,9 @@ var MultiselectElement = React.createClass({
     render: function () {
         var items = this.props.allowedValues.map(this.createArrayOfData);
         return (
+            /*
+            * DA AGGIUNGERE L'onChange!!!!!!!
+            */
             <div>
                 <ReactWidget.Multiselect
                     data={this.props.getData}
