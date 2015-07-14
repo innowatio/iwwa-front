@@ -75,13 +75,14 @@ var Chart = React.createClass({
         return (
             <div>
                 <bootstrap.Col sm={12} style={styles.colVerticalPadding}>
-                    <span>
+                    <span style="width:100%">
                         <components.ButtonGroupSelect
                             allowedValues={valori}
                             getKey={R.prop("key")}
                             getLabel={R.prop("label")}
                             {...valoreInputProps}
                         />
+                        <components.DatepickerModal />
                     </span>
                     <span className="pull-right">
                         <components.DropdownSelect
