@@ -89,19 +89,18 @@ var LoginModal = React.createClass({
         this.setState({
             mailError: true
         });
-        console.log(this.state.mailError);
     },
     login: function () {
         var credentials = {
-            email: this.refs.email.getValue(),
-            password: this.refs.password.getValue()
+            email: this.refs.login.refs.email.getValue(),
+            password: this.refs.login.refs.password.getValue()
         };
         this.setLoginError(null);
         this.props.asteroid.login(credentials).catch(this.setLoginError);
     },
     passwordLost: function () {
         var credentials = {
-            email: this.refs.email.getValue(),
+            email: this.refs.sendMail.refs.email.getValue()
         };
         this.setPasswordLostError(null);
         (credentials.email.indexOf("@")>0) ?
@@ -157,163 +156,30 @@ var LoginModal = React.createClass({
             </bootstrap.Alert>
         ) : null;
     },
-    renderStyle: function () {
-        return (
-            <Radium.Style
-                rules={{
-                    ".form-group": {
-                        marginBottom: "-1px"
-                    },
-                    ".input-password": {
-                        marginBottom: "40px",
-                        borderTopLeftRadius: 0
-                    },
-                    ".form-signin-email": {
-                        borderBottomRightRadius: 0
-                    },
-                    ".form-signin-psw": {
-                        borderTopRightRadius: 0
-                    },
-                    ".input-group": {
-                        borderTopLeftRadius: 0
-                    },
-                    ".access-button": {
-                        background: colors.primary
-                    },
-                    ".access-button:hover": {
-                        background: colors.buttonHover
-                    },
-                    ".access-button:active": {
-                        background: colors.buttonHover
-                    }
-                }}
-            />
-        );
-    },
-    renderEmailInput: function () {
-        return (
-            <bootstrap.Input
-                addonBefore={<components.Icon icon="user" style={styles.groupIcon}/>}
-                className="form-signin-email"
-                placeholder="Email"
-                ref="email"
-                style={styles.inputLabel}
-                type="email"
-                required>
-            </bootstrap.Input>
-        );
-    },
-    renderLoginPage: function () {
-        return (
-            <div style={styles.overlay}>
-                {this.renderStyle()}
-                <span className="text-center" style={styles.textTitlePosition}>
-                    <h1 style={styles.titleLabel}>{"Energia alla tua Energia"}</h1>
-                    <h4 style={styles.h4Label}>{"Innowatio"}</h4>
-                </span>
-                <div style={styles.inputsContainer}>
-                    {this.renderEmailInput()}
-                    <div className="input-password">
-                        <bootstrap.Input
-                            addonBefore={
-                                <span className="iconPsw">
-                                    <components.Icon className="iconPsw" icon="lock" style={styles.groupIcon}/>
-                                </span>
-                                }
-                            className="form-signin-psw"
-                            placeholder="Password"
-                            ref="password"
-                            style={styles.inputLabel}
-                            type="password"
-                        />
-                    </div>
-                    <bootstrap.Button
-                        block
-                        className="access-button"
-                        onClick={this.login}
-                        style={styles.accessButton}
-                    >
-                        {"ACCEDI"}
-                    </bootstrap.Button>
-                    {this.renderError()}
-                    <components.Spacer direction="v" size={10} />
-                    <div className="text-center" style={styles.popupLabel}>
-                        <a onClick={this.lostPasswordToLogin} style={styles.aLink}>{"Username o Password dimenticati?"}</a>
-                    </div>
-                </div>
-            </div>
-        );
-    },
-    renderRequestPasswordPage: function () {
-        return (
-            <div style={styles.overlay}>
-                {this.renderStyle()}
-                <span className="text-center" style={styles.textTitlePosition}>
-                    <h1 style={styles.titleLabel}>{"Energia alla tua Energia"}</h1>
-                    <h4 style={styles.h4PasswordLostLabel}>{"Innowatio"}</h4>
-                    <h4 style={styles.h4PasswordLostLabel}>{"Username o Password dimenticati?"}</h4>
-                </span>
-                <div style={styles.inputsContainer}>
-                    {this.renderEmailInput()}
-                    <bootstrap.Button
-                        block
-                        className="access-button"
-                        onClick={this.passwordLost}
-                        style={styles.accessButton}
-                    >
-                        {"INVIA"}
-                    </bootstrap.Button>
-                    {this.renderMailError()}
-                    <span className="text-center" style={styles.textTitlePosition}>
-                        <h6 style={styles.h4PasswordLostLabel}>{"Riceverai le nuove credenziali all'indirizzo e-mail indicato"}</h6>
-                    </span>
-                </div>
-            </div>
-        )
-    },
-    renderSentPasswordPage: function () {
-        return (
-            <div style={styles.overlay}>
-                {this.renderStyle()}
-                <span className="text-center" style={styles.textTitlePosition}>
-                    <h1 style={styles.titleLabel}>{"Energia alla tua Energia"}</h1>
-                    <h4 style={styles.h4PasswordLostLabel}>{"Innowatio"}</h4>
-                    <h4 style={styles.h4PasswordLostLabel}>
-                        {"Abbiamo mandato una mail all'indirizzo selezionato per il reset della password."}
-                    </h4>
-                </span>
-                <div style={styles.inputsContainer}>
-                    <bootstrap.Button
-                        block
-                        className="access-button"
-                        onClick={this.lostPasswordToLogin}
-                        style={styles.accessButton}
-                    >
-                        {"TORNA ALLA LOGIN"}
-                    </bootstrap.Button>
-                </div>
-            </div>
-        )
-    },
     render: function () {
         if (!this.state.lostPassword) {
             return this.props.isOpen ? (
-                <div>
-                    {this.renderLoginPage()}
-                </div>
+                <components.LoginPage
+                    errorMail={this.renderError()}
+                    lostPassword={this.lostPasswordToLogin}
+                    onChange={this.login}
+                    ref="login"
+                />
             ) : null;
         } else {
             if (!this.state.passwordSent) {
                 return this.props.isOpen ? (
-                    <div>
-                        {this.renderRequestPasswordPage()}
-                    </div>
+                    <components.RequestPasswordPage
+                        errorMail={this.renderMailError()}
+                        onChange={this.passwordLost}
+                        ref="sendMail"
+                    />
             ) : null;
             } else {
                 return this.props.isOpen ? (
-                    <div>
-                        {this.renderSentPasswordPage()}
-                    </div>
+                    <components.SentPasswordPage
+                        onChange={this.lostPasswordToLogin}
+                    />
             ) : null;
             }
         }
