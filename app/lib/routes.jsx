@@ -8,6 +8,7 @@ module.exports = (
     <Router.Router history={BrowserHistory.history}>
         <Router.Route component={views.Root} name="root" path="/">
             <Router.Route component={views.Chart} name="chart" path="chart/" />
+            <Router.Route component={views.Home} name="home" path="home/" />
         </Router.Route>
     </Router.Router>
 );
