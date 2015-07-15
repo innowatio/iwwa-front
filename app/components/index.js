@@ -1,6 +1,6 @@
 exports.Button            = require("./button/");
 exports.ButtonGroupSelect = require("./button-group-select/");
-exports.DatepickerModal   = require("./datepicker-modal/");
+exports.DatefilterModal   = require("./datefilter-modal/");
 exports.DropdownSelect    = require("./dropdown-select/");
 exports.Header            = require("./header/");
 exports.HistoricalGraph   = require("./historical-graph/");

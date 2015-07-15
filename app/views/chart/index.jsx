@@ -49,6 +49,9 @@ var Chart = React.createClass({
             {label: "Previsionale 7gg", key: "realeMeno7"}
         ];
     },
+    openModal: function () {
+        this.refs.datefilterModal.open();
+    },
     render: function () {
         // Sito
         var siti = this.props.collections.get("siti") || Immutable.Map();
@@ -71,7 +74,7 @@ var Chart = React.createClass({
         return (
             <div>
                 <bootstrap.Col sm={12} style={styles.colVerticalPadding}>
-                    <span style="width:100%">
+                    <span style="width:50%">
                         <components.ButtonGroupSelect
                             allowedValues={valori}
                             getKey={R.prop("key")}
@@ -79,7 +82,11 @@ var Chart = React.createClass({
                             multi={true}
                             {...valoreInputProps}
                         />
-                        <components.DatepickerModal />
+                        <components.Spacer direction="h" size={10} />
+                        <bootstrap.Button onClick={this.openModal} >
+                            {"Compara per data"}
+                        </bootstrap.Button>
+                        <components.DatefilterModal ref="datefilterModal"/>
                     </span>
                     <span className="pull-right">
                         <components.DropdownSelect
