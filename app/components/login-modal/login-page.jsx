@@ -60,7 +60,8 @@ var styles = {
     },
     aLink: {
         color: colors.white,
-        fontSize: "15px"
+        fontSize: "15px",
+        cursor: "pointer"
     },
     errorAlert: {
         marginTop: "16px"
