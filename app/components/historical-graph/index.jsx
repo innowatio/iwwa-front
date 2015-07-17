@@ -1,3 +1,4 @@
+var moment     = require("moment");
 var Radium     = require("radium");
 var R          = require("ramda");
 var React      = require("react");
@@ -28,7 +29,7 @@ var HistoricalGraph = React.createClass({
                     R.map(function (valore) {
                         return [misura.get(valore.key), 0];
                     }),
-                    R.prepend(new Date(misura.get("data")))
+                    R.prepend(moment(misura.get("data")).toDate())
                 )(self.props.valori);
             })
             .sort(function (m1, m2) {

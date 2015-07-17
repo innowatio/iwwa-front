@@ -83,19 +83,13 @@ var Chart = React.createClass({
                     <span className="pull-right">
                         <components.MultiselectElement
                             allowedValues={siti}
+                            getKey={getSitoKey}
                             getLabel={getSitoLabel}
                             title="Punto di misurazione"
                             {...sitoInputProps}
                         />
                     </span>
                     <span className="pull-right">
-                        <components.DropdownSelect
-                            allowedValues={siti}
-                            getKey={getSitoKey}
-                            getLabel={getSitoLabel}
-                            title="Punto di misurazione"
-                            {...sitoInputProps}
-                        />
                         <components.Spacer direction="h" size={10} />
                         <components.DropdownSelect
                             allowedValues={tipologie}

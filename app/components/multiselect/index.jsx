@@ -1,3 +1,4 @@
+var R           = require("ramda");
 var Radium      = require("radium");
 var React       = require("react");
 var bootstrap   = require("react-bootstrap");
@@ -16,48 +17,46 @@ var MultiselectElement = React.createClass({
         // getKey: React.PropTypes.func,
         getLabel: React.PropTypes.func,
         onChange: React.PropTypes.func.isRequired,
-        title: React.PropTypes.string,
-        // value: React.PropTypes.any
-        getData: React.PropTypes.array
+        title: React.PropTypes.string
+        // value: React.PropTypes.array,
+
     },
+    mixins: [React.addons.PureRenderMixin],
     getDefaultProps: function () {
         var defaultGetter = function (allowedItem) {
             return allowedItem.toString();
         };
         return {
             getKey: defaultGetter,
-            getLabel: defaultGetter,
-            getData: []
+            getLabel: defaultGetter
         };
     },
-    shouldComponentUpdate: function (nextProps) {
-        return !(
-            this.props.allowedValues === nextProps.allowedValues &&
-            // this.props.getKey === nextProps.getKey &&
-            this.props.getLabel === nextProps.getLabel &&
-            this.props.title === nextProps.title &&
-            this.props.value === nextProps.value
-        );
+    getInitialState: function () {
+        return {
+            value: []
+        };
     },
-    createArrayOfData: function (allowedValue) {
-        var items = this.props.getLabel(allowedValue);
-        return (
-            this.props.getData.push(items)
-        );
-    },
+    // onChange: function (value) {
+    //     if (this.state.value.length < 3)
+    //     {
+    //         this.setState({ value: value })
+    //         this.props.onChange(value)
+    //     }
+    // }, // to add value
     render: function () {
-        var items = this.props.allowedValues.map(this.createArrayOfData);
+        var data = this.props.allowedValues.toList().toJS();
+        /*
+        *   Add default data value
+        */
         return (
-            /*
-            * DA AGGIUNGERE L'onChange!!!!!!!
-            */
             <div>
                 <ReactWidget.Multiselect
-                    data={this.props.getData}
+                    data={data}
                     duration={250}
                     filter="contains"
-                    onChange={""}
+                    onChange={this.props.onChange}
                     placeholder={this.props.title}
+                    valueField="_id" textField={item => item.societa + " " + item.idCoin}
                 />
             </div>
         );

@@ -10,9 +10,10 @@ exports.sito = function (siti) {
                 Immutable.Map()
             );
         },
-        stringify: function (value) {
-            return value.get("_id");
-        }
+        stringify:  R.pipe(
+            R.map(R.prop("_id")),
+            R.join(",")
+        )
     };
 };
 
