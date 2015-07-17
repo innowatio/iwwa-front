@@ -63,6 +63,9 @@ var styles = {
     errorAlert: {
         marginTop: "16px",
         textAlign: "center"
+    },
+    iconForm: {
+        borderBottomLeftRadius: 0
     }
 };
 

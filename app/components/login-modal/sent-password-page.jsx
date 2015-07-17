@@ -4,7 +4,7 @@ var bootstrap = require("react-bootstrap");
 
 var components = require("components");
 var colors     = require("lib/colors");
-var loginStyle = require("components/login-modal/login-modal-style.js");
+var loginStyle = require("components/login-modal/login-style.js");
 
 var SentPasswordPage = React.createClass({
     propTypes: {

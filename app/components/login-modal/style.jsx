@@ -14,6 +14,9 @@ var StyleLogin = React.createClass({
                     ".form-group": {
                         marginBottom: "-1px"
                     },
+                    ".input-group": {
+                        opacity: 0.7
+                    },
                     ".input-password": {
                         marginBottom: "40px",
                         borderTopLeftRadius: 0
@@ -23,9 +26,6 @@ var StyleLogin = React.createClass({
                     },
                     ".form-signin-psw": {
                         borderTopRightRadius: 0
-                    },
-                    ".input-group": {
-                        borderTopLeftRadius: 0
                     },
                     ".access-button": {
                         background: colors.primary
