@@ -65,6 +65,7 @@
     "font-awesome": "^4.3.0",
     "immutable": "^3.7.4",
     "lodash.throttle": "^3.0.4",
+    "moment": "^2.10.3",
     "radium": "^0.13.2",
     "react": "^0.13.3",
     "react-bootstrap": "^0.23.7",

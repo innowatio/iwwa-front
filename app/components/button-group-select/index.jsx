@@ -38,17 +38,19 @@ var ButtonGroupSelect = React.createClass({
         };
     },
     isActiveMulti: function (allowedValue) {
+        var keys = this.props.value.map(this.props.getKey);
+        var key = this.props.getKey(allowedValue);
         return (
-            R.is(Immutable.List, this.props.value) ?
-            this.props.value.contains(allowedValue) :
-            R.contains(allowedValue, this.props.value)
+            R.is(Immutable.List, keys) ?
+            keys.contains(key) :
+            R.contains(key, keys)
         );
     },
     isActive: function (allowedValue) {
         return (
             this.props.multi ?
             this.isActiveMulti(allowedValue) :
-            allowedValue === this.props.value
+            this.props.getKey(allowedValue) === this.props.getKey(this.props.value)
         );
     },
     onChangeMulti: function (allowedValue) {

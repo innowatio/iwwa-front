@@ -62,7 +62,10 @@ describe("The `ButtonGroupSelect` component ", function () {
             />
         );
         TestUtils.scryRenderedComponentsWithType(selectNode, Button);
-        expect(getKeySpy.callCount).to.equal(allowedValues.length);
+        // we call get key 3 times: 1 when we pass the key prop on buttons creation
+        // 2 more when we check if the button `isActive`
+        var callsPerValue = 3;
+        expect(getKeySpy.callCount).to.equal(allowedValues.length * callsPerValue);
     });
 
     it("should render a button in the button group for each of the `allowedValues` passed as props", function () {
