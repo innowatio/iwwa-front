@@ -36,13 +36,6 @@ var MultiselectElement = React.createClass({
             value: []
         };
     },
-    // onChange: function (value) {
-    //     if (this.state.value.length < 3)
-    //     {
-    //         this.setState({ value: value })
-    //         this.props.onChange(value)
-    //     }
-    // }, // to add value
     render: function () {
         var data = this.props.allowedValues.toList().toJS();
         /*

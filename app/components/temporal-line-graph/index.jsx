@@ -12,11 +12,6 @@ var TemporalLineGraph = React.createClass({
         xLabel: React.PropTypes.string.isRequired,
         yLabel: React.PropTypes.string.isRequired
     },
-    getInitialState: function () {
-        return {
-            props: []
-        }
-    },
     componentDidMount: function () {
         this.drawGraph();
     },
