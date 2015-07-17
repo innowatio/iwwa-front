@@ -4,7 +4,7 @@ var bootstrap = require("react-bootstrap");
 
 var components = require("components");
 var colors     = require("lib/colors");
-var loginStyle = require("lib/login-modal-style")
+var loginStyle = require("components/login-modal/login-modal-style.js");
 
 var LoginModal = React.createClass({
     propTypes: {

@@ -1,5 +1,4 @@
 var colors   = require("lib/colors");
-var bkgImage = require("lib/image/image!background.jpg")
 
 var styles = {
     center: {
@@ -11,7 +10,9 @@ var styles = {
         left: "0px",
         height: "100%",
         width: "100%",
-        backgroundImage: ,
+        backgroundColor: colors.black,
+        backgroundImage: "url(/_assets/images/login-background.jpg)",
+        backgroundSize: "cover",
         zIndex: 1000
     },
     h4Label: {
