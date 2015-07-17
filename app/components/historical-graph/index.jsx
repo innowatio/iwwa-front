@@ -7,6 +7,11 @@ var components = require("components");
 
 var HistoricalGraph = React.createClass({
     propTypes: {
+        dateCompare: React.PropTypes.shape({
+            period: React.PropTypes.object,
+            dateOne: React.PropTypes.date,
+            dateTwo: React.PropTypes.date
+        }),
         misure: IPropTypes.map,
         sito: IPropTypes.map,
         tipologia: React.PropTypes.object,
@@ -40,6 +45,24 @@ var HistoricalGraph = React.createClass({
         return ["Data"].concat(
             R.map(R.prop("label"), this.props.valori)
         );
+    },
+    convertPeriodToDate: function (startingDate, periodString) {
+        var converter = {
+            week: function (date) {
+                date.setDate(date.getDate() + 7);
+                return date;
+            },
+            month: function (date) {
+                date.setMonth(date.getMonth() + 1);
+                return date;
+            },
+            quarter: function (date) {
+                date.setMonth(date.getMonth() + 3);
+                return date;
+            }
+        };
+        console.log(converter[periodString]);
+        return converter[periodString](startingDate);
     },
     render: function () {
         return (

@@ -1,6 +1,7 @@
 require("unit-setup.js");
 
 var Immutable = require("immutable");
+var moment    = require("moment");
 var R         = require("ramda");
 
 var DygraphCoordinate = require("lib/app-prop-types.js").DygraphCoordinate;
@@ -119,4 +120,27 @@ describe("The `getCoordinates` method of the HistoricalGraph component", functio
             });
     });
 
+});
+
+describe("The `convertPeriodToDate` method of the HistoricalGraph component", function () {
+
+    var convertPeriodToDate = HistoricalGraph.prototype.convertPeriodToDate;
+
+    it("should return the correct date if called with the `week` param", function () {
+        var date1 = moment("20151001", "YYYYMMDD").toDate();
+
+        expect(convertPeriodToDate(date1, "week")).to.be.eql(moment("20151008", "YYYYMMDD").toDate());
+    });
+
+    it("should return the correct date if called with the `month` param", function () {
+        var date1 = moment("20151001", "YYYYMMDD").toDate();
+
+        expect(convertPeriodToDate(date1, "month")).to.be.eql(moment("20151101", "YYYYMMDD").toDate());
+    });
+
+    it("should return the correct date if called with the `quarter` param", function () {
+        var date1 = moment("20151001", "YYYYMMDD").toDate();
+
+        expect(convertPeriodToDate(date1, "quarter")).to.be.eql(moment("20160101", "YYYYMMDD").toDate());
+    });
 });
