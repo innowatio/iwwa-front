@@ -1,58 +1,109 @@
-var Immutable = require("immutable");
-var Radium    = require("radium");
-var R         = require("ramda");
-var React     = require("react");
-var Router    = require("react-router");
-var bootstrap = require("react-bootstrap");
+var Immutable  = require("immutable");
+var Radium     = require("radium");
+var R          = require("ramda");
+var React      = require("react");
+var bootstrap  = require("react-bootstrap");
+var IPropTypes = require("react-immutable-proptypes");
 
-var components = require("components");
-var styles     = require("lib/styles");
+var components       = require("components");
+var styles           = require("lib/styles");
+var QuerystringMixin = require("lib/querystring-mixin");
+var transformers     = require("./transformers.js");
+
+var getSitoKey = R.memoize(function (sito) {
+    return sito.get("_id");
+});
+var getSitoLabel = R.memoize(function (sito) {
+    return sito.get("societa") + " - " + sito.get("idCoin");
+});
 
 var Chart = React.createClass({
     propTypes: {
-        collections: React.PropTypes.instanceOf(Immutable.Map),
-        location: React.PropTypes.object
+        asteroid: React.PropTypes.object,
+        collections: IPropTypes.map
     },
-    mixins: [Router.Navigation],
-    changeQuery: function (name, value) {
-        this.replaceWith(
-            this.props.location.pathname,
-            R.assoc(name, value, this.props.location.query)
+    mixins: [QuerystringMixin],
+    componentDidMount: function () {
+        this.props.asteroid.on("connected", (function () {
+            this.props.asteroid.subscribe("siti");
+        }).bind(this));
+    },
+    componentWillReceiveProps: function (props) {
+        this.props.asteroid.subscribe(
+            "misureBySito",
+            R.path(["location", "query", "sito"], props)
         );
     },
-    bindToQueryParameter: function (name, defaultValue) {
-        return {
-            value: R.path(["location", "query", name], this.props) || defaultValue,
-            onChange: R.partial(this.changeQuery, name)
-        };
+    getTipologie: function () {
+        return [
+            {label: "Attiva", key: 1},
+            {label: "Potenza", key: 2},
+            {label: "Reattiva", key: 3}
+        ];
+    },
+    getValori: function () {
+        return [
+            {label: "Reale", key: "reale"},
+            {label: "Contrattuale", key: "contrattuale"},
+            {label: "Previsionale 1gg", key: "realeMeno1"},
+            {label: "Previsionale 7gg", key: "realeMeno7"}
+        ];
     },
     render: function () {
+        // Sito
+        var siti = this.props.collections.get("siti") || Immutable.Map();
+        var sitoInputProps = this.bindToQueryParameter(
+            "sito",
+            transformers.sito(siti)
+        );
+        // Tipologia
+        var tipologie = this.getTipologie();
+        var tipologiaInputProps = this.bindToQueryParameter(
+            "tipologia",
+            transformers.tipologia(tipologie)
+        );
+        // Valore
+        var valori = this.getValori();
+        var valoreInputProps = this.bindToQueryParameter(
+            "valore",
+            transformers.valore(valori)
+        );
         return (
             <div>
                 <bootstrap.Col sm={12} style={styles.colVerticalPadding}>
                     <span>
                         <components.ButtonGroupSelect
-                            allowedValues={["Contrattuale", "Previsionale", "Reale"]}
-                            {...this.bindToQueryParameter("tipologia", "Contrattuale")}
+                            allowedValues={valori}
+                            getKey={R.prop("key")}
+                            getLabel={R.prop("label")}
+                            multi={true}
+                            {...valoreInputProps}
                         />
                     </span>
                     <span className="pull-right">
                         <components.DropdownSelect
-                            allowedItems={[ "Coin", "OVS", "Iperal Fuentes"]}
+                            allowedValues={siti}
+                            getKey={getSitoKey}
+                            getLabel={getSitoLabel}
                             title="Punto di misurazione"
-                            {...this.bindToQueryParameter("punto", "Coin")}
+                            {...sitoInputProps}
                         />
                         <components.Spacer direction="h" size={10} />
                         <components.DropdownSelect
-                            allowedItems={["Corrente", "Potenza attiva", "Potenza reattiva", "Voltaggio"]}
+                            allowedValues={tipologie}
+                            getKey={R.prop("key")}
+                            getLabel={R.prop("label")}
                             title="Quantità di interesse"
-                            {...this.bindToQueryParameter("quantita", "Corrente")}
+                            {...tipologiaInputProps}
                         />
                     </span>
                 </bootstrap.Col>
-                <bootstrap.Col sm={12}>
-                    <components.TemporalLineChart
-                        coordinates={[]}
+                <bootstrap.Col sm={12} style={{height: "500px"}}>
+                    <components.HistoricalGraph
+                        misure={this.props.collections.get("misure") || Immutable.Map()}
+                        sito={sitoInputProps.value}
+                        tipologia={tipologiaInputProps.value}
+                        valori={valoreInputProps.value}
                     />
                 </bootstrap.Col>
             </div>

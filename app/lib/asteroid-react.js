@@ -1,9 +1,13 @@
+var throttle = require("lodash.throttle");
+
 exports.getControllerViewMixin = function getControllerViewMixin () {
     var self = this;
     return {
         getInitialState: function () {
             return {
-                collections: self.collections
+                collections: self.collections,
+                userId: self.userId,
+                user: self.collections.getIn(["users", self.userId])
             };
         },
         setUserId: function () {
@@ -12,11 +16,11 @@ exports.getControllerViewMixin = function getControllerViewMixin () {
                 user: self.collections.getIn(["users", self.userId])
             });
         },
-        updateCollections: function () {
+        updateCollections: throttle(function () {
             this.setState({
                 collections: self.collections
             });
-        },
+        }, 500),
         componentDidMount: function () {
             self.on("collections:change", this.updateCollections);
             self.on("loggedIn", this.setUserId);

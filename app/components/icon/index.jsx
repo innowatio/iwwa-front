@@ -3,6 +3,7 @@ var React  = require("react");
 
 var Icon = React.createClass({
     propTypes: {
+        className: React.PropTypes.string,
         color: React.PropTypes.string,
         icon: React.PropTypes.string.isRequired,
         onClick: React.PropTypes.func,
@@ -24,7 +25,8 @@ var Icon = React.createClass({
             // Fontawesome icon class
             ("fa fa-" + this.props.icon),
             // Fontawesome spin class
-            (this.props.spin ? "fa-spin" : "")
+            (this.props.spin ? "fa-spin" : ""),
+            this.props.className || ""
         ].join(" ");
     },
     getStyle: function () {

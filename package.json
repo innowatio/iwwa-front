@@ -9,7 +9,7 @@
     "lint": "node_modules/.bin/eslint app/**/*.js app/**/*.jsx",
     "generate-reports": "node scripts/generate-reports.js",
     "publish-reports": "node scripts/publish-reports.js",
-    "prestart": "npm build",
+    "prestart": "node_modules/.bin/gulp build",
     "start": "node scripts/server.js",
     "test": "NODE_PATH=app:test node_modules/.bin/mocha --compilers jsx:babel/register test/unit/**/*unit*"
   },
@@ -29,6 +29,7 @@
     "bluebird": "^2.9.30",
     "browser-sync": "^2.7.12",
     "chai": "^3.0.0",
+    "dev-ip": "^1.0.1",
     "eslint": "^0.23.0",
     "eslint-html-reporter": "^0.4.11",
     "eslint-plugin-react": "^2.5.2",
@@ -60,13 +61,16 @@
     "bootstrap": "^3.3.5",
     "color": "^0.10.1",
     "compression": "^1.5.0",
+    "dygraphs": "^1.1.1",
     "express": "^4.13.0",
     "font-awesome": "^4.3.0",
     "immutable": "^3.7.4",
+    "lodash.throttle": "^3.0.4",
     "radium": "^0.13.2",
     "ramda": "^0.16.0",
     "react": "^0.13.3",
     "react-bootstrap": "^0.23.5",
+    "react-immutable-proptypes": "^1.0.0",
     "react-router": "^1.0.0-beta3"
   }
 }

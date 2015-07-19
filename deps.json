@@ -10,11 +10,13 @@
     "js": [
         "asteroid",
         "immutable",
+        "lodash.throttle",
         "radium",
         "ramda",
         "react",
         "react/addons",
         "react-bootstrap",
+        "react-immutable-proptypes",
         "react-router",
         "react-router/lib/BrowserHistory",
         "vis/dist/vis.js"

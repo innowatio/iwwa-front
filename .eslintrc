@@ -8,6 +8,8 @@
         "node": true
     },
     "globals": {
+        "BACKEND_HOST": true,
+        "Dygraph": true,
         "expect": true,
         "proxyquire": true,
         "React": true,
