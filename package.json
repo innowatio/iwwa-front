@@ -60,6 +60,7 @@
     "asteroid": "mondora/asteroid#ffd16f",
     "bootstrap": "^3.3.5",
     "compression": "^1.5.0",
+    "dygraphs": "^1.1.1",
     "express": "^4.13.0",
     "font-awesome": "^4.3.0",
     "immutable": "^3.7.4",

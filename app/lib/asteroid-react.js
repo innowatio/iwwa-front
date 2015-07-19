@@ -5,7 +5,9 @@ exports.getControllerViewMixin = function getControllerViewMixin () {
     return {
         getInitialState: function () {
             return {
-                collections: self.collections
+                collections: self.collections,
+                userId: self.userId,
+                user: self.collections.getIn(["users", self.userId])
             };
         },
         setUserId: function () {
