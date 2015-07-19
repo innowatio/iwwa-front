@@ -47,11 +47,17 @@ proGulp.task("buildAppScripts", (function () {
             filename: targetDir + "app.js"
         },
         module: {
-            loaders: [{
-                test: /\.jsx?$/,
-                exclude: /node_modules/,
-                loader: "babel"
-            }]
+            loaders: [
+                {
+                    test: /\.jsx?$/,
+                    exclude: /node_modules/,
+                    loader: "babel"
+                },
+                {
+                    test: /\.json$/,
+                    loader: "json"
+                }
+            ]
         },
         resolve: {
             root: path.join(__dirname, "app"),

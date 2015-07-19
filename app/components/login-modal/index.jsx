@@ -1,10 +1,58 @@
-var Radium    = require("radium");
-var React     = require("react");
-var bootstrap = require("react-bootstrap");
+var Radium = require("radium");
+var React  = require("react");
 
-var components = require("components");
-var colors     = require("lib/colors");
-var loginStyle = require("components/login-modal/login-style.js");
+var components        = require("components");
+var colors            = require("lib/colors");
+var LoginView         = require("./login-view.jsx");
+var PasswordResetView = require("./password-reset-view.jsx");
+
+var styles = {
+    overlay: {
+        position: "fixed",
+        top: "0px",
+        left: "0px",
+        height: "100%",
+        width: "100%",
+        backgroundColor: colors.black,
+        backgroundImage: "url(/_assets/images/login-background.jpg)",
+        backgroundSize: "cover",
+        zIndex: 1000
+    },
+    body: {
+        width: "100%",
+        color: colors.white,
+        fontWeight: "lighter",
+        position: "absolute",
+        top: "10%"
+    },
+    title: {
+        container: {
+            width: "100%",
+            textAlign: "center"
+        },
+        logo: {
+            width: "250px"
+        },
+        firstLine: {
+            fontSize: "48px"
+        },
+        secondLine: {
+            fontSize: "24px"
+        }
+    },
+    activeView: {
+        width: "50%",
+        position: "relative",
+        left: "25%"
+    },
+    viewSwitcher: {
+        cursor: "pointer",
+        textAlign: "center",
+        ":hover": {
+            textDecoration: "underline"
+        }
+    }
+};
 
 var LoginModal = React.createClass({
     propTypes: {
@@ -13,54 +61,14 @@ var LoginModal = React.createClass({
     },
     getInitialState: function () {
         return {
-            loginError: null,
-            mailError: null,
-            lostPassword: false,
-            passwordSent: false
+            activeView: "login"
         };
     },
-    setLoginError: function (error) {
-        this.setState({
-            loginError: error
-        });
+    componentWillMount: function () {
+        this.attachModalOpenClass(this.props);
     },
-    setPasswordLostError: function (error) {
-        this.setState({
-            mailError: true
-        });
-    },
-    login: function () {
-        var credentials = {
-            email: this.refs.login.refs.email.getValue(),
-            password: this.refs.login.refs.password.getValue()
-        };
-        this.setLoginError(null);
-        this.props.asteroid.login(credentials).catch(this.setLoginError);
-    },
-    passwordLost: function () {
-        var credentials = {
-            email: this.refs.sendMail.refs.email.getValue()
-        };
-        this.setPasswordLostError(null);
-        (credentials.email.indexOf("@")>0) ?
-        this.setState({
-            passwordSent: !this.state.passwordSent
-        }) :
-        this.setPasswordLostError
-    },
-    lostPasswordToLogin: function () {
-        !this.state.passwordSent ?
-            this.setState({
-                lostPassword: !this.state.lostPassword,
-                mailError: null,
-                loginError: null
-            }) :
-            this.setState({
-                lostPassword: !this.state.lostPassword,
-                passwordSent: !this.state.passwordSent,
-                mailError: null,
-                loginError: null
-            });
+    componentWillReceiveProps: function (props) {
+        this.attachModalOpenClass(props);
     },
     attachModalOpenClass: function (props) {
         if (props.isOpen) {
@@ -69,59 +77,52 @@ var LoginModal = React.createClass({
             document.body.classList.remove("modal-open");
         }
     },
-    componentWillMount: function () {
-        this.attachModalOpenClass(this.props);
+    switchView: function () {
+        this.setState({
+            activeView: (
+                this.state.activeView === "login" ?
+                "passwordReset" :
+                "login"
+            )
+        });
     },
-    componentWillReceiveProps: function (props) {
-        this.attachModalOpenClass(props);
+    renderActiveView: function () {
+        return (
+            this.state.activeView === "login" ?
+            <LoginView asteroid={this.props.asteroid} /> :
+            <PasswordResetView asteroid={this.props.asteroid} />
+        );
     },
-    renderMailError: function () {
-        return this.state.mailError ? (
-            <bootstrap.Alert
-                bsStyle="danger"
-                style={loginStyle.errorAlert}
-            >
-                {"Hai sbagliato a inserire la mail!"}
-            </bootstrap.Alert>
-        ) : null;
-    },
-    renderError: function () {
-        return this.state.loginError ? (
-            <bootstrap.Alert
-                bsStyle="danger"
-                style={loginStyle.errorAlert}
-            >
-                {"Hai sbagliato a inserire mail o password!"}
-            </bootstrap.Alert>
-        ) : null;
+    renderViewSwitcherText: function () {
+        return (
+            this.state.activeView === "login" ?
+            "Password dimenticata?" :
+            "Torna alla login"
+        );
     },
     render: function () {
-        if (!this.state.lostPassword) {
-            return this.props.isOpen ? (
-                <components.LoginPage
-                    errorMail={this.renderError()}
-                    lostPassword={this.lostPasswordToLogin}
-                    onChange={this.login}
-                    ref="login"
-                />
-            ) : null;
-        } else {
-            if (!this.state.passwordSent) {
-                return this.props.isOpen ? (
-                    <components.RequestPasswordPage
-                        errorMail={this.renderMailError()}
-                        onChange={this.passwordLost}
-                        ref="sendMail"
-                    />
-            ) : null;
-            } else {
-                return this.props.isOpen ? (
-                    <components.SentPasswordPage
-                        onChange={this.lostPasswordToLogin}
-                    />
-            ) : null;
-            }
-        }
+        return this.props.isOpen ? (
+            <div style={styles.overlay}>
+                <div style={styles.body}>
+                    <div style={styles.title.container}>
+                        <div>
+                            <img src="/_assets/images/logo.png" style={styles.title.logo} />
+                        </div>
+                        <components.Spacer direction="v" size={32} />
+                        <div style={styles.title.firstLine}>{"Energia alla tua Energia"}</div>
+                        <div style={styles.title.secondLine}>{"Innowatio"}</div>
+                    </div>
+                    <components.Spacer direction="v" size={64} />
+                    <div style={styles.activeView}>
+                        {this.renderActiveView()}
+                    </div>
+                    <components.Spacer direction="v" size={16} />
+                    <div onClick={this.switchView} style={styles.viewSwitcher}>
+                        {this.renderViewSwitcherText()}
+                    </div>
+                </div>
+            </div>
+        ) : null;
     }
 });
 
