@@ -58,11 +58,17 @@ proGulp.task("buildAppScripts", (function () {
             filename: targetDir + "app.js"
         },
         module: {
-            loaders: [{
-                test: /\.jsx?$/,
-                exclude: /node_modules/,
-                loader: "babel"
-            }]
+            loaders: [
+                {
+                    test: /\.jsx?$/,
+                    exclude: /node_modules/,
+                    loader: "babel"
+                },
+                {
+                    test: /\.json$/,
+                    loader: "json"
+                }
+            ]
         },
         resolve: {
             root: path.join(__dirname, "app"),
@@ -84,6 +90,11 @@ proGulp.task("buildAppScripts", (function () {
     };
 })());
 
+proGulp.task("buildAppAssets", function () {
+    return gulp.src("app/assets/**/*")
+        .pipe(gulp.dest("builds/" + ENVIRONMENT + "/_assets/"));
+});
+
 proGulp.task("buildVendorStyles", function () {
     return gulp.src(deps.css)
         .pipe(gp.concat("vendor.css"))
@@ -99,6 +110,7 @@ proGulp.task("buildVendorFonts", function () {
 proGulp.task("build", proGulp.parallel([
     "buildMainHtml",
     "buildAppScripts",
+    "buildAppAssets",
     "buildVendorStyles",
     "buildVendorFonts"
 ]));
@@ -171,6 +183,10 @@ proGulp.task("setupWatchers", function () {
     gulp.watch(
         ["app/**/*.jsx", "app/**/*.js"],
         proGulp.parallel(["buildAppScripts", "runUnitTests"])
+    );
+    gulp.watch(
+        "app/assets/**/*",
+        proGulp.task("buildAppAssets")
     );
     gulp.watch(
         ["test/unit/**/*.jsx", "test/unit/**/*.js"],

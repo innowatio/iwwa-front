@@ -16,15 +16,15 @@ exports.DygraphCoordinate = function (props, propName) {
     var prop = props[propName];
     var x = prop[0];
     var ys = prop.slice(1);
-    if (!R.is(Date, x)) {
-        return new Error(propName + "[0] must be a date");
+    if (!R.is(Date, x) && !R.is(Number, x)) {
+        return new Error(propName + "[0] must be a date or a number");
     }
     return ys.reduce(function (error, y, index) {
         if (error) {
             return error;
         }
         return (
-            isArrayOfNumbers(y) && y.length === 2 ?
+            R.isNil(y) || (isArrayOfNumbers(y) && y.length === 2) ?
             null :
             new Error(propName + "[" + index + "] must be a 2-tuple of numbers")
         );

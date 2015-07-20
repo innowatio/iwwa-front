@@ -1,15 +1,16 @@
 require("unit-setup.js");
 
 var Immutable = require("immutable");
+var moment    = require("moment");
 var R         = require("ramda");
 
 var DygraphCoordinate = require("lib/app-prop-types.js").DygraphCoordinate;
 
-var HistoricalGraph = proxyquire("components/historical-graph/", {});
+var ValoriCompareGraph = proxyquire("components/historical-graph/valori-compare.jsx", {});
 
-describe("The `getCoordinates` method of the HistoricalGraph component", function () {
+describe("The `getCoordinates` method of the ValoriCompareGraph component", function () {
 
-    var getCoordinates = HistoricalGraph.prototype.getCoordinates;
+    var getCoordinates = ValoriCompareGraph.prototype.getCoordinates;
 
     var getRandomMonth = function () {
         return (Math.ceil(Math.random() * 100) % 12) + 1;
