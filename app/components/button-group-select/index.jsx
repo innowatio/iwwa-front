@@ -14,22 +14,15 @@ var ButtonGroupSelect = React.createClass({
         getLabel: React.PropTypes.func,
         multi: React.PropTypes.bool,
         onChange: React.PropTypes.func.isRequired,
-        value: function (props, propName, componentName) {
-            var validator = (
-                props.multi === true ?
-                React.PropTypes.oneOfType([
-                    React.PropTypes.array,
-                    IPropTypes.list
-                ]) :
-                React.PropTypes.any.isRequired
-            );
-            return validator(props, propName, componentName);
-        }
+        value: React.PropTypes.oneOfType([
+            React.PropTypes.array,
+            IPropTypes.list
+        ])
     },
     mixins: [React.addons.PureRenderMixin],
     getDefaultProps: function () {
-        var defaultGetter = function (allowedItem) {
-            return allowedItem.toString();
+        var defaultGetter = function (allowedValue) {
+            return allowedValue.toString();
         };
         return {
             multi: false,
@@ -38,17 +31,28 @@ var ButtonGroupSelect = React.createClass({
         };
     },
     isActiveMulti: function (allowedValue) {
+        var keys = this.props.value.map(this.props.getKey);
+        var key = this.props.getKey(allowedValue);
         return (
-            R.is(Immutable.List, this.props.value) ?
-            this.props.value.contains(allowedValue) :
-            R.contains(allowedValue, this.props.value)
+            R.is(Immutable.List, keys) ?
+            keys.contains(key) :
+            R.contains(key, keys)
+        );
+    },
+    isActiveSingle: function (allowedValue) {
+        var keys = this.props.value.map(this.props.getKey);
+        var key = this.props.getKey(allowedValue);
+        return (
+            R.is(Immutable.List, keys) ?
+            keys.first() === key :
+            keys[0] === key
         );
     },
     isActive: function (allowedValue) {
         return (
             this.props.multi ?
             this.isActiveMulti(allowedValue) :
-            allowedValue === this.props.value
+            this.isActiveSingle(allowedValue)
         );
     },
     onChangeMulti: function (allowedValue) {
@@ -73,11 +77,18 @@ var ButtonGroupSelect = React.createClass({
             );
         }
     },
+    onChangeSingle: function (allowedValue) {
+        this.props.onChange(
+            R.is(Immutable.List, this.props.value) ?
+            Immutable.List(allowedValue) :
+            [allowedValue]
+        );
+    },
     onChange: function (allowedValue) {
         return (
             this.props.multi ?
             this.onChangeMulti(allowedValue) :
-            this.props.onChange(allowedValue)
+            this.onChangeSingle(allowedValue)
         );
     },
     renderButtonOption: function (allowedValue) {

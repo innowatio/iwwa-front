@@ -6,9 +6,17 @@ var mkdirp      = require("mkdirp");
 var proGulp     = require("pro-gulp");
 var eslReporter = require("eslint-html-reporter");
 
+var rm = function (target) {
+    try {
+        sh("rm -r " + target);
+    } catch (e) {
+        console.log(e.message);
+    }
+};
+
 proGulp.task("generateMochaReport", function () {
     var targetDir = "./builds/_reports/unit-tests/";
-    sh("rm -r " + targetDir);
+    rm(targetDir);
     mkdirp.sync(targetDir);
     return gulp.src("./test/unit/**/*unit*")
         .pipe(gp.spawnMocha({
@@ -28,7 +36,7 @@ proGulp.task("generateMochaReport", function () {
 
 proGulp.task("generateEsLintReport", function () {
     var targetDir = "builds/_reports/eslint/";
-    sh("rm -r " + targetDir);
+    rm(targetDir);
     mkdirp.sync(targetDir);
     return gulp.src(["app/**/**.js", "app/**/**.jsx"])
         .pipe(gp.eslint())

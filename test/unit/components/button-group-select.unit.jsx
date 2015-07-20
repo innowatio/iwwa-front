@@ -37,7 +37,7 @@ describe("The `ButtonGroupSelect` component ", function () {
                 allowedValues={allowedValues}
                 getLabel={getLabelSpy}
                 onChange={R.identity}
-                value={allowedValues[0]}
+                value={allowedValues.slice(0, 1)}
             />
         );
         var buttonNodes = TestUtils.scryRenderedComponentsWithType(selectNode, Button);
@@ -58,11 +58,14 @@ describe("The `ButtonGroupSelect` component ", function () {
                 allowedValues={allowedValues}
                 getKey={getKeySpy}
                 onChange={R.identity}
-                value={allowedValues[0]}
+                value={allowedValues.slice(0, 1)}
             />
         );
         TestUtils.scryRenderedComponentsWithType(selectNode, Button);
-        expect(getKeySpy.callCount).to.equal(allowedValues.length);
+        // we call get key 3 times: 1 when we pass the key prop on buttons creation
+        // 2 more when we check if the button `isActive`
+        var callsPerValue = 3;
+        expect(getKeySpy.callCount).to.equal(allowedValues.length * callsPerValue);
     });
 
     it("should render a button in the button group for each of the `allowedValues` passed as props", function () {
@@ -71,7 +74,7 @@ describe("The `ButtonGroupSelect` component ", function () {
             <ButtonGroupSelect
                 allowedValues={allowedValues}
                 onChange={R.identity}
-                value={allowedValues[0]}
+                value={allowedValues.slice(0, 1)}
             />
         );
         var selectNode = TestUtils.renderIntoDocument(selectElement);
@@ -91,7 +94,7 @@ describe("The `ButtonGroupSelect` component ", function () {
                     getLabel={R.prop("id")}
                     multi={false}
                     onChange={R.identity}
-                    value={allowedValues[selectedIndex]}
+                    value={allowedValues.slice(selectedIndex, selectedIndex + 1)}
                 />
             );
             var selectNode = TestUtils.renderIntoDocument(selectElement);
@@ -105,7 +108,7 @@ describe("The `ButtonGroupSelect` component ", function () {
             expect(actualStates).to.eql(expectedStates);
         });
 
-        it("should call the `onChange` handler with the corresponding value when a button is clicked", function () {
+        it("should call the `onChange` handler with an array containing the corresponding value as first and only element when a button is clicked", function () {
             var allowedValues = [{id: 1}, {id: 2}, {id: 3}];
             var changeSpy = sinon.spy();
             var selectElement = (
@@ -114,7 +117,7 @@ describe("The `ButtonGroupSelect` component ", function () {
                     getKey={R.prop("id")}
                     getLabel={R.prop("id")}
                     onChange={changeSpy}
-                    value={allowedValues[0]}
+                    value={allowedValues.slice(0, 1)}
                 />
             );
             var selectNode = TestUtils.renderIntoDocument(selectElement);
@@ -122,7 +125,7 @@ describe("The `ButtonGroupSelect` component ", function () {
             buttonNodes.forEach(function (buttonNode, index) {
                 var buttonDOMNode = buttonNode.getDOMNode();
                 TestUtils.Simulate.click(buttonDOMNode);
-                expect(changeSpy).to.have.been.calledWith(allowedValues[index]);
+                expect(changeSpy).to.have.been.calledWith(allowedValues.slice(index, index + 1));
                 changeSpy.reset();
             });
         });

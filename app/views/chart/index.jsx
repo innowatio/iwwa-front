@@ -34,6 +34,13 @@ var Chart = React.createClass({
             R.path(["location", "query", "sito"], props)
         );
     },
+    getPeriods: function () {
+        return [
+            {label: "Settimana", key: "week"},
+            {label: "Mese", key: "month"},
+            {label: "Trimestre", key: "quarter"}
+        ];
+    },
     getTipologie: function () {
         return [
             {label: "Attiva", key: 1},
@@ -68,6 +75,12 @@ var Chart = React.createClass({
             "valore",
             transformers.valore(valori)
         );
+        // Date Compare
+        var periods = this.getPeriods();
+        var dateCompareProps = this.bindToQueryParameter(
+            "dateCompare",
+            transformers.dateCompare(periods)
+        );
         return (
             <div>
                 <bootstrap.Col sm={12} style={styles.colVerticalPadding}>
@@ -76,8 +89,15 @@ var Chart = React.createClass({
                             allowedValues={valori}
                             getKey={R.prop("key")}
                             getLabel={R.prop("label")}
-                            multi={true}
+                            multi={!dateCompareProps.value}
                             {...valoreInputProps}
+                        />
+                        <components.Spacer direction="h" size={10} />
+                        <components.DatefilterModal
+                            getPeriodKey={R.prop("key")}
+                            getPeriodLabel={R.prop("label")}
+                            periods={periods}
+                            {...dateCompareProps}
                         />
                     </span>
                     <span className="pull-right">
@@ -101,7 +121,9 @@ var Chart = React.createClass({
                     </span>
                 </bootstrap.Col>
                 <bootstrap.Col sm={12} style={{height: "500px"}}>
+                    <components.Spacer direction="v" size={32} />
                     <components.HistoricalGraph
+                        dateCompare={dateCompareProps.value}
                         misure={this.props.collections.get("misure") || Immutable.Map()}
                         sito={sitoInputProps.value}
                         tipologia={tipologiaInputProps.value}
