@@ -8,7 +8,7 @@
     "dev": "node_modules/.bin/gulp dev",
     "lint": "node_modules/.bin/eslint app/**/*.js app/**/*.jsx",
     "generate-reports": "node scripts/generate-reports.js",
-    "publish-reports": "node scripts/publish-reports.js",
+    "publish-reports": "node scripts/generate-reports.js && node scripts/publish-reports.js",
     "prestart": "node_modules/.bin/gulp build",
     "start": "node scripts/server.js",
     "test": "NODE_PATH=app:test node_modules/.bin/mocha --compilers jsx:babel/register test/unit/**/*unit*"
@@ -45,13 +45,13 @@
     "gulp-spawn-mocha": "^2.2.1",
     "gulp-util": "^3.0.5",
     "jsdom": "^5.4.3",
+    "json-loader": "^0.5.2",
     "mkdirp": "^0.5.1",
     "mocha": "^2.2.5",
     "mochawesome": "^1.2.0",
     "node-libs-browser": "^0.5.2",
     "pro-gulp": "^0.3.0",
     "proxyquire": "^1.5.0",
-    "ramda": "^0.15.1",
     "sinon": "^1.15.3",
     "sinon-chai": "^2.8.0",
     "webpack": "^1.9.11"
@@ -59,6 +59,7 @@
   "dependencies": {
     "asteroid": "mondora/asteroid#ffd16f",
     "bootstrap": "^3.3.5",
+    "color": "^0.10.1",
     "compression": "^1.5.0",
     "dygraphs": "^1.1.1",
     "express": "^4.13.0",
@@ -67,11 +68,11 @@
     "lodash.throttle": "^3.0.4",
     "moment": "^2.10.3",
     "radium": "^0.13.2",
+    "ramda": "^0.17.0",
     "react": "^0.13.3",
     "react-bootstrap": "^0.23.7",
     "react-immutable-proptypes": "^1.0.0",
     "react-router": "^1.0.0-beta3",
-    "react-widgets": "^2.7.2",
-    "vis": "^4.3.0"
+    "react-widgets": "^2.7.2"
   }
 }
