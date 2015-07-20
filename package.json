@@ -66,11 +66,13 @@
     "font-awesome": "^4.3.0",
     "immutable": "^3.7.4",
     "lodash.throttle": "^3.0.4",
+    "moment": "^2.10.3",
     "radium": "^0.13.2",
     "ramda": "^0.17.0",
     "react": "^0.13.3",
-    "react-bootstrap": "^0.23.5",
+    "react-bootstrap": "^0.23.7",
     "react-immutable-proptypes": "^1.0.0",
-    "react-router": "^1.0.0-beta3"
+    "react-router": "^1.0.0-beta3",
+    "react-widgets": "^2.7.2"
   }
 }
