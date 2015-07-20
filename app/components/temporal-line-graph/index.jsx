@@ -39,7 +39,6 @@ var TemporalLineGraph = React.createClass({
             errorBars: true,
             labels: this.getLabelsFromProps(props),
             labelsSeparateLines: true,
-            showRangeSelector: this.props.showRangeSelector,
             sigma: 2,
             strokeWidth: 1.5,
             stepPlot: true,

@@ -58,9 +58,9 @@ describe("The `getCoordinates` method of the ValoriCompareGraph component", func
         return {
             props: {
                 misure: Immutable.fromJS(getMisure()),
-                sito: Immutable.Map({
+                siti: [Immutable.Map({
                     pod: pod
-                }),
+                })],
                 tipologia: {
                     key: tipologia
                 },

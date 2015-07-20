@@ -8,30 +8,30 @@ describe("The `sito` transformer", function () {
 
     describe("the `parse` function should return", function () {
 
-        it("an empty `Immutable.Map` if `siti` is empty", function () {
+        it("an empty array if `siti` is empty", function () {
             var siti = Immutable.Map();
             var st = transformers.sito(siti);
             var ret = st.parse("_id");
-            expect(ret).to.be.an.instanceOf(Immutable.Map);
-            expect(ret.isEmpty()).to.equal(true);
+            expect(ret).to.eql([]);
         });
 
-        it("the first element of `siti` if `siti` has no key that matches the supplied string", function () {
+        it("an empty array` if `siti` has no key that matches the supplied strings", function () {
             var siti = Immutable.Map({
                 "sito_0": Immutable.Map({a: 0}),
                 "sito_1": Immutable.Map({a: 1})
             });
             var st = transformers.sito(siti);
-            expect(st.parse("non-existent-sito")).to.equal(siti.first());
+            expect(st.parse("non-existent-sito")).to.eql([]);
         });
 
-        it("the value of the property of `siti` which key matches the supplied string", function () {
+        it("the values of the property of `siti` which key matches the supplied strings", function () {
             var siti = Immutable.Map({
                 "sito_0": Immutable.Map({a: 0}),
                 "sito_1": Immutable.Map({a: 1})
             });
             var st = transformers.sito(siti);
-            expect(st.parse("sito_1")).to.equal(siti.get("sito_1"));
+            expect(st.parse("sito_1")).to.be.an("array");
+            expect(st.parse("sito_1")[0]).to.equal(siti.get("sito_1"));
         });
 
     });
@@ -43,7 +43,7 @@ describe("The `sito` transformer", function () {
                 _id: "sito_id"
             });
             var st = transformers.sito(Immutable.Map());
-            expect(st.stringify(sito)).to.equal("sito_id");
+            expect(st.stringify([sito])).to.equal("sito_id");
         });
 
     });

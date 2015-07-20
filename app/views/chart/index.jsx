@@ -4,18 +4,54 @@ var R          = require("ramda");
 var React      = require("react");
 var bootstrap  = require("react-bootstrap");
 var IPropTypes = require("react-immutable-proptypes");
+var titleCase  = require("title-case");
 
 var components       = require("components");
 var styles           = require("lib/styles");
 var QuerystringMixin = require("lib/querystring-mixin");
 var transformers     = require("./transformers.js");
 
-var getSitoKey = R.memoize(function (sito) {
-    return sito.get("_id");
+var multiselectStyles = {
+    multiselect: {
+        width: "348.5px"
+    },
+    tag: {
+        display: "inline-block",
+        width: "150px",
+        float: "left",
+        paddingLeft: "10px",
+        paddingRight: "10px",
+        fontSize: "11px",
+        overflow: "hidden",
+        textOverflow: "ellipsis"
+    }
+};
+
+var getSitoLabel = function (sito) {
+    return [
+        titleCase(sito.get("societa")),
+        titleCase(sito.get("idCoin"))
+    ].join(" - ");
+};
+var SitoTagComponent = React.createClass({
+    propTypes: {
+        item: IPropTypes.map
+    },
+    render: function () {
+        return (
+            <span style={multiselectStyles.tag}>
+                {getSitoLabel(this.props.item)}
+            </span>
+        );
+    }
 });
-var getSitoLabel = R.memoize(function (sito) {
-    return sito.get("societa") + " - " + sito.get("idCoin");
-});
+var filterSito = function (item, search) {
+    var searchRegExp = new RegExp(search, "i");
+    return (
+        searchRegExp.test(item.get("societa")) ||
+        searchRegExp.test(item.get("idCoin"))
+    );
+};
 
 var Chart = React.createClass({
     propTypes: {
@@ -29,10 +65,12 @@ var Chart = React.createClass({
         }).bind(this));
     },
     componentWillReceiveProps: function (props) {
-        this.props.asteroid.subscribe(
-            "misureBySito",
-            R.path(["location", "query", "sito"], props)
-        );
+        var self = this;
+        var sitoQuery = R.path(["location", "query", "sito"], props);
+        var siti = (sitoQuery && sitoQuery.split(",")) || [];
+        siti.forEach(function (sito) {
+            self.props.asteroid.subscribe("misureBySito", sito);
+        });
     },
     getPeriods: function () {
         return [
@@ -52,8 +90,7 @@ var Chart = React.createClass({
         return [
             {label: "Reale", key: "reale"},
             {label: "Contrattuale", key: "contrattuale"},
-            {label: "Previsionale 1gg", key: "realeMeno1"},
-            {label: "Previsionale 7gg", key: "realeMeno7"}
+            {label: "Previsionale", key: "realeMeno1"}
         ];
     },
     render: function () {
@@ -81,6 +118,10 @@ var Chart = React.createClass({
             "dateCompare",
             transformers.dateCompare(periods)
         );
+        var valoriMulti = (
+            !dateCompareProps.value &&
+            sitoInputProps.value.length <= 1
+        );
         return (
             <div>
                 <bootstrap.Col sm={12} style={styles.colVerticalPadding}>
@@ -89,10 +130,10 @@ var Chart = React.createClass({
                             allowedValues={valori}
                             getKey={R.prop("key")}
                             getLabel={R.prop("label")}
-                            multi={!dateCompareProps.value}
+                            multi={valoriMulti}
                             {...valoreInputProps}
                         />
-                        <components.Spacer direction="h" size={10} />
+                    <components.Spacer direction="h" size={10} />
                         <components.DatefilterModal
                             getPeriodKey={R.prop("key")}
                             getPeriodLabel={R.prop("label")}
@@ -101,18 +142,24 @@ var Chart = React.createClass({
                         />
                     </span>
                     <span className="pull-right">
-                        <components.DropdownSelect
+                        <components.Spacer direction="h" size={10} />
+                        <components.Multiselect
                             allowedValues={siti}
-                            getKey={getSitoKey}
+                            filter={filterSito}
                             getLabel={getSitoLabel}
+                            maxValues={2}
+                            style={multiselectStyles.multiselect}
+                            tagComponent={SitoTagComponent}
                             title="Punto di misurazione"
                             {...sitoInputProps}
                         />
-                        <components.Spacer direction="h" size={10} />
+                    </span>
+                    <span className="pull-right">
                         <components.DropdownSelect
                             allowedValues={tipologie}
                             getKey={R.prop("key")}
                             getLabel={R.prop("label")}
+                            style={{float: "left"}}
                             title="Quantità di interesse"
                             {...tipologiaInputProps}
                         />
@@ -123,7 +170,7 @@ var Chart = React.createClass({
                     <components.HistoricalGraph
                         dateCompare={dateCompareProps.value}
                         misure={this.props.collections.get("misure") || Immutable.Map()}
-                        sito={sitoInputProps.value}
+                        siti={sitoInputProps.value}
                         tipologia={tipologiaInputProps.value}
                         valori={valoreInputProps.value}
                     />

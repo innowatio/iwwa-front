@@ -9,3 +9,4 @@ exports.LoginModal        = require("./login-modal/");
 exports.SideNav           = require("./sidebar/");
 exports.Spacer            = require("./spacer/");
 exports.TemporalLineGraph = require("./temporal-line-graph/");
+exports.Multiselect       = require("./multiselect/");

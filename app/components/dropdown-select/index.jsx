@@ -3,7 +3,7 @@ var React      = require("react");
 var bootstrap  = require("react-bootstrap");
 var IPropTypes = require("react-immutable-proptypes");
 
-var DropdownButtonSelect = React.createClass({
+var DropdownSelect = React.createClass({
     propTypes: {
         allowedValues: React.PropTypes.oneOfType([
             React.PropTypes.array,
@@ -54,4 +54,4 @@ var DropdownButtonSelect = React.createClass({
     }
 });
 
-module.exports = DropdownButtonSelect;
+module.exports = DropdownSelect;
