@@ -45,13 +45,13 @@
     "gulp-spawn-mocha": "^2.2.1",
     "gulp-util": "^3.0.5",
     "jsdom": "^5.4.3",
+    "json-loader": "^0.5.2",
     "mkdirp": "^0.5.1",
     "mocha": "^2.2.5",
     "mochawesome": "^1.2.0",
     "node-libs-browser": "^0.5.2",
     "pro-gulp": "^0.3.0",
     "proxyquire": "^1.5.0",
-    "ramda": "^0.15.1",
     "sinon": "^1.15.3",
     "sinon-chai": "^2.8.0",
     "webpack": "^1.9.11"
@@ -59,6 +59,7 @@
   "dependencies": {
     "asteroid": "mondora/asteroid#ffd16f",
     "bootstrap": "^3.3.5",
+    "color": "^0.10.1",
     "compression": "^1.5.0",
     "dygraphs": "^1.1.1",
     "express": "^4.13.0",
@@ -66,10 +67,10 @@
     "immutable": "^3.7.4",
     "lodash.throttle": "^3.0.4",
     "radium": "^0.13.2",
+    "ramda": "^0.17.0",
     "react": "^0.13.3",
     "react-bootstrap": "^0.23.5",
     "react-immutable-proptypes": "^1.0.0",
-    "react-router": "^1.0.0-beta3",
-    "vis": "^4.3.0"
+    "react-router": "^1.0.0-beta3"
   }
 }

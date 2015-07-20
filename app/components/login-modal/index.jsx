@@ -1,64 +1,56 @@
-var Radium    = require("radium");
-var React     = require("react");
-var bootstrap = require("react-bootstrap");
+var Radium = require("radium");
+var React  = require("react");
 
-var components = require("components");
-var colors     = require("lib/colors");
+var components        = require("components");
+var colors            = require("lib/colors");
+var LoginView         = require("./login-view.jsx");
+var PasswordResetView = require("./password-reset-view.jsx");
 
 var styles = {
-    center: {
-        textAlign: "center"
-    },
     overlay: {
         position: "fixed",
         top: "0px",
         left: "0px",
         height: "100%",
         width: "100%",
-        background: colors.primary,
+        backgroundColor: colors.black,
+        backgroundImage: "url(/_assets/images/login-background.jpg)",
+        backgroundSize: "cover",
         zIndex: 1000
     },
-    h4Label: {
-        marginBottom: "100px",
+    body: {
+        width: "100%",
         color: colors.white,
-        fontWeight: "100"
-    },
-    accessButton: {
-        fontWeight: "bold",
-        height: "50px",
-        color: colors.white,
-        fontSize: "20px"
-    },
-    titleLabel: {
-        marginTop: "200px",
-        color: colors.white,
-        fontWeight: "100"
-    },
-    inputLabel: {
-        height: "50px",
-        fontSize: "18px"
-        // opacity: 0.1
-    },
-    groupIcon: {
-        width: "36px"
-    },
-    inputsContainer: {
+        fontWeight: "lighter",
         position: "absolute",
-        left: "calc(50% - 175px)",
-        width: "350px"
+        top: "10%"
     },
-    textTitlePosition: {
-        width: "350px"
+    title: {
+        container: {
+            width: "100%",
+            textAlign: "center"
+        },
+        logo: {
+            width: "250px"
+        },
+        firstLine: {
+            fontSize: "48px"
+        },
+        secondLine: {
+            fontSize: "24px"
+        }
     },
-    popupLabel: {
-        color: colors.white
+    activeView: {
+        width: "50%",
+        position: "relative",
+        left: "25%"
     },
-    aLink: {
-        color: colors.white,
-        fontSize: "15px"
-    },
-    errorAlert: {
-        marginTop: "16px"
+    viewSwitcher: {
+        cursor: "pointer",
+        textAlign: "center",
+        ":hover": {
+            textDecoration: "underline"
+        }
     }
 };
 
@@ -69,24 +61,14 @@ var LoginModal = React.createClass({
     },
     getInitialState: function () {
         return {
-            loginError: null
+            activeView: "login"
         };
     },
-    setLoginError: function (error) {
-        this.setState({
-            loginError: error
-        });
+    componentWillMount: function () {
+        this.attachModalOpenClass(this.props);
     },
-    login: function () {
-        var credentials = {
-            email: this.refs.email.getValue(),
-            password: this.refs.password.getValue()
-        };
-        this.setLoginError(null);
-        this.props.asteroid.login(credentials).catch(this.setLoginError);
-    },
-    lostUsernameLogin: function () {
-        console.log("hai cliccato");
+    componentWillReceiveProps: function (props) {
+        this.attachModalOpenClass(props);
     },
     attachModalOpenClass: function (props) {
         if (props.isOpen) {
@@ -95,96 +77,52 @@ var LoginModal = React.createClass({
             document.body.classList.remove("modal-open");
         }
     },
-    componentWillMount: function () {
-        this.attachModalOpenClass(this.props);
+    switchView: function () {
+        this.setState({
+            activeView: (
+                this.state.activeView === "login" ?
+                "passwordReset" :
+                "login"
+            )
+        });
     },
-    componentWillReceiveProps: function (props) {
-        this.attachModalOpenClass(props);
+    renderActiveView: function () {
+        return (
+            this.state.activeView === "login" ?
+            <LoginView asteroid={this.props.asteroid} /> :
+            <PasswordResetView asteroid={this.props.asteroid} />
+        );
     },
-    renderError: function () {
-        return this.state.loginError ? (
-            <bootstrap.Alert
-                bsStyle="danger"
-                style={styles.errorAlert}
-            >
-                {"Error logging in"}
-            </bootstrap.Alert>
-        ) : null;
+    renderViewSwitcherText: function () {
+        return (
+            this.state.activeView === "login" ?
+            "Password dimenticata?" :
+            "Torna alla login"
+        );
     },
     render: function () {
         return this.props.isOpen ? (
             <div style={styles.overlay}>
-                <Radium.Style
-                    rules={{
-                        ".form-group": {
-                            marginBottom: "-1px"
-                        },
-                        ".input-password": {
-                            marginBottom: "40px",
-                            borderTopLeftRadius: 0
-                        },
-                        ".form-signin-email": {
-                            borderBottomRightRadius: 0
-                        },
-                        ".form-signin-psw": {
-                            borderTopRightRadius: 0
-                        },
-                        ".input-group": {
-                            borderTopLeftRadius: 0
-                        },
-                        ".access-button": {
-                        },
-                        ".access-button:hover": {
-                            background: colors.buttonHover
-                        },
-                        ".access-button:active": {
-                            background: colors.buttonHover
-                        }
-                    }}
-                />
-            <span className="text-center" style={styles.textTitlePosition}>
-                    <h1 style={styles.titleLabel}>{"Energia alla tua Energia"}</h1>
-                    <h4 style={styles.h4Label}>{"Innowatio"}</h4>
-                </span>
-                <div style={styles.inputsContainer}>
-                    <bootstrap.Input
-                        addonBefore={<components.Icon icon="user" style={styles.groupIcon}/>}
-                        className="form-signin-email"
-                        placeholder="Email"
-                        ref="email"
-                        style={styles.inputLabel}
-                        type="email">
-                    </bootstrap.Input>
-                <div className="input-password">
-                    <bootstrap.Input
-                        addonBefore={
-                            <span className="iconPsw">
-                                <components.Icon className="iconPsw" icon="lock" style={styles.groupIcon}/>
-                            </span>
-                            }
-                        className="form-signin-psw"
-                        placeholder="Password"
-                        ref="password"
-                        style={styles.inputLabel}
-                        type="password"
-                    />
-                </div>
-                    <bootstrap.Button
-                        block
-                        className="access-button"
-                        onClick={this.login}
-                        style={styles.accessButton}
-                    >
-                        {"ACCEDI"}
-                    </bootstrap.Button>
-                    {this.renderError()}
-                    <components.Spacer direction="v" size={10} />
-                    <div className="text-center" style={styles.popupLabel}>
-                        <a onClick={this.lostUsernameLogin} style={styles.aLink}>{"Username o Password dimenticati?"}</a>
+                <div style={styles.body}>
+                    <div style={styles.title.container}>
+                        <div>
+                            <img src="/_assets/images/logo.png" style={styles.title.logo} />
+                        </div>
+                        <components.Spacer direction="v" size={32} />
+                        <div style={styles.title.firstLine}>{"Energia alla tua Energia"}</div>
+                        <div style={styles.title.secondLine}>{"Innowatio"}</div>
+                    </div>
+                    <components.Spacer direction="v" size={64} />
+                    <div style={styles.activeView}>
+                        {this.renderActiveView()}
+                    </div>
+                    <components.Spacer direction="v" size={16} />
+                    <div onClick={this.switchView} style={styles.viewSwitcher}>
+                        {this.renderViewSwitcherText()}
                     </div>
                 </div>
             </div>
-            ) : null;
+        ) : null;
     }
 });
 
