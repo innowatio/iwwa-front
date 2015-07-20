@@ -39,7 +39,6 @@ var icoHistConsum = "/_assets/icons/os__Historical_consumption-.svg";
 var icoDashboard  = "/_assets/icons/os__Dashboard-.svg";
 var icoHelp       = "/_assets/icons/os__Help.svg";
 var icoLiveConsum = "/_assets/icons/os__Live_consumption-.svg";
-var icoMenu       = "icon-Menu";
 
 var Root = React.createClass({
     propTypes: {
@@ -65,6 +64,11 @@ var Root = React.createClass({
     toggleSidebar: function () {
         this.setState({
             sidebarOpen: !this.state.sidebarOpen
+        });
+    },
+    closeSidebar: function () {
+        this.setState({
+            sidebarOpen: false
         });
     },
     getHeaderStyle: function () {
@@ -105,6 +109,7 @@ var Root = React.createClass({
             <div>
                 <components.SideNav
                     items={this.getMenuItems()}
+                    linkClickAction={this.closeSidebar}
                     style={this.getSidebarStyle()}
                     toggleSidebar={this.toggleSidebar}
                 />

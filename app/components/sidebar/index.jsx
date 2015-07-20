@@ -25,6 +25,11 @@ var styles = {
         position: "absolute",
         top: measures.headerHeight,
         width: "100%"
+    },
+    activeLink: {
+        borderRight: "4px solid " + colors.primary,
+        borderRadius: "0px",
+        backgroundColor: colors.greyLight
     }
 };
 
@@ -35,6 +40,7 @@ var SideNav = React.createClass({
         items: React.PropTypes.arrayOf(
             React.PropTypes.object
         ),
+        linkClickAction: React.PropTypes.func,
         style: React.PropTypes.object,
         toggleSidebar: React.PropTypes.func.isRequired
     },
@@ -46,7 +52,12 @@ var SideNav = React.createClass({
     renderNavItem: function (menuItem) {
         return (
             <li>
-                <Router.Link style={{height: "55px"}} to={menuItem.url}>
+                <Router.Link
+                    activeStyle={styles.activeLink}
+                    onClick={this.props.linkClickAction}
+                    style={{height: "55px"}}
+                    to={menuItem.url}
+                >
                     {menuItem.label}
                     <img src={menuItem.iconPath} style={{float: "right", width: "30px"}} />
                 </Router.Link>
