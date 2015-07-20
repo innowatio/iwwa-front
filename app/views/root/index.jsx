@@ -30,6 +30,7 @@ var styles = {
         position: "absolute",
         top: "0px",
         width: measures.sidebarWidth,
+        height: "100%",
         transition: "left 0.3s ease"
     }
 };

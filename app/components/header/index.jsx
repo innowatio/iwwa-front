@@ -14,6 +14,9 @@ var styles = {
         width: "100%",
         height: "100%",
         color: colors.white
+    },
+    logout: {
+        cursor: "pointer"
     }
 };
 
@@ -30,12 +33,12 @@ var Header = React.createClass({
                 <span>
                     {"Innowatio"}
                 </span>
-                <span>
-                    <components.Icon
-                        icon="sign-out"
-                        onClick={this.logout}
-                        size="24px"
-                    />
+                <span onClick={this.logout} style={styles.logout}>
+                    <i>
+                        {"Logout"}
+                    </i>
+                    <components.Spacer direction="h" size={8} />
+                    <components.Icon icon="sign-out" />
                 </span>
             </div>
         );

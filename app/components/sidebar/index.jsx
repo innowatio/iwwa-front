@@ -7,6 +7,12 @@ var colors = require("lib/colors");
 var measures = require("lib/measures");
 
 var styles = {
+    sidebar: {
+        height: "100%",
+        borderRightWidth: "1px",
+        borderRightStyle: "solid",
+        borderRightColor: colors.primary
+    },
     hamburger: {
         position: "absolute",
         top: "0px",
@@ -19,7 +25,8 @@ var styles = {
         fontSize: "35px",
         textAlign: "right",
         paddingRight: "15px",
-        paddingTop: "5px"
+        paddingTop: "5px",
+        cursor: "pointer"
     },
     menu: {
         position: "absolute",
@@ -66,7 +73,7 @@ var SideNav = React.createClass({
     },
     render: function () {
         return (
-            <span style={this.props.style}>
+            <div style={[styles.sidebar, this.props.style]}>
                 <div
                     className={icoMenu}
                     onClick={this.props.toggleSidebar}
@@ -78,7 +85,7 @@ var SideNav = React.createClass({
                         {this.props.items.map(this.renderNavItem)}
                     </bootstrap.Nav>
                 </div>
-            </span>
+            </div>
         );
     }
 });
