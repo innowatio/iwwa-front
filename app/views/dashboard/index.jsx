@@ -2,8 +2,6 @@ var bootstrap  = require("react-bootstrap");
 var Radium     = require("radium");
 var React      = require("react");
 
-var styles     = require("lib/styles");
-
 var Dashboard = React.createClass({
     propTypes: {
     },
