@@ -8,4 +8,4 @@ exports.Icon              = require("./icon/");
 exports.LoginModal        = require("./login-modal/");
 exports.Spacer            = require("./spacer/");
 exports.TemporalLineGraph = require("./temporal-line-graph/");
-exports.MultiselectElement = require("./multiselect/");
+exports.Multiselect       = require("./multiselect/");

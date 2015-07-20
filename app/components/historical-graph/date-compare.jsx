@@ -15,7 +15,7 @@ var DateCompare = React.createClass({
             dateTwo: React.PropTypes.date
         }),
         misure: IPropTypes.map,
-        sito: IPropTypes.map,
+        siti: React.PropTypes.arrayOf(IPropTypes.map),
         tipologia: React.PropTypes.object,
         valori: React.PropTypes.arrayOf(React.PropTypes.object)
     },
@@ -35,7 +35,8 @@ var DateCompare = React.createClass({
     },
     getCoordinates: function () {
         var self = this;
-        var pod = self.props.sito.get("pod");
+        var sito = self.props.siti[0] || Immutable.Map();
+        var pod = sito.get("pod");
         var ranges = self.getDateRanges();
         var valore = self.props.valori[0];
         return self.props.misure
@@ -46,7 +47,7 @@ var DateCompare = React.createClass({
                 return misura.get("tipologia") === self.props.tipologia.key;
             })
             .reduce(function (acc, misura) {
-                var date = new Date(misura.get("data")).getTime();
+                var date = moment(misura.get("data")).valueOf();
                 if (
                     moment(date).isBetween(ranges.rangeOne.start, ranges.rangeOne.end)
                 ) {
