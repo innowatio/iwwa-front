@@ -125,7 +125,7 @@ var Chart = React.createClass({
         return (
             <div>
                 <bootstrap.Col sm={12} style={styles.colVerticalPadding}>
-                    <span>
+                    <span className="pull-left">
                         <components.ButtonGroupSelect
                             allowedValues={valori}
                             getKey={R.prop("key")}
@@ -133,7 +133,9 @@ var Chart = React.createClass({
                             multi={valoriMulti}
                             {...valoreInputProps}
                         />
-                    <components.Spacer direction="h" size={10} />
+                    </span>
+                    <span className="pull-left">
+                        <components.Spacer direction="h" size={10} />
                         <components.DatefilterModal
                             getPeriodKey={R.prop("key")}
                             getPeriodLabel={R.prop("label")}

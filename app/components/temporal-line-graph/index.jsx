@@ -41,7 +41,6 @@ var TemporalLineGraph = React.createClass({
             labelsSeparateLines: true,
             sigma: 2,
             strokeWidth: 1.5,
-            stepPlot: true,
             xlabel: props.xLabel,
             ylabel: props.yLabel,
             axes: {
