@@ -1,6 +1,5 @@
-var Immutable = require("immutable");
-var moment    = require("moment");
-var R         = require("ramda");
+var moment = require("moment");
+var R      = require("ramda");
 
 exports.dateCompare = function (periods) {
     return {
@@ -31,15 +30,23 @@ exports.dateCompare = function (periods) {
 exports.sito = function (siti) {
     return {
         parse: function (query) {
-            return (
-                siti.get(query) ||
-                siti.first() ||
-                Immutable.Map()
-            );
+            if (!query) {
+                return [];
+            }
+            var sitoIds = query.split(",");
+            return R.pipe(
+                R.map(function (sitoId) {
+                    return siti.get(sitoId);
+                }),
+                R.reject(R.isNil)
+            )(sitoIds);
         },
-        stringify: function (value) {
-            return value.get("_id");
-        }
+        stringify: R.pipe(
+            R.map(function (sito) {
+                return sito.get("_id");
+            }),
+            R.join(",")
+        )
     };
 };
 

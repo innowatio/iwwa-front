@@ -6,9 +6,8 @@ var React      = require("react");
 var IPropTypes = require("react-immutable-proptypes");
 
 var components = require("components");
-window.moment = moment;
 
-var ValoriCompare = React.createClass({
+var SitiCompare = React.createClass({
     propTypes: {
         misure: IPropTypes.map,
         siti: React.PropTypes.arrayOf(IPropTypes.map),
@@ -18,40 +17,43 @@ var ValoriCompare = React.createClass({
     mixins: [React.addons.PureRenderMixin],
     getCoordinates: function () {
         var self = this;
-        var sito = self.props.siti[0] || Immutable.Map();
-        var pod = sito.get("pod");
+        var pods = self.props.siti.map(function (sito) {
+            return sito.get("pod");
+        });
+        var nullPods = R.repeat(null, pods.length);
+        var valore = self.props.valori[0];
         return self.props.misure
             .filter(function (misura) {
-                return misura.get("pod") === pod;
+                return R.contains(misura.get("pod"), pods);
             })
             .filter(function (misura) {
                 return misura.get("tipologia") === self.props.tipologia.key;
             })
-            .map(function (misura) {
-                var date = moment(misura.get("data")).toDate();
-                return R.pipe(
-                    R.map(function (valore) {
-                        return [misura.get(valore.key), 0];
-                    }),
-                    R.prepend(date)
-                )(self.props.valori);
-            })
+            .reduce(function (acc, misura) {
+                var date = moment(misura.get("data")).valueOf();
+                return acc.withMutations(function (map) {
+                    var value = map.get(date) || [new Date(date)].concat(nullPods);
+                    var pod = misura.get("pod");
+                    value[pods.indexOf(pod) + 1] = [misura.get(valore.key), 0];
+                    map.set(date, value);
+                });
+            }, Immutable.Map())
             .sort(function (m1, m2) {
                 return (m1[0] < m2[0] ? -1 : 1);
             })
             .toArray();
     },
     getLabels: function () {
-        return ["Data"].concat(
-            R.map(R.prop("label"), this.props.valori)
-        );
+        var sitiLabels = this.props.siti.map(function (sito) {
+            return sito.get("idCoin");
+        });
+        return ["Data"].concat(sitiLabels);
     },
     render: function () {
         return (
             <components.TemporalLineGraph
                 coordinates={this.getCoordinates()}
                 labels={this.getLabels()}
-                showRangeSelector={true}
                 xLabel=""
                 yLabel="kWh"
             />
@@ -59,4 +61,4 @@ var ValoriCompare = React.createClass({
     }
 });
 
-module.exports = Radium(ValoriCompare);
+module.exports = Radium(SitiCompare);

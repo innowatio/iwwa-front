@@ -6,5 +6,7 @@ exports.Header            = require("./header/");
 exports.HistoricalGraph   = require("./historical-graph/");
 exports.Icon              = require("./icon/");
 exports.LoginModal        = require("./login-modal/");
+exports.SideNav           = require("./sidebar/");
 exports.Spacer            = require("./spacer/");
 exports.TemporalLineGraph = require("./temporal-line-graph/");
+exports.Multiselect       = require("./multiselect/");

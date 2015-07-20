@@ -4,6 +4,7 @@ var IPropTypes = require("react-immutable-proptypes");
 
 var DateCompareGraph   = require("./date-compare.jsx");
 var ValoriCompareGraph = require("./valori-compare.jsx");
+var SitiCompareGraph   = require("./siti-compare.jsx");
 
 var HistoricalGraph = React.createClass({
     propTypes: {
@@ -13,7 +14,7 @@ var HistoricalGraph = React.createClass({
             dateTwo: React.PropTypes.date
         }),
         misure: IPropTypes.map,
-        sito: IPropTypes.map,
+        siti: React.PropTypes.arrayOf(IPropTypes.map),
         tipologia: React.PropTypes.object,
         valori: React.PropTypes.arrayOf(React.PropTypes.object)
     },
@@ -21,15 +22,20 @@ var HistoricalGraph = React.createClass({
     renderDateCompareGraph: function () {
         return <DateCompareGraph {...this.props} />;
     },
+    renderSitiCompareGraph: function () {
+        return <SitiCompareGraph {...this.props} />;
+    },
     renderValoriCompareGraph: function () {
         return <ValoriCompareGraph {...this.props} />;
     },
     render: function () {
-        return (
-            this.props.dateCompare ?
-            this.renderDateCompareGraph() :
-            this.renderValoriCompareGraph()
-        );
+        if (this.props.dateCompare) {
+            return this.renderDateCompareGraph();
+        }
+        if (this.props.siti.length > 1) {
+            return this.renderSitiCompareGraph();
+        }
+        return this.renderValoriCompareGraph();
     }
 });
 

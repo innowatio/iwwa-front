@@ -10,8 +10,10 @@
     ],
     "js": [
         "asteroid",
+        "color",
         "immutable",
         "lodash.throttle",
+        "moment",
         "radium",
         "ramda",
         "react",
@@ -20,6 +22,8 @@
         "react-immutable-proptypes",
         "react-router",
         "react-router/lib/BrowserHistory",
+        "react-widgets",
+        "title-case",
         "vis/dist/vis.js"
     ]
 }
