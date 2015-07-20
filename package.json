@@ -8,7 +8,7 @@
     "dev": "node_modules/.bin/gulp dev",
     "lint": "node_modules/.bin/eslint app/**/*.js app/**/*.jsx",
     "generate-reports": "node scripts/generate-reports.js",
-    "publish-reports": "node scripts/publish-reports.js",
+    "publish-reports": "node scripts/generate-reports.js && node scripts/publish-reports.js",
     "prestart": "node_modules/.bin/gulp build",
     "start": "node scripts/server.js",
     "test": "NODE_PATH=app:test node_modules/.bin/mocha --compilers jsx:babel/register test/unit/**/*unit*"
