@@ -1,3 +1,3 @@
-exports.Chart = require("./chart/");
-exports.Root  = require("./root/");
-exports.Home  = require("./userHome/");
+exports.Chart      = require("./chart/");
+exports.Root       = require("./root/");
+exports.Dashboard  = require("./dashboard/");
