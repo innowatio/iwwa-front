@@ -1,5 +1,32 @@
 var Immutable = require("immutable");
+var moment    = require("moment");
 var R         = require("ramda");
+
+exports.dateCompare = function (periods) {
+    return {
+        parse: function (query) {
+            if (!query) {
+                return null;
+            }
+            var tokens = query.split("-") || [];
+            return {
+                period: R.find(R.propEq("key", tokens[0]), periods) || periods[0],
+                dateOne: moment(tokens[1], "YYYYMMDD").toDate(),
+                dateTwo: moment(tokens[2], "YYYYMMDD").toDate()
+            };
+        },
+        stringify: function (value) {
+            if (!value) {
+                return "";
+            }
+            return [
+                value.period.key,
+                moment(value.dateOne).format("YYYYMMDD"),
+                moment(value.dateTwo).format("YYYYMMDD")
+            ].join("-");
+        }
+    };
+};
 
 exports.sito = function (siti) {
     return {
