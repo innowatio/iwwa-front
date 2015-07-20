@@ -67,7 +67,7 @@
     "immutable": "^3.7.4",
     "lodash.throttle": "^3.0.4",
     "radium": "^0.13.2",
-    "ramda": "^0.16.0",
+    "ramda": "^0.17.0",
     "react": "^0.13.3",
     "react-bootstrap": "^0.23.5",
     "react-immutable-proptypes": "^1.0.0",
