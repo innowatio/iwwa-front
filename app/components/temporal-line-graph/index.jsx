@@ -8,20 +8,23 @@ var TemporalLineGraph = React.createClass({
         coordinates: React.PropTypes.arrayOf(
             AppPropTypes.DygraphCoordinate
         ).isRequired,
+        dateWindow: React.PropTypes.arrayOf(React.PropTypes.number),
         labels: React.PropTypes.array,
-        xLabel: React.PropTypes.string.isRequired,
-        yLabel: React.PropTypes.string.isRequired
+        lockInteraction: React.PropTypes.bool,
+        showRangeSelector: React.PropTypes.bool,
+        xLabel: React.PropTypes.string,
+        xLegendFormatter: React.PropTypes.func,
+        xTicker: React.PropTypes.func,
+        yLabel: React.PropTypes.string
     },
     componentDidMount: function () {
         this.drawGraph();
     },
     componentWillReceiveProps: function (nextProps) {
-        this.graph.updateOptions({
-            file: this.getCoordinatesFromProps(nextProps),
-            xlabel: nextProps.xLabel,
-            ylabel: nextProps.yLabel,
-            labels: this.getLabelsFromProps(nextProps)
-        });
+        var options = this.getOptionsFromProps(nextProps);
+        this.graph.updateOptions(R.merge(options, {
+            file: this.getCoordinatesFromProps(nextProps)
+        }));
     },
     getCoordinatesFromProps: function (props) {
         return (
@@ -29,6 +32,37 @@ var TemporalLineGraph = React.createClass({
             [[0]] :
             props.coordinates
         );
+    },
+    getOptionsFromProps: function (props) {
+        var options = {
+            drawPoints: true,
+            errorBars: true,
+            labels: this.getLabelsFromProps(props),
+            labelsSeparateLines: true,
+            showRangeSelector: this.props.showRangeSelector,
+            sigma: 2,
+            strokeWidth: 1.5,
+            stepPlot: true,
+            xlabel: props.xLabel,
+            ylabel: props.yLabel,
+            axes: {
+                x: {},
+                y: {}
+            }
+        };
+        if (props.dateWindow) {
+            options.dateWindow = props.dateWindow;
+        }
+        if (props.lockInteraction) {
+            options.interactionModel = {};
+        }
+        if (props.xLegendFormatter) {
+            options.axes.x.valueFormatter = props.xLegendFormatter;
+        }
+        if (props.xTicker) {
+            options.axes.x.ticker = props.xTicker;
+        }
+        return options;
     },
     getLabelsFromProps: function (props) {
         return (
@@ -40,15 +74,7 @@ var TemporalLineGraph = React.createClass({
     drawGraph: function () {
         var container = this.refs.graphContainer.getDOMNode();
         var coordinates = this.getCoordinatesFromProps(this.props);
-        var options = {
-            drawPoints: true,
-            errorBars: true,
-            labels: this.getLabelsFromProps(this.props),
-            sigma: 2,
-            strokeWidth: 1.5,
-            xlabel: this.props.xLabel,
-            ylabel: this.props.yLabel
-        };
+        var options = this.getOptionsFromProps(this.props);
         /*
         *   Instantiating the graph automatically renders it to the page
         */

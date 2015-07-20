@@ -5,7 +5,10 @@ var R         = require("ramda");
 exports.dateCompare = function (periods) {
     return {
         parse: function (query) {
-            var tokens = (query && query.split("-")) || [];
+            if (!query) {
+                return null;
+            }
+            var tokens = query.split("-") || [];
             return {
                 period: R.find(R.propEq("key", tokens[0]), periods) || periods[0],
                 dateOne: moment(tokens[1], "YYYYMMDD").toDate(),
@@ -13,6 +16,9 @@ exports.dateCompare = function (periods) {
             };
         },
         stringify: function (value) {
+            if (!value) {
+                return "";
+            }
             return [
                 value.period.key,
                 moment(value.dateOne).format("YYYYMMDD"),

@@ -84,12 +84,12 @@ var Chart = React.createClass({
         return (
             <div>
                 <bootstrap.Col sm={12} style={styles.colVerticalPadding}>
-                    <span style="width:50%">
+                    <span>
                         <components.ButtonGroupSelect
                             allowedValues={valori}
                             getKey={R.prop("key")}
                             getLabel={R.prop("label")}
-                            multi={true}
+                            multi={!dateCompareProps.value}
                             {...valoreInputProps}
                         />
                         <components.Spacer direction="h" size={10} />
@@ -119,6 +119,7 @@ var Chart = React.createClass({
                     </span>
                 </bootstrap.Col>
                 <bootstrap.Col sm={12} style={{height: "500px"}}>
+                    <components.Spacer direction="v" size={32} />
                     <components.HistoricalGraph
                         dateCompare={dateCompareProps.value}
                         misure={this.props.collections.get("misure") || Immutable.Map()}
