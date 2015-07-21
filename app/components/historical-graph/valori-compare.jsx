@@ -5,8 +5,8 @@ var R          = require("ramda");
 var React      = require("react");
 var IPropTypes = require("react-immutable-proptypes");
 
-var components = require("components");
-window.moment = moment;
+var components  = require("components");
+var formatValue = require("./format-value.js");
 
 var ValoriCompare = React.createClass({
     propTypes: {
@@ -31,7 +31,7 @@ var ValoriCompare = React.createClass({
                 var date = moment(misura.get("data")).toDate();
                 return R.pipe(
                     R.map(function (valore) {
-                        return [misura.get(valore.key), 0];
+                        return formatValue(misura.get(valore.key));
                     }),
                     R.prepend(date)
                 )(self.props.valori);

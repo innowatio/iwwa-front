@@ -5,7 +5,8 @@ var R          = require("ramda");
 var React      = require("react");
 var IPropTypes = require("react-immutable-proptypes");
 
-var components = require("components");
+var components  = require("components");
+var formatValue = require("./format-value.js");
 
 var SitiCompare = React.createClass({
     propTypes: {
@@ -34,7 +35,7 @@ var SitiCompare = React.createClass({
                 return acc.withMutations(function (map) {
                     var value = map.get(date) || [new Date(date)].concat(nullPods);
                     var pod = misura.get("pod");
-                    value[pods.indexOf(pod) + 1] = [misura.get(valore.key), 0];
+                    value[pods.indexOf(pod) + 1] = formatValue(misura.get(valore.key));
                     map.set(date, value);
                 });
             }, Immutable.Map())

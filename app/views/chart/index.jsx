@@ -90,7 +90,7 @@ var Chart = React.createClass({
         return [
             {label: "Reale", key: "reale"},
             {label: "Contrattuale", key: "contrattuale"},
-            {label: "Previsionale", key: "realeMeno1"}
+            {label: "Previsionale", key: "previsionale"}
         ];
     },
     render: function () {

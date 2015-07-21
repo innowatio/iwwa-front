@@ -5,7 +5,8 @@ var R          = require("ramda");
 var React      = require("react");
 var IPropTypes = require("react-immutable-proptypes");
 
-var components = require("components");
+var components  = require("components");
+var formatValue = require("./format-value.js");
 
 var DateCompare = React.createClass({
     propTypes: {
@@ -54,7 +55,7 @@ var DateCompare = React.createClass({
                     acc = acc.withMutations(function (map) {
                         var position = date - ranges.rangeOne.start;
                         var value = map.get(position) || [position, null, null];
-                        value[1] = [misura.get(valore.key), 0];
+                        value[1] = formatValue(misura.get(valore.key));
                         map.set(position, value);
                     });
                 }
@@ -64,7 +65,7 @@ var DateCompare = React.createClass({
                     acc = acc.withMutations(function (map) {
                         var position = date - ranges.rangeTwo.start;
                         var value = map.get(position) || [position, null, null];
-                        value[2] = [misura.get(valore.key), 0];
+                        value[2] = formatValue(misura.get(valore.key));
                         map.set(position, value);
                     });
                 }
