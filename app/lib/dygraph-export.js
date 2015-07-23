@@ -77,7 +77,6 @@ Dygraph.Export.isSupported = function () {
  */
 exports.asPNG = function (dygraph, img, userOptions) {
     var canvas = Dygraph.Export.asCanvas(dygraph, userOptions);
-    console.log(canvas.toDataURL());
     img.src = canvas.toDataURL();
 };
 
@@ -121,7 +120,7 @@ Dygraph.Export.drawPlot = function (canvas, dygraph, options) {
 
     var i = 0;
 
-    ctx.drawImage(plotCanvas, 0, 0);
+    ctx.drawImage(plotCanvas, 0, 0, canvas.width, canvas.height);
 
 
     // Add the x and y axes
