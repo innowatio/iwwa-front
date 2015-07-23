@@ -4,6 +4,7 @@ var Immutable  = require("immutable");
 var IPropTypes = require("react-immutable-proptypes");
 var titleCase  = require("title-case");
 
+var colors             = require("lib/colors");
 var DateCompareGraph   = require("./date-compare.jsx");
 var ValoriCompareGraph = require("./valori-compare.jsx");
 var SitiCompareGraph   = require("./siti-compare.jsx");
@@ -41,7 +42,7 @@ var HistoricalGraph = React.createClass({
                     {this.props.siti.length === 2 ? " & " : null}
                     {this.renderSitoTitle(this.props.siti[1])}
                 </h3>
-                <h4 className="text-center">
+                <h4 className="text-center" style={{color: colors.greySubTitle}}>
                     Tipologia: &nbsp;
                     {this.props.tipologia.label}
                 </h4>

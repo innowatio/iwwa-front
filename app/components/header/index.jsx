@@ -28,17 +28,14 @@ var Header = React.createClass({
         this.props.asteroid.logout();
     },
     render: function () {
+        var iconLogout = "/_assets/icons/os__logout.svg";
+        var iconLogo   = "/_assets/icons/os__link_dashboard.svg";
         return (
             <div style={styles.base}>
-                <span>
-                    {"Innowatio"}
-                </span>
+                <img src={iconLogo} style={{width: "25px"}}/>
                 <span onClick={this.logout} style={styles.logout}>
-                    <i>
-                        {"Logout"}
-                    </i>
                     <components.Spacer direction="h" size={8} />
-                    <components.Icon icon="sign-out" />
+                    <img src={iconLogout} style={{width: "25px"}}/>
                 </span>
             </div>
         );

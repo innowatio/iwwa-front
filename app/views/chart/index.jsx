@@ -139,7 +139,19 @@ var Chart = React.createClass({
         );
         return (
             <div>
-                <h2 className="text-center" style={{color: colors.titleColor}}>Consumi storici</h2>
+                <h2
+                    className="text-center"
+                    style={{
+                            color: colors.titleColor,
+                            backgroundColor: colors.greyBackground,
+                            marginTop: "0px",
+                            height: "40px",
+                            fontSize: "20pt"
+                        }}
+                >
+                    <components.Spacer direction="v" size={5} />
+                    Consumi storici
+                </h2>
                 <bootstrap.Col sm={12} style={styles.colVerticalPadding}>
                     <span className="pull-left">
                         <components.ButtonGroupSelect
