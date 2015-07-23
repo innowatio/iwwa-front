@@ -58,7 +58,7 @@ var SideNav = React.createClass({
     },
     renderNavItem: function (menuItem) {
         return (
-            <li>
+            <li key={menuItem.iconPath}>
                 <Router.Link
                     activeStyle={styles.activeLink}
                     onClick={this.props.linkClickAction}

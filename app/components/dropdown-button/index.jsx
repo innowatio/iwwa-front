@@ -7,7 +7,7 @@ var IPropTypes = require("react-immutable-proptypes");
 var components = require("components/");
 var colors     = require("lib/colors");
 
-var DropdownSelect = React.createClass({
+var DropdownButton = React.createClass({
     propTypes: {
         allowedValues: React.PropTypes.oneOfType([
             React.PropTypes.array,
@@ -15,9 +15,7 @@ var DropdownSelect = React.createClass({
         ]).isRequired,
         getKey: React.PropTypes.func,
         getLabel: React.PropTypes.func,
-        onChange: React.PropTypes.func.isRequired,
-        title: React.PropTypes.element,
-        value: React.PropTypes.any
+        getIcon: React.PropTypes.func
     },
     getDefaultProps: function () {
         var defaultGetter = function (allowedItem) {
@@ -25,17 +23,19 @@ var DropdownSelect = React.createClass({
         };
         return {
             getKey: defaultGetter,
-            getLabel: defaultGetter
+            getLabel: defaultGetter,
+            getIcon: defaultGetter
         };
     },
-    shouldComponentUpdate: function (nextProps) {
-        return !(
-            this.props.allowedValues === nextProps.allowedValues &&
-            this.props.getKey === nextProps.getKey &&
-            this.props.getLabel === nextProps.getLabel &&
-            this.props.title === nextProps.title &&
-            this.props.value === nextProps.value
-        );
+    imageItem: function (allowedValue) {
+        if (R.keys(allowedValue).length === 3) {
+            return (
+                <img
+                    src={this.props.getIcon(allowedValue)}
+                    style={{width: "25px", marginRight: "20px"}}
+                />
+            )
+        }
     },
     renderButtonOption: function (allowedValue, index) {
         var active = (allowedValue === this.props.value);
@@ -54,7 +54,7 @@ var DropdownSelect = React.createClass({
                 key={this.props.getKey(allowedValue)}
                 onClick={R.partial(this.props.onChange, allowedValue)}
             >
-                <input checked={active} style={{marginRight: "10px"}} readOnly type="radio" />
+                {this.imageItem(allowedValue)}
                 {this.props.getLabel(allowedValue)}
             </bootstrap.ListGroupItem>
         );
@@ -95,4 +95,4 @@ var DropdownSelect = React.createClass({
     }
 });
 
-module.exports = Radium(DropdownSelect);
+module.exports = DropdownButton;

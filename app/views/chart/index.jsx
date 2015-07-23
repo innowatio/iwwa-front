@@ -6,6 +6,7 @@ var bootstrap  = require("react-bootstrap");
 var IPropTypes = require("react-immutable-proptypes");
 var titleCase  = require("title-case");
 
+var colors     = require("lib/colors");
 var components       = require("components");
 var styles           = require("lib/styles");
 var QuerystringMixin = require("lib/querystring-mixin");
@@ -93,7 +94,21 @@ var Chart = React.createClass({
             {label: "Previsionale", key: "previsionale"}
         ];
     },
+    getExportType: function () {
+        var iconCSV = "/_assets/icons/os__CSV.svg";
+        var iconPNG = "/_assets/icons/os__JPG.svg";
+        return [
+            {label: "Png", key: "png", icon: iconPNG},
+            {label: "Csv", key: "csv", icon: iconCSV}
+        ]
+    },
+    onChangeExport: function (valueChanged) {
+        console.log("Esporta con " + valueChanged.label);
+    },
     render: function () {
+        //Icone
+        var iconExport = "/_assets/icons/os__export.svg";
+        var iconPower = "/_assets/icons/os__power.svg";
         // Sito
         var siti = this.props.collections.get("siti") || Immutable.Map();
         var sitoInputProps = this.bindToQueryParameter(
@@ -124,6 +139,7 @@ var Chart = React.createClass({
         );
         return (
             <div>
+                <h2 className="text-center" style={{color: colors.titleColor}}>Consumi storici</h2>
                 <bootstrap.Col sm={12} style={styles.colVerticalPadding}>
                     <span className="pull-left">
                         <components.ButtonGroupSelect
@@ -132,6 +148,14 @@ var Chart = React.createClass({
                             getLabel={R.prop("label")}
                             multi={valoriMulti}
                             {...valoreInputProps}
+                        />
+                    <components.DropdownButton
+                            allowedValues={this.getExportType()}
+                            getIcon={R.prop("icon")}
+                            getKey={R.prop("key")}
+                            getLabel={R.prop("label")}
+                            title={<img src={iconExport} style={{width: "18px"}} />}
+                            onChange={this.onChangeExport}
                         />
                     </span>
                     <span className="pull-left">
@@ -162,13 +186,12 @@ var Chart = React.createClass({
                             getKey={R.prop("key")}
                             getLabel={R.prop("label")}
                             style={{float: "left"}}
-                            title="Quantità di interesse"
+                            title={<img src={iconPower} style={{width: "25px"}} />}
                             {...tipologiaInputProps}
                         />
                     </span>
                 </bootstrap.Col>
                 <bootstrap.Col sm={12} style={{height: "500px"}}>
-                    <components.Spacer direction="v" size={32} />
                     <components.HistoricalGraph
                         dateCompare={dateCompareProps.value}
                         misure={this.props.collections.get("misure") || Immutable.Map()}

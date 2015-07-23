@@ -1,6 +1,8 @@
 var Radium     = require("radium");
 var React      = require("react");
+var Immutable  = require("immutable");
 var IPropTypes = require("react-immutable-proptypes");
+var titleCase  = require("title-case");
 
 var DateCompareGraph   = require("./date-compare.jsx");
 var ValoriCompareGraph = require("./valori-compare.jsx");
@@ -19,6 +21,33 @@ var HistoricalGraph = React.createClass({
         valori: React.PropTypes.arrayOf(React.PropTypes.object)
     },
     mixins: [React.addons.PureRenderMixin],
+    renderSitoTitle: function (sito) {
+        return sito ? (
+            <span>
+                <strong>
+                    {titleCase(sito.get("societa"))}
+                </strong>
+                {" - "}
+                {titleCase(sito.get("idCoin"))}
+            </span>
+        ) : null;
+    },
+    renderTitle: function () {
+        return (
+            <div>
+                <h3 className="text-center" style={{marginTop: "0px"}}>
+                    Sito: &nbsp;
+                    {this.renderSitoTitle(this.props.siti[0])}
+                    {this.props.siti.length === 2 ? " & " : null}
+                    {this.renderSitoTitle(this.props.siti[1])}
+                </h3>
+                <h4 className="text-center">
+                    Tipologia: &nbsp;
+                    {this.props.tipologia.label}
+                </h4>
+            </div>
+        );
+    },
     renderDateCompareGraph: function () {
         return <DateCompareGraph {...this.props} />;
     },
@@ -28,7 +57,7 @@ var HistoricalGraph = React.createClass({
     renderValoriCompareGraph: function () {
         return <ValoriCompareGraph {...this.props} />;
     },
-    render: function () {
+    renderGraph: function () {
         if (this.props.dateCompare) {
             return this.renderDateCompareGraph();
         }
@@ -36,6 +65,14 @@ var HistoricalGraph = React.createClass({
             return this.renderSitiCompareGraph();
         }
         return this.renderValoriCompareGraph();
+    },
+    render: function () {
+        return (
+            <div style={{width: "100%", height: "100%"}}>
+                {this.renderTitle()}
+                {this.renderGraph()}
+            </div>
+        );
     }
 });
 
