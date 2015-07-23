@@ -6,7 +6,7 @@ var bootstrap  = require("react-bootstrap");
 var IPropTypes = require("react-immutable-proptypes");
 var titleCase  = require("title-case");
 
-var colors     = require("lib/colors");
+var colors           = require("lib/colors");
 var components       = require("components");
 var styles           = require("lib/styles");
 var QuerystringMixin = require("lib/querystring-mixin");
@@ -14,7 +14,7 @@ var transformers     = require("./transformers.js");
 
 var multiselectStyles = {
     multiselect: {
-        width: "348.5px"
+        width: "175px"
     },
     tag: {
         display: "inline-block",
@@ -109,6 +109,7 @@ var Chart = React.createClass({
         //Icone
         var iconExport = "/_assets/icons/os__export.svg";
         var iconPower = "/_assets/icons/os__power.svg";
+        var iconSiti = "/_assets/icons/os__map.svg";
         // Sito
         var siti = this.props.collections.get("siti") || Immutable.Map();
         var sitoInputProps = this.bindToQueryParameter(
@@ -150,7 +151,7 @@ var Chart = React.createClass({
                         }}
                 >
                     <components.Spacer direction="v" size={5} />
-                    Consumi storici
+                    Storico consumi
                 </h2>
                 <bootstrap.Col sm={12} style={styles.colVerticalPadding}>
                     <span className="pull-left">
@@ -170,29 +171,8 @@ var Chart = React.createClass({
                             onChange={this.onChangeExport}
                         />
                     </span>
-                    <span className="pull-left">
-                        <components.Spacer direction="h" size={10} />
-                        <components.DatefilterModal
-                            getPeriodKey={R.prop("key")}
-                            getPeriodLabel={R.prop("label")}
-                            periods={periods}
-                            {...dateCompareProps}
-                        />
-                    </span>
                     <span className="pull-right">
                         <components.Spacer direction="h" size={10} />
-                        <components.Multiselect
-                            allowedValues={siti}
-                            filter={filterSito}
-                            getLabel={getSitoLabel}
-                            maxValues={2}
-                            style={multiselectStyles.multiselect}
-                            tagComponent={SitoTagComponent}
-                            title="Punto di misurazione"
-                            {...sitoInputProps}
-                        />
-                    </span>
-                    <span className="pull-right">
                         <components.DropdownSelect
                             allowedValues={tipologie}
                             getKey={R.prop("key")}
@@ -200,6 +180,23 @@ var Chart = React.createClass({
                             style={{float: "left"}}
                             title={<img src={iconPower} style={{width: "25px"}} />}
                             {...tipologiaInputProps}
+                        />
+                        <components.Multiselect
+                            allowedValues={siti}
+                            filter={filterSito}
+                            getLabel={getSitoLabel}
+                            maxValues={2}
+                            style={multiselectStyles.multiselect}
+                            tagComponent={SitoTagComponent}
+                            title={<img src={iconSiti} style={{width: "25px"}} />}
+                            {...sitoInputProps}
+                        />
+                        <components.Spacer direction="h" size={10} />
+                        <components.DatefilterModal
+                            getPeriodKey={R.prop("key")}
+                            getPeriodLabel={R.prop("label")}
+                            periods={periods}
+                            {...dateCompareProps}
                         />
                     </span>
                 </bootstrap.Col>
