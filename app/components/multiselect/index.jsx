@@ -69,10 +69,6 @@ var Multiselect = React.createClass({
                         },
                         "ul.rw-list": {
                             padding: "0px"
-                        },
-                        ".rw-multiselect-taglist > li": {
-                            border: "0px",
-                            borderColor: colors.white
                         }
                     }}
                     scopeSelector=".ac-multiselect"
