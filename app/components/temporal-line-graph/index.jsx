@@ -1,7 +1,9 @@
+var bootstrap = require("react-bootstrap");
 var R     = require("ramda");
 var React = require("react");
 
 var AppPropTypes = require("lib/app-prop-types.js");
+var dygraphExport = require("lib/dygraph-export.js");
 
 var TemporalLineGraph = React.createClass({
     propTypes: {
@@ -78,9 +80,20 @@ var TemporalLineGraph = React.createClass({
         */
         this.graph = new Dygraph(container, coordinates, options);
     },
+    exportPNG: function () {
+        var imgContainer = this.refs.demoImg.getDOMNode();
+        dygraphExport.asPNG(this.graph, imgContainer);
+        window.location.href = imgContainer.src.replace("image/png", "image/octet-stream");
+    },
     render: function () {
         return (
-            <div ref="graphContainer" style={{width: "100%", height: "100%"}} />
+            <span>
+                <div ref="graphContainer" style={{width: "100%", height: "100%"}} />
+                <bootstrap.Button onClick={this.exportPNG}>
+                    Export!
+                </bootstrap.Button>
+                <img ref="demoImg" style={{visibility: "hidden"}}/>
+            </span>
         );
     }
 });
