@@ -18,26 +18,29 @@
  * See: http://cavorite.com/labs/js/dygraphs-export/
  */
 
+var R = require("ramda");
+
+
 Dygraph.Export = {};
 
 Dygraph.Export.DEFAULT_ATTRS = {
 
-    backgroundColor: "transparent",
+    backgroundColor: "white",
 
     // Texts displayed below the chart's x-axis and to the left of the y-axis
     titleFont: "bold 18px serif",
     titleFontColor: "black",
 
     // Texts displayed below the chart's x-axis and to the left of the y-axis
-    axisLabelFont: "bold 14px serif",
+    axisLabelFont: "normal 14px lato",
     axisLabelFontColor: "black",
 
     // Texts for the axis ticks
-    labelFont: "normal 12px serif",
+    labelFont: "normal 14px lato",
     labelFontColor: "black",
 
     // Text for the chart legend
-    legendFont: "bold 12px serif",
+    legendFont: "normal 14px lato",
     legendFontColor: "black",
 
     // Default position for vertical labels
@@ -187,7 +190,8 @@ Dygraph.Export.putLabel = function (ctx, divLabel, options, font, color) {
     }
 
     // FIXME: Remove this 'magic' number needed to get the line-height.
-    top = top + options.magicNumbertop;
+    // TODO: added 8 to allow X values to better fit
+    top = top + options.magicNumbertop + 8;
 
     var width = parseInt(divLabel.style.width, 10);
 
@@ -221,7 +225,7 @@ Dygraph.Export.putVerticalLabelY1 = function (ctx, divLabel, options, font, colo
         left = options.vLabelLeft;
     }
 
-    if (textAlign == "center") {
+    if (textAlign === "center") {
         var textDim = ctx.measureText(text);
         top = Math.ceil((ctx.canvas.height - textDim.width) / 2 + textDim.width);
     }
@@ -250,7 +254,7 @@ Dygraph.Export.putVerticalLabelY2 = function (ctx, divLabel, options, font, colo
     var right = parseInt(divLabel.style.right, 10) + parseInt(divLabel.style.width, 10) * 2;
     var text = divLabel.innerText || divLabel.textContent;
 
-    if (textAlign == "center") {
+    if (textAlign === "center") {
         top = Math.ceil(ctx.canvas.height / 2);
     }
 
@@ -285,49 +289,62 @@ Dygraph.Export.putText = function (ctx, left, top, divLabel, font, color) {
  *
  */
 Dygraph.Export.drawLegend = function (canvas, dygraph, options) {
-    var ctx = canvas.getContext("2d");
 
-    // Margin from the plot
-    var labelTopMargin = 10;
+    var legendPlugin = Dygraph.Export.getPlugin(dygraph, "Legend Plugin");
 
-    // Margin between labels
-    var labelMargin = 5;
-
-    var colors = dygraph.getColors();
-    // Drop the first element, which is the label for the time dimension
-    var labels = dygraph.attr_("labels").slice(1);
-
-    // 1. Compute the width of the labels:
-    var labelsWidth = 0;
-
-    var i;
-    for (i = 0; i < labels.length; i++) {
-        labelsWidth = labelsWidth + ctx.measureText("- " + labels[i]).width + labelMargin;
+    if (!legendPlugin) {
+        // cannot create a legend if it's not visibile
+        return;
     }
 
-    var labelsX = Math.floor((canvas.width - labelsWidth) / 2);
-    var labelsY = canvas.height - options.legendHeight + labelTopMargin;
+    var ctx = canvas.getContext("2d");
+    var legendStyle = legendPlugin.plugin.legend_div_.style;
 
+    var legendLeft = Dygraph.Export.fromPixelToNumber(legendStyle.left);
+    var legendTop = Dygraph.Export.fromPixelToNumber(legendStyle.top);
+    var legendWidth = Dygraph.Export.fromPixelToNumber(legendStyle.width);
 
-    var labelVisibility = dygraph.attr_("visibility");
-
+    // Legend Text
     ctx.font = options.legendFont;
     ctx.textAlign = "left";
     ctx.textBaseline = "middle";
 
+    var colors = dygraph.getColors();
+    var labels = dygraph.attr_("labels").slice(1);
     var usedColorCount = 0;
-    for (i = 0; i < labels.length; i++) {
+    var labelVisibility = dygraph.attr_("visibility");
+
+    // TODO: remove the hardcoding
+    var textSize = 14;
+
+    var labelsY = textSize;
+    var legendTexts = [];
+
+    for (var i = 0; i < labels.length; i++) {
         if (labelVisibility[i]) {
             // TODO Replace the minus sign by a proper dash, although there is a
             //     problem when the page encoding is different than the encoding
             //     of this file (UTF-8).
-            var txt = "- " + labels[i];
-            ctx.fillStyle = colors[usedColorCount];
+            legendTexts.push({
+                fillStyle: colors[usedColorCount],
+                key: labels[i],
+                labelX: legendLeft,
+                labelY: labelsY
+            });
+
             usedColorCount++;
-            ctx.fillText(txt, labelsX, labelsY);
-            labelsX = labelsX + ctx.measureText(txt).width + labelMargin;
+            labelsY = labelsY + textSize;
         }
     }
+
+    ctx.rect(legendLeft, legendTop, legendWidth, labelsY);
+    ctx.fillStyle = "white";
+    ctx.fill();
+
+    legendTexts.map(function (text) {
+        ctx.fillStyle = text.fillStyle;
+        ctx.fillText(text.key, text.labelX, text.labelY);
+    });
 };
 
 /*
@@ -337,10 +354,25 @@ Dygraph.Export.drawLegend = function (canvas, dygraph, options) {
  * If the plugin is not found, it returns null.
  */
 Dygraph.Export.getPlugin = function (dygraph, name) {
-    for (var i = 0; i < dygraph.plugins_.length; i++) {
-        if (dygraph.plugins_[i].plugin.toString() == name) {
-            return dygraph.plugins_[i];
+
+    var plugin = dygraph.plugins_.map(function (dygraphPlugin) {
+        if (dygraphPlugin.plugin.toString() === name) {
+            return dygraphPlugin;
         }
+    });
+
+    var res = R.filter(function (value) {
+        return !R.isNil(value);
+    },
+    plugin);
+
+    if (res.length > 0) {
+        return res[0];
+    } else {
+        return null;
     }
-    return null;
+};
+
+Dygraph.Export.fromPixelToNumber = function (pxString) {
+    return parseInt(pxString.replace("px", ""), 10);
 };

@@ -25,3 +25,6 @@ global.proxyquire = proxyquire;
 // Setup React
 global.React = React;
 global.TestUtils = React.addons.TestUtils;
+
+// to avoid `Dygraph is not defined` while running tests
+global.Dygraph = {};
