@@ -69,6 +69,9 @@ var Multiselect = React.createClass({
                         },
                         "ul.rw-list": {
                             padding: "0px"
+                        },
+                        ".rw-input": {
+                            padding: "5px"
                         }
                     }}
                     scopeSelector=".ac-multiselect"

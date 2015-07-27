@@ -5,6 +5,7 @@ var AppPropTypes = require("lib/app-prop-types.js");
 
 var TemporalLineGraph = React.createClass({
     propTypes: {
+        colors: React.PropTypes.arrayOf(React.PropTypes.string),
         coordinates: React.PropTypes.arrayOf(
             AppPropTypes.DygraphCoordinate
         ).isRequired,
@@ -50,6 +51,9 @@ var TemporalLineGraph = React.createClass({
                 y: {}
             }
         };
+        if (props.colors) {
+            options.colors = props.colors;
+        }
         if (props.dateWindow) {
             options.dateWindow = props.dateWindow;
         }

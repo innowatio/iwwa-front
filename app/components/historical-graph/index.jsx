@@ -69,10 +69,10 @@ var HistoricalGraph = React.createClass({
     },
     render: function () {
         return (
-            <div style={{width: "100%", height: "100%"}}>
-                {this.renderTitle()}
-                {this.renderGraph()}
-            </div>
+                <div style={{width: "100%", height: "100%"}}>
+                    {this.renderTitle()}
+                    {this.renderGraph()}
+                </div>
         );
     }
 });

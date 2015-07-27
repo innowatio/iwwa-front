@@ -50,6 +50,7 @@ var ValoriCompare = React.createClass({
         return (
             <components.TemporalLineGraph
                 coordinates={this.getCoordinates()}
+                colors={this.props.valori.map(R.prop("color"))}
                 labels={this.getLabels()}
                 showRangeSelector={true}
                 xLabel=""

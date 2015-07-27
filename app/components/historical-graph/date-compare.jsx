@@ -148,8 +148,7 @@ var DateCompare = React.createClass({
                 lockInteraction={true}
                 xLegendFormatter={this.xLegendFormatter}
                 xTicker={this.xTicker}
-                yLabel="kWh"
-            />
+                yLabel="kWh"/>
         );
     }
 });

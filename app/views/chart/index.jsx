@@ -89,9 +89,9 @@ var Chart = React.createClass({
     },
     getValori: function () {
         return [
-            {label: "Reale", key: "reale"},
-            {label: "Contrattuale", key: "contrattuale"},
-            {label: "Previsionale", key: "previsionale"}
+            {label: "Reale", color: "blue", key: "reale"},
+            {label: "Contrattuale", color: "red", key: "contrattuale"},
+            {label: "Previsionale", color: "green", key: "previsionale"}
         ];
     },
     getExportType: function () {
@@ -128,6 +128,12 @@ var Chart = React.createClass({
             "valore",
             transformers.valore(valori)
         );
+        var valoreGetActiveStyle = function (valore) {
+            return {
+                background: valore.color,
+                color: colors.white
+            };
+        };
         // Date Compare
         var periods = this.getPeriods();
         var dateCompareProps = this.bindToQueryParameter(
@@ -157,6 +163,7 @@ var Chart = React.createClass({
                     <span className="pull-left">
                         <components.ButtonGroupSelect
                             allowedValues={valori}
+                            getActiveStyle={valoreGetActiveStyle}
                             getKey={R.prop("key")}
                             getLabel={R.prop("label")}
                             multi={valoriMulti}
@@ -206,8 +213,7 @@ var Chart = React.createClass({
                         misure={this.props.collections.get("misure") || Immutable.Map()}
                         siti={sitoInputProps.value}
                         tipologia={tipologiaInputProps.value}
-                        valori={valoreInputProps.value}
-                    />
+                        valori={valoreInputProps.value}/>
                 </bootstrap.Col>
             </div>
         );

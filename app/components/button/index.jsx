@@ -15,8 +15,6 @@ var Button = React.createClass({
         );
         return React.cloneElement(button, {
             style: R.merge({
-                background: this.props.active ? colors.primary : colors.white,
-                color: this.props.active ? colors.white : colors.black,
                 outline: "0px",
                 outlineStyle: "none",
                 outlineWidth: "0px"
