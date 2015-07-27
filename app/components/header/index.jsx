@@ -37,7 +37,8 @@ var icoMenu = "fa fa-bars";
 
 var Header = React.createClass({
     propTypes: {
-        asteroid: React.PropTypes.object.isRequired
+        asteroid: React.PropTypes.object.isRequired,
+        menuClickAction: React.PropTypes.func
     },
     logout: function () {
         this.props.asteroid.logout();
