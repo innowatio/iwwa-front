@@ -14,23 +14,16 @@ var styles = {
         borderRightColor: colors.primary
     },
     hamburger: {
-        position: "absolute",
-        top: "0px",
-        left: "0px",
-        width: "100%",
         height: measures.headerHeight,
         backgroundColor: colors.primary,
-        alignItems: "center",
-        color: colors.white,
         fontSize: "35px",
-        textAlign: "right",
+        textAlign: "left",
         paddingRight: "15px",
         paddingTop: "5px",
         cursor: "pointer"
     },
     menu: {
         position: "absolute",
-        top: measures.headerHeight,
         width: "100%"
     },
     activeLink: {
@@ -74,12 +67,6 @@ var SideNav = React.createClass({
     render: function () {
         return (
             <div style={[styles.sidebar, this.props.style]}>
-                <div
-                    className={icoMenu}
-                    onClick={this.props.toggleSidebar}
-                    style={styles.hamburger}
-                >
-                </div>
                 <div style={styles.menu}>
                     <bootstrap.Nav bsStyle="pills" stacked >
                         {this.props.items.map(this.renderNavItem)}

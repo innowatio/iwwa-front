@@ -2,7 +2,8 @@ var Radium = require("radium");
 var React  = require("react");
 
 var components = require("components");
-var colors = require("lib/colors");
+var colors     = require("lib/colors");
+var measures   = require("lib/measures");
 
 var styles = {
     base: {
@@ -16,9 +17,23 @@ var styles = {
         color: colors.white
     },
     logout: {
+        cursor: "pointer",
+        alignItems: "center"
+    },
+    hamburger: {
+        height: measures.headerHeight,
+        backgroundColor: colors.primary,
+        alignItems: "center",
+        color: colors.white,
+        fontSize: "35px",
+        textAlign: "right",
+        paddingRight: "15px",
+        paddingTop: "5px",
         cursor: "pointer"
     }
 };
+
+var icoMenu = "fa fa-bars";
 
 var Header = React.createClass({
     propTypes: {
@@ -32,10 +47,16 @@ var Header = React.createClass({
         var iconLogo   = "/_assets/icons/os__link_dashboard.svg";
         return (
             <div style={styles.base}>
-                <img src={iconLogo} style={{width: "25px"}}/>
+                <span
+                    className={icoMenu}
+                    onClick={this.props.menuClickAction}
+                    style={styles.hamburger}
+                />
+                <span style={styles.base}>
+                    <img src={iconLogo} />
+                </span>
                 <span onClick={this.logout} style={styles.logout}>
-                    <components.Spacer direction="h" size={8} />
-                    <img src={iconLogout} style={{width: "25px"}}/>
+                    <img src={iconLogout} />
                 </span>
             </div>
         );

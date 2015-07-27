@@ -14,7 +14,7 @@ var measures   = require("lib/measures");
 var styles = {
     header: {
         position: "absolute",
-        width: "calc(100% - " + measures.sidebarShoulderWidth + ")",
+        width: "100%",
         height: measures.headerHeight,
         transition: "left 0.3s ease"
     },
@@ -28,7 +28,7 @@ var styles = {
     },
     sidebar: {
         position: "absolute",
-        top: "0px",
+        top: measures.headerHeight,
         width: measures.sidebarWidth,
         height: "100%",
         transition: "left 0.3s ease"
@@ -114,8 +114,11 @@ var Root = React.createClass({
                     style={this.getSidebarStyle()}
                     toggleSidebar={this.toggleSidebar}
                 />
-                <div style={this.getHeaderStyle()}>
-                    <components.Header asteroid={asteroid} />
+                <div style={styles.header}>
+                    <components.Header
+                        asteroid={asteroid}
+                        menuClickAction={this.toggleSidebar}
+                    />
                 </div>
                 <div style={this.getContentStyle()}>
                     {this.renderChildren()}
