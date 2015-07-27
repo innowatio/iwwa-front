@@ -1,9 +1,9 @@
-var bootstrap = require("react-bootstrap");
 var R     = require("ramda");
 var React = require("react");
 
-var AppPropTypes = require("lib/app-prop-types.js");
-var dygraphExport = require("lib/dygraph-export.js");
+var AppPropTypes     = require("lib/app-prop-types.js");
+var dygraphExport    = require("lib/dygraph-export.js");
+var DygraphCSVExport = require("lib/dygraph-export-csv.js");
 
 var TemporalLineGraph = React.createClass({
     propTypes: {
@@ -18,6 +18,11 @@ var TemporalLineGraph = React.createClass({
         xLegendFormatter: React.PropTypes.func,
         xTicker: React.PropTypes.func,
         yLabel: React.PropTypes.string
+    },
+    getInitialState: function () {
+        return {
+            imageBase64: ""
+        };
     },
     componentDidMount: function () {
         this.drawGraph();
@@ -80,19 +85,26 @@ var TemporalLineGraph = React.createClass({
         */
         this.graph = new Dygraph(container, coordinates, options);
     },
+    exportCSV: function () {
+        var csvString = DygraphCSVExport.exportCSV(this.graph);
+        window.open(csvString.toBase64(), "_blank");
+    },
     exportPNG: function () {
-        var imgContainer = this.refs.demoImg.getDOMNode();
-        dygraphExport.asPNG(this.graph, imgContainer);
-        window.location.href = imgContainer.src.replace("image/png", "image/octet-stream");
+        var options = {
+            labelFont: "14px lato",
+            legendFont: "14px lato",
+            magicNumbertop: 20
+        };
+
+        var imgContainer;
+        dygraphExport.asPNG(this.graph, imgContainer, options);
+        this.state.imageBase64 = imgContainer.src.replace("image/png", "image/octet-stream");
+        window.open(this.state.imageBase64, "_blank");
     },
     render: function () {
         return (
             <span>
                 <div ref="graphContainer" style={{width: "100%", height: "100%"}} />
-                <bootstrap.Button onClick={this.exportPNG}>
-                    Export!
-                </bootstrap.Button>
-                <img ref="demoImg" style={{visibility: "hidden"}}/>
             </span>
         );
     }
