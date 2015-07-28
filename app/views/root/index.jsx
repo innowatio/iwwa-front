@@ -75,8 +75,6 @@ var Root = React.createClass({
     getHeaderStyle: function () {
         return R.merge(styles.header, {
             left: (
-                this.state.sidebarOpen ?
-                measures.sidebarWidth :
                 measures.sidebarShoulderWidth
             )
         });
@@ -84,13 +82,15 @@ var Root = React.createClass({
     getContentStyle: function () {
         return R.merge(styles.content, {
             left: (
-                this.state.sidebarOpen ?
-                measures.sidebarWidth :
                 measures.sidebarShoulderWidth
             )
         });
     },
     getSidebarStyle: function () {
+        console.log(this.state.sidebarOpen ?
+        "0px" :
+        (parseInt(measures.sidebarShoulderWidth) - parseInt(measures.sidebarWidth)) + "px");
+
         return R.merge(styles.sidebar, {
             left: (
                 this.state.sidebarOpen ?

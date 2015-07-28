@@ -3,7 +3,7 @@ var Radium     = require("radium");
 var React      = require("react");
 var Router     = require("react-router");
 
-var colors = require("lib/colors");
+var colors   = require("lib/colors");
 var measures = require("lib/measures");
 
 var styles = {
@@ -11,7 +11,12 @@ var styles = {
         height: "100%",
         borderRightWidth: "1px",
         borderRightStyle: "solid",
-        borderRightColor: colors.primary
+        borderRightColor: colors.primary,
+        backgroundColor: colors.white,
+        zIndex: 100,
+        "@media only screen": {
+            left: "-" + measures.sidebarWidth
+        }
     },
     hamburger: {
         height: measures.headerHeight,
@@ -32,8 +37,6 @@ var styles = {
         backgroundColor: colors.greyLight
     }
 };
-
-var icoMenu = "fa fa-bars";
 
 var SideNav = React.createClass({
     propTypes: {
