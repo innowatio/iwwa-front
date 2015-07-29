@@ -57,6 +57,7 @@
     "webpack": "^1.9.11"
   },
   "dependencies": {
+    "TiTaToggle": "kleinejan/titatoggle",
     "asteroid": "mondora/asteroid#ffd16f",
     "bootstrap": "^3.3.5",
     "color": "^0.10.1",

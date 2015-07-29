@@ -8,15 +8,18 @@ var IPropTypes = require("react-immutable-proptypes");
 var titleCase  = require("title-case");
 
 var colors           = require("lib/colors");
-var components       = require("components");
+var components       = require("components/");
 var styles           = require("lib/styles");
 var QuerystringMixin = require("lib/querystring-mixin");
 var transformers     = require("./transformers.js");
 
 var multiselectStyles = {
+    multiselectPopover: {
+        width: "175px"
+    },
     multiselect: {
-        width: "175px",
-        fontSize: "13px"
+        width: "550px",
+        height: "35px"
     },
     tag: {
         display: "inline-block",
@@ -109,6 +112,15 @@ var Chart = React.createClass({
             {label: "Csv", key: "csv", icon: iconCSV}
         ];
     },
+    getCompare: function () {
+        return [
+            {label: "Ieri e oggi", key: "ieri e oggi"},
+            {label: "Oggi con stesso giorno una settimana fa", key: "1 giorno della settimana"},
+            {label: "Settimana corrente con settimana precedente", key: "1 settimana fa"},
+            {label: "Mese corrente con mese precedente", key: "1 mese fa"},
+            {label: "Mese corrente con stesso mese anno precedente", key: "stesso mese anno scorso"}
+        ];
+    },
     onChangeExport: function (valueChanged) {
         console.log("Esporta con " + valueChanged.label);
     },
@@ -147,6 +159,9 @@ var Chart = React.createClass({
             "dateCompare",
             transformers.dateCompare(periods)
         );
+        // Compare
+        var compare = this.getCompare();
+
         var valoriMulti = (
             !dateCompareProps.value &&
             sitoInputProps.value.length <= 1
@@ -176,35 +191,45 @@ var Chart = React.createClass({
                             multi={valoriMulti}
                             {...valoreInputProps}
                         />
-                    <components.DropdownButton
-                            allowedValues={this.getExportType()}
-                            getIcon={R.prop("icon")}
-                            getKey={R.prop("key")}
-                            getLabel={R.prop("label")}
+                        <components.Popover
                             title={<img src={iconExport} style={{width: "18px"}} />}
-                            onChange={this.onChangeExport}
-                        />
+                        >
+                            <components.DropdownButton
+                                allowedValues={this.getExportType()}
+                                getIcon={R.prop("icon")}
+                                getKey={R.prop("key")}
+                                getLabel={R.prop("label")}
+                                onChange={this.onChangeExport}
+                            />
+                        </components.Popover>
                     </span>
                     <span className="pull-right">
                         <components.Spacer direction="h" size={10} />
-                        <components.DropdownSelect
-                            allowedValues={tipologie}
-                            getKey={R.prop("key")}
-                            getLabel={R.prop("label")}
-                            style={{float: "left"}}
+                        <components.Popover
                             title={<img src={iconPower} style={{width: "25px"}} />}
-                            {...tipologiaInputProps}
-                        />
-                        <components.Multiselect
-                            allowedValues={siti}
-                            filter={filterSito}
-                            getLabel={getSitoLabel}
-                            maxValues={2}
-                            style={multiselectStyles.multiselect}
-                            tagComponent={SitoTagComponent}
+                        >
+                            <components.DropdownSelect
+                                allowedValues={tipologie}
+                                getKey={R.prop("key")}
+                                getLabel={R.prop("label")}
+                                style={{float: "left"}}
+                                {...tipologiaInputProps}
+                            />
+                        </components.Popover>
+                        <components.Popover
                             title={<img src={iconSiti} style={{width: "25px"}} />}
-                            {...sitoInputProps}
-                        />
+                        >
+                            <components.Multiselect
+                                allowedValues={siti}
+                                filter={filterSito}
+                                getLabel={getSitoLabel}
+                                maxValues={2}
+                                open=" "
+                                style={multiselectStyles.multiselectPopover}
+                                tagComponent={SitoTagComponent}
+                                {...sitoInputProps}
+                            />
+                        </components.Popover>
                         <components.Spacer direction="h" size={10} />
                         <components.DatefilterModal
                             getPeriodKey={R.prop("key")}
@@ -212,6 +237,21 @@ var Chart = React.createClass({
                             periods={periods}
                             {...dateCompareProps}
                         />
+                        <components.Compare>
+                            <components.SitiCompare
+                                allowedValues={siti}
+                                filter={filterSito}
+                                getSitoLabel={getSitoLabel}
+                                open={"undefined"}
+                                style={multiselectStyles.multiselect}
+                                value={[]}
+                            />
+                            <components.DataCompare
+                                allowedValues={compare}
+                                getKey={R.prop("key")}
+                                getLabel={R.prop("label")}
+                            />
+                        </components.Compare>
                     </span>
                 </bootstrap.Col>
                 <bootstrap.Col sm={12} style={{height: "100%", padding: "30px"}}>

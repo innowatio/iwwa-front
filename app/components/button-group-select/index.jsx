@@ -9,8 +9,8 @@ var components = require("components");
 
 var ButtonGroupSelect = React.createClass({
     propTypes: {
-        getActiveStyle: React.PropTypes.func,
         allowedValues: React.PropTypes.array.isRequired,
+        getActiveStyle: React.PropTypes.func,
         getKey: React.PropTypes.func,
         getLabel: React.PropTypes.func,
         multi: React.PropTypes.bool,
@@ -26,9 +26,10 @@ var ButtonGroupSelect = React.createClass({
             return allowedValue.toString();
         };
         return {
-            multi: false,
+            getActiveStyle: R.always({}),
             getKey: defaultGetter,
-            getLabel: defaultGetter
+            getLabel: defaultGetter,
+            multi: false
         };
     },
     isActiveMulti: function (allowedValue) {
@@ -96,6 +97,7 @@ var ButtonGroupSelect = React.createClass({
         var active = this.isActive(allowedValue);
         return (
             <components.Button
+                active={active}
                 key={this.props.getKey(allowedValue)}
                 onClick={R.partial(this.onChange, allowedValue)}
                 style={active ? this.props.getActiveStyle(allowedValue) : {}}
