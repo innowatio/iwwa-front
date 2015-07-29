@@ -2,12 +2,8 @@ var Immutable   = require("immutable");
 var Radium     = require("radium");
 var R           = require("ramda");
 var React       = require("react");
-var bootstrap  = require("react-bootstrap");
 var ReactWidget = require("react-widgets");
 var IPropTypes  = require("react-immutable-proptypes");
-
-var colors     = require("lib/colors");
-var components = require("components/");
 
 var Multiselect = React.createClass({
     propTypes: {
@@ -19,6 +15,7 @@ var Multiselect = React.createClass({
         getLabel: React.PropTypes.func,
         maxValues: React.PropTypes.number,
         onChange: React.PropTypes.func.isRequired,
+        open: React.PropTypes.string,
         style: React.PropTypes.object,
         tagComponent: React.PropTypes.func,
         title: React.PropTypes.element,
@@ -43,9 +40,12 @@ var Multiselect = React.createClass({
         if (!this.props.maxValues) {
             return true;
         }
+        if (this.props.open === "undefined" && (this.props.value.length < this.props.maxValues)) {
+            return undefined;
+        }
         return this.props.value.length < this.props.maxValues;
     },
-    renderMultiselect: function () {
+    render: function () {
         var canOpen = this.canOpen();
         return (
             <span className="ac-multiselect" style={{display: "inline-block"}}>
@@ -55,7 +55,7 @@ var Multiselect = React.createClass({
                            display: canOpen ? "" : "none"
                        },
                         "li.rw-list-option": {
-                            height: "40px",
+                            height: "40px"
                         },
                         "ul.rw-list > li.rw-list-option": {
                             borderBottom: "#C8C8C8 1px solid",
@@ -80,7 +80,7 @@ var Multiselect = React.createClass({
                     data={this.getData()}
                     filter={this.props.filter}
                     onChange={this.props.onChange}
-                    open={this.canOpen()}
+                    open={canOpen}
                     placeholder={"Punto di misurazione"}
                     style={this.props.style}
                     tagComponent={this.props.tagComponent}
@@ -88,45 +88,6 @@ var Multiselect = React.createClass({
                     value={this.props.value}
                 />
             </span>
-        );
-    },
-    renderOverlay: function () {
-        return (
-            <bootstrap.Popover className="multiselect-popover">
-                <Radium.Style
-                    rules={{
-                        "": {
-                            padding: "0px"
-                        },
-                        ".popover-content": {
-                            padding: "0px",
-                            cursor: "pointer"
-                        },
-                        ".rw-widget": {
-                            border: "0px"
-                        },
-                        ".rw-popup": {
-                            padding: "0px"
-                        }
-                    }}
-                    scopeSelector=".multiselect-popover"
-                />
-                {this.renderMultiselect()}
-            </bootstrap.Popover>
-        )
-    },
-    render: function () {
-        return (
-            <bootstrap.OverlayTrigger
-                trigger="click"
-                placement="bottom"
-                rootClose={true}
-                overlay={this.renderOverlay()}
-            >
-                <components.Button  bsStyle="link">
-                    {this.props.title}
-                </components.Button>
-            </bootstrap.OverlayTrigger>
         );
     }
 });
