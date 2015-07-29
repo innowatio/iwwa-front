@@ -1,3 +1,4 @@
+var color      = require("color");
 var Immutable  = require("immutable");
 var Radium     = require("radium");
 var R          = require("ramda");
@@ -14,7 +15,8 @@ var transformers     = require("./transformers.js");
 
 var multiselectStyles = {
     multiselect: {
-        width: "175px"
+        width: "175px",
+        fontSize: "13px"
     },
     tag: {
         display: "inline-block",
@@ -26,6 +28,11 @@ var multiselectStyles = {
         overflow: "hidden",
         textOverflow: "ellipsis"
     }
+};
+
+var graphStyle = {
+    border: "solid 1px " + color(colors.darkBlack).alpha(0.1).rgbString(),
+    boxShadow: "2px 2px 5px #8c8c8d"
 };
 
 var getSitoLabel = function (sito) {
@@ -89,9 +96,9 @@ var Chart = React.createClass({
     },
     getValori: function () {
         return [
-            {label: "Reale", color: "blue", key: "reale"},
-            {label: "Contrattuale", color: "red", key: "contrattuale"},
-            {label: "Previsionale", color: "green", key: "previsionale"}
+            {label: "Reale", color: "#8595f9", key: "reale"},
+            {label: "Contrattuale", color: "#56c5e2", key: "contrattuale"},
+            {label: "Previsionale", color: "#a8e1d4", key: "previsionale"}
         ];
     },
     getExportType: function () {
@@ -100,13 +107,13 @@ var Chart = React.createClass({
         return [
             {label: "Png", key: "png", icon: iconPNG},
             {label: "Csv", key: "csv", icon: iconCSV}
-        ]
+        ];
     },
     onChangeExport: function (valueChanged) {
         console.log("Esporta con " + valueChanged.label);
     },
     render: function () {
-        //Icone
+        // Icone
         var iconExport = "/_assets/icons/os__export.svg";
         var iconPower = "/_assets/icons/os__power.svg";
         var iconSiti = "/_assets/icons/os__map.svg";
@@ -207,13 +214,15 @@ var Chart = React.createClass({
                         />
                     </span>
                 </bootstrap.Col>
-                <bootstrap.Col sm={12} style={{height: "500px"}}>
+                <bootstrap.Col sm={12} style={{height: "100%", padding: "30px"}}>
                     <components.HistoricalGraph
                         dateCompare={dateCompareProps.value}
                         misure={this.props.collections.get("misure") || Immutable.Map()}
                         siti={sitoInputProps.value}
+                        style={graphStyle}
                         tipologia={tipologiaInputProps.value}
-                        valori={valoreInputProps.value}/>
+                        valori={valoreInputProps.value}
+                    />
                 </bootstrap.Col>
             </div>
         );

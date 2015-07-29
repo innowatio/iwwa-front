@@ -86,7 +86,7 @@ var TemporalLineGraph = React.createClass({
     },
     render: function () {
         return (
-            <div ref="graphContainer" style={{width: "100%", height: "100%"}} />
+            <div ref="graphContainer" style={{width: "100%", height: "500px", marginBottom: "35px"}} />
         );
     }
 });
