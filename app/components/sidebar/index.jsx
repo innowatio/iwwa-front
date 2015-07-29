@@ -13,10 +13,10 @@ var styles = {
         borderRightStyle: "solid",
         borderRightColor: colors.primary,
         backgroundColor: colors.white,
-        zIndex: 100,
-        "@media only screen": {
-            left: "-" + measures.sidebarWidth
-        }
+        zIndex: 100// ,
+        // "@media only screen": {
+        //     left: "-" + measures.sidebarWidth
+        // }
     },
     hamburger: {
         height: measures.headerHeight,
@@ -32,9 +32,17 @@ var styles = {
         width: "100%"
     },
     activeLink: {
-        borderRight: "4px solid " + colors.primary,
+        borderLeft: "4px solid " + colors.primary,
         borderRadius: "0px",
         backgroundColor: colors.greyLight
+    },
+    iconsBar: {
+        height: "100%",
+        zIndex: 101,
+        borderRightWidth: "1px",
+        borderRightStyle: "solid",
+        borderRightColor: colors.primary,
+        backgroundColor: colors.white
     }
 };
 
@@ -52,6 +60,13 @@ var SideNav = React.createClass({
             visible: false
         };
     },
+    renderIconSideBar: function (menuItem) {
+        return (
+            <li key={menuItem.iconPath} style={{height: "55px"}}>
+                <img src={menuItem.iconPath} style={{float: "right", width: "30px"}} />
+            </li>
+        );
+    },
     renderNavItem: function (menuItem) {
         return (
             <li key={menuItem.iconPath}>
@@ -61,8 +76,8 @@ var SideNav = React.createClass({
                     style={{height: "55px"}}
                     to={menuItem.url}
                 >
-                    {menuItem.label}
-                    <img src={menuItem.iconPath} style={{float: "right", width: "30px"}} />
+                    <img src={menuItem.iconPath} style={{float: "left", width: "30px"}} />
+                    <span style={{marginLeft: "10px", verticalAlign: "middle", height: "100%"}}>{menuItem.label}</span>
                 </Router.Link>
             </li>
         );
@@ -70,7 +85,7 @@ var SideNav = React.createClass({
     render: function () {
         return (
             <div style={[styles.sidebar, this.props.style]}>
-                <div style={styles.menu}>
+                <div id="menu" style={styles.menu}>
                     <bootstrap.Nav bsStyle="pills" stacked >
                         {this.props.items.map(this.renderNavItem)}
                     </bootstrap.Nav>

@@ -21,8 +21,7 @@ var styles = {
     content: {
         position: "absolute",
         top: measures.headerHeight,
-        left: measures.sidebarShoulderWidth,
-        width: "calc(100% - " + measures.sidebarShoulderWidth + ")",
+        width: "100%",
         height: "calc(100% - " + measures.headerHeight + ")",
         transition: "left 0.3s ease"
     },
@@ -79,23 +78,16 @@ var Root = React.createClass({
             )
         });
     },
-    getContentStyle: function () {
-        return R.merge(styles.content, {
-            left: (
-                measures.sidebarShoulderWidth
-            )
-        });
-    },
     getSidebarStyle: function () {
         console.log(this.state.sidebarOpen ?
         "0px" :
-        (parseInt(measures.sidebarShoulderWidth) - parseInt(measures.sidebarWidth)) + "px");
+        ("-" + parseInt(measures.sidebarWidth)) + "px");
 
         return R.merge(styles.sidebar, {
             left: (
                 this.state.sidebarOpen ?
                 "0px" :
-                (parseInt(measures.sidebarShoulderWidth) - parseInt(measures.sidebarWidth)) + "px"
+                ("-" + parseInt(measures.sidebarWidth)) + "px"
             )
         });
     },
@@ -120,7 +112,7 @@ var Root = React.createClass({
                         menuClickAction={this.toggleSidebar}
                     />
                 </div>
-                <div style={this.getContentStyle()}>
+                <div style={styles.content}>
                     {this.renderChildren()}
                 </div>
                 <components.LoginModal
