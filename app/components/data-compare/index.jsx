@@ -1,7 +1,15 @@
-var bootstrap  = require("react-bootstrap");
 var R          = require("ramda");
 var React      = require("react");
 
+var components = require("components/");
+
+var styles = {
+    buttonCompare: {
+        width: "200px",
+        marginRight: "8px",
+        marginBottom: "13px"
+    }
+};
 
 var DataCompare = React.createClass({
     propTypes: {
@@ -11,7 +19,7 @@ var DataCompare = React.createClass({
     },
     getInitialState: function () {
         return {
-            value: "Ieri e oggi"
+            value: this.props.allowedValues[2].label
         };
     },
     selectedChackboxDate: function (value) {
@@ -19,23 +27,32 @@ var DataCompare = React.createClass({
             value: value
         });
     },
+    iconSelectData: function (active) {
+        // TODO Quando ci sono le giuste inserirle al posto di queste
+        var iconPower = "/_assets/icons/os__power.svg";
+        var iconSiti = "/_assets/icons/os__map.svg";
+        return active ?
+            iconPower :
+            iconSiti;
+    },
     renderDataCompare: function (allowedValue) {
+        var active = this.state.value === this.props.getLabel(allowedValue);
         return (
-                <bootstrap.Input
-                    checked={this.state.value === this.props.getLabel(allowedValue)}
-                    key={this.props.getKey(allowedValue)}
-                    onChange={R.identity()}
-                    onClick={R.partial(this.selectedChackboxDate, this.props.getLabel(allowedValue))}
-                    type="radio"
-                    value={this.props.getLabel(allowedValue)}
-                >
-                    <span>{this.props.getLabel(allowedValue)}</span>
-                </bootstrap.Input>
+            <components.Button
+                active={active}
+                key={this.props.getKey(allowedValue)}
+                onClick={R.partial(this.selectedChackboxDate, this.props.getLabel(allowedValue))}
+                style={styles.buttonCompare}
+                value={this.props.getLabel(allowedValue)}
+            >
+                {this.props.getLabel(allowedValue)}
+                <img className="pull-right" src={this.iconSelectData(active)} style={{width: "22px"}}/>
+            </components.Button>
         );
     },
     render: function () {
         return (
-            <div className="checkbox checkbox-slider--b-flat">
+            <div>
                 {this.props.allowedValues.map(this.renderDataCompare)}
             </div>
         );

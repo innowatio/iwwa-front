@@ -17,7 +17,7 @@ var multiselectStyles = {
         width: "175px"
     },
     multiselect: {
-        width: "550px",
+        width: "624px",
         height: "35px"
     },
     tag: {
@@ -38,6 +38,8 @@ var getSitoLabel = function (sito) {
         titleCase(sito.get("idCoin"))
     ].join(" - ");
 };
+
+
 var SitoTagComponent = React.createClass({
     propTypes: {
         item: IPropTypes.map
@@ -106,13 +108,13 @@ var Chart = React.createClass({
             {label: "Csv", key: "csv", icon: iconCSV}
         ];
     },
-    getCompare: function () {
+    getDateCompare: function () {
         return [
-            {label: "Ieri e oggi", key: "ieri e oggi"},
-            {label: "Oggi con stesso giorno una settimana fa", key: "1 giorno della settimana"},
-            {label: "Settimana corrente con settimana precedente", key: "1 settimana fa"},
-            {label: "Mese corrente con mese precedente", key: "1 mese fa"},
-            {label: "Mese corrente con stesso mese anno precedente", key: "stesso mese anno scorso"}
+            {label: "IERI", key: "ieri"},
+            {label: "7 GG FA", key: "7giorni"},
+            {label: "SETTIMANA SCORSA", key: "1settimana"},
+            {label: "MESE SCORSO", key: "1mese"},
+            {label: "12 MESI FA", key: "12mesi"}
         ];
     },
     onChangeExport: function (valueChanged) {
@@ -154,7 +156,7 @@ var Chart = React.createClass({
             transformers.dateCompare(periods)
         );
         // Compare
-        var compare = this.getCompare();
+        var compareDate = this.getDateCompare();
 
         var valoriMulti = (
             !dateCompareProps.value &&
@@ -186,7 +188,7 @@ var Chart = React.createClass({
                             {...valoreInputProps}
                         />
                         <components.Popover
-                            title={<img src={iconExport} style={{width: "18px"}} />}
+                            title={<img src={iconExport} style={{width: "75%"}} />}
                         >
                             <components.DropdownButton
                                 allowedValues={this.getExportType()}
@@ -200,7 +202,7 @@ var Chart = React.createClass({
                     <span className="pull-right">
                         <components.Spacer direction="h" size={10} />
                         <components.Popover
-                            title={<img src={iconPower} style={{width: "25px"}} />}
+                            title={<img src={iconPower} style={{width: "75%"}} />}
                         >
                             <components.DropdownSelect
                                 allowedValues={tipologie}
@@ -211,7 +213,7 @@ var Chart = React.createClass({
                             />
                         </components.Popover>
                         <components.Popover
-                            title={<img src={iconSiti} style={{width: "25px"}} />}
+                            title={<img src={iconSiti} style={{width: "75%"}} />}
                         >
                             <components.Multiselect
                                 allowedValues={siti}
@@ -241,7 +243,7 @@ var Chart = React.createClass({
                                 value={[]}
                             />
                             <components.DataCompare
-                                allowedValues={compare}
+                                allowedValues={compareDate}
                                 getKey={R.prop("key")}
                                 getLabel={R.prop("label")}
                             />

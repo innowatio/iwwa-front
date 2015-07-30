@@ -17,7 +17,6 @@ var SitiCompare = React.createClass({
     render: function () {
         return (
             <div>
-                <h5 className="text-center">{"Seleziona 2 punti di misurazione da confrontare"}</h5>
                 <components.Multiselect
                     allowedValues={this.props.allowedValues}
                     filter={this.props.filter}

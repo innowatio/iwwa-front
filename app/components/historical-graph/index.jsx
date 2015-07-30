@@ -1,6 +1,5 @@
 var Radium     = require("radium");
 var React      = require("react");
-var Immutable  = require("immutable");
 var IPropTypes = require("react-immutable-proptypes");
 var titleCase  = require("title-case");
 
