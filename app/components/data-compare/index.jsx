@@ -6,6 +6,7 @@ var components = require("components/");
 var styles = {
     buttonCompare: {
         width: "200px",
+        height: "40px",
         marginRight: "8px",
         marginBottom: "13px"
     }

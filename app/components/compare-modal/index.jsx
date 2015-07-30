@@ -139,7 +139,7 @@ var Compare = React.createClass({
                         >
                             {this.headerTitleCompare()}
                         </bootstrap.Modal.Header>
-                        <bootstrap.Modal.Body>
+                        <bootstrap.Modal.Body style={{textAlign: "center"}}>
                             {this.modalCompare()}
                         </bootstrap.Modal.Body>
                         <bootstrap.Modal.Footer style={{borderTop: "none", paddingTop: "25px", textAlign: "center"}}>
@@ -148,7 +148,8 @@ var Compare = React.createClass({
                                 style={{
                                     background: colors.primary,
                                     color: colors.white,
-                                    width: "200px"
+                                    width: "230px",
+                                    height: "45px"
                                 }}
                             >
                                 {"CONFERMA"}

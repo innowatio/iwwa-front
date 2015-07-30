@@ -16,10 +16,14 @@ var Multiselect = React.createClass({
         maxValues: React.PropTypes.number,
         onChange: React.PropTypes.func.isRequired,
         open: React.PropTypes.string,
+        placeholder: React.PropTypes.string,
         style: React.PropTypes.object,
         tagComponent: React.PropTypes.func,
         title: React.PropTypes.element,
-        value: React.PropTypes.array
+        value: React.PropTypes.oneOfType([
+            React.PropTypes.array,
+            React.PropTypes.object
+        ])
     },
     mixins: [React.addons.PureRenderMixin],
     getDefaultProps: function () {
@@ -36,14 +40,24 @@ var Multiselect = React.createClass({
             this.props.allowedValues
         );
     },
-    canOpen: function () {
+    canOpenTrue: function () {
+        var ret;
         if (!this.props.maxValues) {
-            return true;
+            ret = true;
+        } else {
+            ret = this.props.value.length < this.props.maxValues;
         }
-        if (this.props.open === "undefined" && (this.props.value.length < this.props.maxValues)) {
-            return undefined;
-        }
-        return this.props.value.length < this.props.maxValues;
+        console.log(ret);
+        return ret;
+    },
+    canOpenUndefined: function () {
+        return undefined;
+    },
+    canOpen: function () {
+        return (this.props.open === "undefined" ?
+            this.canOpenUndefined() :
+            this.canOpenTrue()
+        );
     },
     render: function () {
         var canOpen = this.canOpen();
@@ -52,7 +66,7 @@ var Multiselect = React.createClass({
                 <Radium.Style
                     rules={{
                         input: {
-                           display: canOpen ? "" : "none"
+                           display: canOpen === undefined || canOpen === true ? "inline" : "none"
                        },
                         "li.rw-list-option": {
                             height: "40px"
@@ -81,7 +95,7 @@ var Multiselect = React.createClass({
                     filter={this.props.filter}
                     onChange={this.props.onChange}
                     open={canOpen}
-                    placeholder={"Punto di misurazione"}
+                    placeholder={this.props.placeholder}
                     style={this.props.style}
                     tagComponent={this.props.tagComponent}
                     textField={this.props.getLabel}

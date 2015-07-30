@@ -17,7 +17,7 @@ var multiselectStyles = {
         width: "175px"
     },
     multiselect: {
-        width: "624px",
+        width: "450px",
         height: "35px"
     },
     tag: {
@@ -157,7 +157,11 @@ var Chart = React.createClass({
         );
         // Compare
         var compareDate = this.getDateCompare();
-
+        // SiteCompare
+        // var sitiInputProps = this.bindToQueryParameter(
+        //     "sitoCompare",
+        //     transformers.sito(siti)
+        // );
         var valoriMulti = (
             !dateCompareProps.value &&
             sitoInputProps.value.length <= 1
@@ -171,7 +175,8 @@ var Chart = React.createClass({
                             backgroundColor: colors.greyBackground,
                             marginTop: "0px",
                             height: "40px",
-                            fontSize: "20pt"
+                            fontSize: "20pt",
+                            marginBottom: "0px"
                         }}
                 >
                     <components.Spacer direction="v" size={5} />
@@ -219,8 +224,9 @@ var Chart = React.createClass({
                                 allowedValues={siti}
                                 filter={filterSito}
                                 getLabel={getSitoLabel}
-                                maxValues={2}
+                                maxValues={1}
                                 open=" "
+                                placeholder={"Punto di misurazione"}
                                 style={multiselectStyles.multiselectPopover}
                                 tagComponent={SitoTagComponent}
                                 {...sitoInputProps}
@@ -240,7 +246,7 @@ var Chart = React.createClass({
                                 getSitoLabel={getSitoLabel}
                                 open={"undefined"}
                                 style={multiselectStyles.multiselect}
-                                value={[]}
+                                {...sitoInputProps}
                             />
                             <components.DataCompare
                                 allowedValues={compareDate}
