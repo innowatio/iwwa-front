@@ -192,7 +192,10 @@ var Chart = React.createClass({
                             {...valoreInputProps}
                         />
                         <components.Popover
-                            title={<img src={iconExport} style={{width: "18px"}} />}
+                            style={{width: "18px"}}
+                            title={<img src={iconExport} style={{width: "25px"}} />}
+                            tooltipMessage="Esporta"
+                            tooltipPosition="right"
                         >
                             <components.DropdownButton
                                 allowedValues={this.getExportType()}
@@ -207,6 +210,8 @@ var Chart = React.createClass({
                         <components.Spacer direction="h" size={10} />
                         <components.Popover
                             title={<img src={iconPower} style={{width: "25px"}} />}
+                            tooltipMessage="Quantità d'interesse"
+                            tooltipPosition="left"
                         >
                             <components.DropdownSelect
                                 allowedValues={tipologie}
@@ -218,6 +223,9 @@ var Chart = React.createClass({
                         </components.Popover>
                         <components.Popover
                             title={<img src={iconSiti} style={{width: "25px"}} />}
+                            tooltipMessage="Punti di misurazione.
+                                Puoi selezionare un singolo punto oppure due per confrontarli"
+                            tooltipPosition="left"
                         >
                             <components.Multiselect
                                 allowedValues={siti}

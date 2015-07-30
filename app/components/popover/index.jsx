@@ -7,7 +7,44 @@ var components = require("components/");
 var Popover = React.createClass({
     propTypes: {
         children: React.PropTypes.element,
-        title: React.PropTypes.element
+        title: React.PropTypes.element,
+        tooltipMessage: React.PropTypes.string,
+        tooltipPosition: React.PropTypes.string
+    },
+    getDefaultProps: function () {
+        return {
+            tooltipPosition: "right"
+        };
+    },
+    addTooltip: function () {
+        return (
+            <bootstrap.Tooltip>
+                {this.props.tooltipMessage}
+            </bootstrap.Tooltip>
+        );
+    },
+    getButton: function () {
+        return (
+            <components.Button bsStyle="link">
+                {this.props.title}
+            </components.Button>
+        );
+    },
+    getTooltipAndButton: function () {
+        var button = this.getButton();
+        if (this.props.tooltipMessage) {
+            return (
+                <bootstrap.OverlayTrigger
+                    overlay={this.addTooltip()}
+                    placement={this.props.tooltipPosition}
+                    rootClose={true}
+                    trigger={["hover", "focus"]}
+                >
+                    {button}
+                </bootstrap.OverlayTrigger>
+            );
+        }
+        return button;
     },
     renderOverlay: function () {
         return (
@@ -42,9 +79,7 @@ var Popover = React.createClass({
                 rootClose={true}
                 trigger="click"
             >
-                <components.Button  bsStyle="link">
-                    {this.props.title}
-                </components.Button>
+                {this.getTooltipAndButton()}
             </bootstrap.OverlayTrigger>
         );
     }
