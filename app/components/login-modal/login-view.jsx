@@ -8,8 +8,10 @@ var colors     = require("lib/colors");
 
 var styles = {
     inputs: {
-        borderRadius: "4px",
-        overflow: "hidden"
+        borderRadius: "6px",
+        overflow: "hidden",
+        border: "solid 1px " + color(colors.white).alpha(0.3).rgbString(),
+        color: "white"
     },
     loginButton: {
         background: colors.primary,
@@ -60,7 +62,8 @@ var LoginView = React.createClass({
                     <Radium.Style
                         rules={{
                             ".form-group": {
-                                marginBottom: "0px"
+                                marginBottom: "0px",
+                                border: "solid 1px " + color(colors.white).alpha(0.3).rgbString()
                             },
                             ".form-group div, .form-group span, .form-group input": {
                                 border: "0px",
@@ -71,6 +74,18 @@ var LoginView = React.createClass({
                             },
                             ".form-control:focus": {
                                 boxShadow: "none"
+                            },
+                            "::-webkit-input-placeholder": {
+                               color: colors.white
+                            },
+                            ":-moz-placeholder": { /* Firefox 18- */
+                               color: colors.white
+                            },
+                            "::-moz-placeholder": {  /* Firefox 19+ */
+                               color: colors.white
+                            },
+                            ":-ms-input-placeholder": {
+                               color: colors.white
                             }
                         }}
                         scopeSelector=".ac-login-modal-inputs"
@@ -97,7 +112,7 @@ var LoginView = React.createClass({
                     onClick={this.login}
                     style={styles.loginButton}
                 >
-                    {"Accedi"}
+                    {"ACCEDI"}
                 </components.Button>
                 {this.renderError()}
             </div>

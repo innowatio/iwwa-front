@@ -41,9 +41,9 @@ var styles = {
         }
     },
     activeView: {
-        width: "50%",
+        width: "520px",
         position: "relative",
-        left: "25%"
+        left: "calc(50% - 260px)"
     },
     viewSwitcher: {
         cursor: "pointer",
