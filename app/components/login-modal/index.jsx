@@ -43,7 +43,8 @@ var styles = {
     activeView: {
         width: "520px",
         position: "relative",
-        left: "calc(50% - 260px)"
+        margin: "auto",
+        maxWidth: "90%"
     },
     viewSwitcher: {
         cursor: "pointer",
