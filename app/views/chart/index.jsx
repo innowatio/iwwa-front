@@ -111,10 +111,10 @@ var Chart = React.createClass({
     getDateCompare: function () {
         return [
             {label: "IERI", key: "days"},
-            {label: "7 GG FA", key: "weeks"},
-            {label: "SETTIMANA SCORSA", key: "1settimana"},
-            {label: "MESE SCORSO", key: "1mese"},
-            {label: "12 MESI FA", key: "12mesi"}
+            {label: "7 GG FA", key: "7giornifa"},
+            {label: "SETTIMANA SCORSA", key: "weeks"},
+            {label: "MESE SCORSO", key: "months"},
+            {label: "12 MESI FA", key: "years"}
         ];
     },
     onChangeExport: function (valueChanged) {
@@ -149,12 +149,6 @@ var Chart = React.createClass({
                 color: colors.white
             };
         };
-        // Date Compare
-        var periods = this.getPeriods();
-        var dateCompareProps = this.bindToQueryParameter(
-            "dateCompare",
-            transformers.dateCompare(periods)
-        );
         // Compare
         var compareDate = this.getDateCompare();
         var dateComparePropsModal = this.bindToQueryParameter(
@@ -163,7 +157,7 @@ var Chart = React.createClass({
         );
 
         var valoriMulti = (
-            !dateCompareProps.value &&
+            !dateComparePropsModal.value &&
             sitoInputProps.value.length <= 1
         );
         return (
@@ -233,12 +227,6 @@ var Chart = React.createClass({
                             />
                         </components.Popover>
                         <components.Spacer direction="h" size={10} />
-                        <components.DatefilterModal
-                            getPeriodKey={R.prop("key")}
-                            getPeriodLabel={R.prop("label")}
-                            periods={periods}
-                            {...dateCompareProps}
-                        />
                         <components.Compare>
                             <components.SitiCompare
                                 allowedValues={siti}
@@ -259,7 +247,7 @@ var Chart = React.createClass({
                 </bootstrap.Col>
                 <bootstrap.Col sm={12} style={{height: "500px"}}>
                     <components.HistoricalGraph
-                        dateCompare={dateCompareProps.value}
+                        dateCompare={dateComparePropsModal.value}
                         misure={this.props.collections.get("misure") || Immutable.Map()}
                         siti={sitoInputProps.value}
                         tipologia={tipologiaInputProps.value}

@@ -12,8 +12,7 @@ var DateCompare = React.createClass({
     propTypes: {
         dateCompare: React.PropTypes.shape({
             period: React.PropTypes.object,
-            dateOne: React.PropTypes.date,
-            dateTwo: React.PropTypes.date
+            dateOne: React.PropTypes.date
         }),
         misure: IPropTypes.map,
         siti: React.PropTypes.arrayOf(IPropTypes.map),
@@ -25,12 +24,12 @@ var DateCompare = React.createClass({
         var dc = this.props.dateCompare;
         return {
             rangeOne: {
-                start: dc.dateOne.getTime(),
-                end: moment(dc.dateOne).add(1, dc.period.key).valueOf()
+                start: moment(dc.dateOne).subtract(1, dc.period.key).valueOf(),
+                end: dc.dateOne.getTime()
             },
             rangeTwo: {
-                start: dc.dateTwo.getTime(),
-                end: moment(dc.dateTwo).add(1, dc.period.key).valueOf()
+                start: moment(dc.dateOne).subtract(2, dc.period.key).valueOf(),
+                end: moment(dc.dateOne).subtract(1, dc.period.key).valueOf()
             }
         };
     },
@@ -80,7 +79,7 @@ var DateCompare = React.createClass({
     getLabels: function () {
         return ["Data"].concat([
             moment(this.props.dateCompare.dateOne).format("MMM DD, YYYY"),
-            moment(this.props.dateCompare.dateTwo).format("MMM DD, YYYY")
+            moment(this.props.dateCompare.dateOne).format("MMM DD, YYYY")
         ]);
     },
     getDateWindow: function () {
@@ -108,7 +107,7 @@ var DateCompare = React.createClass({
                     v: delta,
                     label: [
                         "<small>" + moment(self.props.dateCompare.dateOne).add(delta).format("MMM DD") + "</small>",
-                        "<small>" + moment(self.props.dateCompare.dateTwo).add(delta).format("MMM DD") + "</small>"
+                        "<small>" + moment(self.props.dateCompare.dateOne).add(delta).format("MMM DD") + "</small>"
                     ].join("<br />")
                 };
             });
@@ -120,7 +119,7 @@ var DateCompare = React.createClass({
                     v: delta,
                     label: [
                         "<small>" + moment(self.props.dateCompare.dateOne).add(delta).format("MMM DD") + "</small>",
-                        "<small>" + moment(self.props.dateCompare.dateTwo).add(delta).format("MMM DD") + "</small>"
+                        "<small>" + moment(self.props.dateCompare.dateOne).add(delta).format("MMM DD") + "</small>"
                     ].join("<br />")
                 };
             });
@@ -132,7 +131,7 @@ var DateCompare = React.createClass({
                     v: delta,
                     label: [
                         "<small>" + moment(self.props.dateCompare.dateOne).add(delta).format("MMM") + "</small>",
-                        "<small>" + moment(self.props.dateCompare.dateTwo).add(delta).format("MMM") + "</small>"
+                        "<small>" + moment(self.props.dateCompare.dateOne).add(delta).format("MMM") + "</small>"
                     ].join("<br />")
                 };
             });

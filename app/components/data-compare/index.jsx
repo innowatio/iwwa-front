@@ -26,13 +26,11 @@ var DataCompare = React.createClass({
         return {
             value: {
                 period: R.isNil(this.props.value) ? this.props.allowedValues[2] : this.props.value.period,
-                dateOne: R.isNil(this.props.value) ? now : this.props.value.dateOne,
-                dateTwo: R.isNil(this.props.value) ? now : this.props.value.dateTwo
+                dateOne: R.isNil(this.props.value) ? now : this.props.value.dateOne
             }
         };
     },
     componentWillReceiveProps: function (props) {
-        console.log(props.value);
         return this.getStateFromProps(props);
     },
     getStateFromProps: function (props) {
@@ -42,7 +40,6 @@ var DataCompare = React.createClass({
     },
     selectedCheckboxDate: function (allowedValue) {
         var newState = R.merge(this.state.value, {period: allowedValue});
-        console.log(newState);
         this.setState({
             value: newState
         });

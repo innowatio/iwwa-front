@@ -12,8 +12,7 @@ var HistoricalGraph = React.createClass({
     propTypes: {
         dateCompare: React.PropTypes.shape({
             period: React.PropTypes.object,
-            dateOne: React.PropTypes.date,
-            dateTwo: React.PropTypes.date
+            dateOne: React.PropTypes.date
         }),
         misure: IPropTypes.map,
         siti: React.PropTypes.arrayOf(IPropTypes.map),

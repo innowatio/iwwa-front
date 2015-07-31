@@ -10,8 +10,7 @@ exports.dateCompare = function (periods) {
             var tokens = query.split("-") || [];
             return {
                 period: R.find(R.propEq("key", tokens[0]), periods) || periods[0],
-                dateOne: moment(tokens[1], "YYYYMMDD").toDate(),
-                dateTwo: moment(tokens[2], "YYYYMMDD").toDate()
+                dateOne: moment(tokens[1], "YYYYMMDD").toDate()
             };
         },
         stringify: function (value) {
@@ -20,8 +19,7 @@ exports.dateCompare = function (periods) {
             }
             return [
                 value.period.key,
-                moment(value.dateOne).format("YYYYMMDD"),
-                moment(value.dateTwo).format("YYYYMMDD")
+                moment(value.dateOne).format("YYYYMMDD")
             ].join("-");
         }
     };
