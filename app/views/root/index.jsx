@@ -5,6 +5,7 @@ var React  = require("react");
 var components = require("components");
 var asteroid   = require("lib/asteroid");
 var measures   = require("lib/measures");
+var colors     = require("lib/colors");
 
 // Decommment for debugging
 // window.asteroid = asteroid;
@@ -22,7 +23,7 @@ var styles = {
         position: "absolute",
         top: measures.headerHeight,
         width: "100%",
-        height: "calc(100% - " + measures.headerHeight + ")",
+        height: "calc(100% - 90px)",
         transition: "left 0.3s ease"
     },
     sidebar: {
@@ -31,6 +32,15 @@ var styles = {
         width: measures.sidebarWidth,
         height: "100%",
         transition: "left 0.3s ease"
+    },
+    footer: {
+        position: "absolute",
+        backgroundColor: colors.greyBackground,
+        color: colors.greySubTitle,
+        height: measures.footerHeight,
+        width: "100%",
+        top: "calc(100% - " + measures.footerHeight + ")",
+        textAlign: "center"
     }
 };
 
@@ -79,10 +89,6 @@ var Root = React.createClass({
         });
     },
     getSidebarStyle: function () {
-        console.log(this.state.sidebarOpen ?
-        "0px" :
-        ("-" + parseInt(measures.sidebarWidth)) + "px");
-
         return R.merge(styles.sidebar, {
             left: (
                 this.state.sidebarOpen ?
@@ -119,6 +125,9 @@ var Root = React.createClass({
                     asteroid={asteroid}
                     isOpen={!this.state.userId}
                 />
+                <div style={styles.footer} >
+                    Copyright 2015 - Innowatio
+                </div>
             </div>
         );
     }
