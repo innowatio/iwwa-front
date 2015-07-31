@@ -1,6 +1,7 @@
 var R          = require("ramda");
 var React      = require("react");
 
+var colors = require("lib/colors");
 var components = require("components/");
 
 var styles = {
@@ -16,16 +17,34 @@ var DataCompare = React.createClass({
     propTypes: {
         allowedValues: React.PropTypes.array.isRequired,
         getKey: React.PropTypes.func,
-        getLabel: React.PropTypes.func
+        getLabel: React.PropTypes.func,
+        onChange: React.PropTypes.func,
+        value: React.PropTypes.object
     },
     getInitialState: function () {
+        var now = new Date();
         return {
-            value: this.props.allowedValues[2].label
+            value: {
+                period: R.isNil(this.props.value) ? this.props.allowedValues[2] : this.props.value.period,
+                dateOne: R.isNil(this.props.value) ? now : this.props.value.dateOne,
+                dateTwo: R.isNil(this.props.value) ? now : this.props.value.dateTwo
+            }
         };
     },
-    selectedChackboxDate: function (value) {
+    componentWillReceiveProps: function (props) {
+        console.log(props.value);
+        return this.getStateFromProps(props);
+    },
+    getStateFromProps: function (props) {
         this.setState({
-            value: value
+            value: props.value
+        });
+    },
+    selectedCheckboxDate: function (allowedValue) {
+        var newState = R.merge(this.state.value, {period: allowedValue});
+        console.log(newState);
+        this.setState({
+            value: newState
         });
     },
     iconSelectData: function (active) {
@@ -36,15 +55,18 @@ var DataCompare = React.createClass({
             iconPower :
             iconSiti;
     },
+    onClickButton: function () {
+        this.props.onChange(this.state.value);
+    },
     renderDataCompare: function (allowedValue) {
-        var active = this.state.value === this.props.getLabel(allowedValue);
+        var active = allowedValue === this.state.value.period;
         return (
             <components.Button
                 active={active}
                 key={this.props.getKey(allowedValue)}
-                onClick={R.partial(this.selectedChackboxDate, this.props.getLabel(allowedValue))}
+                onClick={R.partial(this.selectedCheckboxDate, allowedValue)}
                 style={styles.buttonCompare}
-                value={this.props.getLabel(allowedValue)}
+                value={allowedValue}
             >
                 {this.props.getLabel(allowedValue)}
                 <img className="pull-right" src={this.iconSelectData(active)} style={{width: "22px"}}/>
@@ -55,6 +77,18 @@ var DataCompare = React.createClass({
         return (
             <div>
                 {this.props.allowedValues.map(this.renderDataCompare)}
+                <components.Button
+                    onClick={this.onClickButton}
+                    style={{
+                        background: colors.primary,
+                        marginTop: "60px",
+                        color: colors.white,
+                        width: "230px",
+                        height: "45px"
+                    }}
+                >
+                    {"CONFERMA"}
+                </components.Button>
             </div>
         );
     }

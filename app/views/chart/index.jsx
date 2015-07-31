@@ -110,8 +110,8 @@ var Chart = React.createClass({
     },
     getDateCompare: function () {
         return [
-            {label: "IERI", key: "ieri"},
-            {label: "7 GG FA", key: "7giorni"},
+            {label: "IERI", key: "days"},
+            {label: "7 GG FA", key: "weeks"},
             {label: "SETTIMANA SCORSA", key: "1settimana"},
             {label: "MESE SCORSO", key: "1mese"},
             {label: "12 MESI FA", key: "12mesi"}
@@ -157,11 +157,11 @@ var Chart = React.createClass({
         );
         // Compare
         var compareDate = this.getDateCompare();
-        // SiteCompare
-        // var sitiInputProps = this.bindToQueryParameter(
-        //     "sitoCompare",
-        //     transformers.sito(siti)
-        // );
+        var dateComparePropsModal = this.bindToQueryParameter(
+            "dateCompareModal",
+            transformers.dateCompare(compareDate)
+        );
+
         var valoriMulti = (
             !dateCompareProps.value &&
             sitoInputProps.value.length <= 1
@@ -252,6 +252,7 @@ var Chart = React.createClass({
                                 allowedValues={compareDate}
                                 getKey={R.prop("key")}
                                 getLabel={R.prop("label")}
+                                {...dateComparePropsModal}
                             />
                         </components.Compare>
                     </span>

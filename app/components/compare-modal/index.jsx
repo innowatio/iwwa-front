@@ -142,19 +142,6 @@ var Compare = React.createClass({
                         <bootstrap.Modal.Body style={{textAlign: "center"}}>
                             {this.modalCompare()}
                         </bootstrap.Modal.Body>
-                        <bootstrap.Modal.Footer style={{borderTop: "none", paddingTop: "25px", textAlign: "center"}}>
-                            <components.Button
-                                onClick={this.closeSuccess}
-                                style={{
-                                    background: colors.primary,
-                                    color: colors.white,
-                                    width: "230px",
-                                    height: "45px"
-                                }}
-                            >
-                                {"CONFERMA"}
-                            </components.Button>
-                        </bootstrap.Modal.Footer>
                     </bootstrap.Modal>
             </span>
         );
