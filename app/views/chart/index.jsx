@@ -122,6 +122,7 @@ var Chart = React.createClass({
     },
     render: function () {
         // Icone
+        var iconCompare = "/_assets/icons/os__cal.svg";
         var iconExport = "/_assets/icons/os__export.svg";
         var iconPower = "/_assets/icons/os__power.svg";
         var iconSiti = "/_assets/icons/os__map.svg";
@@ -199,7 +200,6 @@ var Chart = React.createClass({
                         </components.Popover>
                     </span>
                     <span className="pull-right">
-                        <components.Spacer direction="h" size={10} />
                         <components.Popover
                             title={<img src={iconPower} style={{width: "75%"}} />}
                         >
@@ -226,7 +226,10 @@ var Chart = React.createClass({
                                 {...sitoInputProps}
                             />
                         </components.Popover>
-                        <components.Spacer direction="h" size={10} />
+                        <components.DatefilterModal
+                            title={<img src={iconCompare} style={{width: "75%"}} />}
+                        />
+                        <components.Spacer direction="h" size={5} />
                         <components.Compare>
                             <components.SitiCompare
                                 allowedValues={siti}

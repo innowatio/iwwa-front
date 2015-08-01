@@ -47,7 +47,6 @@ var Multiselect = React.createClass({
         } else {
             ret = this.props.value.length < this.props.maxValues;
         }
-        console.log(ret);
         return ret;
     },
     canOpenUndefined: function () {

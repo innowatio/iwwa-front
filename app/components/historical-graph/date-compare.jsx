@@ -100,7 +100,7 @@ var DateCompare = React.createClass({
     },
     xTicker: function () {
         var self = this;
-        if (self.props.dateCompare.period.key === "week") {
+        if (self.props.dateCompare.period.key === "days") {
             return R.range(0, 8).map(function (n) {
                 var delta = moment(0).add(n, "days").valueOf();
                 return {
@@ -112,7 +112,19 @@ var DateCompare = React.createClass({
                 };
             });
         }
-        if (self.props.dateCompare.period.key === "month") {
+        if (self.props.dateCompare.period.key === "weeks") {
+            return R.range(0, 8).map(function (n) {
+                var delta = moment(0).add(n, "days").valueOf();
+                return {
+                    v: delta,
+                    label: [
+                        "<small>" + moment(self.props.dateCompare.dateOne).add(delta).format("MMM DD") + "</small>",
+                        "<small>" + moment(self.props.dateCompare.dateOne).add(delta).format("MMM DD") + "</small>"
+                    ].join("<br />")
+                };
+            });
+        }
+        if (self.props.dateCompare.period.key === "months") {
             return R.range(0, 31).map(function (n) {
                 var delta = moment(0).add(n, "days").valueOf();
                 return {
@@ -124,7 +136,7 @@ var DateCompare = React.createClass({
                 };
             });
         }
-        if (self.props.dateCompare.period.key === "quarter") {
+        if (self.props.dateCompare.period.key === "years") {
             return R.range(0, 4).map(function (n) {
                 var delta = moment(0).add(n, "months").valueOf();
                 return {
