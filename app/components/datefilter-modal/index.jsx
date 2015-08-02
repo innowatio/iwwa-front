@@ -1,8 +1,10 @@
-var Radium         = require("radium");
-var React          = require("react");
-var bootstrap      = require("react-bootstrap");
-var Calendar = require("react-widgets").Calendar;
+var Radium    = require("radium");
+var React     = require("react");
+var bootstrap = require("react-bootstrap");
+var Calendar  = require("react-widgets").Calendar;
+var moment    = require("moment");
 
+var colors = require("lib/colors");
 var components = require("components/");
 
 var DatefilterModal = React.createClass({
@@ -49,6 +51,10 @@ var DatefilterModal = React.createClass({
             value: value
         });
     },
+    defaultDate: function () {
+        var now = new Date();
+        return moment(now).subtract(1, "weeks")._d;
+    },
     renderResetButton: function () {
         return this.props.value ? (
             <bootstrap.Button onClick={this.reset}>
@@ -89,21 +95,67 @@ var DatefilterModal = React.createClass({
                         <h5 style={{marginLeft: "115px"}}>da <components.Spacer direction="h" size={360}/> a</h5>
                         </span>
                         <components.Spacer direction="v" size={15}/>
-                        <Calendar
-                            className="pull-right"
-                            culture={"en-GB"}
-                            dayFormat={day => ['L', 'M','M','G', 'V', 'S', 'D'][day]}
-                            defaultValue={new Date()}
-                            format="MMM dd, yyyy"
-                            style={{width: "40%"}}
-                        />
-                        <Calendar
-                            dayFormat={day => ['L', 'M','M','G', 'V', 'S', 'D'][day]}
-                            defaultValue={new Date()}
-                            format="MMM dd, yyyy"
-                            style={{width: "40%"}}
-                        />
+                        <div className="rw-calendar-modal">
+                            <Radium.Style
+                                rules={{
+                                    ".rw-header": {
+                                        background: colors.primary,
+                                        color: colors.white
+                                    },
+                                    ".rw-header .rw-btn-view": {
+                                        background: colors.primary,
+                                        color: colors.white,
+                                        borderRadius: "0px"
+                                    },
+                                    ".rw-btn": {
+                                        outline: "0px",
+                                        outlineStyle: "none",
+                                        outlineWidth: "0px"
+                                    }
+                                }}
+                                scopeSelector=".rw-calendar-modal"
+                            />
+                            <Calendar
+                                className="pull-right"
+                                culture={"en-GB"}
+                                dayFormat={day => ['D', 'L', 'M','M','G', 'V', 'S'][day]}
+                                defaultValue={new Date()}
+                                format="MMM dd, yyyy"
+                                style={{width: "40%"}}
+                            />
+                            <Calendar
+                                dayFormat={day => ['D', 'L', 'M','M','G', 'V', 'S'][day]}
+                                defaultValue={this.defaultDate()}
+                                format="MMM dd, yyyy"
+                                style={{width: "40%"}}
+                            />
+                        </div>
                     </bootstrap.Modal.Body>
+                    <bootstrap.Modal.Footer style={{textAlign: "center", border: "0px", marginTop: "20px"}}>
+                        <components.Button
+                            onClick={this.closeSuccess}
+                            style={{
+                                background: colors.greyBackground,
+                                color: colors.primary,
+                                width: "230px",
+                                height: "45px"
+                            }}
+                        >
+                            {"RESET"}
+                        </components.Button>
+                        <components.Spacer direction="h" size={20} />
+                        <components.Button
+                            onClick={this.close}
+                            style={{
+                                background: colors.primary,
+                                color: colors.white,
+                                width: "230px",
+                                height: "45px"
+                            }}
+                        >
+                            {"CONFERMA"}
+                        </components.Button>
+                    </bootstrap.Modal.Footer>
                 </bootstrap.Modal>
             </span>
         );
