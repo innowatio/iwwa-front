@@ -18,7 +18,7 @@ var multiselectStyles = {
         width: "175px"
     },
     multiselect: {
-        width: "550px",
+        width: "450px",
         height: "35px"
     },
     tag: {
@@ -45,6 +45,8 @@ var getSitoLabel = function (sito) {
         titleCase(sito.get("idCoin"))
     ].join(" - ");
 };
+
+
 var SitoTagComponent = React.createClass({
     propTypes: {
         item: IPropTypes.map
@@ -113,13 +115,13 @@ var Chart = React.createClass({
             {label: "Csv", key: "csv", icon: iconCSV}
         ];
     },
-    getCompare: function () {
+    getDateCompare: function () {
         return [
-            {label: "Ieri e oggi", key: "ieri e oggi"},
-            {label: "Oggi con stesso giorno una settimana fa", key: "1 giorno della settimana"},
-            {label: "Settimana corrente con settimana precedente", key: "1 settimana fa"},
-            {label: "Mese corrente con mese precedente", key: "1 mese fa"},
-            {label: "Mese corrente con stesso mese anno precedente", key: "stesso mese anno scorso"}
+            {label: "IERI", key: "days"},
+            {label: "7 GG FA", key: "7giornifa"},
+            {label: "SETTIMANA SCORSA", key: "weeks"},
+            {label: "MESE SCORSO", key: "months"},
+            {label: "12 MESI FA", key: "years"}
         ];
     },
     onChangeExport: function (valueChanged) {
@@ -127,6 +129,7 @@ var Chart = React.createClass({
     },
     render: function () {
         // Icone
+        var iconCompare = "/_assets/icons/os__cal.svg";
         var iconExport = "/_assets/icons/os__export.svg";
         var iconPower = "/_assets/icons/os__power.svg";
         var iconSiti = "/_assets/icons/os__map.svg";
@@ -154,17 +157,15 @@ var Chart = React.createClass({
                 color: colors.white
             };
         };
-        // Date Compare
-        var periods = this.getPeriods();
-        var dateCompareProps = this.bindToQueryParameter(
-            "dateCompare",
-            transformers.dateCompare(periods)
-        );
         // Compare
-        var compare = this.getCompare();
+        var compareDate = this.getDateCompare();
+        var dateComparePropsModal = this.bindToQueryParameter(
+            "dateCompareModal",
+            transformers.dateCompare(compareDate)
+        );
 
         var valoriMulti = (
-            !dateCompareProps.value &&
+            !dateComparePropsModal.value &&
             sitoInputProps.value.length <= 1
         );
         return (
@@ -176,7 +177,8 @@ var Chart = React.createClass({
                             backgroundColor: colors.greyBackground,
                             marginTop: "0px",
                             height: "40px",
-                            fontSize: "20pt"
+                            fontSize: "20pt",
+                            marginBottom: "0px"
                         }}
                 >
                     <components.Spacer direction="v" size={5} />
@@ -194,7 +196,7 @@ var Chart = React.createClass({
                         />
                         <components.Popover
                             style={{width: "18px"}}
-                            title={<img src={iconExport} style={{width: "25px"}} />}
+                            title={<img src={iconExport} style={{width: "75%"}} />}
                             tooltipMessage="Esporta"
                             tooltipPosition="right"
                         >
@@ -208,9 +210,8 @@ var Chart = React.createClass({
                         </components.Popover>
                     </span>
                     <span className="pull-right">
-                        <components.Spacer direction="h" size={10} />
                         <components.Popover
-                            title={<img src={iconPower} style={{width: "25px"}} />}
+                            title={<img src={iconPower} style={{width: "75%"}} />}
                             tooltipMessage="Quantità d'interesse"
                             tooltipPosition="left"
                         >
@@ -223,7 +224,7 @@ var Chart = React.createClass({
                             />
                         </components.Popover>
                         <components.Popover
-                            title={<img src={iconSiti} style={{width: "25px"}} />}
+                            title={<img src={iconSiti} style={{width: "75%"}} />}
                             tooltipMessage="Punti di misurazione.
                                 Puoi selezionare un singolo punto oppure due per confrontarli"
                             tooltipPosition="left"
@@ -232,20 +233,18 @@ var Chart = React.createClass({
                                 allowedValues={siti}
                                 filter={filterSito}
                                 getLabel={getSitoLabel}
-                                maxValues={2}
+                                maxValues={1}
                                 open=" "
+                                placeholder={"Punto di misurazione"}
                                 style={multiselectStyles.multiselectPopover}
                                 tagComponent={SitoTagComponent}
                                 {...sitoInputProps}
                             />
                         </components.Popover>
-                        <components.Spacer direction="h" size={10} />
                         <components.DatefilterModal
-                            getPeriodKey={R.prop("key")}
-                            getPeriodLabel={R.prop("label")}
-                            periods={periods}
-                            {...dateCompareProps}
+                            title={<img src={iconCompare} style={{width: "75%"}} />}
                         />
+                        <components.Spacer direction="h" size={5} />
                         <components.Compare>
                             <components.SitiCompare
                                 allowedValues={siti}
@@ -253,19 +252,20 @@ var Chart = React.createClass({
                                 getSitoLabel={getSitoLabel}
                                 open={"undefined"}
                                 style={multiselectStyles.multiselect}
-                                value={[]}
+                                {...sitoInputProps}
                             />
                             <components.DataCompare
-                                allowedValues={compare}
+                                allowedValues={compareDate}
                                 getKey={R.prop("key")}
                                 getLabel={R.prop("label")}
+                                {...dateComparePropsModal}
                             />
                         </components.Compare>
                     </span>
                 </bootstrap.Col>
                 <bootstrap.Col sm={12} style={{height: "100%"}}>
                     <components.HistoricalGraph
-                        dateCompare={dateCompareProps.value}
+                        dateCompare={dateComparePropsModal.value}
                         misure={this.props.collections.get("misure") || Immutable.Map()}
                         siti={sitoInputProps.value}
                         style={graphStyle}

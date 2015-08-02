@@ -1,3 +1,4 @@
+var R              = require("ramda");
 var Radium         = require("radium");
 var React          = require("react");
 var bootstrap      = require("react-bootstrap");
@@ -18,7 +19,7 @@ var Compare = React.createClass({
         return {
             showModal: false,
             active: "activeSiteCompare",
-            value: "Ieri e oggi"
+            compare: " "
         };
     },
     close: function () {
@@ -26,9 +27,10 @@ var Compare = React.createClass({
             showModal: false
         });
     },
-    open: function () {
+    open: function (value) {
         this.setState({
-            showModal: true
+            showModal: true,
+            compare: value.label
         });
     },
     closeSuccess: function () {
@@ -46,6 +48,42 @@ var Compare = React.createClass({
         this.setState({
             value: value
         });
+    },
+    getCompare: function () {
+        return [
+            {label: "Confronta punti di misurazione", key: "confronta siti"},
+            {label: "Confronta periodi", key: "confronta periodi"}
+        ];
+    },
+    headerTitleCompare: function () {
+        return this.state.compare === this.getCompare()[0].label ?
+        this.renderSitiTitle() :
+        this.renderDataTitle();
+    },
+    modalCompare: function () {
+        return this.state.compare === this.getCompare()[0].label ?
+        this.renderSitiCompare() :
+        this.renderDataCompare();
+    },
+    renderSitiTitle: function () {
+        return (
+            <div>
+                <bootstrap.Modal.Title className="text-center" style={{color: colors.primary}}>
+                    {"Voglio confrontare questi punti di misurazione"}
+                </bootstrap.Modal.Title>
+                <h5 className="text-center">{"Seleziona due punti"}</h5>
+            </div>
+        );
+    },
+    renderDataTitle: function () {
+        return (
+            <div>
+                <bootstrap.Modal.Title className="text-center" style={{color: colors.primary}}>
+                    {"Voglio confrontare i dati attuali con"}
+                </bootstrap.Modal.Title>
+                <h5 className="text-center">{"Seleziona una delle seguenti opzioni"}</h5>
+            </div>
+        );
     },
     renderSitiCompare: function () {
         return React.Children.map(this.props.children, function (child, index) {
@@ -69,36 +107,42 @@ var Compare = React.createClass({
         return (
             <span>
                 <bootstrap.ButtonGroup>
-                    <components.Button bsStyle="link" onClick={this.open}>
-                        <img src={iconCompare} style={{width: "22px"}}/>
-                    </components.Button>
+                    <components.Popover
+                        title={<img src={iconCompare} style={{width: "75%"}} />}
+                    >
+                        <components.DropdownButton
+                            allowedValues={this.getCompare()}
+                            getIcon={R.prop("icon")}
+                            getKey={R.prop("key")}
+                            getLabel={R.prop("label")}
+                            onChange={this.open}
+                        />
+                    </components.Popover>
                     {this.renderResetButton()}
                 </bootstrap.ButtonGroup>
-                <bootstrap.Modal
-                    container={this}
-                    onHide={this.close}
-                    show={this.state.showModal}
-                >
-                    <bootstrap.Modal.Header closeButton>
-                        <bootstrap.Modal.Title className="text-center" style={{color: colors.primary}}>
-                            {"Cosa vuoi confrontare?"}
-                        </bootstrap.Modal.Title>
-                    </bootstrap.Modal.Header>
-                    <bootstrap.Modal.Body>
-                        <bootstrap.TabbedArea defaultActiveKey={1} justified>
-                              <bootstrap.TabPane eventKey={1} tab="Punti di misurazione">{this.renderSitiCompare()}</bootstrap.TabPane>
-                              <bootstrap.TabPane eventKey={2} tab="Periodi">{this.renderDataCompare()}</bootstrap.TabPane>
-                        </bootstrap.TabbedArea>
-                    </bootstrap.Modal.Body>
-                    <bootstrap.Modal.Footer>
-                        <components.Button onClick={this.close}>
-                            {"Cancel"}
-                        </components.Button>
-                        <components.Button onClick={this.closeSuccess}>
-                            {"Apply"}
-                        </components.Button>
-                    </bootstrap.Modal.Footer>
-                </bootstrap.Modal>
+                    <bootstrap.Modal
+                        container={this}
+                        onHide={this.close}
+                        show={this.state.showModal}
+                    >
+                        <Radium.Style
+                            rules={{
+                                ".modal-content": {
+                                    width: "656px"
+                                }
+                            }}
+                            scopeSelector=".modal-dialog"
+                        />
+                        <bootstrap.Modal.Header
+                            closeButton
+                            style={{borderBottom: "none"}}
+                        >
+                            {this.headerTitleCompare()}
+                        </bootstrap.Modal.Header>
+                        <bootstrap.Modal.Body style={{textAlign: "center"}}>
+                            {this.modalCompare()}
+                        </bootstrap.Modal.Body>
+                    </bootstrap.Modal>
             </span>
         );
     }

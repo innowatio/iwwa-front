@@ -12,8 +12,7 @@ var DateCompare = React.createClass({
     propTypes: {
         dateCompare: React.PropTypes.shape({
             period: React.PropTypes.object,
-            dateOne: React.PropTypes.date,
-            dateTwo: React.PropTypes.date
+            dateOne: React.PropTypes.date
         }),
         misure: IPropTypes.map,
         siti: React.PropTypes.arrayOf(IPropTypes.map),
@@ -25,12 +24,12 @@ var DateCompare = React.createClass({
         var dc = this.props.dateCompare;
         return {
             rangeOne: {
-                start: dc.dateOne.getTime(),
-                end: moment(dc.dateOne).add(1, dc.period.key).valueOf()
+                start: moment(dc.dateOne).subtract(1, dc.period.key).valueOf(),
+                end: dc.dateOne.getTime()
             },
             rangeTwo: {
-                start: dc.dateTwo.getTime(),
-                end: moment(dc.dateTwo).add(1, dc.period.key).valueOf()
+                start: moment(dc.dateOne).subtract(2, dc.period.key).valueOf(),
+                end: moment(dc.dateOne).subtract(1, dc.period.key).valueOf()
             }
         };
     },
@@ -80,7 +79,7 @@ var DateCompare = React.createClass({
     getLabels: function () {
         return ["Data"].concat([
             moment(this.props.dateCompare.dateOne).format("MMM DD, YYYY"),
-            moment(this.props.dateCompare.dateTwo).format("MMM DD, YYYY")
+            moment(this.props.dateCompare.dateOne).format("MMM DD, YYYY")
         ]);
     },
     getDateWindow: function () {
@@ -101,38 +100,50 @@ var DateCompare = React.createClass({
     },
     xTicker: function () {
         var self = this;
-        if (self.props.dateCompare.period.key === "week") {
+        if (self.props.dateCompare.period.key === "days") {
             return R.range(0, 8).map(function (n) {
                 var delta = moment(0).add(n, "days").valueOf();
                 return {
                     v: delta,
                     label: [
                         "<small>" + moment(self.props.dateCompare.dateOne).add(delta).format("MMM DD") + "</small>",
-                        "<small>" + moment(self.props.dateCompare.dateTwo).add(delta).format("MMM DD") + "</small>"
+                        "<small>" + moment(self.props.dateCompare.dateOne).add(delta).format("MMM DD") + "</small>"
                     ].join("<br />")
                 };
             });
         }
-        if (self.props.dateCompare.period.key === "month") {
+        if (self.props.dateCompare.period.key === "weeks") {
+            return R.range(0, 8).map(function (n) {
+                var delta = moment(0).add(n, "days").valueOf();
+                return {
+                    v: delta,
+                    label: [
+                        "<small>" + moment(self.props.dateCompare.dateOne).add(delta).format("MMM DD") + "</small>",
+                        "<small>" + moment(self.props.dateCompare.dateOne).add(delta).format("MMM DD") + "</small>"
+                    ].join("<br />")
+                };
+            });
+        }
+        if (self.props.dateCompare.period.key === "months") {
             return R.range(0, 31).map(function (n) {
                 var delta = moment(0).add(n, "days").valueOf();
                 return {
                     v: delta,
                     label: [
                         "<small>" + moment(self.props.dateCompare.dateOne).add(delta).format("MMM DD") + "</small>",
-                        "<small>" + moment(self.props.dateCompare.dateTwo).add(delta).format("MMM DD") + "</small>"
+                        "<small>" + moment(self.props.dateCompare.dateOne).add(delta).format("MMM DD") + "</small>"
                     ].join("<br />")
                 };
             });
         }
-        if (self.props.dateCompare.period.key === "quarter") {
+        if (self.props.dateCompare.period.key === "years") {
             return R.range(0, 4).map(function (n) {
                 var delta = moment(0).add(n, "months").valueOf();
                 return {
                     v: delta,
                     label: [
                         "<small>" + moment(self.props.dateCompare.dateOne).add(delta).format("MMM") + "</small>",
-                        "<small>" + moment(self.props.dateCompare.dateTwo).add(delta).format("MMM") + "</small>"
+                        "<small>" + moment(self.props.dateCompare.dateOne).add(delta).format("MMM") + "</small>"
                     ].join("<br />")
                 };
             });
