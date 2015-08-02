@@ -35,7 +35,8 @@ var multiselectStyles = {
 
 var graphStyle = {
     border: "solid 1px " + color(colors.darkBlack).alpha(0.1).rgbString(),
-    boxShadow: "2px 2px 5px #8c8c8d"
+    boxShadow: "2px 2px 5px " + colors.greySubTitle,
+    marginBottom: "15px"
 };
 
 var getSitoLabel = function (sito) {
@@ -99,9 +100,9 @@ var Chart = React.createClass({
     },
     getValori: function () {
         return [
-            {label: "Reale", color: "#8595f9", key: "reale"},
-            {label: "Contrattuale", color: "#56c5e2", key: "contrattuale"},
-            {label: "Previsionale", color: "#a8e1d4", key: "previsionale"}
+            {label: "Reale", color: colors.lineReale, key: "reale"},
+            {label: "Contrattuale", color: colors.lineContrattuale, key: "contrattuale"},
+            {label: "Previsionale", color: colors.linePrevisionale, key: "previsionale"}
         ];
     },
     getExportType: function () {
@@ -262,7 +263,7 @@ var Chart = React.createClass({
                         </components.Compare>
                     </span>
                 </bootstrap.Col>
-                <bootstrap.Col sm={12} style={{height: "100%", padding: "30px"}}>
+                <bootstrap.Col sm={12} style={{height: "100%"}}>
                     <components.HistoricalGraph
                         dateCompare={dateCompareProps.value}
                         misure={this.props.collections.get("misure") || Immutable.Map()}

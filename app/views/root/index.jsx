@@ -14,17 +14,19 @@ var colors     = require("lib/colors");
 
 var styles = {
     header: {
-        position: "absolute",
+        // position: "absolute",
         width: "100%",
         height: measures.headerHeight,
         transition: "left 0.3s ease"
     },
     content: {
-        position: "absolute",
+        // position: "absolute",
         top: measures.headerHeight,
         width: "100%",
-        height: "calc(100% - 90px)",
-        transition: "left 0.3s ease"
+        height: "100%",
+        // height: "calc(100% - 90px)",
+        transition: "left 0.3s ease",
+        overflow: "scroll"
     },
     sidebar: {
         position: "absolute",
@@ -39,7 +41,7 @@ var styles = {
         color: colors.greySubTitle,
         height: measures.footerHeight,
         width: "100%",
-        top: "calc(100% - " + measures.footerHeight + ")",
+        bottom: "0px",
         textAlign: "center"
     }
 };
@@ -121,13 +123,13 @@ var Root = React.createClass({
                 <div style={styles.content}>
                     {this.renderChildren()}
                 </div>
+                <div style={styles.footer} >
+                    Copyright 2015 - Innowatio
+                </div>
                 <components.LoginModal
                     asteroid={asteroid}
                     isOpen={!this.state.userId}
                 />
-                <div style={styles.footer} >
-                    Copyright 2015 - Innowatio
-                </div>
             </div>
         );
     }
