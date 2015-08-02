@@ -1,6 +1,5 @@
 var Radium     = require("radium");
 var React      = require("react");
-var Immutable  = require("immutable");
 var IPropTypes = require("react-immutable-proptypes");
 var titleCase  = require("title-case");
 
@@ -36,7 +35,7 @@ var HistoricalGraph = React.createClass({
     renderTitle: function () {
         return (
             <div>
-                <h3 className="text-center" style={{marginTop: "0px"}}>
+                <h3 className="text-center" style={{marginTop: "15px"}}>
                     Sito: &nbsp;
                     {this.renderSitoTitle(this.props.siti[0])}
                     {this.props.siti.length === 2 ? " & " : null}

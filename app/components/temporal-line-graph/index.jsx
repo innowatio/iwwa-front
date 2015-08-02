@@ -3,6 +3,16 @@ var React = require("react");
 
 var AppPropTypes = require("lib/app-prop-types.js");
 
+
+var styles = {
+    graphContainer: {
+        width: "calc(100vw - 100px)",
+        height: "calc(100vh - 300px)",
+        marginBottom: "25px",
+        margin: "auto"
+    }
+};
+
 var TemporalLineGraph = React.createClass({
     propTypes: {
         colors: React.PropTypes.arrayOf(React.PropTypes.string),
@@ -86,7 +96,7 @@ var TemporalLineGraph = React.createClass({
     },
     render: function () {
         return (
-            <div ref="graphContainer" style={{width: "100%", height: "500px", marginBottom: "35px"}} />
+            <div ref="graphContainer" style={styles.graphContainer} />
         );
     }
 });
