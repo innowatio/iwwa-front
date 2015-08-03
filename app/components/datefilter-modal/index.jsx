@@ -52,7 +52,7 @@ var DatefilterModal = React.createClass({
         });
     },
     defaultDate: function () {
-        var now = new Date();
+        var now = new moment()._d;
         return moment(now).subtract(1, "weeks")._d;
     },
     renderResetButton: function () {
@@ -88,13 +88,13 @@ var DatefilterModal = React.createClass({
                         closeButton
                         style={{borderBottom: "none"}}
                     >
-                        <h3 className="text-center">{"Seleziona periodo"}</h3>
+                        <h3 className="text-center" style={{color: colors.primary}}>{"Seleziona periodo"}</h3>
                     </bootstrap.Modal.Header>
                     <bootstrap.Modal.Body>
                         <span>
-                        <h5 style={{marginLeft: "115px"}}>da <components.Spacer direction="h" size={360}/> a</h5>
+                        <h4 style={{marginLeft: "115px"}}>da <components.Spacer direction="h" size={360}/> a</h4>
                         </span>
-                        <components.Spacer direction="v" size={15}/>
+                        <components.Spacer direction="v" size={10}/>
                         <div className="rw-calendar-modal">
                             <Radium.Style
                                 rules={{
