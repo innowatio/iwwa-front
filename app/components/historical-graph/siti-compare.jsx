@@ -5,6 +5,7 @@ var R          = require("ramda");
 var React      = require("react");
 var IPropTypes = require("react-immutable-proptypes");
 
+var colors      = require("lib/colors");
 var components  = require("components");
 var formatValue = require("./format-value.js");
 
@@ -51,8 +52,10 @@ var SitiCompare = React.createClass({
         return ["Data"].concat(sitiLabels);
     },
     render: function () {
+        var valori = this.props.valori[0];
         return (
             <components.TemporalLineGraph
+                colors={[valori.color, colors.lineCompare]}
                 coordinates={this.getCoordinates()}
                 labels={this.getLabels()}
                 xLabel=""

@@ -158,7 +158,7 @@ var Chart = React.createClass({
         };
         // Compare
         var compareDate = this.getDateCompare();
-        var dateComparePropsModal = this.bindToQueryParameter(
+        var dateCompareProps = this.bindToQueryParameter(
             "dateCompare",
             transformers.dateCompare(compareDate)
         );
@@ -169,7 +169,7 @@ var Chart = React.createClass({
         );
 
         var valoriMulti = (
-            !dateComparePropsModal.value &&
+            !dateCompareProps.value &&
             sitoInputProps.value.length <= 1
         );
         return (
@@ -262,14 +262,14 @@ var Chart = React.createClass({
                                 allowedValues={compareDate}
                                 getKey={R.prop("key")}
                                 getLabel={R.prop("label")}
-                                {...dateComparePropsModal}
+                                {...dateCompareProps}
                             />
                         </components.Compare>
                     </span>
                 </bootstrap.Col>
                 <bootstrap.Col sm={12} style={{height: "100%"}}>
                     <components.HistoricalGraph
-                        dateCompare={dateComparePropsModal.value}
+                        dateCompare={dateCompareProps.value}
                         dateFilter={dateFilterProps.value}
                         misure={this.props.collections.get("misure") || Immutable.Map()}
                         siti={sitoInputProps.value}
