@@ -163,7 +163,7 @@ var Chart = React.createClass({
             transformers.dateCompare(compareDate)
         );
         // Date filter
-        var dateFilterPropsModal = this.bindToQueryParameter(
+        var dateFilterProps = this.bindToQueryParameter(
             "dateFilter",
             transformers.dateFilter()
         );
@@ -247,7 +247,7 @@ var Chart = React.createClass({
                         </components.Popover>
                         <components.DatefilterModal
                             title={<img src={iconCompare} style={{width: "75%"}} />}
-                            {...dateFilterPropsModal}
+                            {...dateFilterProps}
                         />
                         <components.Compare>
                             <components.SitiCompare
@@ -270,6 +270,7 @@ var Chart = React.createClass({
                 <bootstrap.Col sm={12} style={{height: "100%"}}>
                     <components.HistoricalGraph
                         dateCompare={dateComparePropsModal.value}
+                        dateFilter={dateFilterProps.value}
                         misure={this.props.collections.get("misure") || Immutable.Map()}
                         siti={sitoInputProps.value}
                         style={graphStyle}

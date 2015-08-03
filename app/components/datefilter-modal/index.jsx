@@ -66,8 +66,10 @@ var DatefilterModal = React.createClass({
         });
     },
     setDate: function (dateKey, dateValue) {
+        var obj = {};
+        obj[dateKey]= dateValue;
         this.setState({
-            value: R.assoc(dateKey, dateValue, this.state.value[dateKey])
+            value: R.merge(this.state.value, obj)
         });
     },
     renderResetButton: function () {
