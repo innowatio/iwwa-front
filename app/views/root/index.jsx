@@ -25,8 +25,7 @@ var styles = {
         width: "100%",
         height: "100%",
         // height: "calc(100% - 90px)",
-        transition: "left 0.3s ease",
-        overflow: "scroll"
+        transition: "left 0.3s ease"
     },
     sidebar: {
         position: "absolute",
