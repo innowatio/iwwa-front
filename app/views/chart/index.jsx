@@ -229,7 +229,6 @@ var Chart = React.createClass({
                         <components.DatefilterModal
                             title={<img src={iconCompare} style={{width: "75%"}} />}
                         />
-                        <components.Spacer direction="h" size={5} />
                         <components.Compare>
                             <components.SitiCompare
                                 allowedValues={siti}
