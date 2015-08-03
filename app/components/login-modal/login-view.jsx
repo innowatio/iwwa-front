@@ -10,7 +10,9 @@ var styles = {
     inputs: {
         borderRadius: "6px",
         overflow: "hidden",
-        border: "solid 1px " + color(colors.white).alpha(0.3).rgbString(),
+        borderWidth: "1px",
+        borderColor: color(colors.white).alpha(0.3).rgbString(),
+        borderStyle: "solid",
         color: "white"
     },
     loginButton: {

@@ -35,8 +35,7 @@ var multiselectStyles = {
 
 var graphStyle = {
     border: "solid 1px " + color(colors.darkBlack).alpha(0.1).rgbString(),
-    boxShadow: "2px 2px 5px " + colors.greySubTitle,
-    marginBottom: "15px"
+    boxShadow: "2px 2px 5px " + colors.greySubTitle
 };
 
 var getSitoLabel = function (sito) {
@@ -118,7 +117,7 @@ var Chart = React.createClass({
     getDateCompare: function () {
         return [
             {label: "IERI", key: "days"},
-            {label: "7 GG FA", key: "7giornifa"},
+            {label: "7 GG FA", key: "7 days before"},
             {label: "SETTIMANA SCORSA", key: "weeks"},
             {label: "MESE SCORSO", key: "months"},
             {label: "12 MESI FA", key: "years"}
@@ -160,7 +159,7 @@ var Chart = React.createClass({
         // Compare
         var compareDate = this.getDateCompare();
         var dateComparePropsModal = this.bindToQueryParameter(
-            "dateCompareModal",
+            "dateCompare",
             transformers.dateCompare(compareDate)
         );
         // Date filter
