@@ -28,8 +28,11 @@ var ValoriCompare = React.createClass({
                 return misura.get("tipologia") === self.props.tipologia.key;
             })
             .filter(function (misura) {
-                return moment(misura.get("data")).toDate() >= self.props.dateFilter.start &&
-                    moment(misura.get("data")).toDate() <= self.props.dateFilter.end;
+                if (self.props.dateFilter) {
+                    return moment(misura.get("data")).toDate() >= self.props.dateFilter.start &&
+                        moment(misura.get("data")).toDate() <= self.props.dateFilter.end;
+                }
+                return true;
             })
             .map(function (misura) {
                 var date = moment(misura.get("data")).toDate();
