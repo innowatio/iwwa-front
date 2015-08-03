@@ -28,6 +28,7 @@ module.exports = R.merge(Router.Navigation, {
         return {
             value: transformer.parse(queryValue),
             onChange: function (newValue) {
+                console.log(newValue);
                 var newQueryValue = transformer.stringify(newValue);
                 /*
                 *   replaceWith is defined as we merged with our mixin

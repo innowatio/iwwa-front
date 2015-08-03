@@ -163,6 +163,11 @@ var Chart = React.createClass({
             "dateCompareModal",
             transformers.dateCompare(compareDate)
         );
+        // Date filter
+        var dateFilterPropsModal = this.bindToQueryParameter(
+            "dateFilter",
+            transformers.dateFilter()
+        );
 
         var valoriMulti = (
             !dateComparePropsModal.value &&
@@ -243,6 +248,7 @@ var Chart = React.createClass({
                         </components.Popover>
                         <components.DatefilterModal
                             title={<img src={iconCompare} style={{width: "75%"}} />}
+                            {...dateFilterPropsModal}
                         />
                         <components.Compare>
                             <components.SitiCompare

@@ -1,3 +1,4 @@
+var R         = require("ramda");
 var Radium    = require("radium");
 var React     = require("react");
 var bootstrap = require("react-bootstrap");
@@ -15,45 +16,59 @@ var DatefilterModal = React.createClass({
         ]),
         style: React.PropTypes.object,
         title: React.PropTypes.element,
-        value: React.PropTypes.array
+        value: React.PropTypes.shape({
+            start: React.PropTypes.date,
+            end: React.PropTypes.date
+        })
     },
     getInitialState: function () {
         return {
             showModal: false,
-            active: "activeSiteCompare",
-            compare: " "
+            value: {
+                start: this.getDefault(this.props.value, "start", this.defaultStartDate()),
+                end: this.getDefault(this.props.value, "end", new Date())
+            }
         };
+    },
+    getDefault: function (valueObject, key, defaultValue) {
+        var defaultTo = R.defaultTo(defaultValue);
+
+        var result = defaultValue;
+        if (R.has(defaultValue, key)) {
+            return defaultTo(valueObject[key]);
+        }
+
+        return result;
     },
     close: function () {
         this.setState({
             showModal: false
         });
     },
-    open: function (value) {
+    defaultStartDate: function () {
+        var now = new moment()._d;
+        return moment(now).subtract(1, "weeks")._d;
+    },
+    open: function () {
         this.setState({
-            showModal: true,
-            compare: value.label
+            showModal: true
         });
     },
     closeSuccess: function () {
         this.close();
     },
     reset: function () {
-        // this.props.onChange(null);
-    },
-    handleSelect: function (select) {
         this.setState({
-            active: select
+            value: {
+                start: this.defaultStartDate(),
+                end: new Date()
+            }
         });
     },
-    selectedChackboxDate: function (value) {
+    setDate: function (dateKey, dateValue) {
         this.setState({
-            value: value
+            value: R.assoc(dateKey, dateValue, this.state.value[dateKey])
         });
-    },
-    defaultDate: function () {
-        var now = new moment()._d;
-        return moment(now).subtract(1, "weeks")._d;
     },
     renderResetButton: function () {
         return this.props.value ? (
@@ -115,25 +130,29 @@ var DatefilterModal = React.createClass({
                                 }}
                                 scopeSelector=".rw-calendar-modal"
                             />
+
+                    {/* <!-- WARNING: the first calendar is on the right so the 1st here is the 2nd in the page --> */}
                             <Calendar
                                 className="pull-right"
                                 culture={"en-GB"}
                                 dayFormat={day => ['D', 'L', 'M','M','G', 'V', 'S'][day]}
-                                defaultValue={new Date()}
                                 format="MMM dd, yyyy"
+                                onChange={R.partial(this.setDate, "end")}
                                 style={{width: "40%"}}
+                                value={this.state.value.end}
                             />
                             <Calendar
                                 dayFormat={day => ['D', 'L', 'M','M','G', 'V', 'S'][day]}
-                                defaultValue={this.defaultDate()}
                                 format="MMM dd, yyyy"
+                                onChange={R.partial(this.setDate, "start")}
                                 style={{width: "40%"}}
+                                value={this.state.value.start}
                             />
                         </div>
                     </bootstrap.Modal.Body>
                     <bootstrap.Modal.Footer style={{textAlign: "center", border: "0px", marginTop: "20px"}}>
                         <components.Button
-                            onClick={this.closeSuccess}
+                            onClick={this.reset}
                             style={{
                                 background: colors.greyBackground,
                                 color: colors.primary,
@@ -145,7 +164,7 @@ var DatefilterModal = React.createClass({
                         </components.Button>
                         <components.Spacer direction="h" size={20} />
                         <components.Button
-                            onClick={this.close}
+                            onClick={R.partial(this.props.onChange, this.state.value)}
                             style={{
                                 background: colors.primary,
                                 color: colors.white,

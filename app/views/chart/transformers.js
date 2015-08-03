@@ -25,6 +25,30 @@ exports.dateCompare = function (periods) {
     };
 };
 
+exports.dateFilter = function () {
+    return {
+        parse: function (query) {
+            if (!query) {
+                return null;
+            }
+            var tokens = query.split("-") || [];
+            return {
+                start: moment(tokens[0], "YYYYMMDD").toDate(),
+                end: moment(tokens[1], "YYYYMMDD").toDate()
+            };
+        },
+        stringify: function (value) {
+            if (!value) {
+                return "";
+            }
+            return [
+                moment(value.start).format("YYYYMMDD"),
+                moment(value.end).format("YYYYMMDD")
+            ].join("-");
+        }
+    };
+};
+
 exports.sito = function (siti) {
     return {
         parse: function (query) {
