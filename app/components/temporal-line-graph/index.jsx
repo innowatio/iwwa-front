@@ -7,9 +7,8 @@ var AppPropTypes = require("lib/app-prop-types.js");
 var styles = {
     graphContainer: {
         width: "calc(100vw - 100px)",
-        height: "calc(100vh - 300px)",
-        marginBottom: "25px",
-        margin: "auto"
+        height: "calc(100vh - 350px)",
+        margin: "20px 20px 30px 20px"
     }
 };
 

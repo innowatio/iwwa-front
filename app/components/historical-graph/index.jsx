@@ -1,3 +1,4 @@
+var R          = require("ramda");
 var Radium     = require("radium");
 var React      = require("react");
 var IPropTypes = require("react-immutable-proptypes");
@@ -16,6 +17,7 @@ var HistoricalGraph = React.createClass({
         }),
         misure: IPropTypes.map,
         siti: React.PropTypes.arrayOf(IPropTypes.map),
+        style: React.PropTypes.object,
         tipologia: React.PropTypes.object,
         valori: React.PropTypes.arrayOf(React.PropTypes.object)
     },
@@ -34,7 +36,7 @@ var HistoricalGraph = React.createClass({
     renderTitle: function () {
         return (
             <div>
-                <h3 className="text-center" style={{marginTop: "15px"}}>
+                <h3 className="text-center" style={{marginTop: "20px"}}>
                     Sito: &nbsp;
                     {this.renderSitoTitle(this.props.siti[0])}
                     {this.props.siti.length === 2 ? " & " : null}
@@ -67,7 +69,7 @@ var HistoricalGraph = React.createClass({
     },
     render: function () {
         return (
-                <div style={{width: "100%", height: "100%"}}>
+                <div style={R.merge({width: "100%", height: "100%"}, this.props.style)}>
                     {this.renderTitle()}
                     {this.renderGraph()}
                 </div>
