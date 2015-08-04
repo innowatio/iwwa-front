@@ -1,11 +1,12 @@
 var Immutable   = require("immutable");
-var Radium     = require("radium");
+var Radium      = require("radium");
 var R           = require("ramda");
 var React       = require("react");
+var ReactLink   = require("react/lib/ReactLink");
 var ReactWidget = require("react-widgets");
 var IPropTypes  = require("react-immutable-proptypes");
 
-var Multiselect = React.createClass({
+var Select = React.createClass({
     propTypes: {
         allowedValues: React.PropTypes.oneOfType([
             React.PropTypes.array,
@@ -13,12 +14,12 @@ var Multiselect = React.createClass({
         ]).isRequired,
         filter: React.PropTypes.func,
         getLabel: React.PropTypes.func,
-        maxValues: React.PropTypes.number,
-        onChange: React.PropTypes.func.isRequired,
+        label: React.PropTypes.string,
+        onChange: React.PropTypes.func,
+        placeholder: React.PropTypes.string,
         style: React.PropTypes.object,
-        tagComponent: React.PropTypes.func,
-        title: React.PropTypes.string,
-        value: React.PropTypes.array
+        value: React.PropTypes.array,
+        valueLink: ReactLink.PropTypes.link()
     },
     mixins: [React.addons.PureRenderMixin],
     getDefaultProps: function () {
@@ -35,38 +36,42 @@ var Multiselect = React.createClass({
             this.props.allowedValues
         );
     },
-    canOpen: function () {
-        if (!this.props.maxValues) {
-            return true;
+    getValue: function () {
+        return (
+            this.props.valueLink ?
+            this.props.valueLink.value :
+            this.props.value
+        );
+    },
+    onChange: function (newValue) {
+        if (this.props.onChange) {
+            this.props.onChange(newValue);
         }
-        return this.props.value.length < this.props.maxValues;
+        if (this.props.valueLink) {
+            this.props.valueLink.requestChange(newValue);
+        }
+    },
+    renderLabel: function () {
+        return this.props.label ? (
+            <label>{this.props.label}</label>
+        ) : null;
     },
     render: function () {
-        var canOpen = this.canOpen();
         return (
-            <span className="ac-multiselect" style={{display: "inline-block"}}>
-                <Radium.Style
-                    rules={{
-                        input: {
-                           display: canOpen ? "" : "none"
-                        }
-                    }}
-                    scopeSelector=".ac-multiselect"
-                />
-                <ReactWidget.Multiselect
+            <div className="form-group">
+                {this.renderLabel()}
+                <ReactWidget.DropdownList
                     data={this.getData()}
                     filter={this.props.filter}
-                    onChange={this.props.onChange}
-                    open={canOpen ? undefined : false}
-                    placeholder={this.props.title}
+                    onChange={this.onChange}
+                    placeholder={this.props.placeholder}
                     style={this.props.style}
-                    tagComponent={this.props.tagComponent}
                     textField={this.props.getLabel}
-                    value={this.props.value}
+                    value={this.getValue()}
                 />
-            </span>
+            </div>
         );
     }
 });
 
-module.exports = Radium(Multiselect);
+module.exports = Radium(Select);

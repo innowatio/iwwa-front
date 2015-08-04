@@ -14,7 +14,10 @@ var webpack     = require("webpack");
 
 var getIp = function () {
     return R.find(function (ip) {
-        return ip.slice(0, 3) === "192";
+        return (
+            ip.slice(0, 3) === "192" ||
+            ip.slice(0, 2) === "10"
+        );
     }, devip());
 };
 
@@ -25,7 +28,8 @@ var getIp = function () {
 */
 
 var ENVIRONMENT  = process.env.ENVIRONMENT || "dev";
-var BACKEND_HOST = process.env.BACKEND_HOST || getIp() + ":3000";
+var WRITE_BACKEND_HOST = process.env.WRITE_BACKEND_HOST || getIp() + ":3000";
+var READ_BACKEND_HOST = process.env.READ_BACKEND_HOST || getIp() + ":3000";
 var MINIFY_FILES = (process.env.MINIFY_FILES === "true") || false;
 
 var deps = JSON.parse(fs.readFileSync("deps.json", "utf8"));
@@ -38,10 +42,6 @@ var deps = JSON.parse(fs.readFileSync("deps.json", "utf8"));
 
 proGulp.task("buildMainHtml", function () {
     return gulp.src("app/main.html")
-        .pipe(gp.preprocess({context: {
-            ENVIRONMENT: ENVIRONMENT,
-            BACKEND_HOST: BACKEND_HOST
-        }}))
         .pipe(gp.rename("index.html"))
         .pipe(gulp.dest("builds/" + ENVIRONMENT + "/"));
 });
@@ -76,7 +76,8 @@ proGulp.task("buildAppScripts", (function () {
         },
         plugins: [
             new webpack.DefinePlugin({
-                BACKEND_HOST: JSON.stringify(BACKEND_HOST)
+                READ_BACKEND_HOST: JSON.stringify(READ_BACKEND_HOST),
+                WRITE_BACKEND_HOST: JSON.stringify(WRITE_BACKEND_HOST)
             }),
             new webpack.optimize.CommonsChunkPlugin(
                 "vendor",
@@ -216,7 +217,8 @@ gulp.task("default", function () {
     gp.util.log("  " + gp.util.colors.green("dev") + "     set up dev environment with auto-recompiling");
     gp.util.log("");
     gp.util.log("Environment variables for configuration:");
-    gp.util.log("  " + gp.util.colors.cyan("BACKEND_HOST") + "    (defaults to `" + getIp() + ":3000`)");
+    gp.util.log("  " + gp.util.colors.cyan("READ_BACKEND_HOST") + "    (defaults to `" + getIp() + ":3000`)");
+    gp.util.log("  " + gp.util.colors.cyan("WRITE_BACKEND_HOST") + "    (defaults to `" + getIp() + ":3000`)");
     gp.util.log("  " + gp.util.colors.cyan("ENVIRONMENT") + "     (defaults to `dev`)");
     gp.util.log("  " + gp.util.colors.cyan("MINIFY_FILES") + "    (defaults to `false`)");
     gp.util.log("");

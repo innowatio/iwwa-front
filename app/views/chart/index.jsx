@@ -4,11 +4,11 @@ var R          = require("ramda");
 var React      = require("react");
 var bootstrap  = require("react-bootstrap");
 var IPropTypes = require("react-immutable-proptypes");
-var titleCase  = require("title-case");
 
 var components       = require("components");
 var styles           = require("lib/styles");
 var QuerystringMixin = require("lib/querystring-mixin");
+var CollectionUtils  = require("lib/collection-utils");
 var transformers     = require("./transformers.js");
 
 var multiselectStyles = {
@@ -27,12 +27,6 @@ var multiselectStyles = {
     }
 };
 
-var getSitoLabel = function (sito) {
-    return [
-        titleCase(sito.get("societa")),
-        titleCase(sito.get("idCoin"))
-    ].join(" - ");
-};
 var SitoTagComponent = React.createClass({
     propTypes: {
         item: IPropTypes.map
@@ -40,18 +34,11 @@ var SitoTagComponent = React.createClass({
     render: function () {
         return (
             <span style={multiselectStyles.tag}>
-                {getSitoLabel(this.props.item)}
+                {CollectionUtils.siti.getLabel(this.props.item)}
             </span>
         );
     }
 });
-var filterSito = function (item, search) {
-    var searchRegExp = new RegExp(search, "i");
-    return (
-        searchRegExp.test(item.get("societa")) ||
-        searchRegExp.test(item.get("idCoin"))
-    );
-};
 
 var Chart = React.createClass({
     propTypes: {
@@ -60,9 +47,7 @@ var Chart = React.createClass({
     },
     mixins: [QuerystringMixin],
     componentDidMount: function () {
-        this.props.asteroid.on("connected", (function () {
-            this.props.asteroid.subscribe("siti");
-        }).bind(this));
+        this.props.asteroid.subscribe("siti");
     },
     componentWillReceiveProps: function (props) {
         var self = this;
@@ -147,8 +132,8 @@ var Chart = React.createClass({
                         <components.Spacer direction="h" size={10} />
                         <components.Multiselect
                             allowedValues={siti}
-                            filter={filterSito}
-                            getLabel={getSitoLabel}
+                            filter={CollectionUtils.siti.filter}
+                            getLabel={CollectionUtils.siti.getLabel}
                             maxValues={2}
                             style={multiselectStyles.multiselect}
                             tagComponent={SitoTagComponent}

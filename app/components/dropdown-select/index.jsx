@@ -16,8 +16,8 @@ var DropdownSelect = React.createClass({
         value: React.PropTypes.any
     },
     getDefaultProps: function () {
-        var defaultGetter = function (allowedItem) {
-            return allowedItem.toString();
+        var defaultGetter = function (allowedValue) {
+            return allowedValue.toString();
         };
         return {
             getKey: defaultGetter,
