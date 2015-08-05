@@ -1,7 +1,7 @@
 var R          = require("ramda");
 var React      = require("react");
 
-var colors = require("lib/colors");
+var colors     = require("lib/colors");
 var components = require("components/");
 
 var styles = {

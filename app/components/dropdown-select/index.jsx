@@ -47,10 +47,11 @@ var DropdownSelect = React.createClass({
                     borderTop: (index === 0 ? "0px" : undefined),
                     borderTopLeftRadius: (index === 0 ? "4px" : undefined),
                     borderTopRightRadius: (index === 0 ? "4px" : undefined),
-                    borderBottom: (index === 2 ? "0px" : undefined)
+                    borderBottom: (index === 2 ? "0px" : undefined),
+                    fontSize: "12px",
+                    width: "90px"
                 }}
             >
-                <input checked={active} readOnly style={{marginRight: "10px"}} type="radio" />
                 {this.props.getLabel(allowedValue)}
             </bootstrap.ListGroupItem>
         );

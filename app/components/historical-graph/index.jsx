@@ -34,20 +34,20 @@ var HistoricalGraph = React.createClass({
         ) : null;
     },
     renderTitle: function () {
-        return (
-            <div>
-                <h3 className="text-center" style={{marginTop: "20px"}}>
-                    Sito: &nbsp;
-                    {this.renderSitoTitle(this.props.siti[0])}
-                    {this.props.siti.length === 2 ? " & " : null}
-                    {this.renderSitoTitle(this.props.siti[1])}
-                </h3>
-                <h4 className="text-center" style={{color: colors.greySubTitle}}>
-                    Tipologia: &nbsp;
-                    {this.props.tipologia.label}
-                </h4>
-            </div>
-        );
+        if (this.props.siti.length > 0) {
+            return (
+                <div>
+                    <h3 className="text-center" style={{marginTop: "20px"}}>
+                        {this.renderSitoTitle(this.props.siti[0])}
+                        {this.props.siti.length === 2 ? " & " : null}
+                        {this.renderSitoTitle(this.props.siti[1])}
+                    </h3>
+                    <h4 className="text-center" style={{color: colors.greySubTitle}}>
+                        {this.props.tipologia.label}
+                    </h4>
+                </div>
+            );
+        }
     },
     renderDateCompareGraph: function () {
         return <DateCompareGraph {...this.props} />;

@@ -8,6 +8,7 @@ var Popover = React.createClass({
     propTypes: {
         children: React.PropTypes.element,
         title: React.PropTypes.element,
+        tooltipId: React.PropTypes.string,
         tooltipMessage: React.PropTypes.string,
         tooltipPosition: React.PropTypes.string
     },
@@ -18,7 +19,9 @@ var Popover = React.createClass({
     },
     addTooltip: function () {
         return (
-            <bootstrap.Tooltip>
+            <bootstrap.Tooltip
+                id={this.props.tooltipId}
+            >
                 {this.props.tooltipMessage}
             </bootstrap.Tooltip>
         );
@@ -38,7 +41,6 @@ var Popover = React.createClass({
                     overlay={this.addTooltip()}
                     placement={this.props.tooltipPosition}
                     rootClose={true}
-                    trigger={["hover", "focus"]}
                 >
                     {button}
                 </bootstrap.OverlayTrigger>

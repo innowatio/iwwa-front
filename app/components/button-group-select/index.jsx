@@ -4,8 +4,15 @@ var React      = require("react");
 var bootstrap  = require("react-bootstrap");
 var IPropTypes = require("react-immutable-proptypes");
 
-
+var colors     = require("lib/colors");
 var components = require("components");
+
+var styleDropdown = {
+    fontSize: "13px",
+    color: colors.greySubTitle,
+    backgroundColor: colors.greyBackground,
+    border: "1px " + colors.greyBorder
+};
 
 var ButtonGroupSelect = React.createClass({
     propTypes: {
@@ -100,7 +107,7 @@ var ButtonGroupSelect = React.createClass({
                 active={active}
                 key={this.props.getKey(allowedValue)}
                 onClick={R.partial(this.onChange, allowedValue)}
-                style={active ? this.props.getActiveStyle(allowedValue) : {}}
+                style={active ? this.props.getActiveStyle(allowedValue) : styleDropdown}
             >
                 {this.props.getLabel(allowedValue)}
             </components.Button>

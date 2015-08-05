@@ -82,7 +82,7 @@ var Chart = React.createClass({
         var sitoQuery = R.path(["location", "query", "sito"], props);
         var siti = (sitoQuery && sitoQuery.split(",")) || [];
         siti.forEach(function (sito) {
-            self.props.asteroid.subscribe("misureBySito", sito);
+            self.props.asteroid.subscribe("misureBySitoTwoMonths", sito);
         });
     },
     getPeriods: function () {
@@ -153,7 +153,9 @@ var Chart = React.createClass({
         var valoreGetActiveStyle = function (valore) {
             return {
                 background: valore.color,
-                color: colors.white
+                color: colors.white,
+                fontSize: "13px",
+                border: "1px " + colors.greyBorder
             };
         };
         // Compare
@@ -199,8 +201,8 @@ var Chart = React.createClass({
                             {...valoreInputProps}
                         />
                         <components.Popover
-                            style={{width: "18px"}}
                             title={<img src={iconExport} style={{width: "75%"}} />}
+                            tooltipId="tooltipExport"
                             tooltipMessage="Esporta"
                             tooltipPosition="right"
                         >
@@ -213,9 +215,10 @@ var Chart = React.createClass({
                             />
                         </components.Popover>
                     </span>
-                    <span className="pull-right">
+                    <span className="pull-right" style={{display: "flex"}}>
                         <components.Popover
                             title={<img src={iconPower} style={{width: "75%"}} />}
+                            tooltipId="tooltipInterest"
                             tooltipMessage="Quantità d'interesse"
                             tooltipPosition="left"
                         >
@@ -229,8 +232,8 @@ var Chart = React.createClass({
                         </components.Popover>
                         <components.Popover
                             title={<img src={iconSiti} style={{width: "75%"}} />}
-                            tooltipMessage="Punti di misurazione.
-                                Puoi selezionare un singolo punto oppure due per confrontarli"
+                            tooltipId="tooltipMisurazione"
+                            tooltipMessage="Punti di misurazione"
                             tooltipPosition="left"
                         >
                             <components.Multiselect

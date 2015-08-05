@@ -8,6 +8,7 @@ exports.buttonHover      = "#2a2f67";
 exports.titleColor       = "#7275a0";
 exports.greyBackground   = "#f3f3f4";
 exports.greySubTitle     = "#8c8c8d";
+exports.greyBorder       = "#cccccc";
 exports.lineReale        = "#8595f9";
 exports.lineContrattuale = "#56c5e2";
 exports.linePrevisionale = "#a8e1d4";

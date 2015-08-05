@@ -109,6 +109,9 @@ var Compare = React.createClass({
                 <bootstrap.ButtonGroup>
                     <components.Popover
                         title={<img src={iconCompare} style={{width: "75%"}} />}
+                        tooltipId="tooltipCompare"
+                        tooltipMessage={"Comparazione"}
+                        tooltipPosition="left"
                     >
                         <components.DropdownButton
                             allowedValues={this.getCompare()}

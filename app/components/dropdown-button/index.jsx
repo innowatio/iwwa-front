@@ -3,6 +3,8 @@ var React      = require("react");
 var bootstrap  = require("react-bootstrap");
 var IPropTypes = require("react-immutable-proptypes");
 
+// var colors = require("lib/colors");
+
 var DropdownButton = React.createClass({
     propTypes: {
         allowedValues: React.PropTypes.oneOfType([
@@ -25,6 +27,12 @@ var DropdownButton = React.createClass({
             getIcon: defaultGetter
         };
     },
+    getInitialState: function () {
+        return {
+            hover: "false",
+            allowedValue: {}
+        };
+    },
     imageItem: function (allowedValue) {
         if (R.keys(allowedValue).length > 2) {
             return (
@@ -35,18 +43,32 @@ var DropdownButton = React.createClass({
             );
         }
     },
+    mouseOver: function (item) {
+        this.setState({
+            hover: true,
+            allowedValue: item
+        });
+    },
     renderButtonOption: function (allowedValue, index) {
         return (
             <bootstrap.ListGroupItem
                 key={this.props.getKey(allowedValue)}
                 onClick={R.partial(this.props.onChange, allowedValue)}
+                onMouseOver={R.partial(this.mouseOver, allowedValue)}
                 style={{
                     borderLeft: "0px",
                     borderRight: "0px",
                     borderTop: (index === 0 ? "0px" : undefined),
                     borderTopLeftRadius: (index === 0 ? "4px" : undefined),
                     borderTopRightRadius: (index === 0 ? "4px" : undefined),
-                    borderBottom: (index === 2 ? "0px" : undefined)
+                    borderBottom: (index === 2 ? "0px" : undefined),
+                    fontSize: "12px"
+                    // background: (this.state.hover && this.state.allowedValue === allowedValue) ?
+                    //     colors.primary :
+                    //     colors.greyBackground,
+                    // color: (this.state.hover && this.state.allowedValue === allowedValue) ?
+                    //     colors.white :
+                    //     colors.greySubTitle
                 }}
             >
                 {this.imageItem(allowedValue)}
