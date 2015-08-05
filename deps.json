@@ -24,7 +24,6 @@
         "react-router",
         "react-router/lib/BrowserHistory",
         "react-widgets",
-        "title-case",
-        "vis/dist/vis.js"
+        "title-case"
     ]
 }
