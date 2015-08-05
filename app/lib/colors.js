@@ -12,3 +12,4 @@ exports.lineReale        = "#8595f9";
 exports.lineContrattuale = "#56c5e2";
 exports.linePrevisionale = "#a8e1d4";
 exports.lineCompare      = "#f74f68";
+exports.borderColor      = "rgba(0, 0, 0, 0.0980392)";

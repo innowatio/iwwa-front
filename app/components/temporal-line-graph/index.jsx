@@ -1,5 +1,5 @@
-var R     = require("ramda");
-var React = require("react");
+var R      = require("ramda");
+var React  = require("react");
 
 var AppPropTypes = require("lib/app-prop-types.js");
 
@@ -95,7 +95,7 @@ var TemporalLineGraph = React.createClass({
     },
     render: function () {
         return (
-            <div ref="graphContainer" style={styles.graphContainer} />
+            <div ref="graphContainer" style={styles.graphContainer}/>
         );
     }
 });
