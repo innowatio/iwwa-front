@@ -82,7 +82,7 @@ var Chart = React.createClass({
         var sitoQuery = R.path(["location", "query", "sito"], props);
         var siti = (sitoQuery && sitoQuery.split(",")) || [];
         siti.forEach(function (sito) {
-            self.props.asteroid.subscribe("misureBySitoTwoMonths", sito);
+            self.props.asteroid.subscribe("misureBySito", sito);
         });
     },
     getPeriods: function () {

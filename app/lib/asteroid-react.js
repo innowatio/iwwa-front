@@ -17,14 +17,16 @@ exports.getControllerViewMixin = function getControllerViewMixin () {
             });
         },
         updateCollections: throttle(function () {
-            this.setState({
-                collections: self.collections
-            });
-        }, 500),
+            if (self.loggedIn) {
+                this.setState({
+                    collections: self.collections
+                });
+            }
+        }, 1000),
         componentDidMount: function () {
-            self.on("collections:change", this.updateCollections);
             self.on("loggedIn", this.setUserId);
             self.on("loggedOut", this.setUserId);
+            self.on("collections:change", this.updateCollections);
         },
         componentWillUnmount: function () {
             self.off("collections:change", this.updateCollections);
