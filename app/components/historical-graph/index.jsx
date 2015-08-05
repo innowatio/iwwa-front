@@ -5,7 +5,6 @@ var IPropTypes = require("react-immutable-proptypes");
 var titleCase  = require("title-case");
 
 var colors             = require("lib/colors");
-var components         = require("components/");
 var DateCompareGraph   = require("./date-compare.jsx");
 var ValoriCompareGraph = require("./valori-compare.jsx");
 var SitiCompareGraph   = require("./siti-compare.jsx");
@@ -27,7 +26,6 @@ var HistoricalGraph = React.createClass({
         return sito ? (
             <span>
                 <strong>
-                    <components.Spacer direction="h" size={8}/>
                     {titleCase(sito.get("societa"))}
                 </strong>
                 {" - "}
@@ -76,9 +74,9 @@ var HistoricalGraph = React.createClass({
                         rules={{
                             ".dygraph-legend": {
                                 top: "-60px !important",
-                                border: "1px solid" + colors.borderColor + "!important",
-                                boxShadow: "2px 2px 5px " + colors.greySubTitle + "!important",
-                                textIndent: "8px"
+                                boxShadow: "2px 2px 5px " + colors.greySubTitle,
+                                left: "1150px !important",
+                                width: "186px !important"
                             }
                         }}
                         scopeSelector=".col-sm-12"
