@@ -1,7 +1,6 @@
 var Radium = require("radium");
 var React  = require("react");
 
-var components = require("components");
 var colors     = require("lib/colors");
 var measures   = require("lib/measures");
 
@@ -57,7 +56,7 @@ var Header = React.createClass({
                     <img src={iconLogo} />
                 </span>
                 <span onClick={this.logout} style={styles.logout}>
-                    <img src={iconLogout} />
+                    <img className="pull-right" src={iconLogout} style={{width: "85%"}}/>
                 </span>
             </div>
         );

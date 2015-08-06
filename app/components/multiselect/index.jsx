@@ -5,6 +5,8 @@ var React       = require("react");
 var ReactWidget = require("react-widgets");
 var IPropTypes  = require("react-immutable-proptypes");
 
+var colors = require("lib/colors");
+
 var Multiselect = React.createClass({
     propTypes: {
         allowedValues: React.PropTypes.oneOfType([
@@ -85,6 +87,15 @@ var Multiselect = React.createClass({
                         },
                         ".rw-input": {
                             padding: "5px"
+                        },
+                        ".rw-multiselect-taglist > li": {
+                            background: colors.primary,
+                            color: colors.white
+                        },
+                        ".rw-multiselect-taglist > li .rw-btn": {
+                            float: "right",
+                            // paddingLeft: "15px",
+                            color: colors.white
                         }
                     }}
                     scopeSelector=".ac-multiselect"

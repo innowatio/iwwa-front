@@ -41,6 +41,7 @@ var Popover = React.createClass({
                     overlay={this.addTooltip()}
                     placement={this.props.tooltipPosition}
                     rootClose={true}
+                    trigger="click"
                 >
                     {button}
                 </bootstrap.OverlayTrigger>

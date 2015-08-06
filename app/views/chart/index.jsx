@@ -201,7 +201,7 @@ var Chart = React.createClass({
                             {...valoreInputProps}
                         />
                         <components.Popover
-                            title={<img src={iconExport} style={{width: "75%"}} />}
+                            title={<img src={iconExport} style={{width: "50%"}} />}
                             tooltipId="tooltipExport"
                             tooltipMessage="Esporta"
                             tooltipPosition="right"
