@@ -42,22 +42,10 @@ var Multiselect = React.createClass({
             this.props.allowedValues
         );
     },
-    canOpenTrue: function () {
-        var ret;
-        if (!this.props.maxValues) {
-            ret = true;
-        } else {
-            ret = this.props.value.length < this.props.maxValues;
-        }
-        return ret;
-    },
-    canOpenUndefined: function () {
-        return undefined;
-    },
     canOpen: function () {
         return (this.props.open === "undefined" ?
-            this.canOpenUndefined() :
-            this.canOpenTrue()
+            undefined :
+            true
         );
     },
     render: function () {
@@ -86,7 +74,8 @@ var Multiselect = React.createClass({
                             padding: "0px"
                         },
                         ".rw-input": {
-                            padding: "5px"
+                            padding: "5px",
+                            borderRadius: "10px"
                         },
                         ".rw-multiselect-taglist > li": {
                             background: colors.primary,
@@ -94,8 +83,16 @@ var Multiselect = React.createClass({
                         },
                         ".rw-multiselect-taglist > li .rw-btn": {
                             float: "right",
-                            // paddingLeft: "15px",
-                            color: colors.white
+                            color: colors.white,
+                            paddingLeft: this.props.open === "undefined" ? "15px" :  "initial"
+                        },
+                        "li": {
+                            fontSize: "13px",
+                            height: "100%",
+                            borderRadius: "5px"
+                        },
+                        ".rw-open.rw-widget, .rw-open > .rw-multiselect-wrapper": {
+                            height: "30px"
                         }
                     }}
                     scopeSelector=".ac-multiselect"

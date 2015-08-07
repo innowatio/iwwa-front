@@ -138,6 +138,14 @@ var Chart = React.createClass({
             "sito",
             transformers.sito(siti)
         );
+
+        var sitoInputSingleMultiselect = function (sito) {
+            if (!R.isEmpty(sito)) {
+                return sitoInputProps.onChange([R.last(sito)]);
+            }
+            return sitoInputProps.onChange([]);
+        };
+
         // Tipologia
         var tipologie = this.getTipologie();
         var tipologiaInputProps = this.bindToQueryParameter(
@@ -241,11 +249,12 @@ var Chart = React.createClass({
                                 filter={filterSito}
                                 getLabel={getSitoLabel}
                                 maxValues={1}
+                                onChange={sitoInputSingleMultiselect}
                                 open=" "
                                 placeholder={"Punto di misurazione"}
                                 style={multiselectStyles.multiselectPopover}
                                 tagComponent={SitoTagComponent}
-                                {...sitoInputProps}
+                                value={sitoInputProps.value}
                             />
                         </components.Popover>
                         <components.DatefilterModal
