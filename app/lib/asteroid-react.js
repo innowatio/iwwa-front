@@ -1,4 +1,5 @@
-var throttle = require("lodash.throttle");
+// var throttle = require("lodash.throttle");
+var debounce = require("lodash.debounce");
 
 exports.getControllerViewMixin = function getControllerViewMixin () {
     var self = this;
@@ -16,13 +17,20 @@ exports.getControllerViewMixin = function getControllerViewMixin () {
                 user: self.collections.getIn(["users", self.userId])
             });
         },
-        updateCollections: throttle(function () {
+        // updateCollections: throttle(function () {
+        //     if (self.loggedIn) {
+        //         this.setState({
+        //             collections: self.collections
+        //         });
+        //     }
+        // }, 1000),
+        updateCollections: debounce(function () {
             if (self.loggedIn) {
                 this.setState({
                     collections: self.collections
                 });
             }
-        }, 1000),
+        }, 200),
         componentDidMount: function () {
             self.on("loggedIn", this.setUserId);
             self.on("loggedOut", this.setUserId);
