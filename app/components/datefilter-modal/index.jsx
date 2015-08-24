@@ -8,6 +8,15 @@ var moment    = require("moment");
 var colors = require("lib/colors");
 var components = require("components/");
 
+var styles = {
+    buttonCompare: {
+        width: "200px",
+        height: "40px",
+        marginRight: "8px",
+        marginBottom: "13px"
+    }
+};
+
 var DatefilterModal = React.createClass({
     propTypes: {
         children: React.PropTypes.oneOfType([
@@ -23,6 +32,8 @@ var DatefilterModal = React.createClass({
     },
     getInitialState: function () {
         return {
+            active: this.props.getKey(this.props.allowedValues[2]),
+            custom: false,
             showModal: false,
             value: {
                 start: this.getDefault(this.props.value, "start", this.defaultStartDate()),
@@ -47,10 +58,11 @@ var DatefilterModal = React.createClass({
     },
     defaultStartDate: function () {
         var now = new moment()._d;
-        return moment(now).subtract(1, "weeks")._d;
+        return moment(now).subtract(1, "months")._d;
     },
     open: function () {
         this.setState({
+            custom: false,
             showModal: true
         });
     },
@@ -59,6 +71,7 @@ var DatefilterModal = React.createClass({
     },
     reset: function () {
         this.setState({
+            custom: false,
             value: {
                 start: this.defaultStartDate(),
                 end: new Date()
@@ -72,12 +85,91 @@ var DatefilterModal = React.createClass({
             value: R.merge(this.state.value, obj)
         });
     },
-    renderResetButton: function () {
-        return this.props.value ? (
-            <bootstrap.Button onClick={this.reset}>
-                <components.Icon icon="times" />
-            </bootstrap.Button>
-        ) : null;
+    selectedCheckboxDate: function (allowedValue) {
+        var checkedKey = this.props.getKey(allowedValue);
+        if (checkedKey === "custom") {
+            this.setState({
+                custom: true,
+                value: {
+                    start: this.defaultStartDate(),
+                    end: new Date()
+                }
+            })
+        } else if (checkedKey === "2months") {
+            this.setState({
+                value: {start: moment().subtract(2, "months")}
+            })
+        } else {
+            this.setState({
+                value: {start: moment().subtract(1, checkedKey)}
+            })
+        }
+        this.setState({
+            active: checkedKey
+        })
+    },
+    renderButtonFilter: function (allowedValue) {
+        var active = this.props.getKey(allowedValue) === this.state.active;
+        return (
+            <components.Button
+                active={active}
+                key={this.props.getKey(allowedValue)}
+                onClick={R.partial(this.selectedCheckboxDate, allowedValue)}
+                style={styles.buttonCompare}
+                value={allowedValue}
+            >
+                {this.props.getLabel(allowedValue)}
+            </components.Button>
+        );
+    },
+    renderCustomButton: function () {
+        return (
+            <div>
+                <span>
+                <h4 style={{marginLeft: "115px"}}>da <components.Spacer direction="h" size={360}/> a</h4>
+                </span>
+                <components.Spacer direction="v" size={10}/>
+                <div className="rw-calendar-modal">
+                    <Radium.Style
+                        rules={{
+                            ".rw-header": {
+                                background: colors.primary,
+                                color: colors.white
+                            },
+                            ".rw-header .rw-btn-view": {
+                                background: colors.primary,
+                                color: colors.white,
+                                borderRadius: "0px"
+                            },
+                            ".rw-btn": {
+                                outline: "0px",
+                                outlineStyle: "none",
+                                outlineWidth: "0px"
+                            }
+                        }}
+                        scopeSelector=".rw-calendar-modal"
+                    />
+
+            {/* <!-- WARNING: the first calendar is on the right so the 1st here is the 2nd in the page --> */}
+                    <Calendar
+                        className="pull-right"
+                        culture={"en-GB"}
+                        dayFormat={day => ['D', 'L', 'M','M','G', 'V', 'S'][day]}
+                        format="MMM dd, yyyy"
+                        onChange={R.partial(this.setDate, "end")}
+                        style={{width: "40%"}}
+                        value={this.state.value.end}
+                    />
+                    <Calendar
+                        dayFormat={day => ['D', 'L', 'M','M','G', 'V', 'S'][day]}
+                        format="MMM dd, yyyy"
+                        onChange={R.partial(this.setDate, "start")}
+                        style={{width: "40%"}}
+                        value={this.state.value.start}
+                    />
+                </div>
+            </div>
+        );
     },
     render: function () {
         return (
@@ -107,50 +199,8 @@ var DatefilterModal = React.createClass({
                     >
                         <h3 className="text-center" style={{color: colors.primary}}>{"Seleziona periodo"}</h3>
                     </bootstrap.Modal.Header>
-                    <bootstrap.Modal.Body>
-                        <span>
-                        <h4 style={{marginLeft: "115px"}}>da <components.Spacer direction="h" size={360}/> a</h4>
-                        </span>
-                        <components.Spacer direction="v" size={10}/>
-                        <div className="rw-calendar-modal">
-                            <Radium.Style
-                                rules={{
-                                    ".rw-header": {
-                                        background: colors.primary,
-                                        color: colors.white
-                                    },
-                                    ".rw-header .rw-btn-view": {
-                                        background: colors.primary,
-                                        color: colors.white,
-                                        borderRadius: "0px"
-                                    },
-                                    ".rw-btn": {
-                                        outline: "0px",
-                                        outlineStyle: "none",
-                                        outlineWidth: "0px"
-                                    }
-                                }}
-                                scopeSelector=".rw-calendar-modal"
-                            />
-
-                    {/* <!-- WARNING: the first calendar is on the right so the 1st here is the 2nd in the page --> */}
-                            <Calendar
-                                className="pull-right"
-                                culture={"en-GB"}
-                                dayFormat={day => ['D', 'L', 'M','M','G', 'V', 'S'][day]}
-                                format="MMM dd, yyyy"
-                                onChange={R.partial(this.setDate, "end")}
-                                style={{width: "40%"}}
-                                value={this.state.value.end}
-                            />
-                            <Calendar
-                                dayFormat={day => ['D', 'L', 'M','M','G', 'V', 'S'][day]}
-                                format="MMM dd, yyyy"
-                                onChange={R.partial(this.setDate, "start")}
-                                style={{width: "40%"}}
-                                value={this.state.value.start}
-                            />
-                        </div>
+                    <bootstrap.Modal.Body style={{textAlign: "center"}}>
+                        {this.state.custom ? this.renderCustomButton() : this.props.allowedValues.map(this.renderButtonFilter)}
                     </bootstrap.Modal.Body>
                     <bootstrap.Modal.Footer style={{textAlign: "center", border: "0px", marginTop: "20px"}}>
                         <components.Button

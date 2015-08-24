@@ -123,6 +123,15 @@ var Chart = React.createClass({
             {label: "12 MESI FA", key: "years"}
         ];
     },
+    getDateFilter: function () {
+        return [
+            {label: "IERI", key: "days"},
+            {label: "SETTIMANA SCORSA", key: "weeks"},
+            {label: "MESE SCORSO", key: "months"},
+            {label: "2 MESI FA", key: "2months"},
+            {label: "CUSTOM", key: "custom"}
+        ];
+    },
     onChangeExport: function (valueChanged) {
         console.log("Esporta con " + valueChanged.label);
     },
@@ -173,6 +182,7 @@ var Chart = React.createClass({
             transformers.dateCompare(compareDate)
         );
         // Date filter
+        var filterDate = this.getDateFilter();
         var dateFilterProps = this.bindToQueryParameter(
             "dateFilter",
             transformers.dateFilter()
@@ -258,6 +268,9 @@ var Chart = React.createClass({
                             />
                         </components.Popover>
                         <components.DatefilterModal
+                            allowedValues={filterDate}
+                            getKey={R.prop("key")}
+                            getLabel={R.prop("label")}
                             title={<img src={iconCompare} style={{width: "75%"}} />}
                             {...dateFilterProps}
                         />
