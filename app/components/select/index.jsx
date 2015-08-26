@@ -6,6 +6,8 @@ var ReactLink   = require("react/lib/ReactLink");
 var ReactWidget = require("react-widgets");
 var IPropTypes  = require("react-immutable-proptypes");
 
+var colors = require("lib/colors");
+
 var Select = React.createClass({
     propTypes: {
         allowedValues: React.PropTypes.oneOfType([
@@ -60,6 +62,39 @@ var Select = React.createClass({
         return (
             <div className="form-group">
                 {this.renderLabel()}
+                <Radium.Style
+                    rules={{
+                        "ul.rw-list > li.rw-list-option.rw-state-selected": {
+                            backgroundColor: colors.primary,
+                            color: colors.white
+                        },
+                        "li.rw-list-option": {
+                            height: "40px"
+                        },
+                        "li.rw-list-option rw-list-focus": {
+                            border: "0px"
+                        },
+                        "ul.rw-list > li.rw-list-option": {
+                            borderBottom: colors.greyBorder + " 1px solid",
+                            borderRadius: "0px"
+                        },
+                        "ul.rw-list > li.rw-list-option.rw-state-focus": {
+                            border: colors.blueBorder + " 1px solid"
+                        },
+                        "ul.rw-list > li.rw-list-option:hover, .rw-selectlist > li.rw-list-option:hover": {
+                            borderColor: colors.greyLight
+                        },
+                        "ul.rw-list": {
+                            padding: "0px"
+                        },
+                        "li": {
+                            fontSize: "13px",
+                            height: "100%",
+                            borderRadius: "5px"
+                        }
+                    }}
+                    scopeSelector=".form-group"
+                />
                 <ReactWidget.DropdownList
                     data={this.getData()}
                     filter={this.props.filter}
