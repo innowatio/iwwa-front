@@ -8,8 +8,10 @@ var colors     = require("lib/colors");
 
 var styles = {
     inputs: {
-        borderRadius: "4px",
-        overflow: "hidden"
+        borderRadius: "6px",
+        overflow: "hidden",
+        border: "solid 1px " + color(colors.white).alpha(0.3).rgbString(),
+        color: "white"
     },
     button: {
         background: colors.primary,
@@ -85,6 +87,18 @@ var PasswordResetView = React.createClass({
                             },
                             ".form-control:focus": {
                                 boxShadow: "none"
+                            },
+                            "::-webkit-input-placeholder": {
+                               color: colors.white
+                            },
+                            ":-moz-placeholder": { /* Firefox 18- */
+                               color: colors.white
+                            },
+                            "::-moz-placeholder": {  /* Firefox 19+ */
+                               color: colors.white
+                            },
+                            ":-ms-input-placeholder": {
+                               color: colors.white
                             }
                         }}
                         scopeSelector=".ac-login-modal-inputs"
@@ -104,7 +118,7 @@ var PasswordResetView = React.createClass({
                     onClick={this.passwordReset}
                     style={styles.button}
                 >
-                    {"Invia mail di reset"}
+                    {"INVIA MAIL DI RESET"}
                 </components.Button>
                 {this.renderError()}
             </div>

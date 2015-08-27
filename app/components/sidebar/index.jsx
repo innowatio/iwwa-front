@@ -3,7 +3,7 @@ var Radium     = require("radium");
 var React      = require("react");
 var Router     = require("react-router");
 
-var colors = require("lib/colors");
+var colors   = require("lib/colors");
 var measures = require("lib/measures");
 
 var styles = {
@@ -11,36 +11,40 @@ var styles = {
         height: "100%",
         borderRightWidth: "1px",
         borderRightStyle: "solid",
-        borderRightColor: colors.primary
+        borderRightColor: colors.primary,
+        backgroundColor: colors.white,
+        zIndex: 100// ,
+        // "@media only screen": {
+        //     left: "-" + measures.sidebarWidth
+        // }
     },
     hamburger: {
-        position: "absolute",
-        top: "0px",
-        left: "0px",
-        width: "100%",
         height: measures.headerHeight,
         backgroundColor: colors.primary,
-        alignItems: "center",
-        color: colors.white,
         fontSize: "35px",
-        textAlign: "right",
+        textAlign: "left",
         paddingRight: "15px",
         paddingTop: "5px",
         cursor: "pointer"
     },
     menu: {
         position: "absolute",
-        top: measures.headerHeight,
         width: "100%"
     },
     activeLink: {
-        borderRight: "4px solid " + colors.primary,
+        borderLeft: "4px solid " + colors.primary,
         borderRadius: "0px",
         backgroundColor: colors.greyLight
+    },
+    iconsBar: {
+        height: "100%",
+        zIndex: 101,
+        borderRightWidth: "1px",
+        borderRightStyle: "solid",
+        borderRightColor: colors.primary,
+        backgroundColor: colors.white
     }
 };
-
-var icoMenu = "fa fa-bars";
 
 var SideNav = React.createClass({
     propTypes: {
@@ -56,17 +60,24 @@ var SideNav = React.createClass({
             visible: false
         };
     },
+    renderIconSideBar: function (menuItem) {
+        return (
+            <li key={menuItem.iconPath} style={{height: "55px"}}>
+                <img src={menuItem.iconPath} style={{float: "right", width: "30px"}} />
+            </li>
+        );
+    },
     renderNavItem: function (menuItem) {
         return (
-            <li>
+            <li key={menuItem.iconPath}>
                 <Router.Link
                     activeStyle={styles.activeLink}
                     onClick={this.props.linkClickAction}
                     style={{height: "55px"}}
                     to={menuItem.url}
                 >
-                    {menuItem.label}
-                    <img src={menuItem.iconPath} style={{float: "right", width: "30px"}} />
+                    <img src={menuItem.iconPath} style={{float: "left", width: "30px"}} />
+                    <span style={{marginLeft: "10px", verticalAlign: "middle", height: "100%"}}>{menuItem.label}</span>
                 </Router.Link>
             </li>
         );
@@ -74,13 +85,7 @@ var SideNav = React.createClass({
     render: function () {
         return (
             <div style={[styles.sidebar, this.props.style]}>
-                <div
-                    className={icoMenu}
-                    onClick={this.props.toggleSidebar}
-                    style={styles.hamburger}
-                >
-                </div>
-                <div style={styles.menu}>
+                <div id="menu" style={styles.menu}>
                     <bootstrap.Nav bsStyle="pills" stacked >
                         {this.props.items.map(this.renderNavItem)}
                     </bootstrap.Nav>

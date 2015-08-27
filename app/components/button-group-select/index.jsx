@@ -4,12 +4,20 @@ var React      = require("react");
 var bootstrap  = require("react-bootstrap");
 var IPropTypes = require("react-immutable-proptypes");
 
-
+var colors     = require("lib/colors");
 var components = require("components");
+
+var styleDropdown = {
+    fontSize: "13px",
+    color: colors.greySubTitle,
+    backgroundColor: colors.greyBackground,
+    border: "1px " + colors.greyBorder
+};
 
 var ButtonGroupSelect = React.createClass({
     propTypes: {
         allowedValues: React.PropTypes.array.isRequired,
+        getActiveStyle: React.PropTypes.func,
         getKey: React.PropTypes.func,
         getLabel: React.PropTypes.func,
         multi: React.PropTypes.bool,
@@ -25,9 +33,10 @@ var ButtonGroupSelect = React.createClass({
             return allowedValue.toString();
         };
         return {
-            multi: false,
+            getActiveStyle: R.always({}),
             getKey: defaultGetter,
-            getLabel: defaultGetter
+            getLabel: defaultGetter,
+            multi: false
         };
     },
     isActiveMulti: function (allowedValue) {
@@ -92,11 +101,13 @@ var ButtonGroupSelect = React.createClass({
         );
     },
     renderButtonOption: function (allowedValue) {
+        var active = this.isActive(allowedValue);
         return (
             <components.Button
-                active={this.isActive(allowedValue)}
+                active={active}
                 key={this.props.getKey(allowedValue)}
                 onClick={R.partial(this.onChange, allowedValue)}
+                style={active ? this.props.getActiveStyle(allowedValue) : styleDropdown}
             >
                 {this.props.getLabel(allowedValue)}
             </components.Button>

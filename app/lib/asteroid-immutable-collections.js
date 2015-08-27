@@ -13,14 +13,14 @@ var normalizeId = function (id) {
 exports.init = function init () {
     var self = this;
     self.collections = Immutable.Map();
-    self._ddp.on("added", function (msg) {
+    self.ddp.on("added", function (msg) {
         var id = normalizeId(msg.id);
         var element = Immutable.fromJS(msg.fields).set("_id", id);
         self.collections = self.collections
             .setIn([msg.collection, id], element);
         self.emit("collections:change");
     });
-    self._ddp.on("changed", function (msg) {
+    self.ddp.on("changed", function (msg) {
         var id = normalizeId(msg.id);
         if (msg.fields) {
             self.collections = self.collections
@@ -33,7 +33,7 @@ exports.init = function init () {
         }
         self.emit("collections:change");
     });
-    self._ddp.on("removed", function (msg) {
+    self.ddp.on("removed", function (msg) {
         var id = normalizeId(msg.id);
         self.collections = self.collections
             .deleteIn([msg.collection, id]);

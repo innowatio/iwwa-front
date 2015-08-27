@@ -1,12 +1,22 @@
-var R     = require("ramda");
-var React = require("react");
+var R      = require("ramda");
+var React  = require("react");
 
 var AppPropTypes     = require("lib/app-prop-types.js");
 var dygraphExport    = require("lib/dygraph-export.js");
 var DygraphCSVExport = require("lib/dygraph-export-csv.js");
 
+
+var styles = {
+    graphContainer: {
+        width: "calc(100vw - 100px)",
+        height: "calc(100vh - 350px)",
+        margin: "20px 20px 30px 20px"
+    }
+};
+
 var TemporalLineGraph = React.createClass({
     propTypes: {
+        colors: React.PropTypes.arrayOf(React.PropTypes.string),
         coordinates: React.PropTypes.arrayOf(
             AppPropTypes.DygraphCoordinate
         ).isRequired,
@@ -44,8 +54,10 @@ var TemporalLineGraph = React.createClass({
         var options = {
             drawPoints: true,
             errorBars: true,
+            hideOverlayOnMouseOut: false,
             labels: this.getLabelsFromProps(props),
             labelsSeparateLines: true,
+            legend: "always",
             sigma: 2,
             strokeWidth: 1.5,
             xlabel: props.xLabel,
@@ -55,6 +67,9 @@ var TemporalLineGraph = React.createClass({
                 y: {}
             }
         };
+        if (props.colors) {
+            options.colors = props.colors;
+        }
         if (props.dateWindow) {
             options.dateWindow = props.dateWindow;
         }
@@ -103,9 +118,7 @@ var TemporalLineGraph = React.createClass({
     },
     render: function () {
         return (
-            <span>
-                <div ref="graphContainer" style={{width: "100%", height: "100%"}} />
-            </span>
+            <div ref="graphContainer" style={styles.graphContainer}/>
         );
     }
 });

@@ -10,8 +10,7 @@ exports.dateCompare = function (periods) {
             var tokens = query.split("-") || [];
             return {
                 period: R.find(R.propEq("key", tokens[0]), periods) || periods[0],
-                dateOne: moment(tokens[1], "YYYYMMDD").toDate(),
-                dateTwo: moment(tokens[2], "YYYYMMDD").toDate()
+                dateOne: moment(tokens[1], "YYYYMMDDHH").toDate()
             };
         },
         stringify: function (value) {
@@ -20,8 +19,31 @@ exports.dateCompare = function (periods) {
             }
             return [
                 value.period.key,
-                moment(value.dateOne).format("YYYYMMDD"),
-                moment(value.dateTwo).format("YYYYMMDD")
+                moment(value.dateOne).format("YYYYMMDDHH")
+            ].join("-");
+        }
+    };
+};
+
+exports.dateFilter = function () {
+    return {
+        parse: function (query) {
+            if (!query) {
+                return null;
+            }
+            var tokens = query.split("-") || [];
+            return {
+                start: moment(tokens[0], "YYYYMMDD").toDate(),
+                end: moment(tokens[1], "YYYYMMDD").toDate()
+            };
+        },
+        stringify: function (value) {
+            if (!value) {
+                return "";
+            }
+            return [
+                moment(value.start).format("YYYYMMDD"),
+                moment(value.end).format("YYYYMMDD")
             ].join("-");
         }
     };

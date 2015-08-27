@@ -4,11 +4,13 @@
     },
     "env": {
         "browser": true,
+        "es6": true,
         "mocha": true,
         "node": true
     },
     "globals": {
-        "BACKEND_HOST": true,
+        "WRITE_BACKEND_HOST": true,
+        "READ_BACKEND_HOST": true,
         "Dygraph": true,
         "expect": true,
         "proxyquire": true,

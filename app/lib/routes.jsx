@@ -7,6 +7,8 @@ var views = require("views");
 module.exports = (
     <Router.Router history={BrowserHistory.history}>
         <Router.Route component={views.Root} name="root" path="/">
+            <Router.Route component={views.Alarms} name="alarms" path="alarms/" />
+            <Router.Route component={views.Alarm} name="alarm" path="alarms/:id" />
             <Router.Route component={views.Chart} name="chart" path="chart/" />
             <Router.Route component={views.Dashboard} name="dashboard" path="dashboard/" />
         </Router.Route>
