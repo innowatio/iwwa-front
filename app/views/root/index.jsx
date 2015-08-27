@@ -7,11 +7,6 @@ var asteroid   = require("lib/asteroid");
 var measures   = require("lib/measures");
 var colors     = require("lib/colors");
 
-// Decommment for debugging
-// window.asteroid = asteroid;
-// asteroid._ddp._socket.on("message:in", console.log.bind(console));
-// asteroid._ddp._socket.on("message:out", console.log.bind(console));
-
 var styles = {
     header: {
         // position: "absolute",

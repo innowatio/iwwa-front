@@ -57,8 +57,8 @@
     "webpack": "^1.9.11"
   },
   "dependencies": {
-    "TiTaToggle": "kleinejan/titatoggle",
-    "asteroid": "mondora/asteroid#ffd16f",
+    "asteroid": "mondora/asteroid#1.0.0-rewrite",
+    "axios": "^0.5.4",
     "bootstrap": "^3.3.5",
     "color": "^0.10.1",
     "compression": "^1.5.0",
@@ -76,6 +76,7 @@
     "react-immutable-proptypes": "^1.0.0",
     "react-router": "^1.0.0-beta3",
     "react-widgets": "^2.7.2",
+    "TiTaToggle": "kleinejan/titatoggle",
     "title-case": "^1.1.1"
   }
 }

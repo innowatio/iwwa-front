@@ -1,13 +1,14 @@
 var Immutable   = require("immutable");
-var Radium     = require("radium");
+var Radium      = require("radium");
 var R           = require("ramda");
 var React       = require("react");
+var ReactLink   = require("react/lib/ReactLink");
 var ReactWidget = require("react-widgets");
 var IPropTypes  = require("react-immutable-proptypes");
 
 var colors = require("lib/colors");
 
-var Multiselect = React.createClass({
+var Select = React.createClass({
     propTypes: {
         allowedValues: React.PropTypes.oneOfType([
             React.PropTypes.array,
@@ -15,17 +16,12 @@ var Multiselect = React.createClass({
         ]).isRequired,
         filter: React.PropTypes.func,
         getLabel: React.PropTypes.func,
-        maxValues: React.PropTypes.number,
-        onChange: React.PropTypes.func.isRequired,
-        open: React.PropTypes.string,
+        label: React.PropTypes.string,
+        onChange: React.PropTypes.func,
         placeholder: React.PropTypes.string,
         style: React.PropTypes.object,
-        tagComponent: React.PropTypes.func,
-        title: React.PropTypes.element,
-        value: React.PropTypes.oneOfType([
-            React.PropTypes.array,
-            React.PropTypes.object
-        ])
+        value: React.PropTypes.array,
+        valueLink: ReactLink.PropTypes.link()
     },
     mixins: [React.addons.PureRenderMixin],
     getDefaultProps: function () {
@@ -42,75 +38,75 @@ var Multiselect = React.createClass({
             this.props.allowedValues
         );
     },
-    canOpen: function () {
-        return (this.props.open === "undefined" ?
-            undefined :
-            true
+    getValue: function () {
+        return (
+            this.props.valueLink ?
+            this.props.valueLink.value :
+            this.props.value
         );
     },
+    onChange: function (newValue) {
+        if (this.props.onChange) {
+            this.props.onChange(newValue);
+        }
+        if (this.props.valueLink) {
+            this.props.valueLink.requestChange(newValue);
+        }
+    },
+    renderLabel: function () {
+        return this.props.label ? (
+            <label>{this.props.label}</label>
+        ) : null;
+    },
     render: function () {
-        var canOpen = this.canOpen();
         return (
-            <span className="ac-multiselect" style={{display: "inline-block"}}>
+            <div className="form-group">
+                {this.renderLabel()}
                 <Radium.Style
                     rules={{
-                        input: {
-                           display: canOpen === undefined || canOpen === true ? "inline" : "none"
-                       },
+                        "ul.rw-list > li.rw-list-option.rw-state-selected": {
+                            backgroundColor: colors.primary,
+                            color: colors.white
+                        },
                         "li.rw-list-option": {
                             height: "40px"
                         },
+                        "li.rw-list-option rw-list-focus": {
+                            border: "0px"
+                        },
                         "ul.rw-list > li.rw-list-option": {
-                            borderBottom: "#C8C8C8 1px solid",
+                            borderBottom: colors.greyBorder + " 1px solid",
                             borderRadius: "0px"
                         },
                         "ul.rw-list > li.rw-list-option.rw-state-focus": {
-                            border: "#66afe9 1px solid"
+                            border: colors.blueBorder + " 1px solid"
                         },
                         "ul.rw-list > li.rw-list-option:hover, .rw-selectlist > li.rw-list-option:hover": {
-                            borderColor: "#e6e6e6"
+                            borderColor: colors.greyLight
                         },
                         "ul.rw-list": {
                             padding: "0px"
-                        },
-                        ".rw-input": {
-                            padding: "5px",
-                            borderRadius: "10px"
-                        },
-                        ".rw-multiselect-taglist > li": {
-                            background: colors.primary,
-                            color: colors.white
-                        },
-                        ".rw-multiselect-taglist > li .rw-btn": {
-                            float: "right",
-                            color: colors.white,
-                            paddingLeft: this.props.open === "undefined" ? "15px" :  "initial"
                         },
                         "li": {
                             fontSize: "13px",
                             height: "100%",
                             borderRadius: "5px"
-                        },
-                        ".rw-open.rw-widget, .rw-open > .rw-multiselect-wrapper": {
-                            height: "30px"
                         }
                     }}
-                    scopeSelector=".ac-multiselect"
+                    scopeSelector=".form-group"
                 />
-                <ReactWidget.Multiselect
+                <ReactWidget.DropdownList
                     data={this.getData()}
                     filter={this.props.filter}
-                    onChange={this.props.onChange}
-                    open={canOpen}
+                    onChange={this.onChange}
                     placeholder={this.props.placeholder}
                     style={this.props.style}
-                    tagComponent={this.props.tagComponent}
                     textField={this.props.getLabel}
-                    value={this.props.value}
+                    value={this.getValue()}
                 />
-            </span>
+            </div>
         );
     }
 });
 
-module.exports = Radium(Multiselect);
+module.exports = Radium(Select);
