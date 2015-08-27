@@ -3,17 +3,18 @@ var React      = require("react");
 var bootstrap  = require("react-bootstrap");
 var IPropTypes = require("react-immutable-proptypes");
 
-var colors     = require("lib/colors");
+// var colors = require("lib/colors");
 
-var DropdownSelect = React.createClass({
+var DropdownButton = React.createClass({
     propTypes: {
         allowedValues: React.PropTypes.oneOfType([
             React.PropTypes.array,
             IPropTypes.iterable
         ]).isRequired,
+        getIcon: React.PropTypes.func,
         getKey: React.PropTypes.func,
         getLabel: React.PropTypes.func,
-        onChange: React.PropTypes.func.isRequired,
+        onChange: React.PropTypes.func,
         value: React.PropTypes.any
     },
     getDefaultProps: function () {
@@ -22,37 +23,55 @@ var DropdownSelect = React.createClass({
         };
         return {
             getKey: defaultGetter,
-            getLabel: defaultGetter
+            getLabel: defaultGetter,
+            getIcon: defaultGetter
         };
     },
-    shouldComponentUpdate: function (nextProps) {
-        return !(
-            this.props.allowedValues === nextProps.allowedValues &&
-            this.props.getKey === nextProps.getKey &&
-            this.props.getLabel === nextProps.getLabel &&
-            this.props.value === nextProps.value
-        );
+    getInitialState: function () {
+        return {
+            hover: "false",
+            allowedValue: {}
+        };
+    },
+    imageItem: function (allowedValue) {
+        if (R.keys(allowedValue).length > 2) {
+            return (
+                <img
+                    src={this.props.getIcon(allowedValue)}
+                    style={{width: "25px", marginRight: "20px"}}
+                />
+            );
+        }
+    },
+    mouseOver: function (item) {
+        this.setState({
+            hover: true,
+            allowedValue: item
+        });
     },
     renderButtonOption: function (allowedValue, index) {
-        var active = (allowedValue === this.props.value);
         return (
             <bootstrap.ListGroupItem
                 key={this.props.getKey(allowedValue)}
                 onClick={R.partial(this.props.onChange, allowedValue)}
+                onMouseOver={R.partial(this.mouseOver, allowedValue)}
                 style={{
-                    background: (active ? colors.primary : ""),
-                    color: (active ? colors.white : colors.darkBlack),
                     borderLeft: "0px",
                     borderRight: "0px",
                     borderTop: (index === 0 ? "0px" : undefined),
                     borderTopLeftRadius: (index === 0 ? "4px" : undefined),
                     borderTopRightRadius: (index === 0 ? "4px" : undefined),
                     borderBottom: (index === 2 ? "0px" : undefined),
-                    fontSize: "12px",
-                    width: "90px",
-                    textAlign: "center"
+                    fontSize: "12px"
+                    // background: (this.state.hover && this.state.allowedValue === allowedValue) ?
+                    //     colors.primary :
+                    //     colors.greyBackground,
+                    // color: (this.state.hover && this.state.allowedValue === allowedValue) ?
+                    //     colors.white :
+                    //     colors.greySubTitle
                 }}
             >
+                {this.imageItem(allowedValue)}
                 {this.props.getLabel(allowedValue)}
             </bootstrap.ListGroupItem>
         );
@@ -67,4 +86,4 @@ var DropdownSelect = React.createClass({
     }
 });
 
-module.exports = DropdownSelect;
+module.exports = DropdownButton;

@@ -27,6 +27,13 @@ var ValoriCompare = React.createClass({
             .filter(function (misura) {
                 return misura.get("tipologia") === self.props.tipologia.key;
             })
+            .filter(function (misura) {
+                if (self.props.dateFilter) {
+                    return moment(misura.get("data")).toDate() >= self.props.dateFilter.start &&
+                        moment(misura.get("data")).toDate() <= self.props.dateFilter.end;
+                }
+                return true;
+            })
             .map(function (misura) {
                 var date = moment(misura.get("data")).toDate();
                 return R.pipe(
@@ -49,6 +56,7 @@ var ValoriCompare = React.createClass({
     render: function () {
         return (
             <components.TemporalLineGraph
+                colors={this.props.valori.map(R.prop("color"))}
                 coordinates={this.getCoordinates()}
                 labels={this.getLabels()}
                 showRangeSelector={true}

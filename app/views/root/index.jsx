@@ -5,6 +5,7 @@ var React  = require("react");
 var components = require("components");
 var asteroid   = require("lib/asteroid");
 var measures   = require("lib/measures");
+var colors     = require("lib/colors");
 
 // Decommment for debugging
 // window.asteroid = asteroid;
@@ -13,25 +14,34 @@ var measures   = require("lib/measures");
 
 var styles = {
     header: {
-        position: "absolute",
-        width: "calc(100% - " + measures.sidebarShoulderWidth + ")",
+        // position: "absolute",
+        width: "100%",
         height: measures.headerHeight,
         transition: "left 0.3s ease"
     },
     content: {
-        position: "absolute",
+        // position: "absolute",
         top: measures.headerHeight,
-        left: measures.sidebarShoulderWidth,
-        width: "calc(100% - " + measures.sidebarShoulderWidth + ")",
-        height: "calc(100% - " + measures.headerHeight + ")",
+        width: "100%",
+        height: "100%",
+        // height: "calc(100% - 90px)",
         transition: "left 0.3s ease"
     },
     sidebar: {
         position: "absolute",
-        top: "0px",
+        top: measures.headerHeight,
         width: measures.sidebarWidth,
         height: "100%",
         transition: "left 0.3s ease"
+    },
+    footer: {
+        position: "absolute",
+        backgroundColor: colors.greyBackground,
+        color: colors.greySubTitle,
+        height: measures.footerHeight,
+        width: "100%",
+        bottom: "0px",
+        textAlign: "center"
     }
 };
 
@@ -75,17 +85,6 @@ var Root = React.createClass({
     getHeaderStyle: function () {
         return R.merge(styles.header, {
             left: (
-                this.state.sidebarOpen ?
-                measures.sidebarWidth :
-                measures.sidebarShoulderWidth
-            )
-        });
-    },
-    getContentStyle: function () {
-        return R.merge(styles.content, {
-            left: (
-                this.state.sidebarOpen ?
-                measures.sidebarWidth :
                 measures.sidebarShoulderWidth
             )
         });
@@ -95,7 +94,7 @@ var Root = React.createClass({
             left: (
                 this.state.sidebarOpen ?
                 "0px" :
-                (parseInt(measures.sidebarShoulderWidth) - parseInt(measures.sidebarWidth)) + "px"
+                ("-" + parseInt(measures.sidebarWidth)) + "px"
             )
         });
     },
@@ -114,11 +113,17 @@ var Root = React.createClass({
                     style={this.getSidebarStyle()}
                     toggleSidebar={this.toggleSidebar}
                 />
-                <div style={this.getHeaderStyle()}>
-                    <components.Header asteroid={asteroid} />
+                <div style={styles.header}>
+                    <components.Header
+                        asteroid={asteroid}
+                        menuClickAction={this.toggleSidebar}
+                    />
                 </div>
-                <div style={this.getContentStyle()}>
+                <div style={styles.content}>
                     {this.renderChildren()}
+                </div>
+                <div style={styles.footer} >
+                    Copyright 2015 - Innowatio
                 </div>
                 <components.LoginModal
                     asteroid={asteroid}

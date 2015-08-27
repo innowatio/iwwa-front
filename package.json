@@ -57,6 +57,7 @@
     "webpack": "^1.9.11"
   },
   "dependencies": {
+    "TiTaToggle": "kleinejan/titatoggle",
     "asteroid": "mondora/asteroid#ffd16f",
     "bootstrap": "^3.3.5",
     "color": "^0.10.1",
@@ -65,6 +66,7 @@
     "express": "^4.13.0",
     "font-awesome": "^4.3.0",
     "immutable": "^3.7.4",
+    "lodash.debounce": "^3.1.1",
     "lodash.throttle": "^3.0.4",
     "moment": "^2.10.3",
     "radium": "^0.13.2",

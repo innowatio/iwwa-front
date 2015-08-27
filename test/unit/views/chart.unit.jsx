@@ -1,6 +1,7 @@
 require("unit-setup.js");
 
 var Immutable = require("immutable");
+var moment    = require("moment");
 
 var transformers = proxyquire("views/chart/transformers.js", {});
 
@@ -48,6 +49,40 @@ describe("The `sito` transformer", function () {
 
     });
 
+});
+
+describe("The `dateFilter` transformer", function () {
+
+    describe("the `parse` function, given two strings rappresentition of dates in format `YYYYMMDD`, should return", function () {
+
+        it("an object which contains `start` and `end` dates", function () {
+            var expected = {
+                start: moment("20140606", "YYYYMMDD").toDate(),
+                end: moment("20150505", "YYYYMMDD").toDate()
+            };
+
+            var transformer = transformers.dateFilter();
+            var ret = transformer.parse("20140606-20150505");
+
+            expect(ret).to.eql(expected);
+        });
+    });
+
+    describe("the `stringify` function should return", function () {
+
+        it("an object which contains `start` and `end` dates", function () {
+            var values = {
+                start: moment("20140606", "YYYYMMDD").toDate(),
+                end: moment("20150505", "YYYYMMDD").toDate()
+            };
+            var expected = "20140606-20150505";
+
+            var transformer = transformers.dateFilter();
+            var ret = transformer.stringify(values);
+
+            expect(ret).to.eql(expected);
+        });
+    });
 });
 
 describe("The `tipologia` transformer", function () {
