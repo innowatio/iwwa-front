@@ -75,7 +75,7 @@ var HistoricalGraph = React.createClass({
                             ".dygraph-legend": {
                                 top: "-60px !important",
                                 boxShadow: "2px 2px 5px " + colors.greySubTitle,
-                                left: "1150px !important",
+                                left: "85% !important",
                                 width: "186px !important"
                             }
                         }}

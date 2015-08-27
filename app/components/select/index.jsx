@@ -18,6 +18,7 @@ var Select = React.createClass({
         getLabel: React.PropTypes.func,
         label: React.PropTypes.string,
         onChange: React.PropTypes.func,
+        open: React.PropTypes.string,
         placeholder: React.PropTypes.string,
         style: React.PropTypes.object,
         value: React.PropTypes.array,
@@ -47,11 +48,17 @@ var Select = React.createClass({
     },
     onChange: function (newValue) {
         if (this.props.onChange) {
-            this.props.onChange(newValue);
+            this.props.onChange([newValue]);
         }
         if (this.props.valueLink) {
             this.props.valueLink.requestChange(newValue);
         }
+    },
+    canOpen: function () {
+        return (this.props.open === "undefined" ?
+            undefined :
+            true
+        );
     },
     renderLabel: function () {
         return this.props.label ? (
@@ -91,6 +98,16 @@ var Select = React.createClass({
                             fontSize: "13px",
                             height: "100%",
                             borderRadius: "5px"
+                        },
+                        ".rw-dropdownlist > .rw-input": {
+                            display: this.props.open === "undefined" ? "block" : "none"
+                        },
+                        ".rw-filter-input": {
+                            borderTop: "0px",
+                            borderRadius: "3px"
+                        },
+                        ".rw-popup-container": {
+                            marginTop: "0px"
                         }
                     }}
                     scopeSelector=".form-group"
@@ -99,6 +116,7 @@ var Select = React.createClass({
                     data={this.getData()}
                     filter={this.props.filter}
                     onChange={this.onChange}
+                    open={this.canOpen()}
                     placeholder={this.props.placeholder}
                     style={this.props.style}
                     textField={this.props.getLabel}

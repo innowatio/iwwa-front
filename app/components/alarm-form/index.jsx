@@ -120,6 +120,7 @@ var AlarmForm = React.createClass({
                     filter={CollectionUtils.siti.filter}
                     getLabel={CollectionUtils.siti.getLabel}
                     label="Sito"
+                    open="undefined"
                     valueLink={this.linkState("sito")}
                 />
                 <bootstrap.Input
