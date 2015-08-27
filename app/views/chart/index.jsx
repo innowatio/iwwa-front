@@ -1,3 +1,4 @@
+var color      = require("color");
 var Immutable  = require("immutable");
 var Radium     = require("radium");
 var R          = require("ramda");
@@ -5,15 +6,20 @@ var React      = require("react");
 var bootstrap  = require("react-bootstrap");
 var IPropTypes = require("react-immutable-proptypes");
 
-var components       = require("components");
+var colors           = require("lib/colors");
+var components       = require("components/");
 var styles           = require("lib/styles");
 var QuerystringMixin = require("lib/querystring-mixin");
 var CollectionUtils  = require("lib/collection-utils");
 var transformers     = require("./transformers.js");
 
 var multiselectStyles = {
+    multiselectPopover: {
+        width: "175px"
+    },
     multiselect: {
-        width: "348.5px"
+        width: "450px",
+        height: "35px"
     },
     tag: {
         display: "inline-block",
@@ -25,6 +31,11 @@ var multiselectStyles = {
         overflow: "hidden",
         textOverflow: "ellipsis"
     }
+};
+
+var graphStyle = {
+    border: "solid 1px " + color(colors.darkBlack).alpha(0.1).rgbString(),
+    boxShadow: "2px 2px 5px " + colors.greySubTitle
 };
 
 var SitoTagComponent = React.createClass({
@@ -73,18 +84,60 @@ var Chart = React.createClass({
     },
     getValori: function () {
         return [
-            {label: "Reale", key: "reale"},
-            {label: "Contrattuale", key: "contrattuale"},
-            {label: "Previsionale", key: "previsionale"}
+            {label: "Reale", color: colors.lineReale, key: "reale"},
+            {label: "Contrattuale", color: colors.lineContrattuale, key: "contrattuale"},
+            {label: "Previsionale", color: colors.linePrevisionale, key: "previsionale"}
         ];
     },
+    getExportType: function () {
+        var iconCSV = "/_assets/icons/os__CSV.svg";
+        var iconPNG = "/_assets/icons/os__JPG.svg";
+        return [
+            {label: "Png", key: "png", icon: iconPNG},
+            {label: "Csv", key: "csv", icon: iconCSV}
+        ];
+    },
+    getDateCompare: function () {
+        return [
+            {label: "IERI", key: "days"},
+            {label: "7 GG FA", key: "7 days before"},
+            {label: "SETTIMANA SCORSA", key: "weeks"},
+            {label: "MESE SCORSO", key: "months"},
+            {label: "12 MESI FA", key: "years"}
+        ];
+    },
+    getDateFilter: function () {
+        return [
+            {label: "IERI", key: "days"},
+            {label: "SETTIMANA SCORSA", key: "weeks"},
+            {label: "MESE SCORSO", key: "months"},
+            {label: "2 MESI FA", key: "2months"},
+            {label: "CUSTOM", key: "custom"}
+        ];
+    },
+    onChangeExport: function (valueChanged) {
+        console.log("Esporta con " + valueChanged.label);
+    },
     render: function () {
+        // Icone
+        var iconCompare = "/_assets/icons/os__cal.svg";
+        var iconExport = "/_assets/icons/os__export.svg";
+        var iconPower = "/_assets/icons/os__power.svg";
+        var iconSiti = "/_assets/icons/os__map.svg";
         // Sito
         var siti = this.props.collections.get("siti") || Immutable.Map();
         var sitoInputProps = this.bindToQueryParameter(
             "sito",
             transformers.sito(siti)
         );
+
+        var sitoInputSingleMultiselect = function (sito) {
+            if (!R.isEmpty(sito)) {
+                return sitoInputProps.onChange([R.last(sito)]);
+            }
+            return sitoInputProps.onChange([]);
+        };
+
         // Tipologia
         var tipologie = this.getTipologie();
         var tipologiaInputProps = this.bindToQueryParameter(
@@ -97,67 +150,138 @@ var Chart = React.createClass({
             "valore",
             transformers.valore(valori)
         );
-        // Date Compare
-        var periods = this.getPeriods();
+        var valoreGetActiveStyle = function (valore) {
+            return {
+                background: valore.color,
+                color: colors.white,
+                fontSize: "13px",
+                border: "1px " + colors.greyBorder
+            };
+        };
+        // Compare
+        var compareDate = this.getDateCompare();
         var dateCompareProps = this.bindToQueryParameter(
             "dateCompare",
-            transformers.dateCompare(periods)
+            transformers.dateCompare(compareDate)
         );
+        // Date filter
+        var filterDate = this.getDateFilter();
+        var dateFilterProps = this.bindToQueryParameter(
+            "dateFilter",
+            transformers.dateFilter()
+        );
+
         var valoriMulti = (
             !dateCompareProps.value &&
             sitoInputProps.value.length <= 1
         );
         return (
             <div>
+                <h2
+                    className="text-center"
+                    style={{
+                            color: colors.titleColor,
+                            backgroundColor: colors.greyBackground,
+                            marginTop: "0px",
+                            height: "40px",
+                            fontSize: "20pt",
+                            marginBottom: "0px"
+                        }}
+                >
+                    <components.Spacer direction="v" size={5} />
+                    Storico consumi
+                </h2>
                 <bootstrap.Col sm={12} style={styles.colVerticalPadding}>
                     <span className="pull-left">
                         <components.ButtonGroupSelect
                             allowedValues={valori}
+                            getActiveStyle={valoreGetActiveStyle}
                             getKey={R.prop("key")}
                             getLabel={R.prop("label")}
                             multi={valoriMulti}
                             {...valoreInputProps}
                         />
+                        <components.Popover
+                            title={<img src={iconExport} style={{width: "50%"}} />}
+                            tooltipId="tooltipExport"
+                            tooltipMessage="Esporta"
+                            tooltipPosition="right"
+                        >
+                            <components.DropdownButton
+                                allowedValues={this.getExportType()}
+                                getIcon={R.prop("icon")}
+                                getKey={R.prop("key")}
+                                getLabel={R.prop("label")}
+                                onChange={this.onChangeExport}
+                            />
+                        </components.Popover>
                     </span>
-                    <span className="pull-left">
-                        <components.Spacer direction="h" size={10} />
+                    <span className="pull-right" style={{display: "flex"}}>
+                        <components.Popover
+                            title={<img src={iconPower} style={{width: "75%"}} />}
+                            tooltipId="tooltipInterest"
+                            tooltipMessage="Quantità d'interesse"
+                            tooltipPosition="left"
+                        >
+                            <components.DropdownSelect
+                                allowedValues={tipologie}
+                                getKey={R.prop("key")}
+                                getLabel={R.prop("label")}
+                                style={{float: "left"}}
+                                {...tipologiaInputProps}
+                            />
+                        </components.Popover>
+                        <components.Popover
+                            title={<img src={iconSiti} style={{width: "75%"}} />}
+                            tooltipId="tooltipMisurazione"
+                            tooltipMessage="Punti di misurazione"
+                            tooltipPosition="left"
+                        >
+                            <components.Multiselect
+                                allowedValues={siti}
+                                filter={CollectionUtils.siti.filter}
+                                getLabel={CollectionUtils.siti.getLabel}
+                                maxValues={1}
+                                onChange={sitoInputSingleMultiselect}
+                                open=" "
+                                placeholder={"Punto di misurazione"}
+                                style={multiselectStyles.multiselectPopover}
+                                tagComponent={SitoTagComponent}
+                                value={sitoInputProps.value}
+                            />
+                        </components.Popover>
                         <components.DatefilterModal
-                            getPeriodKey={R.prop("key")}
-                            getPeriodLabel={R.prop("label")}
-                            periods={periods}
-                            {...dateCompareProps}
-                        />
-                    </span>
-                    <span className="pull-right">
-                        <components.Spacer direction="h" size={10} />
-                        <components.Multiselect
-                            allowedValues={siti}
-                            filter={CollectionUtils.siti.filter}
-                            getLabel={CollectionUtils.siti.getLabel}
-                            maxValues={2}
-                            style={multiselectStyles.multiselect}
-                            tagComponent={SitoTagComponent}
-                            title="Punto di misurazione"
-                            {...sitoInputProps}
-                        />
-                    </span>
-                    <span className="pull-right">
-                        <components.DropdownSelect
-                            allowedValues={tipologie}
+                            allowedValues={filterDate}
                             getKey={R.prop("key")}
                             getLabel={R.prop("label")}
-                            style={{float: "left"}}
-                            title="Quantità di interesse"
-                            {...tipologiaInputProps}
+                            title={<img src={iconCompare} style={{width: "75%"}} />}
+                            {...dateFilterProps}
                         />
+                        <components.Compare>
+                            <components.SitiCompare
+                                allowedValues={siti}
+                                filter={CollectionUtils.siti.filter}
+                                getSitoLabel={CollectionUtils.siti.getLabel}
+                                open={"undefined"}
+                                style={multiselectStyles.multiselect}
+                                {...sitoInputProps}
+                            />
+                            <components.DataCompare
+                                allowedValues={compareDate}
+                                getKey={R.prop("key")}
+                                getLabel={R.prop("label")}
+                                {...dateCompareProps}
+                            />
+                        </components.Compare>
                     </span>
                 </bootstrap.Col>
-                <bootstrap.Col sm={12} style={{height: "500px"}}>
-                    <components.Spacer direction="v" size={32} />
+                <bootstrap.Col sm={12} style={{height: "100%"}}>
                     <components.HistoricalGraph
                         dateCompare={dateCompareProps.value}
+                        dateFilter={dateFilterProps.value}
                         misure={this.props.collections.get("misure") || Immutable.Map()}
                         siti={sitoInputProps.value}
+                        style={graphStyle}
                         tipologia={tipologiaInputProps.value}
                         valori={valoreInputProps.value}
                     />

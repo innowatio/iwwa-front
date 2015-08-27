@@ -1,138 +1,231 @@
-var R              = require("ramda");
-var Radium         = require("radium");
-var React          = require("react");
-var bootstrap      = require("react-bootstrap");
-var DateTimePicker = require("react-widgets").DateTimePicker;
+var R         = require("ramda");
+var Radium    = require("radium");
+var React     = require("react");
+var bootstrap = require("react-bootstrap");
+var Calendar  = require("react-widgets").Calendar;
+var moment    = require("moment");
 
-var components = require("components");
+var colors = require("lib/colors");
+var components = require("components/");
 
-var DatepickerFilter = React.createClass({
+var styles = {
+    buttonCompare: {
+        width: "200px",
+        height: "40px",
+        marginRight: "8px",
+        marginBottom: "13px"
+    }
+};
+
+var DatefilterModal = React.createClass({
     propTypes: {
-        getPeriodKey: React.PropTypes.func.isRequired,
-        getPeriodLabel: React.PropTypes.func.isRequired,
-        onChange: React.PropTypes.func.isRequired,
-        periods: React.PropTypes.arrayOf(React.PropTypes.shape({
-            key: React.PropTypes.string,
-            label: React.PropTypes.string
-        })).isRequired,
-        value: React.PropTypes.object
+        children: React.PropTypes.oneOfType([
+            React.PropTypes.array,
+            React.PropTypes.object
+        ]),
+        style: React.PropTypes.object,
+        title: React.PropTypes.element,
+        value: React.PropTypes.shape({
+            start: React.PropTypes.date,
+            end: React.PropTypes.date
+        })
     },
     getInitialState: function () {
         return {
+            active: this.props.getKey(this.props.allowedValues[2]),
+            custom: false,
             showModal: false,
-            value: this.props.value || this.getDefaultValue()
+            value: {
+                start: this.getDefault(this.props.value, "start", this.defaultStartDate()),
+                end: this.getDefault(this.props.value, "end", new Date())
+            }
         };
     },
-    getDefaultValue: function () {
-        /*
-        *   Not in getDefaultProps as the method doesn't know about the instance
-        *   of the component, and therefore its props
-        */
-        var now = new Date();
-        return {
-            period: this.props.periods[0],
-            dateOne: now,
-            dateTwo: now
-        };
+    getDefault: function (valueObject, key, defaultValue) {
+        var defaultTo = R.defaultTo(defaultValue);
+
+        var result = defaultValue;
+        if (R.has(defaultValue, key)) {
+            return defaultTo(valueObject[key]);
+        }
+
+        return result;
     },
     close: function () {
         this.setState({
             showModal: false
         });
     },
+    defaultStartDate: function () {
+        var now = new moment()._d;
+        return moment(now).subtract(1, "months")._d;
+    },
     open: function () {
         this.setState({
-            showModal: true,
-            value: this.props.value || this.getDefaultValue()
-        });
-    },
-    setPeriod: function (period) {
-        this.setState({
-            value: R.assoc("period", period[0], this.state.value)
-        });
-    },
-    setDate: function (dateKey, dateValue) {
-        this.setState({
-            value: R.assoc(dateKey, dateValue, this.state.value)
+            custom: false,
+            showModal: true
         });
     },
     closeSuccess: function () {
-        this.props.onChange(this.state.value);
         this.close();
     },
     reset: function () {
-        this.props.onChange(null);
+        this.setState({
+            custom: false,
+            value: {
+                start: this.defaultStartDate(),
+                end: new Date()
+            }
+        });
     },
-    renderResetButton: function () {
-        return this.props.value ? (
-            <bootstrap.Button onClick={this.reset}>
-                <components.Icon icon="times" />
-            </bootstrap.Button>
-        ) : null;
+    setDate: function (dateKey, dateValue) {
+        var obj = {};
+        obj[dateKey]= dateValue;
+        this.setState({
+            value: R.merge(this.state.value, obj)
+        });
+    },
+    selectedCheckboxDate: function (allowedValue) {
+        var checkedKey = this.props.getKey(allowedValue);
+        if (checkedKey === "custom") {
+            this.setState({
+                custom: true,
+                value: {
+                    start: this.defaultStartDate(),
+                    end: new Date()
+                }
+            })
+        } else if (checkedKey === "2months") {
+            this.setState({
+                value: {start: moment().subtract(2, "months")}
+            })
+        } else {
+            this.setState({
+                value: {start: moment().subtract(1, checkedKey)}
+            })
+        }
+        this.setState({
+            active: checkedKey
+        })
+    },
+    renderButtonFilter: function (allowedValue) {
+        var active = this.props.getKey(allowedValue) === this.state.active;
+        return (
+            <components.Button
+                active={active}
+                key={this.props.getKey(allowedValue)}
+                onClick={R.partial(this.selectedCheckboxDate, allowedValue)}
+                style={styles.buttonCompare}
+                value={allowedValue}
+            >
+                {this.props.getLabel(allowedValue)}
+            </components.Button>
+        );
+    },
+    renderCustomButton: function () {
+        return (
+            <div>
+                <span>
+                <h4 style={{marginLeft: "115px"}}>da <components.Spacer direction="h" size={360}/> a</h4>
+                </span>
+                <components.Spacer direction="v" size={10}/>
+                <div className="rw-calendar-modal">
+                    <Radium.Style
+                        rules={{
+                            ".rw-header": {
+                                background: colors.primary,
+                                color: colors.white
+                            },
+                            ".rw-header .rw-btn-view": {
+                                background: colors.primary,
+                                color: colors.white,
+                                borderRadius: "0px"
+                            },
+                            ".rw-btn": {
+                                outline: "0px",
+                                outlineStyle: "none",
+                                outlineWidth: "0px"
+                            }
+                        }}
+                        scopeSelector=".rw-calendar-modal"
+                    />
+
+            {/* <!-- WARNING: the first calendar is on the right so the 1st here is the 2nd in the page --> */}
+                    <Calendar
+                        className="pull-right"
+                        culture={"en-GB"}
+                        dayFormat={day => ['D', 'L', 'M','M','G', 'V', 'S'][day]}
+                        format="MMM dd, yyyy"
+                        onChange={R.partial(this.setDate, "end")}
+                        style={{width: "40%"}}
+                        value={this.state.value.end}
+                    />
+                    <Calendar
+                        dayFormat={day => ['D', 'L', 'M','M','G', 'V', 'S'][day]}
+                        format="MMM dd, yyyy"
+                        onChange={R.partial(this.setDate, "start")}
+                        style={{width: "40%"}}
+                        value={this.state.value.start}
+                    />
+                </div>
+            </div>
+        );
     },
     render: function () {
         return (
             <span>
-                <bootstrap.ButtonGroup>
-                    <bootstrap.Button onClick={this.open} >
-                        {"Confronta per data"}
-                    </bootstrap.Button>
-                    {this.renderResetButton()}
-                </bootstrap.ButtonGroup>
+                <components.Button
+                    bsStyle="link"
+                    onClick={this.open}
+                >
+                    {this.props.title}
+                </components.Button>
                 <bootstrap.Modal
                     container={this}
                     onHide={this.close}
                     show={this.state.showModal}
                 >
-                    <bootstrap.Modal.Header closeButton>
-                        <bootstrap.Modal.Title>
-                            {"Scegli le date da confrontare"}
-                        </bootstrap.Modal.Title>
+                    <Radium.Style
+                        rules={{
+                            ".modal-content": {
+                                width: "656px"
+                            }
+                        }}
+                        scopeSelector=".modal-dialog"
+                    />
+                    <bootstrap.Modal.Header
+                        closeButton
+                        style={{borderBottom: "none"}}
+                    >
+                        <h3 className="text-center" style={{color: colors.primary}}>{"Seleziona periodo"}</h3>
                     </bootstrap.Modal.Header>
-                    <bootstrap.Modal.Body>
-                        <components.ButtonGroupSelect
-                            allowedValues={this.props.periods}
-                            getKey={this.props.getPeriodKey}
-                            getLabel={this.props.getPeriodLabel}
-                            onChange={this.setPeriod}
-                            value={[this.state.value.period]}
-                        />
-                        <components.Spacer direction="v" size={16} />
-                        <div>
-                            <label>
-                                {"Data d'inizio primo set"}
-                            </label>
-                            <DateTimePicker
-                                defaultValue={new Date()}
-                                footer={true}
-                                format="MMM dd, yyyy"
-                                onChange={R.partial(this.setDate, "dateOne")}
-                                time={false}
-                                value={this.state.value.dateOne}
-                            />
-                        </div>
-                        <components.Spacer direction="v" size={16} />
-                        <div>
-                            <label>
-                                {"Data d'inizio secondo set"}
-                            </label>
-                            <DateTimePicker
-                                defaultValue={new Date()}
-                                footer={true}
-                                format={"MMM dd, yyyy"}
-                                onChange={R.partial(this.setDate, "dateTwo")}
-                                time={false}
-                                value={this.state.value.dateTwo}
-                            />
-                        </div>
+                    <bootstrap.Modal.Body style={{textAlign: "center"}}>
+                        {this.state.custom ? this.renderCustomButton() : this.props.allowedValues.map(this.renderButtonFilter)}
                     </bootstrap.Modal.Body>
-                    <bootstrap.Modal.Footer>
-                        <bootstrap.Button onClick={this.close}>
-                            {"Cancel"}
-                        </bootstrap.Button>
-                        <bootstrap.Button onClick={this.closeSuccess}>
-                            {"Apply"}
-                        </bootstrap.Button>
+                    <bootstrap.Modal.Footer style={{textAlign: "center", border: "0px", marginTop: "20px"}}>
+                        <components.Button
+                            onClick={this.reset}
+                            style={{
+                                background: colors.greyBackground,
+                                color: colors.primary,
+                                width: "230px",
+                                height: "45px"
+                            }}
+                        >
+                            {"RESET"}
+                        </components.Button>
+                        <components.Spacer direction="h" size={20} />
+                        <components.Button
+                            onClick={R.partial(this.props.onChange, this.state.value)}
+                            style={{
+                                background: colors.primary,
+                                color: colors.white,
+                                width: "230px",
+                                height: "45px"
+                            }}
+                        >
+                            {"CONFERMA"}
+                        </components.Button>
                     </bootstrap.Modal.Footer>
                 </bootstrap.Modal>
             </span>
@@ -140,4 +233,4 @@ var DatepickerFilter = React.createClass({
     }
 });
 
-module.exports = Radium(DatepickerFilter);
+module.exports = Radium(DatefilterModal);

@@ -16,7 +16,8 @@ var styles = {
         backgroundColor: colors.black,
         backgroundImage: "url(/_assets/images/login-background.jpg)",
         backgroundSize: "cover",
-        zIndex: 1000
+        zIndex: 1000,
+        overflowY: "scroll"
     },
     body: {
         width: "100%",
@@ -41,9 +42,10 @@ var styles = {
         }
     },
     activeView: {
-        width: "50%",
+        width: "520px",
         position: "relative",
-        left: "25%"
+        margin: "auto",
+        maxWidth: "90%"
     },
     viewSwitcher: {
         cursor: "pointer",
@@ -120,6 +122,7 @@ var LoginModal = React.createClass({
                     <div onClick={this.switchView} style={styles.viewSwitcher}>
                         {this.renderViewSwitcherText()}
                     </div>
+                    <components.Spacer direction="v" size={20} />
                 </div>
             </div>
         ) : null;
