@@ -11,6 +11,7 @@ var SitiCompare = React.createClass({
             React.PropTypes.array,
             IPropTypes.iterable
         ]).isRequired,
+        closeModal: React.PropTypes.func,
         filter: React.PropTypes.func,
         getSitoLabel: React.PropTypes.func,
         onChange: React.PropTypes.func.isRequired,
@@ -51,8 +52,9 @@ var SitiCompare = React.createClass({
             [this.state.valueFirst, this.state.valueSecond]
         );
         if (list.length === 2) {
-            return R.partial(this.props.onChange, list);
+            R.partial(this.props.onChange, list)();
         }
+        this.props.closeModal();
     },
     render: function () {
         return (
@@ -80,7 +82,7 @@ var SitiCompare = React.createClass({
                     value={this.state.valueSecond}
                 />
                 <components.Button
-                    onClick={this.onClick()}
+                    onClick={this.onClick}
                     style={{
                         background: colors.primary,
                         marginTop: "60px",
