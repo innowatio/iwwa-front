@@ -37,6 +37,14 @@ module.exports = R.merge(Router.Navigation, {
                     self.props.location.pathname,
                     R.assoc(name, newQueryValue, self.props.location.query)
                 );
+            },
+            resetParam: function (paramName) {
+                if (paramName in self.props.location.query) {
+                    self.replaceWith(
+                        self.props.location.pathname,
+                        R.dissoc(paramName, self.props.location.query)
+                    );
+                }
             }
         };
     }

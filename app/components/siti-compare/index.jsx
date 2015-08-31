@@ -51,7 +51,10 @@ var SitiCompare = React.createClass({
             [this.state.valueFirst, this.state.valueSecond]
         );
         if (list.length === 2) {
-            return R.partial(this.props.onChange, list);
+            return () => {
+                this.props.onChange(list);
+                this.props.resetParam("dateCompare");
+            };
         }
     },
     render: function () {
