@@ -116,7 +116,12 @@ var Chart = React.createClass({
         ];
     },
     onChangeExport: function (valueChanged) {
-        console.log("Esporta con " + valueChanged.label);
+        var exportAPILocation = this.refs.historicalGraph.refs.compareGraph.refs.temporalLineGraph;
+        if (valueChanged.key === "png") {
+            exportAPILocation.exportPNG();
+        } else if (valueChanged.key === "csv") {
+            exportAPILocation.exportCSV();
+        }
     },
     render: function () {
         // Icone
@@ -280,6 +285,7 @@ var Chart = React.createClass({
                         dateCompare={dateCompareProps.value}
                         dateFilter={dateFilterProps.value}
                         misure={this.props.collections.get("misure") || Immutable.Map()}
+                        ref="historicalGraph"
                         siti={sitoInputProps.value}
                         style={graphStyle}
                         tipologia={tipologiaInputProps.value}

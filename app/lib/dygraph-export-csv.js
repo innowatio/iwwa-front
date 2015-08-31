@@ -19,7 +19,6 @@ var DygraphCSVExport = {
 
             return res;
         }).join("\n");
-        console.log(csvResult);
 
         return csvResult;
     }

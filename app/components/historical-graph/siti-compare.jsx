@@ -55,6 +55,7 @@ var SitiCompare = React.createClass({
         var valori = this.props.valori[0];
         return (
             <components.TemporalLineGraph
+                ref="temporalLineGraph"
                 colors={[valori.color, colors.lineCompare]}
                 coordinates={this.getCoordinates()}
                 labels={this.getLabels()}

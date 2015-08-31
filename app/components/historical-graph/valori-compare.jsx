@@ -56,6 +56,7 @@ var ValoriCompare = React.createClass({
     render: function () {
         return (
             <components.TemporalLineGraph
+                ref="temporalLineGraph"
                 colors={this.props.valori.map(R.prop("color"))}
                 coordinates={this.getCoordinates()}
                 labels={this.getLabels()}

@@ -29,11 +29,6 @@ var TemporalLineGraph = React.createClass({
         xTicker: React.PropTypes.func,
         yLabel: React.PropTypes.string
     },
-    getInitialState: function () {
-        return {
-            imageBase64: ""
-        };
-    },
     componentDidMount: function () {
         this.drawGraph();
     },
@@ -102,7 +97,8 @@ var TemporalLineGraph = React.createClass({
     },
     exportCSV: function () {
         var csvString = DygraphCSVExport.exportCSV(this.graph);
-        window.open(csvString.toBase64(), "_blank");
+        var dataTypePrefix = "data:text/csv;base64,";
+        this.openDownloadLink(dataTypePrefix + window.btoa(csvString), "export.csv");
     },
     exportPNG: function () {
         var options = {
@@ -110,15 +106,23 @@ var TemporalLineGraph = React.createClass({
             legendFont: "14px lato",
             magicNumbertop: 20
         };
-
-        var imgContainer;
+        var imgContainer = {};
         dygraphExport.asPNG(this.graph, imgContainer, options);
-        this.state.imageBase64 = imgContainer.src.replace("image/png", "image/octet-stream");
-        window.open(this.state.imageBase64, "_blank");
+        var imageBase64 = imgContainer.src.replace("image/png", "image/octet-stream");
+        this.openDownloadLink(imageBase64, "export.png");
+    },
+    openDownloadLink: function (content, name) {
+        var encodedUri = encodeURI(content);
+        var link = document.createElement("a");
+        link.setAttribute("href", encodedUri);
+        link.setAttribute("download", name);
+        link.click();
     },
     render: function () {
         return (
-            <div ref="graphContainer" style={styles.graphContainer}/>
+            <span>
+                <div ref="graphContainer" style={styles.graphContainer}/>
+            </span>
         );
     }
 });
