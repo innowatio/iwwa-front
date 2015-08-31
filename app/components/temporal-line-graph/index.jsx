@@ -1,7 +1,9 @@
 var R      = require("ramda");
 var React  = require("react");
 
-var AppPropTypes = require("lib/app-prop-types.js");
+var AppPropTypes     = require("lib/app-prop-types.js");
+var dygraphExport    = require("lib/dygraph-export.js");
+var DygraphCSVExport = require("lib/dygraph-export-csv.js");
 
 
 var styles = {
@@ -93,9 +95,34 @@ var TemporalLineGraph = React.createClass({
         */
         this.graph = new Dygraph(container, coordinates, options);
     },
+    exportCSV: function () {
+        var csvString = DygraphCSVExport.exportCSV(this.graph);
+        var dataTypePrefix = "data:text/csv;base64,";
+        this.openDownloadLink(dataTypePrefix + window.btoa(csvString), "export.csv");
+    },
+    exportPNG: function () {
+        var options = {
+            labelFont: "14px lato",
+            legendFont: "14px lato",
+            magicNumbertop: 20
+        };
+        var imgContainer = {};
+        dygraphExport.asPNG(this.graph, imgContainer, options);
+        var imageBase64 = imgContainer.src.replace("image/png", "image/octet-stream");
+        this.openDownloadLink(imageBase64, "export.png");
+    },
+    openDownloadLink: function (content, name) {
+        var encodedUri = encodeURI(content);
+        var link = document.createElement("a");
+        link.setAttribute("href", encodedUri);
+        link.setAttribute("download", name);
+        link.click();
+    },
     render: function () {
         return (
-            <div ref="graphContainer" style={styles.graphContainer}/>
+            <span>
+                <div ref="graphContainer" style={styles.graphContainer}/>
+            </span>
         );
     }
 });

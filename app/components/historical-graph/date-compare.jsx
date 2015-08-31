@@ -269,6 +269,7 @@ var DateCompare = React.createClass({
                 dateWindow={this.getDateWindow()}
                 labels={this.getLabels()}
                 lockInteraction={true}
+                ref="temporalLineGraph"
                 xLegendFormatter={this.xLegendFormatter}
                 xTicker={this.xTicker}
                 yLabel="kWh"/>

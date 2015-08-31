@@ -22,6 +22,9 @@ var HistoricalGraph = React.createClass({
         valori: React.PropTypes.arrayOf(React.PropTypes.object)
     },
     mixins: [React.addons.PureRenderMixin],
+    exportPNG: function () {
+        return this.refs.temporalLineGraph.exportPNG;
+    },
     renderSitoTitle: function (sito) {
         return sito ? (
             <span>
@@ -50,13 +53,13 @@ var HistoricalGraph = React.createClass({
         }
     },
     renderDateCompareGraph: function () {
-        return <DateCompareGraph {...this.props} />;
+        return <DateCompareGraph {...this.props} ref="compareGraph"/>;
     },
     renderSitiCompareGraph: function () {
-        return <SitiCompareGraph {...this.props} />;
+        return <SitiCompareGraph {...this.props} ref="compareGraph"/>;
     },
     renderValoriCompareGraph: function () {
-        return <ValoriCompareGraph {...this.props} />;
+        return <ValoriCompareGraph {...this.props} ref="compareGraph"/>;
     },
     renderGraph: function () {
         if (this.props.dateCompare) {
