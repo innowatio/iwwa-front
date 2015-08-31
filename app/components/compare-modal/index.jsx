@@ -22,6 +22,12 @@ var Compare = React.createClass({
             compare: " "
         };
     },
+    addCloseModalToChild: function (child) {
+        var closeAction = this.close;
+        return React.addons.cloneWithProps(child, {
+            closeModal: closeAction
+        });
+    },
     close: function () {
         this.setState({
             showModal: false
@@ -86,13 +92,15 @@ var Compare = React.createClass({
         );
     },
     renderSitiCompare: function () {
+        var closeModal = this.addCloseModalToChild;
         return React.Children.map(this.props.children, function (child, index) {
-            return (index === 0 ? child : null);
+            return (index === 0 ? closeModal(child) : null);
         });
     },
     renderDataCompare: function () {
+        var closeModal = this.addCloseModalToChild;
         return React.Children.map(this.props.children, function (child, index) {
-            return (index === 1 ? child : null);
+            return (index === 1 ? closeModal(child) : null);
         });
     },
     renderResetButton: function () {

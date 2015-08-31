@@ -11,6 +11,7 @@ var SitiCompare = React.createClass({
             React.PropTypes.array,
             IPropTypes.iterable
         ]).isRequired,
+        closeModal: React.PropTypes.func,
         filter: React.PropTypes.func,
         getSitoLabel: React.PropTypes.func,
         onChange: React.PropTypes.func.isRequired,
@@ -54,6 +55,7 @@ var SitiCompare = React.createClass({
             return () => {
                 this.props.onChange(list);
                 this.props.resetParam("dateCompare");
+                this.props.closeModal();
             };
         }
     },
