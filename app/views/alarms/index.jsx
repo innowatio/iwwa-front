@@ -20,6 +20,11 @@ var Alarms = React.createClass({
         location: React.PropTypes.object,
         params: React.PropTypes.object
     },
+    getInitialState: function () {
+        return {
+            key: 1
+        };
+    },
     componentDidMount: function () {
         this.props.asteroid.subscribe("alarms");
         this.props.asteroid.subscribe("alarms");
@@ -35,9 +40,10 @@ var Alarms = React.createClass({
         return this.props.collections.get("siti") || Immutable.Map();
     },
     getType: function () {
-        return (this.props.params.id === "new" ? "insert" : "update");
+        return (this.props.params.id ? "update" : "insert");
     },
     getColumns: function () {
+        var self = this;
         return [
             "podId",
             "active",
@@ -47,13 +53,21 @@ var Alarms = React.createClass({
                 key: "_id",
                 "valueFormatter": function (value) {
                     return (
-                        <Router.Link to={`/alarms/${value}`}>
+                        <Router.Link onClick={self.onClickAction} to={`/alarms/${value}`}>
                             <components.Icon icon="external-link" />
                         </Router.Link>
                     );
                 }
             }
         ];
+    },
+    onClickAction: function () {
+        this.activeKey(1);
+    },
+    activeKey: function (key) {
+        this.setState({
+            key: key
+        });
     },
     render: function () {
         return (
@@ -88,10 +102,11 @@ var Alarms = React.createClass({
                 />
             <div style={styles.tabbedArea}>
                 <bootstrap.TabbedArea
+                    activeKey={this.state.key}
                     animation={false}
                     bsStyle={"tabs"}
-                    defaultActiveKey={1}
                     justified
+                    onSelect={this.activeKey}
                 >
                         <bootstrap.TabPane eventKey={1} tab="Impostazione">
                             <bootstrap.Col>

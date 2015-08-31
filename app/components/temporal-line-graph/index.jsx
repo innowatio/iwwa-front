@@ -101,8 +101,7 @@ var TemporalLineGraph = React.createClass({
             for (i = 0; i < event.touches.length; i++) {
                 var t = event.touches[i];
                 touches.push({
-                    pageX: t.pageX,
-                    pageY: t.pageY
+                    pageX: t.pageX
                 });
             }
             var initialTouches = context.initialTouches;
@@ -115,21 +114,18 @@ var TemporalLineGraph = React.createClass({
                 c_now = touches[0];
             } else {
                 c_now = {
-                    pageX: 0.5 * (touches[0].pageX + touches[1].pageX),
-                    pageY: 0.5 * (touches[0].pageY)
+                    pageX: 0.5 * (touches[0].pageX + touches[1].pageX)
                 };
             }
 
               // this is the "swipe" component
               // we toss it out for now, but could use it in the future.
             var swipe = {
-                pageX: c_now.pageX - c_init.pageX,
-                pageY: c_now.pageY - c_init.pageY
+                pageX: c_now.pageX - c_init.pageX
             };
             var dataWidth = context.initialRange.x[1] - context.initialRange.x[0];
             var dataHeight = context.initialRange.y[0] - context.initialRange.y[1];
             swipe.dataX = (swipe.pageX / g.plotter_.area.w) * dataWidth;
-            swipe.dataY = (swipe.pageY / g.plotter_.area.h) * dataHeight;
             var xScale;
 
             // The residual bits are usually split into scale & rotate bits, but we split

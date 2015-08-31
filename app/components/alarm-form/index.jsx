@@ -4,6 +4,7 @@ var Radium     = require("radium");
 var React      = require("react");
 var bootstrap  = require("react-bootstrap");
 var IPropTypes = require("react-immutable-proptypes");
+var Router     = require("react-router");
 
 var components      = require("components");
 var CollectionUtils = require("lib/collection-utils");
@@ -82,19 +83,14 @@ var AlarmForm = React.createClass({
             .then(() => this.setState({saving: false}))
             .catch(() => this.setState({saving: false}));
     },
-    renderCancelButton: function () {
-        return this.props.type === "insert" ? (
-            <components.Button disabled={this.state.saving} onClick={this.cancel}>
-                {"Cancel"}
-            </components.Button>
-        ) : null;
-    },
     renderResetButton: function () {
-        return this.props.type === "update" ? (
-            <components.Button disabled={this.state.saving} onClick={this.reset}>
-                {"Reset"}
-            </components.Button>
-        ) : null;
+        return (
+            <Router.Link to={`/alarms/`}>
+                <components.Button bsStyle="link" disabled={this.state.saving} onClick={this.reset}>
+                    {<components.Icon icon="repeat" />}
+                </components.Button>
+            </Router.Link>
+        );
     },
     renderSubmitButton: function () {
         return (
@@ -107,7 +103,7 @@ var AlarmForm = React.createClass({
                     width: "230px",
                     height: "45px"
                 }}>
-                {this.props.type === "update" ? "Salva" : "Create"}
+                {this.props.type === "update" ? "Salva" : "Crea"}
             </components.Button>
         );
     },
@@ -171,9 +167,15 @@ var AlarmForm = React.createClass({
                         />
                     </div>
                 </div>
-                    <bootstrap.ButtonToolbar style={{position: "absolute", bottom: "12%", paddingLeft: "38%", zIndex: "0"}}>
+                    <bootstrap.ButtonToolbar
+                        style={{
+                            position: "absolute",
+                            bottom: "12%",
+                            paddingLeft: "38%",
+                            zIndex: "0",
+                            display: "flex"}}
+                        >
                         {this.renderSubmitButton()}
-                        {this.renderCancelButton()}
                         {this.renderResetButton()}
                     </bootstrap.ButtonToolbar>
             </div>

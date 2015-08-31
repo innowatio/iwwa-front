@@ -107,10 +107,12 @@ var CollectionElementsTable = React.createClass({
     },
     render: function () {
         return (
-            <bootstrap.Table hover={this.props.hover} striped={this.props.striped}>
-                {this.renderHead()}
-                {this.renderBody()}
-            </bootstrap.Table>
+            <div style={{overflow: "auto"}}>
+                <bootstrap.Table hover={this.props.hover} striped={this.props.striped}>
+                    {this.renderHead()}
+                    {this.renderBody()}
+                </bootstrap.Table>
+            </div>
         );
     }
 });

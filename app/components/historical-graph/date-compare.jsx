@@ -35,6 +35,18 @@ var DateCompare = React.createClass({
                 }
             };
         }
+        if (dc.period.key === "years") {
+            return {
+                rangeOne: {
+                    start: moment(dc.dateOne).subtract(1, "months").valueOf(),
+                    end: dc.dateOne.getTime()
+                },
+                rangeTwo: {
+                    start: moment(dc.dateOne).subtract(1, "years").subtract(1, "months").valueOf(),
+                    end: moment(dc.dateOne).subtract(1, "years").valueOf()
+                }
+            };
+        }
         return {
             rangeOne: {
                 start: moment(dc.dateOne).subtract(1, dc.period.key).valueOf(),
@@ -100,6 +112,12 @@ var DateCompare = React.createClass({
             return [
                 0,
                 moment(0).add(1, "days").valueOf()
+            ];
+        }
+        if (this.props.dateCompare.period.key === "years") {
+            return [
+                0,
+                moment(0).add(1, "months").valueOf()
             ];
         }
         return [
@@ -233,17 +251,50 @@ var DateCompare = React.createClass({
             });
         }
         if (self.props.dateCompare.period.key === "years") {
-            return R.range(0, 13).map(function (n) {
-                var delta = moment(0).add(n, "months").valueOf();
-                if (n === 0 ||
-                    moment(self.props.dateCompare.dateOne).subtract(1, "years").add(n, "months").format("MMM") === "Jan") {
+            return R.range(0, 31).map(function (n) {
+                var delta = moment(0).add(n, "days").valueOf();
+                if (n === 0) {
                     return {
                         v: delta,
                         label: [
                             "<small>" + moment(self.props.dateCompare.dateOne)
-                                .subtract(1, "years").add(n, "months").format("YYYY") + "</small>",
+                                .subtract(1, "months").add(n, "days").format("YYYY") + "</small>",
                             "<small style='color:red;'>" + moment(self.props.dateCompare.dateOne)
-                                .subtract(2, "years").add(n, "months").format("YYYY") + "</small>"
+                                .subtract(1, "years").subtract(1, "months").add(n, "days").format("YYYY") + "</small>"
+                        ].join("<br />")
+                    };
+                }
+                if (moment(self.props.dateCompare.dateOne).subtract(1, "years").subtract(1, "months").add(n, "days").format("DD") === "01" &&
+                    moment(self.props.dateCompare.dateOne).subtract(1, "months").add(n, "days").format("DD") === "01") {
+                    return {
+                        v: delta,
+                        label: [
+                            "<small>" + moment(self.props.dateCompare.dateOne)
+                                .subtract(1, "months").add(n, "days").format("DD MMM") + "</small>",
+                            "<small style='color:red;'>" + moment(self.props.dateCompare.dateOne)
+                                .subtract(1, "years").subtract(1, "months").add(n, "days").format("DD MMM") + "</small>"
+                        ].join("<br />")
+                    };
+                }
+                if (moment(self.props.dateCompare.dateOne).subtract(1, "months").add(n, "days").format("DD") === "01") {
+                    return {
+                        v: delta,
+                        label: [
+                            "<small>" + moment(self.props.dateCompare.dateOne)
+                                .subtract(1, "months").add(n, "days").format("DD MMM") + "</small>",
+                            "<small style='color:red;'>" + moment(self.props.dateCompare.dateOne)
+                                .subtract(1, "years").subtract(1, "months").add(n, "days").format("DD") + "</small>"
+                        ].join("<br />")
+                    };
+                }
+                if (moment(self.props.dateCompare.dateOne).subtract(1, "years").subtract(1, "months").add(delta).format("DD") === "01") {
+                    return {
+                        v: delta,
+                        label: [
+                            "<small>" + moment(self.props.dateCompare.dateOne)
+                                .subtract(1, "months").add(n, "days").format("DD") + "</small>",
+                            "<small style='color:red;'>" + moment(self.props.dateCompare.dateOne)
+                                .subtract(1, "years").subtract(1, "months").add(n, "days").format("DD MMM") + "</small>"
                         ].join("<br />")
                     };
                 }
@@ -251,13 +302,39 @@ var DateCompare = React.createClass({
                     v: delta,
                     label: [
                         "<small>" + moment(self.props.dateCompare.dateOne)
-                            .subtract(1, "years").add(n, "months").format("MMM") + "</small>",
+                            .subtract(1, "months").add(n, "days").format("DD") + "</small>",
                         "<small style='color:red;'>" + moment(self.props.dateCompare.dateOne)
-                            .subtract(2, "years").add(n, "months").format("MMM") + "</small>"
+                            .subtract(1, "years").subtract(1, "months").add(n, "days").format("DD") + "</small>"
                     ].join("<br />")
                 };
             });
         }
+        // if (self.props.dateCompare.period.key === "years") {
+        //     return R.range(0, 31).map(function (n) {
+        //         var delta = moment(0).add(n, "months").valueOf();
+        //         if (n === 0 ||
+        //             moment(self.props.dateCompare.dateOne).subtract(1, "years").add(n, "months").format("MMM") === "Jan") {
+        //             return {
+        //                 v: delta,
+        //                 label: [
+        //                     "<small>" + moment(self.props.dateCompare.dateOne)
+        //                         .subtract(1, "years").add(n, "months").format("YYYY") + "</small>",
+        //                     "<small style='color:red;'>" + moment(self.props.dateCompare.dateOne)
+        //                         .subtract(2, "years").add(n, "months").format("YYYY") + "</small>"
+        //                 ].join("<br />")
+        //             };
+        //         }
+        //         return {
+        //             v: delta,
+        //             label: [
+        //                 "<small>" + moment(self.props.dateCompare.dateOne)
+        //                     .subtract(1, "years").add(n, "months").format("MMM") + "</small>",
+        //                 "<small style='color:red;'>" + moment(self.props.dateCompare.dateOne)
+        //                     .subtract(2, "years").add(n, "months").format("MMM") + "</small>"
+        //             ].join("<br />")
+        //         };
+        //     });
+        // }
         return [];
     },
     render: function () {
