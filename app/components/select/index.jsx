@@ -18,6 +18,7 @@ var Select = React.createClass({
         getLabel: React.PropTypes.func,
         label: React.PropTypes.string,
         onChange: React.PropTypes.func,
+        open: React.PropTypes.string,
         placeholder: React.PropTypes.string,
         style: React.PropTypes.object,
         value: React.PropTypes.array,
@@ -42,16 +43,26 @@ var Select = React.createClass({
         return (
             this.props.valueLink ?
             this.props.valueLink.value :
-            this.props.value
+            (
+                R.isArrayLike(this.props.value) ?
+                this.props.value[0] :
+                this.props.value
+            )
         );
     },
     onChange: function (newValue) {
         if (this.props.onChange) {
-            this.props.onChange(newValue);
+            this.props.onChange([newValue]);
         }
         if (this.props.valueLink) {
             this.props.valueLink.requestChange(newValue);
         }
+    },
+    canOpen: function () {
+        return (this.props.open === "undefined" ?
+            undefined :
+            true
+        );
     },
     renderLabel: function () {
         return this.props.label ? (
@@ -68,18 +79,26 @@ var Select = React.createClass({
                             backgroundColor: colors.primary,
                             color: colors.white
                         },
+                        "ul.rw-list > li.rw-list-option:hover": {
+                            backgroundColor: colors.primary,
+                            color: colors.white
+                        },
+                        "ul.rw-list > li.rw-list-option.rw-state-focus, .rw-selectlist > li.rw-list-option.rw-state-focus": {
+                            border: "0px"
+                        },
                         "li.rw-list-option": {
                             height: "40px"
                         },
                         "li.rw-list-option rw-list-focus": {
-                            border: "0px"
+                            border: "0px",
+                            borderColor: colors.greyBorder
                         },
                         "ul.rw-list > li.rw-list-option": {
                             borderBottom: colors.greyBorder + " 1px solid",
                             borderRadius: "0px"
                         },
                         "ul.rw-list > li.rw-list-option.rw-state-focus": {
-                            border: colors.blueBorder + " 1px solid"
+                            borderBottom: colors.greyBorder + " 1px solid"
                         },
                         "ul.rw-list > li.rw-list-option:hover, .rw-selectlist > li.rw-list-option:hover": {
                             borderColor: colors.greyLight
@@ -91,6 +110,16 @@ var Select = React.createClass({
                             fontSize: "13px",
                             height: "100%",
                             borderRadius: "5px"
+                        },
+                        ".rw-dropdownlist > .rw-input": {
+                            display: this.props.open === "undefined" ? "block" : "none"
+                        },
+                        ".rw-filter-input": {
+                            borderTop: "0px",
+                            borderRadius: "3px"
+                        },
+                        ".rw-popup-container": {
+                            marginTop: "0px"
                         }
                     }}
                     scopeSelector=".form-group"
@@ -99,6 +128,7 @@ var Select = React.createClass({
                     data={this.getData()}
                     filter={this.props.filter}
                     onChange={this.onChange}
+                    open={this.canOpen()}
                     placeholder={this.props.placeholder}
                     style={this.props.style}
                     textField={this.props.getLabel}

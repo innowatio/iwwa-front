@@ -57,6 +57,7 @@
     "webpack": "^1.9.11"
   },
   "dependencies": {
+    "TiTaToggle": "kleinejan/titatoggle",
     "asteroid": "mondora/asteroid#1.0.0-rewrite",
     "axios": "^0.5.4",
     "bootstrap": "^3.3.5",
@@ -65,6 +66,7 @@
     "dygraphs": "^1.1.1",
     "express": "^4.13.0",
     "font-awesome": "^4.3.0",
+    "history": "^1.8.4",
     "immutable": "^3.7.4",
     "lodash.debounce": "^3.1.1",
     "lodash.throttle": "^3.0.4",
@@ -76,7 +78,6 @@
     "react-immutable-proptypes": "^1.0.0",
     "react-router": "1.0.0-beta3",
     "react-widgets": "^2.7.2",
-    "TiTaToggle": "kleinejan/titatoggle",
     "title-case": "^1.1.1"
   }
 }

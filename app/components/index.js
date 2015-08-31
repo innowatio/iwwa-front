@@ -17,4 +17,3 @@ exports.SideNav                 = require("./sidebar/");
 exports.SitiCompare             = require("./siti-compare/");
 exports.Spacer                  = require("./spacer/");
 exports.TemporalLineGraph       = require("./temporal-line-graph/");
-exports.Multiselect             = require("./multiselect/");

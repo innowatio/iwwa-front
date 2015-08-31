@@ -59,22 +59,20 @@ var SitiCompare = React.createClass({
     render: function () {
         return (
             <div>
-                <components.Multiselect
+                <components.Select
                     allowedValues={this.props.allowedValues}
                     filter={this.props.filter}
                     getLabel={this.props.getSitoLabel}
-                    maxValues={1}
                     onChange={this.multi1}
                     open={this.props.open}
                     placeholder={"Seleziona punto 1"}
                     style={this.props.style}
                     value={this.state.valueFirst}
                 />
-                <components.Multiselect
+                <components.Select
                     allowedValues={this.props.allowedValues}
                     filter={this.props.filter}
                     getLabel={this.props.getSitoLabel}
-                    maxValues={1}
                     onChange={this.multi2}
                     open={this.props.open}
                     placeholder={"Seleziona punto 2"}

@@ -111,7 +111,7 @@ var LoginModal = React.createClass({
                             <img src="/_assets/images/logo.png" style={styles.title.logo} />
                         </div>
                         <components.Spacer direction="v" size={32} />
-                        <div style={styles.title.firstLine}>{"Energia alla tua Energia"}</div>
+                        <div style={styles.title.firstLine}>{"Diamo Energia alla tua Energia"}</div>
                         <div style={styles.title.secondLine}>{"Innowatio"}</div>
                     </div>
                     <components.Spacer direction="v" size={64} />

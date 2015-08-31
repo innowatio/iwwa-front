@@ -59,7 +59,8 @@ var Popover = React.createClass({
                         },
                         ".popover-content": {
                             padding: "0px",
-                            cursor: "pointer"
+                            cursor: "pointer",
+                            display: "flex"
                         },
                         ".rw-widget": {
                             border: "0px"

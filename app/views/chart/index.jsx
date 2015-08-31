@@ -19,7 +19,8 @@ var multiselectStyles = {
     },
     multiselect: {
         width: "450px",
-        height: "35px"
+        height: "35px",
+        display: "inline-block"
     },
     tag: {
         display: "inline-block",
@@ -37,19 +38,6 @@ var graphStyle = {
     border: "solid 1px " + color(colors.darkBlack).alpha(0.1).rgbString(),
     boxShadow: "2px 2px 5px " + colors.greySubTitle
 };
-
-var SitoTagComponent = React.createClass({
-    propTypes: {
-        item: IPropTypes.map
-    },
-    render: function () {
-        return (
-            <span style={multiselectStyles.tag}>
-                {CollectionUtils.siti.getLabel(this.props.item)}
-            </span>
-        );
-    }
-});
 
 var Chart = React.createClass({
     propTypes: {
@@ -136,13 +124,6 @@ var Chart = React.createClass({
             transformers.sito(siti)
         );
 
-        var sitoInputSingleMultiselect = function (sito) {
-            if (!R.isEmpty(sito)) {
-                return sitoInputProps.onChange([R.last(sito)]);
-            }
-            return sitoInputProps.onChange([]);
-        };
-
         // Tipologia
         var tipologie = this.getTipologie();
         var tipologiaInputProps = this.bindToQueryParameter(
@@ -184,14 +165,7 @@ var Chart = React.createClass({
             <div>
                 <h2
                     className="text-center"
-                    style={{
-                            color: colors.titleColor,
-                            backgroundColor: colors.greyBackground,
-                            marginTop: "0px",
-                            height: "40px",
-                            fontSize: "20pt",
-                            marginBottom: "0px"
-                        }}
+                    style={styles.titlePage}
                 >
                     <components.Spacer direction="v" size={5} />
                     Storico consumi
@@ -242,17 +216,14 @@ var Chart = React.createClass({
                             tooltipMessage="Punti di misurazione"
                             tooltipPosition="left"
                         >
-                            <components.Multiselect
+                            <components.Select
                                 allowedValues={siti}
                                 filter={CollectionUtils.siti.filter}
                                 getLabel={CollectionUtils.siti.getLabel}
-                                maxValues={1}
-                                onChange={sitoInputSingleMultiselect}
                                 open=" "
                                 placeholder={"Punto di misurazione"}
                                 style={multiselectStyles.multiselectPopover}
-                                tagComponent={SitoTagComponent}
-                                value={sitoInputProps.value}
+                                {...sitoInputProps}
                             />
                         </components.Popover>
                         <components.DatefilterModal
