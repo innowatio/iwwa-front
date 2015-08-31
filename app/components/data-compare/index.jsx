@@ -16,6 +16,7 @@ var styles = {
 var DataCompare = React.createClass({
     propTypes: {
         allowedValues: React.PropTypes.array.isRequired,
+        closeModal: React.PropTypes.func,
         getKey: React.PropTypes.func,
         getLabel: React.PropTypes.func,
         onChange: React.PropTypes.func,
@@ -53,6 +54,7 @@ var DataCompare = React.createClass({
             iconSiti;
     },
     onClickButton: function () {
+        this.props.closeModal();
         this.props.onChange(this.state.value);
     },
     renderDataCompare: function (allowedValue) {

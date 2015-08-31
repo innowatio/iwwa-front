@@ -51,6 +51,10 @@ var DatefilterModal = React.createClass({
 
         return result;
     },
+    confirmAndClose: function () {
+        R.partial(this.props.onChange, this.state.value)();
+        this.close();
+    },
     close: function () {
         this.setState({
             showModal: false
@@ -94,19 +98,19 @@ var DatefilterModal = React.createClass({
                     start: this.defaultStartDate(),
                     end: new Date()
                 }
-            })
+            });
         } else if (checkedKey === "2months") {
             this.setState({
                 value: {start: moment().subtract(2, "months")}
-            })
+            });
         } else {
             this.setState({
                 value: {start: moment().subtract(1, checkedKey)}
-            })
+            });
         }
         this.setState({
             active: checkedKey
-        })
+        });
     },
     renderButtonFilter: function (allowedValue) {
         var active = this.props.getKey(allowedValue) === this.state.active;
@@ -216,7 +220,7 @@ var DatefilterModal = React.createClass({
                         </components.Button>
                         <components.Spacer direction="h" size={20} />
                         <components.Button
-                            onClick={R.partial(this.props.onChange, this.state.value)}
+                            onClick={this.confirmAndClose}
                             style={{
                                 background: colors.primary,
                                 color: colors.white,
