@@ -28,13 +28,14 @@ exports.tabbedArea = {
     width: "96%",
     marginLeft: "2%",
     marginTop: "2%",
-    height: "calc(100vh - 150px)",
+    height: "calc(100vh - 190px)",
     borderBottom: "solid 1px " + color(colors.darkBlack).alpha(0.1).rgbString(),
     borderRight: "solid 1px " + color(colors.darkBlack).alpha(0.1).rgbString(),
     borderLeft: "solid 1px " + color(colors.darkBlack).alpha(0.1).rgbString(),
     borderTop: "0px",
     borderRadius: "3px",
-    boxShadow: "2px 2px 5px " + colors.greySubTitle
+    boxShadow: "2px 2px 5px " + colors.greySubTitle,
+    overflow: "hidden"
 };
 
 exports.titlePage = {

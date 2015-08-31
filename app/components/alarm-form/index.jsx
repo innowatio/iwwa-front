@@ -129,23 +129,23 @@ var AlarmForm = React.createClass({
                         <h5>Seleziona un punto da monitorare e le soglie di allarme</h5>
                     </span>
                     <div style={{float: "left", width: "50%"}}>
-                        <bootstrap.Input
-                            label="Nome"
-                            style={{width: "80%"}}
-                            type="text"
-                            valueLink={this.linkState("name")}
-                        />
                         <components.Select
                             allowedValues={this.props.siti}
                             filter={CollectionUtils.siti.filter}
                             getLabel={CollectionUtils.siti.getLabel}
                             label="Sito"
                             open=""
-                            style={{width: "80%", zIndex: "0"}}
+                            style={{width: "80%", zIndex: "10"}}
                             valueLink={this.linkState("sito")}
                         />
                     </div>
                     <div style={{float: "right", width: "40%"}}>
+                        <bootstrap.Input
+                            label="Nome"
+                            style={{width: "80%"}}
+                            type="text"
+                            valueLink={this.linkState("name")}
+                        />
                         {this.renderAlertInfo()}
                         <h4 style={{color: colors.primary}}>{stringIt.typeOfAlarm}</h4>
                         <span className="alarm-type">
@@ -171,7 +171,7 @@ var AlarmForm = React.createClass({
                         />
                     </div>
                 </div>
-                    <bootstrap.ButtonToolbar style={{position: "absolute", bottom: "8%", paddingLeft: "41%"}}>
+                    <bootstrap.ButtonToolbar style={{position: "absolute", bottom: "12%", paddingLeft: "38%", zIndex: "0"}}>
                         {this.renderSubmitButton()}
                         {this.renderCancelButton()}
                         {this.renderResetButton()}
