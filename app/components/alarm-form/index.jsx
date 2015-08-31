@@ -1,6 +1,7 @@
 var axios      = require("axios");
 var Immutable  = require("immutable");
 var Radium     = require("radium");
+var R          = require("ramda");
 var React      = require("react");
 var bootstrap  = require("react-bootstrap");
 var IPropTypes = require("react-immutable-proptypes");
@@ -38,7 +39,11 @@ var AlarmForm = React.createClass({
             active: props.alarm.get("active"),
             name: props.alarm.get("name"),
             type: props.alarm.get("type"),
-            sito: this.getSitoFromProps(props)
+            sito: this.getSitoFromProps(props),
+            threshold: R.path(
+                ["reale", "$gt"],
+                JSON.parse(props.alarm.get("rule") || "{}")
+            ) || 0
         };
     },
     cancel: function () {
@@ -57,12 +62,7 @@ var AlarmForm = React.createClass({
             podId: this.state.sito.get("pod"),
             rule: JSON.stringify({
                 reale: {
-                    $gt: 0
-                },
-                data: {
-                    weekDay: {
-                        $gt: 5
-                    }
+                    $gt: parseInt(this.state.threshold)
                 }
             })
         };
@@ -122,7 +122,7 @@ var AlarmForm = React.createClass({
                 <div style={styles.colVerticalPadding}>
                     <span>
                         <h3 style={{color: colors.primary}}>{stringIt.titleTabImpostazioniAlarm}</h3>
-                        <h5>Seleziona un punto da monitorare e le soglie di allarme</h5>
+                        <h5>{"Seleziona un punto da monitorare e le soglie di allarme"}</h5>
                     </span>
                     <div style={{float: "left", width: "50%"}}>
                         <components.Select
@@ -143,6 +143,7 @@ var AlarmForm = React.createClass({
                             valueLink={this.linkState("name")}
                         />
                         {this.renderAlertInfo()}
+                        {/*
                         <h4 style={{color: colors.primary}}>{stringIt.typeOfAlarm}</h4>
                         <span className="alarm-type">
                             <bootstrap.Input
@@ -160,6 +161,15 @@ var AlarmForm = React.createClass({
                                 <option value="on-off">{stringIt.selectAlarmType}</option>
                             </bootstrap.Input>
                         </span>
+                        */}
+                        <bootstrap.Input
+                            label={`Soglia (${this.state.threshold} kwh)`}
+                            max={500}
+                            min={0}
+                            style={{width: "80%"}}
+                            type="range"
+                            valueLink={this.linkState("threshold")}
+                        />
                         <bootstrap.Input
                             checkedLink={this.linkState("active")}
                             label="Attivo"
@@ -167,17 +177,18 @@ var AlarmForm = React.createClass({
                         />
                     </div>
                 </div>
-                    <bootstrap.ButtonToolbar
-                        style={{
-                            position: "absolute",
-                            bottom: "12%",
-                            paddingLeft: "38%",
-                            zIndex: "0",
-                            display: "flex"}}
-                        >
-                        {this.renderSubmitButton()}
-                        {this.renderResetButton()}
-                    </bootstrap.ButtonToolbar>
+                <bootstrap.ButtonToolbar
+                    style={{
+                        position: "absolute",
+                        bottom: "12%",
+                        paddingLeft: "38%",
+                        zIndex: "0",
+                        display: "flex"
+                    }}
+                >
+                    {this.renderSubmitButton()}
+                    {this.renderResetButton()}
+                </bootstrap.ButtonToolbar>
             </div>
         );
     }
