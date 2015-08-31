@@ -51,7 +51,7 @@ var Popover = React.createClass({
     },
     renderOverlay: function () {
         return (
-            <bootstrap.Popover className="multiselect-popover">
+            <bootstrap.Popover animation={false} className="multiselect-popover">
                 <Radium.Style
                     rules={{
                         "": {
@@ -78,6 +78,7 @@ var Popover = React.createClass({
     render: function () {
         return (
             <bootstrap.OverlayTrigger
+                animation={false}
                 overlay={this.renderOverlay()}
                 placement="bottom"
                 rootClose={true}

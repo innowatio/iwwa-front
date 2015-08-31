@@ -100,7 +100,7 @@ var Chart = React.createClass({
             {label: "SETTIMANA SCORSA", key: "weeks"},
             {label: "MESE SCORSO", key: "months"},
             {label: "2 MESI FA", key: "2months"},
-            {label: "CUSTOM", key: "custom"}
+            {label: "ALTRO PERIODO", key: "custom"}
         ];
     },
     onChangeExport: function (valueChanged) {

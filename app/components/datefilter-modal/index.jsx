@@ -19,10 +19,14 @@ var styles = {
 
 var DatefilterModal = React.createClass({
     propTypes: {
+        allowedValues: React.PropTypes.array.isRequired,
         children: React.PropTypes.oneOfType([
             React.PropTypes.array,
             React.PropTypes.object
         ]),
+        getKey: React.PropTypes.func,
+        getLabel: React.PropTypes.func,
+        onChange: React.PropTypes.func,
         style: React.PropTypes.object,
         title: React.PropTypes.element,
         value: React.PropTypes.shape({
@@ -84,7 +88,7 @@ var DatefilterModal = React.createClass({
     },
     setDate: function (dateKey, dateValue) {
         var obj = {};
-        obj[dateKey]= dateValue;
+        obj[dateKey] = dateValue;
         this.setState({
             value: R.merge(this.state.value, obj)
         });
@@ -101,11 +105,17 @@ var DatefilterModal = React.createClass({
             });
         } else if (checkedKey === "2months") {
             this.setState({
-                value: {start: moment().subtract(2, "months")}
+                value: {
+                    start: moment().subtract(2, "months"),
+                    end: moment().subtract(1, "months")
+                }
             });
         } else {
             this.setState({
-                value: {start: moment().subtract(1, checkedKey)}
+                value: {
+                    start: moment().subtract(1, checkedKey),
+                    end: new Date()
+                }
             });
         }
         this.setState({
@@ -158,14 +168,14 @@ var DatefilterModal = React.createClass({
                     <Calendar
                         className="pull-right"
                         culture={"en-GB"}
-                        dayFormat={day => ['D', 'L', 'M','M','G', 'V', 'S'][day]}
+                        dayFormat={day => ["D", "L", "M", "M", "G", "V", "S"][day]}
                         format="MMM dd, yyyy"
                         onChange={R.partial(this.setDate, "end")}
                         style={{width: "40%"}}
                         value={this.state.value.end}
                     />
                     <Calendar
-                        dayFormat={day => ['D', 'L', 'M','M','G', 'V', 'S'][day]}
+                        dayFormat={day => ["D", "L", "M", "M", "G", "V", "S"][day]}
                         format="MMM dd, yyyy"
                         onChange={R.partial(this.setDate, "start")}
                         style={{width: "40%"}}
