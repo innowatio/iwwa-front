@@ -93,8 +93,8 @@ exports.asPNG = function (dygraph, img, userOptions) {
  *
  */
 Dygraph.Export.asCanvas = function (dygraph, userOptions) {
-    var options = {},
-        canvas = Dygraph.createCanvas();
+    var options = {};
+    var canvas = Dygraph.createCanvas();
 
     Dygraph.update(options, Dygraph.Export.DEFAULT_ATTRS);
     Dygraph.update(options, userOptions);
