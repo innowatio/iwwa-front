@@ -55,7 +55,6 @@ var SitiCompare = React.createClass({
         }
     },
     render: function () {
-        console.log(this.state);
         return (
             <div>
                 <components.Select

@@ -43,7 +43,11 @@ var Select = React.createClass({
         return (
             this.props.valueLink ?
             this.props.valueLink.value :
-            this.props.value
+            (
+                R.isArrayLike(this.props.value) ?
+                this.props.value[0] :
+                this.props.value
+            )
         );
     },
     onChange: function (newValue) {
@@ -75,18 +79,26 @@ var Select = React.createClass({
                             backgroundColor: colors.primary,
                             color: colors.white
                         },
+                        "ul.rw-list > li.rw-list-option:hover": {
+                            backgroundColor: colors.primary,
+                            color: colors.white
+                        },
+                        "ul.rw-list > li.rw-list-option.rw-state-focus, .rw-selectlist > li.rw-list-option.rw-state-focus": {
+                            border: "0px"
+                        },
                         "li.rw-list-option": {
                             height: "40px"
                         },
                         "li.rw-list-option rw-list-focus": {
-                            border: "0px"
+                            border: "0px",
+                            borderColor: colors.greyBorder
                         },
                         "ul.rw-list > li.rw-list-option": {
                             borderBottom: colors.greyBorder + " 1px solid",
                             borderRadius: "0px"
                         },
                         "ul.rw-list > li.rw-list-option.rw-state-focus": {
-                            border: colors.blueBorder + " 1px solid"
+                            borderBottom: colors.greyBorder + " 1px solid"
                         },
                         "ul.rw-list > li.rw-list-option:hover, .rw-selectlist > li.rw-list-option:hover": {
                             borderColor: colors.greyLight

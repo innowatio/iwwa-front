@@ -160,14 +160,7 @@ var Chart = React.createClass({
             <div>
                 <h2
                     className="text-center"
-                    style={{
-                            color: colors.titleColor,
-                            backgroundColor: colors.greyBackground,
-                            marginTop: "0px",
-                            height: "40px",
-                            fontSize: "20pt",
-                            marginBottom: "0px"
-                        }}
+                    style={styles.titlePage}
                 >
                     <components.Spacer direction="v" size={5} />
                     Storico consumi

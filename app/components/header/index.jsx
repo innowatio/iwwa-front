@@ -1,3 +1,4 @@
+var Router = require("react-router");
 var Radium = require("radium");
 var React  = require("react");
 
@@ -53,7 +54,9 @@ var Header = React.createClass({
                     style={styles.hamburger}
                 />
                 <span style={styles.base}>
-                    <img src={iconLogo} />
+                    <Router.Link to="/dashboard/" >
+                        <img src={iconLogo} />
+                    </Router.Link>
                 </span>
                 <span onClick={this.logout} style={styles.logout}>
                     <img className="pull-right" src={iconLogout} style={{width: "85%"}}/>

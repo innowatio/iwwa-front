@@ -7,6 +7,9 @@ var IPropTypes = require("react-immutable-proptypes");
 
 var components      = require("components");
 var CollectionUtils = require("lib/collection-utils");
+var colors          = require("lib/colors");
+var stringIt        = require("lib/string-it");
+var styles          = require("lib/styles");
 
 var AlarmForm = React.createClass({
     propTypes: {
@@ -81,58 +84,98 @@ var AlarmForm = React.createClass({
     },
     renderCancelButton: function () {
         return this.props.type === "insert" ? (
-            <bootstrap.Button disabled={this.state.saving} onClick={this.cancel}>
+            <components.Button disabled={this.state.saving} onClick={this.cancel}>
                 {"Cancel"}
-            </bootstrap.Button>
+            </components.Button>
         ) : null;
     },
     renderResetButton: function () {
         return this.props.type === "update" ? (
-            <bootstrap.Button disabled={this.state.saving} onClick={this.reset}>
+            <components.Button disabled={this.state.saving} onClick={this.reset}>
                 {"Reset"}
-            </bootstrap.Button>
+            </components.Button>
         ) : null;
     },
     renderSubmitButton: function () {
         return (
-            <bootstrap.Button disabled={this.state.saving} onClick={this.submit}>
-                {this.props.type === "update" ? "Save" : "Create"}
-            </bootstrap.Button>
+            <components.Button
+                disabled={this.state.saving}
+                onClick={this.submit}
+                style={{
+                    backgroundColor: colors.primary,
+                    color: colors.white,
+                    width: "230px",
+                    height: "45px"
+                }}>
+                {this.props.type === "update" ? "Salva" : "Create"}
+            </components.Button>
         );
+    },
+    renderAlertInfo: function () {
+        var sito = CollectionUtils.siti.getLabel(this.state.sito);
+        return this.state.saving ? (
+            <bootstrap.Alert bsStyle="success" style={{width: "80%"}}>
+                {stringIt.alertSuccessAlarm}
+                <strong>{sito}</strong>
+            </bootstrap.Alert>
+        ) : null;
     },
     render: function () {
         return (
             <div>
-                <bootstrap.Input
-                    label="Nome"
-                    type="text"
-                    valueLink={this.linkState("name")}
-                />
-                <bootstrap.Input
-                    label="Tipo"
-                    type="select"
-                    valueLink={this.linkState("type")}
-                >
-                    <option value="on-off">{"On / Off"}</option>
-                </bootstrap.Input>
-                <components.Select
-                    allowedValues={this.props.siti}
-                    filter={CollectionUtils.siti.filter}
-                    getLabel={CollectionUtils.siti.getLabel}
-                    label="Sito"
-                    open="undefined"
-                    valueLink={this.linkState("sito")}
-                />
-                <bootstrap.Input
-                    checkedLink={this.linkState("active")}
-                    label="Attivo"
-                    type="checkbox"
-                />
-                <bootstrap.ButtonToolbar>
-                    {this.renderCancelButton()}
-                    {this.renderResetButton()}
-                    {this.renderSubmitButton()}
-                </bootstrap.ButtonToolbar>
+                <div style={styles.colVerticalPadding}>
+                    <span>
+                        <h3 style={{color: colors.primary}}>{stringIt.titleTabImpostazioniAlarm}</h3>
+                        <h5>Seleziona un punto da monitorare e le soglie di allarme</h5>
+                    </span>
+                    <div style={{float: "left", width: "50%"}}>
+                        <bootstrap.Input
+                            label="Nome"
+                            style={{width: "80%"}}
+                            type="text"
+                            valueLink={this.linkState("name")}
+                        />
+                        <components.Select
+                            allowedValues={this.props.siti}
+                            filter={CollectionUtils.siti.filter}
+                            getLabel={CollectionUtils.siti.getLabel}
+                            label="Sito"
+                            open=""
+                            style={{width: "80%", zIndex: "0"}}
+                            valueLink={this.linkState("sito")}
+                        />
+                    </div>
+                    <div style={{float: "right", width: "40%"}}>
+                        {this.renderAlertInfo()}
+                        <h4 style={{color: colors.primary}}>{stringIt.typeOfAlarm}</h4>
+                        <span className="alarm-type">
+                            <bootstrap.Input
+                                type="radio"
+                                valueLink={this.linkState("type")}
+                            >
+                                <Radium.Style
+                                    rules={{
+                                        ".radio": {
+                                            paddingLeft: "20px"
+                                        }
+                                    }}
+                                    scopeSelector=".alarm-type"
+                                />
+                                <option value="on-off">{stringIt.selectAlarmType}</option>
+                            </bootstrap.Input>
+                        </span>
+                        <bootstrap.Input
+                            checkedLink={this.linkState("active")}
+                            label="Attivo"
+                            type="checkbox"
+                        />
+                    </div>
+                </div>
+                    <bootstrap.ButtonToolbar style={{position: "absolute", bottom: "8%", paddingLeft: "41%"}}>
+                        {this.renderSubmitButton()}
+                        {this.renderCancelButton()}
+                        {this.renderResetButton()}
+                    </bootstrap.ButtonToolbar>
             </div>
         );
     }
