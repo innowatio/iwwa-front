@@ -197,6 +197,7 @@ var Chart = React.createClass({
                     </span>
                     <span className="pull-right" style={{display: "flex"}}>
                         <components.Popover
+                            hideOnChange={true}
                             title={<img src={iconPower} style={{width: "75%"}} />}
                             tooltipId="tooltipInterest"
                             tooltipMessage="Quantità d'interesse"
@@ -211,6 +212,7 @@ var Chart = React.createClass({
                             />
                         </components.Popover>
                         <components.Popover
+                            hideOnChange={true}
                             title={<img src={iconSiti} style={{width: "75%"}} />}
                             tooltipId="tooltipMisurazione"
                             tooltipMessage="Punti di misurazione"

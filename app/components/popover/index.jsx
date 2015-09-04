@@ -7,6 +7,7 @@ var components = require("components/");
 var Popover = React.createClass({
     propTypes: {
         children: React.PropTypes.element,
+        hideOnChange: React.PropTypes.bool,
         title: React.PropTypes.element,
         tooltipId: React.PropTypes.string,
         tooltipMessage: React.PropTypes.string,
@@ -17,6 +18,28 @@ var Popover = React.createClass({
             tooltipPosition: "right"
         };
     },
+    getInitialState: function () {
+        return {
+            isOpen: false
+        };
+    },
+    componentDidMount: function () {
+        this.state.isOpen = true;
+    },
+    componentWillReceiveProps: function () {
+        if (!this.state.isOpen) {
+            this.closePopover();
+        }
+    },
+    addOnClickCloseToChild: function (child) {
+        var self = this;
+        return React.addons.cloneWithProps(child, {
+            onChange: (a) => {
+                child.props.onChange(a);
+                self.closePopover();
+            }
+        });
+    },
     addTooltip: function () {
         return (
             <bootstrap.Tooltip
@@ -25,6 +48,9 @@ var Popover = React.createClass({
                 {this.props.tooltipMessage}
             </bootstrap.Tooltip>
         );
+    },
+    closePopover: function () {
+        this.refs.menuPopover.hide();
     },
     getButton: function () {
         return (
@@ -51,7 +77,10 @@ var Popover = React.createClass({
     },
     renderOverlay: function () {
         return (
-            <bootstrap.Popover animation={false} className="multiselect-popover">
+            <bootstrap.Popover
+                animation={false}
+                className="multiselect-popover"
+            >
                 <Radium.Style
                     rules={{
                         "": {
@@ -71,7 +100,7 @@ var Popover = React.createClass({
                     }}
                     scopeSelector=".multiselect-popover"
                 />
-                {this.props.children}
+                {this.props.hideOnChange ? this.addOnClickCloseToChild(this.props.children) : this.props.children}
             </bootstrap.Popover>
         );
     },
@@ -81,6 +110,7 @@ var Popover = React.createClass({
                 animation={false}
                 overlay={this.renderOverlay()}
                 placement="bottom"
+                ref={"menuPopover"}
                 rootClose={true}
                 trigger="click"
             >
