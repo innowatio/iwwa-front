@@ -18,25 +18,12 @@ var Popover = React.createClass({
             tooltipPosition: "right"
         };
     },
-    getInitialState: function () {
-        return {
-            isOpen: false
-        };
-    },
-    componentDidMount: function () {
-        this.state.isOpen = true;
-    },
-    componentWillReceiveProps: function () {
-        if (!this.state.isOpen) {
-            this.closePopover();
-        }
-    },
     addOnClickCloseToChild: function (child) {
         var self = this;
         return React.addons.cloneWithProps(child, {
             onChange: (a) => {
-                child.props.onChange(a);
                 self.closePopover();
+                child.props.onChange(a);
             }
         });
     },
@@ -50,6 +37,7 @@ var Popover = React.createClass({
         );
     },
     closePopover: function () {
+        console.log(this.refs.menuPopover);
         this.refs.menuPopover.hide();
     },
     getButton: function () {
