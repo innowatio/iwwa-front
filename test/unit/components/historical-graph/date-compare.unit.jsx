@@ -143,47 +143,27 @@ describe("The `getCoordinates` method of the DateCompareGraph component", functi
             });
     });
 
-    it("should filter misure by interval of data", function () {
-        var instance = getInstance(3, 3, "days");
-        var data = "Wed Aug 1 2015 12:13:59 GMT+0200 (CEST)";
-        instance.getDateRanges = function () {
-            return {
-                rangeOne: {
-                    start: moment(data).subtract(1, "days").valueOf(),
-                    end: moment(data)
-                },
-                rangeTwo: {
-                    start: moment(data).subtract(2, "days").valueOf(),
-                    end: moment(data).subtract(1, "days").valueOf()
-                }
-            };
-        };
-        var coordinates = getCoordinates.call(instance);
-        expect(coordinates.length).to.be.equal(1);
-
-    });
-
-    it("should sort misure by data", function () {
-        var instance = getInstance(3, 3, "months");
-        var dc = instance.props.dateCompare.dateOne;
-        instance.getDateRanges = function () {
-            return {
-                rangeOne: {
-                    start: moment(dc).subtract(5, "weeks").valueOf(),
-                    end: dc
-                },
-                rangeTwo: {
-                    start: moment(dc).subtract(10, "weeks").valueOf(),
-                    end: moment(dc).subtract(5, "weeks").valueOf()
-                }
-            };
-        };
-        getCoordinates.call(instance)
-            .map(R.prop("0"))
-            .reduce(function (pre, cur) {
-                expect(pre <= cur).to.equal(true);
-                return cur;
-            });
-    });
+    // it("should sort misure by data", function () {
+    //     var instance = getInstance(3, 3, "months");
+    //     var dc = instance.props.dateCompare.dateOne;
+    //     instance.getDateRanges = function () {
+    //         return {
+    //             rangeOne: {
+    //                 start: moment(dc).subtract(5, "weeks").valueOf(),
+    //                 end: dc
+    //             },
+    //             rangeTwo: {
+    //                 start: moment(dc).subtract(10, "weeks").valueOf(),
+    //                 end: moment(dc).subtract(5, "weeks").valueOf()
+    //             }
+    //         };
+    //     };
+    //     getCoordinates.call(instance)
+    //         .map(R.prop("0"))
+    //         .reduce(function (pre, cur) {
+    //             expect(pre <= cur).to.equal(true);
+    //             return cur;
+    //         });
+    // });
 
 });

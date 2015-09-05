@@ -55,12 +55,14 @@ var Popover = React.createClass({
                 <Radium.Style
                     rules={{
                         "": {
-                            padding: "0px"
+                            padding: "0px",
+                            height: this.props.tooltipMessage === "Punti di misurazione" ? "45%" : ""
                         },
                         ".popover-content": {
                             padding: "0px",
                             cursor: "pointer",
-                            display: "flex"
+                            display: "flex",
+                            height: "100%"
                         },
                         ".rw-widget": {
                             border: "0px"
