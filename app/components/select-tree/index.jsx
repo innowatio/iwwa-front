@@ -37,9 +37,8 @@ var SelectTree = React.createClass({
     getInitialState: function () {
         return {
             numberOfValues: 20,
-            value: Immutable.Iterable,
-            inputFilter: "",
-            activeKey: ""
+            value: this.getValue() || Immutable.Iterable,
+            inputFilter: ""
         };
     },
     getValue: function () {
@@ -60,10 +59,9 @@ var SelectTree = React.createClass({
         if (this.props.onChange) {
             this.props.onChange([allowedValue]);
         }
-        //     if (this.props.valueLink) {
-        //         this.props.valueLink.requestChange(newValue);
-        //     }
-        // },
+        // if (this.props.valueLink) {
+        //     this.props.valueLink.requestChange(newValue);
+        // }
     },
     filter: function (allowedValue) {
         return this.props.filter(allowedValue, this.state.inputFilter);
@@ -111,6 +109,7 @@ var SelectTree = React.createClass({
                 collapsible
                 eventKey={this.props.getLabel(allowedValue)}
                 header={this.renderHeader(allowedValue)}
+                key={this.props.getLabel(allowedValue)}
                 style={{
                     width: "200px",
                     borderTop: "0px",
