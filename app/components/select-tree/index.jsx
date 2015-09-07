@@ -16,13 +16,11 @@ var SelectTree = React.createClass({
             React.PropTypes.array,
             IPropTypes.iterable
         ]).isRequired,
+        buttonCloseDefault: React.PropTypes.bool,
         filter: React.PropTypes.func,
         getLabel: React.PropTypes.func,
         label: React.PropTypes.string,
         onChange: React.PropTypes.func,
-        open: React.PropTypes.string,
-        placeholder: React.PropTypes.string,
-        style: React.PropTypes.object,
         value: React.PropTypes.array,
         valueLink: ReactLink.PropTypes.link()
     },
@@ -38,7 +36,8 @@ var SelectTree = React.createClass({
         return {
             numberOfValues: 20,
             value: this.getValue() || Immutable.Iterable,
-            inputFilter: ""
+            inputFilter: "",
+            activeKey: ""
         };
     },
     getValue: function () {
@@ -52,16 +51,28 @@ var SelectTree = React.createClass({
             )
         );
     },
-    onClickPanel: function (allowedValue) {
+    onClickActiveSite: function (allowedValue) {
         this.setState({
             value: allowedValue
         });
         if (this.props.onChange) {
             this.props.onChange([allowedValue]);
         }
-        // if (this.props.valueLink) {
-        //     this.props.valueLink.requestChange(newValue);
-        // }
+        if (this.props.valueLink) {
+            this.props.valueLink.requestChange(allowedValue);
+        }
+    },
+    onClickOpenPanel: function (allowedValue) {
+        var value = this.props.getLabel(allowedValue);
+        if (this.state.activeKey === value) {
+            this.setState({
+                activeKey: ""
+            });
+        } else {
+            this.setState({
+                activeKey: value
+            });
+        }
     },
     filter: function (allowedValue) {
         return this.props.filter(allowedValue, this.state.inputFilter);
@@ -71,7 +82,7 @@ var SelectTree = React.createClass({
             <span>
                 <components.Button
                     bsStyle="link"
-                    onClick={R.partial(this.onClickPanel, allowedValue)}
+                    onClick={R.partial(this.onClickActiveSite, allowedValue)}
                     style={{
                         height: "54px",
                         width: "20%",
@@ -81,11 +92,12 @@ var SelectTree = React.createClass({
                 >
                     <components.Icon
                         icon={allowedValue === this.state.value ? "minus" : "plus"}
-                        style={{float: "left"}}
+                        style={{float: "left", width: "100%"}}
                     />
                 </components.Button>
                 <components.Button
                     bsStyle="link"
+                    onClick={R.partial(this.onClickOpenPanel, allowedValue)}
                     style={{
                         textDecoration: "none",
                         width: "80%",
@@ -109,9 +121,8 @@ var SelectTree = React.createClass({
                 collapsible
                 eventKey={this.props.getLabel(allowedValue)}
                 header={this.renderHeader(allowedValue)}
-                key={this.props.getLabel(allowedValue)}
                 style={{
-                    width: "200px",
+                    width: this.props.buttonCloseDefault ? "100%" : "200px",
                     borderTop: "0px",
                     marginTop: "0px",
                     borderRadius: "0px"
@@ -127,14 +138,22 @@ var SelectTree = React.createClass({
             .map(this.renderPanel)
             .toList();
         return (
-            <div className="site-selector" style={{position: "relative", overflow: "scroll", width: "200px"}}>
+            <div
+                className="site-selector"
+                style={{
+                    position: "relative",
+                    overflow: "scroll",
+                    maxHeight: "400px",
+                    width: "100%"
+                }}>
                 <Radium.Style
                     rules={{
                         ".form-group": {
                             position: "fixed",
                             height: "34px",
-                            width: "200px",
-                            margin: "0px"
+                            margin: "0px",
+                            zIndex: "10",
+                            width: this.props.buttonCloseDefault ? "30.3%" : "200px"
                         },
                         ".panel-group": {
                             paddingTop: "34px",
@@ -178,15 +197,18 @@ var SelectTree = React.createClass({
                     placeholder="Ricerca"
                     type="text"
                 />
-                <bootstrap.Accordion>
-                    {things}
-                    <Waypoint
-                      onEnter={() => this.setState({
-                          numberOfValues: this.state.numberOfValues + 20
-                      })}
-                      threshold={0.8}
-                    />
-                </bootstrap.Accordion>
+                    <bootstrap.PanelGroup
+                        accordion
+                        activeKey={this.state.activeKey}
+                        style={{maxHeight: "300px"}}
+                    >
+                        {things}
+                        <Waypoint
+                          onEnter={() => this.setState({
+                              numberOfValues: this.state.numberOfValues + 20
+                          })}
+                        />
+                    </bootstrap.PanelGroup>
             </div>
         );
     }

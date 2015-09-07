@@ -206,28 +206,11 @@ var Chart = React.createClass({
                             tooltipMessage="Punti di misurazione"
                             tooltipPosition="top"
                         >
-                            <components.Select
-                                allowedValues={siti}
-                                filter={CollectionUtils.siti.filter}
-                                getLabel={CollectionUtils.siti.getLabel}
-                                open=" "
-                                placeholder={"Punto di misurazione"}
-                                style={multiselectStyles.multiselectPopover}
-                                {...sitoInputProps}
-                            />
-                        </components.Popover>
-                        <components.Popover
-                            title={<img src={iconSiti} style={{width: "75%"}} />}
-                            tooltipId="tooltipMisurazione"
-                            tooltipMessage="Punti di misurazione"
-                            tooltipPosition="top"
-                        >
                             <components.SelectTree
                                 allowedValues={siti}
                                 filter={CollectionUtils.siti.filter}
                                 getLabel={CollectionUtils.siti.getLabel}
                                 placeholder={"Punto di misurazione"}
-                                style={multiselectStyles.multiselectPopover}
                                 {...sitoInputProps}
                             />
                         </components.Popover>

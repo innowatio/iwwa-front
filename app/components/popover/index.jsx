@@ -6,6 +6,7 @@ var components = require("components/");
 
 var Popover = React.createClass({
     propTypes: {
+        arrow: React.PropTypes.string,
         children: React.PropTypes.element,
         title: React.PropTypes.element,
         tooltipId: React.PropTypes.string,
@@ -51,12 +52,20 @@ var Popover = React.createClass({
     },
     renderOverlay: function () {
         return (
-            <bootstrap.Popover animation={false} className="multiselect-popover">
+            <bootstrap.Popover
+                animation={false}
+                className="multiselect-popover"
+                >
                 <Radium.Style
                     rules={{
                         "": {
                             padding: "0px",
-                            height: this.props.tooltipMessage === "Punti di misurazione" ? "45%" : ""
+                            height: this.props.tooltipMessage === "Punti di misurazione" ? "45%" : null,
+                            maxWidth: "500px",
+                            left: this.props.arrow === "none" ? "37.6% !important" : null,
+                            width: this.props.arrow === "none" ? "30.4%" : null,
+                            botderTopLeftRadius: this.props.arrow === "none" ? "0px !important" : null,
+                            botderTopRightRadius: this.props.arrow === "none" ? "0px !important" : null
                         },
                         ".popover-content": {
                             padding: "0px",
@@ -69,6 +78,9 @@ var Popover = React.createClass({
                         },
                         ".rw-popup": {
                             padding: "0px"
+                        },
+                        ".arrow": {
+                            display: this.props.arrow === "none" ? "none !important" : null
                         }
                     }}
                     scopeSelector=".multiselect-popover"
