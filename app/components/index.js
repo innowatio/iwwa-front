@@ -13,6 +13,7 @@ exports.Icon                    = require("./icon/");
 exports.LoginModal              = require("./login-modal/");
 exports.Popover                 = require("./popover/");
 exports.Select                  = require("./select/");
+exports.SelectTree              = require("./select-tree");
 exports.SideNav                 = require("./sidebar/");
 exports.SitiCompare             = require("./siti-compare/");
 exports.Spacer                  = require("./spacer/");
