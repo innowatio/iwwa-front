@@ -6,6 +6,7 @@ var components = require("components/");
 
 var Popover = React.createClass({
     propTypes: {
+        arrow: React.PropTypes.string,
         children: React.PropTypes.element,
         title: React.PropTypes.element,
         tooltipId: React.PropTypes.string,
@@ -27,11 +28,13 @@ var Popover = React.createClass({
         );
     },
     getButton: function () {
-        return (
+        return this.props.arrow === "none" ?
+            <components.Button style={{width: "430px"}} >
+                {this.props.title}
+            </components.Button> :
             <components.Button bsStyle="link">
                 {this.props.title}
-            </components.Button>
-        );
+            </components.Button>;
     },
     getTooltipAndButton: function () {
         var button = this.getButton();
@@ -51,22 +54,33 @@ var Popover = React.createClass({
     },
     renderOverlay: function () {
         return (
-            <bootstrap.Popover animation={false} className="multiselect-popover">
+            <bootstrap.Popover
+                animation={false}
+                className="multiselect-popover"
+                >
                 <Radium.Style
                     rules={{
                         "": {
-                            padding: "0px"
+                            padding: "0px",
+                            height: this.props.tooltipMessage === "Punti di misurazione" ? "45%" : "",
+                            maxWidth: "500px",
+                            width: this.props.arrow === "none" ? "430px" : "",
+                            marginTop: this.props.arrow === "none" ? "0px !important" : ""
                         },
                         ".popover-content": {
                             padding: "0px",
                             cursor: "pointer",
-                            display: "flex"
+                            display: "flex",
+                            height: "100%"
                         },
                         ".rw-widget": {
                             border: "0px"
                         },
                         ".rw-popup": {
                             padding: "0px"
+                        },
+                        ".arrow": {
+                            display: this.props.arrow === "none" ? "none" : ""
                         }
                     }}
                     scopeSelector=".multiselect-popover"

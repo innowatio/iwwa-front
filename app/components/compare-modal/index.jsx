@@ -133,6 +133,7 @@ var Compare = React.createClass({
                 </bootstrap.ButtonGroup>
                     <bootstrap.Modal
                         container={this}
+                        enforceFocus={false}
                         onHide={this.close}
                         show={this.state.showModal}
                     >
