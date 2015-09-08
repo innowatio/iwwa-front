@@ -28,11 +28,13 @@ var Popover = React.createClass({
         );
     },
     getButton: function () {
-        return (
+        return this.props.arrow === "none" ?
+            <components.Button style={{width: "430px"}} >
+                {this.props.title}
+            </components.Button> :
             <components.Button bsStyle="link">
                 {this.props.title}
-            </components.Button>
-        );
+            </components.Button>;
     },
     getTooltipAndButton: function () {
         var button = this.getButton();
@@ -60,12 +62,10 @@ var Popover = React.createClass({
                     rules={{
                         "": {
                             padding: "0px",
-                            height: this.props.tooltipMessage === "Punti di misurazione" ? "45%" : null,
+                            height: this.props.tooltipMessage === "Punti di misurazione" ? "45%" : "",
                             maxWidth: "500px",
-                            left: this.props.arrow === "none" ? "37.6% !important" : null,
-                            width: this.props.arrow === "none" ? "30.4%" : null,
-                            borderTopLeftRadius: this.props.arrow === "none" ? "0px !important" : null,
-                            borderTopRightRadius: this.props.arrow === "none" ? "0px !important" : null
+                            width: this.props.arrow === "none" ? "430px" : "",
+                            marginTop: this.props.arrow === "none" ? "0px !important" : ""
                         },
                         ".popover-content": {
                             padding: "0px",
@@ -80,7 +80,7 @@ var Popover = React.createClass({
                             padding: "0px"
                         },
                         ".arrow": {
-                            display: this.props.arrow === "none" ? "none !important" : null
+                            display: this.props.arrow === "none" ? "none" : ""
                         }
                     }}
                     scopeSelector=".multiselect-popover"

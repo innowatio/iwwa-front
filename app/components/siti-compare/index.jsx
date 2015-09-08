@@ -5,12 +5,6 @@ var IPropTypes = require("react-immutable-proptypes");
 var colors     = require("lib/colors");
 var components = require("components/");
 
-var styles = {
-    buttonTitle: {
-        width: "70%"
-    }
-};
-
 var SitiCompare = React.createClass({
     propTypes: {
         allowedValues: React.PropTypes.oneOfType([
@@ -97,11 +91,7 @@ var SitiCompare = React.createClass({
             <div className="select-popover">
                 <components.Popover
                     arrow="none"
-                    title={
-                        <components.Button style={styles.buttonTitle}>
-                            {this.titleFirstSelect()}
-                        </components.Button>
-                    }
+                    title={this.titleFirstSelect()}
                 >
                     <components.SelectTree
                         allowedValues={this.props.allowedValues}
@@ -109,18 +99,13 @@ var SitiCompare = React.createClass({
                         filter={this.props.filter}
                         getLabel={this.props.getSitoLabel}
                         onChange={this.multi1}
-                        style={styles.inputFilter}
                         value={this.state.valueFirst}
                     />
                 </components.Popover>
                 <components.Spacer direction="v" size={30} />
                 <components.Popover
                     arrow="none"
-                    title={
-                        <components.Button style={styles.buttonTitle}>
-                            {this.titleSecondSelect()}
-                        </components.Button>
-                    }
+                    title={this.titleSecondSelect()}
                 >
                     <components.SelectTree
                         allowedValues={this.props.allowedValues}

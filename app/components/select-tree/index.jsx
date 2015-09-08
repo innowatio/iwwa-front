@@ -1,4 +1,4 @@
-var Immutable  = require("immutable");
+// var Immutable  = require("immutable");
 var Radium     = require("radium");
 var bootstrap  = require("react-bootstrap");
 var R          = require("ramda");
@@ -21,7 +21,7 @@ var SelectTree = React.createClass({
         getLabel: React.PropTypes.func,
         label: React.PropTypes.string,
         onChange: React.PropTypes.func,
-        value: React.PropTypes.array,
+        value: React.PropTypes.any,
         valueLink: ReactLink.PropTypes.link()
     },
     mixins: [React.addons.PureRenderMixin],
@@ -35,9 +35,10 @@ var SelectTree = React.createClass({
     getInitialState: function () {
         return {
             numberOfValues: 20,
-            value: this.getValue() || Immutable.Iterable,
+            value: this.getValue(),
             inputFilter: "",
-            activeKey: ""
+            activeKey: "",
+            subMenu: false
         };
     },
     getValue: function () {
@@ -84,23 +85,8 @@ var SelectTree = React.createClass({
                     bsStyle="link"
                     onClick={R.partial(this.onClickActiveSite, allowedValue)}
                     style={{
-                        height: "54px",
-                        width: "20%",
-                        backgroundColor: allowedValue === this.state.value ? colors.primary : colors.white,
-                        color: allowedValue === this.state.value ? colors.white : colors.black
-                    }}
-                >
-                    <components.Icon
-                        icon={allowedValue === this.state.value ? "minus" : "plus"}
-                        style={{float: "left", width: "100%"}}
-                    />
-                </components.Button>
-                <components.Button
-                    bsStyle="link"
-                    onClick={R.partial(this.onClickOpenPanel, allowedValue)}
-                    style={{
                         textDecoration: "none",
-                        width: "80%",
+                        width: this.state.subMenu ? "80%" : "100%",
                         textOverflow: "ellipsis",
                         overflow: "hidden",
                         whiteSpace: "nowrap",
@@ -112,8 +98,27 @@ var SelectTree = React.createClass({
                     <br />
                     {allowedValue.get("pod")}
                 </components.Button>
+                {this.renderButtonSubMenu(allowedValue)}
             </span>
         );
+    },
+    renderButtonSubMenu: function (allowedValue) {
+        return this.state.subMenu ?
+            <components.Button
+                bsStyle="link"
+                onClick={R.partial(this.onClickOpenPanel, allowedValue)}
+                style={{
+                    height: "54px",
+                    width: this.state.subMenu ? "20%" : "0%",
+                    backgroundColor: allowedValue === this.state.value ? colors.primary : colors.white,
+                    color: allowedValue === this.state.value ? colors.white : colors.black
+                }}
+            >
+                <components.Icon
+                    icon={"chevron-down"}
+                    style={{float: "left", width: "100%"}}
+                />
+        </components.Button> : null;
     },
     renderPanel: function (allowedValue) {
         return (
@@ -144,7 +149,7 @@ var SelectTree = React.createClass({
                     position: "relative",
                     overflow: "scroll",
                     maxHeight: "400px",
-                    width: "100%"
+                    width: this.props.buttonCloseDefault ? "430px" : "200px"
                 }}>
                 <Radium.Style
                     rules={{
@@ -153,7 +158,7 @@ var SelectTree = React.createClass({
                             height: "34px",
                             margin: "0px",
                             zIndex: "10",
-                            width: this.props.buttonCloseDefault ? "30.3%" : "200px"
+                            width: this.props.buttonCloseDefault ? "428px" : "198px"
                         },
                         ".panel-group": {
                             paddingTop: "34px",
@@ -197,18 +202,18 @@ var SelectTree = React.createClass({
                     placeholder="Ricerca"
                     type="text"
                 />
-                    <bootstrap.PanelGroup
-                        accordion
-                        activeKey={this.state.activeKey}
-                        style={{maxHeight: "300px"}}
-                    >
-                        {things}
-                        <Waypoint
-                          onEnter={() => this.setState({
-                              numberOfValues: this.state.numberOfValues + 20
-                          })}
-                        />
-                    </bootstrap.PanelGroup>
+                <bootstrap.PanelGroup
+                    accordion
+                    activeKey={this.state.activeKey}
+                    style={{maxHeight: "300px"}}
+                >
+                    {things}
+                    <Waypoint
+                      onEnter={() => this.setState({
+                          numberOfValues: this.state.numberOfValues + 20
+                      })}
+                    />
+                </bootstrap.PanelGroup>
             </div>
         );
     }
