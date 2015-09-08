@@ -116,7 +116,9 @@ var Select = React.createClass({
                         },
                         ".rw-filter-input": {
                             borderTop: "0px",
-                            borderRadius: "3px"
+                            borderRadius: "0px",
+                            borderColor: colors.white,
+                            borderBottomColor: colors.greyBorder
                         },
                         ".rw-popup-container": {
                             marginTop: "0px"
