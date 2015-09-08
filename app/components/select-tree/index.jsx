@@ -202,6 +202,7 @@ var SelectTree = React.createClass({
                 />
                 <bootstrap.Input
                     addonAfter={<components.Icon icon="search"/>}
+                    autoFocus
                     className="input-search"
                     onChange={(input) => this.setState({inputFilter: input.target.value})}
                     placeholder="Ricerca"
