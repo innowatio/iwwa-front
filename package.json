@@ -65,6 +65,7 @@
     "compression": "^1.5.0",
     "dygraphs": "^1.1.1",
     "express": "^4.13.0",
+    "fastclick": "^1.0.6",
     "font-awesome": "^4.3.0",
     "history": "^1.8.4",
     "immutable": "^3.7.4",
