@@ -21,16 +21,6 @@ var multiselectStyles = {
         width: "450px",
         height: "35px",
         display: "inline-block"
-    },
-    tag: {
-        display: "inline-block",
-        width: "150px",
-        float: "left",
-        paddingLeft: "10px",
-        paddingRight: "10px",
-        fontSize: "11px",
-        overflow: "hidden",
-        textOverflow: "ellipsis"
     }
 };
 
@@ -216,15 +206,13 @@ var Chart = React.createClass({
                             title={<img src={iconSiti} style={{width: "75%"}} />}
                             tooltipId="tooltipMisurazione"
                             tooltipMessage="Punti di misurazione"
-                            tooltipPosition="left"
+                            tooltipPosition="top"
                         >
-                            <components.Select
+                            <components.SelectTree
                                 allowedValues={siti}
                                 filter={CollectionUtils.siti.filter}
                                 getLabel={CollectionUtils.siti.getLabel}
-                                open=" "
                                 placeholder={"Punto di misurazione"}
-                                style={multiselectStyles.multiselectPopover}
                                 {...sitoInputProps}
                             />
                         </components.Popover>
