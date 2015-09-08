@@ -143,27 +143,88 @@ describe("The `getCoordinates` method of the DateCompareGraph component", functi
             });
     });
 
-    // it("should sort misure by data", function () {
-    //     var instance = getInstance(3, 3, "months");
-    //     var dc = instance.props.dateCompare.dateOne;
-    //     instance.getDateRanges = function () {
-    //         return {
-    //             rangeOne: {
-    //                 start: moment(dc).subtract(5, "weeks").valueOf(),
-    //                 end: dc
-    //             },
-    //             rangeTwo: {
-    //                 start: moment(dc).subtract(10, "weeks").valueOf(),
-    //                 end: moment(dc).subtract(5, "weeks").valueOf()
-    //             }
-    //         };
-    //     };
-    //     getCoordinates.call(instance)
-    //         .map(R.prop("0"))
-    //         .reduce(function (pre, cur) {
-    //             expect(pre <= cur).to.equal(true);
-    //             return cur;
-    //         });
-    // });
+    it("should filter misure by interval of data", function () {
+        var data = "Wed Aug 1 2015 12:13:59 GMT+0200 (CEST)";
+        var pod = "pod";
+        var tipologia = 1;
+        var instance = {
+            props: {
+                misure: Immutable.fromJS([
+                    // in range 1
+                    {
+                        data: moment(data).subtract(1, "hours").valueOf(),
+                        pod: pod,
+                        prop1: pod,
+                        prop2: tipologia,
+                        tipologia: tipologia
+                    },
+                    // in range 2
+                    {
+                        data: moment(data).subtract(47, "hours").valueOf(),
+                        pod: pod,
+                        prop1: pod,
+                        prop2: tipologia,
+                        tipologia: tipologia
+                    },
+                    // non in range
+                    {
+                        data: moment(data).subtract(10, "days").valueOf(),
+                        pod: pod,
+                        prop1: pod,
+                        prop2: tipologia,
+                        tipologia: tipologia
+                    }
+                ]),
+                siti: [Immutable.Map({
+                    pod: pod
+                })],
+                tipologia: {
+                    key: tipologia
+                },
+                valori: [
+                    {key: "prop1"},
+                    {key: "prop2"}
+                ]
+            }
+        };
+        instance.getDateRanges = function () {
+            return {
+                rangeOne: {
+                    start: moment(data).subtract(1, "days").valueOf(),
+                    end: moment(data)
+                },
+                rangeTwo: {
+                    start: moment(data).subtract(2, "days").valueOf(),
+                    end: moment(data).subtract(1, "days").valueOf()
+                }
+            };
+        };
+        var coordinates = getCoordinates.call(instance);
+        expect(2).to.be.equal(coordinates.length);
+
+    });
+
+    it("should sort misure by data", function () {
+        var instance = getInstance(3, 3, "months");
+        var dc = instance.props.dateCompare.dateOne;
+        instance.getDateRanges = function () {
+            return {
+                rangeOne: {
+                    start: moment(dc).subtract(5, "weeks").valueOf(),
+                    end: dc
+                },
+                rangeTwo: {
+                    start: moment(dc).subtract(10, "weeks").valueOf(),
+                    end: moment(dc).subtract(5, "weeks").valueOf()
+                }
+            };
+        };
+        getCoordinates.call(instance)
+            .map(R.prop("0"))
+            .reduce(function (pre, cur) {
+                expect(pre <= cur).to.equal(true);
+                return cur;
+            });
+    });
 
 });
