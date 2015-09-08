@@ -21,7 +21,10 @@ var SelectTree = React.createClass({
         getLabel: React.PropTypes.func,
         label: React.PropTypes.string,
         onChange: React.PropTypes.func,
-        value: React.PropTypes.any,
+        value: React.PropTypes.oneOfType([
+            React.PropTypes.array,
+            React.PropTypes.object
+        ]),
         valueLink: ReactLink.PropTypes.link()
     },
     mixins: [React.addons.PureRenderMixin],
@@ -46,7 +49,7 @@ var SelectTree = React.createClass({
             this.props.valueLink ?
             this.props.valueLink.value :
             (
-                R.isArrayLike(this.props.value) ?
+                R.is(Array, this.props.value) ?
                 this.props.value[0] :
                 this.props.value
             )
@@ -126,6 +129,7 @@ var SelectTree = React.createClass({
                 collapsible
                 eventKey={this.props.getLabel(allowedValue)}
                 header={this.renderHeader(allowedValue)}
+                key={this.props.getLabel(allowedValue)}
                 style={{
                     width: this.props.buttonCloseDefault ? "100%" : "200px",
                     borderTop: "0px",
@@ -137,11 +141,12 @@ var SelectTree = React.createClass({
         );
     },
     render: function () {
-        var things = this.props.allowedValues
+        var panelOfSite = this.props.allowedValues
             .filter(this.filter)
             .slice(0, this.state.numberOfValues)
             .map(this.renderPanel)
-            .toList();
+            .toList()
+            .toJS();
         return (
             <div
                 className="site-selector"
@@ -207,7 +212,7 @@ var SelectTree = React.createClass({
                     activeKey={this.state.activeKey}
                     style={{maxHeight: "300px"}}
                 >
-                    {things}
+                    {panelOfSite}
                     <Waypoint
                       onEnter={() => this.setState({
                           numberOfValues: this.state.numberOfValues + 20
