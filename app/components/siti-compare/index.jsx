@@ -61,9 +61,7 @@ var SitiCompare = React.createClass({
         <span>
             Seleziona punto 1
             <components.Icon icon="chevron-down" style={{float: "right"}}/>
-        </span>
-
-        :
+        </span> :
         <span>
             {this.props.getSitoLabel(this.state.valueFirst)}
             <components.Spacer direction="h" size={30} />
@@ -76,9 +74,7 @@ var SitiCompare = React.createClass({
         <span>
             Seleziona punto 2
             <components.Icon icon="chevron-down" style={{float: "right"}}/>
-        </span>
-
-        :
+        </span> :
         <span>
             {this.props.getSitoLabel(this.state.valueSecond)}
             <components.Spacer direction="h" size={30} />
@@ -91,6 +87,7 @@ var SitiCompare = React.createClass({
             <div className="select-popover">
                 <components.Popover
                     arrow="none"
+                    style="inherit"
                     title={this.titleFirstSelect()}
                 >
                     <components.SelectTree
@@ -105,6 +102,7 @@ var SitiCompare = React.createClass({
                 <components.Spacer direction="v" size={30} />
                 <components.Popover
                     arrow="none"
+                    style="inherit"
                     title={this.titleSecondSelect()}
                 >
                     <components.SelectTree

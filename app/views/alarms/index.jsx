@@ -71,7 +71,7 @@ var Alarms = React.createClass({
     },
     render: function () {
         return (
-            <div className="alarm-tab" style={styles.colVerticalPadding}>
+            <div className="alarm-tab" style={{paddingBottom: "15px"}}>
                 <h2
                     className="text-center"
                     style={styles.titlePage}

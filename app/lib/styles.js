@@ -46,3 +46,30 @@ exports.titlePage = {
     fontSize: "20pt",
     marginBottom: "0px"
 };
+
+exports.inputLine = {
+    borderTop: "0px",
+    borderLeft: "0px",
+    borderRight: "0px",
+    borderRadius: "0px",
+    WebkitBoxShadow: "none",
+    boxShadow: "none"
+};
+
+exports.inputRange = {
+    width: "80%",
+    marginLeft: "10%",
+    backgroundColor: colors.greyBackground,
+    padding: "0px",
+    border: "0px",
+    WebkitBoxShadow: "none",
+    boxShadow: "none",
+    outline: "0px"
+};
+
+exports.divAlarmOpenModal = {
+    height: "34px",
+    width: "100%",
+    borderBottom: "1px solid" + colors.greyBorder,
+    cursor: "pointer"
+};

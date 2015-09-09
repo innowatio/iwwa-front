@@ -10,6 +10,7 @@ var Router     = require("react-router");
 var components      = require("components");
 var CollectionUtils = require("lib/collection-utils");
 var colors          = require("lib/colors");
+var Icon            = require("lib/icons");
 var stringIt        = require("lib/string-it");
 var styles          = require("lib/styles");
 
@@ -36,7 +37,7 @@ var AlarmForm = React.createClass({
     },
     getStateFromProps: function (props) {
         return {
-            active: props.alarm.get("active"),
+            active: props.alarm.get("active") || true,
             name: props.alarm.get("name"),
             type: props.alarm.get("type"),
             sito: this.getSitoFromProps(props),
@@ -83,6 +84,15 @@ var AlarmForm = React.createClass({
             .then(() => this.setState({saving: false}))
             .catch(() => this.setState({saving: false}));
     },
+    addTooltip: function () {
+        return (
+            <bootstrap.Tooltip
+                id="createAlarmInfo"
+            >
+                {stringIt.createAlarmInfoTooltip}
+            </bootstrap.Tooltip>
+        );
+    },
     renderResetButton: function () {
         return (
             <Router.Link to={`/alarms/`}>
@@ -107,89 +117,125 @@ var AlarmForm = React.createClass({
             </components.Button>
         );
     },
-    renderAlertInfo: function () {
-        var sito = CollectionUtils.siti.getLabel(this.state.sito);
-        return this.state.saving ? (
-            <bootstrap.Alert bsStyle="success" style={{width: "80%"}}>
-                {stringIt.alertSuccessAlarm}
-                <strong>{sito}</strong>
-            </bootstrap.Alert>
-        ) : null;
+    renderTitleSelectSite: function () {
+        return (
+            <span>
+                Seleziona punto di misurazione
+                <components.Icon icon="chevron-down" style={{float: "right"}}/>
+            </span>
+        );
     },
     render: function () {
         return (
-            <div>
-                <div style={styles.colVerticalPadding}>
-                    <span>
+            <div className="alarm-form" style={{height: "100%"}}>
+                <div style={R.merge(styles.colVerticalPadding, {height: "100%", overflow: "auto"})}>
+                    <Radium.Style
+                        rules={{
+                            ".input-group-addon": {
+                                backgroundColor: colors.white,
+                                borderTop: "0",
+                                borderRight: "0",
+                                borderBottomRightRadius: "0",
+                                padding: "0"
+                            }
+                        }}
+                        scopeSelector=".alarm-form"
+                    />
+                    <bootstrap.Col lg={6} md={6}>
                         <h3 style={{color: colors.primary}}>{stringIt.titleTabImpostazioniAlarm}</h3>
-                        <h5>{"Seleziona un punto da monitorare e le soglie di allarme"}</h5>
-                    </span>
-                    <div style={{float: "left", width: "50%"}}>
-                        <components.Select
-                            allowedValues={this.props.siti}
-                            filter={CollectionUtils.siti.filter}
-                            getLabel={CollectionUtils.siti.getLabel}
-                            label="Sito"
-                            open=""
-                            style={{width: "80%", zIndex: "10"}}
-                            valueLink={this.linkState("sito")}
-                        />
-                    </div>
-                    <div style={{float: "right", width: "40%"}}>
-                        <bootstrap.Input
-                            label="Nome"
-                            style={{width: "80%"}}
-                            type="text"
-                            valueLink={this.linkState("name")}
-                        />
-                        {this.renderAlertInfo()}
-                        {/*
-                        <h4 style={{color: colors.primary}}>{stringIt.typeOfAlarm}</h4>
-                        <span className="alarm-type">
-                            <bootstrap.Input
-                                type="radio"
-                                valueLink={this.linkState("type")}
+                        <div style={{height: "calc(100vh - 420px)"}}>
+                            <h5>
+                                {"Seleziona un punto da monitorare e le soglie di allarme "}
+                                <bootstrap.OverlayTrigger
+                                    overlay={this.addTooltip()}
+                                    placement="right"
+                                    rootClose={true}
+                                    trigger="click"
+                                >
+                                    <components.Button  bsStyle="link">
+                                        <components.Icon icon="info" />
+                                    </components.Button>
+                                </bootstrap.OverlayTrigger>
+                            </h5>
+
+                            <components.Popover
+                                arrow="none"
+                                style="inherit"
+                                title={this.renderTitleSelectSite()}
                             >
-                                <Radium.Style
-                                    rules={{
-                                        ".radio": {
-                                            paddingLeft: "20px"
-                                        }
-                                    }}
-                                    scopeSelector=".alarm-type"
+                                <components.SelectTree
+                                    allowedValues={this.props.siti}
+                                    buttonCloseDefault={true}
+                                    filter={CollectionUtils.siti.filter}
+                                    getLabel={CollectionUtils.siti.getLabel}
+                                    valueLink={this.linkState("sito")}
                                 />
-                                <option value="on-off">{stringIt.selectAlarmType}</option>
-                            </bootstrap.Input>
-                        </span>
-                        */}
-                        <bootstrap.Input
-                            label={`Soglia (${this.state.threshold} kwh)`}
-                            max={500}
-                            min={0}
-                            style={{width: "80%"}}
-                            type="range"
-                            valueLink={this.linkState("threshold")}
-                        />
-                        <bootstrap.Input
-                            checkedLink={this.linkState("active")}
-                            label="Attivo"
-                            type="checkbox"
-                        />
-                    </div>
-                </div>
-                <bootstrap.ButtonToolbar
+                            </components.Popover>
+
+                            <h4 style={{color: colors.primary}}>{stringIt.titleNameAlarm}</h4>
+                            <bootstrap.Input
+                                style={styles.inputLine}
+                                type="text"
+                                valueLink={this.linkState("name")}/>
+
+                            <h4 style={{color: colors.primary}}>{stringIt.titleNotifyAlarm}</h4>
+                            <div style={styles.divAlarmOpenModal}>
+                                <components.Icon icon="arrow-right" style={{float: "right", paddingTop: "10px"}} />
+                            </div>
+
+                        </div>
+                    </bootstrap.Col>
+                    <bootstrap.Col lg={6} md={6}>
+                        <h4 style={{color: colors.primary}}>{stringIt.titleAlarmThreshold}</h4>
+                        <div style={{backgroundColor: colors.greyBackground, textAlign: "center"}}>
+                            <components.Spacer direction="v" size={3} />
+                            <h4
+                                style={{
+                                    color: colors.primary,
+                                    marginTop: "8px"
+                                }}> {`Soglia (${this.state.threshold} kwh)`}
+                            </h4>
+                            <components.Spacer direction="v" size={10} />
+                            <bootstrap.Input
+                                max={600}
+                                min={0}
+                                step={5}
+                                style={styles.inputRange}
+                                type="range"
+                                valueLink={this.linkState("threshold")}
+                            />
+                            <components.Spacer direction="v" size={15} />
+                        </div>
+                        <div style={{display: this.props.type === "update" ? "" : "none"}}>
+                            <components.Spacer direction="v" size={15} />
+                            <bootstrap.Input
+                                checkedLink={this.linkState("active")}
+                                label={
+                                    <h4 style={{color: colors.primary, marginTop: "0px"}}>
+                                        {stringIt.titleAlarmActive}
+                                    </h4>
+                                }
+                                type="checkbox"
+                            />
+                        </div>
+                        <div style={{marginTop: this.props.type === "update" ? "" : "68px", marginBottom: "0px"}}>
+                            <h4 style={{color: colors.primary}}>{stringIt.titleAlarmRepeat}</h4>
+                                <div style={styles.divAlarmOpenModal}>
+                                    <components.Icon icon="arrow-right" style={{float: "right", paddingTop: "10px"}} />
+                                </div>
+                        </div>
+                </bootstrap.Col>
+                <bootstrap.Col lg={12} md={12}
                     style={{
-                        position: "absolute",
-                        bottom: "12%",
-                        paddingLeft: "38%",
-                        zIndex: "0",
-                        display: "flex"
+                    paddingTop: "20px",
+                    textAlign: "center"
                     }}
                 >
                     {this.renderSubmitButton()}
                     {this.renderResetButton()}
-                </bootstrap.ButtonToolbar>
+                </bootstrap.Col>
             </div>
+        </div>
         );
     }
 });
