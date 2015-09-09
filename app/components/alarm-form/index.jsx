@@ -141,9 +141,9 @@ var AlarmForm = React.createClass({
                         }}
                         scopeSelector=".alarm-form"
                     />
-                    <bootstrap.Col lg={6} md={6}>
+                <div style={{height: "calc(100vh - 420px)"}}>
+                    <bootstrap.Col lg={6} md={6} xs={12}>
                         <h3 style={{color: colors.primary}}>{stringIt.titleTabImpostazioniAlarm}</h3>
-                        <div style={{height: "calc(100vh - 420px)"}}>
                             <h5>
                                 {"Seleziona un punto da monitorare e le soglie di allarme "}
                                 <bootstrap.OverlayTrigger
@@ -171,21 +171,9 @@ var AlarmForm = React.createClass({
                                     valueLink={this.linkState("sito")}
                                 />
                             </components.Popover>
+                        </bootstrap.Col>
 
-                            <h4 style={{color: colors.primary}}>{stringIt.titleNameAlarm}</h4>
-                            <bootstrap.Input
-                                style={styles.inputLine}
-                                type="text"
-                                valueLink={this.linkState("name")}/>
-
-                            <h4 style={{color: colors.primary}}>{stringIt.titleNotifyAlarm}</h4>
-                            <div style={styles.divAlarmOpenModal}>
-                                <components.Icon icon="arrow-right" style={{float: "right", paddingTop: "10px"}} />
-                            </div>
-
-                        </div>
-                    </bootstrap.Col>
-                    <bootstrap.Col lg={6} md={6}>
+                    <bootstrap.Col lg={6} md={6} xs={12}>
                         <h4 style={{color: colors.primary}}>{stringIt.titleAlarmThreshold}</h4>
                         <div style={{backgroundColor: colors.greyBackground, textAlign: "center"}}>
                             <components.Spacer direction="v" size={3} />
@@ -206,34 +194,52 @@ var AlarmForm = React.createClass({
                             />
                             <components.Spacer direction="v" size={15} />
                         </div>
-                        <div style={{display: this.props.type === "update" ? "" : "none"}}>
+                    </bootstrap.Col>
+                    <bootstrap.Col lg={6} md={6} xs={12}>
+
+                        <h4 style={{color: colors.primary}}>{stringIt.titleNameAlarm}</h4>
+                        <bootstrap.Input
+                            style={styles.inputLine}
+                            type="text"
+                            valueLink={this.linkState("name")}/>
+
+                        <h4 style={{color: colors.primary}}>{stringIt.titleNotifyAlarm}</h4>
+                        <div style={styles.divAlarmOpenModal}>
+                            <components.Icon icon="arrow-right" style={{float: "right", paddingTop: "10px"}} />
+                        </div>
+                    </bootstrap.Col>
+                        <bootstrap.Col lg={6} md={6} xs={12}>
+                            <div style={{display: this.props.type === "update" ? "" : "none"}}>
+                                <components.Spacer direction="v" size={15} />
+                                <bootstrap.Input
+                                    checkedLink={this.linkState("active")}
+                                    label={
+                                        <h4 style={{color: colors.primary, marginTop: "0px"}}>
+                                            {stringIt.titleAlarmActive}
+                                        </h4>
+                                    }
+                                    type="checkbox"
+                                />
+                            </div>
                             <components.Spacer direction="v" size={15} />
-                            <bootstrap.Input
-                                checkedLink={this.linkState("active")}
-                                label={
-                                    <h4 style={{color: colors.primary, marginTop: "0px"}}>
-                                        {stringIt.titleAlarmActive}
-                                    </h4>
-                                }
-                                type="checkbox"
-                            />
-                        </div>
-                        <div style={{marginTop: this.props.type === "update" ? "" : "68px", marginBottom: "0px"}}>
-                            <h4 style={{color: colors.primary}}>{stringIt.titleAlarmRepeat}</h4>
-                                <div style={styles.divAlarmOpenModal}>
-                                    <components.Icon icon="arrow-right" style={{float: "right", paddingTop: "10px"}} />
-                                </div>
-                        </div>
-                </bootstrap.Col>
-                <bootstrap.Col lg={12} md={12}
-                    style={{
-                    paddingTop: "20px",
-                    textAlign: "center"
-                    }}
-                >
-                    {this.renderSubmitButton()}
-                    {this.renderResetButton()}
-                </bootstrap.Col>
+                            <div style={{marginBottom: "0px"}}>
+                                <h4 style={{color: colors.primary}}>{stringIt.titleAlarmRepeat}</h4>
+                                    <div style={styles.divAlarmOpenModal}>
+                                        <components.Icon icon="arrow-right" style={{float: "right", paddingTop: "10px"}} />
+                                    </div>
+                            </div>
+                    </bootstrap.Col>
+                </div>
+                    <bootstrap.Col
+                        style={{
+                        paddingTop: "8vh",
+                        textAlign: "center"
+                        }}
+                        xs={12}
+                    >
+                        {this.renderSubmitButton()}
+                        {this.renderResetButton()}
+                    </bootstrap.Col>
             </div>
         </div>
         );

@@ -4,6 +4,7 @@ var React      = require("react");
 var bootstrap  = require("react-bootstrap");
 var IPropTypes = require("react-immutable-proptypes");
 var Router     = require("react-router");
+var color      = require("color");
 
 var components = require("components");
 var styles     = require("lib/styles");
@@ -81,42 +82,46 @@ var Alarms = React.createClass({
                 </h2>
                 <Radium.Style
                     rules={{
-                        ".nav-tabs.nav-justified > .active > a": {
+                        ".nav-tabs.nav > .active > a": {
                             color: colors.titleColor,
-                            backgroundColor: colors.white
+                            backgroundColor: colors.white,
+                            width: "200px",
+                            textAlign: "center"
                         },
-                        ".nav-tabs.nav-justified > li > a": {
+                        ".nav-tabs.nav > li > a": {
                             backgroundColor: colors.primary,
-                            color: colors.white
+                            color: colors.white,
+                            width: "200px",
+                            textAlign: "center"
+                        },
+                        ".tabbed-area > div": {
+                            height: "100%"
                         },
                         ".tab-content": {
-                            width: "96%",
-                            marginLeft: "2%",
-                            marginTop: "2%"
-                        },
-                        ".nav-tabs.nav-justified": {
-                            width: "100.15%"
+                            height: "90%",
+                            borderBottom: "solid 1px " + color(colors.darkBlack).alpha(0.1).rgbString(),
+                            borderRight: "solid 1px " + color(colors.darkBlack).alpha(0.1).rgbString(),
+                            borderLeft: "solid 1px " + color(colors.darkBlack).alpha(0.1).rgbString(),
+                            borderTop: "0px",
+                            boxShadow: "2px 2px 5px " + colors.greySubTitle
                         }
                     }}
                     scopeSelector=".alarm-tab"
                 />
-            <div style={styles.tabbedArea}>
+            <div className="tabbed-area" style={styles.tabbedArea}>
                 <bootstrap.TabbedArea
                     activeKey={this.state.key}
                     animation={false}
                     bsStyle={"tabs"}
-                    justified
                     onSelect={this.activeKey}
                 >
-                        <bootstrap.TabPane eventKey={1} tab="Impostazione">
-                            <bootstrap.Col>
-                                <components.AlarmForm
-                                    alarm={this.getAlarm()}
-                                    siti={this.getSiti()}
-                                    type={this.getType()}
-                                />
-                            </bootstrap.Col>
-                        </bootstrap.TabPane>
+                    <bootstrap.TabPane eventKey={1} tab="Impostazione">
+                        <components.AlarmForm
+                            alarm={this.getAlarm()}
+                            siti={this.getSiti()}
+                            type={this.getType()}
+                        />
+                    </bootstrap.TabPane>
                         <bootstrap.TabPane eventKey={2} tab="Allarmi">
                             <components.CollectionElementsTable
                                 collection={this.props.collections.get("alarms") || Immutable.Map()}
