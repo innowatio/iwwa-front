@@ -55,7 +55,8 @@ var Alarms = React.createClass({
                 "valueFormatter": function (value) {
                     return (
                         <Router.Link onClick={self.onClickAction} to={`/alarms/${value}`}>
-                            <components.Icon icon="external-link" />
+                            <components.Icon icon="arrow-right"
+                                style={{float: "right", paddingRight: "10px", paddingTop: "2px"}}/>
                         </Router.Link>
                     );
                 }
@@ -64,6 +65,9 @@ var Alarms = React.createClass({
     },
     onClickAction: function () {
         this.activeKey(1);
+    },
+    onClickFilter: function () {
+        console.log("Filtro");
     },
     activeKey: function (key) {
         this.setState({
@@ -123,6 +127,13 @@ var Alarms = React.createClass({
                         />
                     </bootstrap.TabPane>
                         <bootstrap.TabPane eventKey={2} tab="Allarmi">
+                            <div style={{marginRight: "30px", height: "40px", paddingTop: "20px"}}>
+                                <div onClick={this.onClickFilter} style={{float: "right", display: "flex", cursor: "pointer"}}>
+                                    <components.Icon icon="filter" style={{paddingTop: "13px"}}/>
+                                    <components.Spacer direction="h" size={10} />
+                                    <h4 style={{color: colors.primary}}>Filter</h4>
+                                </div>
+                            </div>
                             <components.CollectionElementsTable
                                 collection={this.props.collections.get("alarms") || Immutable.Map()}
                                 columns={this.getColumns()}

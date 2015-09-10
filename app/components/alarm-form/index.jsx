@@ -53,6 +53,12 @@ var AlarmForm = React.createClass({
     reset: function () {
         this.setState(this.getStateFromProps(this.props));
     },
+    onClickNotify: function () {
+        console.log("Notifiche");
+    },
+    onClickRepeatNotification: function () {
+        console.log("Ripeti notifiche");
+    },
     submit: function () {
         this.setState({
             saving: true
@@ -113,7 +119,7 @@ var AlarmForm = React.createClass({
                     width: "230px",
                     height: "45px"
                 }}>
-                {this.props.type === "update" ? "Salva" : "Crea"}
+                {this.props.type === "update" ? "SALVA" : "CREA"}
             </components.Button>
         );
     },
@@ -142,37 +148,37 @@ var AlarmForm = React.createClass({
                         scopeSelector=".alarm-form"
                     />
                 <div style={{height: "calc(100vh - 420px)"}}>
+                    {/* Add alarm and select site */}
                     <bootstrap.Col lg={6} md={6} xs={12}>
                         <h3 style={{color: colors.primary}}>{stringIt.titleTabImpostazioniAlarm}</h3>
-                            <h5>
-                                {"Seleziona un punto da monitorare e le soglie di allarme "}
-                                <bootstrap.OverlayTrigger
-                                    overlay={this.addTooltip()}
-                                    placement="right"
-                                    rootClose={true}
-                                    trigger="click"
-                                >
-                                    <components.Button  bsStyle="link">
-                                        <components.Icon icon="info" />
-                                    </components.Button>
-                                </bootstrap.OverlayTrigger>
-                            </h5>
-
-                            <components.Popover
-                                arrow="none"
-                                style="inherit"
-                                title={this.renderTitleSelectSite()}
+                        <h5>
+                            {"Seleziona un punto da monitorare e le soglie di allarme "}
+                            <bootstrap.OverlayTrigger
+                                overlay={this.addTooltip()}
+                                placement="right"
+                                rootClose={true}
+                                trigger="click"
                             >
-                                <components.SelectTree
-                                    allowedValues={this.props.siti}
-                                    buttonCloseDefault={true}
-                                    filter={CollectionUtils.siti.filter}
-                                    getLabel={CollectionUtils.siti.getLabel}
-                                    valueLink={this.linkState("sito")}
-                                />
-                            </components.Popover>
-                        </bootstrap.Col>
-
+                                <components.Button  bsStyle="link">
+                                    <components.Icon icon="info" />
+                                </components.Button>
+                            </bootstrap.OverlayTrigger>
+                        </h5>
+                        <components.Popover
+                            arrow="none"
+                            style="inherit"
+                            title={this.renderTitleSelectSite()}
+                        >
+                            <components.SelectTree
+                                allowedValues={this.props.siti}
+                                buttonCloseDefault={true}
+                                filter={CollectionUtils.siti.filter}
+                                getLabel={CollectionUtils.siti.getLabel}
+                                valueLink={this.linkState("sito")}
+                            />
+                        </components.Popover>
+                    </bootstrap.Col>
+                    {/* Alarm threshold */}
                     <bootstrap.Col lg={6} md={6} xs={12}>
                         <h4 style={{color: colors.primary}}>{stringIt.titleAlarmThreshold}</h4>
                         <div style={{backgroundColor: colors.greyBackground, textAlign: "center"}}>
@@ -192,54 +198,56 @@ var AlarmForm = React.createClass({
                                 type="range"
                                 valueLink={this.linkState("threshold")}
                             />
-                            <components.Spacer direction="v" size={15} />
                         </div>
                     </bootstrap.Col>
+                    {/* Alarm name */}
                     <bootstrap.Col lg={6} md={6} xs={12}>
-
-                        <h4 style={{color: colors.primary}}>{stringIt.titleNameAlarm}</h4>
+                        <h4 style={{color: colors.primary}}>{stringIt.titleAlarmName}</h4>
                         <bootstrap.Input
                             style={styles.inputLine}
                             type="text"
                             valueLink={this.linkState("name")}/>
-
-                        <h4 style={{color: colors.primary}}>{stringIt.titleNotifyAlarm}</h4>
-                        <div style={styles.divAlarmOpenModal}>
+                        <h4 style={{color: colors.primary}}>{stringIt.titleAlarmNotify}</h4>
+                        <div onClick={this.onClickNotify} style={styles.divAlarmOpenModal}>
                             <components.Icon icon="arrow-right" style={{float: "right", paddingTop: "10px"}} />
                         </div>
                     </bootstrap.Col>
-                        <bootstrap.Col lg={6} md={6} xs={12}>
-                            <div style={{display: this.props.type === "update" ? "" : "none"}}>
-                                <components.Spacer direction="v" size={15} />
-                                <bootstrap.Input
-                                    checkedLink={this.linkState("active")}
-                                    label={
-                                        <h4 style={{color: colors.primary, marginTop: "0px"}}>
-                                            {stringIt.titleAlarmActive}
-                                        </h4>
-                                    }
-                                    type="checkbox"
-                                />
+                    {/* Active alarm. This is displayed only when you update an existent alarm */}
+                    <bootstrap.Col lg={6} md={6} xs={12}>
+                        <div style={{display: this.props.type === "update" ? "" : "none"}}>
+                            <components.Spacer direction="v" size={30} />
+                            <bootstrap.Input
+                                checkedLink={this.linkState("active")}
+                                label={
+                                    <h4 style={{color: colors.primary, marginTop: "0px"}}>
+                                        {stringIt.titleAlarmActive}
+                                    </h4>
+                                }
+                                type="checkbox"
+                            />
+                        </div>
+                    </bootstrap.Col>
+                    {/* Repetition of the alarm */}
+                    <bootstrap.Col lg={6} md={6} xs={12}>
+                        <div style={{marginBottom: "0px"}}>
+                            <h4 style={{color: colors.primary}}>{stringIt.titleAlarmRepeat}</h4>
+                            <div onClick={this.onClickRepeatNotification} style={styles.divAlarmOpenModal}>
+                                <components.Icon icon="arrow-right" style={{float: "right", paddingTop: "10px"}} />
                             </div>
-                            <components.Spacer direction="v" size={15} />
-                            <div style={{marginBottom: "0px"}}>
-                                <h4 style={{color: colors.primary}}>{stringIt.titleAlarmRepeat}</h4>
-                                    <div style={styles.divAlarmOpenModal}>
-                                        <components.Icon icon="arrow-right" style={{float: "right", paddingTop: "10px"}} />
-                                    </div>
-                            </div>
+                        </div>
                     </bootstrap.Col>
                 </div>
-                    <bootstrap.Col
-                        style={{
-                        paddingTop: "8vh",
-                        textAlign: "center"
-                        }}
-                        xs={12}
-                    >
-                        {this.renderSubmitButton()}
-                        {this.renderResetButton()}
-                    </bootstrap.Col>
+                {/* Submit button */}
+                <bootstrap.Col
+                    style={{
+                    paddingTop: "8vh",
+                    textAlign: "center"
+                    }}
+                    xs={12}
+                >
+                    {this.renderSubmitButton()}
+                    {this.renderResetButton()}
+                </bootstrap.Col>
             </div>
         </div>
         );

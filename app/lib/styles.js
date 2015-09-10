@@ -1,5 +1,3 @@
-var color      = require("color");
-
 var colors = require("lib/colors");
 
 exports.base = {
@@ -29,12 +27,7 @@ exports.tabbedArea = {
     marginLeft: "2%",
     marginTop: "1%",
     height: "calc(100vh - 150px)",
-    // borderBottom: "solid 1px " + color(colors.darkBlack).alpha(0.1).rgbString(),
-    // borderRight: "solid 1px " + color(colors.darkBlack).alpha(0.1).rgbString(),
-    // borderLeft: "solid 1px " + color(colors.darkBlack).alpha(0.1).rgbString(),
-    // borderTop: "0px",
     borderRadius: "3px",
-    // boxShadow: "2px 2px 5px " + colors.greySubTitle,
     overflow: "hidden"
 };
 

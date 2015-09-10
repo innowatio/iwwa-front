@@ -36,6 +36,8 @@ var Row = React.createClass({
                 <td key={column}>{stringify(this.props.item.get(column))}</td>
             );
         }
+        console.log(this.props.item);
+        console.log(column);
         var value = this.props.item.get(column.key);
         return (
             <td key={column.key}>
@@ -64,27 +66,6 @@ var CollectionElementsTable = React.createClass({
         hover: React.PropTypes.bool,
         striped: React.PropTypes.bool
     },
-    renderHead: function () {
-        return (
-            <thead>
-                <tr>
-                    {this.props.columns.map(column => {
-                        return (
-                            R.is(String, column) ?
-                            <th key={column}>{column}</th> :
-                            <th key={column.key}>
-                                {
-                                    R.isNil(column.heading) ?
-                                    column.key :
-                                    column.heading
-                                }
-                            </th>
-                        );
-                    })}
-                </tr>
-            </thead>
-        );
-    },
     renderBody: function () {
         return (
             <tbody>
@@ -107,9 +88,8 @@ var CollectionElementsTable = React.createClass({
     },
     render: function () {
         return (
-            <div style={{overflow: "auto"}}>
+            <div style={{overflow: "auto", paddingTop: "10px", width: "100%"}}>
                 <bootstrap.Table hover={this.props.hover} striped={this.props.striped}>
-                    {this.renderHead()}
                     {this.renderBody()}
                 </bootstrap.Table>
             </div>
