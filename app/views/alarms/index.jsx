@@ -6,6 +6,7 @@ var IPropTypes = require("react-immutable-proptypes");
 var Router     = require("react-router");
 var color      = require("color");
 
+var CollectionUtils = require("lib/collection-utils");
 var components = require("components");
 var styles     = require("lib/styles");
 var colors     = require("lib/colors");
@@ -46,13 +47,34 @@ var Alarms = React.createClass({
     getColumns: function () {
         var self = this;
         return [
-            "podId",
             "active",
+            // {
+            //     key: "active",
+            //     valueFormatter: function (value) {
+            //         return (
+            //             <components.Icon
+            //                 icon={value ? "check" : "exclamation"}
+            //                 style={{/*color: colors.white*/}/>
+            //         );
+            //     }
+            // },
             "name",
             {
-                heading: "",
+                key: "podId",
+                valueFormatter: function (value) {
+                    var sito = self.getSiti().find(s => {
+                        return s.get("pod") === value;
+                    });
+                    return (
+                        <span>
+                            {CollectionUtils.siti.getLabel(sito)}
+                        </span>
+                    );
+                }
+            },
+            {
                 key: "_id",
-                "valueFormatter": function (value) {
+                valueFormatter: function (value) {
                     return (
                         <Router.Link onClick={self.onClickAction} to={`/alarms/${value}`}>
                             <components.Icon icon="arrow-right"
@@ -139,7 +161,7 @@ var Alarms = React.createClass({
                                 columns={this.getColumns()}
                                 getKey={getKeyFromAlarm}
                                 hover={true}
-                                striped={true}
+                                siti={this.getSiti()}
                             />
                         </bootstrap.TabPane>
                         <bootstrap.TabPane eventKey={3} tab="Storico allarmi">

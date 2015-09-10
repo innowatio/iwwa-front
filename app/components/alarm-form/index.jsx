@@ -131,6 +131,105 @@ var AlarmForm = React.createClass({
             </span>
         );
     },
+    renderAlarmSelectSite: function () {
+        return (
+            <div>
+                <h3 style={{color: colors.primary}}>{stringIt.titleTabImpostazioniAlarm}</h3>
+                <h5>
+                    {"Seleziona un punto da monitorare e le soglie di allarme "}
+                    <bootstrap.OverlayTrigger
+                        overlay={this.addTooltip()}
+                        placement="right"
+                        rootClose={true}
+                        trigger="click"
+                    >
+                        <components.Button  bsStyle="link">
+                            <components.Icon icon="info" />
+                        </components.Button>
+                    </bootstrap.OverlayTrigger>
+                </h5>
+                <components.Popover
+                    arrow="none"
+                    style="inherit"
+                    title={this.renderTitleSelectSite()}
+                >
+                    <components.SelectTree
+                        allowedValues={this.props.siti}
+                        buttonCloseDefault={true}
+                        filter={CollectionUtils.siti.filter}
+                        getLabel={CollectionUtils.siti.getLabel}
+                        valueLink={this.linkState("sito")}
+                    />
+                </components.Popover>
+            </div>
+        );
+    },
+    renderAlarmThreshold: function () {
+        return (
+            <div>
+                <h4 style={{color: colors.primary}}>{stringIt.titleAlarmThreshold}</h4>
+                <div style={{backgroundColor: colors.greyBackground, textAlign: "center"}}>
+                    <components.Spacer direction="v" size={3} />
+                    <h4
+                        style={{
+                            color: colors.primary,
+                            marginTop: "8px"
+                        }}> {`Soglia (${this.state.threshold} kwh)`}
+                    </h4>
+                    <components.Spacer direction="v" size={10} />
+                    <bootstrap.Input
+                        max={600}
+                        min={0}
+                        step={5}
+                        style={styles.inputRange}
+                        type="range"
+                        valueLink={this.linkState("threshold")}
+                    />
+                </div>
+            </div>
+        );
+    },
+    renderAlarmName: function () {
+        return (
+            <div>
+                <h4 style={{color: colors.primary}}>{stringIt.titleAlarmName}</h4>
+                <bootstrap.Input
+                    style={styles.inputLine}
+                    type="text"
+                    valueLink={this.linkState("name")}/>
+                <h4 style={{color: colors.primary}}>{stringIt.titleAlarmNotify}</h4>
+                <div onClick={this.onClickNotify} style={styles.divAlarmOpenModal}>
+                    <components.Icon icon="arrow-right" style={{float: "right", paddingTop: "10px"}} />
+                </div>
+            </div>
+        );
+    },
+    renderAlarmActive: function () {
+        return (
+            <div style={{display: this.props.type === "update" ? "" : "none"}}>
+                <components.Spacer direction="v" size={30} />
+                <bootstrap.Input
+                    checkedLink={this.linkState("active")}
+                    label={
+                        <h4 style={{color: colors.primary, marginTop: "0px"}}>
+                            {stringIt.titleAlarmActive}
+                        </h4>
+                    }
+                    type="checkbox"
+                />
+            </div>
+        );
+    },
+    renderAlarmRepetition: function () {
+        return (
+            <div style={{marginBottom: "0px"}}>
+                <h4 style={{color: colors.primary}}>{stringIt.titleAlarmRepeat}</h4>
+                <div onClick={this.onClickRepeatNotification} style={styles.divAlarmOpenModal}>
+                    <components.Icon icon="arrow-right" style={{float: "right", paddingTop: "10px"}} />
+                </div>
+            </div>
+        );
+    },
     render: function () {
         return (
             <div className="alarm-form" style={{height: "100%"}}>
@@ -148,103 +247,23 @@ var AlarmForm = React.createClass({
                         scopeSelector=".alarm-form"
                     />
                 <div style={{height: "calc(100vh - 420px)"}}>
-                    {/* Add alarm and select site */}
                     <bootstrap.Col lg={6} md={6} xs={12}>
-                        <h3 style={{color: colors.primary}}>{stringIt.titleTabImpostazioniAlarm}</h3>
-                        <h5>
-                            {"Seleziona un punto da monitorare e le soglie di allarme "}
-                            <bootstrap.OverlayTrigger
-                                overlay={this.addTooltip()}
-                                placement="right"
-                                rootClose={true}
-                                trigger="click"
-                            >
-                                <components.Button  bsStyle="link">
-                                    <components.Icon icon="info" />
-                                </components.Button>
-                            </bootstrap.OverlayTrigger>
-                        </h5>
-                        <components.Popover
-                            arrow="none"
-                            style="inherit"
-                            title={this.renderTitleSelectSite()}
-                        >
-                            <components.SelectTree
-                                allowedValues={this.props.siti}
-                                buttonCloseDefault={true}
-                                filter={CollectionUtils.siti.filter}
-                                getLabel={CollectionUtils.siti.getLabel}
-                                valueLink={this.linkState("sito")}
-                            />
-                        </components.Popover>
+                        {this.renderAlarmSelectSite()}
                     </bootstrap.Col>
-                    {/* Alarm threshold */}
                     <bootstrap.Col lg={6} md={6} xs={12}>
-                        <h4 style={{color: colors.primary}}>{stringIt.titleAlarmThreshold}</h4>
-                        <div style={{backgroundColor: colors.greyBackground, textAlign: "center"}}>
-                            <components.Spacer direction="v" size={3} />
-                            <h4
-                                style={{
-                                    color: colors.primary,
-                                    marginTop: "8px"
-                                }}> {`Soglia (${this.state.threshold} kwh)`}
-                            </h4>
-                            <components.Spacer direction="v" size={10} />
-                            <bootstrap.Input
-                                max={600}
-                                min={0}
-                                step={5}
-                                style={styles.inputRange}
-                                type="range"
-                                valueLink={this.linkState("threshold")}
-                            />
-                        </div>
+                        {this.renderAlarmThreshold()}
                     </bootstrap.Col>
-                    {/* Alarm name */}
                     <bootstrap.Col lg={6} md={6} xs={12}>
-                        <h4 style={{color: colors.primary}}>{stringIt.titleAlarmName}</h4>
-                        <bootstrap.Input
-                            style={styles.inputLine}
-                            type="text"
-                            valueLink={this.linkState("name")}/>
-                        <h4 style={{color: colors.primary}}>{stringIt.titleAlarmNotify}</h4>
-                        <div onClick={this.onClickNotify} style={styles.divAlarmOpenModal}>
-                            <components.Icon icon="arrow-right" style={{float: "right", paddingTop: "10px"}} />
-                        </div>
+                        {this.renderAlarmName()}
                     </bootstrap.Col>
-                    {/* Active alarm. This is displayed only when you update an existent alarm */}
                     <bootstrap.Col lg={6} md={6} xs={12}>
-                        <div style={{display: this.props.type === "update" ? "" : "none"}}>
-                            <components.Spacer direction="v" size={30} />
-                            <bootstrap.Input
-                                checkedLink={this.linkState("active")}
-                                label={
-                                    <h4 style={{color: colors.primary, marginTop: "0px"}}>
-                                        {stringIt.titleAlarmActive}
-                                    </h4>
-                                }
-                                type="checkbox"
-                            />
-                        </div>
+                        {this.renderAlarmActive()}
                     </bootstrap.Col>
-                    {/* Repetition of the alarm */}
                     <bootstrap.Col lg={6} md={6} xs={12}>
-                        <div style={{marginBottom: "0px"}}>
-                            <h4 style={{color: colors.primary}}>{stringIt.titleAlarmRepeat}</h4>
-                            <div onClick={this.onClickRepeatNotification} style={styles.divAlarmOpenModal}>
-                                <components.Icon icon="arrow-right" style={{float: "right", paddingTop: "10px"}} />
-                            </div>
-                        </div>
+                        {this.renderAlarmRepetition()}
                     </bootstrap.Col>
                 </div>
-                {/* Submit button */}
-                <bootstrap.Col
-                    style={{
-                    paddingTop: "8vh",
-                    textAlign: "center"
-                    }}
-                    xs={12}
-                >
+                <bootstrap.Col style={{paddingTop: "8vh", textAlign: "center"}} xs={12}>
                     {this.renderSubmitButton()}
                     {this.renderResetButton()}
                 </bootstrap.Col>
