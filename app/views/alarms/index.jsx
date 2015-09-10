@@ -47,20 +47,32 @@ var Alarms = React.createClass({
     getColumns: function () {
         var self = this;
         return [
-            "active",
-            // {
-            //     key: "active",
-            //     valueFormatter: function (value) {
-            //         return (
-            //             <components.Icon
-            //                 icon={value ? "check" : "exclamation"}
-            //                 style={{/*color: colors.white*/}/>
-            //         );
-            //     }
-            // },
+            {
+                key: "active",
+                style: function (value) {
+                    return {
+                        backgroundColor: value ? colors.green : colors.red,
+                        width: "37px",
+                        height: "100%",
+                        textAlign: "center"
+                    };
+                },
+                valueFormatter: function (value) {
+                    return (
+                        <components.Icon
+                            icon={value ? "check" : "exclamation"}
+                            />
+                    );
+                }
+            },
             "name",
             {
                 key: "podId",
+                style: function () {
+                    return {
+                        width: "40%"
+                    };
+                },
                 valueFormatter: function (value) {
                     var sito = self.getSiti().find(s => {
                         return s.get("pod") === value;
@@ -161,7 +173,7 @@ var Alarms = React.createClass({
                                 columns={this.getColumns()}
                                 getKey={getKeyFromAlarm}
                                 hover={true}
-                                siti={this.getSiti()}
+                                width={"40%"}
                             />
                         </bootstrap.TabPane>
                         <bootstrap.TabPane eventKey={3} tab="Storico allarmi">
