@@ -58,7 +58,7 @@ var AlarmForm = React.createClass({
             threshold: R.path(
                 ["reale", "$gt"],
                 JSON.parse(props.alarm.get("rule") || "{}")
-            ) || 0,
+            ) || 300,
             modalRepetitionOpen: false
         };
     },
@@ -241,7 +241,7 @@ var AlarmForm = React.createClass({
     },
     renderAlarmActive: function () {
         return (
-            <div style={{display: this.props.type === "update" ? "" : "none"}}>
+            <div style={{display: this.props.type === "update" ? "block" : "none"}}>
                 <components.Spacer direction="v" size={30} />
                 <bootstrap.Input
                     checkedLink={this.linkState("active")}
