@@ -255,17 +255,22 @@ var AlarmForm = React.createClass({
             </div>
         );
     },
+    repetitionLabelParser: function () {
+        var labels = [];
+        var repetitions = self.state.repetition;
+        this.getRepetitionOptions().map(function (record) {
+            if (R.contains(record.key, repetitions)) {
+                labels.push(record.label);
+            }
+        });
+        return labels.join(" - ");
+    },
     renderAlarmRepetition: function () {
-        var self = this;
         return (
             <div style={{marginBottom: "0px"}}>
                 <h4 style={{color: colors.primary}}>{stringIt.titleAlarmRepeat}</h4>
                 <div onClick={this.toggleModalRepetition} style={styles.divAlarmOpenModal}>
-                    {self.getRepetitionOptions().map(function (record) {
-                        if (R.contains(record.key, self.state.repetition)) {
-                            return record.label;
-                        }
-                    })}
+                    {this.repetitionLabelParser()}
                     <components.Icon icon="arrow-right" style={{float: "right", paddingTop: "10px"}} />
                 </div>
                 <components.AlarmRepetitionModal
