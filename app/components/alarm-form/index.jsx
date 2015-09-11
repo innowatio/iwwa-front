@@ -29,6 +29,19 @@ var AlarmForm = React.createClass({
     componentWillReceiveProps: function (props) {
         this.setState(this.getStateFromProps(props));
     },
+    getRepetitionOptions: function () {
+        return [
+            {label: "Tutti i giorni", key: [0, 1, 2, 3, 4, 5, 6], action: this.dayRepetitionAction},
+            {label: "Domenica", key: 0, action: this.dayRepetitionAction},
+            {label: "Lunedì", key: 1, action: this.dayRepetitionAction},
+            {label: "Martedì", key: 2, action: this.dayRepetitionAction},
+            {label: "Mercoledì", key: 3, action: this.dayRepetitionAction},
+            {label: "Giovedì", key: 4, action: this.dayRepetitionAction},
+            {label: "Venerdì", key: 5, action: this.dayRepetitionAction},
+            {label: "Sabato", key: 6, action: this.dayRepetitionAction},
+            {label: "Fine settimana", key: [0, 6], action: this.dayRepetitionAction}
+        ];
+    },
     getSitoFromProps: function (props) {
         var pod = props.alarm.get("podId");
         return props.siti.find(function (sito) {
@@ -41,10 +54,12 @@ var AlarmForm = React.createClass({
             name: props.alarm.get("name"),
             type: props.alarm.get("type"),
             sito: this.getSitoFromProps(props),
+            repetition: [0, 1, 2, 3, 4, 5, 6],
             threshold: R.path(
                 ["reale", "$gt"],
                 JSON.parse(props.alarm.get("rule") || "{}")
-            ) || 0
+            ) || 0,
+            modalRepetitionOpen: false
         };
     },
     cancel: function () {
@@ -58,6 +73,21 @@ var AlarmForm = React.createClass({
     },
     onClickRepeatNotification: function () {
         console.log("Ripeti notifiche");
+    },
+    dayRepetitionAction: function (value) {
+        var newRepetition = this.state.repetition;
+        if (R.isArrayLike(value)) {
+            newRepetition = value;
+        } else {
+            if (R.contains(value, newRepetition)) {
+                newRepetition.splice(newRepetition.indexOf(value), 1);
+            } else {
+                newRepetition.push(value);
+            }
+        }
+        this.setState(
+            R.merge(self.state, {repetition: newRepetition})
+        );
     },
     submit: function () {
         this.setState({
@@ -89,6 +119,11 @@ var AlarmForm = React.createClass({
         axios.post(endpoint, requestBody)
             .then(() => this.setState({saving: false}))
             .catch(() => this.setState({saving: false}));
+    },
+    toggleModalRepetition: function () {
+        this.setState(
+            R.merge(this.state, {modalRepetitionOpen: !this.state.modalRepetitionOpen})
+        );
     },
     addTooltip: function () {
         return (
@@ -221,12 +256,27 @@ var AlarmForm = React.createClass({
         );
     },
     renderAlarmRepetition: function () {
+        var self = this;
         return (
             <div style={{marginBottom: "0px"}}>
                 <h4 style={{color: colors.primary}}>{stringIt.titleAlarmRepeat}</h4>
-                <div onClick={this.onClickRepeatNotification} style={styles.divAlarmOpenModal}>
+                <div onClick={this.toggleModalRepetition} style={styles.divAlarmOpenModal}>
+                    {self.getRepetitionOptions().map(function (record) {
+                        if (R.contains(record.key, self.state.repetition)) {
+                            return record.label;
+                        }
+                    })}
                     <components.Icon icon="arrow-right" style={{float: "right", paddingTop: "10px"}} />
                 </div>
+                <components.AlarmRepetitionModal
+                    allowedValues={this.getRepetitionOptions()}
+                    getKey={R.prop("key")}
+                    getLabel={R.prop("label")}
+                    header={"Quando vuoi che sia attivo l’allarme?"}
+                    modalState={this.state.modalRepetitionOpen}
+                    toggleModal={this.toggleModalRepetition}
+                    value={this.state.repetition}
+                />
             </div>
         );
     },

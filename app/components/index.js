@@ -1,4 +1,5 @@
 exports.AlarmForm               = require("./alarm-form/");
+exports.AlarmRepetitionModal    = require("./alarm-repetition-modal/");
 exports.Button                  = require("./button/");
 exports.ButtonGroupSelect       = require("./button-group-select/");
 exports.CollectionElementsTable = require("./collection-elements-table/");
