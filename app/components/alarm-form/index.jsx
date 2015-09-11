@@ -257,7 +257,7 @@ var AlarmForm = React.createClass({
     },
     repetitionLabelParser: function () {
         var labels = [];
-        var repetitions = self.state.repetition;
+        var repetitions = this.state.repetition;
         this.getRepetitionOptions().map(function (record) {
             if (R.contains(record.key, repetitions)) {
                 labels.push(record.label);
