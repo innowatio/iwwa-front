@@ -32,13 +32,13 @@ var AlarmForm = React.createClass({
     getRepetitionOptions: function () {
         return [
             {label: "Tutti i giorni", key: [0, 1, 2, 3, 4, 5, 6], action: this.dayRepetitionAction},
-            {label: "Domenica", key: 0, action: this.dayRepetitionAction},
             {label: "Lunedì", key: 1, action: this.dayRepetitionAction},
             {label: "Martedì", key: 2, action: this.dayRepetitionAction},
             {label: "Mercoledì", key: 3, action: this.dayRepetitionAction},
             {label: "Giovedì", key: 4, action: this.dayRepetitionAction},
             {label: "Venerdì", key: 5, action: this.dayRepetitionAction},
             {label: "Sabato", key: 6, action: this.dayRepetitionAction},
+            {label: "Domenica", key: 0, action: this.dayRepetitionAction},
             {label: "Fine settimana", key: [0, 6], action: this.dayRepetitionAction}
         ];
     },
@@ -277,7 +277,7 @@ var AlarmForm = React.createClass({
                     allowedValues={this.getRepetitionOptions()}
                     getKey={R.prop("key")}
                     getLabel={R.prop("label")}
-                    header={"Quando vuoi che sia attivo l’allarme?"}
+                    header={<h4 style={{color: colors.primary}}>{"Quando vuoi che sia attivo l’allarme?"}</h4>}
                     modalState={this.state.modalRepetitionOpen}
                     toggleModal={this.toggleModalRepetition}
                     value={this.state.repetition}

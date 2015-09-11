@@ -6,6 +6,7 @@ var bootstrap      = require("react-bootstrap");
 var colors     = require("lib/colors");
 var components = require("components/");
 var icons      = require("lib/colors");
+var measures   = require("lib/measures");
 
 var Compare = React.createClass({
     propTypes: {
@@ -140,7 +141,7 @@ var Compare = React.createClass({
                         <Radium.Style
                             rules={{
                                 ".modal-content": {
-                                    width: "656px"
+                                    width: measures.modalWidthLarge
                                 }
                             }}
                             scopeSelector=".modal-dialog"

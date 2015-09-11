@@ -1,18 +1,11 @@
-var axios      = require("axios");
-var Immutable  = require("immutable");
 var Radium     = require("radium");
 var R          = require("ramda");
 var React      = require("react");
 var bootstrap  = require("react-bootstrap");
-var IPropTypes = require("react-immutable-proptypes");
-var Router     = require("react-router");
 
-var components      = require("components");
-var CollectionUtils = require("lib/collection-utils");
-var colors          = require("lib/colors");
-var Icon            = require("lib/icons");
-var stringIt        = require("lib/string-it");
-var styles          = require("lib/styles");
+var colors     = require("lib/colors");
+var components = require("components");
+var measures   = require("lib/measures");
 
 var AlarmRepetitionModal = React.createClass({
     propTypes: {
@@ -36,11 +29,12 @@ var AlarmRepetitionModal = React.createClass({
                 key={this.props.getKey(value)}
                 onClick={R.partial(value.action, this.props.getKey(value))}
                 style={{
-                    background: (active ? colors.primary : ""),
-                    color: (active ? colors.white : colors.darkBlack)
+                    color: colors.greySubTitle,
+                    textAlign: "left"
                 }}
             >
                 {this.props.getLabel(value)}
+                <components.Icon icon="check" style={{float: "right", visibility: active ? "visible" : "hidden"}}/>
             </bootstrap.ListGroupItem>
         );
     },
@@ -57,7 +51,8 @@ var AlarmRepetitionModal = React.createClass({
                     <Radium.Style
                         rules={{
                             ".modal-content": {
-                                width: "656px"
+                                width: measures.modalWidthMedium,
+                                left: "calc(50% - 400px / 2)"
                             }
                         }}
                         scopeSelector=".modal-dialog"
