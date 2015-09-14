@@ -1,4 +1,4 @@
-exports.iconCompare    = "/_assets/icons/os__cal.svg";
+exports.iconCalendar   = "/_assets/icons/os__cal.svg";
 exports.iconExport     = "/_assets/icons/os__export.svg";
 exports.iconPower      = "/_assets/icons/os__power.svg";
 exports.iconSiti       = "/_assets/icons/os__map.svg";
