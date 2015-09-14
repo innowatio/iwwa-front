@@ -12,7 +12,7 @@ var AlarmRepetitionModal = React.createClass({
         allowedValues: React.PropTypes.array,
         getKey: React.PropTypes.func,
         getLabel: React.PropTypes.func,
-        header: React.PropTypes.string,
+        header: React.PropTypes.object,
         modalState: React.PropTypes.bool,
         toggleModal: React.PropTypes.func,
         value: React.PropTypes.array

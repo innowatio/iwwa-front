@@ -29,17 +29,24 @@ var AlarmForm = React.createClass({
     componentWillReceiveProps: function (props) {
         this.setState(this.getStateFromProps(props));
     },
+    getNotificationOptions: function () {
+        return [
+            {label: "Email", key: "mail", action: R.partial(this.actionPutOrRemoveInArray, "notification")},
+            {label: "Sms", key: "sms", action: R.partial(this.actionPutOrRemoveInArray, "notification")},
+            {label: "Notifiche App", key: "push", action: R.partial(this.actionPutOrRemoveInArray, "notification")}
+        ];
+    },
     getRepetitionOptions: function () {
         return [
-            {label: "Tutti i giorni", key: [0, 1, 2, 3, 4, 5, 6], action: this.dayRepetitionAction},
-            {label: "Lunedì", key: 1, action: this.dayRepetitionAction},
-            {label: "Martedì", key: 2, action: this.dayRepetitionAction},
-            {label: "Mercoledì", key: 3, action: this.dayRepetitionAction},
-            {label: "Giovedì", key: 4, action: this.dayRepetitionAction},
-            {label: "Venerdì", key: 5, action: this.dayRepetitionAction},
-            {label: "Sabato", key: 6, action: this.dayRepetitionAction},
-            {label: "Domenica", key: 0, action: this.dayRepetitionAction},
-            {label: "Fine settimana", key: [0, 6], action: this.dayRepetitionAction}
+            {label: "Tutti i giorni", key: [0, 1, 2, 3, 4, 5, 6], action: R.partial(this.actionPutOrRemoveInArray, "repetition")},
+            {label: "Lunedì", key: 1, action: R.partial(this.actionPutOrRemoveInArray, "repetition")},
+            {label: "Martedì", key: 2, action: R.partial(this.actionPutOrRemoveInArray, "repetition")},
+            {label: "Mercoledì", key: 3, action: R.partial(this.actionPutOrRemoveInArray, "repetition")},
+            {label: "Giovedì", key: 4, action: R.partial(this.actionPutOrRemoveInArray, "repetition")},
+            {label: "Venerdì", key: 5, action: R.partial(this.actionPutOrRemoveInArray, "repetition")},
+            {label: "Sabato", key: 6, action: R.partial(this.actionPutOrRemoveInArray, "repetition")},
+            {label: "Domenica", key: 0, action: R.partial(this.actionPutOrRemoveInArray, "repetition")},
+            {label: "Fine settimana", key: [0, 6], action: R.partial(this.actionPutOrRemoveInArray, "repetition")}
         ];
     },
     getSitoFromProps: function (props) {
@@ -52,14 +59,16 @@ var AlarmForm = React.createClass({
         return {
             active: props.alarm.get("active") || true,
             name: props.alarm.get("name"),
+            notification: props.alarm.get("notification") || ["mail"],
             type: props.alarm.get("type"),
             sito: this.getSitoFromProps(props),
-            repetition: [0, 1, 2, 3, 4, 5, 6],
+            repetition: props.alarm.get("repetition") || [0, 1, 2, 3, 4, 5, 6],
             threshold: R.path(
                 ["reale", "$gt"],
                 JSON.parse(props.alarm.get("rule") || "{}")
             ) || 300,
-            modalRepetitionOpen: false
+            modalRepetitionOpen: false,
+            modalNotificationOpen: false
         };
     },
     cancel: function () {
@@ -74,8 +83,13 @@ var AlarmForm = React.createClass({
     onClickRepeatNotification: function () {
         console.log("Ripeti notifiche");
     },
-    dayRepetitionAction: function (value) {
-        var newRepetition = this.state.repetition;
+    notificationAction: function (value) {
+        this.setState(
+            R.merge(self.state, {notification: value})
+        );
+    },
+    actionPutOrRemoveInArray: function (param, value) {
+        var newRepetition = this.state[param];
         if (R.isArrayLike(value)) {
             newRepetition = value;
         } else {
@@ -85,8 +99,10 @@ var AlarmForm = React.createClass({
                 newRepetition.push(value);
             }
         }
+        var newValue = {};
+        newValue[param] = newRepetition;
         this.setState(
-            R.merge(self.state, {repetition: newRepetition})
+            R.merge(self.state, newValue)
         );
     },
     submit: function () {
@@ -120,9 +136,12 @@ var AlarmForm = React.createClass({
             .then(() => this.setState({saving: false}))
             .catch(() => this.setState({saving: false}));
     },
-    toggleModalRepetition: function () {
+    toggleModal: function (name) {
+        var stateParamName = "modal" + name + "Open";
+        var newValue = {};
+        newValue[stateParamName] = !this.state[stateParamName];
         this.setState(
-            R.merge(this.state, {modalRepetitionOpen: !this.state.modalRepetitionOpen})
+            R.merge(this.state, newValue)
         );
     },
     addTooltip: function () {
@@ -231,11 +250,8 @@ var AlarmForm = React.createClass({
                 <bootstrap.Input
                     style={styles.inputLine}
                     type="text"
-                    valueLink={this.linkState("name")}/>
-                <h4 style={{color: colors.primary}}>{stringIt.titleAlarmNotify}</h4>
-                <div onClick={this.onClickNotify} style={styles.divAlarmOpenModal}>
-                    <components.Icon icon="arrow-right" style={{float: "right", paddingTop: "10px"}} />
-                </div>
+                    valueLink={this.linkState("name")}
+                />
             </div>
         );
     },
@@ -255,10 +271,29 @@ var AlarmForm = React.createClass({
             </div>
         );
     },
-    repetitionLabelParser: function () {
+    renderAlarmNotification: function () {
+        return (
+            <div>
+                <h4 style={{color: colors.primary}}>{stringIt.titleAlarmNotify}</h4>
+                    <div onClick={R.partial(this.toggleModal, "Notification")} style={styles.divAlarmOpenModal}>
+                        {this.labelParser("notification", this.getNotificationOptions())}
+                        <components.Icon icon="arrow-right" style={{float: "right", paddingTop: "10px"}} />
+                    </div>
+                    <components.AlarmRepetitionModal
+                        allowedValues={this.getNotificationOptions()}
+                        getKey={R.prop("key")}
+                        getLabel={R.prop("label")}
+                        header={<h4 style={{color: colors.primary}}>{"Seleziona tipo di notifica"}</h4>}
+                        modalState={this.state.modalNotificationOpen}
+                        toggleModal={R.partial(this.toggleModal, "Notification")}
+                        value={this.state.notification}
+                    />
+            </div>);
+    },
+    labelParser: function (param, values) {
         var labels = [];
-        var repetitions = this.state.repetition;
-        this.getRepetitionOptions().map(function (record) {
+        var repetitions = this.state[param];
+        values.map(function (record) {
             if (R.contains(record.key, repetitions)) {
                 labels.push(record.label);
             }
@@ -269,8 +304,8 @@ var AlarmForm = React.createClass({
         return (
             <div style={{marginBottom: "0px"}}>
                 <h4 style={{color: colors.primary}}>{stringIt.titleAlarmRepeat}</h4>
-                <div onClick={this.toggleModalRepetition} style={styles.divAlarmOpenModal}>
-                    {this.repetitionLabelParser()}
+                <div onClick={R.partial(this.toggleModal, "Repetition")} style={styles.divAlarmOpenModal}>
+                    {this.labelParser("repetition", this.getRepetitionOptions())}
                     <components.Icon icon="arrow-right" style={{float: "right", paddingTop: "10px"}} />
                 </div>
                 <components.AlarmRepetitionModal
@@ -279,7 +314,7 @@ var AlarmForm = React.createClass({
                     getLabel={R.prop("label")}
                     header={<h4 style={{color: colors.primary}}>{"Quando vuoi che sia attivo l’allarme?"}</h4>}
                     modalState={this.state.modalRepetitionOpen}
-                    toggleModal={this.toggleModalRepetition}
+                    toggleModal={R.partial(this.toggleModal, "Repetition")}
                     value={this.state.repetition}
                 />
             </div>
@@ -310,6 +345,7 @@ var AlarmForm = React.createClass({
                     </bootstrap.Col>
                     <bootstrap.Col lg={6} md={6} xs={12}>
                         {this.renderAlarmName()}
+                        {this.renderAlarmNotification()}
                     </bootstrap.Col>
                     <bootstrap.Col lg={6} md={6} xs={12}>
                         {this.renderAlarmActive()}
