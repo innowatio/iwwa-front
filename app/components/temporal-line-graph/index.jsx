@@ -1,9 +1,13 @@
-var R      = require("ramda");
-var React  = require("react");
+var R         = require("ramda");
+var Radium    = require("radium");
+var React     = require("react");
+var Loader    = require("halogen/PacmanLoader");
+var bootstrap = require("react-bootstrap");
 
 var AppPropTypes     = require("lib/app-prop-types.js");
 var dygraphExport    = require("lib/dygraph-export.js");
 var DygraphCSVExport = require("lib/dygraph-export-csv.js");
+var colors           = require("lib/colors");
 
 
 var styles = {
@@ -185,9 +189,35 @@ var TemporalLineGraph = React.createClass({
         link.setAttribute("download", name);
         link.click();
     },
+    renderSpinner: function () {
+        // TODO To set a timeout.
+        // if (window.location.search.indexOf("sito") >= 0 && this.props.coordinates.length === 0) {
+            return (
+                <div className="modal-spinner">
+                    <bootstrap.Modal
+                        autoFocus={false}
+                        enforceFocus={false}
+                        onHide={R.identity()}
+                        style={{zIndex: 1000}}
+                    >
+                        <Radium.Style
+                            rutles={{
+                                ".modal-dialog": {
+                                    width: "125px"
+                                }
+                            }}
+                            scopeSelector=".modal-spinner"
+                        />
+                        <Loader color={colors.primary} style={{zIndex: 1010}}/>
+                    </bootstrap.Modal>
+                </div>
+            );
+        // }
+    },
     render: function () {
         return (
             <span>
+                {this.renderSpinner()}
                 <div ref="graphContainer" style={styles.graphContainer}/>
             </span>
         );

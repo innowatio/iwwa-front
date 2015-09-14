@@ -67,6 +67,7 @@
     "express": "^4.13.0",
     "fastclick": "^1.0.6",
     "font-awesome": "^4.3.0",
+    "halogen": "^0.1.10",
     "history": "^1.8.4",
     "immutable": "^3.7.4",
     "lodash.debounce": "^3.1.1",
