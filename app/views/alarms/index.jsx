@@ -5,6 +5,7 @@ var bootstrap  = require("react-bootstrap");
 var IPropTypes = require("react-immutable-proptypes");
 var Router     = require("react-router");
 var color      = require("color");
+var moment     = require("moment");
 
 var CollectionUtils = require("lib/collection-utils");
 var components = require("components");
@@ -29,7 +30,7 @@ var Alarms = React.createClass({
     },
     componentDidMount: function () {
         this.props.asteroid.subscribe("alarms");
-        this.props.asteroid.subscribe("alarms");
+        this.props.asteroid.subscribe("notifications");
         this.props.asteroid.subscribe("siti");
     },
     getAlarm: function () {
@@ -44,7 +45,7 @@ var Alarms = React.createClass({
     getType: function () {
         return (this.props.params.id ? "update" : "insert");
     },
-    getColumns: function () {
+    getColumnsAlarms: function () {
         var self = this;
         return [
             {
@@ -74,11 +75,62 @@ var Alarms = React.createClass({
                     };
                 },
                 valueFormatter: function (value) {
-                    var sito = self.getSiti().find(s => {
-                        return s.get("pod") === value;
+                    var sito = self.getSiti().find(siti => {
+                        return siti.get("pod") === value;
                     });
                     return (
                         <span>
+                            {CollectionUtils.siti.getLabel(sito)}
+                        </span>
+                    );
+                }
+            },
+            {
+                key: "_id",
+                valueFormatter: function (value) {
+                    return (
+                        <Router.Link onClick={self.onClickAction} to={`/alarms/${value}`}>
+                            <components.Icon icon="arrow-right"
+                                style={{float: "right", paddingRight: "10px", paddingTop: "2px"}}/>
+                        </Router.Link>
+                    );
+                }
+            }
+        ];
+    },
+    getColumnsNotifications: function () {
+        var self = this;
+        return [
+            {
+                key: "date",
+                style: function () {
+                    return {
+                        width: "40%"
+                    };
+                },
+                valueFormatter: function (value) {
+                    var date = moment(value, "x");
+                    return (
+                        <span style={{marginLeft: "20px"}}>
+                            {date.locale("it").format("LLL")}
+                        </span>
+                    );
+                }
+            },
+            "name",
+            {
+                key: "podId",
+                style: function () {
+                    return {
+                        width: "30%"
+                    };
+                },
+                valueFormatter: function (value) {
+                    var sito = self.getSiti().find(siti => {
+                        return siti.get("pod") === value;
+                    });
+                    return (
+                        <span style={{marginLeft: "20px"}}>
                             {CollectionUtils.siti.getLabel(sito)}
                         </span>
                     );
@@ -170,14 +222,27 @@ var Alarms = React.createClass({
                             </div>
                             <components.CollectionElementsTable
                                 collection={this.props.collections.get("alarms") || Immutable.Map()}
-                                columns={this.getColumns()}
+                                columns={this.getColumnsAlarms()}
                                 getKey={getKeyFromAlarm}
                                 hover={true}
                                 width={"40%"}
                             />
                         </bootstrap.TabPane>
                         <bootstrap.TabPane eventKey={3} tab="Storico allarmi">
-                            Storico allarmi
+                            <div style={{marginRight: "30px", height: "40px", paddingTop: "20px"}}>
+                                <div onClick={this.onClickFilter} style={{float: "right", display: "flex", cursor: "pointer"}}>
+                                    <components.Icon icon="filter" style={{paddingTop: "13px"}}/>
+                                    <components.Spacer direction="h" size={10} />
+                                    <h4 style={{color: colors.primary}}>Filter</h4>
+                                </div>
+                            </div>
+                            <components.CollectionElementsTable
+                                collection={this.props.collections.get("notifications") || Immutable.Map()}
+                                columns={this.getColumnsNotifications()}
+                                getKey={getKeyFromAlarm}
+                                hover={true}
+                                width={"30%"}
+                            />
                         </bootstrap.TabPane>
                     </bootstrap.TabbedArea>
                 </div>
