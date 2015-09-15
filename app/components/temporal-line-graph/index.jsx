@@ -191,28 +191,55 @@ var TemporalLineGraph = React.createClass({
     },
     renderSpinner: function () {
         // TODO To set a timeout.
-        // if (window.location.search.indexOf("sito") >= 0 && this.props.coordinates.length === 0) {
+        if (window.location.search.indexOf("sito") >= 0 && this.props.coordinates.length === 0) {
             return (
                 <div className="modal-spinner">
                     <bootstrap.Modal
+                        animation={false}
                         autoFocus={false}
+                        container={this}
                         enforceFocus={false}
                         onHide={R.identity()}
                         style={{zIndex: 1000}}
                     >
                         <Radium.Style
-                            rutles={{
+                            rules={{
                                 ".modal-dialog": {
-                                    width: "125px"
+                                    width: "98%"
+                                },
+                                ".modal-container": {
+                                    position: "relative",
+                                    width: "100%"
+                                },
+                                ".modal-container .modal, .modal-container .modal-backdrop": {
+                                    position: "absolute",
+                                    width: "98%",
+                                    left: "1%"
+                                },
+                                ".modal": {
+                                    top: "50%"
+                                },
+                                ".modal-content > div > div": {
+                                    left: "45%"
+                                },
+                                ".modal-content": {
+                                    backgroundColor: colors.transparent,
+                                    boxShadow: "none",
+                                    WebkitBoxShadow: "none",
+                                    border: "none"
+                                },
+                                ".modal-backdrop": {
+                                    opacity: "0.8",
+                                    backgroundColor: colors.white
                                 }
                             }}
-                            scopeSelector=".modal-spinner"
+                            scopeSelector=".modal-container"
                         />
-                        <Loader color={colors.primary} style={{zIndex: 1010}}/>
+                    <Loader color={colors.primary} style={{zIndex: 1010, position: "relative"}}/>
                     </bootstrap.Modal>
                 </div>
             );
-        // }
+        }
     },
     render: function () {
         return (
