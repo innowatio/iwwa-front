@@ -3,8 +3,9 @@ var Radium         = require("radium");
 var React          = require("react");
 var bootstrap      = require("react-bootstrap");
 
-var colors = require("lib/colors");
-var components = require("components/");
+var assetsPathTo = require("lib/assets-path-to");
+var colors       = require("lib/colors");
+var components   = require("components/");
 
 var Compare = React.createClass({
     propTypes: {
@@ -111,7 +112,7 @@ var Compare = React.createClass({
         ) : null;
     },
     render: function () {
-        var iconCompare = "/_assets/icons/os__compare.svg";
+        var iconCompare = assetsPathTo("icons/os__compare.svg");
         return (
             <span>
                 <bootstrap.ButtonGroup>

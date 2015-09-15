@@ -2,10 +2,11 @@ var Radium = require("radium");
 var R      = require("ramda");
 var React  = require("react");
 
-var components = require("components");
-var asteroid   = require("lib/asteroid");
-var measures   = require("lib/measures");
-var colors     = require("lib/colors");
+var components   = require("components");
+var assetsPathTo = require("lib/assets-path-to");
+var asteroid     = require("lib/asteroid");
+var measures     = require("lib/measures");
+var colors       = require("lib/colors");
 
 var styles = {
     header: {
@@ -40,11 +41,11 @@ var styles = {
     }
 };
 
-var icoAlarm      = "/_assets/icons/os__Alarms_menu-.svg";
-var icoHistConsum = "/_assets/icons/os__Historical_consumption-.svg";
-var icoDashboard  = "/_assets/icons/os__Dashboard-.svg";
-var icoHelp       = "/_assets/icons/os__Help.svg";
-var icoLiveConsum = "/_assets/icons/os__Live_consumption-.svg";
+var icoAlarm      = assetsPathTo("icons/os__Alarms_menu-.svg");
+var icoHistConsum = assetsPathTo("icons/os__Historical_consumption-.svg");
+var icoDashboard  = assetsPathTo("icons/os__Dashboard-.svg");
+var icoHelp       = assetsPathTo("icons/os__Help.svg");
+var icoLiveConsum = assetsPathTo("icons/os__Live_consumption-.svg");
 
 var Root = React.createClass({
     propTypes: {

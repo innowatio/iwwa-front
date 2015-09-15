@@ -4,14 +4,16 @@
   "description": "Innowatio app front-end",
   "main": "index.js",
   "scripts": {
-    "build": "node_modules/.bin/gulp build",
-    "dev": "node_modules/.bin/gulp dev",
-    "lint": "node_modules/.bin/eslint app/**/*.js app/**/*.jsx",
+    "build": "gulp build",
+    "build-cordova": "node scripts/build-cordova.js",
+    "dev": "gulp dev",
+    "emulate-ios": "cd builds/ios && cordova emulate ios --target=\"iPad-Air\"",
+    "lint": "eslint app/**/*.js app/**/*.jsx",
     "generate-reports": "node scripts/generate-reports.js",
     "publish-reports": "node scripts/generate-reports.js && node scripts/publish-reports.js",
-    "prestart": "node_modules/.bin/gulp build",
+    "prestart": "gulp build",
     "start": "node scripts/server.js",
-    "test": "NODE_PATH=app:test node_modules/.bin/mocha --compilers jsx:babel/register test/unit/**/*unit*"
+    "test": "NODE_PATH=app:test mocha --compilers jsx:babel/register test/unit/**/*unit*"
   },
   "repository": {
     "type": "git",
@@ -29,6 +31,8 @@
     "bluebird": "^2.9.30",
     "browser-sync": "^2.7.12",
     "chai": "^3.0.0",
+    "chalk": "^1.1.1",
+    "cordova": "^5.3.1",
     "dev-ip": "^1.0.1",
     "eslint": "^0.23.0",
     "eslint-html-reporter": "^0.4.11",
@@ -44,17 +48,21 @@
     "gulp-rename": "^1.2.2",
     "gulp-spawn-mocha": "^2.2.1",
     "gulp-util": "^3.0.5",
+    "ios-sim": "^4.1.1",
     "jsdom": "^5.4.3",
     "json-loader": "^0.5.2",
+    "minimist": "^1.2.0",
     "mkdirp": "^0.5.1",
     "mocha": "^2.2.5",
     "mochawesome": "^1.2.0",
     "node-libs-browser": "^0.5.2",
     "pro-gulp": "^0.3.0",
     "proxyquire": "^1.5.0",
+    "semver": "^5.0.1",
     "sinon": "^1.15.3",
     "sinon-chai": "^2.8.0",
-    "webpack": "^1.9.11"
+    "webpack": "^1.9.11",
+    "xml2js": "^0.4.12"
   },
   "dependencies": {
     "TiTaToggle": "kleinejan/titatoggle",
@@ -82,5 +90,10 @@
     "react-widgets": "^2.7.2",
     "title-case": "^1.1.1",
     "treeview-react-bootstrap": "^0.2.4"
-  }
+  },
+  "cordovaPlugins": [
+    "cordova-plugin-device",
+    "cordova-plugin-inappbrowser",
+    "cordova-plugin-statusbar"
+  ]
 }

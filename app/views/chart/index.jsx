@@ -6,11 +6,12 @@ var React      = require("react");
 var bootstrap  = require("react-bootstrap");
 var IPropTypes = require("react-immutable-proptypes");
 
-var colors           = require("lib/colors");
 var components       = require("components/");
+var assetsPathTo     = require("lib/assets-path-to");
+var CollectionUtils  = require("lib/collection-utils");
+var colors           = require("lib/colors");
 var styles           = require("lib/styles");
 var QuerystringMixin = require("lib/querystring-mixin");
-var CollectionUtils  = require("lib/collection-utils");
 var transformers     = require("./transformers.js");
 
 var multiselectStyles = {
@@ -32,7 +33,8 @@ var graphStyle = {
 var Chart = React.createClass({
     propTypes: {
         asteroid: React.PropTypes.object,
-        collections: IPropTypes.map
+        collections: IPropTypes.map,
+        location: React.PropTypes.object
     },
     mixins: [QuerystringMixin],
     componentDidMount: function () {
@@ -68,8 +70,8 @@ var Chart = React.createClass({
         ];
     },
     getExportType: function () {
-        var iconCSV = "/_assets/icons/os__CSV.svg";
-        var iconPNG = "/_assets/icons/os__JPG.svg";
+        var iconCSV = assetsPathTo("icons/os__CSV.svg");
+        var iconPNG = assetsPathTo("icons/os__JPG.svg");
         return [
             {label: "Png", key: "png", icon: iconPNG},
             {label: "Csv", key: "csv", icon: iconCSV}
@@ -103,10 +105,10 @@ var Chart = React.createClass({
     },
     render: function () {
         // Icone
-        var iconCompare = "/_assets/icons/os__cal.svg";
-        var iconExport = "/_assets/icons/os__export.svg";
-        var iconPower = "/_assets/icons/os__power.svg";
-        var iconSiti = "/_assets/icons/os__map.svg";
+        var iconCompare = assetsPathTo("icons/os__cal.svg");
+        var iconExport = assetsPathTo("icons/os__export.svg");
+        var iconPower = assetsPathTo("icons/os__power.svg");
+        var iconSiti = assetsPathTo("icons/os__map.svg");
         // Sito
         var siti = this.props.collections.get("siti") || Immutable.Map();
         var sitoInputProps = this.bindToQueryParameter(
