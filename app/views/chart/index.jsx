@@ -213,7 +213,7 @@ var Chart = React.createClass({
                             allowedValues={filterDate}
                             getKey={R.prop("key")}
                             getLabel={R.prop("label")}
-                            title={<img src={icons.iconCompare} style={{width: "75%"}} />}
+                            title={<img src={icons.iconCalendar} style={{width: "75%"}} />}
                             {...dateFilterProps}
                         />
                         <components.Compare>
