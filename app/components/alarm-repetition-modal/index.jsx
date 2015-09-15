@@ -1,3 +1,4 @@
+var Calendar   = require("react-widgets").Calendar;
 var Radium     = require("radium");
 var R          = require("ramda");
 var React      = require("react");
@@ -15,6 +16,10 @@ var style = {
         width: "40%",
         padding: "1px",
         paddingLeft: "5px"
+    },
+    option: {
+        color: colors.greySubTitle,
+        textAlign: "left"
     }
 };
 
@@ -28,7 +33,9 @@ var AlarmRepetitionModal = React.createClass({
     getInitialState: function () {
         return {
             isOpen: false,
+            isDatepickerVisible: false,
             valueRepetition: this.props.value.days,
+            valueDate: this.props.value.day || null,
             valueTimeEnd: this.props.value.timeEnd || "00:00",
             valueTimeStart: this.props.value.timeStart || "00:00"
         };
@@ -43,7 +50,9 @@ var AlarmRepetitionModal = React.createClass({
             {label: "Venerdì", key: 5, action: this.actionPutOrRemoveInArray},
             {label: "Sabato", key: 6, action: this.actionPutOrRemoveInArray},
             {label: "Domenica", key: 0, action: this.actionPutOrRemoveInArray},
-            {label: "Fine settimana", key: [0, 6], action: this.actionPutOrRemoveInArray},
+            //TODO mettere tutte le date per la voce "Giorni Festivi" (IWWA-31)
+            {label: "Giorni Festivi", key: [0, 6], action: this.actionPutOrRemoveInArray},
+            this.renderDateSelection(),
             this.renderTimeSelection()
         ];
     },
@@ -62,10 +71,67 @@ var AlarmRepetitionModal = React.createClass({
         newValue[param] = value;
         this.setState(newValue);
     },
+    onChangeDatePicker: function (value) {
+        // set the date and unset all week days
+        this.setState({valueDate: value, valueRepetition: []});
+    },
+    actionPutOrRemoveInArray: function (value) {
+        var newValue = this.state.valueRepetition;
+        if (R.isArrayLike(value)) {
+            newValue = value;
+        } else {
+            if (R.contains(value, newValue)) {
+                newValue.splice(newValue.indexOf(value), 1);
+            } else {
+                newValue.push(value);
+            }
+        }
+        // set repetition day / reset datepicker
+        this.setState({valueRepetition: newValue, valueDate: null});
+    },
+    onClickConfirm: function () {
+        this.props.updateParentState({
+            repetition: {
+                days: this.state.valueRepetition,
+                timeEnd: this.state.valueTimeEnd,
+                timeStart: this.state.valueTimeStart
+            }
+        });
+        this.toggleModal();
+    },
+    toggleDatepicker: function () {
+        this.setState({isDatepickerVisible: !this.state.isDatepickerVisible});
+    },
+    toggleModal: function () {
+        this.setState({isOpen: !this.state.isOpen});
+    },
+    renderDateSelection: function () {
+        return (
+            <span key="datepicker">
+                <bootstrap.ListGroupItem
+                    onClick={this.toggleDatepicker}
+                    style={style.option}
+                >
+                    {"Solo il giorno"}
+                    <components.Icon icon="calendar" style={{marginLeft: "50px", color: colors.primary}}/>
+                </bootstrap.ListGroupItem>
+                <bootstrap.ListGroupItem style={{display: this.state.isDatepickerVisible ? "" : "none"}}>
+                    <Calendar
+                        culture={"en-GB"}
+                        dayFormat={day => ["D", "L", "M", "M", "G", "V", "S"][day]}
+                        format="MMM dd, yyyy"
+                        min={new Date()}
+                        onChange={this.onChangeDatePicker}
+                        value={this.state.valueDate}
+                    />
+                </bootstrap.ListGroupItem>
+            </span>
+        );
+    },
     renderTimeSelection: function () {
         return (
             <bootstrap.ListGroupItem
-                key={"picker"}
+                key={"timepickers"}
                 style={{
                     color: colors.greySubTitle,
                     alignItems: "center",
@@ -112,32 +178,6 @@ var AlarmRepetitionModal = React.createClass({
                 </span>
             </bootstrap.ListGroupItem>
         );
-    },
-    actionPutOrRemoveInArray: function (value) {
-        var newValue = this.state.valueRepetition;
-        if (R.isArrayLike(value)) {
-            newValue = value;
-        } else {
-            if (R.contains(value, newValue)) {
-                newValue.splice(newValue.indexOf(value), 1);
-            } else {
-                newValue.push(value);
-            }
-        }
-        this.setState({valueRepetition: newValue});
-    },
-    onClickConfirm: function () {
-        this.props.updateParentState({
-            repetition: {
-                days: this.state.valueRepetition,
-                timeEnd: this.state.valueTimeEnd,
-                timeStart: this.state.valueTimeStart
-            }
-        });
-        this.toggleModal();
-    },
-    toggleModal: function () {
-        this.setState({isOpen: !this.state.isOpen});
     },
     render: function () {
         return (
