@@ -1,4 +1,5 @@
 exports.AlarmForm               = require("./alarm-form/");
+exports.AlarmNotificationModal  = require("./alarm-notification-modal/");
 exports.AlarmRepetitionModal    = require("./alarm-repetition-modal/");
 exports.Button                  = require("./button/");
 exports.ButtonGroupSelect       = require("./button-group-select/");
@@ -12,6 +13,7 @@ exports.Header                  = require("./header/");
 exports.HistoricalGraph         = require("./historical-graph/");
 exports.Icon                    = require("./icon/");
 exports.LoginModal              = require("./login-modal/");
+exports.ModalOptionList         = require("./modal-option-list/");
 exports.Popover                 = require("./popover/");
 exports.Select                  = require("./select/");
 exports.SelectTree              = require("./select-tree");

@@ -5,71 +5,160 @@ var bootstrap  = require("react-bootstrap");
 
 var colors     = require("lib/colors");
 var components = require("components");
-var measures   = require("lib/measures");
+var stringIt   = require("lib/string-it");
+var styles     = require("lib/styles");
+var TimePicker = require("react-time-picker");
+
+var style = {
+    timePicker: {
+        border: "0px none",
+        width: "40%",
+        padding: "1px",
+        paddingLeft: "5px"
+    }
+};
 
 var AlarmRepetitionModal = React.createClass({
     propTypes: {
-        allowedValues: React.PropTypes.array,
-        getKey: React.PropTypes.func,
-        getLabel: React.PropTypes.func,
-        header: React.PropTypes.object,
-        modalState: React.PropTypes.bool,
-        toggleModal: React.PropTypes.func,
-        value: React.PropTypes.array
+        updateParentState: React.PropTypes.func.isRequired,
+        value: React.PropTypes.oneOfType([
+            React.PropTypes.array,
+            React.PropTypes.object]).isRequired
     },
     getInitialState: function () {
         return {
-            isOpen: this.props.modalState
+            isOpen: false,
+            valueRepetition: this.props.value.days,
+            valueTimeEnd: this.props.value.timeEnd || "00:00",
+            valueTimeStart: this.props.value.timeStart || "00:00"
         };
     },
-    renderAlarmRepetitionGroupItems: function (value) {
-        var active = R.contains(this.props.getKey(value), this.props.value);
+    getRepetitionOptions: function () {
+        return [
+            {label: "Tutti i giorni", key: [0, 1, 2, 3, 4, 5, 6], action: this.actionPutOrRemoveInArray},
+            {label: "Lunedì", key: 1, action: this.actionPutOrRemoveInArray},
+            {label: "Martedì", key: 2, action: this.actionPutOrRemoveInArray},
+            {label: "Mercoledì", key: 3, action: this.actionPutOrRemoveInArray},
+            {label: "Giovedì", key: 4, action: this.actionPutOrRemoveInArray},
+            {label: "Venerdì", key: 5, action: this.actionPutOrRemoveInArray},
+            {label: "Sabato", key: 6, action: this.actionPutOrRemoveInArray},
+            {label: "Domenica", key: 0, action: this.actionPutOrRemoveInArray},
+            {label: "Fine settimana", key: [0, 6], action: this.actionPutOrRemoveInArray},
+            this.renderTimeSelection()
+        ];
+    },
+    labelParser: function () {
+        var labels = [];
+        var repetitions = this.props.value.days;
+        this.getRepetitionOptions().map(function (record) {
+            if (R.contains(record.key, repetitions)) {
+                labels.push(record.label);
+            }
+        });
+        return labels.join(" - ");
+    },
+    onChange: function (param, value) {
+        var newValue = {};
+        newValue[param] = value;
+        this.setState(newValue);
+    },
+    renderTimeSelection: function () {
         return (
             <bootstrap.ListGroupItem
-                key={this.props.getKey(value)}
-                onClick={R.partial(value.action, this.props.getKey(value))}
+                key={"picker"}
                 style={{
                     color: colors.greySubTitle,
-                    textAlign: "left"
+                    alignItems: "center",
+                    display: "flex",
+                    textAlign: "left",
+                    paddingTop: "2px",
+                    paddingBottom: "2px"
                 }}
             >
-                {this.props.getLabel(value)}
-                <components.Icon icon="check" style={{float: "right", visibility: active ? "visible" : "hidden"}}/>
+                <span style={{
+                    color: colors.greySubTitle,
+                    alignItems: "center",
+                    display: "flex"
+                }}>
+                    {"Dalle ore"}
+                    <TimePicker
+                        className="timepicker"
+                        onChange={R.partial(this.onChange, "valueTimeStart")}
+                        style={style.timePicker}
+                        value={this.state.valueTimeStart}
+                    />
+                </span>
+                <components.Spacer direction="h" size={50} />
+                <span style={{
+                    color: colors.greySubTitle,
+                    alignItems: "center",
+                    display: "flex"
+                }}>
+                    {"Alle ore"}
+                    <Radium.Style
+                        rules={{
+                            "div > span": {
+                                margin: "0px !important"
+                            }
+                        }}
+                        scopeSelector=".timepicker"
+                    />
+                    <TimePicker
+                        className="timepicker"
+                        onChange={R.partial(this.onChange, "valueTimeEnd")}
+                        style={style.timePicker}
+                        value={this.state.valueTimeEnd}
+                    />
+                </span>
             </bootstrap.ListGroupItem>
         );
     },
+    actionPutOrRemoveInArray: function (value) {
+        var newValue = this.state.valueRepetition;
+        if (R.isArrayLike(value)) {
+            newValue = value;
+        } else {
+            if (R.contains(value, newValue)) {
+                newValue.splice(newValue.indexOf(value), 1);
+            } else {
+                newValue.push(value);
+            }
+        }
+        this.setState({valueRepetition: newValue});
+    },
+    onClickConfirm: function () {
+        this.props.updateParentState({
+            repetition: {
+                days: this.state.valueRepetition,
+                timeEnd: this.state.valueTimeEnd,
+                timeStart: this.state.valueTimeStart
+            }
+        });
+        this.toggleModal();
+    },
+    toggleModal: function () {
+        this.setState({isOpen: !this.state.isOpen});
+    },
     render: function () {
-        var repetitionItems = this.props.allowedValues.map(this.renderAlarmRepetitionGroupItems);
         return (
-            <div>
-                <bootstrap.Modal
-                    container={this}
-                    enforceFocus={false}
-                    onHide={this.props.toggleModal}
-                    show={this.props.modalState}
-                >
-                    <Radium.Style
-                        rules={{
-                            ".modal-content": {
-                                width: measures.modalWidthMedium,
-                                left: "calc(50% - 400px / 2)"
-                            }
-                        }}
-                        scopeSelector=".modal-dialog"
-                    />
-                    <bootstrap.Modal.Header
-                        closeButton
-                        style={{borderBottom: "none"}}
-                    >
-                        {this.props.header}
-                    </bootstrap.Modal.Header>
-                    <bootstrap.Modal.Body style={{textAlign: "center"}}>
-                        <bootstrap.ListGroup>
-                            {repetitionItems.toArray ? repetitionItems.toArray() : repetitionItems}
-                        </bootstrap.ListGroup>
-                    </bootstrap.Modal.Body>
-                </bootstrap.Modal>
-            </div>
+            <span>
+                <h4 style={{color: colors.primary}}>{stringIt.titleAlarmNotify}</h4>
+                <div onClick={this.toggleModal} style={styles.divAlarmOpenModal}>
+                    {this.labelParser()}
+                    <components.Icon icon="arrow-right" style={{float: "right", paddingTop: "10px"}} />
+                </div>
+                <components.ModalOptionList
+                    allowedValues={this.getRepetitionOptions()}
+                    getKey={R.prop("key")}
+                    getLabel={R.prop("label")}
+                    header={<h4 style={{color: colors.primary}}>{"Seleziona tipo di notifica"} </h4>}
+                    isModalOpen={this.state.isOpen}
+                    onClickConfirm={this.onClickConfirm}
+                    onClickReset={this.toggleModal}
+                    toggleModal={this.toggleModal}
+                    value={this.state.valueRepetition}
+                />
+            </span>
         );
     }
 });
