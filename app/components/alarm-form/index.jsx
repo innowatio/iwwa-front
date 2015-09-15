@@ -43,7 +43,7 @@ var AlarmForm = React.createClass({
             type: props.alarm.get("type"),
             sito: this.getSitoFromProps(props),
             repetition: {
-                days: props.alarm.get("repetition") || [0, 1, 2, 3, 4, 5, 6],
+                weekDays: props.alarm.get("repetition") || [0, 1, 2, 3, 4, 5, 6],
                 timeEnd: "00:00",
                 timeStart: "00:00"
             },

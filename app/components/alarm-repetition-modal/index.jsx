@@ -34,7 +34,7 @@ var AlarmRepetitionModal = React.createClass({
         return {
             isOpen: false,
             isDatepickerVisible: false,
-            valueRepetition: this.props.value.days,
+            valueRepetition: this.props.value.weekDays || [],
             valueDate: this.props.value.day || null,
             valueTimeEnd: this.props.value.timeEnd || "00:00",
             valueTimeStart: this.props.value.timeStart || "00:00"
@@ -58,7 +58,7 @@ var AlarmRepetitionModal = React.createClass({
     },
     labelParser: function () {
         var labels = [];
-        var repetitions = this.props.value.days;
+        var repetitions = this.props.value.weekDays;
         this.getRepetitionOptions().map(function (record) {
             if (R.contains(record.key, repetitions)) {
                 labels.push(record.label);
@@ -92,7 +92,8 @@ var AlarmRepetitionModal = React.createClass({
     onClickConfirm: function () {
         this.props.updateParentState({
             repetition: {
-                days: this.state.valueRepetition,
+                day: this.this.state.valueDate,
+                weekDays: this.state.valueRepetition,
                 timeEnd: this.state.valueTimeEnd,
                 timeStart: this.state.valueTimeStart
             }
