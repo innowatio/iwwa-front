@@ -27,16 +27,29 @@ module.exports = R.merge(Router.Navigation, {
         */
         return {
             value: transformer.parse(queryValue),
-            onChange: function (newValue) {
+            onChange: function (newValue, paramName) {
                 var newQueryValue = transformer.stringify(newValue);
                 /*
                 *   replaceWith is defined as we merged with our mixin
                 *   react-router's Navigation mixin
                 */
-                self.replaceWith(
-                    self.props.location.pathname,
-                    R.assoc(name, newQueryValue, self.props.location.query)
-                );
+                if (paramName === "sito" && !R.isNil(self.props.location.query) && R.has(paramName, self.props.location.query)) {
+                    var querySito = self.props.location.query.sito.split(",")[0];
+                    self.replaceWith(
+                        self.props.location.pathname,
+                        R.assoc(name, newQueryValue, R.assoc(paramName, querySito, self.props.location.query))
+                    );
+                } else if (!R.isNil(paramName) && !R.isNil(self.props.location.query) && R.has(paramName, self.props.location.query)) {
+                    self.replaceWith(
+                        self.props.location.pathname,
+                        R.assoc(name, newQueryValue, R.dissoc(paramName, self.props.location.query))
+                    );
+                } else {
+                    self.replaceWith(
+                        self.props.location.pathname,
+                        R.assoc(name, newQueryValue, self.props.location.query)
+                    );
+                }
             }
         };
     }

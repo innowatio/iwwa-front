@@ -16,6 +16,7 @@ var SitiCompare = React.createClass({
         getSitoLabel: React.PropTypes.func,
         onChange: React.PropTypes.func.isRequired,
         open: React.PropTypes.string,
+        resetParam: React.PropTypes.func,
         style: React.PropTypes.object,
         value: React.PropTypes.array
     },
@@ -52,9 +53,11 @@ var SitiCompare = React.createClass({
             [this.state.valueFirst, this.state.valueSecond]
         );
         if (list.length === 2) {
-            R.partial(this.props.onChange, list)();
+            return () => {
+                this.props.onChange(list, "dateCompare");
+                this.props.closeModal();
+            };
         }
-        this.props.closeModal();
     },
     titleFirstSelect: function () {
         return R.isNil(this.state.valueFirst) ?
@@ -115,7 +118,7 @@ var SitiCompare = React.createClass({
                     />
                 </components.Popover>
                 <components.Button
-                    onClick={this.onClick}
+                    onClick={this.onClick()}
                     style={{
                         background: colors.primary,
                         marginTop: "60px",
