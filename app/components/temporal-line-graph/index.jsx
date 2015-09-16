@@ -9,7 +9,6 @@ var dygraphExport    = require("lib/dygraph-export.js");
 var DygraphCSVExport = require("lib/dygraph-export-csv.js");
 var colors           = require("lib/colors");
 
-
 var styles = {
     graphContainer: {
         width: "calc(100vw - 100px)",
@@ -66,6 +65,24 @@ var TemporalLineGraph = React.createClass({
                 y: {}
             }
         };
+        if (props.coordinates.length !== 0) {
+            var lastDate;
+            options.underlayCallback = function (canvas, area, g) {
+                props.coordinates.map(value => {
+                    var date = value[0];
+                    if (moment(lastDate).date() !== moment(date).date() && R.equals(moment(date), moment(date).day(6))) {
+                        lastDate = date;
+                        var bottomLeft = g.toDomCoords(moment(date).startOf("day"), -20);
+                        var topRight = g.toDomCoords(moment(date).add(1, "days").endOf("day"), +20);
+                        var left = bottomLeft[0];
+                        var right = topRight[0];
+
+                        canvas.fillStyle = colors.greyBackground;
+                        canvas.fillRect(left, area.y, right - left, area.h);
+                    }
+                });
+            };
+        }
         if (props.colors) {
             options.colors = props.colors;
         }
@@ -130,7 +147,6 @@ var TemporalLineGraph = React.createClass({
                 pageX: c_now.pageX - c_init.pageX
             };
             var dataWidth = context.initialRange.x[1] - context.initialRange.x[0];
-            var dataHeight = context.initialRange.y[0] - context.initialRange.y[1];
             swipe.dataX = (swipe.pageX / g.plotter_.area.w) * dataWidth;
             var xScale;
 
