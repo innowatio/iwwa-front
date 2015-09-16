@@ -8,6 +8,7 @@ var IPropTypes = require("react-immutable-proptypes");
 
 var colors           = require("lib/colors");
 var components       = require("components/");
+var icons            = require("lib/icons");
 var styles           = require("lib/styles");
 var QuerystringMixin = require("lib/querystring-mixin");
 var CollectionUtils  = require("lib/collection-utils");
@@ -68,11 +69,9 @@ var Chart = React.createClass({
         ];
     },
     getExportType: function () {
-        var iconCSV = "/_assets/icons/os__CSV.svg";
-        var iconPNG = "/_assets/icons/os__JPG.svg";
         return [
-            {label: "Png", key: "png", icon: iconPNG},
-            {label: "Csv", key: "csv", icon: iconCSV}
+            {label: "Png", key: "png", icon: icons.iconPNG},
+            {label: "Csv", key: "csv", icon: icons.iconCSV}
         ];
     },
     getDateCompare: function () {
@@ -102,11 +101,6 @@ var Chart = React.createClass({
         }
     },
     render: function () {
-        // Icone
-        var iconCompare = "/_assets/icons/os__cal.svg";
-        var iconExport = "/_assets/icons/os__export.svg";
-        var iconPower = "/_assets/icons/os__power.svg";
-        var iconSiti = "/_assets/icons/os__map.svg";
         // Sito
         var siti = this.props.collections.get("siti") || Immutable.Map();
         var sitoInputProps = this.bindToQueryParameter(
@@ -171,7 +165,7 @@ var Chart = React.createClass({
                             {...valoreInputProps}
                         />
                         <components.Popover
-                            title={<img src={iconExport} style={{width: "50%"}} />}
+                            title={<img src={icons.iconExport} style={{width: "50%"}} />}
                             tooltipId="tooltipExport"
                             tooltipMessage="Esporta"
                             tooltipPosition="right"
@@ -187,7 +181,7 @@ var Chart = React.createClass({
                     </span>
                     <span className="pull-right" style={{display: "flex"}}>
                         <components.Popover
-                            title={<img src={iconPower} style={{width: "75%"}} />}
+                            title={<img src={icons.iconPower} style={{width: "75%"}} />}
                             tooltipId="tooltipInterest"
                             tooltipMessage="Quantità d'interesse"
                             tooltipPosition="left"
@@ -201,7 +195,8 @@ var Chart = React.createClass({
                             />
                         </components.Popover>
                         <components.Popover
-                            title={<img src={iconSiti} style={{width: "75%"}} />}
+                            style="inherit"
+                            title={<img src={icons.iconSiti} style={{width: "75%"}} />}
                             tooltipId="tooltipMisurazione"
                             tooltipMessage="Punti di misurazione"
                             tooltipPosition="top"
@@ -218,7 +213,7 @@ var Chart = React.createClass({
                             allowedValues={filterDate}
                             getKey={R.prop("key")}
                             getLabel={R.prop("label")}
-                            title={<img src={iconCompare} style={{width: "75%"}} />}
+                            title={<img src={icons.iconCalendar} style={{width: "75%"}} />}
                             {...dateFilterProps}
                         />
                         <components.Compare>

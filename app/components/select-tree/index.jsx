@@ -19,7 +19,6 @@ var SelectTree = React.createClass({
         buttonCloseDefault: React.PropTypes.bool,
         filter: React.PropTypes.func,
         getLabel: React.PropTypes.func,
-        label: React.PropTypes.string,
         onChange: React.PropTypes.func,
         value: React.PropTypes.oneOfType([
             React.PropTypes.array,
@@ -202,7 +201,6 @@ var SelectTree = React.createClass({
                 />
                 <bootstrap.Input
                     addonAfter={<components.Icon icon="search"/>}
-                    autoFocus
                     className="input-search"
                     onChange={(input) => this.setState({inputFilter: input.target.value})}
                     placeholder="Ricerca"

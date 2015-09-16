@@ -79,6 +79,7 @@
     "react-bootstrap": "^0.23.7",
     "react-immutable-proptypes": "^1.0.0",
     "react-router": "1.0.0-beta3",
+    "react-time-picker": "^1.1.0",
     "react-waypoint": "^1.0.2",
     "react-widgets": "^2.7.2",
     "title-case": "^1.1.1",
