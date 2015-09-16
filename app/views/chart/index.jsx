@@ -234,7 +234,7 @@ var Chart = React.createClass({
                         </components.Compare>
                     </span>
                 </bootstrap.Col>
-                <bootstrap.Col sm={12} style={{height: "100%"}}>
+                <bootstrap.Col  className="modal-container" sm={12} style={{height: "100%"}}>
                     <components.HistoricalGraph
                         dateCompare={dateCompareProps.value}
                         dateFilter={dateFilterProps.value}

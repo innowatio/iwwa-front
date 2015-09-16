@@ -1,10 +1,14 @@
-var R      = require("ramda");
-var React  = require("react");
+var R         = require("ramda");
+var Radium    = require("radium");
+var React     = require("react");
+var Loader    = require("halogen/PacmanLoader");
+var bootstrap = require("react-bootstrap");
+var moment    = require("moment");
 
 var AppPropTypes     = require("lib/app-prop-types.js");
 var dygraphExport    = require("lib/dygraph-export.js");
 var DygraphCSVExport = require("lib/dygraph-export-csv.js");
-
+var colors           = require("lib/colors");
 
 var styles = {
     graphContainer: {
@@ -62,6 +66,24 @@ var TemporalLineGraph = React.createClass({
                 y: {}
             }
         };
+        if (props.coordinates.length !== 0) {
+            var lastDate;
+            options.underlayCallback = function (canvas, area, g) {
+                props.coordinates.map(value => {
+                    var date = value[0];
+                    if (moment(lastDate).date() !== moment(date).date() && R.equals(moment(date), moment(date).day(6))) {
+                        lastDate = date;
+                        var bottomLeft = g.toDomCoords(moment(date).startOf("day"), -20);
+                        var topRight = g.toDomCoords(moment(date).add(1, "days").endOf("day"), +20);
+                        var left = bottomLeft[0];
+                        var right = topRight[0];
+
+                        canvas.fillStyle = colors.greyBackground;
+                        canvas.fillRect(left, area.y, right - left, area.h);
+                    }
+                });
+            };
+        }
         if (props.colors) {
             options.colors = props.colors;
         }
@@ -126,7 +148,6 @@ var TemporalLineGraph = React.createClass({
                 pageX: c_now.pageX - c_init.pageX
             };
             var dataWidth = context.initialRange.x[1] - context.initialRange.x[0];
-            var dataHeight = context.initialRange.y[0] - context.initialRange.y[1];
             swipe.dataX = (swipe.pageX / g.plotter_.area.w) * dataWidth;
             var xScale;
 
@@ -185,9 +206,62 @@ var TemporalLineGraph = React.createClass({
         link.setAttribute("download", name);
         link.click();
     },
+    renderSpinner: function () {
+        // TODO To set a timeout.
+        if (window.location.search.indexOf("sito") >= 0 && this.props.coordinates.length === 0) {
+            return (
+                <div className="modal-spinner">
+                    <bootstrap.Modal
+                        animation={false}
+                        autoFocus={false}
+                        container={this}
+                        enforceFocus={false}
+                        onHide={R.identity()}
+                        style={{zIndex: 1000}}
+                    >
+                        <Radium.Style
+                            rules={{
+                                ".modal-dialog": {
+                                    width: "98%"
+                                },
+                                ".modal-container": {
+                                    position: "relative",
+                                    width: "100%"
+                                },
+                                ".modal-container .modal, .modal-container .modal-backdrop": {
+                                    position: "absolute",
+                                    width: "98%",
+                                    left: "1%"
+                                },
+                                ".modal": {
+                                    top: "50%"
+                                },
+                                ".modal-content > div > div": {
+                                    left: "45%"
+                                },
+                                ".modal-content": {
+                                    backgroundColor: colors.transparent,
+                                    boxShadow: "none",
+                                    WebkitBoxShadow: "none",
+                                    border: "none"
+                                },
+                                ".modal-backdrop": {
+                                    opacity: "0.8",
+                                    backgroundColor: colors.white
+                                }
+                            }}
+                            scopeSelector=".modal-container"
+                        />
+                    <Loader color={colors.primary} style={{zIndex: 1010, position: "relative"}}/>
+                    </bootstrap.Modal>
+                </div>
+            );
+        }
+    },
     render: function () {
         return (
             <span>
+                {this.renderSpinner()}
                 <div ref="graphContainer" style={styles.graphContainer}/>
             </span>
         );
