@@ -8,6 +8,7 @@ var Popover = React.createClass({
     propTypes: {
         arrow: React.PropTypes.string,
         children: React.PropTypes.element,
+        hideOnChange: React.PropTypes.bool,
         style: React.PropTypes.string,
         title: React.PropTypes.element,
         tooltipId: React.PropTypes.string,
@@ -19,6 +20,15 @@ var Popover = React.createClass({
             tooltipPosition: "right"
         };
     },
+    addOnClickCloseToChild: function (child) {
+        var self = this;
+        return React.addons.cloneWithProps(child, {
+            onChange: (a) => {
+                self.closePopover();
+                child.props.onChange(a);
+            }
+        });
+    },
     addTooltip: function () {
         return (
             <bootstrap.Tooltip
@@ -27,6 +37,10 @@ var Popover = React.createClass({
                 {this.props.tooltipMessage}
             </bootstrap.Tooltip>
         );
+    },
+    closePopover: function () {
+        console.log(this.refs.menuPopover);
+        this.refs.menuPopover.hide();
     },
     getButton: function () {
         return this.props.arrow === "none" ?
@@ -58,7 +72,7 @@ var Popover = React.createClass({
             <bootstrap.Popover
                 animation={false}
                 className="multiselect-popover"
-                >
+            >
                 <Radium.Style
                     rules={{
                         "": {
@@ -86,7 +100,7 @@ var Popover = React.createClass({
                     }}
                     scopeSelector=".multiselect-popover"
                 />
-                {this.props.children}
+                {this.props.hideOnChange ? this.addOnClickCloseToChild(this.props.children) : this.props.children}
             </bootstrap.Popover>
         );
     },
@@ -96,6 +110,7 @@ var Popover = React.createClass({
                 animation={false}
                 overlay={this.renderOverlay()}
                 placement="bottom"
+                ref={"menuPopover"}
                 rootClose={true}
                 trigger="click"
             >
