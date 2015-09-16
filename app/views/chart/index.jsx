@@ -30,6 +30,9 @@ var graphStyle = {
     boxShadow: "2px 2px 5px " + colors.greySubTitle
 };
 
+var dateCompareProps;
+var sitoInputProps;
+
 var Chart = React.createClass({
     propTypes: {
         asteroid: React.PropTypes.object,
@@ -100,10 +103,19 @@ var Chart = React.createClass({
             exportAPILocation.exportCSV();
         }
     },
+    resetCompare: function () {
+        if (sitoInputProps.value && sitoInputProps.value.length > 1) {
+            var val = sitoInputProps.value[0];
+            sitoInputProps.onChange([val], "sito");
+        }
+        if (this.refs.historicalGraph.props.dateCompare) {
+            dateCompareProps.onChange(null, "dateCompare");
+        }
+    },
     render: function () {
         // Sito
         var siti = this.props.collections.get("siti") || Immutable.Map();
-        var sitoInputProps = this.bindToQueryParameter(
+        sitoInputProps = this.bindToQueryParameter(
             "sito",
             transformers.sito(siti)
         );
@@ -130,7 +142,7 @@ var Chart = React.createClass({
         };
         // Compare
         var compareDate = this.getDateCompare();
-        var dateCompareProps = this.bindToQueryParameter(
+        dateCompareProps = this.bindToQueryParameter(
             "dateCompare",
             transformers.dateCompare(compareDate)
         );
@@ -240,6 +252,7 @@ var Chart = React.createClass({
                         dateFilter={dateFilterProps.value}
                         misure={this.props.collections.get("misure") || Immutable.Map()}
                         ref="historicalGraph"
+                        resetCompare={this.resetCompare}
                         siti={sitoInputProps.value}
                         style={graphStyle}
                         tipologia={tipologiaInputProps.value}
