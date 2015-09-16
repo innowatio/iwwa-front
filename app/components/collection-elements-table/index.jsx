@@ -4,6 +4,10 @@ var React      = require("react");
 var bootstrap  = require("react-bootstrap");
 var IPropTypes = require("react-immutable-proptypes");
 
+// var CollectionUtils  = require("lib/collection-utils");
+var colors           = require("lib/colors");
+// var components       = require("components");
+
 var columnType = React.PropTypes.oneOfType([
     React.PropTypes.string,
     React.PropTypes.shape({
@@ -28,17 +32,26 @@ var stringify = function (thing) {
 var Row = React.createClass({
     propTypes: {
         columns: columnsType,
-        item: IPropTypes.map
+        item: IPropTypes.map,
+        width: React.PropTypes.string
+    },
+    renderCellElement: function (columnElement) {
+        return (
+            <td key={columnElement} style={{width: this.props.width, paddingLeft: "15px"}}>
+                {stringify(columnElement)}
+            </td>
+        );
     },
     renderCell: function (column) {
         if (R.is(String, column)) {
             return (
-                <td key={column}>{stringify(this.props.item.get(column))}</td>
+                this.renderCellElement(this.props.item.get(column))
             );
         }
         var value = this.props.item.get(column.key);
         return (
-            <td key={column.key}>
+            <td key={column.key}
+                style={R.isNil(column.style) ? {} : column.style(value)}>
                 {
                     column.valueFormatter ?
                     column.valueFormatter(value, this.props.item) :
@@ -58,32 +71,15 @@ var Row = React.createClass({
 
 var CollectionElementsTable = React.createClass({
     propTypes: {
+        bordered: React.PropTypes.bool,
         collection: IPropTypes.map,
         columns: columnsType,
+        condensed: React.PropTypes.bool,
         getKey: React.PropTypes.func,
         hover: React.PropTypes.bool,
-        striped: React.PropTypes.bool
-    },
-    renderHead: function () {
-        return (
-            <thead>
-                <tr>
-                    {this.props.columns.map(column => {
-                        return (
-                            R.is(String, column) ?
-                            <th key={column}>{column}</th> :
-                            <th key={column.key}>
-                                {
-                                    R.isNil(column.heading) ?
-                                    column.key :
-                                    column.heading
-                                }
-                            </th>
-                        );
-                    })}
-                </tr>
-            </thead>
-        );
+        siti: IPropTypes.map,
+        striped: React.PropTypes.bool,
+        width: React.PropTypes.string
     },
     renderBody: function () {
         return (
@@ -99,6 +95,7 @@ var CollectionElementsTable = React.createClass({
                             columns={this.props.columns}
                             item={item}
                             key={key}
+                            width={this.props.width}
                         />
                     );
                 }).toArray()}
@@ -107,10 +104,17 @@ var CollectionElementsTable = React.createClass({
     },
     render: function () {
         return (
-            <bootstrap.Table hover={this.props.hover} striped={this.props.striped}>
-                {this.renderHead()}
-                {this.renderBody()}
-            </bootstrap.Table>
+            <div style={{overflow: "auto", paddingTop: "10px", width: "100%"}}>
+                <bootstrap.Table
+                    bordered={this.props.bordered}
+                    condensed={this.props.condensed}
+                    hover={this.props.hover}
+                    striped={this.props.striped}
+                    style={{borderBottom: "1px solid" + colors.greyBorder}}
+                >
+                    {this.renderBody()}
+                </bootstrap.Table>
+            </div>
         );
     }
 });

@@ -1,9 +1,9 @@
 var R          = require("ramda");
-var React       = require("react");
-var IPropTypes  = require("react-immutable-proptypes");
+var React      = require("react");
+var IPropTypes = require("react-immutable-proptypes");
 
-var colors           = require("lib/colors");
-var components       = require("components/");
+var colors     = require("lib/colors");
+var components = require("components/");
 
 var SitiCompare = React.createClass({
     propTypes: {
@@ -59,31 +59,64 @@ var SitiCompare = React.createClass({
             };
         }
     },
+    titleFirstSelect: function () {
+        return R.isNil(this.state.valueFirst) ?
+        <span>
+            Seleziona punto 1
+            <components.Icon icon="chevron-down" style={{float: "right"}}/>
+        </span> :
+        <span>
+            {this.props.getSitoLabel(this.state.valueFirst)}
+            <components.Spacer direction="h" size={30} />
+            {this.state.valueFirst.get("pod")}
+            <components.Icon icon="chevron-down" style={{float: "right"}}/>
+        </span>;
+    },
+    titleSecondSelect: function () {
+        return R.isNil(this.state.valueSecond) ?
+        <span>
+            Seleziona punto 2
+            <components.Icon icon="chevron-down" style={{float: "right"}}/>
+        </span> :
+        <span>
+            {this.props.getSitoLabel(this.state.valueSecond)}
+            <components.Spacer direction="h" size={30} />
+            {this.state.valueSecond.get("pod")}
+            <components.Icon icon="chevron-down" style={{float: "right"}}/>
+        </span>;
+    },
     render: function () {
         return (
-            <div>
-                <components.Multiselect
-                    allowedValues={this.props.allowedValues}
-                    filter={this.props.filter}
-                    getLabel={this.props.getSitoLabel}
-                    maxValues={1}
-                    onChange={this.multi1}
-                    open={this.props.open}
-                    placeholder={"Seleziona punto 1"}
-                    style={this.props.style}
-                    value={this.state.valueFirst}
-                />
-                <components.Multiselect
-                    allowedValues={this.props.allowedValues}
-                    filter={this.props.filter}
-                    getLabel={this.props.getSitoLabel}
-                    maxValues={1}
-                    onChange={this.multi2}
-                    open={this.props.open}
-                    placeholder={"Seleziona punto 2"}
-                    style={this.props.style}
-                    value={this.state.valueSecond}
-                />
+            <div className="select-popover">
+                <components.Popover
+                    arrow="none"
+                    style="inherit"
+                    title={this.titleFirstSelect()}
+                >
+                    <components.SelectTree
+                        allowedValues={this.props.allowedValues}
+                        buttonCloseDefault={true}
+                        filter={this.props.filter}
+                        getLabel={this.props.getSitoLabel}
+                        onChange={this.multi1}
+                        value={this.state.valueFirst}
+                    />
+                </components.Popover>
+                <components.Spacer direction="v" size={30} />
+                <components.Popover
+                    arrow="none"
+                    style="inherit"
+                    title={this.titleSecondSelect()}
+                >
+                    <components.SelectTree
+                        allowedValues={this.props.allowedValues}
+                        buttonCloseDefault={true}
+                        filter={this.props.filter}
+                        getLabel={this.props.getSitoLabel}
+                        onChange={this.multi2}
+                        value={this.state.valueSecond}
+                    />
+                </components.Popover>
                 <components.Button
                     onClick={this.onClick()}
                     style={{

@@ -8,6 +8,7 @@ var IPropTypes = require("react-immutable-proptypes");
 
 var colors           = require("lib/colors");
 var components       = require("components/");
+var icons            = require("lib/icons");
 var styles           = require("lib/styles");
 var QuerystringMixin = require("lib/querystring-mixin");
 var CollectionUtils  = require("lib/collection-utils");
@@ -19,17 +20,8 @@ var multiselectStyles = {
     },
     multiselect: {
         width: "450px",
-        height: "35px"
-    },
-    tag: {
-        display: "inline-block",
-        width: "150px",
-        float: "left",
-        paddingLeft: "10px",
-        paddingRight: "10px",
-        fontSize: "11px",
-        overflow: "hidden",
-        textOverflow: "ellipsis"
+        height: "35px",
+        display: "inline-block"
     }
 };
 
@@ -37,19 +29,6 @@ var graphStyle = {
     border: "solid 1px " + color(colors.darkBlack).alpha(0.1).rgbString(),
     boxShadow: "2px 2px 5px " + colors.greySubTitle
 };
-
-var SitoTagComponent = React.createClass({
-    propTypes: {
-        item: IPropTypes.map
-    },
-    render: function () {
-        return (
-            <span style={multiselectStyles.tag}>
-                {CollectionUtils.siti.getLabel(this.props.item)}
-            </span>
-        );
-    }
-});
 
 var Chart = React.createClass({
     propTypes: {
@@ -90,11 +69,9 @@ var Chart = React.createClass({
         ];
     },
     getExportType: function () {
-        var iconCSV = "/_assets/icons/os__CSV.svg";
-        var iconPNG = "/_assets/icons/os__JPG.svg";
         return [
-            {label: "Png", key: "png", icon: iconPNG},
-            {label: "Csv", key: "csv", icon: iconCSV}
+            {label: "Png", key: "png", icon: icons.iconPNG},
+            {label: "Csv", key: "csv", icon: icons.iconCSV}
         ];
     },
     getDateCompare: function () {
@@ -112,7 +89,7 @@ var Chart = React.createClass({
             {label: "SETTIMANA SCORSA", key: "weeks"},
             {label: "MESE SCORSO", key: "months"},
             {label: "2 MESI FA", key: "2months"},
-            {label: "CUSTOM", key: "custom"}
+            {label: "ALTRO PERIODO", key: "custom"}
         ];
     },
     onChangeExport: function (valueChanged) {
@@ -124,24 +101,12 @@ var Chart = React.createClass({
         }
     },
     render: function () {
-        // Icone
-        var iconCompare = "/_assets/icons/os__cal.svg";
-        var iconExport = "/_assets/icons/os__export.svg";
-        var iconPower = "/_assets/icons/os__power.svg";
-        var iconSiti = "/_assets/icons/os__map.svg";
         // Sito
         var siti = this.props.collections.get("siti") || Immutable.Map();
         var sitoInputProps = this.bindToQueryParameter(
             "sito",
             transformers.sito(siti)
         );
-
-        var sitoInputSingleMultiselect = function (sito) {
-            if (!R.isEmpty(sito)) {
-                return sitoInputProps.onChange([R.last(sito)]);
-            }
-            return sitoInputProps.onChange([]);
-        };
 
         // Tipologia
         var tipologie = this.getTipologie();
@@ -184,14 +149,7 @@ var Chart = React.createClass({
             <div>
                 <h2
                     className="text-center"
-                    style={{
-                            color: colors.titleColor,
-                            backgroundColor: colors.greyBackground,
-                            marginTop: "0px",
-                            height: "40px",
-                            fontSize: "20pt",
-                            marginBottom: "0px"
-                        }}
+                    style={styles.titlePage}
                 >
                     <components.Spacer direction="v" size={5} />
                     Storico consumi
@@ -207,7 +165,7 @@ var Chart = React.createClass({
                             {...valoreInputProps}
                         />
                         <components.Popover
-                            title={<img src={iconExport} style={{width: "50%"}} />}
+                            title={<img src={icons.iconExport} style={{width: "50%"}} />}
                             tooltipId="tooltipExport"
                             tooltipMessage="Esporta"
                             tooltipPosition="right"
@@ -223,7 +181,7 @@ var Chart = React.createClass({
                     </span>
                     <span className="pull-right" style={{display: "flex"}}>
                         <components.Popover
-                            title={<img src={iconPower} style={{width: "75%"}} />}
+                            title={<img src={icons.iconPower} style={{width: "75%"}} />}
                             tooltipId="tooltipInterest"
                             tooltipMessage="Quantità d'interesse"
                             tooltipPosition="left"
@@ -237,29 +195,25 @@ var Chart = React.createClass({
                             />
                         </components.Popover>
                         <components.Popover
-                            title={<img src={iconSiti} style={{width: "75%"}} />}
+                            style="inherit"
+                            title={<img src={icons.iconSiti} style={{width: "75%"}} />}
                             tooltipId="tooltipMisurazione"
                             tooltipMessage="Punti di misurazione"
-                            tooltipPosition="left"
+                            tooltipPosition="top"
                         >
-                            <components.Multiselect
+                            <components.SelectTree
                                 allowedValues={siti}
                                 filter={CollectionUtils.siti.filter}
                                 getLabel={CollectionUtils.siti.getLabel}
-                                maxValues={1}
-                                onChange={sitoInputSingleMultiselect}
-                                open=" "
                                 placeholder={"Punto di misurazione"}
-                                style={multiselectStyles.multiselectPopover}
-                                tagComponent={SitoTagComponent}
-                                value={sitoInputProps.value}
+                                {...sitoInputProps}
                             />
                         </components.Popover>
                         <components.DatefilterModal
                             allowedValues={filterDate}
                             getKey={R.prop("key")}
                             getLabel={R.prop("label")}
-                            title={<img src={iconCompare} style={{width: "75%"}} />}
+                            title={<img src={icons.iconCalendar} style={{width: "75%"}} />}
                             {...dateFilterProps}
                         />
                         <components.Compare>
@@ -280,7 +234,7 @@ var Chart = React.createClass({
                         </components.Compare>
                     </span>
                 </bootstrap.Col>
-                <bootstrap.Col sm={12} style={{height: "100%"}}>
+                <bootstrap.Col  className="modal-container" sm={12} style={{height: "100%"}}>
                     <components.HistoricalGraph
                         dateCompare={dateCompareProps.value}
                         dateFilter={dateFilterProps.value}

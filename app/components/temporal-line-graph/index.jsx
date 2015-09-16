@@ -1,10 +1,14 @@
-var R      = require("ramda");
-var React  = require("react");
+var R         = require("ramda");
+var Radium    = require("radium");
+var React     = require("react");
+var Loader    = require("halogen/PacmanLoader");
+var bootstrap = require("react-bootstrap");
+var moment    = require("moment");
 
 var AppPropTypes     = require("lib/app-prop-types.js");
 var dygraphExport    = require("lib/dygraph-export.js");
 var DygraphCSVExport = require("lib/dygraph-export-csv.js");
-
+var colors           = require("lib/colors");
 
 var styles = {
     graphContainer: {
@@ -62,6 +66,24 @@ var TemporalLineGraph = React.createClass({
                 y: {}
             }
         };
+        if (props.coordinates.length !== 0) {
+            var lastDate;
+            options.underlayCallback = function (canvas, area, g) {
+                props.coordinates.map(value => {
+                    var date = value[0];
+                    if (moment(lastDate).date() !== moment(date).date() && R.equals(moment(date), moment(date).day(6))) {
+                        lastDate = date;
+                        var bottomLeft = g.toDomCoords(moment(date).startOf("day"), -20);
+                        var topRight = g.toDomCoords(moment(date).add(1, "days").endOf("day"), +20);
+                        var left = bottomLeft[0];
+                        var right = topRight[0];
+
+                        canvas.fillStyle = colors.greyBackground;
+                        canvas.fillRect(left, area.y, right - left, area.h);
+                    }
+                });
+            };
+        }
         if (props.colors) {
             options.colors = props.colors;
         }
@@ -93,6 +115,72 @@ var TemporalLineGraph = React.createClass({
         /*
         *   Instantiating the graph automatically renders it to the page
         */
+
+        Dygraph.Interaction.moveTouch = function (event, g, context) {
+            // If the tap moves, then it's definitely not part of a double-tap.
+            context.startTimeForDoubleTapMs = null;
+
+            var i = [];
+            var touches = [];
+            for (i = 0; i < event.touches.length; i++) {
+                var t = event.touches[i];
+                touches.push({
+                    pageX: t.pageX
+                });
+            }
+            var initialTouches = context.initialTouches;
+
+            var c_now;
+
+            // old and new centers.
+            var c_init = context.initialPinchCenter;
+            if (touches.length === 1) {
+                c_now = touches[0];
+            } else {
+                c_now = {
+                    pageX: 0.5 * (touches[0].pageX + touches[1].pageX)
+                };
+            }
+
+              // this is the "swipe" component
+              // we toss it out for now, but could use it in the future.
+            var swipe = {
+                pageX: c_now.pageX - c_init.pageX
+            };
+            var dataWidth = context.initialRange.x[1] - context.initialRange.x[0];
+            swipe.dataX = (swipe.pageX / g.plotter_.area.w) * dataWidth;
+            var xScale;
+
+            // The residual bits are usually split into scale & rotate bits, but we split
+            // them into x-scale and y-scale bits.
+            if (touches.length === 1) {
+                xScale = 1.0;
+            } else if (touches.length >= 2) {
+                var initHalfWidth = (initialTouches[1].pageX - c_init.pageX);
+                xScale = (touches[1].pageX - c_now.pageX) / initHalfWidth;
+            }
+
+            // Clip scaling to [1/8, 8] to prevent too much blowup.
+            xScale = Math.min(8, Math.max(0.125, xScale));
+
+            var didZoom = false;
+            if (context.touchDirections.x) {
+                g.dateWindow_ = [
+                    c_init.dataX - swipe.dataX + (context.initialRange.x[0] - c_init.dataX) / xScale,
+                    c_init.dataX - swipe.dataX + (context.initialRange.x[1] - c_init.dataX) / xScale
+                ];
+                didZoom = true;
+            }
+
+            g.drawGraph_(false);
+
+            // We only call zoomCallback on zooms, not pans, to mirror desktop behavior.
+            if (didZoom && touches.length > 1 && g.getFunctionOption("zoomCallback")) {
+                var viewWindow = g.xAxisRange();
+                g.getFunctionOption("zoomCallback").call(g, viewWindow[0], viewWindow[1], g.yAxisRanges());
+            }
+        };
+
         this.graph = new Dygraph(container, coordinates, options);
     },
     exportCSV: function () {
@@ -118,9 +206,62 @@ var TemporalLineGraph = React.createClass({
         link.setAttribute("download", name);
         link.click();
     },
+    renderSpinner: function () {
+        // TODO To set a timeout.
+        if (window.location.search.indexOf("sito") >= 0 && this.props.coordinates.length === 0) {
+            return (
+                <div className="modal-spinner">
+                    <bootstrap.Modal
+                        animation={false}
+                        autoFocus={false}
+                        container={this}
+                        enforceFocus={false}
+                        onHide={R.identity()}
+                        style={{zIndex: 1000}}
+                    >
+                        <Radium.Style
+                            rules={{
+                                ".modal-dialog": {
+                                    width: "98%"
+                                },
+                                ".modal-container": {
+                                    position: "relative",
+                                    width: "100%"
+                                },
+                                ".modal-container .modal, .modal-container .modal-backdrop": {
+                                    position: "absolute",
+                                    width: "98%",
+                                    left: "1%"
+                                },
+                                ".modal": {
+                                    top: "50%"
+                                },
+                                ".modal-content > div > div": {
+                                    left: "45%"
+                                },
+                                ".modal-content": {
+                                    backgroundColor: colors.transparent,
+                                    boxShadow: "none",
+                                    WebkitBoxShadow: "none",
+                                    border: "none"
+                                },
+                                ".modal-backdrop": {
+                                    opacity: "0.8",
+                                    backgroundColor: colors.white
+                                }
+                            }}
+                            scopeSelector=".modal-container"
+                        />
+                    <Loader color={colors.primary} style={{zIndex: 1010, position: "relative"}}/>
+                    </bootstrap.Modal>
+                </div>
+            );
+        }
+    },
     render: function () {
         return (
             <span>
+                {this.renderSpinner()}
                 <div ref="graphContainer" style={styles.graphContainer}/>
             </span>
         );

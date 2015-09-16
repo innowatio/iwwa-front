@@ -1,7 +1,6 @@
 require("unit-setup.js");
 
 var Immutable = require("immutable");
-var moment    = require("moment");
 var R         = require("ramda");
 
 var DygraphCoordinate = require("lib/app-prop-types.js").DygraphCoordinate;

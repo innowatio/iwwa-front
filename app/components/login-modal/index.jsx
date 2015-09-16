@@ -1,5 +1,6 @@
 var Radium = require("radium");
 var React  = require("react");
+var R      = require("ramda");
 
 var components        = require("components");
 var colors            = require("lib/colors");
@@ -104,14 +105,14 @@ var LoginModal = React.createClass({
     },
     render: function () {
         return this.props.isOpen ? (
-            <div style={styles.overlay}>
+            <div style={R.merge(styles.overlay, {zIndex: 10000})}>
                 <div style={styles.body}>
                     <div style={styles.title.container}>
                         <div>
                             <img src="/_assets/images/logo.png" style={styles.title.logo} />
                         </div>
                         <components.Spacer direction="v" size={32} />
-                        <div style={styles.title.firstLine}>{"Energia alla tua Energia"}</div>
+                        <div style={styles.title.firstLine}>{"Diamo Energia alla tua Energia"}</div>
                         <div style={styles.title.secondLine}>{"Innowatio"}</div>
                     </div>
                     <components.Spacer direction="v" size={64} />

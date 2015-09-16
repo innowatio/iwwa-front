@@ -45,14 +45,6 @@ var DataCompare = React.createClass({
             value: newState
         });
     },
-    iconSelectData: function (active) {
-        // TODO Quando ci sono le giuste inserirle al posto di queste
-        var iconPower = "/_assets/icons/os__power.svg";
-        var iconSiti = "/_assets/icons/os__map.svg";
-        return active ?
-            iconPower :
-            iconSiti;
-    },
     onClickButton: function () {
         this.props.closeModal();
         this.props.onChange(this.state.value, "sito");
@@ -68,7 +60,6 @@ var DataCompare = React.createClass({
                 value={allowedValue}
             >
                 {this.props.getLabel(allowedValue)}
-                <img className="pull-right" src={this.iconSelectData(active)} style={{width: "22px"}}/>
             </components.Button>
         );
     },

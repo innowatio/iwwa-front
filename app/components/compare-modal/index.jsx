@@ -3,8 +3,10 @@ var Radium         = require("radium");
 var React          = require("react");
 var bootstrap      = require("react-bootstrap");
 
-var colors = require("lib/colors");
+var colors     = require("lib/colors");
 var components = require("components/");
+var icons      = require("lib/icons");
+var measures   = require("lib/measures");
 
 var Compare = React.createClass({
     propTypes: {
@@ -111,12 +113,11 @@ var Compare = React.createClass({
         ) : null;
     },
     render: function () {
-        var iconCompare = "/_assets/icons/os__compare.svg";
         return (
             <span>
                 <bootstrap.ButtonGroup>
                     <components.Popover
-                        title={<img src={iconCompare} style={{width: "75%"}} />}
+                        title={<img src={icons.iconCompare} style={{width: "75%"}} />}
                         tooltipId="tooltipCompare"
                         tooltipMessage={"Comparazione"}
                         tooltipPosition="left"
@@ -133,13 +134,14 @@ var Compare = React.createClass({
                 </bootstrap.ButtonGroup>
                     <bootstrap.Modal
                         container={this}
+                        enforceFocus={false}
                         onHide={this.close}
                         show={this.state.showModal}
                     >
                         <Radium.Style
                             rules={{
                                 ".modal-content": {
-                                    width: "656px"
+                                    width: measures.modalWidthLarge
                                 }
                             }}
                             scopeSelector=".modal-dialog"
