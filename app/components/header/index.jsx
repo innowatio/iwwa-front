@@ -2,9 +2,9 @@ var Router = require("react-router");
 var Radium = require("radium");
 var React  = require("react");
 
-var assetsPathTo = require("lib/assets-path-to");
-var colors       = require("lib/colors");
-var measures     = require("lib/measures");
+var colors   = require("lib/colors");
+var measures = require("lib/measures");
+var icons    = require("lib/icons");
 
 var styles = {
     base: {
@@ -45,8 +45,6 @@ var Header = React.createClass({
         this.props.asteroid.logout();
     },
     render: function () {
-        var iconLogout = assetsPathTo("icons/os__logout.svg");
-        var iconLogo   = assetsPathTo("icons/os__link_dashboard.svg");
         return (
             <div style={styles.base}>
                 <span
@@ -56,11 +54,11 @@ var Header = React.createClass({
                 />
                 <span style={styles.base}>
                     <Router.Link to="/dashboard/" >
-                        <img src={iconLogo} />
+                        <img src={icons.iconLogo} />
                     </Router.Link>
                 </span>
                 <span onClick={this.logout} style={styles.logout}>
-                    <img className="pull-right" src={iconLogout} style={{width: "85%"}}/>
+                    <img className="pull-right" src={icons.iconLogout} style={{width: "85%"}}/>
                 </span>
             </div>
         );

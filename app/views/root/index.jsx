@@ -2,11 +2,11 @@ var Radium = require("radium");
 var R      = require("ramda");
 var React  = require("react");
 
-var components   = require("components");
-var assetsPathTo = require("lib/assets-path-to");
-var asteroid     = require("lib/asteroid");
-var measures     = require("lib/measures");
-var colors       = require("lib/colors");
+var components = require("components");
+var asteroid   = require("lib/asteroid");
+var measures   = require("lib/measures");
+var colors     = require("lib/colors");
+var icons      = require("lib/icons");
 
 var styles = {
     header: {
@@ -41,12 +41,6 @@ var styles = {
     }
 };
 
-var icoAlarm      = assetsPathTo("icons/os__Alarms_menu-.svg");
-var icoHistConsum = assetsPathTo("icons/os__Historical_consumption-.svg");
-var icoDashboard  = assetsPathTo("icons/os__Dashboard-.svg");
-var icoHelp       = assetsPathTo("icons/os__Help.svg");
-var icoLiveConsum = assetsPathTo("icons/os__Live_consumption-.svg");
-
 var Root = React.createClass({
     propTypes: {
         children: React.PropTypes.node
@@ -61,11 +55,11 @@ var Root = React.createClass({
     },
     getMenuItems: function () {
         return [
-            {key: "dashboard", label: "Dashboard", url: "/dashboard/", iconPath: icoDashboard},
-            {key: "chart", label: "Historical Consumption", url: "/chart/", iconPath: icoHistConsum},
-            {key: "live", label: "Live Consumption", url: "/live/", iconPath: icoLiveConsum},
-            {key: "alarms", label: "Alarms", url: "/alarms/", iconPath: icoAlarm},
-            {key: "help", label: "Help", url: "/help/", iconPath: icoHelp}
+            {key: "dashboard", label: "Dashboard", url: "/dashboard/", iconPath: icons.iconDashboard},
+            {key: "chart", label: "Historical Consumption", url: "/chart/", iconPath: icons.iconHistConsum},
+            {key: "live", label: "Live Consumption", url: "/live/", iconPath: icons.iconLiveConsum},
+            {key: "alarms", label: "Alarms", url: "/alarms/", iconPath: icons.iconAlarm},
+            {key: "help", label: "Help", url: "/help/", iconPath: icons.iconHelp}
         ];
     },
     toggleSidebar: function () {

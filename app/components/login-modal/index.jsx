@@ -1,5 +1,6 @@
 var Radium = require("radium");
 var React  = require("react");
+var R      = require("ramda");
 
 var components        = require("components");
 var assetsPathTo      = require("lib/assets-path-to");
@@ -105,7 +106,7 @@ var LoginModal = React.createClass({
     },
     render: function () {
         return this.props.isOpen ? (
-            <div style={styles.overlay}>
+            <div style={R.merge(styles.overlay, {zIndex: 10000})}>
                 <div style={styles.body}>
                     <div style={styles.title.container}>
                         <div>
