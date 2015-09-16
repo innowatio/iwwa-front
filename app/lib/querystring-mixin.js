@@ -20,7 +20,6 @@ module.exports = R.merge(Router.Navigation, {
         *   location props passed by react-router
         */
         var queryValue = R.path(["location", "query", name], self.props);
-
         /*
         *   Return the props which will be attached to an input component. The
         *   input must adhere to the convention of taking value as the current

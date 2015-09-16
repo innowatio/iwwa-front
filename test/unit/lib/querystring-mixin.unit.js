@@ -12,6 +12,8 @@ describe("The `QuerystringMixin`", function () {
     });
 
     it("should have been mixed in with react-router's `Navigation` mixin", function () {
+        console.log(Router.Navigation);
+        console.log(R.keys(Router.Navigation));
         expect(QuerystringMixin).to.include.keys(R.keys(Router.Navigation));
     });
 
