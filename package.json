@@ -91,9 +91,13 @@
     "title-case": "^1.1.1",
     "treeview-react-bootstrap": "^0.2.4"
   },
-  "cordovaPlugins": [
-    "cordova-plugin-device",
-    "cordova-plugin-inappbrowser",
-    "cordova-plugin-statusbar"
-  ]
+  "cordova": {
+    "name": "iwwa",
+    "version": "1.0.0",
+    "plugins": [
+      "cordova-plugin-device",
+      "cordova-plugin-inappbrowser",
+      "cordova-plugin-statusbar"
+    ]
+  }
 }

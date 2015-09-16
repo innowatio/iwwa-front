@@ -52,7 +52,7 @@ var createCordovaApp = function () {
 };
 
 var installCordovaPlugins = function () {
-    this.cordovaPlugins.forEach(function (plugin) {
+    this.plugins.forEach(function (plugin) {
         sh(`cd builds/cordova-app && ${bin.cordova} plugin add ${plugin}`);
     });
 };
@@ -72,6 +72,7 @@ var configureCordovaApp = function () {
         .then(function (xml) {
 
             xml.widget.$.version = this.version;
+            xml.widget.$.id = this.name;
             xml.widget.platform = {$: {
                 name: this.platform
             }};
@@ -196,10 +197,10 @@ var argv = minimist(process.argv.slice(2), {
 });
 
 var config = {
-    name: pkg.name,
+    name: pkg.cordova.name,
     platform: argv.platform,
-    version: pkg.version,
-    cordovaPlugins: pkg.cordovaPlugins
+    version: pkg.cordova.version,
+    plugins: pkg.cordova.plugins
 };
 
 BPromise.bind(config)
