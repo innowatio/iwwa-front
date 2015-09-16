@@ -4,6 +4,7 @@ var React      = require("react");
 var IPropTypes = require("react-immutable-proptypes");
 var titleCase  = require("title-case");
 
+var components         = require("components");
 var colors             = require("lib/colors");
 var DateCompareGraph   = require("./date-compare.jsx");
 var ValoriCompareGraph = require("./valori-compare.jsx");
@@ -85,6 +86,15 @@ var HistoricalGraph = React.createClass({
                         scopeSelector=".col-sm-12"
                     />
                     {this.renderTitle()}
+                    <div
+                        onClick={this.props.resetCompare}
+                        style={{
+                            display: this.props.dateCompare || this.props.siti.length > 1 ? "flex" : "none",
+                            position: "relative",
+                            marginLeft: "50px"}}
+                    >
+                        <components.Icon icon="times-circle" style={{fontSize: "20px", width: "30px"}}></components.Icon>
+                        Esci dal confronto</div>
                     {this.renderGraph()}
                 </div>
         );
