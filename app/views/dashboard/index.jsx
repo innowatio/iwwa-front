@@ -2,16 +2,17 @@ var bootstrap  = require("react-bootstrap");
 var Radium     = require("radium");
 var React      = require("react");
 
-var components = require("components");
-var colors     = require("lib/colors");
+var components   = require("components");
+var assetsPathTo = require("lib/assets-path-to");
+var colors       = require("lib/colors");
 
 var Dashboard = React.createClass({
     propTypes: {
     },
     render: function () {
-        var widget1 = "/_assets/images/dashboard/widget4.png";
-        var widget2 = "/_assets/images/dashboard/widget2.png";
-        var widget3 = "/_assets/images/dashboard/widget3.png";
+        var widget1 = assetsPathTo("images/dashboard/widget4.png");
+        var widget2 = assetsPathTo("images/dashboard/widget2.png");
+        var widget3 = assetsPathTo("images/dashboard/widget3.png");
 
         return (
             <bootstrap.Grid>

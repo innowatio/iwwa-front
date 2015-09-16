@@ -33,7 +33,8 @@ var graphStyle = {
 var Chart = React.createClass({
     propTypes: {
         asteroid: React.PropTypes.object,
-        collections: IPropTypes.map
+        collections: IPropTypes.map,
+        location: React.PropTypes.object
     },
     mixins: [QuerystringMixin],
     componentDidMount: function () {

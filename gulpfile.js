@@ -42,6 +42,7 @@ var deps = JSON.parse(fs.readFileSync("deps.json", "utf8"));
 
 proGulp.task("buildMainHtml", function () {
     return gulp.src("app/main.html")
+        .pipe(gp.preprocess({context: {ENVIRONMENT: ENVIRONMENT}}))
         .pipe(gp.rename("index.html"))
         .pipe(gulp.dest("builds/" + ENVIRONMENT + "/"));
 });
@@ -76,6 +77,7 @@ proGulp.task("buildAppScripts", (function () {
         },
         plugins: [
             new webpack.DefinePlugin({
+                ENVIRONMENT: JSON.stringify(ENVIRONMENT),
                 READ_BACKEND_HOST: JSON.stringify(READ_BACKEND_HOST),
                 WRITE_BACKEND_HOST: JSON.stringify(WRITE_BACKEND_HOST)
             }),

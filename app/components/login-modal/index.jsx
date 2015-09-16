@@ -3,6 +3,7 @@ var React  = require("react");
 var R      = require("ramda");
 
 var components        = require("components");
+var assetsPathTo      = require("lib/assets-path-to");
 var colors            = require("lib/colors");
 var LoginView         = require("./login-view.jsx");
 var PasswordResetView = require("./password-reset-view.jsx");
@@ -15,7 +16,7 @@ var styles = {
         height: "100%",
         width: "100%",
         backgroundColor: colors.black,
-        backgroundImage: "url(/_assets/images/login-background.jpg)",
+        backgroundImage: "url(" + assetsPathTo("images/login-background.jpg") + ")",
         backgroundSize: "cover",
         zIndex: 1000,
         overflowY: "scroll"
@@ -109,7 +110,7 @@ var LoginModal = React.createClass({
                 <div style={styles.body}>
                     <div style={styles.title.container}>
                         <div>
-                            <img src="/_assets/images/logo.png" style={styles.title.logo} />
+                            <img src={assetsPathTo("images/logo.png")} style={styles.title.logo} />
                         </div>
                         <components.Spacer direction="v" size={32} />
                         <div style={styles.title.firstLine}>{"Diamo Energia alla tua Energia"}</div>
