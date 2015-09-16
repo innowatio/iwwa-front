@@ -234,7 +234,8 @@ var TemporalLineGraph = React.createClass({
                                     left: "1%"
                                 },
                                 ".modal": {
-                                    top: "50%"
+                                    top: "50%",
+                                    zIndex: 1039
                                 },
                                 ".modal-content > div > div": {
                                     left: "45%"
@@ -247,7 +248,8 @@ var TemporalLineGraph = React.createClass({
                                 },
                                 ".modal-backdrop": {
                                     opacity: "0.8",
-                                    backgroundColor: colors.white
+                                    backgroundColor: colors.white,
+                                    zIndex: 1039
                                 }
                             }}
                             scopeSelector=".modal-container"

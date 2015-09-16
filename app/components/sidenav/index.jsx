@@ -13,7 +13,7 @@ var styles = {
         borderRightStyle: "solid",
         borderRightColor: colors.primary,
         backgroundColor: colors.white,
-        zIndex: 100// ,
+        zIndex: 1040// ,
         // "@media only screen": {
         //     left: "-" + measures.sidebarWidth
         // }
@@ -38,7 +38,7 @@ var styles = {
     },
     iconsBar: {
         height: "100%",
-        zIndex: 101,
+        zIndex: 1041,
         borderRightWidth: "1px",
         borderRightStyle: "solid",
         borderRightColor: colors.primary,

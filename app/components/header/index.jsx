@@ -22,19 +22,9 @@ var styles = {
         alignItems: "center"
     },
     hamburger: {
-        height: measures.headerHeight,
-        backgroundColor: colors.primary,
-        alignItems: "center",
-        color: colors.white,
-        fontSize: "35px",
-        textAlign: "right",
-        paddingRight: "15px",
-        paddingTop: "5px",
         cursor: "pointer"
     }
 };
-
-var icoMenu = "fa fa-bars";
 
 var Header = React.createClass({
     propTypes: {
@@ -47,11 +37,7 @@ var Header = React.createClass({
     render: function () {
         return (
             <div style={styles.base}>
-                <span
-                    className={icoMenu}
-                    onClick={this.props.menuClickAction}
-                    style={styles.hamburger}
-                />
+                <img onClick={this.props.menuClickAction} src={icons.iconMenu}  style={styles.hamburger}/>
                 <span style={styles.base}>
                     <Router.Link to="/dashboard/" >
                         <img src={icons.iconLogo} />

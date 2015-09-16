@@ -1,6 +1,7 @@
 var Radium    = require("radium");
 var React     = require("react");
 var bootstrap = require("react-bootstrap");
+var R         = require("ramda");
 
 var components = require("components/");
 
@@ -25,7 +26,11 @@ var Popover = React.createClass({
         return React.addons.cloneWithProps(child, {
             onChange: (a) => {
                 self.closePopover();
-                child.props.onChange(a);
+                if (!R.isNil(child.props.onChange)) {
+                    child.props.onChange(a);
+                } else {
+                    child.props.valueLink.requestChange(a);
+                }
             }
         });
     },
@@ -39,7 +44,6 @@ var Popover = React.createClass({
         );
     },
     closePopover: function () {
-        console.log(this.refs.menuPopover);
         this.refs.menuPopover.hide();
     },
     getButton: function () {
