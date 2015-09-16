@@ -36,7 +36,8 @@ var sitoInputProps;
 var Chart = React.createClass({
     propTypes: {
         asteroid: React.PropTypes.object,
-        collections: IPropTypes.map
+        collections: IPropTypes.map,
+        location: React.PropTypes.object
     },
     mixins: [QuerystringMixin],
     componentDidMount: function () {
@@ -177,6 +178,7 @@ var Chart = React.createClass({
                             {...valoreInputProps}
                         />
                         <components.Popover
+                            hideOnChange={true}
                             title={<img src={icons.iconExport} style={{width: "50%"}} />}
                             tooltipId="tooltipExport"
                             tooltipMessage="Esporta"
@@ -193,6 +195,7 @@ var Chart = React.createClass({
                     </span>
                     <span className="pull-right" style={{display: "flex"}}>
                         <components.Popover
+                            hideOnChange={true}
                             title={<img src={icons.iconPower} style={{width: "75%"}} />}
                             tooltipId="tooltipInterest"
                             tooltipMessage="Quantità d'interesse"
@@ -207,6 +210,7 @@ var Chart = React.createClass({
                             />
                         </components.Popover>
                         <components.Popover
+                            hideOnChange={true}
                             style="inherit"
                             title={<img src={icons.iconSiti} style={{width: "75%"}} />}
                             tooltipId="tooltipMisurazione"

@@ -70,7 +70,6 @@ var AlarmForm = React.createClass({
         this.setState(this.getStateFromProps(this.props));
     },
     submit: function () {
-        console.log(this.state);
         this.setState({
             saving: true
         });
@@ -174,6 +173,7 @@ var AlarmForm = React.createClass({
                 </h5>
                 <components.Popover
                     arrow="none"
+                    hideOnChange={true}
                     style="inherit"
                     title={this.renderTitleSelectSite()}
                 >
@@ -282,12 +282,17 @@ var AlarmForm = React.createClass({
         );
     },
     renderTitleSelectSite: function () {
-        return (
+        return this.state.sito.size === 0 ?
             <span>
                 Seleziona punto di misurazione
                 <components.Icon icon="chevron-down" style={{float: "right"}}/>
-            </span>
-        );
+            </span> :
+            <span>
+                {CollectionUtils.siti.getLabel(this.state.sito)}
+                <components.Spacer direction="h" size={30} />
+                {this.state.sito.get("pod")}
+                <components.Icon icon="chevron-down" style={{float: "right"}}/>
+            </span>;
     },
     render: function () {
         return (
