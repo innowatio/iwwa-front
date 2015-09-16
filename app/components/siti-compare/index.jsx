@@ -90,6 +90,7 @@ var SitiCompare = React.createClass({
             <div className="select-popover">
                 <components.Popover
                     arrow="none"
+                    hideOnChange={true}
                     style="inherit"
                     title={this.titleFirstSelect()}
                 >
@@ -105,6 +106,7 @@ var SitiCompare = React.createClass({
                 <components.Spacer direction="v" size={30} />
                 <components.Popover
                     arrow="none"
+                    hideOnChange={true}
                     style="inherit"
                     title={this.titleSecondSelect()}
                 >

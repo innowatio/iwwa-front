@@ -1,4 +1,3 @@
-// var Immutable  = require("immutable");
 var Radium     = require("radium");
 var bootstrap  = require("react-bootstrap");
 var R          = require("ramda");

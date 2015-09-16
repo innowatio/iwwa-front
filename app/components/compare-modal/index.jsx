@@ -117,6 +117,7 @@ var Compare = React.createClass({
             <span>
                 <bootstrap.ButtonGroup>
                     <components.Popover
+                        hideOnChange={true}
                         title={<img src={icons.iconCompare} style={{width: "75%"}} />}
                         tooltipId="tooltipCompare"
                         tooltipMessage={"Comparazione"}

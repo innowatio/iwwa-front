@@ -4,11 +4,11 @@
 <svg version="1.1" id="Livello_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
 	 width="40px" height="40px" viewBox="0 0 40 40" enable-background="new 0 0 40 40" xml:space="preserve">
 <g>
-	
-		<line fill="none" stroke="#72749E" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="10" x1="7.333" y1="12.75" x2="32.666" y2="12.75"/>
-	
-		<line fill="none" stroke="#72749E" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="10" x1="7.333" y1="20" x2="32.666" y2="20"/>
-	
-		<line fill="none" stroke="#72749E" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="10" x1="7.333" y1="27.25" x2="32.666" y2="27.25"/>
+
+		<line fill="none" stroke="#ffffff" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="10" x1="7.333" y1="12.75" x2="32.666" y2="12.75"/>
+
+		<line fill="none" stroke="#ffffff" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="10" x1="7.333" y1="20" x2="32.666" y2="20"/>
+
+		<line fill="none" stroke="#ffffff" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="10" x1="7.333" y1="27.25" x2="32.666" y2="27.25"/>
 </g>
 </svg>
