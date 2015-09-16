@@ -55,7 +55,7 @@ var DataCompare = React.createClass({
     },
     onClickButton: function () {
         this.props.closeModal();
-        this.props.onChange(this.state.value);
+        this.props.onChange(this.state.value, "sito");
     },
     renderDataCompare: function (allowedValue) {
         var active = allowedValue === this.state.value.period;
