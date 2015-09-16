@@ -7,7 +7,7 @@
     "build": "gulp build",
     "build-cordova": "node scripts/build-cordova.js",
     "dev": "gulp dev",
-    "emulate-ios": "cd builds/ios && cordova emulate ios --target=\"iPad-Air\"",
+    "emulate-ios": "cd builds/cordova-app && cordova emulate ios --target=\"iPad-Air\"",
     "lint": "eslint app/**/*.js app/**/*.jsx",
     "generate-reports": "node scripts/generate-reports.js",
     "publish-reports": "node scripts/generate-reports.js && node scripts/publish-reports.js",
@@ -48,7 +48,6 @@
     "gulp-rename": "^1.2.2",
     "gulp-spawn-mocha": "^2.2.1",
     "gulp-util": "^3.0.5",
-    "ios-sim": "^4.1.1",
     "jsdom": "^5.4.3",
     "json-loader": "^0.5.2",
     "minimist": "^1.2.0",
@@ -101,5 +100,8 @@
       "cordova-plugin-inappbrowser",
       "cordova-plugin-statusbar"
     ]
+  },
+  "optionalDependencies": {
+    "ios-sim": "^5.0.1"
   }
 }
