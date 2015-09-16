@@ -3,7 +3,7 @@ var Radium         = require("radium");
 var React          = require("react");
 var bootstrap      = require("react-bootstrap");
 
-var colors = require("lib/colors");
+var colors     = require("lib/colors");
 var components = require("components/");
 
 var Compare = React.createClass({
