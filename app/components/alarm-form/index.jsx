@@ -101,8 +101,8 @@ var AlarmForm = React.createClass({
             });
         }
 
-        var timeStart = moment(this.state.repetition.timeStart);
-        var timeEnd = moment(this.state.repetition.timeEnd);
+        var timeStart = moment(this.state.repetition.timeStart, "hh:mm");
+        var timeEnd = moment(this.state.repetition.timeEnd, "hh:mm");
         if (!less(this.state.repetition.timeEnd, this.state.repetition.timeStart)) {
             rule.$and.push({
                 "date.hour": {
