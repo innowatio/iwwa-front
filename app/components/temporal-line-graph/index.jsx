@@ -3,6 +3,7 @@ var Radium    = require("radium");
 var React     = require("react");
 var Loader    = require("halogen/PacmanLoader");
 var bootstrap = require("react-bootstrap");
+var moment    = require("moment");
 
 var AppPropTypes     = require("lib/app-prop-types.js");
 var dygraphExport    = require("lib/dygraph-export.js");
