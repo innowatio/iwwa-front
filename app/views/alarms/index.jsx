@@ -6,6 +6,7 @@ var IPropTypes = require("react-immutable-proptypes");
 var Router     = require("react-router");
 var color      = require("color");
 var moment     = require("moment");
+var R          = require("ramda");
 
 var CollectionUtils = require("lib/collection-utils");
 var components = require("components");
@@ -25,7 +26,10 @@ var Alarms = React.createClass({
     },
     getInitialState: function () {
         return {
-            key: 1
+            key: 1,
+            active: [
+                "TUTTI"
+            ]
         };
     },
     componentDidMount: function () {
@@ -135,32 +139,106 @@ var Alarms = React.createClass({
                         </span>
                     );
                 }
-            },
-            {
-                key: "_id",
-                valueFormatter: function (value) {
-                    return (
-                        <Router.Link onClick={self.onClickAction} to={`/alarms/${value}`}>
-                            <components.Icon icon="arrow-right"
-                                style={{float: "right", paddingRight: "10px", paddingTop: "2px"}}/>
-                        </Router.Link>
-                    );
-                }
-            }
+            } // ,
+            // {
+            //     key: "_id",
+            //     valueFormatter: function (value) {
+            //         return (
+            //             <Router.Link onClick={self.onClickAction} to={`/alarms/${value}`}>
+            //                 <components.Icon icon="arrow-right"
+            //                     style={{float: "right", paddingRight: "10px", paddingTop: "2px"}}/>
+            //             </Router.Link>
+            //         );
+            //     }
+            // }
         ];
     },
     onClickAction: function () {
         this.activeKey(1);
-    },
-    onClickFilter: function () {
-        console.log("Filtro");
     },
     activeKey: function (key) {
         this.setState({
             key: key
         });
     },
+    alarmFilterTitle: function () {
+        return [
+            {title: "Quali allarmi vuoi visualizzare?", label: ["TUTTI", "ATTIVI", "INATTIVI"]}
+        ];
+    },
+    onClickFilter: function (label, value) {
+        if (R.equals(value, this.alarmFilterTitle()[0])) {
+            this.setState({
+                active: [
+                    label
+                ]
+            });
+        }
+    },
+    filterAlarms: function (value) {
+        if (this.state.active[0] === "ATTIVI") {
+            return value.get("active") === true;
+        }
+        if (this.state.active[0] === "INATTIVI") {
+            return value.get("active") === false;
+        }
+        return value;
+    },
+    renderFilterTableCell: function (allowedValue, label) {
+        var active = this.state.active[0] === label || this.state.active[1] === label;
+        return (
+            <bootstrap.ListGroupItem
+                key={[allowedValue, label]}
+                onClick={R.partial(this.onClickFilter, label, allowedValue)}
+                style={{
+                    paddingLeft: "10px",
+                    borderRadius: "0px",
+                    borderLeft: "0px",
+                    borderRight: "0px",
+                    color: active ? colors.white : colors.greySubTitle,
+                    backgroundColor: active ? colors.primary : colors.white,
+                    textAlign: "center",
+                    paddingTop: "0px",
+                    paddingBottom: "0px"
+                }}>
+                    <h5>{label}</h5>
+            </bootstrap.ListGroupItem>
+        );
+    },
+    renderFilterCell: function (value) {
+        return (
+            <div key={value.title}>
+                <h5 style={{color: colors.primary, width: "250px", paddingLeft: "10px"}}>
+                        {value.title}
+                </h5>
+                <bootstrap.ListGroup>
+                    {
+                        R.is(Array, value.label) ?
+                        value.label.map(R.partial(this.renderFilterTableCell, value)) :
+                        this.renderFilterTableCell(value, value.label)
+                    }
+                </bootstrap.ListGroup>
+            </div>
+        );
+    },
+    renderFilter: function () {
+        var alarmFilter = this.alarmFilterTitle();
+        return (
+            <div className="alarm-filter" style={{overflow: "auto"}}>
+                <Radium.Style
+                    rules={{
+                        ".list-group": {
+                            marginBottom: "0px"
+                        }
+                    }}
+                    scopeSelector=".alarm-filter"
+                />
+                {alarmFilter.map(this.renderFilterCell)}
+            </div>
+        );
+    },
     render: function () {
+        var allowedValues = this.props.collections.get("alarms");
         return (
             <div className="alarm-tab" style={{paddingBottom: "15px"}}>
                 <h2
@@ -213,15 +291,29 @@ var Alarms = React.createClass({
                         />
                     </bootstrap.TabPane>
                         <bootstrap.TabPane eventKey={2} tab="Allarmi">
-                            <div style={{marginRight: "30px", height: "40px", paddingTop: "20px"}}>
-                                <div onClick={this.onClickFilter} style={{float: "right", display: "flex", cursor: "pointer"}}>
-                                    <components.Icon icon="filter" style={{paddingTop: "13px"}}/>
-                                    <components.Spacer direction="h" size={10} />
-                                    <h4 style={{color: colors.primary}}>Filter</h4>
-                                </div>
+                            <div className="element-table" style={{marginRight: "84px", height: "40px", float: "right"}}>
+                                <Radium.Style
+                                    rules={{
+                                        ".btn": {
+                                            height: "40px",
+                                            textDecoration: "none"
+                                        }
+                                    }}
+                                    scopeSelector=".element-table"
+                                />
+                                <components.Popover
+                                    title={
+                                        <span style={{display: "flex", height: "40px"}}>
+                                            <components.Icon icon="filter" style={{paddingTop: "13px"}}/>
+                                            <components.Spacer direction="h" size={5}/>
+                                            <h4 style={{color: colors.primary}}>Filter</h4>
+                                        </span>}
+                                        >
+                                    {this.renderFilter()}
+                                </components.Popover>
                             </div>
                             <components.CollectionElementsTable
-                                collection={this.props.collections.get("alarms") || Immutable.Map()}
+                                collection={ R.isNil(allowedValues) ? Immutable.Map() : allowedValues.filter(this.filterAlarms)}
                                 columns={this.getColumnsAlarms()}
                                 getKey={getKeyFromAlarm}
                                 hover={true}
@@ -229,13 +321,14 @@ var Alarms = React.createClass({
                             />
                         </bootstrap.TabPane>
                         <bootstrap.TabPane eventKey={3} tab="Storico allarmi">
-                            <div style={{marginRight: "30px", height: "40px", paddingTop: "20px"}}>
+                            {/* <div style={{marginRight: "30px", height: "40px", paddingTop: "20px"}}>
                                 <div onClick={this.onClickFilter} style={{float: "right", display: "flex", cursor: "pointer"}}>
                                     <components.Icon icon="filter" style={{paddingTop: "13px"}}/>
                                     <components.Spacer direction="h" size={10} />
                                     <h4 style={{color: colors.primary}}>Filter</h4>
                                 </div>
-                            </div>
+                            </div> */}
+                            <components.Spacer direction="v" size={30}/>
                             <components.CollectionElementsTable
                                 collection={this.props.collections.get("notifications") || Immutable.Map()}
                                 columns={this.getColumnsNotifications()}

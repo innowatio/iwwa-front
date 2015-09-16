@@ -37,7 +37,7 @@ var Row = React.createClass({
     },
     renderCellElement: function (columnElement) {
         return (
-            <td key={columnElement} style={{width: this.props.width}}>
+            <td key={columnElement} style={{width: this.props.width, paddingLeft: "15px"}}>
                 {stringify(columnElement)}
             </td>
         );
