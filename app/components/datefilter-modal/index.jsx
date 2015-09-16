@@ -5,8 +5,9 @@ var bootstrap = require("react-bootstrap");
 var Calendar  = require("react-widgets").Calendar;
 var moment    = require("moment");
 
-var colors = require("lib/colors");
+var colors     = require("lib/colors");
 var components = require("components/");
+var measures   = require("lib/measures");
 
 var styles = {
     buttonCompare: {
@@ -202,7 +203,7 @@ var DatefilterModal = React.createClass({
                     <Radium.Style
                         rules={{
                             ".modal-content": {
-                                width: "656px"
+                                width: measures.modalWidthLarge
                             }
                         }}
                         scopeSelector=".modal-dialog"

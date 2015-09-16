@@ -9,6 +9,7 @@ var Popover = React.createClass({
         arrow: React.PropTypes.string,
         children: React.PropTypes.element,
         hideOnChange: React.PropTypes.bool,
+        style: React.PropTypes.string,
         title: React.PropTypes.element,
         tooltipId: React.PropTypes.string,
         tooltipMessage: React.PropTypes.string,
@@ -43,7 +44,7 @@ var Popover = React.createClass({
     },
     getButton: function () {
         return this.props.arrow === "none" ?
-            <components.Button style={{width: "430px"}} >
+            <components.Button style={{width: "430px", whiteSpace: "normal"}} >
                 {this.props.title}
             </components.Button> :
             <components.Button bsStyle="link">
@@ -76,7 +77,7 @@ var Popover = React.createClass({
                     rules={{
                         "": {
                             padding: "0px",
-                            height: this.props.tooltipMessage === "Punti di misurazione" ? "45%" : "",
+                            height: this.props.style === "inherit" ? "calc(100vh - 420px)" : "",
                             maxWidth: "500px",
                             width: this.props.arrow === "none" ? "430px" : "",
                             marginTop: this.props.arrow === "none" ? "0px !important" : ""

@@ -205,7 +205,53 @@ describe("The `getCoordinates` method of the DateCompareGraph component", functi
     });
 
     it("should sort misure by data", function () {
-        var instance = getInstance(3, 3, "months");
+        var data = "Wed Aug 1 2015 12:13:59 GMT+0200 (CEST)";
+        var pod = "pod";
+        var tipologia = 1;
+        var instance = {
+            props: {
+                dateCompare: {
+                    period: "months",
+                    dateOne: "Wed Sep 02 2015 12:13:59 GMT+0200 (CEST)"
+                },
+                misure: Immutable.fromJS([
+                    // in range 1
+                    {
+                        data: moment(data).subtract(1, "hours").valueOf(),
+                        pod: pod,
+                        prop1: pod,
+                        prop2: tipologia,
+                        tipologia: tipologia
+                    },
+                    // in range 2
+                    {
+                        data: moment(data).subtract(47, "hours").valueOf(),
+                        pod: pod,
+                        prop1: pod,
+                        prop2: tipologia,
+                        tipologia: tipologia
+                    },
+                    // non in range
+                    {
+                        data: moment(data).subtract(10, "days").valueOf(),
+                        pod: pod,
+                        prop1: pod,
+                        prop2: tipologia,
+                        tipologia: tipologia
+                    }
+                ]),
+                siti: [Immutable.Map({
+                    pod: pod
+                })],
+                tipologia: {
+                    key: tipologia
+                },
+                valori: [
+                    {key: "prop1"},
+                    {key: "prop2"}
+                ]
+            }
+        };
         var dc = instance.props.dateCompare.dateOne;
         instance.getDateRanges = function () {
             return {
