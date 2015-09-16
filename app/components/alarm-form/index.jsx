@@ -1,5 +1,6 @@
 var axios      = require("axios");
 var Immutable  = require("immutable");
+var moment     = require("moment");
 var Radium     = require("radium");
 var R          = require("ramda");
 var React      = require("react");
@@ -13,6 +14,13 @@ var colors          = require("lib/colors");
 var Icon            = require("lib/icons");
 var stringIt        = require("lib/string-it");
 var styles          = require("lib/styles");
+
+var less = function (time1, time2) {
+    return (
+        moment(time1, "hh:mm").toDate() <
+        moment(time2, "hh:mm").toDate()
+    );
+};
 
 var AlarmForm = React.createClass({
     propTypes: {
@@ -62,19 +70,59 @@ var AlarmForm = React.createClass({
         this.setState(this.getStateFromProps(this.props));
     },
     submit: function () {
+        console.log(this.state);
         this.setState({
             saving: true
         });
+
+        var rule = {
+            $and: []
+        };
+
+        rule.$and.push({
+            reale: {
+                $gt: parseInt(this.state.threshold)
+            }
+        });
+
+        if (!R.isEmpty(this.state.repetition.weekDays)) {
+            rule.$and.push({
+                "date.weekDay": {
+                    $in: this.state.repetition.weekDays
+                }
+            });
+        }
+        if (this.state.repetition.day) {
+            var day = moment(this.state.repetition.day);
+            rule.$and.push({
+                "date.monthDay": day.date(),
+                "date.month": day.month(),
+                "date.year": day.year()
+            });
+        }
+
+        var timeStart = moment(this.state.repetition.timeStart);
+        var timeEnd = moment(this.state.repetition.timeEnd);
+        if (!less(this.state.repetition.timeEnd, this.state.repetition.timeStart)) {
+            rule.$and.push({
+                "date.hour": {
+                    $lt: timeEnd.hour()
+                }
+            });
+            rule.$and.push({
+                "date.hour": {
+                    $gt: timeStart.hour()
+                }
+            });
+        }
+
         var alarm = {
             active: this.state.active,
             name: this.state.name,
             podId: this.state.sito.get("pod"),
-            rule: JSON.stringify({
-                reale: {
-                    $gt: parseInt(this.state.threshold)
-                }
-            })
+            rule: JSON.stringify(rule)
         };
+
         var requestBody;
         if (this.props.type === "update") {
             requestBody = {
@@ -103,6 +151,9 @@ var AlarmForm = React.createClass({
     },
     updateState: function (newValue) {
         this.setState(newValue);
+    },
+    getNotificationFromState: function () {
+        return this.state.notification;
     },
     renderAlarmSelectSite: function () {
         return (
@@ -189,9 +240,6 @@ var AlarmForm = React.createClass({
                 />
             </div>
         );
-    },
-    getNotificationFromState: function () {
-        return this.state.notification;
     },
     renderAlarmNotification: function () {
         return (

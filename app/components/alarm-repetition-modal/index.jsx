@@ -50,7 +50,7 @@ var AlarmRepetitionModal = React.createClass({
             {label: "Venerdì", key: 5, action: this.actionPutOrRemoveInArray},
             {label: "Sabato", key: 6, action: this.actionPutOrRemoveInArray},
             {label: "Domenica", key: 0, action: this.actionPutOrRemoveInArray},
-            //TODO mettere tutte le date per la voce "Giorni Festivi" (IWWA-31)
+            // TODO mettere tutte le date per la voce "Giorni Festivi" (IWWA-31)
             {label: "Giorni Festivi", key: [0, 6], action: this.actionPutOrRemoveInArray},
             this.renderDateSelection(),
             this.renderTimeSelection()
@@ -92,7 +92,7 @@ var AlarmRepetitionModal = React.createClass({
     onClickConfirm: function () {
         this.props.updateParentState({
             repetition: {
-                day: this.this.state.valueDate,
+                day: this.state.valueDate,
                 weekDays: this.state.valueRepetition,
                 timeEnd: this.state.valueTimeEnd,
                 timeStart: this.state.valueTimeStart
