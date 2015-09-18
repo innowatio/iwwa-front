@@ -92,13 +92,9 @@ var HistoricalGraph = React.createClass({
                         style={{
                             display: this.props.dateCompare || this.props.siti.length > 1 ? "flex" : "none",
                             position: "relative",
-<<<<<<< Updated upstream
-                            marginLeft: "50px"}}
-=======
                             marginLeft: "50px",
                             cursor: "pointer"
                         }}
->>>>>>> Stashed changes
                     >
                         <components.Icon icon="times-circle" style={{fontSize: "20px", width: "30px"}}></components.Icon>
                         Esci dal confronto</div>
