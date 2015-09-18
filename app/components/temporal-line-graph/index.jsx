@@ -131,14 +131,14 @@ var TemporalLineGraph = React.createClass({
             }
             var initialTouches = context.initialTouches;
 
-            var c_now;
+            var cNow;
 
             // old and new centers.
-            var c_init = context.initialPinchCenter;
+            var cInit = context.initialPinchCenter;
             if (touches.length === 1) {
-                c_now = touches[0];
+                cNow = touches[0];
             } else {
-                c_now = {
+                cNow = {
                     pageX: 0.5 * (touches[0].pageX + touches[1].pageX)
                 };
             }
@@ -146,7 +146,7 @@ var TemporalLineGraph = React.createClass({
               // this is the "swipe" component
               // we toss it out for now, but could use it in the future.
             var swipe = {
-                pageX: c_now.pageX - c_init.pageX
+                pageX: cNow.pageX - cInit.pageX
             };
             var dataWidth = context.initialRange.x[1] - context.initialRange.x[0];
             swipe.dataX = (swipe.pageX / g.plotter_.area.w) * dataWidth;
@@ -157,8 +157,8 @@ var TemporalLineGraph = React.createClass({
             if (touches.length === 1) {
                 xScale = 1.0;
             } else if (touches.length >= 2) {
-                var initHalfWidth = (initialTouches[1].pageX - c_init.pageX);
-                xScale = (touches[1].pageX - c_now.pageX) / initHalfWidth;
+                var initHalfWidth = (initialTouches[1].pageX - cInit.pageX);
+                xScale = (touches[1].pageX - cNow.pageX) / initHalfWidth;
             }
 
             // Clip scaling to [1/8, 8] to prevent too much blowup.
@@ -167,8 +167,8 @@ var TemporalLineGraph = React.createClass({
             var didZoom = false;
             if (context.touchDirections.x) {
                 g.dateWindow_ = [
-                    c_init.dataX - swipe.dataX + (context.initialRange.x[0] - c_init.dataX) / xScale,
-                    c_init.dataX - swipe.dataX + (context.initialRange.x[1] - c_init.dataX) / xScale
+                    cInit.dataX - swipe.dataX + (context.initialRange.x[0] - cInit.dataX) / xScale,
+                    cInit.dataX - swipe.dataX + (context.initialRange.x[1] - cInit.dataX) / xScale
                 ];
                 didZoom = true;
             }
