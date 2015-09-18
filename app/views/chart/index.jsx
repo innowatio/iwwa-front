@@ -68,7 +68,6 @@ var Chart = React.createClass({
     getValori: function () {
         return [
             {label: "Reale", color: colors.lineReale, key: "reale"},
-            {label: "Contrattuale", color: colors.lineContrattuale, key: "contrattuale"},
             {label: "Previsionale", color: colors.linePrevisionale, key: "previsionale"}
         ];
     },
