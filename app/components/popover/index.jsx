@@ -80,11 +80,23 @@ var Popover = React.createClass({
                 <Radium.Style
                     rules={{
                         "": {
+<<<<<<< Updated upstream
                             padding: "0px",
                             height: this.props.style === "inherit" ? "calc(100vh - 420px)" : "",
                             maxWidth: "500px",
                             width: this.props.arrow === "none" ? "430px" : "",
                             marginTop: this.props.arrow === "none" ? "0px !important" : ""
+=======
+<<<<<<< Updated upstream
+                            padding: "0px"
+=======
+                            padding: "0px",
+                            // height: this.props.style === "inherit" ? "calc(100vh - 420px)" : "",
+                            maxWidth: "500px",
+                            width: this.props.arrow === "none" ? "430px" : "",
+                            marginTop: this.props.arrow === "none" ? "0px !important" : ""
+>>>>>>> Stashed changes
+>>>>>>> Stashed changes
                         },
                         ".popover-content": {
                             padding: "0px",

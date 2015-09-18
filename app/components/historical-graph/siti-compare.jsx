@@ -59,6 +59,10 @@ var SitiCompare = React.createClass({
                 coordinates={this.getCoordinates()}
                 labels={this.getLabels()}
                 ref="temporalLineGraph"
+<<<<<<< Updated upstream
+=======
+                sito={this.props.siti[0] || Immutable.Map()}
+>>>>>>> Stashed changes
                 xLabel=""
                 yLabel="kWh"
             />
