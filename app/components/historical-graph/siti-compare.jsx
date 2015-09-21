@@ -59,6 +59,7 @@ var SitiCompare = React.createClass({
                 coordinates={this.getCoordinates()}
                 labels={this.getLabels()}
                 ref="temporalLineGraph"
+                sito={this.props.siti[0] || Immutable.Map()}
                 xLabel=""
                 yLabel="kWh"
             />

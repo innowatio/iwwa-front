@@ -12,8 +12,6 @@ describe("The `QuerystringMixin`", function () {
     });
 
     it("should have been mixed in with react-router's `Navigation` mixin", function () {
-        console.log(Router.Navigation);
-        console.log(R.keys(Router.Navigation));
         expect(QuerystringMixin).to.include.keys(R.keys(Router.Navigation));
     });
 
@@ -62,7 +60,7 @@ describe("The `value` property of the object returned by the `bindToQueryParamet
 
 describe("The `onChange` property of the object returned by the `bindToQueryParameter` method", function () {
 
-    it("should tigger a query change with the value obtained by stringifying its first argument", function () {
+    it("should trigger a query change with the value obtained by stringifying its first argument", function () {
         var instance = {
             props: {
                 location: {

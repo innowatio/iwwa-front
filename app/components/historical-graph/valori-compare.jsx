@@ -61,6 +61,7 @@ var ValoriCompare = React.createClass({
                 labels={this.getLabels()}
                 ref="temporalLineGraph"
                 showRangeSelector={true}
+                sito={this.props.siti[0] || Immutable.Map()}
                 xLabel=""
                 yLabel="kWh"
             />
