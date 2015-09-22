@@ -9,9 +9,9 @@ var moment     = require("moment");
 var R          = require("ramda");
 
 var CollectionUtils = require("lib/collection-utils");
-var components = require("components");
-var styles     = require("lib/styles");
-var colors     = require("lib/colors");
+var components      = require("components");
+var styles          = require("lib/styles");
+var colors          = require("lib/colors");
 
 var getKeyFromAlarm = function (alarm) {
     return alarm.get("_id");
@@ -139,18 +139,7 @@ var Alarms = React.createClass({
                         </span>
                     );
                 }
-            } // ,
-            // {
-            //     key: "_id",
-            //     valueFormatter: function (value) {
-            //         return (
-            //             <Router.Link onClick={self.onClickAction} to={`/alarms/${value}`}>
-            //                 <components.Icon icon="arrow-right"
-            //                     style={{float: "right", paddingRight: "10px", paddingTop: "2px"}}/>
-            //             </Router.Link>
-            //         );
-            //     }
-            // }
+            }
         ];
     },
     onClickAction: function () {
