@@ -8,7 +8,7 @@
         "compare": "E' possibile comparare 2 diversi siti o 2 diversi periodi temporali tra quelli scelti."
     },
     "alarmForm": {
-        "siti": "Puoi scegliere di visualizzare un sito dalla lista che viene mostrata.",
+        "siti": "Puoi scegliere di impostare l'allarme su un sito della lista che viene mostrata.",
         "threshold": "Puoi impostare una soglia alla quale far scattare gli allarmi.",
         "name": "Scrivi il nome di un allarme",
         "notification": "Imposta come vuoi ricevere le notifiche: sono disponibili allarmi via email, sms e push",
