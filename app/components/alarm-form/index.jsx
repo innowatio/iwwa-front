@@ -157,9 +157,15 @@ var AlarmForm = React.createClass({
     getNotificationFromState: function () {
         return this.state.notification;
     },
+    onClickResetTutorial: function () {
+        localStorage[`hideTutorialOnPage_alarm-form`] = false;
+    },
     renderAlarmSelectSite: function () {
         return (
             <div>
+                <components.Button onClick={this.onClickResetTutorial}>
+                    {"Reset tutorial"}
+                </components.Button>
                 <h3 style={{color: colors.primary}}>{stringIt.titleTabImpostazioniAlarm}</h3>
                 <h5>
                     {"Seleziona un punto da monitorare e le soglie di allarme "}

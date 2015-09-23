@@ -1,6 +1,5 @@
 {
     "historicalGraph": {
-        "introTutorial": "Benvenuto nel tutorial.",
         "valori": "Puoi scegliere uno o entrambi questi valori, che saranno visualizzati sul grafico.",
         "export": "Puoi esportare l'immagine del grafico o il CSV con i dati.",
         "tipologie": "Puoi visualizzare una di queste tipologie di dati nel grafico.",

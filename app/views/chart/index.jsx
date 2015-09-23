@@ -115,6 +115,9 @@ var Chart = React.createClass({
             dateCompareProps.onChange(null, "dateCompare");
         }
     },
+    onClickResetTutorial: function () {
+        localStorage[`hideTutorialOnPage_graph`] = false;
+    },
     render: function () {
         // Sito
         var siti = this.props.collections.get("siti") || Immutable.Map();
@@ -214,6 +217,9 @@ var Chart = React.createClass({
                             </components.Popover>
                         </components.TutorialAnchor>
                     </span>
+                    <components.Button onClick={this.onClickResetTutorial}>
+                        {"Reset Tutorial"}
+                    </components.Button>
                     <span className="pull-right" style={{display: "flex"}}>
                         <components.TutorialAnchor
                             message={tutorialString.historicalGraph.tipologie}

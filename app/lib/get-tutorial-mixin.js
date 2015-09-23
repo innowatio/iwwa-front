@@ -1,7 +1,7 @@
 var Intro = require("intro.js").introJs;
 var R     = require("ramda");
 
-var TutorialMixin = function (page, refs) {
+var GetTutorialMixin = function (page, refs) {
     return {
         componentDidMount: function () {
             if (R.isNil(localStorage[`hideTutorialOnPage_${page}`]) || localStorage[`hideTutorialOnPage_${page}`] === "false") {
@@ -25,4 +25,4 @@ var TutorialMixin = function (page, refs) {
     };
 };
 
-module.exports = TutorialMixin;
+module.exports = GetTutorialMixin;
