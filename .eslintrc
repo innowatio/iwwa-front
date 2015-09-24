@@ -12,6 +12,7 @@
         "ENVIRONMENT": true,
         "WRITE_BACKEND_HOST": true,
         "READ_BACKEND_HOST": true,
+        "PushNotification": true,
         "Dygraph": true,
         "expect": true,
         "proxyquire": true,

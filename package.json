@@ -1,6 +1,6 @@
 {
   "name": "iwwa-front",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "description": "Innowatio app front-end",
   "main": "index.js",
   "scripts": {
@@ -94,11 +94,13 @@
   },
   "cordova": {
     "name": "iwwa",
-    "version": "1.0.0",
+    "version": "1.1.0",
     "plugins": [
       "cordova-plugin-device",
       "cordova-plugin-inappbrowser",
-      "cordova-plugin-statusbar"
+      "cordova-plugin-statusbar",
+      "phonegap-plugin-push",
+      "https://github.com/robertklein/cordova-ios-security.git"
     ]
   },
   "optionalDependencies": {
