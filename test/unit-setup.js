@@ -30,3 +30,5 @@ global.TestUtils = React.addons.TestUtils;
 global.Dygraph = {};
 // Avoid `ENVIRONMENT is not defined` when running tests
 global.ENVIRONMENT = "";
+// empty localStorage for tests
+global.localStorage = {};

@@ -64,7 +64,6 @@
     "xml2js": "^0.4.12"
   },
   "dependencies": {
-    "TiTaToggle": "kleinejan/titatoggle",
     "asteroid": "mondora/asteroid#1.0.0-rewrite",
     "axios": "^0.5.4",
     "bootstrap": "^3.3.5",
