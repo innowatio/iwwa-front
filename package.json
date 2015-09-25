@@ -99,7 +99,8 @@
       "cordova-plugin-device",
       "cordova-plugin-inappbrowser",
       "cordova-plugin-statusbar",
-      "https://github.com/robertklein/cordova-ios-security.git"
+      "https://github.com/robertklein/cordova-ios-security.git",
+      "https://github.com/innowatio/cordova-ios-fullscreen.git"
     ]
   },
   "optionalDependencies": {
