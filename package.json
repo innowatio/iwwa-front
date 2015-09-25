@@ -94,7 +94,7 @@
   },
   "cordova": {
     "name": "iwwa",
-    "version": "1.0.0",
+    "version": "1.2.0",
     "plugins": [
       "cordova-plugin-device",
       "cordova-plugin-inappbrowser",
