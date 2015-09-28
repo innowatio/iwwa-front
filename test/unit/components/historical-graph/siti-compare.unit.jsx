@@ -5,11 +5,11 @@ var R         = require("ramda");
 
 var DygraphCoordinate = require("lib/app-prop-types.js").DygraphCoordinate;
 
-var ValoriCompareGraph = proxyquire("components/historical-graph/valori-compare.jsx", {});
+var DateCompareGraph = proxyquire("components/historical-graph/siti-compare.jsx", {});
 
-describe("The `getCoordinates` method of the ValoriCompare component", function () {
+describe("The `getCoordinates` method of the SitiCompare component", function () {
 
-    var getCoordinates = ValoriCompareGraph.prototype.getCoordinates;
+    var getCoordinates = DateCompareGraph.prototype.getCoordinates;
 
     var getRandomMonth = function () {
         return (Math.ceil(Math.random() * 100) % 12) + 1;
@@ -72,13 +72,13 @@ describe("The `getCoordinates` method of the ValoriCompare component", function 
     };
 
     it("should return an array", function () {
-        var instance = getInstance(1, 1);
+        var instance = getInstance([1, 3], 3);
         var coordinates = getCoordinates.call(instance);
         expect(coordinates).to.be.an.instanceOf(Array);
     });
 
-    it("should filter misure by pod", function () {
-        var instance = getInstance(1, 1);
+    it("should filter misure by pods", function () {
+        var instance = getInstance([1, 2], 2);
         var coordinates = getCoordinates.call(instance);
         coordinates.forEach(function (coordinate) {
             var actualProp1Value = coordinate[1][0];
@@ -88,17 +88,50 @@ describe("The `getCoordinates` method of the ValoriCompare component", function 
     });
 
     it("should filter misure by tipologia", function () {
-        var instance = getInstance(1, 2);
-        var coordinates = getCoordinates.call(instance);
-        coordinates.forEach(function (coordinate) {
-            var actualProp2Value = coordinate[2][0];
-            var expectedProp2Value = 2;
-            expect(actualProp2Value).to.equal(expectedProp2Value);
-        });
+        var getMisuraWithTipologia = function (day, month, pod, tipologia) {
+            return {
+                data: "2015-" + month + "-" + day,
+                pod: pod,
+                prop1: pod,
+                prop2: tipologia,
+                tipologia: tipologia
+            };
+        };
+        var getMisureWithTipologia = function (pod, tipologia) {
+            // index must not be between 1 and 31, because this is the number of day
+            return R.range(1, 31).reduce(function (misure, index) {
+                var month = "04";
+                var day = index;
+                return R.assoc(
+                    "m" + index,
+                    getMisuraWithTipologia(day, month, pod, tipologia),
+                    misure
+                );
+            }, {});
+        };
+        var getInstanceWithTipologia = function (pod, tipologia) {
+            return {
+                props: {
+                    misure: Immutable.fromJS(getMisureWithTipologia(pod, tipologia)),
+                    siti: [Immutable.Map({
+                        pod: pod
+                    })],
+                    tipologia: {
+                        key: tipologia
+                    },
+                    valori: [
+                        {key: "prop1"}
+                    ]
+                }
+            };
+        };
+        var peaceInstance = getInstanceWithTipologia(1, 2);
+        var peaceCoordinates = getCoordinates.call(peaceInstance);
+        expect(peaceCoordinates.length).to.be.equal(30);
     });
 
     it("should format misure to match the DygraphCoordinate prop type", function () {
-        var instance = getInstance(3, 3);
+        var instance = getInstance([1, 3], 3);
         getCoordinates.call(instance)
             .forEach(function (coordinate) {
                 var ret = DygraphCoordinate({

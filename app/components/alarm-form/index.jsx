@@ -14,6 +14,7 @@ var colors          = require("lib/colors");
 var Icon            = require("lib/icons");
 var stringIt        = require("lib/string-it");
 var styles          = require("lib/styles");
+var icons           = require("lib/icons");
 
 var less = function (time1, time2) {
     return (
@@ -167,7 +168,7 @@ var AlarmForm = React.createClass({
                         trigger="click"
                     >
                         <components.Button  bsStyle="link">
-                            <components.Icon icon="info" />
+                            <img src={icons.iconInfo} style={{width: "75%"}}/>
                         </components.Button>
                     </bootstrap.OverlayTrigger>
                 </h5>
@@ -261,7 +262,7 @@ var AlarmForm = React.createClass({
         return (
             <Router.Link to={`/alarms/`}>
                 <components.Button bsStyle="link" disabled={this.state.saving} onClick={this.reset}>
-                    {<components.Icon icon="repeat" />}
+                    {<img src={icons.iconReset} style={{width: "75%"}}/>}
                 </components.Button>
             </Router.Link>
         );

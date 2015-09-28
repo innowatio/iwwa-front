@@ -5,13 +5,14 @@ var bootstrap = require("react-bootstrap");
 
 var components = require("components");
 var colors     = require("lib/colors");
+var icons      = require("lib/icons");
 
 var styles = {
     inputs: {
         borderRadius: "6px",
         overflow: "hidden",
         border: "solid 1px " + color(colors.white).alpha(0.3).rgbString(),
-        color: "white"
+        color: colors.white
     },
     button: {
         background: colors.primary,
@@ -104,7 +105,7 @@ var PasswordResetView = React.createClass({
                         scopeSelector=".ac-login-modal-inputs"
                     />
                     <bootstrap.Input
-                        addonBefore={<components.Icon icon="user" />}
+                        addonBefore={<img src={icons.iconUser} style={{width: "20px"}}/>}
                         bsSize="large"
                         placeholder="Email"
                         ref="email"
