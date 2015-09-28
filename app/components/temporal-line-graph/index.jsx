@@ -205,6 +205,7 @@ var TemporalLineGraph = React.createClass({
         var link = document.createElement("a");
         link.setAttribute("href", encodedUri);
         link.setAttribute("download", name);
+        link.setAttribute("target", "_blank");
         link.click();
     },
     renderSpinner: function () {
