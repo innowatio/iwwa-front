@@ -13,6 +13,7 @@ var SitiCompareGraph   = require("./siti-compare.jsx");
 
 var HistoricalGraph = React.createClass({
     propTypes: {
+        alarms: React.PropTypes.arrayOf(React.PropTypes.number),
         dateCompare: React.PropTypes.shape({
             period: React.PropTypes.object,
             dateOne: React.PropTypes.date

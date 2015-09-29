@@ -37,11 +37,15 @@ var Chart = React.createClass({
     propTypes: {
         asteroid: React.PropTypes.object,
         collections: IPropTypes.map,
-        location: React.PropTypes.object
+        location: React.PropTypes.object,
+        params: React.PropTypes.object
     },
     mixins: [QuerystringMixin],
     componentDidMount: function () {
         this.props.asteroid.subscribe("siti");
+        if (R.has("idAlarm", this.props.params)) {
+            this.props.asteroid.subscribe("alarms");
+        }
     },
     componentWillReceiveProps: function (props) {
         var self = this;
@@ -153,10 +157,17 @@ var Chart = React.createClass({
             transformers.dateFilter()
         );
 
+        // Alarms
+        var alarms = this.bindToQueryParameter(
+            "alarms",
+            transformers.alarms()
+        );
+
         var valoriMulti = (
             !dateCompareProps.value &&
             sitoInputProps.value.length <= 1
         );
+
         return (
             <div>
                 <h2
@@ -251,6 +262,7 @@ var Chart = React.createClass({
                 </bootstrap.Col>
                 <bootstrap.Col  className="modal-container" sm={12} style={{height: "100%"}}>
                     <components.HistoricalGraph
+                        alarms={alarms.value}
                         dateCompare={dateCompareProps.value}
                         dateFilter={dateFilterProps.value}
                         misure={this.props.collections.get("misure") || Immutable.Map()}
