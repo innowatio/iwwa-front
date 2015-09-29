@@ -14,7 +14,7 @@ var QuerystringMixin = require("lib/querystring-mixin");
 var styles           = require("lib/styles");
 var transformers     = require("./transformers.js");
 var GetTutorialMixin = require("lib/get-tutorial-mixin");
-var tutorialString   = require("assets/JSON/tutorial-string.json");
+var tutorialString   = require("assets/JSON/tutorial-string.json").historicalGraph;
 
 var multiselectStyles = {
     multiselectPopover: {
@@ -42,7 +42,16 @@ var Chart = React.createClass({
         localStorage: React.PropTypes.object,
         location: React.PropTypes.object
     },
-    mixins: [QuerystringMixin, GetTutorialMixin("graph", ["valori", "export", "tipologie", "siti", "dateFilter", "compare"])],
+    mixins: [QuerystringMixin,
+        GetTutorialMixin("graph", [
+            "valori",
+            "export",
+            "tipologie",
+            "siti",
+            "dateFilter",
+            "compare",
+            "historicalGraph"
+    ])],
     componentDidMount: function () {
         this.props.asteroid.subscribe("siti");
     },
@@ -163,7 +172,7 @@ var Chart = React.createClass({
         return (
             <div>
                 <components.TutorialAnchor
-                    message={tutorialString.historicalGraph.introTutorial}
+                    message={tutorialString.introTutorial}
                     order={0}
                     ref="intro"
                 />
@@ -177,7 +186,7 @@ var Chart = React.createClass({
                 <bootstrap.Col sm={12} style={styles.colVerticalPadding}>
                     <span className="pull-left" style={{display: "flex"}}>
                         <components.TutorialAnchor
-                            message={tutorialString.historicalGraph.valori}
+                            message={tutorialString.valori}
                             order={1}
                             position="right"
                             ref="valori"
@@ -192,7 +201,7 @@ var Chart = React.createClass({
                             />
                         </components.TutorialAnchor>
                         <components.TutorialAnchor
-                            message={tutorialString.historicalGraph.export}
+                            message={tutorialString.export}
                             order={2}
                             position="right"
                             ref="export"
@@ -216,7 +225,7 @@ var Chart = React.createClass({
                     </span>
                     <span className="pull-right" style={{display: "flex"}}>
                         <components.TutorialAnchor
-                            message={tutorialString.historicalGraph.tipologie}
+                            message={tutorialString.tipologie}
                             order={3}
                             position="left"
                             ref="tipologie"
@@ -238,7 +247,7 @@ var Chart = React.createClass({
                             </components.Popover>
                         </components.TutorialAnchor>
                         <components.TutorialAnchor
-                            message={tutorialString.historicalGraph.siti}
+                            message={tutorialString.siti}
                             order={4}
                             position="left"
                             ref="siti"
@@ -261,7 +270,7 @@ var Chart = React.createClass({
                             </components.Popover>
                         </components.TutorialAnchor>
                         <components.TutorialAnchor
-                            message={tutorialString.historicalGraph.dateFilter}
+                            message={tutorialString.dateFilter}
                             order={5}
                             position="left"
                             ref="dateFilter"
@@ -275,7 +284,7 @@ var Chart = React.createClass({
                             />
                         </components.TutorialAnchor>
                         <components.TutorialAnchor
-                            message={tutorialString.historicalGraph.compare}
+                            message={tutorialString.compare}
                             order={6}
                             position="left"
                             ref="compare"
@@ -300,17 +309,24 @@ var Chart = React.createClass({
                     </span>
                 </bootstrap.Col>
                 <bootstrap.Col  className="modal-container" sm={12} style={{height: "100%"}}>
-                    <components.HistoricalGraph
-                        dateCompare={dateCompareProps.value}
-                        dateFilter={dateFilterProps.value}
-                        misure={this.props.collections.get("misure") || Immutable.Map()}
+                    <components.TutorialAnchor
+                        message={tutorialString.graph}
+                        order={7}
+                        position="top"
                         ref="historicalGraph"
-                        resetCompare={this.resetCompare}
-                        siti={sitoInputProps.value}
-                        style={graphStyle}
-                        tipologia={tipologiaInputProps.value}
-                        valori={valoreInputProps.value}
-                    />
+                    >
+                        <components.HistoricalGraph
+                            dateCompare={dateCompareProps.value}
+                            dateFilter={dateFilterProps.value}
+                            misure={this.props.collections.get("misure") || Immutable.Map()}
+                            ref="historicalGraph"
+                            resetCompare={this.resetCompare}
+                            siti={sitoInputProps.value}
+                            style={graphStyle}
+                            tipologia={tipologiaInputProps.value}
+                            valori={valoreInputProps.value}
+                        />
+                    </components.TutorialAnchor>
                 </bootstrap.Col>
             </div>
         );
