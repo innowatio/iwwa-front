@@ -9,6 +9,7 @@ var components = require("components");
 var stringIt   = require("lib/string-it");
 var styles     = require("lib/styles");
 var TimePicker = require("react-time-picker");
+var icons      = require("lib/icons");
 
 var style = {
     timePicker: {
@@ -114,7 +115,7 @@ var AlarmRepetitionModal = React.createClass({
                     style={style.option}
                 >
                     {"Solo il giorno"}
-                    <components.Icon icon="calendar" style={{marginLeft: "50px", color: colors.primary}}/>
+                    <img src={icons.iconCalendar} style={{height: "18px", marginLeft: "50px"}}/>
                 </bootstrap.ListGroupItem>
                 <bootstrap.ListGroupItem style={{display: this.state.isDatepickerVisible ? "" : "none"}}>
                     <Calendar
@@ -186,7 +187,7 @@ var AlarmRepetitionModal = React.createClass({
                 <h4 style={{color: colors.primary}}>{stringIt.titleAlarmNotify}</h4>
                 <div onClick={this.toggleModal} style={styles.divAlarmOpenModal}>
                     {this.labelParser()}
-                    <components.Icon icon="arrow-right" style={{float: "right", paddingTop: "10px"}} />
+                    <img src={icons.iconArrowRight} style={{float: "right", width: "33px"}} />
                 </div>
                 <components.ModalOptionList
                     allowedValues={this.getRepetitionOptions()}

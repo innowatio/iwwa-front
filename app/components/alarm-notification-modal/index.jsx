@@ -6,6 +6,7 @@ var colors     = require("lib/colors");
 var components = require("components");
 var stringIt   = require("lib/string-it");
 var styles     = require("lib/styles");
+var icons      = require("lib/icons");
 
 var AlarmNotificationModal = React.createClass({
     propTypes: {
@@ -68,7 +69,7 @@ var AlarmNotificationModal = React.createClass({
                 <h4 style={{color: colors.primary}}>{stringIt.titleAlarmNotify}</h4>
                 <div onClick={this.toggleModal} style={styles.divAlarmOpenModal}>
                     {this.labelParser()}
-                    <components.Icon icon="arrow-right" style={{float: "right", paddingTop: "10px"}} />
+                    <img src={icons.iconArrowRight} style={{float: "right", width: "33px"}} />
                 </div>
                 <components.ModalOptionList
                     allowedValues={this.getNotificationOptions()}

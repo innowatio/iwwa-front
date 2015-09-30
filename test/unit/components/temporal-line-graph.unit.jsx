@@ -18,6 +18,7 @@ describe("The TemporalLineGraph component", function () {
             graph: {
                 updateOptions: sinon.spy()
             },
+            drawAnnotations: function () {},
             getOptionsFromProps: sinon.spy(),
             getCoordinatesFromProps: sinon.spy()
         };

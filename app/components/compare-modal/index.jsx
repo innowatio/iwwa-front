@@ -44,9 +44,6 @@ var Compare = React.createClass({
     closeSuccess: function () {
         this.close();
     },
-    reset: function () {
-        // this.props.onChange(null);
-    },
     handleSelect: function (select) {
         this.setState({
             active: select
@@ -105,13 +102,6 @@ var Compare = React.createClass({
             return (index === 1 ? closeModal(child) : null);
         });
     },
-    renderResetButton: function () {
-        return this.props.value ? (
-            <bootstrap.Button onClick={this.reset}>
-                <components.Icon icon="times" />
-            </bootstrap.Button>
-        ) : null;
-    },
     render: function () {
         return (
             <span>
@@ -131,7 +121,6 @@ var Compare = React.createClass({
                             onChange={this.open}
                         />
                     </components.Popover>
-                    {this.renderResetButton()}
                 </bootstrap.ButtonGroup>
                     <bootstrap.Modal
                         container={this}

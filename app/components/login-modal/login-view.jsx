@@ -5,6 +5,7 @@ var bootstrap = require("react-bootstrap");
 
 var components = require("components");
 var colors     = require("lib/colors");
+var icons      = require("lib/icons");
 
 var styles = {
     inputs: {
@@ -13,7 +14,7 @@ var styles = {
         borderWidth: "1px",
         borderColor: color(colors.white).alpha(0.3).rgbString(),
         borderStyle: "solid",
-        color: "white"
+        color: colors.white
     },
     loginButton: {
         background: colors.primary,
@@ -93,14 +94,14 @@ var LoginView = React.createClass({
                         scopeSelector=".ac-login-modal-inputs"
                     />
                     <bootstrap.Input
-                        addonBefore={<components.Icon icon="user" />}
+                        addonBefore={<img src={icons.iconUser} style={{width: "20px"}}/>}
                         bsSize="large"
                         placeholder="Email"
                         ref="email"
                         type="email"
                     />
                     <bootstrap.Input
-                        addonBefore={<components.Icon icon="lock" />}
+                        addonBefore={<img src={icons.iconLock} style={{width: "20px"}}/>}
                         bsSize="large"
                         placeholder="Password"
                         ref="password"

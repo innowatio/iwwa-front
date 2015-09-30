@@ -8,7 +8,7 @@ var DygraphCoordinate = require("lib/app-prop-types.js").DygraphCoordinate;
 
 var DateCompareGraph = proxyquire("components/historical-graph/date-compare.jsx", {});
 
-describe("The `getCoordinates` method of the DateCompareGraph component", function () {
+describe("The `getCoordinates` method of the DateCompare component", function () {
 
     var getCoordinates = DateCompareGraph.prototype.getCoordinates;
 

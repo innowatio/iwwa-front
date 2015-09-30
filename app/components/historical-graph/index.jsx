@@ -4,14 +4,16 @@ var React      = require("react");
 var IPropTypes = require("react-immutable-proptypes");
 var titleCase  = require("title-case");
 
-var components         = require("components");
+var icons              = require("lib/icons");
 var colors             = require("lib/colors");
+var components         = require("components");
 var DateCompareGraph   = require("./date-compare.jsx");
 var ValoriCompareGraph = require("./valori-compare.jsx");
 var SitiCompareGraph   = require("./siti-compare.jsx");
 
 var HistoricalGraph = React.createClass({
     propTypes: {
+        alarms: React.PropTypes.arrayOf(React.PropTypes.number),
         dateCompare: React.PropTypes.shape({
             period: React.PropTypes.object,
             dateOne: React.PropTypes.date
@@ -96,8 +98,10 @@ var HistoricalGraph = React.createClass({
                             cursor: "pointer"
                         }}
                     >
-                        <components.Icon icon="times-circle" style={{fontSize: "20px", width: "30px"}}></components.Icon>
-                        Esci dal confronto</div>
+                        <img src={icons.iconLogoutColor} style={{width: "30px", height: "20px"}}/>
+                        <components.Spacer direction="h" size={5} />
+                        {"Esci dal confronto"}
+                    </div>
                     {this.renderGraph()}
                 </div>
         );
