@@ -113,18 +113,21 @@ var TemporalLineGraph = React.createClass({
     },
     drawAnnotations: function () {
         var annotations = [];
-        for (var i = 0; i < this.props.alarms.length; i++) {
-            annotations.push({
-                series: "Reale",
-                x: this.props.alarms[i],
-                text: "alarm",
-                cssClass: "alarmPoint",
-                attachAtBottom: false,
-                tickHeight: 0,
-                width: 8,
-                height: 4
-            });
+        if (this.props.alarms) {
+            for (var i = 0; i < this.props.alarms.length; i++) {
+                annotations.push({
+                    series: "Reale",
+                    x: this.props.alarms[i],
+                    text: "alarm",
+                    cssClass: "alarmPoint",
+                    attachAtBottom: false,
+                    tickHeight: 0,
+                    width: 8,
+                    height: 4
+                });
+            }
         }
+
         this.graph.setAnnotations(annotations);
     },
     drawGraph: function () {
@@ -273,7 +276,6 @@ var TemporalLineGraph = React.createClass({
         }
     },
     render: function () {
-        console.log(this.props.alarms);
         return (
             <span>
                 {this.renderSpinner()}
