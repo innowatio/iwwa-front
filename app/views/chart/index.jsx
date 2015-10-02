@@ -43,14 +43,14 @@ var Chart = React.createClass({
         location: React.PropTypes.object
     },
     mixins: [QuerystringMixin,
-        GetTutorialMixin("graph", [
+        GetTutorialMixin("historicalGraph", [
             "valori",
             "export",
             "tipologie",
             "siti",
             "dateFilter",
             "compare",
-            "historicalGraph"
+            "graph"
     ])],
     componentDidMount: function () {
         this.props.asteroid.subscribe("siti");
@@ -313,7 +313,7 @@ var Chart = React.createClass({
                         message={tutorialString.graph}
                         order={7}
                         position="top"
-                        ref="historicalGraph"
+                        ref="graph"
                     >
                         <components.HistoricalGraph
                             dateCompare={dateCompareProps.value}
