@@ -286,13 +286,13 @@ var AlarmForm = React.createClass({
         return this.state.sito.size === 0 ?
             <span>
                 Seleziona punto di misurazione
-                <components.Icon icon="chevron-down" style={{float: "right"}}/>
+                <img src={icons.iconDown} style={{float: "right", paddingTop: "5px", width: "16px"}}/>
             </span> :
             <span>
                 {CollectionUtils.siti.getLabel(this.state.sito)}
                 <components.Spacer direction="h" size={30} />
                 {this.state.sito.get("pod")}
-                <components.Icon icon="chevron-down" style={{float: "right"}}/>
+                <img src={icons.iconDown} style={{float: "right", paddingTop: "5px", width: "16px"}}/>
             </span>;
     },
     render: function () {
