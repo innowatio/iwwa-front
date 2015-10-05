@@ -12,6 +12,7 @@ var CollectionUtils = require("lib/collection-utils");
 var components      = require("components");
 var styles          = require("lib/styles");
 var colors          = require("lib/colors");
+var icons           = require("lib/icons");
 
 var getKeyFromAlarm = function (alarm) {
     return alarm.get("_id");
@@ -64,8 +65,8 @@ var Alarms = React.createClass({
                 },
                 valueFormatter: function (value) {
                     return (
-                        <components.Icon
-                            icon={value ? "check" : "exclamation"}
+                        <img
+                            src={value ? icons.iconFlag : icons.iconActiveAlarm}
                             />
                     );
                 }
@@ -94,8 +95,8 @@ var Alarms = React.createClass({
                 valueFormatter: function (value) {
                     return (
                         <Router.Link onClick={self.onClickAction} to={`/alarms/${value}`}>
-                            <components.Icon icon="arrow-right"
-                                style={{float: "right", paddingRight: "10px", paddingTop: "2px"}}/>
+                            <img src={icons.iconArrowRight}
+                                style={{float: "right", height: "28px"}}/>
                         </Router.Link>
                     );
                 }
@@ -226,6 +227,30 @@ var Alarms = React.createClass({
             </div>
         );
     },
+    renderFilterButton: function () {
+        return (
+            <div className="element-table" style={{marginRight: "84px", height: "40px", float: "right"}}>
+                <Radium.Style
+                    rules={{
+                        ".btn": {
+                            height: "40px",
+                            textDecoration: "none"
+                        }
+                    }}
+                    scopeSelector=".element-table"
+                />
+                <components.Popover
+                    title={
+                        <span style={{display: "flex", height: "40px"}}>
+                            <img src={icons.iconFilter} style={{width: "26px"}}/>
+                            <h4 style={{color: colors.primary}}>Filter</h4>
+                        </span>}
+                        >
+                    {this.renderFilter()}
+                </components.Popover>
+            </div>
+        );
+    },
     render: function () {
         var allowedValues = this.props.collections.get("alarms");
         return (
@@ -280,27 +305,7 @@ var Alarms = React.createClass({
                         />
                     </bootstrap.TabPane>
                         <bootstrap.TabPane eventKey={2} tab="Allarmi">
-                            <div className="element-table" style={{marginRight: "84px", height: "40px", float: "right"}}>
-                                <Radium.Style
-                                    rules={{
-                                        ".btn": {
-                                            height: "40px",
-                                            textDecoration: "none"
-                                        }
-                                    }}
-                                    scopeSelector=".element-table"
-                                />
-                                <components.Popover
-                                    title={
-                                        <span style={{display: "flex", height: "40px"}}>
-                                            <components.Icon icon="filter" style={{paddingTop: "13px"}}/>
-                                            <components.Spacer direction="h" size={5}/>
-                                            <h4 style={{color: colors.primary}}>Filter</h4>
-                                        </span>}
-                                        >
-                                    {this.renderFilter()}
-                                </components.Popover>
-                            </div>
+                            {this.renderFilterButton()}
                             <components.CollectionElementsTable
                                 collection={ R.isNil(allowedValues) ? Immutable.Map() : allowedValues.filter(this.filterAlarms)}
                                 columns={this.getColumnsAlarms()}

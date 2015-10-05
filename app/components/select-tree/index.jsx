@@ -8,6 +8,7 @@ var Waypoint   = require("react-waypoint");
 
 var components = require("components");
 var colors     = require("lib/colors");
+var icons      = require("lib/icons");
 
 var SelectTree = React.createClass({
     propTypes: {
@@ -115,10 +116,7 @@ var SelectTree = React.createClass({
                     color: allowedValue === this.state.value ? colors.white : colors.black
                 }}
             >
-                <components.Icon
-                    icon={"chevron-down"}
-                    style={{float: "left", width: "100%"}}
-                />
+                <components.Icon icon={"chevron-down"} style={{float: "left", width: "100%"}} />
         </components.Button> : null;
     },
     renderPanel: function (allowedValue) {
@@ -199,7 +197,7 @@ var SelectTree = React.createClass({
                     scopeSelector=".site-selector"
                 />
                 <bootstrap.Input
-                    addonAfter={<components.Icon icon="search"/>}
+                    addonAfter={<img src={icons.iconSearch} style={{height: "21px"}}/>}
                     className="input-search"
                     onChange={(input) => this.setState({inputFilter: input.target.value})}
                     placeholder="Ricerca"

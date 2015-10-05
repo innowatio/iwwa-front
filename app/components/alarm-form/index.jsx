@@ -16,6 +16,7 @@ var stringIt        = require("lib/string-it");
 var styles          = require("lib/styles");
 var tutorialString  = require("assets/JSON/tutorial-string.json");
 var GetTutorialMixin   = require("lib/get-tutorial-mixin");
+var icons           = require("lib/icons");
 
 var less = function (time1, time2) {
     return (
@@ -170,7 +171,7 @@ var AlarmForm = React.createClass({
                         trigger="click"
                     >
                         <components.Button  bsStyle="link">
-                            <components.Icon icon="info" />
+                            <img src={icons.iconInfo} style={{width: "75%"}}/>
                         </components.Button>
                     </bootstrap.OverlayTrigger>
                 </h5>
@@ -260,6 +261,15 @@ var AlarmForm = React.createClass({
             />
         );
     },
+    renderResetButton: function () {
+        return (
+            <Router.Link to={`/alarms/`}>
+                <components.Button bsStyle="link" disabled={this.state.saving} onClick={this.reset}>
+                    {<img src={icons.iconReset} style={{width: "75%"}}/>}
+                </components.Button>
+            </Router.Link>
+        );
+    },
     renderSubmitButton: function () {
         return (
             <components.Button
@@ -273,15 +283,6 @@ var AlarmForm = React.createClass({
                 }}>
                 {this.props.type === "update" ? "SALVA" : "CREA"}
             </components.Button>
-        );
-    },
-    renderResetButton: function () {
-        return (
-            <Router.Link to={`/alarms/`}>
-                <components.Button bsStyle="link" disabled={this.state.saving} onClick={this.reset}>
-                    {<components.Icon icon="repeat" />}
-                </components.Button>
-            </Router.Link>
         );
     },
     renderTitleSelectSite: function () {

@@ -37,7 +37,7 @@ var Row = React.createClass({
     },
     renderCellElement: function (columnElement) {
         return (
-            <td key={columnElement} style={{width: this.props.width, paddingLeft: "15px"}}>
+            <td key={columnElement} style={{width: this.props.width, paddingLeft: "15px", verticalAlign: "middle"}}>
                 {stringify(columnElement)}
             </td>
         );
@@ -51,7 +51,7 @@ var Row = React.createClass({
         var value = this.props.item.get(column.key);
         return (
             <td key={column.key}
-                style={R.isNil(column.style) ? {} : column.style(value)}>
+                style={R.merge({verticalAlign: "middle"}, R.isNil(column.style) ? {} : column.style(value))}>
                 {
                     column.valueFormatter ?
                     column.valueFormatter(value, this.props.item) :
