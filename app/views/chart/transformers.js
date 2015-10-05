@@ -107,3 +107,25 @@ exports.valore = function (valori) {
         )
     };
 };
+
+exports.alarms = function () {
+    return {
+        parse: function (query) {
+            if (!query) {
+                return null;
+            }
+            var tokens = query.split("-") || [];
+            return tokens.map(function (value) {
+                return Number(value);
+            });
+        },
+        stringify: function (values) {
+            if (!values) {
+                return "";
+            }
+            return values.map(function (value) {
+                return value.toString();
+            }).join("-");
+        }
+    };
+};

@@ -21,3 +21,4 @@ exports.SideNav                 = require("./sidenav/");
 exports.SitiCompare             = require("./siti-compare/");
 exports.Spacer                  = require("./spacer/");
 exports.TemporalLineGraph       = require("./temporal-line-graph/");
+exports.TutorialAnchor          = require("./tutorial-anchor/");

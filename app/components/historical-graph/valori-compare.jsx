@@ -10,6 +10,7 @@ var formatValue = require("./format-value.js");
 
 var ValoriCompare = React.createClass({
     propTypes: {
+        alarms: React.PropTypes.arrayOf(React.PropTypes.number),
         misure: IPropTypes.map,
         siti: React.PropTypes.arrayOf(IPropTypes.map),
         tipologia: React.PropTypes.object,
@@ -56,11 +57,13 @@ var ValoriCompare = React.createClass({
     render: function () {
         return (
             <components.TemporalLineGraph
+                alarms={this.props.alarms}
                 colors={this.props.valori.map(R.prop("color"))}
                 coordinates={this.getCoordinates()}
                 labels={this.getLabels()}
                 ref="temporalLineGraph"
                 showRangeSelector={true}
+                sito={this.props.siti[0] || Immutable.Map()}
                 xLabel=""
                 yLabel="kWh"
             />

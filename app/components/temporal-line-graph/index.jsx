@@ -20,6 +20,7 @@ var styles = {
 
 var TemporalLineGraph = React.createClass({
     propTypes: {
+        alarms: React.PropTypes.arrayOf(React.PropTypes.number),
         colors: React.PropTypes.arrayOf(React.PropTypes.string),
         coordinates: React.PropTypes.arrayOf(
             AppPropTypes.DygraphCoordinate
@@ -28,6 +29,7 @@ var TemporalLineGraph = React.createClass({
         labels: React.PropTypes.array,
         lockInteraction: React.PropTypes.bool,
         showRangeSelector: React.PropTypes.bool,
+        sito: React.PropTypes.object,
         xLabel: React.PropTypes.string,
         xLegendFormatter: React.PropTypes.func,
         xTicker: React.PropTypes.func,
@@ -41,6 +43,7 @@ var TemporalLineGraph = React.createClass({
         this.graph.updateOptions(R.merge(options, {
             file: this.getCoordinatesFromProps(nextProps)
         }));
+        this.drawAnnotations();
     },
     getCoordinatesFromProps: function (props) {
         return (
@@ -108,6 +111,25 @@ var TemporalLineGraph = React.createClass({
             props.labels
         );
     },
+    drawAnnotations: function () {
+        var annotations = [];
+        if (this.props.alarms) {
+            for (var i = 0; i < this.props.alarms.length; i++) {
+                annotations.push({
+                    series: "Reale",
+                    x: this.props.alarms[i],
+                    text: "alarm",
+                    cssClass: "alarmPoint",
+                    attachAtBottom: false,
+                    tickHeight: 0,
+                    width: 8,
+                    height: 4
+                });
+            }
+        }
+
+        this.graph.setAnnotations(annotations);
+    },
     drawGraph: function () {
         var container = this.refs.graphContainer.getDOMNode();
         var coordinates = this.getCoordinatesFromProps(this.props);
@@ -119,7 +141,6 @@ var TemporalLineGraph = React.createClass({
         Dygraph.Interaction.moveTouch = function (event, g, context) {
             // If the tap moves, then it's definitely not part of a double-tap.
             context.startTimeForDoubleTapMs = null;
-
             var i = [];
             var touches = [];
             for (i = 0; i < event.touches.length; i++) {
@@ -129,51 +150,43 @@ var TemporalLineGraph = React.createClass({
                 });
             }
             var initialTouches = context.initialTouches;
-
-            var c_now;
-
+            var cNow;
             // old and new centers.
-            var c_init = context.initialPinchCenter;
+            var cInit = context.initialPinchCenter;
             if (touches.length === 1) {
-                c_now = touches[0];
+                cNow = touches[0];
             } else {
-                c_now = {
+                cNow = {
                     pageX: 0.5 * (touches[0].pageX + touches[1].pageX)
                 };
             }
-
               // this is the "swipe" component
               // we toss it out for now, but could use it in the future.
             var swipe = {
-                pageX: c_now.pageX - c_init.pageX
+                pageX: cNow.pageX - cInit.pageX
             };
             var dataWidth = context.initialRange.x[1] - context.initialRange.x[0];
             swipe.dataX = (swipe.pageX / g.plotter_.area.w) * dataWidth;
             var xScale;
-
             // The residual bits are usually split into scale & rotate bits, but we split
             // them into x-scale and y-scale bits.
             if (touches.length === 1) {
                 xScale = 1.0;
             } else if (touches.length >= 2) {
-                var initHalfWidth = (initialTouches[1].pageX - c_init.pageX);
-                xScale = (touches[1].pageX - c_now.pageX) / initHalfWidth;
+                var initHalfWidth = (initialTouches[1].pageX - cInit.pageX);
+                xScale = (touches[1].pageX - cNow.pageX) / initHalfWidth;
             }
-
             // Clip scaling to [1/8, 8] to prevent too much blowup.
             xScale = Math.min(8, Math.max(0.125, xScale));
-
             var didZoom = false;
             if (context.touchDirections.x) {
                 g.dateWindow_ = [
-                    c_init.dataX - swipe.dataX + (context.initialRange.x[0] - c_init.dataX) / xScale,
-                    c_init.dataX - swipe.dataX + (context.initialRange.x[1] - c_init.dataX) / xScale
+                    cInit.dataX - swipe.dataX + (context.initialRange.x[0] - cInit.dataX) / xScale,
+                    cInit.dataX - swipe.dataX + (context.initialRange.x[1] - cInit.dataX) / xScale
                 ];
                 didZoom = true;
             }
-
             g.drawGraph_(false);
-
             // We only call zoomCallback on zooms, not pans, to mirror desktop behavior.
             if (didZoom && touches.length > 1 && g.getFunctionOption("zoomCallback")) {
                 var viewWindow = g.xAxisRange();
@@ -182,6 +195,7 @@ var TemporalLineGraph = React.createClass({
         };
 
         this.graph = new Dygraph(container, coordinates, options);
+        this.drawAnnotations();
     },
     exportCSV: function () {
         var csvString = DygraphCSVExport.exportCSV(this.graph);
@@ -204,11 +218,12 @@ var TemporalLineGraph = React.createClass({
         var link = document.createElement("a");
         link.setAttribute("href", encodedUri);
         link.setAttribute("download", name);
+        link.setAttribute("target", "_blank");
         link.click();
     },
     renderSpinner: function () {
-        // TODO To set a timeout.
-        if (window.location.search.indexOf("sito") >= 0 && this.props.coordinates.length === 0) {
+        // TODO Set a timeout.
+        if (!R.isNil(this.props.sito) && this.props.sito.size > 0 && this.props.coordinates.length === 0) {
             return (
                 <div className="modal-spinner">
                     <bootstrap.Modal
@@ -264,6 +279,13 @@ var TemporalLineGraph = React.createClass({
         return (
             <span>
                 {this.renderSpinner()}
+                <Radium.Style
+                    rules={{
+                    ".alarmPoint": {
+                        border: "solid 4px red !important",
+                        borderRadius: "50%"
+                    }
+                }} />
                 <div ref="graphContainer" style={styles.graphContainer}/>
             </span>
         );

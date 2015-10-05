@@ -57,7 +57,7 @@ var DatefilterModal = React.createClass({
         return result;
     },
     confirmAndClose: function () {
-        R.partial(this.props.onChange, this.state.value)();
+        R.partial(this.props.onChange, this.state.value, "dateCompare")();
         this.close();
     },
     close: function () {

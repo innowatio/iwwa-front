@@ -2,11 +2,12 @@ var Radium = require("radium");
 var R      = require("ramda");
 var React  = require("react");
 
-var components = require("components");
-var asteroid   = require("lib/asteroid");
-var measures   = require("lib/measures");
-var colors     = require("lib/colors");
-var icons      = require("lib/icons");
+var components        = require("components");
+var asteroid          = require("lib/asteroid");
+var measures          = require("lib/measures");
+var colors            = require("lib/colors");
+var icons             = require("lib/icons");
+var LocalStorageMixin = require("lib/localstorage-mixin");
 
 var styles = {
     header: {
@@ -46,7 +47,8 @@ var Root = React.createClass({
         children: React.PropTypes.node
     },
     mixins: [
-        asteroid.getControllerViewMixin()
+        asteroid.getControllerViewMixin(),
+        LocalStorageMixin
     ],
     getInitialState: function () {
         return {
@@ -91,7 +93,8 @@ var Root = React.createClass({
     renderChildren: function () {
         return React.cloneElement(this.props.children, {
             asteroid: asteroid,
-            collections: this.state.collections
+            collections: this.state.collections,
+            localStorage: this.state.localStorage
         });
     },
     render: function () {

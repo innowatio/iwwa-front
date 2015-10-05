@@ -6,6 +6,7 @@ var bootstrap  = require("react-bootstrap");
 var colors     = require("lib/colors");
 var components = require("components");
 var measures   = require("lib/measures");
+var icons   = require("lib/icons");
 
 var ModalOptionList = React.createClass({
     propTypes: {
@@ -43,7 +44,7 @@ var ModalOptionList = React.createClass({
                     }}
                 >
                     {this.props.getLabel(value)}
-                    <components.Icon icon="check" style={{float: "right", visibility: active ? "visible" : "hidden"}}/>
+                    <img src={icons.iconFlagColor} style={{float: "right", visibility: active ? "visible" : "hidden"}}/>
                 </bootstrap.ListGroupItem>
             );
         }

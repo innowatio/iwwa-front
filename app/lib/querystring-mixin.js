@@ -33,23 +33,35 @@ module.exports = R.merge(Router.Navigation, {
                 *   replaceWith is defined as we merged with our mixin
                 *   react-router's Navigation mixin
                 */
+                var newqueryState;
                 if (paramName === "sito" && !R.isNil(self.props.location.query) && R.has(paramName, self.props.location.query)) {
                     var querySito = self.props.location.query.sito.split(",")[0];
+                    newqueryState = R.assoc(name, newQueryValue, R.assoc(paramName, querySito, self.props.location.query));
                     self.replaceWith(
                         self.props.location.pathname,
                         R.assoc(name, newQueryValue, R.assoc(paramName, querySito, self.props.location.query))
                     );
                 } else if (!R.isNil(paramName) && !R.isNil(self.props.location.query) && R.has(paramName, self.props.location.query)) {
+                    newqueryState = R.assoc(name, newQueryValue, R.dissoc(paramName, self.props.location.query));
                     self.replaceWith(
                         self.props.location.pathname,
                         R.assoc(name, newQueryValue, R.dissoc(paramName, self.props.location.query))
                     );
                 } else {
+                    newqueryState = R.assoc(name, newQueryValue, self.props.location.query);
                     self.replaceWith(
                         self.props.location.pathname,
                         R.assoc(name, newQueryValue, self.props.location.query)
                     );
                 }
+                if (newqueryState) {
+                    self.replaceWith(
+                        self.props.location.pathname,
+                        newqueryState
+                    );
+                    localStorage.query = JSON.stringify(newqueryState);
+                }
+                console.log(JSON.stringify(newqueryState));
             }
         };
     }

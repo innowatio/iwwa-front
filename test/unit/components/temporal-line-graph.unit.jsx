@@ -4,32 +4,39 @@ describe("The TemporalLineGraph component", function () {
 
     var Dygraph = sinon.spy();
 
-    // var TemporalLineGraph = proxyquire("components/temporal-line-chart-new/", {
-    //     "dygraphs/dygraphs-combined-dev.js": {
-    //     Dygraph: Dygraph
-    //     }
-    // });
-    //
-    // it("should update graph with new data when props change", function () {
-    //     var instance = {
-    //         props: {
-    //             coordinates: []
-    //         },
-    //         chart: {
-    //             updateOptions: sinon.spy()
-    //         }
-    //     };
-    //     var newPropsWithChangedCoordinates = {
-    //         coordinates: []
-    //     };
-    //     var newPropsWithUnchangedCoordinates = {
-    //         coordinates: instance.props.coordinates
-    //     };
-    //     var cwrp = TemporalLineGraph.prototype.componentWillReceiveProps;
-    //     cwrp.call(instance, newPropsWithUnchangedCoordinates);
-    //     expect(instance.chart.updateOptions).to.have.callCount(0);
-    //     instance.chart.updateOptions.reset();
-    //     cwrp.call(instance, newPropsWithChangedCoordinates);
-    //     expect(instance.chart.updateOptions).to.have.callCount(1);
-    // });
+    var TemporalLineGraph = proxyquire("components/temporal-line-graph/", {
+        "dygraphs/dygraphs-combined-dev.js": {
+        Dygraph: Dygraph
+        }
+    });
+
+    it("should update graph with new data when props change", function () {
+        var instance = {
+            props: {
+                coordinates: [1]
+            },
+            graph: {
+                updateOptions: sinon.spy()
+            },
+            drawAnnotations: function () {},
+            getOptionsFromProps: sinon.spy(),
+            getCoordinatesFromProps: sinon.spy()
+        };
+        var newPropsWithChangedCoordinates = {
+            coordinates: [1, 2]
+        };
+        var cwrp = TemporalLineGraph.prototype.componentWillReceiveProps;
+        cwrp.call(instance, newPropsWithChangedCoordinates);
+        expect(instance.getOptionsFromProps).to.have.callCount(1);
+        expect(instance.getCoordinatesFromProps).to.have.callCount(1);
+    });
+
+    it("should mount graph", function () {
+        var instance = {
+            drawGraph: sinon.spy()
+        };
+        var cwrp = TemporalLineGraph.prototype.componentDidMount;
+        cwrp.call(instance);
+        expect(instance.drawGraph).to.have.callCount(1);
+    });
 });

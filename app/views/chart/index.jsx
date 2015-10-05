@@ -6,13 +6,15 @@ var React      = require("react");
 var bootstrap  = require("react-bootstrap");
 var IPropTypes = require("react-immutable-proptypes");
 
+var CollectionUtils  = require("lib/collection-utils");
 var colors           = require("lib/colors");
 var components       = require("components/");
 var icons            = require("lib/icons");
-var styles           = require("lib/styles");
 var QuerystringMixin = require("lib/querystring-mixin");
-var CollectionUtils  = require("lib/collection-utils");
+var styles           = require("lib/styles");
 var transformers     = require("./transformers.js");
+var GetTutorialMixin = require("lib/get-tutorial-mixin");
+var tutorialString   = require("assets/JSON/tutorial-string.json");
 
 var multiselectStyles = {
     multiselectPopover: {
@@ -37,11 +39,15 @@ var Chart = React.createClass({
     propTypes: {
         asteroid: React.PropTypes.object,
         collections: IPropTypes.map,
-        location: React.PropTypes.object
+        location: React.PropTypes.object,
+        params: React.PropTypes.object
     },
-    mixins: [QuerystringMixin],
+    mixins: [QuerystringMixin, GetTutorialMixin("graph", ["valori", "export", "tipologie", "siti", "dateFilter", "compare"])],
     componentDidMount: function () {
         this.props.asteroid.subscribe("siti");
+        if (R.has("idAlarm", this.props.params)) {
+            this.props.asteroid.subscribe("alarms");
+        }
     },
     componentWillReceiveProps: function (props) {
         var self = this;
@@ -50,6 +56,12 @@ var Chart = React.createClass({
         siti.forEach(function (sito) {
             self.props.asteroid.subscribe("misureBySito", sito);
         });
+    },
+    componentDidUpdate: function () {
+        var siti = this.props.collections.get("siti") || Immutable.Map();
+        if (siti.size > 0 && this.refs.historicalGraph.props.siti.length < 1) {
+            sitoInputProps.onChange([siti.first()], "sito");
+        }
     },
     getPeriods: function () {
         return [
@@ -68,7 +80,6 @@ var Chart = React.createClass({
     getValori: function () {
         return [
             {label: "Reale", color: colors.lineReale, key: "reale"},
-            {label: "Contrattuale", color: colors.lineContrattuale, key: "contrattuale"},
             {label: "Previsionale", color: colors.linePrevisionale, key: "previsionale"}
         ];
     },
@@ -154,12 +165,24 @@ var Chart = React.createClass({
             transformers.dateFilter()
         );
 
+        // Alarms
+        var alarms = this.bindToQueryParameter(
+            "alarms",
+            transformers.alarms()
+        );
+
         var valoriMulti = (
             !dateCompareProps.value &&
             sitoInputProps.value.length <= 1
         );
+
         return (
             <div>
+                <components.TutorialAnchor
+                    message={tutorialString.historicalGraph.introTutorial}
+                    order={0}
+                    ref="intro"
+                />
                 <h2
                     className="text-center"
                     style={styles.titlePage}
@@ -168,90 +191,133 @@ var Chart = React.createClass({
                     Storico consumi
                 </h2>
                 <bootstrap.Col sm={12} style={styles.colVerticalPadding}>
-                    <span className="pull-left">
-                        <components.ButtonGroupSelect
-                            allowedValues={valori}
-                            getActiveStyle={valoreGetActiveStyle}
-                            getKey={R.prop("key")}
-                            getLabel={R.prop("label")}
-                            multi={valoriMulti}
-                            {...valoreInputProps}
-                        />
-                        <components.Popover
-                            hideOnChange={true}
-                            title={<img src={icons.iconExport} style={{width: "50%"}} />}
-                            tooltipId="tooltipExport"
-                            tooltipMessage="Esporta"
-                            tooltipPosition="right"
+                    <span className="pull-left" style={{display: "flex"}}>
+                        <components.TutorialAnchor
+                            message={tutorialString.historicalGraph.valori}
+                            order={1}
+                            position="right"
+                            ref="valori"
                         >
-                            <components.DropdownButton
-                                allowedValues={this.getExportType()}
-                                getIcon={R.prop("icon")}
+                            <components.ButtonGroupSelect
+                                allowedValues={valori}
+                                getActiveStyle={valoreGetActiveStyle}
                                 getKey={R.prop("key")}
                                 getLabel={R.prop("label")}
-                                onChange={this.onChangeExport}
+                                multi={valoriMulti}
+                                {...valoreInputProps}
                             />
-                        </components.Popover>
+                        </components.TutorialAnchor>
+                        <components.TutorialAnchor
+                            message={tutorialString.historicalGraph.export}
+                            order={2}
+                            position="right"
+                            ref="export"
+                        >
+                            <components.Popover
+                                hideOnChange={true}
+                                title={<img src={icons.iconExport} style={{width: "50%"}} />}
+                                tooltipId="tooltipExport"
+                                tooltipMessage="Esporta"
+                                tooltipPosition="right"
+                            >
+                                <components.DropdownButton
+                                    allowedValues={this.getExportType()}
+                                    getIcon={R.prop("icon")}
+                                    getKey={R.prop("key")}
+                                    getLabel={R.prop("label")}
+                                    onChange={this.onChangeExport}
+                                />
+                            </components.Popover>
+                        </components.TutorialAnchor>
                     </span>
                     <span className="pull-right" style={{display: "flex"}}>
-                        <components.Popover
-                            hideOnChange={true}
-                            title={<img src={icons.iconPower} style={{width: "75%"}} />}
-                            tooltipId="tooltipInterest"
-                            tooltipMessage="Quantità d'interesse"
-                            tooltipPosition="left"
+                        <components.TutorialAnchor
+                            message={tutorialString.historicalGraph.tipologie}
+                            order={3}
+                            position="left"
+                            ref="tipologie"
                         >
-                            <components.DropdownSelect
-                                allowedValues={tipologie}
+                            <components.Popover
+                                hideOnChange={true}
+                                title={<img src={icons.iconPower} style={{width: "75%"}} />}
+                                tooltipId="tooltipInterest"
+                                tooltipMessage="Quantità d'interesse"
+                                tooltipPosition="left"
+                            >
+                                <components.DropdownSelect
+                                    allowedValues={tipologie}
+                                    getKey={R.prop("key")}
+                                    getLabel={R.prop("label")}
+                                    style={{float: "left"}}
+                                    {...tipologiaInputProps}
+                                />
+                            </components.Popover>
+                        </components.TutorialAnchor>
+                        <components.TutorialAnchor
+                            message={tutorialString.historicalGraph.siti}
+                            order={4}
+                            position="left"
+                            ref="siti"
+                        >
+                            <components.Popover
+                                hideOnChange={true}
+                                style="inherit"
+                                title={<img src={icons.iconSiti} style={{width: "75%"}} />}
+                                tooltipId="tooltipMisurazione"
+                                tooltipMessage="Punti di misurazione"
+                                tooltipPosition="top"
+                            >
+                                <components.SelectTree
+                                    allowedValues={siti}
+                                    filter={CollectionUtils.siti.filter}
+                                    getLabel={CollectionUtils.siti.getLabel}
+                                    placeholder={"Punto di misurazione"}
+                                    {...sitoInputProps}
+                                />
+                            </components.Popover>
+                        </components.TutorialAnchor>
+                        <components.TutorialAnchor
+                            message={tutorialString.historicalGraph.dateFilter}
+                            order={5}
+                            position="left"
+                            ref="dateFilter"
+                        >
+                            <components.DatefilterModal
+                                allowedValues={filterDate}
                                 getKey={R.prop("key")}
                                 getLabel={R.prop("label")}
-                                style={{float: "left"}}
-                                {...tipologiaInputProps}
+                                title={<img src={icons.iconCalendar} style={{width: "75%"}} />}
+                                {...dateFilterProps}
                             />
-                        </components.Popover>
-                        <components.Popover
-                            hideOnChange={true}
-                            style="inherit"
-                            title={<img src={icons.iconSiti} style={{width: "75%"}} />}
-                            tooltipId="tooltipMisurazione"
-                            tooltipMessage="Punti di misurazione"
-                            tooltipPosition="top"
+                        </components.TutorialAnchor>
+                        <components.TutorialAnchor
+                            message={tutorialString.historicalGraph.compare}
+                            order={6}
+                            position="left"
+                            ref="compare"
                         >
-                            <components.SelectTree
-                                allowedValues={siti}
-                                filter={CollectionUtils.siti.filter}
-                                getLabel={CollectionUtils.siti.getLabel}
-                                placeholder={"Punto di misurazione"}
-                                {...sitoInputProps}
-                            />
-                        </components.Popover>
-                        <components.DatefilterModal
-                            allowedValues={filterDate}
-                            getKey={R.prop("key")}
-                            getLabel={R.prop("label")}
-                            title={<img src={icons.iconCalendar} style={{width: "75%"}} />}
-                            {...dateFilterProps}
-                        />
-                        <components.Compare>
-                            <components.SitiCompare
-                                allowedValues={siti}
-                                filter={CollectionUtils.siti.filter}
-                                getSitoLabel={CollectionUtils.siti.getLabel}
-                                open={"undefined"}
-                                style={multiselectStyles.multiselect}
-                                {...sitoInputProps}
-                            />
-                            <components.DataCompare
-                                allowedValues={compareDate}
-                                getKey={R.prop("key")}
-                                getLabel={R.prop("label")}
-                                {...dateCompareProps}
-                            />
-                        </components.Compare>
+                            <components.Compare>
+                                <components.SitiCompare
+                                    allowedValues={siti}
+                                    filter={CollectionUtils.siti.filter}
+                                    getSitoLabel={CollectionUtils.siti.getLabel}
+                                    open={"undefined"}
+                                    style={multiselectStyles.multiselect}
+                                    {...sitoInputProps}
+                                />
+                                <components.DataCompare
+                                    allowedValues={compareDate}
+                                    getKey={R.prop("key")}
+                                    getLabel={R.prop("label")}
+                                    {...dateCompareProps}
+                                />
+                            </components.Compare>
+                        </components.TutorialAnchor>
                     </span>
                 </bootstrap.Col>
                 <bootstrap.Col  className="modal-container" sm={12} style={{height: "100%"}}>
                     <components.HistoricalGraph
+                        alarms={alarms.value}
                         dateCompare={dateCompareProps.value}
                         dateFilter={dateFilterProps.value}
                         misure={this.props.collections.get("misure") || Immutable.Map()}

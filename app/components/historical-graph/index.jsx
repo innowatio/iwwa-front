@@ -4,19 +4,22 @@ var React      = require("react");
 var IPropTypes = require("react-immutable-proptypes");
 var titleCase  = require("title-case");
 
-var components         = require("components");
+var icons              = require("lib/icons");
 var colors             = require("lib/colors");
+var components         = require("components");
 var DateCompareGraph   = require("./date-compare.jsx");
 var ValoriCompareGraph = require("./valori-compare.jsx");
 var SitiCompareGraph   = require("./siti-compare.jsx");
 
 var HistoricalGraph = React.createClass({
     propTypes: {
+        alarms: React.PropTypes.arrayOf(React.PropTypes.number),
         dateCompare: React.PropTypes.shape({
             period: React.PropTypes.object,
             dateOne: React.PropTypes.date
         }),
         misure: IPropTypes.map,
+        resetCompare: React.PropTypes.func,
         siti: React.PropTypes.arrayOf(IPropTypes.map),
         style: React.PropTypes.object,
         tipologia: React.PropTypes.object,
@@ -91,10 +94,14 @@ var HistoricalGraph = React.createClass({
                         style={{
                             display: this.props.dateCompare || this.props.siti.length > 1 ? "flex" : "none",
                             position: "relative",
-                            marginLeft: "50px"}}
+                            marginLeft: "50px",
+                            cursor: "pointer"
+                        }}
                     >
-                        <components.Icon icon="times-circle" style={{fontSize: "20px", width: "30px"}}></components.Icon>
-                        Esci dal confronto</div>
+                        <img src={icons.iconLogoutColor} style={{width: "30px", height: "20px"}}/>
+                        <components.Spacer direction="h" size={5} />
+                        {"Esci dal confronto"}
+                    </div>
                     {this.renderGraph()}
                 </div>
         );
