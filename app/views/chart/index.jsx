@@ -46,14 +46,10 @@ var Chart = React.createClass({
         if (R.has("idAlarm", this.props.params)) {
             this.props.asteroid.subscribe("alarms");
         }
+        this.subscribeToMisure(this.props);
     },
     componentWillReceiveProps: function (props) {
-        var self = this;
-        var sitoQuery = R.path(["location", "query", "sito"], props);
-        var siti = (sitoQuery && sitoQuery.split(",")) || [];
-        siti.forEach(function (sito) {
-            self.props.asteroid.subscribe("misureBySito", sito);
-        });
+        this.subscribeToMisure(props);
     },
     componentDidUpdate: function () {
         var siti = this.props.collections.get("siti") || Immutable.Map();
@@ -122,6 +118,14 @@ var Chart = React.createClass({
             dateCompareProps.onChange(null, "dateCompare");
         }
     },
+    subscribeToMisure: function (props) {
+        var self = this;
+        var sitoQuery = R.path(["location", "query", "sito"], props);
+        var siti = (sitoQuery && sitoQuery.split(",")) || [];
+        siti.forEach(function (sito) {
+            self.props.asteroid.subscribe("misureBySito", sito);
+        });
+    },
     render: function () {
         // Sito
         var siti = this.props.collections.get("siti") || Immutable.Map();
@@ -129,16 +133,6 @@ var Chart = React.createClass({
             "sito",
             transformers.sito(siti)
         );
-        if (this.props.location.query && R.find("pod", this.props.location.query)) {
-            var queryPod = this.props.location.query.pod;
-            var podId = siti.find(function (value) {
-                return value.get("pod") === queryPod;
-            });
-
-            if (podId) {
-                sitoInputProps.value = [podId];
-            }
-        }
 
         // Tipologia
         var tipologie = this.getTipologie();
