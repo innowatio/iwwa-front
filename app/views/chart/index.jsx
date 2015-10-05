@@ -55,6 +55,12 @@ var Chart = React.createClass({
             self.props.asteroid.subscribe("misureBySito", sito);
         });
     },
+    componentDidUpdate: function () {
+        var siti = this.props.collections.get("siti") || Immutable.Map();
+        if (siti.size > 0 && this.refs.historicalGraph.props.siti.length < 1) {
+            sitoInputProps.onChange([siti.first()], "sito");
+        }
+    },
     getPeriods: function () {
         return [
             {label: "Settimana", key: "week"},
