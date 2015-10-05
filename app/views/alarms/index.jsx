@@ -95,7 +95,7 @@ var Alarms = React.createClass({
                 valueFormatter: function (value) {
                     return (
                         <Router.Link onClick={self.onClickAction} to={`/alarms/${value}`}>
-                            <img src={icons.iconArrowRight}
+                            <img src={icons.iconSettings}
                                 style={{float: "right", height: "28px"}}/>
                         </Router.Link>
                     );
@@ -113,8 +113,8 @@ var Alarms = React.createClass({
                     });
                     if (notificationDates.length > 0) {
                         return (
-                            <Router.Link onClick={self.onClickAction} to={`/chart/?sito=${item.get("podId")}&alarms${R.dropRepeats(notificationDates).join("-")}`}>
-                                <img src={icons.iconArrowRight}
+                            <Router.Link onClick={self.onClickAction} to={`/chart/?pod=${item.get("podId")}&alarms=${R.dropRepeats(notificationDates).join("-")}`}>
+                                <img src={icons.iconPNG}
                                     style={{float: "right", height: "28px"}}/>
                             </Router.Link>
                         );
