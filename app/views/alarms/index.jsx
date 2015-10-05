@@ -100,6 +100,31 @@ var Alarms = React.createClass({
                         </Router.Link>
                     );
                 }
+            },
+            {
+                key: "notifications",
+                valueFormatter: function (value, item) {
+                    // value is a list of maps
+                    var notificationDates = [];
+                    value.forEach(function (notification) {
+                        if (notification.get("date")) {
+                            notificationDates.push(notification.get("date"));
+                        }
+                    });
+                    if (notificationDates.length > 0) {
+                        return (
+                            <Router.Link onClick={self.onClickAction} to={`/chart/?sito=${item.get("podId")}&alarms${R.dropRepeats(notificationDates).join("-")}`}>
+                                <img src={icons.iconArrowRight}
+                                    style={{float: "right", height: "28px"}}/>
+                            </Router.Link>
+                        );
+                    } else {
+                        return (
+                            <div></div>
+                        );
+                    }
+
+                }
             }
         ];
     },
@@ -140,7 +165,8 @@ var Alarms = React.createClass({
                         </span>
                     );
                 }
-            } // ,
+            }
+            // ,
             // {
             //     key: "_id",
             //     valueFormatter: function (value) {
@@ -263,7 +289,7 @@ var Alarms = React.createClass({
         );
     },
     render: function () {
-        var allowedValues = this.props.collections.get("alarms");
+        var allowedValues = this.props.collections.get("alarms") || Immutable.Map();
         return (
             <div className="alarm-tab" style={{paddingBottom: "15px"}}>
                 <h2

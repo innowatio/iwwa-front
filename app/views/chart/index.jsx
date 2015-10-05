@@ -123,6 +123,16 @@ var Chart = React.createClass({
             "sito",
             transformers.sito(siti)
         );
+        if (this.props.location.query && R.find("pod", this.props.location.query)) {
+            var queryPod = this.props.location.query.pod;
+            var podId = siti.find(function (value) {
+                return value.get("pod") === queryPod;
+            });
+
+            if (podId) {
+                sitoInputProps.value = [podId];
+            }
+        }
 
         // Tipologia
         var tipologie = this.getTipologie();
