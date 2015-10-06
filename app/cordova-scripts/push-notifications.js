@@ -1,3 +1,9 @@
+var asteroid = require("lib/asteroid.js");
+
+var saveRegistrationId = function (registrationId) {
+    asteroid.call("saveRegistrationId", registrationId);
+};
+
 module.exports = function initPushNotifications () {
     var options = {
        ios: {
@@ -8,8 +14,13 @@ module.exports = function initPushNotifications () {
     };
     var push = PushNotification.init(options);
     push.on("registration", function (data) {
-        console.log("REGISTERED");
-        console.log(data.registrationId);
+        if (asteroid.loggedIn) {
+            saveRegistrationId(data.registrationId);
+        } else {
+            asteroid.on("loggedIn", function () {
+                saveRegistrationId(data.registrationId);
+            });
+        }
     });
     push.on("notification", function (data) {
         console.log("NOTIFICATION");

@@ -285,15 +285,6 @@ var AlarmForm = React.createClass({
             </components.Button>
         );
     },
-    renderResetButton: function () {
-        return (
-            <Router.Link to={`/alarms/`}>
-                <components.Button bsStyle="link" disabled={this.state.saving} onClick={this.reset}>
-                    {<components.Icon icon="repeat" />}
-                </components.Button>
-            </Router.Link>
-        );
-    },
     renderTitleSelectSite: function () {
         return this.state.sito.size === 0 ?
             <span>

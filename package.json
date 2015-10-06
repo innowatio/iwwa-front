@@ -6,6 +6,7 @@
   "scripts": {
     "build": "gulp build",
     "build-cordova": "node scripts/build-cordova.js",
+    "run-ios": "cd builds/cordova-app && cordova run ios",
     "dev": "gulp dev",
     "emulate-ios": "cd builds/cordova-app && cordova emulate ios --target=\"iPad-Air\"",
     "lint": "eslint app/**/*.js app/**/*.jsx",
