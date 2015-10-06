@@ -65,6 +65,13 @@ var Alarms = React.createClass({
         });
         return notificationDates;
     },
+    getChartUrl: function (sito, alarms, startDate, endDate) {
+        var url = `/chart/`;
+        url += `?sito=${sito}`;
+        url += `&dateFilter=${startDate}-${endDate}`;
+        url += `&alarms=${alarms}`;
+        return url;
+    },
     getColumnsAlarms: function () {
         var self = this;
         return [
@@ -125,11 +132,11 @@ var Alarms = React.createClass({
                     if (notificationDates.length > 0) {
                         var lowerDate = moment(notificationDates[notificationDates.length - 1]).subtract(15, "days").format("YYYYMMDD");
                         var upperDate = moment(notificationDates[notificationDates.length - 1]).add(15, "days").format("YYYYMMDD");
-                        var dateFilter = `&dateFilter=${lowerDate}-${upperDate}`;
-                        const sito = self.getSitoByPod(item.get("podId"));
+                        var alarms = R.dropRepeats(notificationDates).join("-");
+                        const sito = self.getSitoByPod(item.get("podId")).get("_id");
+                        var chartUrl = self.getChartUrl(sito, alarms, lowerDate, upperDate);
                         return (
-                            <Router.Link
-                                to={`/chart/?sito=${sito.get("_id")}&alarms=${R.dropRepeats(notificationDates).join("-")}` + dateFilter}>
+                            <Router.Link to={chartUrl}>
                                 <img src={icons.iconPNG}
                                     style={{float: "right", height: "28px"}}/>
                             </Router.Link>
@@ -181,19 +188,24 @@ var Alarms = React.createClass({
                         </span>
                     );
                 }
+            },
+            {
+                key: "notification",
+                valueFormatter: function (value, item) {
+                    // value is a list of maps
+                    // var lowerDate = moment(value).subtract(15, "days").format("YYYYMMDD");
+                    // var upperDate = moment(value).add(15, "days").format("YYYYMMDD");
+                    // var alarms = item.get("date");
+                    // const sito = self.getSitoByPod(item.get("podId")).get("_id");
+                    // var chartUrl = self.getChartUrl(sito, alarms, lowerDate, upperDate);
+                    return (
+                        <Router.Link>
+                            <img src={icons.iconPNG}
+                                style={{float: "right", height: "28px"}}/>
+                        </Router.Link>
+                    );
+                }
             }
-            // ,
-            // {
-            //     key: "_id",
-            //     valueFormatter: function (value) {
-            //         return (
-            //             <Router.Link onClick={self.onClickAction} to={`/alarms/${value}`}>
-            //                 <components.Icon icon="arrow-right"
-            //                     style={{float: "right", paddingRight: "10px", paddingTop: "2px"}}/>
-            //             </Router.Link>
-            //         );
-            //     }
-            // }
         ];
     },
     onClickAction: function () {
