@@ -2,6 +2,7 @@ var bootstrap  = require("react-bootstrap");
 var Radium     = require("radium");
 var React      = require("react");
 var Router     = require("react-router");
+var R          = require("ramda");
 
 var colors   = require("lib/colors");
 var measures = require("lib/measures");
@@ -60,6 +61,12 @@ var SideNav = React.createClass({
             visible: false
         };
     },
+    resetTutorial: function () {
+        localStorage[`hideTutorialOnPage_historicalGraph`] = false;
+        localStorage[`hideTutorialOnPage_alarm-form`] = false;
+        this.props.linkClickAction();
+        location.reload();
+    },
     renderIconSideBar: function (menuItem) {
         return (
             <li key={menuItem.iconPath} style={{height: "55px"}}>
@@ -68,7 +75,7 @@ var SideNav = React.createClass({
         );
     },
     renderNavItem: function (menuItem) {
-        return (
+        return !R.isNil(menuItem.url) ? (
             <li key={menuItem.iconPath}>
                 <Router.Link
                     activeStyle={styles.activeLink}
@@ -79,6 +86,13 @@ var SideNav = React.createClass({
                     <img src={menuItem.iconPath} style={{float: "left", width: "30px"}} />
                     <span style={{marginLeft: "10px", verticalAlign: "middle", height: "100%"}}>{menuItem.label}</span>
                 </Router.Link>
+            </li>
+        ) : (
+            <li key={menuItem.iconPath} onClick={this.resetTutorial} style={{cursor: "pointer"}}>
+                <a style={{height: "55px"}}>
+                    <img src={menuItem.iconPath} style={{float: "left", width: "30px"}} />
+                    <span style={{marginLeft: "10px", verticalAlign: "middle", height: "100%"}}>{menuItem.label}</span>
+                </a>
             </li>
         );
     },

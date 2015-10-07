@@ -9,8 +9,8 @@ var GetTutorialMixin = function (page, refs) {
                 var intro = new Intro();
                 intro.setOptions({
                     steps: R.sortBy(R.prop("order"), refs.map(ref => this.refs[ref].getOptions())),
-                    nextLabel: "Succ. →",
-                    prevLabel: "← Prec.",
+                    nextLabel: "Succ. <i class='fa fa-arrow-right'></i>",
+                    prevLabel: "<i class='fa fa-arrow-left'></i> Prec.",
                     skipLabel: "Salta",
                     doneLabel: "Fatto",
                     exitOnOverlayClick: false,

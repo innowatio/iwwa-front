@@ -8,15 +8,15 @@ var bootstrap  = require("react-bootstrap");
 var IPropTypes = require("react-immutable-proptypes");
 var Router     = require("react-router");
 
-var components        = require("components");
-var CollectionUtils   = require("lib/collection-utils");
-var colors            = require("lib/colors");
-var Icon              = require("lib/icons");
-var stringIt          = require("lib/string-it");
-var styles            = require("lib/styles");
-var tutorialString    = require("assets/JSON/tutorial-string.json");
-var GetTutorialMixin  = require("lib/get-tutorial-mixin");
-var icons             = require("lib/icons");
+var components      = require("components");
+var CollectionUtils = require("lib/collection-utils");
+var colors          = require("lib/colors");
+var Icon            = require("lib/icons");
+var stringIt        = require("lib/string-it");
+var styles          = require("lib/styles");
+var tutorialString  = require("assets/JSON/tutorial-string.json");
+var GetTutorialMixin   = require("lib/get-tutorial-mixin");
+var icons           = require("lib/icons");
 
 var less = function (time1, time2) {
     return (
@@ -283,15 +283,6 @@ var AlarmForm = React.createClass({
                 }}>
                 {this.props.type === "update" ? "SALVA" : "CREA"}
             </components.Button>
-        );
-    },
-    renderResetButton: function () {
-        return (
-            <Router.Link to={`/alarms/`}>
-                <components.Button bsStyle="link" disabled={this.state.saving} onClick={this.reset}>
-                    {<components.Icon icon="repeat" />}
-                </components.Button>
-            </Router.Link>
         );
     },
     renderTitleSelectSite: function () {

@@ -58,10 +58,10 @@ var Root = React.createClass({
     getMenuItems: function () {
         return [
             {key: "dashboard", label: "Dashboard", url: "/dashboard/", iconPath: icons.iconDashboard},
-            {key: "chart", label: "Historical Consumption", url: "/chart/", iconPath: icons.iconHistConsum},
-            {key: "live", label: "Live Consumption", url: "/live/", iconPath: icons.iconLiveConsum},
-            {key: "alarms", label: "Alarms", url: "/alarms/", iconPath: icons.iconAlarm},
-            {key: "help", label: "Help", url: "/help/", iconPath: icons.iconHelp}
+            {key: "chart", label: "Consumi storici", url: "/chart/", iconPath: icons.iconHistConsum},
+            {key: "live", label: "Consumi in tempo reale", url: "/live/", iconPath: icons.iconLiveConsum},
+            {key: "alarms", label: "Allarmi", url: "/alarms/", iconPath: icons.iconAlarm},
+            {key: "help", label: "Aiuto", onClick: "resetTutorial", iconPath: icons.iconHelp}
         ];
     },
     toggleSidebar: function () {
