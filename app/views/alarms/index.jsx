@@ -44,6 +44,9 @@ var Alarms = React.createClass({
             Immutable.Map()
         );
     },
+    getAlarms: function () {
+        return this.props.collections.get("alarms") || Immutable.Map();
+    },
     getSiti: function () {
         return this.props.collections.get("siti") || Immutable.Map();
     },
@@ -64,6 +67,18 @@ var Alarms = React.createClass({
             }
         });
         return notificationDates;
+    },
+    getNotificationsFromAlarm: function (alarm) {
+        const merger = alarm.delete("notifications").delete("_id");
+        return alarm.get("notifications").reduce((acc, notification) => (
+            acc.set(notification.get("_id"), merger.merge(notification))
+        ), Immutable.Map());
+    },
+    getNotifications: function () {
+        var ret = this.getAlarms().reduce((acc, alarm) => (
+            acc.merge(this.getNotificationsFromAlarm(alarm))
+        ), Immutable.Map());
+        return ret;
     },
     getChartUrl: function (sito, alarms, startDate, endDate) {
         var url = `/chart/`;
@@ -126,6 +141,9 @@ var Alarms = React.createClass({
             },
             {
                 key: "notifications",
+                style: function () {
+                    return {width: "50px"};
+                },
                 valueFormatter: function (value, item) {
                     // value is a list of maps
                     var notificationDates = self.getNotificationsList(value);
@@ -190,16 +208,15 @@ var Alarms = React.createClass({
                 }
             },
             {
-                key: "notification",
+                key: "dateNotification",
                 valueFormatter: function (value, item) {
-                    // value is a list of maps
-                    // var lowerDate = moment(value).subtract(15, "days").format("YYYYMMDD");
-                    // var upperDate = moment(value).add(15, "days").format("YYYYMMDD");
-                    // var alarms = item.get("date");
-                    // const sito = self.getSitoByPod(item.get("podId")).get("_id");
-                    // var chartUrl = self.getChartUrl(sito, alarms, lowerDate, upperDate);
+                    var notificationDate = item.get("date");
+                    var lowerDate = moment(notificationDate).subtract(15, "days").format("YYYYMMDD");
+                    var upperDate = moment(notificationDate).add(15, "days").format("YYYYMMDD");
+                    const sito = self.getSitoByPod(item.get("podId")).get("_id");
+                    var chartUrl = self.getChartUrl(sito, notificationDate, lowerDate, upperDate);
                     return (
-                        <Router.Link>
+                        <Router.Link to={chartUrl}>
                             <img src={icons.iconPNG}
                                 style={{float: "right", height: "28px"}}/>
                         </Router.Link>
@@ -220,6 +237,10 @@ var Alarms = React.createClass({
         return [
             {title: "Quali allarmi vuoi visualizzare?", label: ["TUTTI", "ATTIVI", "INATTIVI"]}
         ];
+    },
+    sortByDate: function (a, b, asc) {
+        var comparison = a.get("date") > b.get("date");
+        return asc ? comparison : !comparison;
     },
     onClickFilter: function (label, value) {
         if (R.equals(value, this.alarmFilterTitle()[0])) {
@@ -389,7 +410,7 @@ var Alarms = React.createClass({
                             </div> */}
                             <components.Spacer direction="v" size={30}/>
                             <components.CollectionElementsTable
-                                collection={this.props.collections.get("notifications") || Immutable.Map()}
+                                collection={this.getNotifications().sort(R.partialRight(this.sortByDate, false))}
                                 columns={this.getColumnsNotifications()}
                                 getKey={getKeyFromAlarm}
                                 hover={true}
