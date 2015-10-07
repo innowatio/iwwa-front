@@ -6,13 +6,15 @@ var React      = require("react");
 var bootstrap  = require("react-bootstrap");
 var IPropTypes = require("react-immutable-proptypes");
 
+var CollectionUtils  = require("lib/collection-utils");
 var colors           = require("lib/colors");
 var components       = require("components/");
 var icons            = require("lib/icons");
-var styles           = require("lib/styles");
 var QuerystringMixin = require("lib/querystring-mixin");
-var CollectionUtils  = require("lib/collection-utils");
+var styles           = require("lib/styles");
 var transformers     = require("./transformers.js");
+var GetTutorialMixin = require("lib/get-tutorial-mixin");
+var tutorialString   = require("assets/JSON/tutorial-string.json").historicalGraph;
 
 var multiselectStyles = {
     multiselectPopover: {
@@ -37,10 +39,20 @@ var Chart = React.createClass({
     propTypes: {
         asteroid: React.PropTypes.object,
         collections: IPropTypes.map,
+        localStorage: React.PropTypes.object,
         location: React.PropTypes.object,
         params: React.PropTypes.object
     },
-    mixins: [QuerystringMixin],
+    mixins: [QuerystringMixin,
+        GetTutorialMixin("historicalGraph", [
+            "valori",
+            "export",
+            "tipologie",
+            "siti",
+            "dateFilter",
+            "compare",
+            "graph"
+    ])],
     componentDidMount: function () {
         this.props.asteroid.subscribe("siti");
         if (R.has("idAlarm", this.props.params)) {
@@ -180,6 +192,11 @@ var Chart = React.createClass({
 
         return (
             <div>
+                <components.TutorialAnchor
+                    message={tutorialString.introTutorial}
+                    order={0}
+                    ref="intro"
+                />
                 <h2
                     className="text-center"
                     style={styles.titlePage}
@@ -188,101 +205,150 @@ var Chart = React.createClass({
                     Storico consumi
                 </h2>
                 <bootstrap.Col sm={12} style={styles.colVerticalPadding}>
-                    <span className="pull-left">
-                        <components.ButtonGroupSelect
-                            allowedValues={valori}
-                            getActiveStyle={valoreGetActiveStyle}
-                            getKey={R.prop("key")}
-                            getLabel={R.prop("label")}
-                            multi={valoriMulti}
-                            {...valoreInputProps}
-                        />
-                        <components.Popover
-                            hideOnChange={true}
-                            title={<img src={icons.iconExport} style={{width: "50%"}} />}
-                            tooltipId="tooltipExport"
-                            tooltipMessage="Esporta"
-                            tooltipPosition="right"
+                    <span className="pull-left" style={{display: "flex"}}>
+                        <components.TutorialAnchor
+                            message={tutorialString.valori}
+                            order={1}
+                            position="right"
+                            ref="valori"
                         >
-                            <components.DropdownButton
-                                allowedValues={this.getExportType()}
-                                getIcon={R.prop("icon")}
+                            <components.ButtonGroupSelect
+                                allowedValues={valori}
+                                getActiveStyle={valoreGetActiveStyle}
                                 getKey={R.prop("key")}
                                 getLabel={R.prop("label")}
-                                onChange={this.onChangeExport}
+                                multi={valoriMulti}
+                                {...valoreInputProps}
                             />
-                        </components.Popover>
+                        </components.TutorialAnchor>
+                        <components.TutorialAnchor
+                            message={tutorialString.export}
+                            order={2}
+                            position="right"
+                            ref="export"
+                        >
+                            <components.Popover
+                                hideOnChange={true}
+                                title={<img src={icons.iconExport} style={{width: "50%"}} />}
+                                tooltipId="tooltipExport"
+                                tooltipMessage="Esporta"
+                                tooltipPosition="right"
+                            >
+                                <components.DropdownButton
+                                    allowedValues={this.getExportType()}
+                                    getIcon={R.prop("icon")}
+                                    getKey={R.prop("key")}
+                                    getLabel={R.prop("label")}
+                                    onChange={this.onChangeExport}
+                                />
+                            </components.Popover>
+                        </components.TutorialAnchor>
                     </span>
                     <span className="pull-right" style={{display: "flex"}}>
-                        <components.Popover
-                            hideOnChange={true}
-                            title={<img src={icons.iconPower} style={{width: "75%"}} />}
-                            tooltipId="tooltipInterest"
-                            tooltipMessage="Quantità d'interesse"
-                            tooltipPosition="left"
+                        <components.TutorialAnchor
+                            message={tutorialString.tipologie}
+                            order={3}
+                            position="left"
+                            ref="tipologie"
                         >
-                            <components.DropdownSelect
-                                allowedValues={tipologie}
+                            <components.Popover
+                                hideOnChange={true}
+                                title={<img src={icons.iconPower} style={{width: "75%"}} />}
+                                tooltipId="tooltipInterest"
+                                tooltipMessage="Quantità d'interesse"
+                                tooltipPosition="left"
+                            >
+                                <components.DropdownSelect
+                                    allowedValues={tipologie}
+                                    getKey={R.prop("key")}
+                                    getLabel={R.prop("label")}
+                                    style={{float: "left"}}
+                                    {...tipologiaInputProps}
+                                />
+                            </components.Popover>
+                        </components.TutorialAnchor>
+                        <components.TutorialAnchor
+                            message={tutorialString.siti}
+                            order={4}
+                            position="left"
+                            ref="siti"
+                        >
+                            <components.Popover
+                                hideOnChange={true}
+                                style="inherit"
+                                title={<img src={icons.iconSiti} style={{width: "75%"}} />}
+                                tooltipId="tooltipMisurazione"
+                                tooltipMessage="Punti di misurazione"
+                                tooltipPosition="top"
+                            >
+                                <components.SelectTree
+                                    allowedValues={siti}
+                                    filter={CollectionUtils.siti.filter}
+                                    getLabel={CollectionUtils.siti.getLabel}
+                                    placeholder={"Punto di misurazione"}
+                                    {...sitoInputProps}
+                                />
+                            </components.Popover>
+                        </components.TutorialAnchor>
+                        <components.TutorialAnchor
+                            message={tutorialString.dateFilter}
+                            order={5}
+                            position="left"
+                            ref="dateFilter"
+                        >
+                            <components.DatefilterModal
+                                allowedValues={filterDate}
                                 getKey={R.prop("key")}
                                 getLabel={R.prop("label")}
-                                style={{float: "left"}}
-                                {...tipologiaInputProps}
+                                title={<img src={icons.iconCalendar} style={{width: "75%"}} />}
+                                {...dateFilterProps}
                             />
-                        </components.Popover>
-                        <components.Popover
-                            hideOnChange={true}
-                            style="inherit"
-                            title={<img src={icons.iconSiti} style={{width: "75%"}} />}
-                            tooltipId="tooltipMisurazione"
-                            tooltipMessage="Punti di misurazione"
-                            tooltipPosition="top"
+                        </components.TutorialAnchor>
+                        <components.TutorialAnchor
+                            message={tutorialString.compare}
+                            order={6}
+                            position="left"
+                            ref="compare"
                         >
-                            <components.SelectTree
-                                allowedValues={siti}
-                                filter={CollectionUtils.siti.filter}
-                                getLabel={CollectionUtils.siti.getLabel}
-                                placeholder={"Punto di misurazione"}
-                                {...sitoInputProps}
-                            />
-                        </components.Popover>
-                        <components.DatefilterModal
-                            allowedValues={filterDate}
-                            getKey={R.prop("key")}
-                            getLabel={R.prop("label")}
-                            title={<img src={icons.iconCalendar} style={{width: "75%"}} />}
-                            {...dateFilterProps}
-                        />
-                        <components.Compare>
-                            <components.SitiCompare
-                                allowedValues={siti}
-                                filter={CollectionUtils.siti.filter}
-                                getSitoLabel={CollectionUtils.siti.getLabel}
-                                open={"undefined"}
-                                style={multiselectStyles.multiselect}
-                                {...sitoInputProps}
-                            />
-                            <components.DataCompare
-                                allowedValues={compareDate}
-                                getKey={R.prop("key")}
-                                getLabel={R.prop("label")}
-                                {...dateCompareProps}
-                            />
-                        </components.Compare>
+                            <components.Compare>
+                                <components.SitiCompare
+                                    allowedValues={siti}
+                                    filter={CollectionUtils.siti.filter}
+                                    getSitoLabel={CollectionUtils.siti.getLabel}
+                                    open={"undefined"}
+                                    style={multiselectStyles.multiselect}
+                                    {...sitoInputProps}
+                                />
+                                <components.DataCompare
+                                    allowedValues={compareDate}
+                                    getKey={R.prop("key")}
+                                    getLabel={R.prop("label")}
+                                    {...dateCompareProps}
+                                />
+                            </components.Compare>
+                        </components.TutorialAnchor>
                     </span>
                 </bootstrap.Col>
                 <bootstrap.Col  className="modal-container" sm={12} style={{height: "100%"}}>
-                    <components.HistoricalGraph
-                        alarms={alarms.value}
-                        dateCompare={dateCompareProps.value}
-                        dateFilter={dateFilterProps.value}
-                        misure={this.props.collections.get("misure") || Immutable.Map()}
-                        ref="historicalGraph"
-                        resetCompare={this.resetCompare}
-                        siti={sitoInputProps.value}
-                        style={graphStyle}
-                        tipologia={tipologiaInputProps.value}
-                        valori={valoreInputProps.value}
-                    />
+                    <components.TutorialAnchor
+                        message={tutorialString.graph}
+                        order={7}
+                        position="top"
+                        ref="graph"
+                    >
+                        <components.HistoricalGraph
+                            alarms={alarms.value}
+                            dateCompare={dateCompareProps.value}
+                            dateFilter={dateFilterProps.value}
+                            misure={this.props.collections.get("misure") || Immutable.Map()}
+                            ref="historicalGraph"
+                            resetCompare={this.resetCompare}
+                            siti={sitoInputProps.value}
+                            style={graphStyle}
+                            tipologia={tipologiaInputProps.value}
+                            valori={valoreInputProps.value}
+                        />
+                    </components.TutorialAnchor>
                 </bootstrap.Col>
             </div>
         );

@@ -1,0 +1,25 @@
+{
+    "historicalGraph": {
+
+        "valori": "Scegli che dati mostrare.",
+        "export": "Esporta l'immagine del grafico o il CSV con i dati.",
+        "tipologie": "Scegli il tipo di energia da mostrare.",
+        "siti": "Scegli il punto di misura.",
+        "dateFilter": "Specifica il periodo temporale.",
+        "compare": "Compara 2 siti o 2 periodi temporali per uno stesso sito.",
+        "graph": "Puoi fare zoom <img src='../_assets/icons/tutorial/tutorial_pinch.svg'/> e scroll <img src='../_assets/icons/tutorial/tutorial_swipe.svg'/>"
+
+    },
+
+    "alarmForm": {
+
+        "siti": "Scegli il sito per il quale impostare l'allarme.",
+        "threshold": "Imposta la soglia alla quale far scattare l'allarme.",
+        "name": "Dai un nome all'allarme.",
+        "notification": "Imposta come vuoi essere notificato.",
+        "active": "Attiva / disattiva l'allarme",
+        "repetition": "Imposta quando l'allarme è attivo."
+
+    }
+
+}

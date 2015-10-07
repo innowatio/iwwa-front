@@ -2,11 +2,12 @@ var Radium = require("radium");
 var R      = require("ramda");
 var React  = require("react");
 
-var components = require("components");
-var asteroid   = require("lib/asteroid");
-var measures   = require("lib/measures");
-var colors     = require("lib/colors");
-var icons      = require("lib/icons");
+var components        = require("components");
+var asteroid          = require("lib/asteroid");
+var measures          = require("lib/measures");
+var colors            = require("lib/colors");
+var icons             = require("lib/icons");
+var LocalStorageMixin = require("lib/localstorage-mixin");
 
 var styles = {
     header: {
@@ -46,7 +47,8 @@ var Root = React.createClass({
         children: React.PropTypes.node
     },
     mixins: [
-        asteroid.getControllerViewMixin()
+        asteroid.getControllerViewMixin(),
+        LocalStorageMixin
     ],
     getInitialState: function () {
         return {
@@ -56,10 +58,10 @@ var Root = React.createClass({
     getMenuItems: function () {
         return [
             {key: "dashboard", label: "Dashboard", url: "/dashboard/", iconPath: icons.iconDashboard},
-            {key: "chart", label: "Historical Consumption", url: "/chart/", iconPath: icons.iconHistConsum},
-            {key: "live", label: "Live Consumption", url: "/live/", iconPath: icons.iconLiveConsum},
-            {key: "alarms", label: "Alarms", url: "/alarms/", iconPath: icons.iconAlarm},
-            {key: "help", label: "Help", url: "/help/", iconPath: icons.iconHelp}
+            {key: "chart", label: "Consumi storici", url: "/chart/", iconPath: icons.iconHistConsum},
+            {key: "live", label: "Consumi in tempo reale", url: "/live/", iconPath: icons.iconLiveConsum},
+            {key: "alarms", label: "Allarmi", url: "/alarms/", iconPath: icons.iconAlarm},
+            {key: "help", label: "Aiuto", onClick: "resetTutorial", iconPath: icons.iconHelp}
         ];
     },
     toggleSidebar: function () {
@@ -91,7 +93,8 @@ var Root = React.createClass({
     renderChildren: function () {
         return React.cloneElement(this.props.children, {
             asteroid: asteroid,
-            collections: this.state.collections
+            collections: this.state.collections,
+            localStorage: this.state.localStorage
         });
     },
     render: function () {

@@ -18,7 +18,7 @@ var styles = {
         backgroundColor: colors.black,
         backgroundImage: "url(" + assetsPathTo("images/login-background.jpg") + ")",
         backgroundSize: "cover",
-        zIndex: 1000,
+        zIndex: 10000,
         overflowY: "scroll"
     },
     body: {
@@ -106,7 +106,7 @@ var LoginModal = React.createClass({
     },
     render: function () {
         return this.props.isOpen ? (
-            <div style={R.merge(styles.overlay, {zIndex: 10000})}>
+            <div style={R.merge(styles.overlay, {zIndex: 10000000000})}>
                 <div style={styles.body}>
                     <div style={styles.title.container}>
                         <div>

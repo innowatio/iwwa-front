@@ -141,7 +141,6 @@ var TemporalLineGraph = React.createClass({
         Dygraph.Interaction.moveTouch = function (event, g, context) {
             // If the tap moves, then it's definitely not part of a double-tap.
             context.startTimeForDoubleTapMs = null;
-
             var i = [];
             var touches = [];
             for (i = 0; i < event.touches.length; i++) {
@@ -151,9 +150,7 @@ var TemporalLineGraph = React.createClass({
                 });
             }
             var initialTouches = context.initialTouches;
-
             var cNow;
-
             // old and new centers.
             var cInit = context.initialPinchCenter;
             if (touches.length === 1) {
@@ -163,7 +160,6 @@ var TemporalLineGraph = React.createClass({
                     pageX: 0.5 * (touches[0].pageX + touches[1].pageX)
                 };
             }
-
               // this is the "swipe" component
               // we toss it out for now, but could use it in the future.
             var swipe = {
@@ -172,7 +168,6 @@ var TemporalLineGraph = React.createClass({
             var dataWidth = context.initialRange.x[1] - context.initialRange.x[0];
             swipe.dataX = (swipe.pageX / g.plotter_.area.w) * dataWidth;
             var xScale;
-
             // The residual bits are usually split into scale & rotate bits, but we split
             // them into x-scale and y-scale bits.
             if (touches.length === 1) {
@@ -181,10 +176,8 @@ var TemporalLineGraph = React.createClass({
                 var initHalfWidth = (initialTouches[1].pageX - cInit.pageX);
                 xScale = (touches[1].pageX - cNow.pageX) / initHalfWidth;
             }
-
             // Clip scaling to [1/8, 8] to prevent too much blowup.
             xScale = Math.min(8, Math.max(0.125, xScale));
-
             var didZoom = false;
             if (context.touchDirections.x) {
                 g.dateWindow_ = [
@@ -193,9 +186,7 @@ var TemporalLineGraph = React.createClass({
                 ];
                 didZoom = true;
             }
-
             g.drawGraph_(false);
-
             // We only call zoomCallback on zooms, not pans, to mirror desktop behavior.
             if (didZoom && touches.length > 1 && g.getFunctionOption("zoomCallback")) {
                 var viewWindow = g.xAxisRange();

@@ -76,6 +76,7 @@
     "halogen": "^0.1.10",
     "history": "^1.8.4",
     "immutable": "^3.7.4",
+    "intro.js": "^1.1.1",
     "lodash.debounce": "^3.1.1",
     "lodash.throttle": "^3.0.4",
     "moment": "^2.10.3",
@@ -97,7 +98,8 @@
     "plugins": [
       "cordova-plugin-device",
       "cordova-plugin-inappbrowser",
-      "cordova-plugin-statusbar"
+      "cordova-plugin-statusbar",
+      "https://github.com/robertklein/cordova-ios-security.git"
     ]
   },
   "optionalDependencies": {

@@ -2,9 +2,8 @@ var Router = require("react-router");
 var Radium = require("radium");
 var React  = require("react");
 
-var colors   = require("lib/colors");
-var measures = require("lib/measures");
-var icons    = require("lib/icons");
+var colors     = require("lib/colors");
+var icons      = require("lib/icons");
 
 var styles = {
     base: {
