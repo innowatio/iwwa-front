@@ -44,11 +44,48 @@ var Alarms = React.createClass({
             Immutable.Map()
         );
     },
+    getAlarms: function () {
+        return this.props.collections.get("alarms") || Immutable.Map();
+    },
     getSiti: function () {
         return this.props.collections.get("siti") || Immutable.Map();
     },
     getType: function () {
         return (this.props.params.id ? "update" : "insert");
+    },
+    getSitoByPod: function (pod) {
+        return this.getSiti().find(
+            sito => (
+                sito.get("pod") === pod
+            ));
+    },
+    getNotificationsList: function (notifications) {
+        var notificationDates = [];
+        notifications.forEach(function (notification) {
+            if (notification.get("date")) {
+                notificationDates.push(notification.get("date"));
+            }
+        });
+        return notificationDates;
+    },
+    getNotificationsFromAlarm: function (alarm) {
+        const merger = alarm.delete("notifications").delete("_id");
+        return alarm.get("notifications").reduce((acc, notification) => (
+            acc.set(notification.get("_id"), merger.merge(notification))
+        ), Immutable.Map());
+    },
+    getNotifications: function () {
+        var ret = this.getAlarms().reduce((acc, alarm) => (
+            acc.merge(this.getNotificationsFromAlarm(alarm))
+        ), Immutable.Map());
+        return ret;
+    },
+    getChartUrl: function (sito, alarms, startDate, endDate) {
+        var url = `/chart/`;
+        url += `?sito=${sito}`;
+        url += `&dateFilter=${startDate}-${endDate}`;
+        url += `&alarms=${alarms}`;
+        return url;
     },
     getColumnsAlarms: function () {
         var self = this;
@@ -57,7 +94,7 @@ var Alarms = React.createClass({
                 key: "active",
                 style: function (value) {
                     return {
-                        backgroundColor: value ? colors.green : colors.red,
+                        backgroundColor: value ? colors.green : colors.grey,
                         width: "37px",
                         height: "100%",
                         textAlign: "center"
@@ -66,8 +103,8 @@ var Alarms = React.createClass({
                 valueFormatter: function (value) {
                     return (
                         <img
-                            src={value ? icons.iconFlag : icons.iconActiveAlarm}
-                            />
+                            src={value ? icons.iconFlag : icons.iconPause}
+                        />
                     );
                 }
             },
@@ -79,13 +116,14 @@ var Alarms = React.createClass({
                         width: "40%"
                     };
                 },
-                valueFormatter: function (value) {
+                valueFormatter: function (value, item) {
                     var sito = self.getSiti().find(siti => {
                         return siti.get("pod") === value;
                     });
+                    var latest = R.last(self.getNotificationsList(item.get("notifications").sort()));
                     return (
                         <span>
-                            {CollectionUtils.siti.getLabel(sito)}
+                            {CollectionUtils.siti.getLabel(sito) + " - " + moment(latest).format("DD/MM/YYYY HH:mm")}
                         </span>
                     );
                 }
@@ -95,10 +133,38 @@ var Alarms = React.createClass({
                 valueFormatter: function (value) {
                     return (
                         <Router.Link onClick={self.onClickAction} to={`/alarms/${value}`}>
-                            <img src={icons.iconArrowRight}
+                            <img src={icons.iconSettings}
                                 style={{float: "right", height: "28px"}}/>
                         </Router.Link>
                     );
+                }
+            },
+            {
+                key: "notifications",
+                style: function () {
+                    return {width: "50px"};
+                },
+                valueFormatter: function (value, item) {
+                    // value is a list of maps
+                    var notificationDates = self.getNotificationsList(value);
+                    if (notificationDates.length > 0) {
+                        var lowerDate = moment(notificationDates[notificationDates.length - 1]).subtract(15, "days").format("YYYYMMDD");
+                        var upperDate = moment(notificationDates[notificationDates.length - 1]).add(15, "days").format("YYYYMMDD");
+                        var alarms = R.dropRepeats(notificationDates).join("-");
+                        const sito = self.getSitoByPod(item.get("podId")).get("_id");
+                        var chartUrl = self.getChartUrl(sito, alarms, lowerDate, upperDate);
+                        return (
+                            <Router.Link to={chartUrl}>
+                                <img src={icons.iconPNG}
+                                    style={{float: "right", height: "28px"}}/>
+                            </Router.Link>
+                        );
+                    } else {
+                        return (
+                            <div></div>
+                        );
+                    }
+
                 }
             }
         ];
@@ -140,6 +206,22 @@ var Alarms = React.createClass({
                         </span>
                     );
                 }
+            },
+            {
+                key: "dateNotification",
+                valueFormatter: function (value, item) {
+                    var notificationDate = item.get("date");
+                    var lowerDate = moment(notificationDate).subtract(15, "days").format("YYYYMMDD");
+                    var upperDate = moment(notificationDate).add(15, "days").format("YYYYMMDD");
+                    const sito = self.getSitoByPod(item.get("podId")).get("_id");
+                    var chartUrl = self.getChartUrl(sito, notificationDate, lowerDate, upperDate);
+                    return (
+                        <Router.Link to={chartUrl}>
+                            <img src={icons.iconPNG}
+                                style={{float: "right", height: "28px"}}/>
+                        </Router.Link>
+                    );
+                }
             }
         ];
     },
@@ -155,6 +237,10 @@ var Alarms = React.createClass({
         return [
             {title: "Quali allarmi vuoi visualizzare?", label: ["TUTTI", "ATTIVI", "INATTIVI"]}
         ];
+    },
+    sortByDate: function (a, b, asc) {
+        var comparison = a.get("date") > b.get("date");
+        return asc ? comparison : !comparison;
     },
     onClickFilter: function (label, value) {
         if (R.equals(value, this.alarmFilterTitle()[0])) {
@@ -252,7 +338,7 @@ var Alarms = React.createClass({
         );
     },
     render: function () {
-        var allowedValues = this.props.collections.get("alarms");
+        var allowedValues = this.props.collections.get("alarms") || Immutable.Map();
         return (
             <div className="alarm-tab" style={{paddingBottom: "15px"}}>
                 <h2
@@ -324,7 +410,7 @@ var Alarms = React.createClass({
                             </div> */}
                             <components.Spacer direction="v" size={30}/>
                             <components.CollectionElementsTable
-                                collection={this.props.collections.get("notifications") || Immutable.Map()}
+                                collection={this.getNotifications().sort(R.partialRight(this.sortByDate, false))}
                                 columns={this.getColumnsNotifications()}
                                 getKey={getKeyFromAlarm}
                                 hover={true}
