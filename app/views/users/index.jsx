@@ -2,7 +2,7 @@ var Immutable  = require("immutable");
 var IPropTypes = require("react-immutable-proptypes");
 var React      = require("react");
 var Router     = require("react-router");
-// var R     = require("ramda");
+var moment     = require("moment");
 
 var components = require("components");
 var colors     = require("lib/colors");
@@ -30,6 +30,13 @@ var Admin = React.createClass({
                 }
             },
             {
+                key: "createdAt",
+                valueFormatter: function (value) {
+                    var date = moment(value.get("$date"));
+                    return date.locale("it").format("LL");
+                }
+            },
+            {
                 key: "_id",
                 valueFormatter: function (value) {
                     return (
@@ -51,7 +58,7 @@ var Admin = React.createClass({
                 <components.CollectionElementsTable
                     collection={this.props.collections.get("users") || Immutable.Map()}
                     columns={this.getColumnsUsers()}
-                    head={["Email", "Verificata", "Edit"]}
+                    head={["Email", "Email verificata", "Data di creazione", "Edit"]}
                     hover={true}
                 />
             </div>

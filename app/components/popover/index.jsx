@@ -10,6 +10,7 @@ var Popover = React.createClass({
         arrow: React.PropTypes.string,
         children: React.PropTypes.element,
         hideOnChange: React.PropTypes.bool,
+        notClosePopoverOnClick: React.PropTypes.bool,
         style: React.PropTypes.string,
         title: React.PropTypes.oneOfType([
             React.PropTypes.element,
@@ -47,7 +48,7 @@ var Popover = React.createClass({
         );
     },
     closePopover: function () {
-        this.refs.menuPopover.hide();
+        return this.props.notClosePopoverOnClick ? null : this.refs.menuPopover.hide();
     },
     getButton: function () {
         return this.props.arrow === "none" ?

@@ -11,7 +11,6 @@ var Router     = require("react-router");
 var components      = require("components");
 var CollectionUtils = require("lib/collection-utils");
 var colors          = require("lib/colors");
-var Icon            = require("lib/icons");
 var stringIt        = require("lib/string-it");
 var styles          = require("lib/styles");
 var icons           = require("lib/icons");
@@ -199,7 +198,7 @@ var AlarmForm = React.createClass({
                         style={{
                             color: colors.primary,
                             marginTop: "8px"
-                        }}> {`Soglia (${this.state.threshold} kwh)`}
+                        }}> {`Soglia (${this.state.threshold} kWh)`}
                     </h4>
                     <components.Spacer direction="v" size={10} />
                     <bootstrap.Input

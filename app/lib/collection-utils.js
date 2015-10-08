@@ -7,7 +7,8 @@ exports.siti = {
         var searchRegExp = new RegExp(search, "i");
         return (
             searchRegExp.test(item.get("societa")) ||
-            searchRegExp.test(item.get("idCoin"))
+            searchRegExp.test(item.get("idCoin")) ||
+            searchRegExp.test(item.get("pod"))
         );
     },
     getLabel: function (sito) {
