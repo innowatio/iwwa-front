@@ -9,7 +9,6 @@ var checkLocalStorageAndRedirect = function (nextState, replaceState) {
     if (!nextState.location.query && localStorage.query) {
         nextState.location.query = JSON.parse(localStorage.query);
     }
-
     return replaceState;
 };
 

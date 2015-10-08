@@ -18,6 +18,8 @@ var styles = {
     }
 };
 
+const oneMonthInMilliseconds = moment.duration(1, "months").asMilliseconds();
+
 var TemporalLineGraph = React.createClass({
     propTypes: {
         alarms: React.PropTypes.arrayOf(React.PropTypes.number),
@@ -92,6 +94,18 @@ var TemporalLineGraph = React.createClass({
         }
         if (props.dateWindow) {
             options.dateWindow = props.dateWindow;
+        } else {
+            const {max, min} = props.coordinates.reduce((acc, coordinate) => {
+                return {
+                    max: coordinate[0] > acc.max ? coordinate[0] : acc.max,
+                    min: coordinate[0] < acc.min ? coordinate[0] : acc.min
+                };
+            }, {max: new Date(0), min: new Date()});
+            const delta = max - min;
+            if (delta < oneMonthInMilliseconds) {
+                return;
+            }
+            options.dateWindow = [max -  oneMonthInMilliseconds, max];
         }
         if (props.lockInteraction) {
             options.interactionModel = {};
