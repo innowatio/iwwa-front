@@ -31,6 +31,7 @@ var User = React.createClass({
     },
     getInitialState: function () {
         return {
+            inputFilter: "",
             inputPassword: ""
         };
     },
@@ -163,12 +164,18 @@ var User = React.createClass({
         }).toList().toJS();
     },
     render: function () {
+        var getSitiOfUser = this.getSiti()
+            .filter(value => CollectionUtils.siti.filter(value, this.state.inputFilter))
+            .map(this.renderTableSitiToUser);
         return (
             <div className="users-admin">
                 <Radium.Style
                     rules={{
                         ".panel-body": {
                             display: "inline-block"
+                        },
+                        ".form-group": {
+                            marginBottom: "0px"
                         }
                     }}
                     scopeSelector=".users-admin"
@@ -234,10 +241,15 @@ var User = React.createClass({
                                     {"Aggiungi tutti i siti"}
                                 </components.Button>
                             </div>
-                            <div style={{width: "100%", height: "calc(100vh - 255px)", overflowY: "auto"}}>
+                            <bootstrap.Input
+                                onChange={(input) => this.setState({inputFilter: input.target.value})}
+                                placeholder={"Filtro"}
+                                style={{borderBottomLeftRadius: "0px", borderBottomRightRadius: "0px", borderBottom: "0px"}}
+                                type="text" />
+                            <div style={{width: "100%", height: "calc(100vh - 280px)", overflowY: "auto"}}>
                                 <bootstrap.Table bordered hover style={{marginBottom: "0px"}}>
                                     <tbody>
-                                        {this.getSiti().map(this.renderTableSitiToUser)}
+                                        {getSitiOfUser}
                                     </tbody>
                                 </bootstrap.Table>
                             </div>
