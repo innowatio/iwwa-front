@@ -41,6 +41,7 @@ var Popover = React.createClass({
     addTooltip: function () {
         return (
             <bootstrap.Tooltip
+                className="tooltip-popover"
                 id={this.props.tooltipId}
             >
                 {this.props.tooltipMessage}
@@ -116,6 +117,7 @@ var Popover = React.createClass({
         return (
             <bootstrap.OverlayTrigger
                 animation={false}
+                className="popover-overlay"
                 overlay={this.renderOverlay()}
                 placement="bottom"
                 ref={"menuPopover"}

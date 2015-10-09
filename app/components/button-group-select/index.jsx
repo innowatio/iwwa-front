@@ -6,13 +6,12 @@ var IPropTypes = require("react-immutable-proptypes");
 
 var colors     = require("lib/colors");
 var components = require("components");
+var styles     = require("lib/styles");
 
-var styleDropdown = {
-    fontSize: "13px",
-    color: colors.greySubTitle,
-    backgroundColor: colors.greyBackground,
-    border: "1px " + colors.greyBorder
-};
+var styleDropdown = R.merge(
+        styles.buttonSelectValore,
+        {color: colors.greySubTitle, backgroundColor: colors.greyBackground}
+    );
 
 var ButtonGroupSelect = React.createClass({
     propTypes: {
