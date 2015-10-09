@@ -94,12 +94,13 @@
   },
   "cordova": {
     "name": "iwwa",
-    "version": "1.0.0",
+    "version": "1.2.0",
     "plugins": [
       "cordova-plugin-device",
       "cordova-plugin-inappbrowser",
       "cordova-plugin-statusbar",
-      "https://github.com/robertklein/cordova-ios-security.git"
+      "https://github.com/robertklein/cordova-ios-security.git",
+      "https://github.com/innowatio/cordova-ios-fullscreen.git"
     ]
   },
   "optionalDependencies": {
