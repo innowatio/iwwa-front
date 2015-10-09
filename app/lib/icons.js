@@ -31,3 +31,4 @@ exports.iconSearch      = assetsPathTo("icons/os__search.svg");
 exports.iconSettings    = assetsPathTo("icons/os__settings.svg");
 exports.iconSiti        = assetsPathTo("icons/os__map.svg");
 exports.iconUser        = assetsPathTo("icons/os__user.svg");
+exports.iconUserColor   = assetsPathTo("icons/os__user-color.svg");

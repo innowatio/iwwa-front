@@ -44,6 +44,12 @@ var styles = {
         borderRightStyle: "solid",
         borderRightColor: colors.primary,
         backgroundColor: colors.white
+    },
+    sideLabel: {
+        color: colors.primary,
+        marginLeft: "10px",
+        verticalAlign: "middle",
+        height: "100%"
     }
 };
 
@@ -84,14 +90,18 @@ var SideNav = React.createClass({
                     to={menuItem.url}
                 >
                     <img src={menuItem.iconPath} style={{float: "left", width: "30px"}} />
-                    <span style={{marginLeft: "10px", verticalAlign: "middle", height: "100%"}}>{menuItem.label}</span>
+                    <span style={styles.sideLabel}>
+                        {menuItem.label}
+                    </span>
                 </Router.Link>
             </li>
         ) : (
             <li key={menuItem.iconPath} onClick={this.resetTutorial} style={{cursor: "pointer"}}>
                 <a style={{height: "55px"}}>
                     <img src={menuItem.iconPath} style={{float: "left", width: "30px"}} />
-                    <span style={{marginLeft: "10px", verticalAlign: "middle", height: "100%"}}>{menuItem.label}</span>
+                    <span style={styles.sideLabel}>
+                        {menuItem.label}
+                    </span>
                 </a>
             </li>
         );
