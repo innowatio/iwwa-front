@@ -20,6 +20,7 @@ var styles = {
 
 var TemporalLineGraph = React.createClass({
     propTypes: {
+        alarms: React.PropTypes.arrayOf(React.PropTypes.number),
         colors: React.PropTypes.arrayOf(React.PropTypes.string),
         coordinates: React.PropTypes.arrayOf(
             AppPropTypes.DygraphCoordinate
@@ -42,6 +43,7 @@ var TemporalLineGraph = React.createClass({
         this.graph.updateOptions(R.merge(options, {
             file: this.getCoordinatesFromProps(nextProps)
         }));
+        this.drawAnnotations();
     },
     getCoordinatesFromProps: function (props) {
         return (
@@ -109,6 +111,25 @@ var TemporalLineGraph = React.createClass({
             props.labels
         );
     },
+    drawAnnotations: function () {
+        var annotations = [];
+        if (this.props.alarms) {
+            for (var i = 0; i < this.props.alarms.length; i++) {
+                annotations.push({
+                    series: "Reale",
+                    x: this.props.alarms[i],
+                    text: "alarm",
+                    cssClass: "alarmPoint",
+                    attachAtBottom: false,
+                    tickHeight: 0,
+                    width: 8,
+                    height: 4
+                });
+            }
+        }
+
+        this.graph.setAnnotations(annotations);
+    },
     drawGraph: function () {
         var container = this.refs.graphContainer.getDOMNode();
         var coordinates = this.getCoordinatesFromProps(this.props);
@@ -174,6 +195,7 @@ var TemporalLineGraph = React.createClass({
         };
 
         this.graph = new Dygraph(container, coordinates, options);
+        this.drawAnnotations();
     },
     exportCSV: function () {
         var csvString = DygraphCSVExport.exportCSV(this.graph);
@@ -257,6 +279,13 @@ var TemporalLineGraph = React.createClass({
         return (
             <span>
                 {this.renderSpinner()}
+                <Radium.Style
+                    rules={{
+                    ".alarmPoint": {
+                        border: "solid 4px red !important",
+                        borderRadius: "50%"
+                    }
+                }} />
                 <div ref="graphContainer" style={styles.graphContainer}/>
             </span>
         );

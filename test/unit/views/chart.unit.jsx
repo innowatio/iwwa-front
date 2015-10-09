@@ -177,3 +177,38 @@ describe("The `valore` transformer", function () {
     });
 
 });
+
+describe("The `alarms` transformer", function () {
+
+    describe("the `parse` function should return", function () {
+
+        it("an array of dates in millisecond format", function () {
+            var input = new Date("2011-02-03T04:05:00").getTime() + "-" + new Date("2015-01-01T00:00:00").getTime();
+            var expected = [
+                new Date("2011-02-03T04:05:00").getTime(),
+                new Date("2015-01-01T00:00:00").getTime()
+            ];
+            var st = transformers.alarms();
+            var ret = st.parse(input);
+            expect(ret).to.include(expected[0]);
+            expect(ret).to.include(expected[1]);
+        });
+
+    });
+
+    describe("the `stringify` function should return", function () {
+
+        it("the dates in format `YYYYMMDDHHmm` separeted by a `-`", function () {
+            var input = [
+                new Date("2011-02-03T04:05:00").getTime(),
+                new Date("2015-01-01T00:00:00").getTime()
+            ];
+            var expected = new Date("2011-02-03T04:05:00").getTime() + "-" + new Date("2015-01-01T00:00:00").getTime();
+            var st = transformers.alarms();
+            var ret = st.stringify(input);
+            expect(expected).to.be.eql(ret);
+        });
+
+    });
+
+});

@@ -61,7 +61,6 @@ module.exports = R.merge(Router.Navigation, {
                     );
                     localStorage.query = JSON.stringify(newqueryState);
                 }
-                console.log(JSON.stringify(newqueryState));
             }
         };
     }

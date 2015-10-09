@@ -13,6 +13,7 @@ var SitiCompareGraph   = require("./siti-compare.jsx");
 
 var HistoricalGraph = React.createClass({
     propTypes: {
+        alarms: React.PropTypes.arrayOf(React.PropTypes.number),
         dateCompare: React.PropTypes.shape({
             period: React.PropTypes.object,
             dateOne: React.PropTypes.date
@@ -74,6 +75,7 @@ var HistoricalGraph = React.createClass({
         return this.renderValoriCompareGraph();
     },
     render: function () {
+        console.log(this);
         return (
                 <div style={R.merge({width: "100%", height: "100%"}, this.props.style)}>
                     <Radium.Style

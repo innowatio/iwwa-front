@@ -40,7 +40,8 @@ var Chart = React.createClass({
         asteroid: React.PropTypes.object,
         collections: IPropTypes.map,
         localStorage: React.PropTypes.object,
-        location: React.PropTypes.object
+        location: React.PropTypes.object,
+        params: React.PropTypes.object
     },
     mixins: [QuerystringMixin,
         GetTutorialMixin("historicalGraph", [
@@ -54,14 +55,13 @@ var Chart = React.createClass({
     ])],
     componentDidMount: function () {
         this.props.asteroid.subscribe("siti");
+        if (R.has("idAlarm", this.props.params)) {
+            this.props.asteroid.subscribe("alarms");
+        }
+        this.subscribeToMisure(this.props);
     },
     componentWillReceiveProps: function (props) {
-        var self = this;
-        var sitoQuery = R.path(["location", "query", "sito"], props);
-        var siti = (sitoQuery && sitoQuery.split(",")) || [];
-        siti.forEach(function (sito) {
-            self.props.asteroid.subscribe("misureBySito", sito);
-        });
+        this.subscribeToMisure(props);
     },
     componentDidUpdate: function () {
         var siti = this.props.collections.get("siti") || Immutable.Map();
@@ -130,6 +130,14 @@ var Chart = React.createClass({
             dateCompareProps.onChange(null, "dateCompare");
         }
     },
+    subscribeToMisure: function (props) {
+        var self = this;
+        var sitoQuery = R.path(["location", "query", "sito"], props);
+        var siti = (sitoQuery && sitoQuery.split(",")) || [];
+        siti.forEach(function (sito) {
+            self.props.asteroid.subscribe("misureBySito", sito);
+        });
+    },
     render: function () {
         // Sito
         var siti = this.props.collections.get("siti") || Immutable.Map();
@@ -171,10 +179,17 @@ var Chart = React.createClass({
             transformers.dateFilter()
         );
 
+        // Alarms
+        var alarms = this.bindToQueryParameter(
+            "alarms",
+            transformers.alarms()
+        );
+
         var valoriMulti = (
             !dateCompareProps.value &&
             sitoInputProps.value.length <= 1
         );
+
         return (
             <div>
                 <components.TutorialAnchor
@@ -322,6 +337,7 @@ var Chart = React.createClass({
                         ref="graph"
                     >
                         <components.HistoricalGraph
+                            alarms={alarms.value}
                             dateCompare={dateCompareProps.value}
                             dateFilter={dateFilterProps.value}
                             misure={this.props.collections.get("misure") || Immutable.Map()}
