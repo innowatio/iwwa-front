@@ -126,6 +126,7 @@ var User = React.createClass({
                     allowedValues={sitiToAdd}
                     buttonCloseDefault={true}
                     filter={CollectionUtils.siti.filter}
+                    getKey={CollectionUtils.siti.getKey}
                     getLabel={CollectionUtils.siti.getLabel}
                     onChange={this.selectSiteToUser}
                 />

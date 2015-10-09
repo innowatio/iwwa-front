@@ -14,6 +14,7 @@ var SitiCompare = React.createClass({
         ]).isRequired,
         closeModal: React.PropTypes.func,
         filter: React.PropTypes.func,
+        getKey: React.PropTypes.func,
         getSitoLabel: React.PropTypes.func,
         onChange: React.PropTypes.func.isRequired,
         open: React.PropTypes.string,
@@ -99,6 +100,7 @@ var SitiCompare = React.createClass({
                         allowedValues={this.props.allowedValues}
                         buttonCloseDefault={true}
                         filter={this.props.filter}
+                        getKey={this.props.getKey}
                         getLabel={this.props.getSitoLabel}
                         onChange={this.multi1}
                         value={this.state.valueFirst}
@@ -115,6 +117,7 @@ var SitiCompare = React.createClass({
                         allowedValues={this.props.allowedValues}
                         buttonCloseDefault={true}
                         filter={this.props.filter}
+                        getKey={this.props.getKey}
                         getLabel={this.props.getSitoLabel}
                         onChange={this.multi2}
                         value={this.state.valueSecond}

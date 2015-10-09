@@ -184,6 +184,7 @@ var AlarmForm = React.createClass({
                             allowedValues={this.props.siti}
                             buttonCloseDefault={true}
                             filter={CollectionUtils.siti.filter}
+                            getKey={CollectionUtils.siti.getKey}
                             getLabel={CollectionUtils.siti.getLabel}
                             valueLink={this.linkState("sito")}
                         />

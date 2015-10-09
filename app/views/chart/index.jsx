@@ -284,6 +284,7 @@ var Chart = React.createClass({
                                 <components.SelectTree
                                     allowedValues={siti}
                                     filter={CollectionUtils.siti.filter}
+                                    getKey={CollectionUtils.siti.getKey}
                                     getLabel={CollectionUtils.siti.getLabel}
                                     placeholder={"Punto di misurazione"}
                                     {...sitoInputProps}
@@ -314,6 +315,7 @@ var Chart = React.createClass({
                                 <components.SitiCompare
                                     allowedValues={siti}
                                     filter={CollectionUtils.siti.filter}
+                                    getKey={CollectionUtils.siti.getKey}
                                     getSitoLabel={CollectionUtils.siti.getLabel}
                                     open={"undefined"}
                                     style={multiselectStyles.multiselect}
