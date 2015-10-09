@@ -32,7 +32,7 @@ var Admin = React.createClass({
             {
                 key: "createdAt",
                 valueFormatter: function (value) {
-                    var date = moment(value.get("$date"));
+                    var date = moment(value && value.get("$date"));
                     return date.locale("it").format("LL");
                 }
             },

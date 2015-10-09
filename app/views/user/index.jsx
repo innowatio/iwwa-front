@@ -75,9 +75,7 @@ var User = React.createClass({
         var userSiti = this.getUser().get("siti") || Immutable.List();
         siti.filter(sito => {
             return userSiti.includes(sito.get("_id"));
-        }).map(sito => {
-            this.removeSiteFromUser(sito);
-        });
+        }).map(this.removeSiteFromUser);
     },
     selectSiteToUser: function (value) {
         if (R.is(Array, value)) {
@@ -180,9 +178,6 @@ var User = React.createClass({
                     }}
                     scopeSelector=".users-admin"
                 />
-                <Router.Link style={{float: "right"}} to="/users/">
-                    <components.Icon icon="arrow-left" style={{marginRight: "40px", color: colors.primary}}/>
-                </Router.Link>
                 <div style={{paddingTop: "20px"}}>
                     <bootstrap.Col xs={6}>
                         <div style={styles.userDiv}>
