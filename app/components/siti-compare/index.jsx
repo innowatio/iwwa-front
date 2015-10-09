@@ -4,6 +4,7 @@ var IPropTypes = require("react-immutable-proptypes");
 
 var colors     = require("lib/colors");
 var components = require("components/");
+var icons      = require("lib/icons");
 
 var SitiCompare = React.createClass({
     propTypes: {
@@ -63,26 +64,26 @@ var SitiCompare = React.createClass({
         return R.isNil(this.state.valueFirst) ?
         <span>
             Seleziona punto 1
-            <components.Icon icon="chevron-down" style={{float: "right"}}/>
+            <img src={icons.iconDown} style={{float: "right", paddingTop: "5px", width: "16px"}}/>
         </span> :
         <span>
             {this.props.getSitoLabel(this.state.valueFirst)}
             <components.Spacer direction="h" size={30} />
             {this.state.valueFirst.get("pod")}
-            <components.Icon icon="chevron-down" style={{float: "right"}}/>
+            <img src={icons.iconDown} style={{float: "right", paddingTop: "5px", width: "16px"}}/>
         </span>;
     },
     titleSecondSelect: function () {
         return R.isNil(this.state.valueSecond) ?
         <span>
             Seleziona punto 2
-            <components.Icon icon="chevron-down" style={{float: "right"}}/>
+            <img src={icons.iconDown} style={{float: "right", paddingTop: "5px", width: "16px"}}/>
         </span> :
         <span>
             {this.props.getSitoLabel(this.state.valueSecond)}
             <components.Spacer direction="h" size={30} />
             {this.state.valueSecond.get("pod")}
-            <components.Icon icon="chevron-down" style={{float: "right"}}/>
+            <img src={icons.iconDown} style={{float: "right", paddingTop: "5px", width: "16px"}}/>
         </span>;
     },
     render: function () {

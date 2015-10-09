@@ -17,6 +17,8 @@ module.exports = (
         <Router.Route component={views.Root} name="root">
             <Router.Route component={views.Alarms} name="alarms" path="/alarms/" />
             <Router.Route component={views.Alarms} name="alarm" path="/alarms/:id" />
+            <Router.Route component={views.Users} name="users" path="/users/" />
+            <Router.Route component={views.User} name="user" path="/users/:id" />
             <Router.Route component={views.Chart} name="chart" onEnter={checkLocalStorageAndRedirect} path="/chart/" />
             <Router.Route component={views.Dashboard} name="dashboard" path="/dashboard/" />
             <Router.Route component={views.Dashboard} name="home" path="/" />
