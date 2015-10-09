@@ -140,18 +140,7 @@ var Alarms = React.createClass({
                         </span>
                     );
                 }
-            } // ,
-            // {
-            //     key: "_id",
-            //     valueFormatter: function (value) {
-            //         return (
-            //             <Router.Link onClick={self.onClickAction} to={`/alarms/${value}`}>
-            //                 <components.Icon icon="arrow-right"
-            //                     style={{float: "right", paddingRight: "10px", paddingTop: "2px"}}/>
-            //             </Router.Link>
-            //         );
-            //     }
-            // }
+            }
         ];
     },
     onClickAction: function () {
