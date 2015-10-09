@@ -33,7 +33,7 @@ var styles = {
         transition: "left 0.3s ease"
     },
     footer: {
-        position: "absolute",
+        position: "fixed",
         backgroundColor: colors.greyBackground,
         color: colors.greySubTitle,
         height: measures.footerHeight,

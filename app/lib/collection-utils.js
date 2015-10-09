@@ -18,5 +18,8 @@ exports.siti = {
                 titleCase(sito.get("idCoin"))
             ].join(" - ")
         ) : "";
+    },
+    getKey: function (sito) {
+        return R.is(Immutable.Map, sito) ? sito.get("_id") : "";
     }
 };
