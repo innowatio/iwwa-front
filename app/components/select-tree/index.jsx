@@ -17,7 +17,7 @@ var SelectTree = React.createClass({
             IPropTypes.iterable
         ]).isRequired,
         buttonCloseDefault: React.PropTypes.bool,
-        filter: React.PropTypes.func,
+        filter: React.PropTypes.func.isRequired,
         getLabel: React.PropTypes.func,
         onChange: React.PropTypes.func,
         value: React.PropTypes.oneOfType([
@@ -116,7 +116,7 @@ var SelectTree = React.createClass({
                     color: allowedValue === this.state.value ? colors.white : colors.black
                 }}
             >
-                <components.Icon icon={"chevron-down"} style={{float: "left", width: "100%"}} />
+                <img src={icons.iconDown}/>
         </components.Button> : null;
     },
     renderPanel: function (allowedValue) {
