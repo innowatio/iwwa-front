@@ -8,15 +8,14 @@ var bootstrap  = require("react-bootstrap");
 var IPropTypes = require("react-immutable-proptypes");
 var Router     = require("react-router");
 
-var components        = require("components");
-var CollectionUtils   = require("lib/collection-utils");
-var colors            = require("lib/colors");
-var Icon              = require("lib/icons");
-var stringIt          = require("lib/string-it");
-var styles            = require("lib/styles");
-var tutorialString    = require("assets/JSON/tutorial-string.json");
-var GetTutorialMixin  = require("lib/get-tutorial-mixin");
-var icons             = require("lib/icons");
+var components      = require("components");
+var CollectionUtils = require("lib/collection-utils");
+var colors          = require("lib/colors");
+var stringIt        = require("lib/string-it");
+var styles          = require("lib/styles");
+var tutorialString  = require("assets/JSON/tutorial-string.json");
+var GetTutorialMixin   = require("lib/get-tutorial-mixin");
+var icons           = require("lib/icons");
 
 var less = function (time1, time2) {
     return (
@@ -185,6 +184,7 @@ var AlarmForm = React.createClass({
                             allowedValues={this.props.siti}
                             buttonCloseDefault={true}
                             filter={CollectionUtils.siti.filter}
+                            getKey={CollectionUtils.siti.getKey}
                             getLabel={CollectionUtils.siti.getLabel}
                             valueLink={this.linkState("sito")}
                         />
@@ -202,7 +202,7 @@ var AlarmForm = React.createClass({
                         style={{
                             color: colors.primary,
                             marginTop: "8px"
-                        }}> {`Soglia (${this.state.threshold} kwh)`}
+                        }}> {`Soglia (${this.state.threshold} kWh)`}
                     </h4>
                     <components.Spacer direction="v" size={10} />
                     <bootstrap.Input
@@ -289,13 +289,13 @@ var AlarmForm = React.createClass({
         return this.state.sito.size === 0 ?
             <span>
                 Seleziona punto di misurazione
-                <components.Icon icon="chevron-down" style={{float: "right"}}/>
+                <img src={icons.iconDown} style={{float: "right", paddingTop: "5px", width: "16px"}}/>
             </span> :
             <span>
                 {CollectionUtils.siti.getLabel(this.state.sito)}
                 <components.Spacer direction="h" size={30} />
                 {this.state.sito.get("pod")}
-                <components.Icon icon="chevron-down" style={{float: "right"}}/>
+                <img src={icons.iconDown} style={{float: "right", paddingTop: "5px", width: "16px"}}/>
             </span>;
     },
     render: function () {

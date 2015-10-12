@@ -4,9 +4,7 @@ var React      = require("react");
 var bootstrap  = require("react-bootstrap");
 var IPropTypes = require("react-immutable-proptypes");
 
-// var CollectionUtils  = require("lib/collection-utils");
-var colors           = require("lib/colors");
-// var components       = require("components");
+var colors = require("lib/colors");
 
 var columnType = React.PropTypes.oneOfType([
     React.PropTypes.string,
@@ -42,7 +40,7 @@ var Row = React.createClass({
             </td>
         );
     },
-    renderCell: function (column) {
+    renderCell: function (column, index) {
         if (R.is(String, column)) {
             return (
                 this.renderCellElement(this.props.item.get(column))
@@ -50,7 +48,7 @@ var Row = React.createClass({
         }
         var value = this.props.item.get(column.key);
         return (
-            <td key={column.key}
+            <td key={index}
                 style={R.merge({verticalAlign: "middle"}, R.isNil(column.style) ? {} : column.style(value))}>
                 {
                     column.valueFormatter ?
@@ -69,6 +67,26 @@ var Row = React.createClass({
     }
 });
 
+var RowHead = React.createClass({
+    propTypes: {
+        headColumn: React.PropTypes.array
+    },
+    renderCell: function (column) {
+        return (
+            <td key={column}>
+                {column}
+            </td>
+        );
+    },
+    render: function () {
+        return (
+            <tr>
+                {this.props.headColumn.map(this.renderCell)}
+            </tr>
+        );
+    }
+});
+
 var CollectionElementsTable = React.createClass({
     propTypes: {
         bordered: React.PropTypes.bool,
@@ -76,30 +94,43 @@ var CollectionElementsTable = React.createClass({
         columns: columnsType,
         condensed: React.PropTypes.bool,
         getKey: React.PropTypes.func,
+        head: React.PropTypes.array,
         hover: React.PropTypes.bool,
         siti: IPropTypes.map,
         striped: React.PropTypes.bool,
         width: React.PropTypes.string
     },
+    renderHead: function () {
+        return !R.isNil(this.props.head) ? (
+            <thead>
+                <RowHead
+                    headColumn={this.props.head}
+                />
+            </thead>
+        ) : null;
+    },
     renderBody: function () {
         return (
-            <tbody>
-                {this.props.collection.map(item => {
-                    var key = (
-                        this.props.getKey ?
-                        this.props.getKey(item) :
-                        item.hashCode()
-                    );
-                    return (
-                        <Row
-                            columns={this.props.columns}
-                            item={item}
-                            key={key}
-                            width={this.props.width}
-                        />
-                    );
-                }).toArray()}
-            </tbody>
+            <div>
+                {this.renderHead()}
+                <tbody>
+                    {this.props.collection.map(item => {
+                        var key = (
+                            this.props.getKey ?
+                            this.props.getKey(item) :
+                            item.hashCode()
+                        );
+                        return (
+                            <Row
+                                columns={this.props.columns}
+                                item={item}
+                                key={key}
+                                width={this.props.width}
+                            />
+                        );
+                    }).toArray()}
+                </tbody>
+            </div>
         );
     },
     render: function () {

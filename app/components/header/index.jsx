@@ -3,7 +3,6 @@ var Radium = require("radium");
 var React  = require("react");
 
 var colors     = require("lib/colors");
-var components = require("components");
 var icons      = require("lib/icons");
 
 var styles = {
@@ -34,10 +33,6 @@ var Header = React.createClass({
     logout: function () {
         this.props.asteroid.logout();
     },
-    resetTutorial: function () {
-        localStorage[`hideTutorialOnPage_graph`] = false;
-        localStorage[`hideTutorialOnPage_alarm-form`] = false;
-    },
     render: function () {
         return (
             <div style={styles.base}>
@@ -47,9 +42,6 @@ var Header = React.createClass({
                         <img src={icons.iconLogo} />
                     </Router.Link>
                 </span>
-                <components.Button onClick={this.resetTutorial} style={{float: "left", left: "200px"}}>
-                    {"Reset Tutorial"}
-                </components.Button>
                 <span onClick={this.logout} style={styles.logout}>
                     <img className="pull-right" src={icons.iconLogout} style={{width: "85%"}}/>
                 </span>

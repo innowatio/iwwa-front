@@ -14,7 +14,7 @@ var QuerystringMixin = require("lib/querystring-mixin");
 var styles           = require("lib/styles");
 var transformers     = require("./transformers.js");
 var GetTutorialMixin = require("lib/get-tutorial-mixin");
-var tutorialString   = require("assets/JSON/tutorial-string.json");
+var tutorialString   = require("assets/JSON/tutorial-string.json").historicalGraph;
 
 var multiselectStyles = {
     multiselectPopover: {
@@ -39,23 +39,29 @@ var Chart = React.createClass({
     propTypes: {
         asteroid: React.PropTypes.object,
         collections: IPropTypes.map,
+        localStorage: React.PropTypes.object,
         location: React.PropTypes.object,
         params: React.PropTypes.object
     },
-    mixins: [QuerystringMixin, GetTutorialMixin("graph", ["valori", "export", "tipologie", "siti", "dateFilter", "compare"])],
+    mixins: [QuerystringMixin,
+        GetTutorialMixin("historicalGraph", [
+            "valori",
+            "export",
+            "tipologie",
+            "siti",
+            "dateFilter",
+            "compare",
+            "graph"
+    ])],
     componentDidMount: function () {
         this.props.asteroid.subscribe("siti");
         if (R.has("idAlarm", this.props.params)) {
             this.props.asteroid.subscribe("alarms");
         }
+        this.subscribeToMisure(this.props);
     },
     componentWillReceiveProps: function (props) {
-        var self = this;
-        var sitoQuery = R.path(["location", "query", "sito"], props);
-        var siti = (sitoQuery && sitoQuery.split(",")) || [];
-        siti.forEach(function (sito) {
-            self.props.asteroid.subscribe("misureBySito", sito);
-        });
+        this.subscribeToMisure(props);
     },
     componentDidUpdate: function () {
         var siti = this.props.collections.get("siti") || Immutable.Map();
@@ -124,6 +130,14 @@ var Chart = React.createClass({
             dateCompareProps.onChange(null, "dateCompare");
         }
     },
+    subscribeToMisure: function (props) {
+        var self = this;
+        var sitoQuery = R.path(["location", "query", "sito"], props);
+        var siti = (sitoQuery && sitoQuery.split(",")) || [];
+        siti.forEach(function (sito) {
+            self.props.asteroid.subscribe("misureBySito", sito);
+        });
+    },
     render: function () {
         // Sito
         var siti = this.props.collections.get("siti") || Immutable.Map();
@@ -179,7 +193,7 @@ var Chart = React.createClass({
         return (
             <div>
                 <components.TutorialAnchor
-                    message={tutorialString.historicalGraph.introTutorial}
+                    message={tutorialString.introTutorial}
                     order={0}
                     ref="intro"
                 />
@@ -193,7 +207,7 @@ var Chart = React.createClass({
                 <bootstrap.Col sm={12} style={styles.colVerticalPadding}>
                     <span className="pull-left" style={{display: "flex"}}>
                         <components.TutorialAnchor
-                            message={tutorialString.historicalGraph.valori}
+                            message={tutorialString.valori}
                             order={1}
                             position="right"
                             ref="valori"
@@ -208,7 +222,7 @@ var Chart = React.createClass({
                             />
                         </components.TutorialAnchor>
                         <components.TutorialAnchor
-                            message={tutorialString.historicalGraph.export}
+                            message={tutorialString.export}
                             order={2}
                             position="right"
                             ref="export"
@@ -232,7 +246,7 @@ var Chart = React.createClass({
                     </span>
                     <span className="pull-right" style={{display: "flex"}}>
                         <components.TutorialAnchor
-                            message={tutorialString.historicalGraph.tipologie}
+                            message={tutorialString.tipologie}
                             order={3}
                             position="left"
                             ref="tipologie"
@@ -254,7 +268,7 @@ var Chart = React.createClass({
                             </components.Popover>
                         </components.TutorialAnchor>
                         <components.TutorialAnchor
-                            message={tutorialString.historicalGraph.siti}
+                            message={tutorialString.siti}
                             order={4}
                             position="left"
                             ref="siti"
@@ -270,6 +284,7 @@ var Chart = React.createClass({
                                 <components.SelectTree
                                     allowedValues={siti}
                                     filter={CollectionUtils.siti.filter}
+                                    getKey={CollectionUtils.siti.getKey}
                                     getLabel={CollectionUtils.siti.getLabel}
                                     placeholder={"Punto di misurazione"}
                                     {...sitoInputProps}
@@ -277,7 +292,7 @@ var Chart = React.createClass({
                             </components.Popover>
                         </components.TutorialAnchor>
                         <components.TutorialAnchor
-                            message={tutorialString.historicalGraph.dateFilter}
+                            message={tutorialString.dateFilter}
                             order={5}
                             position="left"
                             ref="dateFilter"
@@ -291,7 +306,7 @@ var Chart = React.createClass({
                             />
                         </components.TutorialAnchor>
                         <components.TutorialAnchor
-                            message={tutorialString.historicalGraph.compare}
+                            message={tutorialString.compare}
                             order={6}
                             position="left"
                             ref="compare"
@@ -300,6 +315,7 @@ var Chart = React.createClass({
                                 <components.SitiCompare
                                     allowedValues={siti}
                                     filter={CollectionUtils.siti.filter}
+                                    getKey={CollectionUtils.siti.getKey}
                                     getSitoLabel={CollectionUtils.siti.getLabel}
                                     open={"undefined"}
                                     style={multiselectStyles.multiselect}
@@ -316,18 +332,25 @@ var Chart = React.createClass({
                     </span>
                 </bootstrap.Col>
                 <bootstrap.Col  className="modal-container" sm={12} style={{height: "100%"}}>
-                    <components.HistoricalGraph
-                        alarms={alarms.value}
-                        dateCompare={dateCompareProps.value}
-                        dateFilter={dateFilterProps.value}
-                        misure={this.props.collections.get("misure") || Immutable.Map()}
-                        ref="historicalGraph"
-                        resetCompare={this.resetCompare}
-                        siti={sitoInputProps.value}
-                        style={graphStyle}
-                        tipologia={tipologiaInputProps.value}
-                        valori={valoreInputProps.value}
-                    />
+                    <components.TutorialAnchor
+                        message={tutorialString.graph}
+                        order={7}
+                        position="top"
+                        ref="graph"
+                    >
+                        <components.HistoricalGraph
+                            alarms={alarms.value}
+                            dateCompare={dateCompareProps.value}
+                            dateFilter={dateFilterProps.value}
+                            misure={this.props.collections.get("misure") || Immutable.Map()}
+                            ref="historicalGraph"
+                            resetCompare={this.resetCompare}
+                            siti={sitoInputProps.value}
+                            style={graphStyle}
+                            tipologia={tipologiaInputProps.value}
+                            valori={valoreInputProps.value}
+                        />
+                    </components.TutorialAnchor>
                 </bootstrap.Col>
             </div>
         );

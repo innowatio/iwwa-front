@@ -1,6 +1,7 @@
-var Radium = require("radium");
-var R      = require("ramda");
-var React  = require("react");
+var Immutable = require("immutable");
+var Radium    = require("radium");
+var R         = require("ramda");
+var React     = require("react");
 
 var components        = require("components");
 var asteroid          = require("lib/asteroid");
@@ -32,7 +33,7 @@ var styles = {
         transition: "left 0.3s ease"
     },
     footer: {
-        position: "absolute",
+        position: "fixed",
         backgroundColor: colors.greyBackground,
         color: colors.greySubTitle,
         height: measures.footerHeight,
@@ -55,14 +56,23 @@ var Root = React.createClass({
             sidebarOpen: false
         };
     },
+    componentDidMount: function () {
+        asteroid.subscribe("users");
+    },
+    userIsAdmin: function () {
+        const users = asteroid.collections.get("users") || Immutable.Map();
+        const roles = users.getIn([asteroid.userId, "roles"]) || Immutable.List();
+        return roles.includes("admin");
+    },
     getMenuItems: function () {
         return [
             {key: "dashboard", label: "Dashboard", url: "/dashboard/", iconPath: icons.iconDashboard},
-            {key: "chart", label: "Historical Consumption", url: "/chart/", iconPath: icons.iconHistConsum},
-            {key: "live", label: "Live Consumption", url: "/live/", iconPath: icons.iconLiveConsum},
-            {key: "alarms", label: "Alarms", url: "/alarms/", iconPath: icons.iconAlarm},
-            {key: "help", label: "Help", url: "/help/", iconPath: icons.iconHelp}
-        ];
+            {key: "chart", label: "Consumi storici", url: "/chart/", iconPath: icons.iconHistConsum},
+            {key: "live", label: "Consumi in tempo reale", url: "/live/", iconPath: icons.iconLiveConsum},
+            {key: "alarms", label: "Allarmi", url: "/alarms/", iconPath: icons.iconAlarm},
+            {key: "help", label: "Aiuto", onClick: "resetTutorial", iconPath: icons.iconHelp},
+            this.userIsAdmin() ? {key: "admin", label: "Amministratore", url: "/users/", iconPath: icons.iconUserColor} : null
+        ].filter(R.identity);
     },
     toggleSidebar: function () {
         this.setState({
