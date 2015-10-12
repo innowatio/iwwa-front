@@ -15,6 +15,7 @@ var DateCompare = React.createClass({
             period: React.PropTypes.object,
             dateOne: React.PropTypes.date
         }),
+        getYLabel: React.PropTypes.func,
         misure: IPropTypes.map,
         siti: React.PropTypes.arrayOf(IPropTypes.map),
         tipologia: React.PropTypes.object,
@@ -340,7 +341,8 @@ var DateCompare = React.createClass({
                 sito={this.props.siti[0] || Immutable.Map()}
                 xLegendFormatter={this.xLegendFormatter}
                 xTicker={this.xTicker}
-                yLabel="kWh"/>
+                yLabel={this.props.getYLabel(this.props.tipologia)}
+            />
         );
     }
 });

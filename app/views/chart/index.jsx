@@ -342,6 +342,7 @@ var Chart = React.createClass({
                             alarms={alarms.value}
                             dateCompare={dateCompareProps.value}
                             dateFilter={dateFilterProps.value}
+                            getYLabel={CollectionUtils.labelGraph.getYLabel}
                             misure={this.props.collections.get("misure") || Immutable.Map()}
                             ref="historicalGraph"
                             resetCompare={this.resetCompare}

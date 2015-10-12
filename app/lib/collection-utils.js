@@ -23,3 +23,17 @@ exports.siti = {
         return R.is(Immutable.Map, sito) ? sito.get("_id") : "";
     }
 };
+
+exports.labelGraph = {
+    getYLabel: function (tipologia) {
+        if (tipologia.key === 1) {
+            return "kWh";
+        } else if (tipologia.key === 2) {
+            return "kW";
+        } else if (tipologia.key === 3) {
+            return "kVARh";
+        } else {
+            return "";
+        }
+    }
+};
