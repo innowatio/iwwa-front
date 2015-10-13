@@ -114,7 +114,6 @@ var Root = React.createClass({
                     linkClickAction={this.closeSidebar}
                     sidebarOpen={this.state.sidebarOpen}
                     style={this.getSidebarStyle()}
-                    toggleSidebar={this.toggleSidebar}
                 />
                 <div style={styles.header}>
                     <components.Header

@@ -5,7 +5,6 @@ var Router     = require("react-router");
 var R          = require("ramda");
 
 var colors   = require("lib/colors");
-var measures = require("lib/measures");
 
 var styles = {
     sidebar: {
@@ -14,19 +13,7 @@ var styles = {
         borderRightStyle: "solid",
         borderRightColor: colors.primary,
         backgroundColor: colors.white,
-        zIndex: 1040// ,
-        // "@media only screen": {
-        //     left: "-" + measures.sidebarWidth
-        // }
-    },
-    hamburger: {
-        height: measures.headerHeight,
-        backgroundColor: colors.primary,
-        fontSize: "35px",
-        textAlign: "left",
-        paddingRight: "15px",
-        paddingTop: "5px",
-        cursor: "pointer"
+        zIndex: 1040
     },
     menu: {
         position: "absolute",
@@ -60,8 +47,7 @@ var SideNav = React.createClass({
         ),
         linkClickAction: React.PropTypes.func,
         sidebarOpen: React.PropTypes.bool,
-        style: React.PropTypes.object,
-        toggleSidebar: React.PropTypes.func.isRequired
+        style: React.PropTypes.object
     },
     getInitialState: function () {
         return {

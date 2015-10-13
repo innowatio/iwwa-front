@@ -38,7 +38,7 @@ var Header = React.createClass({
         return (
             <div style={styles.base}>
                 <img onClick={this.props.menuClickAction} src={icons.iconMenu}  style={styles.hamburger}/>
-                <span style={R.merge(styles.base, {paddingLeft: "15px"})}>
+                <span style={R.merge(styles.base, {marginLeft: "15px"})}>
                     <Router.Link to="/dashboard/" >
                         <img src={icons.iconLogo} />
                     </Router.Link>
