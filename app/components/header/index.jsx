@@ -1,6 +1,7 @@
 var Router = require("react-router");
 var Radium = require("radium");
 var React  = require("react");
+var R      = require("ramda");
 
 var colors     = require("lib/colors");
 var icons      = require("lib/icons");
@@ -10,7 +11,7 @@ var styles = {
         display: "flex",
         alignItems: "center",
         justifyContent: "space-between",
-        padding: "15px",
+        padding: "8px",
         background: colors.primary,
         width: "100%",
         height: "100%",
@@ -37,7 +38,7 @@ var Header = React.createClass({
         return (
             <div style={styles.base}>
                 <img onClick={this.props.menuClickAction} src={icons.iconMenu}  style={styles.hamburger}/>
-                <span style={styles.base}>
+                <span style={R.merge(styles.base, {paddingLeft: "15px"})}>
                     <Router.Link to="/dashboard/" >
                         <img src={icons.iconLogo} />
                     </Router.Link>

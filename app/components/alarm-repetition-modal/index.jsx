@@ -1,14 +1,14 @@
-var Calendar   = require("react-widgets").Calendar;
-var Radium     = require("radium");
-var R          = require("ramda");
-var React      = require("react");
-var bootstrap  = require("react-bootstrap");
+var Calendar      = require("react-widgets").Calendar;
+var Radium        = require("radium");
+var R             = require("ramda");
+var React         = require("react");
+var bootstrap     = require("react-bootstrap");
+var TimePicker    = require("react-time-picker");
 
 var colors     = require("lib/colors");
 var components = require("components");
 var stringIt   = require("lib/string-it");
 var styles     = require("lib/styles");
-var TimePicker = require("react-time-picker");
 var icons      = require("lib/icons");
 
 var style = {
@@ -69,6 +69,7 @@ var AlarmRepetitionModal = React.createClass({
     },
     onChange: function (param, value) {
         var newValue = {};
+        console.log(parseInt(value));
         newValue[param] = value;
         this.setState(newValue);
     },

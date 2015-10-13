@@ -102,10 +102,9 @@ var TemporalLineGraph = React.createClass({
                 };
             }, {max: new Date(0), min: new Date()});
             const delta = max - min;
-            if (delta < oneMonthInMilliseconds) {
-                return;
+            if (delta >= oneMonthInMilliseconds) {
+                options.dateWindow = [max -  oneMonthInMilliseconds, max];
             }
-            options.dateWindow = [max -  oneMonthInMilliseconds, max];
         }
         if (props.lockInteraction) {
             options.interactionModel = {};
