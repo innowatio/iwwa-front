@@ -1,9 +1,10 @@
-var Router = require("react-router");
-var Radium = require("radium");
-var React  = require("react");
+var Immutable = require("immutable");
+var Router    = require("react-router");
+var Radium    = require("radium");
+var React     = require("react");
 
-var colors     = require("lib/colors");
-var icons      = require("lib/icons");
+var colors = require("lib/colors");
+var icons  = require("lib/icons");
 
 var styles = {
     base: {
@@ -16,7 +17,7 @@ var styles = {
         height: "100%",
         color: colors.white
     },
-    logout: {
+    icon: {
         cursor: "pointer",
         alignItems: "center"
     },
@@ -33,6 +34,20 @@ var Header = React.createClass({
     logout: function () {
         this.props.asteroid.logout();
     },
+    userIsAdmin: function () {
+        const users = this.props.asteroid.collections.get("users") || Immutable.Map();
+        const roles = users.getIn([this.props.asteroid.userId, "roles"]) || Immutable.List();
+        return roles.includes("admin");
+    },
+    renderAdminPage: function () {
+        return this.userIsAdmin() && ENVIRONMENT !== "cordova" ? (
+            <span style={{marginRight: "10px"}}>
+                <Router.Link to="/users/" >
+                    <img className="pull-right" src={icons.iconUser} style={{width: "25px"}} />
+                </Router.Link>
+            </span>
+        ) : null;
+    },
     render: function () {
         return (
             <div style={styles.base}>
@@ -42,7 +57,8 @@ var Header = React.createClass({
                         <img src={icons.iconLogo} />
                     </Router.Link>
                 </span>
-                <span onClick={this.logout} style={styles.logout}>
+                {this.renderAdminPage()}
+                <span onClick={this.logout} style={styles.icon}>
                     <img className="pull-right" src={icons.iconLogout} style={{width: "85%"}}/>
                 </span>
             </div>

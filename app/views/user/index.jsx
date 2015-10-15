@@ -4,7 +4,6 @@ var IPropTypes = require("react-immutable-proptypes");
 var R          = require("ramda");
 var Radium     = require("radium");
 var React      = require("react");
-var Router     = require("react-router");
 
 var CollectionUtils  = require("lib/collection-utils");
 var components       = require("components");

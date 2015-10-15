@@ -69,7 +69,8 @@ var Row = React.createClass({
 
 var RowHead = React.createClass({
     propTypes: {
-        headColumn: React.PropTypes.array
+        headColumn: React.PropTypes.array,
+        headStyle: React.PropTypes.object
     },
     renderCell: function (column) {
         return (
@@ -80,7 +81,7 @@ var RowHead = React.createClass({
     },
     render: function () {
         return (
-            <tr>
+            <tr style={this.props.headStyle}>
                 {this.props.headColumn.map(this.renderCell)}
             </tr>
         );
@@ -94,17 +95,19 @@ var CollectionElementsTable = React.createClass({
         columns: columnsType,
         condensed: React.PropTypes.bool,
         getKey: React.PropTypes.func,
-        head: React.PropTypes.array,
+        headColumn: React.PropTypes.array,
+        headStyle: React.PropTypes.object,
         hover: React.PropTypes.bool,
         siti: IPropTypes.map,
         striped: React.PropTypes.bool,
         width: React.PropTypes.string
     },
     renderHead: function () {
-        return !R.isNil(this.props.head) ? (
+        return !R.isNil(this.props.headColumn) ? (
             <thead>
                 <RowHead
-                    headColumn={this.props.head}
+                    headColumn={this.props.headColumn}
+                    headStyle={this.props.headStyle}
                 />
             </thead>
         ) : null;

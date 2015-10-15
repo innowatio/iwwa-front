@@ -6,8 +6,9 @@ var moment     = require("moment");
 
 var components = require("components");
 var colors     = require("lib/colors");
+var styles     = require("lib/styles");
 
-var Admin = React.createClass({
+var Users = React.createClass({
     propTypes: {
         asteroid: React.PropTypes.object,
         collections: IPropTypes.map
@@ -19,18 +20,36 @@ var Admin = React.createClass({
         return [
             {
                 key: "emails",
+                style: function () {
+                    return {
+                        width: "25%",
+                        color: colors.greySubTitle
+                    };
+                },
                 valueFormatter: function (value) {
                     return value.getIn(["0", "address"]);
                 }
             },
             {
                 key: "emails",
+                style: function () {
+                    return {
+                        width: "25%",
+                        color: colors.greySubTitle
+                    };
+                },
                 valueFormatter: function (value) {
                     return value.getIn(["0", "verified"]) ? "Si" : "No";
                 }
             },
             {
                 key: "createdAt",
+                style: function () {
+                    return {
+                        width: "40%",
+                        color: colors.greySubTitle
+                    };
+                },
                 valueFormatter: function (value) {
                     var date = moment(value && value.get("$date"));
                     return date.locale("it").format("LL");
@@ -38,6 +57,11 @@ var Admin = React.createClass({
             },
             {
                 key: "_id",
+                style: function () {
+                    return {
+                        width: "20%"
+                    };
+                },
                 valueFormatter: function (value) {
                     return (
                         <Router.Link to={`/users/${value}`}>
@@ -53,17 +77,26 @@ var Admin = React.createClass({
     },
     render: function () {
         return (
-            <div style={{width: "98%", position: "relative", left: "1%"}}>
-                <h3>{"Admin"}</h3>
-                <components.CollectionElementsTable
-                    collection={this.props.collections.get("users") || Immutable.Map()}
-                    columns={this.getColumnsUsers()}
-                    head={["Email", "Email verificata", "Data di creazione", "Edit"]}
-                    hover={true}
-                />
+            <div>
+                <h2
+                    className="text-center"
+                    style={styles.titlePage}
+                >
+                    <components.Spacer direction="v" size={5} />
+                    {"Admin"}
+                </h2>
+                <div style={{width: "98%", position: "relative", left: "1%"}}>
+                    <components.CollectionElementsTable
+                        collection={this.props.collections.get("users") || Immutable.Map()}
+                        columns={this.getColumnsUsers()}
+                        headColumn={["Email", "Email verificata", "Data di creazione", ""]}
+                        headStyle={{color: colors.titleColor, fontSize: "13pt", backgroundColor: colors.greyBackground}}
+                        hover={true}
+                    />
+                </div>
             </div>
         );
     }
 });
 
-module.exports = Admin;
+module.exports = Users;
