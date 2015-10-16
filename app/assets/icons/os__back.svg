@@ -4,8 +4,9 @@
 <svg version="1.1" id="Livello_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
 	 width="40px" height="40px" viewBox="0 0 40 40" enable-background="new 0 0 40 40" xml:space="preserve">
 <g>
-	<circle fill="none" stroke="#6c719a" stroke-miterlimit="10" cx="20" cy="11.02" r="10.02"/>
-	<path fill="none" stroke="#6c719a" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="10" d="M39.039,38.783
-		v-6.458c-0.436-7.82-7.449-8.201-7.449-8.201H8.408c0,0-7.012,0.381-7.447,8.201v6.458H39.039z"/>
+	<polyline fill="none" stroke="#72749E" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="10" points="
+		12.578,7.928 0.91,20.024 12.53,32.073 	"/>
+	
+		<line fill="none" stroke="#72749E" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="10" x1="0.91" y1="20.024" x2="39.09" y2="20.024"/>
 </g>
 </svg>

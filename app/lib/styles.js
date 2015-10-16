@@ -1,3 +1,5 @@
+var color = require("color");
+
 var colors = require("lib/colors");
 
 exports.base = {
@@ -65,4 +67,35 @@ exports.divAlarmOpenModal = {
     width: "100%",
     borderBottom: "1px solid" + colors.greyBorder,
     cursor: "pointer"
+};
+
+exports.titleTab = {
+    color: colors.titleColor,
+    fontSize: "16pt"
+};
+
+exports.tabForm = {
+    ".nav-tabs.nav > .active > a": {
+        color: colors.titleColor,
+        backgroundColor: colors.white,
+        width: "200px",
+        textAlign: "center"
+    },
+    ".nav-tabs.nav > li > a": {
+        backgroundColor: colors.primary,
+        color: colors.white,
+        width: "200px",
+        textAlign: "center"
+    },
+    ".tabbed-area > div": {
+        height: "100%"
+    },
+    ".tab-content": {
+        height: "90%",
+        borderBottom: "solid 1px " + color(colors.darkBlack).alpha(0.1).rgbString(),
+        borderRight: "solid 1px " + color(colors.darkBlack).alpha(0.1).rgbString(),
+        borderLeft: "solid 1px " + color(colors.darkBlack).alpha(0.1).rgbString(),
+        borderTop: "0px",
+        boxShadow: "2px 2px 5px " + colors.greySubTitle
+    }
 };

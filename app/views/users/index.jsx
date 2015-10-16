@@ -3,10 +3,19 @@ var IPropTypes = require("react-immutable-proptypes");
 var React      = require("react");
 var Router     = require("react-router");
 var moment     = require("moment");
+var R          = require("ramda");
 
 var components = require("components");
 var colors     = require("lib/colors");
 var styles     = require("lib/styles");
+var icons      = require("lib/icons");
+
+var icon = {
+    color: colors.primary,
+    paddingRight: "10px",
+    float: "right",
+    width: "30px"
+};
 
 var Users = React.createClass({
     propTypes: {
@@ -34,7 +43,7 @@ var Users = React.createClass({
                 key: "emails",
                 style: function () {
                     return {
-                        width: "25%",
+                        width: "15%",
                         color: colors.greySubTitle
                     };
                 },
@@ -46,7 +55,7 @@ var Users = React.createClass({
                 key: "createdAt",
                 style: function () {
                     return {
-                        width: "40%",
+                        width: "20%",
                         color: colors.greySubTitle
                     };
                 },
@@ -56,16 +65,28 @@ var Users = React.createClass({
                 }
             },
             {
+                key: "roles",
+                style: function () {
+                    return {
+                        width: "30%",
+                        color: colors.greySubTitle
+                    };
+                },
+                valueFormatter: function (value) {
+                    return value.join(", ");
+                }
+            },
+            {
                 key: "_id",
                 style: function () {
                     return {
-                        width: "20%"
+                        width: "10%"
                     };
                 },
                 valueFormatter: function (value) {
                     return (
                         <Router.Link to={`/users/${value}`}>
-                            <components.Icon icon="pencil" style={{color: colors.primary, paddingLeft: "7px"}}/>
+                            <img src={icons.iconEdit} style={icon}/>
                         </Router.Link>
                     );
                 }
@@ -80,16 +101,16 @@ var Users = React.createClass({
             <div>
                 <h2
                     className="text-center"
-                    style={styles.titlePage}
+                    style={R.merge(styles.titlePage, {fontSize: "14pt", paddingTop: "4px"})}
                 >
                     <components.Spacer direction="v" size={5} />
-                    {"Admin"}
+                    {"Amministra utenti"}
                 </h2>
-                <div style={{width: "98%", position: "relative", left: "1%"}}>
+                <div style={{width: "98%", position: "relative", left: "1%", marginTop: "20px"}}>
                     <components.CollectionElementsTable
                         collection={this.props.collections.get("users") || Immutable.Map()}
                         columns={this.getColumnsUsers()}
-                        headColumn={["Email", "Email verificata", "Data di creazione", ""]}
+                        headColumn={["Email", "Email verificata", "Data di creazione", "Ruolo", ""]}
                         headStyle={{color: colors.titleColor, fontSize: "13pt", backgroundColor: colors.greyBackground}}
                         hover={true}
                     />
