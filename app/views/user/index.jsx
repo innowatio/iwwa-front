@@ -165,10 +165,135 @@ var User = React.createClass({
             ) : null;
         }).toList().toJS();
     },
-    render: function () {
+    renderRolesTab: function () {
+        return (
+            <bootstrap.TabPane eventKey={1} style={{marginLeft: "15px"}} tab="Ruoli dell'utente">
+                    <components.Spacer direction="v" size={15} />
+                    <span>{stringIt.roleTab}</span>
+                    <components.Spacer direction="v" size={40} />
+                    {this.renderRolesButtons()}
+            </bootstrap.TabPane>
+        );
+    },
+    renderPasswordTab: function () {
+        return (
+            <bootstrap.TabPane eventKey={2} tab="Password" >
+                {/* Automatic change of the password */}
+                <bootstrap.Col style={{height: "calc(100vh - 200px)", paddingRight: "0px"}} xs={6} >
+                    <div style={{
+                            borderRight: `1px solid ${colors.greyBorder}`,
+                            marginTop: "40px",
+                            height: "calc(100vh - 260px)"
+                        }}
+                    >
+                        <h4 style={styles.titleTab}>{stringIt.automaticReset}</h4>
+                        <components.Spacer direction="v" size={20} />
+                        <span>{stringIt.automaticEmail}</span>
+                        <span style={{fontSize: "12pt", color: colors.titleColor}}>
+                            {this.getUserEmail()}
+                        </span>
+                        <components.Spacer direction="v" size={60} />
+                        <div style={{position: "absolute", left: "36%", bottom: "20%"}}>
+                            <bootstrap.Button onClick={this.sendResetEmail} style={buttonStyle}>
+                                {stringIt.send}
+                            </bootstrap.Button>
+                        </div>
+                    </div>
+                </bootstrap.Col >
+                {/* Manual change of the password */}
+                <bootstrap.Col style={{height: "calc(100vh - 200px)"}} xs={6}>
+                    <div style={{marginTop: "40px", height: "calc(100vh - 260px)"}} >
+                        <h4 style={styles.titleTab}>{stringIt.manualReset}</h4>
+                        <components.Spacer direction="v" size={20} />
+                        <span>{stringIt.manualEmail}</span>
+                        <span style={{fontSize: "12pt", color: colors.titleColor}}>
+                            {this.getUserEmail()}
+                        </span>
+                        <h4 style={{color: colors.primary}}>{stringIt.newPassword}</h4>
+                        <div style={{textAlign: "center"}}>
+                            <bootstrap.Input
+                                onChange={(input) => this.setState({inputPassword: input.target.value})}
+                                style={R.merge(styles.inputLine, {width: "95%", display: "inline"})}
+                                type="text"
+                            />
+                            <components.Spacer direction="v" size={40} />
+                        </div>
+                        <div style={{position: "absolute", left: "36%", bottom: "20%"}}>
+                            <components.Button onClick={this.setNewPassword} style={buttonStyle}>
+                                {stringIt.confirm}
+                            </components.Button>
+                        </div>
+                    </div>
+                </bootstrap.Col>
+
+            </bootstrap.TabPane>
+        );
+    },
+    renderUserSitiTab: function () {
         var getSitiOfUser = this.getSiti()
             .filter(value => CollectionUtils.siti.filter(value, this.state.inputFilter))
             .map(this.renderTableSitiToUser);
+        return (
+            <bootstrap.TabPane eventKey={3} style={{marginLeft: "15px"}} tab="Siti">
+                <h4 style={R.merge(styles.titleTab, {marginTop: "0px", paddingTop: "30px"})} >
+                    {stringIt.setSitiOfUser}
+                </h4>
+                <span>{stringIt.setUserSite}</span>
+                <components.Spacer direction="v" size={15} />
+                {this.renderSelectUserSite()}
+                <components.Button
+                    onClick={this.selectAllSiteToUser}
+                    style={R.merge(buttonStyle, {marginLeft: "20px", height: "34px"})}
+                >
+                    {stringIt.addAllSites}
+                </components.Button>
+                <h4 style={R.merge(styles.titleTab, {fontSize: "14pt", marginTop: "20px", marginBottom: "20px"})} >
+                    {stringIt.getSitiOfUser}
+                </h4>
+                <div style={{display: "flex"}}>
+                    <bootstrap.Input
+                        addonBefore={<img src={icons.iconSearch} style={{height: "20px"}} />}
+                        onChange={(input) => this.setState({inputFilter: input.target.value})}
+                        placeholder={stringIt.filterUserSite}
+                        style={{
+                            borderRadius: "0px",
+                            width: "40%",
+                            borderLeft: "0px",
+                            WebkitBoxShadow: "none",
+                            boxShadow: "none"
+                        }}
+                        type="text"
+                    />
+                    <div style={{display: "flex", marginRight: "12px"}}>
+                        <span style={{paddingTop: "5px", fontStyle: "italic", fontSize: "12pt", width: "125px"}} >
+                            {stringIt.removeAllSites}
+                        </span>
+                        <components.Spacer direction="h" size={15} />
+                        <div onClick={this.removeAllSiteFromUser}>
+                            <components.Icon
+                                icon="minus"
+                                onClick={this.removeAllSiteFromUser}
+                                style={{
+                                    color: colors.primary,
+                                    padding: "8px",
+                                    border: `1px solid ${colors.greyBorder}`,
+                                    height: "30px"
+                                }}
+                            />
+                        </div>
+                    </div>
+                </div>
+                <div style={{width: "100%", height: "calc(100vh - 442px)", overflowY: "auto"}}>
+                    <bootstrap.Table hover style={{marginBottom: "0px"}}>
+                        <tbody>
+                            {getSitiOfUser}
+                        </tbody>
+                    </bootstrap.Table>
+                </div>
+            </bootstrap.TabPane>
+        );
+    },
+    render: function () {
         return (
             <div className="users-admin">
                 <Radium.Style
@@ -199,6 +324,7 @@ var User = React.createClass({
                         <img src={icons.iconArrowLeft} style={{height: "30px"}} />
                     </bootstrap.Button>
                 </Router.Link>
+
                 <div className="tabbed-area" style={R.merge(styles.tabbedArea, {marginTop: "0px"})}>
                     <bootstrap.TabbedArea
                         activeKey={this.state.key}
@@ -206,134 +332,9 @@ var User = React.createClass({
                         bsStyle={"tabs"}
                         onSelect={this.activeKey}
                     >
-
-                        <bootstrap.TabPane eventKey={1} style={{marginLeft: "15px"}} tab="Ruoli dell'utente">
-                                <components.Spacer direction="v" size={15} />
-                                <span>{stringIt.roleTab}</span>
-                                <components.Spacer direction="v" size={40} />
-                                {this.renderRolesButtons()}
-                        </bootstrap.TabPane>
-
-                        <bootstrap.TabPane eventKey={2} tab="Password" >
-
-                            <bootstrap.Col style={{height: "calc(100vh - 200px)", paddingRight: "0px"}} xs={6} >
-                                <div style={{
-                                        borderRight: `1px solid ${colors.greyBorder}`,
-                                        marginTop: "40px",
-                                        height: "calc(100vh - 260px)"
-                                    }}
-                                >
-                                    <h4 style={styles.titleTab}>{stringIt.automaticReset}</h4>
-                                    <components.Spacer direction="v" size={20} />
-                                    <span>{stringIt.automaticEmail}</span>
-                                    <span style={{fontSize: "12pt", color: colors.titleColor}}>
-                                        {this.getUserEmail()}
-                                    </span>
-                                    <components.Spacer direction="v" size={60} />
-                                    <div style={{position: "absolute", left: "36%", bottom: "20%"}}>
-                                        <bootstrap.Button onClick={this.sendResetEmail} style={buttonStyle}>
-                                            {stringIt.send}
-                                        </bootstrap.Button>
-                                    </div>
-                                </div>
-                            </bootstrap.Col >
-
-                            <bootstrap.Col style={{height: "calc(100vh - 200px)"}} xs={6}>
-                                <div style={{marginTop: "40px", height: "calc(100vh - 260px)"}} >
-                                    <h4 style={styles.titleTab}>{stringIt.manualReset}</h4>
-                                    <components.Spacer direction="v" size={20} />
-                                    <span>{stringIt.manualEmail}</span>
-                                    <span style={{fontSize: "12pt", color: colors.titleColor}}>
-                                        {this.getUserEmail()}
-                                    </span>
-                                    <h4 style={{color: colors.primary}}>{stringIt.newPassword}</h4>
-                                    <div style={{textAlign: "center"}}>
-                                        <bootstrap.Input
-                                            onChange={(input) => this.setState({inputPassword: input.target.value})}
-                                            style={R.merge(styles.inputLine, {width: "95%", display: "inline"})}
-                                            type="text"
-                                        />
-                                        <components.Spacer direction="v" size={40} />
-                                    </div>
-                                    <div style={{position: "absolute", left: "36%", bottom: "20%"}}>
-                                        <components.Button onClick={this.setNewPassword} style={buttonStyle}>
-                                            {stringIt.confirm}
-                                        </components.Button>
-                                    </div>
-                                </div>
-                            </bootstrap.Col>
-
-                        </bootstrap.TabPane>
-
-                        <bootstrap.TabPane eventKey={3} style={{marginLeft: "15px"}} tab="Siti">
-                            <h4 style={R.merge(styles.titleTab, {marginTop: "0px", paddingTop: "30px"})} >
-                                {stringIt.setSitiOfUser}
-                            </h4>
-                            <span>{stringIt.setUserSite}</span>
-                            <components.Spacer direction="v" size={15} />
-                            {this.renderSelectUserSite()}
-                            {
-                                /* <components.Button onClick={this.removeAllSiteFromUser}>
-                                    {"Rimuovi i siti"}
-                                </components.Button> */
-                            }
-                            <components.Button
-                                onClick={this.selectAllSiteToUser}
-                                style={R.merge(buttonStyle, {marginLeft: "20px", height: "34px"})}
-                            >
-                                {stringIt.addAllSites}
-                            </components.Button>
-                            <h4 style={R.merge(styles.titleTab, {fontSize: "14pt", marginTop: "20px", marginBottom: "20px"})} >
-                                {stringIt.getSitiOfUser}
-                            </h4>
-                            <div style={{display: "flex"}}>
-                                <bootstrap.Input
-                                    addonBefore={<img src={icons.iconSearch} style={{height: "20px"}} />}
-                                    onChange={(input) => this.setState({inputFilter: input.target.value})}
-                                    placeholder={stringIt.filterUserSite}
-                                    style={{
-                                        borderRadius: "0px",
-                                        width: "40%",
-                                        borderLeft: "0px",
-                                        WebkitBoxShadow: "none",
-                                        boxShadow: "none"
-                                    }}
-                                    type="text"
-                                />
-                                <div style={{display: "flex", marginRight: "12px"}}>
-                                    <span style={{
-                                            paddingTop: "5px",
-                                            color: colors.greySubTitle,
-                                            fontStyle: "italic",
-                                            fontSize: "12pt",
-                                            width: "125px"
-                                        }}
-                                    >
-                                        {stringIt.removeAllSites}
-                                    </span>
-                                    <components.Spacer direction="h" size={15} />
-                                    <div onClick={this.removeAllSiteFromUser}>
-                                        <components.Icon
-                                            icon="minus"
-                                            onClick={this.removeAllSiteFromUser}
-                                            style={{
-                                                color: colors.primary,
-                                                padding: "8px",
-                                                border: `1px solid ${colors.greyBorder}`,
-                                                height: "30px"
-                                            }}
-                                        />
-                                    </div>
-                                </div>
-                            </div>
-                                <div style={{width: "100%", height: "calc(100vh - 442px)", overflowY: "auto"}}>
-                                    <bootstrap.Table hover style={{marginBottom: "0px"}}>
-                                        <tbody>
-                                            {getSitiOfUser}
-                                        </tbody>
-                                    </bootstrap.Table>
-                                </div>
-                        </bootstrap.TabPane>
+                        {this.renderRolesTab()}
+                        {this.renderPasswordTab()}
+                        {this.renderUserSitiTab()}
                     </bootstrap.TabbedArea>
                 </div>
             </div>
