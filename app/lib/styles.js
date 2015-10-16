@@ -8,6 +8,12 @@ exports.base = {
     height: "100%"
 };
 
+exports.buttonSelectValore = {
+    marginTop: "6px",
+    fontSize: "13px",
+    border: "1px " + colors.greyBorder
+};
+
 exports.colVerticalPadding = {
     paddingTop: "10px",
     paddingBottom: "15px"

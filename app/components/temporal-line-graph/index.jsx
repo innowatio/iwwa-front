@@ -27,6 +27,10 @@ var TemporalLineGraph = React.createClass({
         coordinates: React.PropTypes.arrayOf(
             AppPropTypes.DygraphCoordinate
         ).isRequired,
+        dateFilter: React.PropTypes.oneOfType([
+            React.PropTypes.object,
+            React.PropTypes.string
+        ]),
         dateWindow: React.PropTypes.arrayOf(React.PropTypes.number),
         labels: React.PropTypes.array,
         lockInteraction: React.PropTypes.bool,
@@ -94,6 +98,8 @@ var TemporalLineGraph = React.createClass({
         }
         if (props.dateWindow) {
             options.dateWindow = props.dateWindow;
+        } else if (!R.isNil(props.dateFilter)) {
+            options.dateWindow = [props.dateFilter.start, props.dateFilter.end];
         } else {
             const {max, min} = props.coordinates.reduce((acc, coordinate) => {
                 return {
@@ -295,7 +301,7 @@ var TemporalLineGraph = React.createClass({
                 <Radium.Style
                     rules={{
                     ".alarmPoint": {
-                        border: "solid 4px red !important",
+                        border: `4px solid ${colors.red} !important`,
                         borderRadius: "50%"
                     }
                 }} />
