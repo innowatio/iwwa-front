@@ -295,7 +295,7 @@ var TemporalLineGraph = React.createClass({
                 <Radium.Style
                     rules={{
                     ".alarmPoint": {
-                        border: "solid 4px red !important",
+                        border: `4px solid ${colors.red} !important`,
                         borderRadius: "50%"
                     }
                 }} />

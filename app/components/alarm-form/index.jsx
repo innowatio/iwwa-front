@@ -66,9 +66,6 @@ var AlarmForm = React.createClass({
             modalNotificationOpen: false
         };
     },
-    cancel: function () {
-        console.log("Cancel");
-    },
     reset: function () {
         this.setState(this.getStateFromProps(this.props));
     },
