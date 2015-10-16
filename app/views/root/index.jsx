@@ -19,7 +19,6 @@ var styles = {
     content: {
         // position: "absolute",
         top: measures.headerHeight,
-        width: "100%",
         height: "100%",
         // height: "calc(100% - 90px)",
         transition: "left 0.3s ease"
@@ -38,7 +37,8 @@ var styles = {
         height: measures.footerHeight,
         width: "100%",
         bottom: "0px",
-        textAlign: "center"
+        textAlign: "center",
+        zIndex: 1042
     }
 };
 
@@ -89,7 +89,7 @@ var Root = React.createClass({
             left: (
                 this.state.sidebarOpen ?
                 "0px" :
-                ("-" + parseInt(measures.sidebarWidth)) + "px"
+                ("-" + parseInt(ENVIRONMENT === "cordova" ? measures.sidebarWidth : measures.iconsBarWidth)) + "px"
             )
         });
     },
@@ -106,8 +106,8 @@ var Root = React.createClass({
                 <components.SideNav
                     items={this.getMenuItems()}
                     linkClickAction={this.closeSidebar}
+                    sidebarOpen={this.state.sidebarOpen}
                     style={this.getSidebarStyle()}
-                    toggleSidebar={this.toggleSidebar}
                 />
                 <div style={styles.header}>
                     <components.Header
@@ -115,7 +115,9 @@ var Root = React.createClass({
                         menuClickAction={this.toggleSidebar}
                     />
                 </div>
-                <div style={styles.content}>
+                <div style={ENVIRONMENT === "cordova" ?
+                        styles.content :
+                        R.merge(styles.content, {width: "calc(100vw - 55px)", float: "right"})} >
                     {this.renderChildren()}
                 </div>
                 <div style={styles.footer} >

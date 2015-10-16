@@ -108,7 +108,7 @@ var DatefilterModal = React.createClass({
             this.setState({
                 value: {
                     start: moment().subtract(2, "months"),
-                    end: moment().subtract(1, "months")
+                    end: new Date()
                 }
             });
         } else {

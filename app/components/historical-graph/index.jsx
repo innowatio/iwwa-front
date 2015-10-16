@@ -75,7 +75,6 @@ var HistoricalGraph = React.createClass({
         return this.renderValoriCompareGraph();
     },
     render: function () {
-        console.log(this);
         return (
                 <div style={R.merge({width: "100%", height: "100%"}, this.props.style)}>
                     <Radium.Style

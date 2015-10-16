@@ -15,7 +15,6 @@ exports.Icon                    = require("./icon/");
 exports.LoginModal              = require("./login-modal/");
 exports.ModalOptionList         = require("./modal-option-list/");
 exports.Popover                 = require("./popover/");
-exports.Select                  = require("./select/");
 exports.SelectTree              = require("./select-tree");
 exports.SideNav                 = require("./sidenav/");
 exports.SitiCompare             = require("./siti-compare/");

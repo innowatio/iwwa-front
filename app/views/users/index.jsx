@@ -36,7 +36,7 @@ var Users = React.createClass({
                     };
                 },
                 valueFormatter: function (value) {
-                    return value.getIn(["0", "address"]);
+                    return value.getIn(["0", "address"]) || "";
                 }
             },
             {
@@ -60,7 +60,7 @@ var Users = React.createClass({
                     };
                 },
                 valueFormatter: function (value) {
-                    var date = moment(value && value.get("$date"));
+                    var date = moment(value && value.get("$date")) || "";
                     return date.locale("it").format("LL");
                 }
             },
@@ -73,7 +73,7 @@ var Users = React.createClass({
                     };
                 },
                 valueFormatter: function (value) {
-                    return value.join(", ");
+                    return !R.isNil(value) ? value.join(", ") : "";
                 }
             },
             {

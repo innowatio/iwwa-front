@@ -2,6 +2,7 @@ var Immutable = require("immutable");
 var Router    = require("react-router");
 var Radium    = require("radium");
 var React     = require("react");
+var R         = require("ramda");
 
 var colors = require("lib/colors");
 var icons  = require("lib/icons");
@@ -11,7 +12,7 @@ var styles = {
         display: "flex",
         alignItems: "center",
         justifyContent: "space-between",
-        padding: "15px",
+        padding: "8px",
         background: colors.primary,
         width: "100%",
         height: "100%",
@@ -37,9 +38,11 @@ var Header = React.createClass({
     userIsAdmin: function () {
         const users = this.props.asteroid.collections.get("users") || Immutable.Map();
         const roles = users.getIn([this.props.asteroid.userId, "roles"]) || Immutable.List();
+        console.log(roles);
         return roles.includes("admin");
     },
     renderAdminPage: function () {
+        console.log(this.userIsAdmin());
         return this.userIsAdmin() && ENVIRONMENT !== "cordova" ? (
             <span style={{marginRight: "10px"}}>
                 <Router.Link to="/users/" >
@@ -52,7 +55,7 @@ var Header = React.createClass({
         return (
             <div style={styles.base}>
                 <img onClick={this.props.menuClickAction} src={icons.iconMenu}  style={styles.hamburger}/>
-                <span style={styles.base}>
+                <span style={R.merge(styles.base, {marginLeft: "15px"})}>
                     <Router.Link to="/dashboard/" >
                         <img src={icons.iconLogo} />
                     </Router.Link>

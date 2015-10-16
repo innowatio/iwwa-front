@@ -5,7 +5,6 @@ var Router     = require("react-router");
 var R          = require("ramda");
 
 var colors   = require("lib/colors");
-var measures = require("lib/measures");
 
 var styles = {
     sidebar: {
@@ -14,19 +13,7 @@ var styles = {
         borderRightStyle: "solid",
         borderRightColor: colors.primary,
         backgroundColor: colors.white,
-        zIndex: 1040// ,
-        // "@media only screen": {
-        //     left: "-" + measures.sidebarWidth
-        // }
-    },
-    hamburger: {
-        height: measures.headerHeight,
-        backgroundColor: colors.primary,
-        fontSize: "35px",
-        textAlign: "left",
-        paddingRight: "15px",
-        paddingTop: "5px",
-        cursor: "pointer"
+        zIndex: 1040
     },
     menu: {
         position: "absolute",
@@ -59,8 +46,8 @@ var SideNav = React.createClass({
             React.PropTypes.object
         ),
         linkClickAction: React.PropTypes.func,
-        style: React.PropTypes.object,
-        toggleSidebar: React.PropTypes.func.isRequired
+        sidebarOpen: React.PropTypes.bool,
+        style: React.PropTypes.object
     },
     getInitialState: function () {
         return {
@@ -74,9 +61,22 @@ var SideNav = React.createClass({
         location.reload();
     },
     renderIconSideBar: function (menuItem) {
-        return (
+        return !R.isNil(menuItem.url) ? (
             <li key={menuItem.iconPath} style={{height: "55px"}}>
-                <img src={menuItem.iconPath} style={{float: "right", width: "30px"}} />
+                <Router.Link
+                    activeStyle={styles.activeLink}
+                    onClick={this.props.linkClickAction}
+                    style={{height: "55px"}}
+                    to={menuItem.url}
+                >
+                    <img src={menuItem.iconPath} style={{float: "right", width: "30px"}} />
+                </Router.Link>
+            </li>
+        ) : (
+            <li key={menuItem.iconPath} onClick={this.resetTutorial} style={{height: "55px", cursor: "pointer"}}>
+                <a style={{height: "55px"}}>
+                    <img src={menuItem.iconPath} style={{float: "right", width: "30px"}} />
+                </a>
             </li>
         );
     },
@@ -107,11 +107,19 @@ var SideNav = React.createClass({
         );
     },
     render: function () {
-        return (
+        return ENVIRONMENT === "cordova" || this.props.sidebarOpen ? (
             <div style={[styles.sidebar, this.props.style]}>
                 <div id="menu" style={styles.menu}>
                     <bootstrap.Nav bsStyle="pills" stacked >
                         {this.props.items.map(this.renderNavItem)}
+                    </bootstrap.Nav>
+                </div>
+            </div>
+        ) : (
+            <div style={[styles.iconsBar, this.props.style]}>
+                <div id="menu" style={styles.menu}>
+                    <bootstrap.Nav bsStyle="pills" stacked >
+                        {this.props.items.map(this.renderIconSideBar)}
                     </bootstrap.Nav>
                 </div>
             </div>
