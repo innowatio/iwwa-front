@@ -300,26 +300,19 @@ var User = React.createClass({
                                     }}
                                     type="text"
                                 />
-                                <components.Button onClick={this.removeAllSiteFromUser}
-                                    style={{
-                                        borderRadius: "0px",
-                                        display: "flex",
-                                        border: "none",
-                                        paddingTop: "0px",
-                                        paddingBottom: "0px"
-                                    }}
-                                >
+                                <div style={{display: "flex", marginRight: "12px"}}>
                                     <span style={{
                                             paddingTop: "5px",
                                             color: colors.greySubTitle,
                                             fontStyle: "italic",
-                                            fontSize: "12pt"
+                                            fontSize: "12pt",
+                                            width: "125px"
                                         }}
                                     >
                                         {stringIt.removeAllSites}
                                     </span>
                                     <components.Spacer direction="h" size={15} />
-                                    <div>
+                                    <div onClick={this.removeAllSiteFromUser}>
                                         <components.Icon
                                             icon="minus"
                                             onClick={this.removeAllSiteFromUser}
@@ -331,7 +324,7 @@ var User = React.createClass({
                                             }}
                                         />
                                     </div>
-                                </components.Button>
+                                </div>
                             </div>
                                 <div style={{width: "100%", height: "calc(100vh - 442px)", overflowY: "auto"}}>
                                     <bootstrap.Table hover style={{marginBottom: "0px"}}>
