@@ -69,7 +69,6 @@ var AlarmRepetitionModal = React.createClass({
     },
     onChange: function (param, value) {
         var newValue = {};
-        console.log(parseInt(value));
         newValue[param] = value;
         this.setState(newValue);
     },
