@@ -11,6 +11,7 @@ var formatValue = require("./format-value.js");
 
 var SitiCompare = React.createClass({
     propTypes: {
+        getYLabel: React.PropTypes.func,
         misure: IPropTypes.map,
         siti: React.PropTypes.arrayOf(IPropTypes.map),
         tipologia: React.PropTypes.object,
@@ -61,7 +62,7 @@ var SitiCompare = React.createClass({
                 ref="temporalLineGraph"
                 sito={this.props.siti[0] || Immutable.Map()}
                 xLabel=""
-                yLabel="kWh"
+                yLabel={this.props.getYLabel(this.props.tipologia)}
             />
         );
     }

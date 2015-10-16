@@ -16,11 +16,8 @@ var transformers     = require("./transformers.js");
 var GetTutorialMixin = require("lib/get-tutorial-mixin");
 var tutorialString   = require("assets/JSON/tutorial-string.json").historicalGraph;
 
-var multiselectStyles = {
-    multiselectPopover: {
-        width: "175px"
-    },
-    multiselect: {
+var selectStyles = {
+    selectCompare: {
         width: "450px",
         height: "35px",
         display: "inline-block"
@@ -138,6 +135,34 @@ var Chart = React.createClass({
             self.props.asteroid.subscribe("misureBySito", sito);
         });
     },
+    renderExportButton: function () {
+        return (
+            <div style={{marginTop: "3px"}}>
+                <components.TutorialAnchor
+                    message={tutorialString.export}
+                    order={2}
+                    position="right"
+                    ref="export"
+                >
+                    <components.Popover
+                        hideOnChange={true}
+                        title={<img src={icons.iconExport} style={{width: "50%"}} />}
+                        tooltipId="tooltipExport"
+                        tooltipMessage="Esporta"
+                        tooltipPosition="right"
+                    >
+                        <components.DropdownButton
+                            allowedValues={this.getExportType()}
+                            getIcon={R.prop("icon")}
+                            getKey={R.prop("key")}
+                            getLabel={R.prop("label")}
+                            onChange={this.onChangeExport}
+                        />
+                    </components.Popover>
+                </components.TutorialAnchor>
+            </div>
+        );
+    },
     render: function () {
         // Sito
         var siti = this.props.collections.get("siti") || Immutable.Map();
@@ -159,12 +184,7 @@ var Chart = React.createClass({
             transformers.valore(valori)
         );
         var valoreGetActiveStyle = function (valore) {
-            return {
-                background: valore.color,
-                color: colors.white,
-                fontSize: "13px",
-                border: "1px " + colors.greyBorder
-            };
+            return R.merge(styles.buttonSelectValore, {background: valore.color, color: colors.white});
         };
         // Compare
         var compareDate = this.getDateCompare();
@@ -192,11 +212,6 @@ var Chart = React.createClass({
 
         return (
             <div>
-                <components.TutorialAnchor
-                    message={tutorialString.introTutorial}
-                    order={0}
-                    ref="intro"
-                />
                 <h2
                     className="text-center"
                     style={styles.titlePage}
@@ -221,28 +236,7 @@ var Chart = React.createClass({
                                 {...valoreInputProps}
                             />
                         </components.TutorialAnchor>
-                        <components.TutorialAnchor
-                            message={tutorialString.export}
-                            order={2}
-                            position="right"
-                            ref="export"
-                        >
-                            <components.Popover
-                                hideOnChange={true}
-                                title={<img src={icons.iconExport} style={{width: "50%"}} />}
-                                tooltipId="tooltipExport"
-                                tooltipMessage="Esporta"
-                                tooltipPosition="right"
-                            >
-                                <components.DropdownButton
-                                    allowedValues={this.getExportType()}
-                                    getIcon={R.prop("icon")}
-                                    getKey={R.prop("key")}
-                                    getLabel={R.prop("label")}
-                                    onChange={this.onChangeExport}
-                                />
-                            </components.Popover>
-                        </components.TutorialAnchor>
+                        {ENVIRONMENT === "cordova" ? null : this.renderExportButton()}
                     </span>
                     <span className="pull-right" style={{display: "flex"}}>
                         <components.TutorialAnchor
@@ -318,7 +312,7 @@ var Chart = React.createClass({
                                     getKey={CollectionUtils.siti.getKey}
                                     getSitoLabel={CollectionUtils.siti.getLabel}
                                     open={"undefined"}
-                                    style={multiselectStyles.multiselect}
+                                    style={selectStyles.selectCompare}
                                     {...sitoInputProps}
                                 />
                                 <components.DataCompare
@@ -342,6 +336,7 @@ var Chart = React.createClass({
                             alarms={alarms.value}
                             dateCompare={dateCompareProps.value}
                             dateFilter={dateFilterProps.value}
+                            getYLabel={CollectionUtils.labelGraph.getYLabel}
                             misure={this.props.collections.get("misure") || Immutable.Map()}
                             ref="historicalGraph"
                             resetCompare={this.resetCompare}
