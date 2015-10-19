@@ -113,6 +113,7 @@ var Users = React.createClass({
                         headColumn={["Email", "Email verificata", "Data di creazione", "Ruolo", ""]}
                         headStyle={{color: colors.titleColor, fontSize: "13pt", backgroundColor: colors.greyBackground}}
                         hover={true}
+                        style={{height: "calc(100vh - 100px)", paddingBottom: "10px"}}
                     />
                 </div>
             </div>

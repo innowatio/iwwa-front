@@ -1,5 +1,4 @@
 var bootstrap  = require("react-bootstrap");
-var Radium     = require("radium");
 var React      = require("react");
 var Router     = require("react-router");
 var R          = require("ramda");
@@ -7,14 +6,6 @@ var R          = require("ramda");
 var colors   = require("lib/colors");
 
 var styles = {
-    sidebar: {
-        height: "100%",
-        borderRightWidth: "1px",
-        borderRightStyle: "solid",
-        borderRightColor: colors.primary,
-        backgroundColor: colors.white,
-        zIndex: 1040
-    },
     menu: {
         position: "absolute",
         width: "100%"
@@ -23,14 +14,6 @@ var styles = {
         borderLeft: "4px solid " + colors.primary,
         borderRadius: "0px",
         backgroundColor: colors.greyLight
-    },
-    iconsBar: {
-        height: "100%",
-        zIndex: 1041,
-        borderRightWidth: "1px",
-        borderRightStyle: "solid",
-        borderRightColor: colors.primary,
-        backgroundColor: colors.white
     },
     sideLabel: {
         color: colors.primary,
@@ -108,7 +91,7 @@ var SideNav = React.createClass({
     },
     render: function () {
         return ENVIRONMENT === "cordova" || this.props.sidebarOpen ? (
-            <div style={[styles.sidebar, this.props.style]}>
+            <div style={this.props.style}>
                 <div id="menu" style={styles.menu}>
                     <bootstrap.Nav bsStyle="pills" stacked >
                         {this.props.items.map(this.renderNavItem)}
@@ -116,7 +99,7 @@ var SideNav = React.createClass({
                 </div>
             </div>
         ) : (
-            <div style={[styles.iconsBar, this.props.style]}>
+            <div style={this.props.style}>
                 <div id="menu" style={styles.menu}>
                     <bootstrap.Nav bsStyle="pills" stacked >
                         {this.props.items.map(this.renderIconSideBar)}
@@ -127,4 +110,4 @@ var SideNav = React.createClass({
     }
 });
 
-module.exports = Radium(SideNav);
+module.exports = SideNav;

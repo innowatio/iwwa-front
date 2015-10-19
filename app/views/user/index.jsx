@@ -72,7 +72,7 @@ var User = React.createClass({
         var siti = this.props.collections.get("siti") || Immutable.Map();
         var userSiti = this.getUser().get("siti") || Immutable.List();
         siti.filter(sito => {
-            return userSiti.includes(sito.get("_id"));
+            return R.isNil(userSiti) ? {} : userSiti.includes(sito.get("_id"));
         }).map(this.removeSiteFromUser);
     },
     selectSiteToUser: function (value) {
@@ -115,7 +115,7 @@ var User = React.createClass({
         var siti = this.props.collections.get("siti") || Immutable.Map();
         var userSiti = this.getUser().get("siti");
         var sitiToAdd = siti.filter(sito => {
-            return !userSiti.includes(sito.get("_id"));
+            return R.isNil(userSiti) ? {} : !userSiti.includes(sito.get("_id"));
         });
         return (
             <components.Popover
@@ -150,7 +150,7 @@ var User = React.createClass({
         );
     },
     renderRolesButtons: function () {
-        var userRoles = this.getUser().get("roles") || Immutable.List;
+        var userRoles = this.getUser().get("roles") || Immutable.List();
         return this.getRoles().map(role => {
             const userHasRole = userRoles.includes(role.get("name"));
             return role.get("name") !== "admin" ? (
@@ -319,12 +319,16 @@ var User = React.createClass({
                     })}
                     scopeSelector=".users-admin"
                 />
-                <Router.Link to="/users/">
-                    <bootstrap.Button bsStyle="link" style={{height: "40px", outline: "0px"}}>
-                        <img src={icons.iconArrowLeft} style={{height: "30px"}} />
-                    </bootstrap.Button>
-                </Router.Link>
-
+            <div style={{display: "inline-block", textAlign: "center", width: "100%"}}>
+                    <Router.Link style={{float: "left"}} to="/users/">
+                        <bootstrap.Button bsStyle="link" style={{height: "40px", outline: "0px"}}>
+                            <img src={icons.iconArrowLeft} style={{height: "30px", float: "left"}} />
+                        </bootstrap.Button>
+                    </Router.Link>
+                    <h4 style={{color: colors.titleColor}}>
+                        {`Modifica utente: ${this.getUserEmail()}`}
+                    </h4>
+                </div>
                 <div className="tabbed-area" style={R.merge(styles.tabbedArea, {marginTop: "0px"})}>
                     <bootstrap.TabbedArea
                         activeKey={this.state.key}

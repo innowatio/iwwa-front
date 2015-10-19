@@ -38,11 +38,9 @@ var Header = React.createClass({
     userIsAdmin: function () {
         const users = this.props.asteroid.collections.get("users") || Immutable.Map();
         const roles = users.getIn([this.props.asteroid.userId, "roles"]) || Immutable.List();
-        console.log(roles);
         return roles.includes("admin");
     },
     renderAdminPage: function () {
-        console.log(this.userIsAdmin());
         return this.userIsAdmin() && ENVIRONMENT !== "cordova" ? (
             <span style={{marginRight: "10px"}}>
                 <Router.Link to="/users/" >

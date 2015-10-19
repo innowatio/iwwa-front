@@ -100,6 +100,7 @@ var CollectionElementsTable = React.createClass({
         hover: React.PropTypes.bool,
         siti: IPropTypes.map,
         striped: React.PropTypes.bool,
+        style: React.PropTypes.object,
         width: React.PropTypes.string
     },
     renderHead: function () {
@@ -138,7 +139,7 @@ var CollectionElementsTable = React.createClass({
     },
     render: function () {
         return (
-            <div style={{overflow: "auto", paddingTop: "10px", width: "100%"}}>
+            <div style={[this.props.style, {overflow: "auto", paddingTop: "10px", width: "100%"}]}>
                 <bootstrap.Table
                     bordered={this.props.bordered}
                     condensed={this.props.condensed}

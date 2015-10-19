@@ -11,24 +11,26 @@ var LocalStorageMixin = require("lib/localstorage-mixin");
 
 var styles = {
     header: {
-        // position: "absolute",
         width: "100%",
         height: measures.headerHeight,
         transition: "left 0.3s ease"
     },
     content: {
-        // position: "absolute",
         top: measures.headerHeight,
         height: "100%",
-        // height: "calc(100% - 90px)",
         transition: "left 0.3s ease"
     },
     sidebar: {
         position: "absolute",
         top: measures.headerHeight,
         width: measures.sidebarWidth,
-        height: "100%",
-        transition: "left 0.3s ease"
+        height: "calc(100vh - 55px)",
+        transition: "left 0.3s ease",
+        zIndex: 1041,
+        borderRightWidth: "1px",
+        borderRightStyle: "solid",
+        borderRightColor: colors.primary,
+        backgroundColor: colors.white
     },
     footer: {
         position: "fixed",
