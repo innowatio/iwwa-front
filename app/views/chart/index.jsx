@@ -327,7 +327,7 @@ var Chart = React.createClass({
                 </bootstrap.Col>
                 <bootstrap.Col  className="modal-container" sm={12} style={{height: "100%"}}>
                     <components.TutorialAnchor
-                        message={tutorialString.graph}
+                        message={ENVIRONMENT === "cordova" ? tutorialString.appGraph : tutorialString.webGraph}
                         order={7}
                         position="top"
                         ref="graph"
