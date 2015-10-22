@@ -30,6 +30,9 @@ var TutorialAnchor = React.createClass({
                             border: "0px",
                             textShadow: "none"
                         },
+                        ".introjs-tooltip": {
+                            maxWidth: "380px"
+                        },
                         "a:focus": {
                             outline: "0px",
                             textDecoration: "none"
