@@ -42,7 +42,7 @@ var DatefilterModal = React.createClass({
             showModal: false,
             value: {
                 start: this.getDefault(this.props.value, "start", this.defaultStartDate()),
-                end: this.getDefault(this.props.value, "end", new Date())
+                end: this.getDefault(this.props.value, "end", this.defaultEndDate())
             }
         };
     },
@@ -66,8 +66,10 @@ var DatefilterModal = React.createClass({
         });
     },
     defaultStartDate: function () {
-        var now = new moment()._d;
-        return moment(now).subtract(1, "months")._d;
+        return moment().subtract(1, "months").startOf("month")._d;
+    },
+    defaultEndDate: function () {
+        return moment().subtract(1, "months").endOf("month")._d;
     },
     open: function () {
         this.setState({
@@ -107,8 +109,15 @@ var DatefilterModal = React.createClass({
         } else if (checkedKey === "2months") {
             this.setState({
                 value: {
-                    start: moment().subtract(2, "months"),
-                    end: new Date()
+                    start: moment().subtract(2, "months").startOf("month"),
+                    end: moment().subtract(1, "months").endOf("month")
+                }
+            });
+        } else if (checkedKey === "months") {
+            this.setState({
+                value: {
+                    start: moment().subtract(1, "months").startOf("month"),
+                    end: moment().subtract(1, "months").endOf("month")
                 }
             });
         } else {
