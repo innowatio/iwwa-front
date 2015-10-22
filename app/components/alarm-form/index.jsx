@@ -119,7 +119,8 @@ var AlarmForm = React.createClass({
             active: this.state.active,
             name: this.state.name,
             podId: this.state.sito.get("pod"),
-            rule: JSON.stringify(rule)
+            rule: JSON.stringify(rule),
+            notifications: []
         };
 
         var requestBody;
