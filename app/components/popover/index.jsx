@@ -81,6 +81,7 @@ var Popover = React.createClass({
             <bootstrap.Popover
                 animation={false}
                 className="multiselect-popover"
+                id={this.props.tooltipId + "-popover"}
             >
                 <Radium.Style
                     rules={{

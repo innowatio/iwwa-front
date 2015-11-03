@@ -12,8 +12,13 @@
     ],
     "js": [
         "asteroid",
+        "axios",
         "color",
+        "halogen",
+        "history",
         "immutable",
+        "intro.js",
+        "lodash.debounce",
         "lodash.throttle",
         "moment",
         "radium",

@@ -291,7 +291,7 @@ var Chart = React.createClass({
                             position="left"
                             ref="dateFilter"
                         >
-                            <components.DatefilterModal
+                            <components.DatefilterMonthlyModal
                                 allowedValues={filterDate}
                                 getKey={R.prop("key")}
                                 getLabel={R.prop("label")}

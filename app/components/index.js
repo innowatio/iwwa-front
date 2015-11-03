@@ -7,6 +7,7 @@ exports.CollectionElementsTable = require("./collection-elements-table/");
 exports.Compare                 = require("./compare-modal/");
 exports.DataCompare             = require("./data-compare/");
 exports.DatefilterModal         = require("./datefilter-modal/");
+exports.DatefilterMonthlyModal  = require("./datefilter-monthly-modal/");
 exports.DropdownButton          = require("./dropdown-button/");
 exports.DropdownSelect          = require("./dropdown-select/");
 exports.Header                  = require("./header/");
