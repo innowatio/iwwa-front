@@ -26,7 +26,7 @@ var styles = {
         width: measures.sidebarWidth,
         height: "calc(100vh - 55px)",
         transition: "left 0.3s ease",
-        zIndex: 1041,
+        zIndex: 1040,
         borderRightWidth: "1px",
         borderRightStyle: "solid",
         borderRightColor: colors.primary,

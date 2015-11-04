@@ -83,14 +83,13 @@
     "radium": "^0.13.2",
     "ramda": "^0.17.0",
     "react": "^0.13.3",
-    "react-bootstrap": "^0.23.7",
+    "react-bootstrap": "^0.26.4",
     "react-immutable-proptypes": "^1.0.0",
     "react-router": "1.0.0-beta3",
     "react-time-picker": "^1.1.0",
     "react-waypoint": "1.0.2",
     "react-widgets": "^2.7.2",
-    "title-case": "^1.1.1",
-    "treeview-react-bootstrap": "^0.2.4"
+    "title-case": "^1.1.1"
   },
   "cordova": {
     "name": "iwwa",
