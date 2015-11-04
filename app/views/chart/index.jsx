@@ -86,6 +86,15 @@ var Chart = React.createClass({
             {label: "Previsionale", color: colors.linePrevisionale, key: "previsionale"}
         ];
     },
+    getConsumptionType: function () {
+        return [
+            {label: "Temperatura", key: "temperature", icon: icons.iconPNG},
+            {label: "Umidità", key: "umidity", icon: icons.iconCSV},
+            {label: "Lux", key: "lux", icon: icons.iconCSV},
+            {label: "CO2", key: "co2", icon: icons.iconCSV},
+            {label: "Allarmi", key: "allarms", icon: icons.iconCSV}
+        ];
+    },
     getExportType: function () {
         return [
             {label: "Png", key: "png", icon: icons.iconPNG},
@@ -324,6 +333,16 @@ var Chart = React.createClass({
                             </components.Compare>
                         </components.TutorialAnchor>
                     </span>
+                </bootstrap.Col>
+                <bootstrap.Col >
+                    {
+                        this.getConsumptionType().map(function (type) {
+                            return (
+                                <bootstrap.Button>
+                                    {type.label}
+                                </bootstrap.Button>);
+                        })
+                    }
                 </bootstrap.Col>
                 <bootstrap.Col  className="modal-container" sm={12} style={{height: "100%"}}>
                     <components.TutorialAnchor
