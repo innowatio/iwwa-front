@@ -25,13 +25,13 @@ describe("The `measures` method", function () {
             });
             var variable = ["lux"];
             var expected = [
-                [toDateTime(0), [parseFloat(1), 0]],
-                [toDateTime(1), [parseFloat(2), 0]],
-                [toDateTime(2), [parseFloat(3), 0]],
-                [toDateTime(3), [parseFloat(4), 0]],
-                [toDateTime(4), [parseFloat(null), 0]],
-                [toDateTime(5), [parseFloat(6), 0]],
-                [toDateTime(6), [parseFloat(7.8), 0]]
+                [new Date(toDateTime(0)), [parseFloat(1), 0]],
+                [new Date(toDateTime(1)), [parseFloat(2), 0]],
+                [new Date(toDateTime(2)), [parseFloat(3), 0]],
+                [new Date(toDateTime(3)), [parseFloat(4), 0]],
+                [new Date(toDateTime(4)), [parseFloat(null), 0]],
+                [new Date(toDateTime(5)), [parseFloat(6), 0]],
+                [new Date(toDateTime(6)), [parseFloat(7.8), 0]]
             ];
             var result = CollectionUtils.measures.convertByVariables(measures, variable);
             expect(expected).to.deep.equal(result);
@@ -48,13 +48,13 @@ describe("The `measures` method", function () {
             });
             var variables = ["lux", "potenza"];
             var expected = [
-                [toDateTime(0), [parseFloat(1), 0], [parseFloat(111), 0]],
-                [toDateTime(1), [parseFloat(2), 0], [parseFloat(222), 0]],
-                [toDateTime(2), [parseFloat(3), 0], [parseFloat(333), 0]],
-                [toDateTime(3), [parseFloat(4), 0], [parseFloat(444), 0]],
-                [toDateTime(4), [parseFloat(null), 0], [parseFloat(555), 0]],
-                [toDateTime(5), [parseFloat(6), 0], [parseFloat(null), 0]],
-                [toDateTime(6), [parseFloat(7.8), 0], [parseFloat(7.77), 0]]
+                [new Date(toDateTime(0)), [parseFloat(1), 0], [parseFloat(111), 0]],
+                [new Date(toDateTime(1)), [parseFloat(2), 0], [parseFloat(222), 0]],
+                [new Date(toDateTime(2)), [parseFloat(3), 0], [parseFloat(333), 0]],
+                [new Date(toDateTime(3)), [parseFloat(4), 0], [parseFloat(444), 0]],
+                [new Date(toDateTime(4)), [parseFloat(null), 0], [parseFloat(555), 0]],
+                [new Date(toDateTime(5)), [parseFloat(6), 0], [parseFloat(null), 0]],
+                [new Date(toDateTime(6)), [parseFloat(7.8), 0], [parseFloat(7.77), 0]]
             ];
             var result = CollectionUtils.measures.convertByVariables(measures, variables);
             expect(expected).to.deep.equal(result);
@@ -70,16 +70,17 @@ describe("The `measures` method", function () {
             });
             var variables = ["lux", "other"];
             var expected = [
-                [toDateTime(0), [parseFloat(1), 0], [parseFloat(null), 0]],
-                [toDateTime(1), [parseFloat(2), 0], [parseFloat(null), 0]],
-                [toDateTime(2), [parseFloat(3), 0], [parseFloat(null), 0]],
-                [toDateTime(3), [parseFloat(4), 0], [parseFloat(null), 0]],
-                [toDateTime(4), [parseFloat(null), 0], [parseFloat(null), 0]],
-                [toDateTime(5), [parseFloat(6), 0], [parseFloat(null), 0]],
-                [toDateTime(6), [parseFloat(7.8), 0], [parseFloat(null), 0]]
+                [new Date(toDateTime(0)), [parseFloat(1), 0], [parseFloat(null), 0]],
+                [new Date(toDateTime(1)), [parseFloat(2), 0], [parseFloat(null), 0]],
+                [new Date(toDateTime(2)), [parseFloat(3), 0], [parseFloat(null), 0]],
+                [new Date(toDateTime(3)), [parseFloat(4), 0], [parseFloat(null), 0]],
+                [new Date(toDateTime(4)), [parseFloat(null), 0], [parseFloat(null), 0]],
+                [new Date(toDateTime(5)), [parseFloat(6), 0], [parseFloat(null), 0]],
+                [new Date(toDateTime(6)), [parseFloat(7.8), 0], [parseFloat(null), 0]]
             ];
             var result = CollectionUtils.measures.convertByVariables(measures, variables);
             expect(expected).to.deep.equal(result);
         });
     });
 });
+new Date()

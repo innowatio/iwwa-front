@@ -1,4 +1,5 @@
 var Immutable = require("immutable");
+var moment    = require("moment");
 var R         = require("ramda");
 var titleCase = require("title-case");
 
@@ -73,7 +74,7 @@ exports.measures = {
         */
         return measuresFirstVariable.split(",").map(function (value, index) {
             var arrayResult = [
-                toDateTime(index),
+                new Date(toDateTime(index)),
                 [parseFloat(value), 0]
             ];
             splittedMeasures.forEach(function (measureByVariable) {
