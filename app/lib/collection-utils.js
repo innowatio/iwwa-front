@@ -37,3 +37,43 @@ exports.labelGraph = {
         }
     }
 };
+
+/*
+    objFromDB: {
+        _id: uuid,
+        sitoId: innowatio pod string,
+        podId: uuid,
+        month: "YYYY-MM",
+        readings: {
+            "energia attiva" : JSON string of array,
+            "energia reattiva" : JSON string of array,
+            ...
+        }
+    }
+*/
+exports.measures = {
+    convertByVariables: R.memoize(function (measures, variables) {
+        const fiveMinutesInMS = 5 * 60 * 1000;
+        const startOfMonthInMS = new Date(measures.get("month")).getTime();
+        const measuresFirstVariable = measures.get("readings").get(variables[0]);
+
+        var splittedMeasures = R.map(function (value) {
+            return measures.get("readings").get(value).split(",");
+        }, R.slice(1, variables.length, variables));
+
+        var toDateTime = function (pos) {
+            return startOfMonthInMS + (pos * fiveMinutesInMS);
+        };
+
+        return measuresFirstVariable.split(",").map(function (value, index) {
+            var arrayResult = [
+                toDateTime(index),
+                parseFloat(value)
+            ];
+            splittedMeasures.forEach(function (measureByVariable) {
+                arrayResult.push(parseFloat(measureByVariable[index]));
+            });
+            return arrayResult;
+        });
+    })
+};
