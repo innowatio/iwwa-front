@@ -75,9 +75,9 @@ var Chart = React.createClass({
     },
     getTipologie: function () {
         return [
-            {label: "Attiva", key: 1},
-            {label: "Potenza", key: 2},
-            {label: "Reattiva", key: 3}
+            {label: "Attiva", key: "energia attiva"},
+            {label: "Potenza", key: "potenza totale"},
+            {label: "Reattiva", key: "energia reattiva"}
         ];
     },
     getValori: function () {
@@ -132,7 +132,7 @@ var Chart = React.createClass({
         var sitoQuery = R.path(["location", "query", "sito"], props);
         var siti = (sitoQuery && sitoQuery.split(",")) || [];
         siti.forEach(function (sito) {
-            self.props.asteroid.subscribe("misureBySito", sito);
+            self.props.asteroid.subscribe("misureBySito2", sito);
         });
     },
     renderExportButton: function () {
@@ -337,7 +337,7 @@ var Chart = React.createClass({
                             dateCompare={dateCompareProps.value}
                             dateFilter={dateFilterProps.value}
                             getYLabel={CollectionUtils.labelGraph.getYLabel}
-                            misure={this.props.collections.get("misure") || Immutable.Map()}
+                            misure={this.props.collections.get("month_readings") || Immutable.Map()}
                             ref="historicalGraph"
                             resetCompare={this.resetCompare}
                             siti={sitoInputProps.value}

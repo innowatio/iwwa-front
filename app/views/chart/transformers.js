@@ -76,15 +76,11 @@ exports.tipologia = function (tipologie) {
     return {
         parse: function (query) {
             return (
-                R.find(R.propEq("key", parseInt(query)), tipologie) ||
+                R.find(R.propEq("key", query), tipologie) ||
                 tipologie[0]
             );
         },
-        stringify: R.pipe(
-            R.prop("key"),
-            // As of now prop `key` is a number. We therefore stringify it
-            R.toString
-        )
+        stringify: R.prop("key")
     };
 };
 

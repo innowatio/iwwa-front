@@ -104,6 +104,7 @@ var ButtonGroupSelect = React.createClass({
         return (
             <components.Button
                 active={active}
+                disabled={this.props.getKey(allowedValue) === "previsionale" ? true : false}
                 key={this.props.getKey(allowedValue)}
                 onClick={R.partial(this.onChange, allowedValue)}
                 style={active ? this.props.getActiveStyle(allowedValue) : styleDropdown}

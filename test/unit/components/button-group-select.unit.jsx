@@ -52,8 +52,7 @@ describe("The `ButtonGroupSelect` component ", function () {
 
     it("should call the `getKey` prop (if supplied) to get the key for the children buttons", function () {
         var allowedValues = [1, 2, 3, 4];
-        var getKey = R.toString;
-        var getKeySpy = sinon.spy(getKey);
+        var getKeySpy = sinon.spy();
         var selectNode = TestUtils.renderIntoDocument(
             <ButtonGroupSelect
                 allowedValues={allowedValues}
@@ -64,9 +63,10 @@ describe("The `ButtonGroupSelect` component ", function () {
             />
         );
         TestUtils.scryRenderedComponentsWithType(selectNode, Button);
-        // we call get key 3 times: 1 when we pass the key prop on buttons creation
-        // 2 more when we check if the button `isActive`
-        var callsPerValue = 3;
+        // we call get key 4 times: 1 when we pass the key prop on buttons
+        // creation 2 more when we check if the button `isActive` and 2 more
+        // when we check for disabled button.
+        var callsPerValue = 4;
         expect(getKeySpy.callCount).to.equal(allowedValues.length * callsPerValue);
     });
 

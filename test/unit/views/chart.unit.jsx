@@ -91,20 +91,20 @@ describe("The `tipologia` transformer", function () {
 
         it("the tipologia which `key` equals the supplied string", function () {
             var tipologie = [
-                {label: "Attiva", key: 1},
-                {label: "Potenza", key: 2},
-                {label: "Reattiva", key: 3}
+                {label: "Attiva", key: "energia attiva"},
+                {label: "Potenza", key: "potenza totale"},
+                {label: "Reattiva", key: "energia reattiva"}
             ];
             var st = transformers.tipologia(tipologie);
-            var ret = st.parse("3");
+            var ret = st.parse("energia reattiva");
             expect(ret).to.equal(tipologie[2]);
         });
 
         it("the first tipologia if no `key` equals the supplied string", function () {
             var tipologie = [
-                {label: "Attiva", key: 1},
-                {label: "Potenza", key: 2},
-                {label: "Reattiva", key: 3}
+                {label: "Attiva", key: "energia attiva"},
+                {label: "Potenza", key: "potenza totale"},
+                {label: "Reattiva", key: "energia reattiva"}
             ];
             var st = transformers.tipologia(tipologie);
             var ret = st.parse("4");
@@ -117,12 +117,12 @@ describe("The `tipologia` transformer", function () {
 
         it("the stringified `key` of the supplied tipologia", function () {
             var tipologie = [
-                {label: "Attiva", key: 1},
-                {label: "Potenza", key: 2},
-                {label: "Reattiva", key: 3}
+                {label: "Attiva", key: "energia attiva"},
+                {label: "Potenza", key: "potenza totale"},
+                {label: "Reattiva", key: "energia reattiva"}
             ];
             var st = transformers.tipologia(tipologie);
-            expect(st.stringify(tipologie[0])).to.equal("1");
+            expect(st.stringify(tipologie[0])).to.equal("energia attiva");
         });
 
     });
