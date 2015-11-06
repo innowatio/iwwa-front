@@ -58,20 +58,26 @@ exports.measures = {
         const measuresFirstVariable = measures.get("readings").get(variables[0]);
 
         var splittedMeasures = R.map(function (value) {
+            if (R.isNil(measures.get("readings").get(value))) {
+                return [];
+            }
             return measures.get("readings").get(value).split(",");
         }, R.slice(1, variables.length, variables));
 
-        var toDateTime = function (pos) {
-            return startOfMonthInMS + (pos * fiveMinutesInMS);
+        var toDateTime = function (index) {
+            return startOfMonthInMS + (index * fiveMinutesInMS);
         };
 
+        /*
+            * Add 0 as placeholder for standard deviation
+        */
         return measuresFirstVariable.split(",").map(function (value, index) {
             var arrayResult = [
                 toDateTime(index),
-                parseFloat(value)
+                [parseFloat(value), 0]
             ];
             splittedMeasures.forEach(function (measureByVariable) {
-                arrayResult.push(parseFloat(measureByVariable[index]));
+                arrayResult.push([parseFloat(measureByVariable[index]), 0]);
             });
             return arrayResult;
         });
