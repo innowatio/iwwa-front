@@ -31,8 +31,9 @@ var graphStyle = {
 
 var consumptionButtonStyle = {
     color: colors.greySubTitle,
-    width: "15%",
-    textAlign: "left"
+    width: "90%",
+    textAlign: "left",
+    borderRadius: 0
 };
 
 var dateCompareProps;
@@ -156,16 +157,18 @@ var Chart = React.createClass({
     },
     renderConsumptionButton: function (consumption) {
         return (
-            <bootstrap.Button
-                onClick={consumption.action}
-                style={consumptionButtonStyle}>
-                <img src={consumption.icon} style={{height: "25px", marginRight: "10px"}} />
-                {consumption.label}
-            </bootstrap.Button>);
+            <div style={{width: "19%", display: "inline-block"}}>
+                <bootstrap.Button
+                    onClick={consumption.action}
+                    style={consumptionButtonStyle}>
+                    <img src={consumption.icon} style={{height: "25px", marginRight: "10px"}} />
+                    {consumption.label}
+                </bootstrap.Button>
+            </div>);
     },
     renderConsumptionButtonList: function () {
         return (
-            <bootstrap.ButtonGroup justified style={{width: "100oh - 20px"}}>
+            <bootstrap.ButtonGroup justified style={{width: "calc(100vw - 20px)", left: "14px"}}>
                 {this.getConsumptions().map(this.renderConsumptionButton)}
             </bootstrap.ButtonGroup>
         );
