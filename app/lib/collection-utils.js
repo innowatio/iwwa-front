@@ -1,5 +1,4 @@
 var Immutable = require("immutable");
-var moment    = require("moment");
 var R         = require("ramda");
 var titleCase = require("title-case");
 
