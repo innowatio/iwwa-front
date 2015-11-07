@@ -5,7 +5,6 @@ var React      = require("react");
 var IPropTypes = require("react-immutable-proptypes");
 
 var components    = require("components");
-// var formatValue   = require("./format-value");
 var measuresUtils = require("lib/collection-utils").measures;
 
 var ValoriCompare = React.createClass({
@@ -23,11 +22,18 @@ var ValoriCompare = React.createClass({
     },
     mixins: [React.addons.PureRenderMixin],
     getCoordinates: function () {
-        var self = this;
-        if (self.props.misure.size === 0) {
-            return [];
-        }
-        return measuresUtils.convertByVariables(self.props.misure.first(), [self.props.tipologia.key]);
+        var selectedPod = this.props.siti[0] ? this.props.siti[0].get("pod") : "";
+        var selectedTipologia = [this.props.tipologia.key];
+        var result = [];
+
+        this.props.misure
+            .filter(function (measure) {
+                return measure.get("podId") === selectedPod;
+            })
+            .forEach(function (measure) {
+                result = R.concat(result, measuresUtils.convertByVariables(measure, selectedTipologia));
+            });
+        return result;
     },
     getLabels: function () {
         return ["Data"].concat(
