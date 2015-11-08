@@ -93,7 +93,6 @@ exports.measures = {
                 measuresBySito.push(self.convertByVariables(values, [variable]));
             });
         });
-        console.log(measuresBySito);
         return this.mergeCoordinates(measuresBySito[0], measuresBySito[1]);
     },
     mergeCoordinates: function (coordinate1, coordinate2) {
@@ -104,9 +103,22 @@ exports.measures = {
             b = [[[date1, [n11, dev11]], [date12, [n12, dev12]], ... ]
             c = [[[date1, [n01, dev01], [n11, dev11]], [date02, [n02, dev02], [n12, dev12]], ...]
         */
+        var maxCriteria = function (a) {
+            return a.length;
+        };
+        var maxCoordinate = R.maxBy(maxCriteria, coordinate1, coordinate2);
+        var minCoordinate = maxCoordinate === coordinate1 ? coordinate2 : coordinate1;
 
-        return coordinate1.map(function (value, index) {
-            return value.concat([coordinate2[index][1]]);
+        return maxCoordinate.map(function (value, index) {
+            var toConcat = [NaN, 0];
+            if (minCoordinate.length > index) {
+                toConcat = minCoordinate[index][1];
+            }
+            if (coordinate1 === maxCoordinate) {
+                return value.concat([toConcat]);
+            } else {
+                return [value[0], toConcat].concat([value[1]]);
+            }
         });
     }
 };

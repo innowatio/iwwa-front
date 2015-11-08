@@ -192,26 +192,26 @@ describe("The `measures` method", function () {
                 [new Date(toDateTime(1)), [parseFloat(2), 0]],
                 [new Date(toDateTime(2)), [parseFloat(3), 0]],
                 [new Date(toDateTime(3)), [parseFloat(4), 0]],
-                [new Date(toDateTime(4)), [parseFloat(5), 0]],
-                [new Date(toDateTime(5)), [parseFloat(6), 0]],
-                [new Date(toDateTime(6)), [parseFloat(7.8), 0]],
-                [new Date(toDateTime(7)), [parseFloat(null), 0]]
+                [new Date(toDateTime(4)), [parseFloat(5), 0]]
             ];
             var coordinate2 = [
                 [new Date(toDateTime(0)), [parseFloat(11), 0]],
                 [new Date(toDateTime(1)), [parseFloat(22), 0]],
                 [new Date(toDateTime(2)), [parseFloat(33), 0]],
                 [new Date(toDateTime(3)), [parseFloat(44), 0]],
-                [new Date(toDateTime(4)), [parseFloat(55), 0]]
+                [new Date(toDateTime(4)), [parseFloat(55), 0]],
+                [new Date(toDateTime(5)), [parseFloat(6), 0]],
+                [new Date(toDateTime(6)), [parseFloat(7.8), 0]],
+                [new Date(toDateTime(7)), [parseFloat(null), 0]]
             ];
             var expected = [
                 [new Date(toDateTime(0)), [parseFloat(1), 0], [parseFloat(11), 0]],
                 [new Date(toDateTime(1)), [parseFloat(2), 0], [parseFloat(22), 0]],
                 [new Date(toDateTime(2)), [parseFloat(3), 0], [parseFloat(33), 0]],
                 [new Date(toDateTime(3)), [parseFloat(4), 0], [parseFloat(44), 0]],
-                [new Date(toDateTime(4)), [parseFloat(null), 0], [parseFloat(55), 0]],
-                [new Date(toDateTime(5)), [parseFloat(6), 0], [parseFloat(null), 0]],
-                [new Date(toDateTime(6)), [parseFloat(7.8), 0], [parseFloat(null), 0]],
+                [new Date(toDateTime(4)), [parseFloat(5), 0], [parseFloat(55), 0]],
+                [new Date(toDateTime(5)), [parseFloat(null), 0], [parseFloat(6), 0]],
+                [new Date(toDateTime(6)), [parseFloat(null), 0], [parseFloat(7.8), 0]],
                 [new Date(toDateTime(7)), [parseFloat(null), 0], [parseFloat(null), 0]]
             ];
 
