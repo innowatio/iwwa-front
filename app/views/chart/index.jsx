@@ -3,6 +3,7 @@ var Immutable  = require("immutable");
 var Radium     = require("radium");
 var R          = require("ramda");
 var React      = require("react");
+var moment     = require("moment");
 var bootstrap  = require("react-bootstrap");
 var IPropTypes = require("react-immutable-proptypes");
 
@@ -131,17 +132,25 @@ var Chart = React.createClass({
         var self = this;
         var sitoQuery = R.path(["location", "query", "sito"], props);
         var date;
-        // if (!R.isNil(R.path(["location", "query", "dateCompare"], props))) {
+        // else if (!R.isNil(R.path(["location", "query", "dateCompare"], props))) {
         //
         // }
         if (!R.isNil(R.path(["location", "query", "dateFilter"], props))) {
-            var dateQuery = R.path(["location", "query", "dateFilter"], props);
-            date = R.split("-", dateQuery)[0];
-            date = R.remove(7, 2, R.insert(4, "-", R.split("", date))).join("");
+            const dateQuery = R.path(["location", "query", "dateFilter"], props);
+            const dateURL = R.split("-", dateQuery)[0];
+            const dateString = R.remove(7, 2, R.insert(4, "-", R.split("", dateURL))).join("");
+            date = R.append(dateString, []);
+        } else {
+            // If no data is selected, is displayed the past month.
+            const month = moment().subtract(1, "month").month() + 1;
+            const year = moment().year();
+            date = [`${year}-${month}`];
         }
         var siti = (sitoQuery && sitoQuery.split(",")) || [];
         siti.forEach(function (sito) {
-            self.props.asteroid.subscribe("misureBySitoAndMonth", sito, date);
+            date.forEach(function (data) {
+                self.props.asteroid.subscribe("misureBySitoAndMonth", sito, data);
+            });
         });
     },
     renderExportButton: function () {

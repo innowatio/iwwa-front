@@ -1,6 +1,5 @@
 var Immutable  = require("immutable");
 var Radium     = require("radium");
-var R          = require("ramda");
 var React      = require("react");
 var IPropTypes = require("react-immutable-proptypes");
 
