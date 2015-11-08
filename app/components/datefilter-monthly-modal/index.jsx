@@ -73,15 +73,15 @@ var DatefilterMonthlyModal = React.createClass({
     closeSuccess: function () {
         this.close();
     },
-        reset: function () {
-            this.setState({
-                custom: false,
-                value: {
-                    start: this.defaultStartDate(),
-                    end: this.defaultEndDate()
-                }
-            });
-        },
+    reset: function () {
+        this.setState({
+            custom: false,
+            value: {
+                start: this.defaultStartDate(),
+                end: this.defaultEndDate()
+            }
+        });
+    },
     setDate: function (dateValue) {
         var startDate = moment(dateValue)._d;
         var endDate = moment(dateValue).endOf("month")._d;

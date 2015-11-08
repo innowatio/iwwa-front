@@ -4,6 +4,7 @@ var Radium     = require("radium");
 var R          = require("ramda");
 var React      = require("react");
 var bootstrap  = require("react-bootstrap");
+var moment     = require("moment");
 var IPropTypes = require("react-immutable-proptypes");
 
 var CollectionUtils  = require("lib/collection-utils");
@@ -130,9 +131,17 @@ var Chart = React.createClass({
     subscribeToMisure: function (props) {
         var self = this;
         var sitoQuery = R.path(["location", "query", "sito"], props);
+        // if (!R.isNil(R.path(["location", "query", "dateCompare"], props))) {
+        //     console.log("");
+        // }
+        if (!R.isNil(R.path(["location", "query", "dateFilter"], props))) {
+            var dateQuery = R.path(["location", "query", "dateFilter"], props);
+            var date = R.split("-", dateQuery)[0];
+            date = R.remove(7, 2, R.insert(4, "-", R.split("", date))).join("");
+        }
         var siti = (sitoQuery && sitoQuery.split(",")) || [];
         siti.forEach(function (sito) {
-            self.props.asteroid.subscribe("misureBySito2", sito);
+            self.props.asteroid.subscribe("misureBySitoAndMonth", sito, date);
         });
     },
     renderExportButton: function () {
