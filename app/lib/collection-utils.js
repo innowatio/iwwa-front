@@ -81,5 +81,32 @@ exports.measures = {
             });
             return arrayResult;
         });
-    })
+    }),
+    convertBySitesAndVariable: function (measures, pods, variable) {
+        var self = this;
+        var measuresBySito = [];
+        pods.forEach(pod => {
+            measures.filter(function (misura) {
+                return misura.get("podId") === pod;
+            })
+            .forEach(function (values) {
+                measuresBySito.push(self.convertByVariables(values, [variable]));
+            });
+        });
+        console.log(measuresBySito);
+        return this.mergeCoordinates(measuresBySito[0], measuresBySito[1]);
+    },
+    mergeCoordinates: function (coordinate1, coordinate2) {
+        /*
+            f(a,b) => c
+
+            a = [[[date1, [n01, dev01]], [date02, [n02, dev02]], ... ]
+            b = [[[date1, [n11, dev11]], [date12, [n12, dev12]], ... ]
+            c = [[[date1, [n01, dev01], [n11, dev11]], [date02, [n02, dev02], [n12, dev12]], ...]
+        */
+
+        return coordinate1.map(function (value, index) {
+            return value.concat([coordinate2[index][1]]);
+        });
+    }
 };
