@@ -34,7 +34,13 @@ module.exports = R.merge(Router.Navigation, {
                 *   react-router's Navigation mixin
                 */
                 var newqueryState;
-                if (paramName === "sito" && !R.isNil(self.props.location.query) && R.has(paramName, self.props.location.query)) {
+                // Use "deleteValue" as newValue for delete a value from URL
+                if (newValue === "deleteValueFromURL") {
+                    self.replaceWith(
+                        self.props.location.pathname,
+                        R.dissoc(paramName, self.props.location.query)
+                    );
+                } else if (paramName === "sito" && !R.isNil(self.props.location.query) && R.has(paramName, self.props.location.query)) {
                     var querySito = self.props.location.query.sito.split(",")[0];
                     newqueryState = R.assoc(name, newQueryValue, R.assoc(paramName, querySito, self.props.location.query));
                     self.replaceWith(

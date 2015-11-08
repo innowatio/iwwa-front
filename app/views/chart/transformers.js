@@ -14,7 +14,7 @@ exports.dateCompare = function (periods) {
             };
         },
         stringify: function (value) {
-            if (!value) {
+            if (!value || value === "deleteValueFromURL") {
                 return "";
             }
             return [
