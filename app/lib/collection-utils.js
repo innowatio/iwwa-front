@@ -104,12 +104,12 @@ exports.measures = {
             c = [[[date1, [n01, dev01], [n11, dev11]], [date02, [n02, dev02], [n12, dev12]], ...]
         */
         var maxCriteria = function (a) {
-            return a.length;
+            return !R.isNil(a) ? a.length : null;
         };
         var maxCoordinate = R.maxBy(maxCriteria, coordinate1, coordinate2);
         var minCoordinate = maxCoordinate === coordinate1 ? coordinate2 : coordinate1;
 
-        return maxCoordinate.map(function (value, index) {
+        return R.isNil(maxCoordinate) || R.isNil(minCoordinate) ? [] : maxCoordinate.map(function (value, index) {
             var toConcat = [NaN, 0];
             if (minCoordinate.length > index) {
                 toConcat = minCoordinate[index][1];

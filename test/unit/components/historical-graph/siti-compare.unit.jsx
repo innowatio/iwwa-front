@@ -87,49 +87,6 @@ describe("The `getCoordinates` method of the SitiCompare component", function ()
         });
     });
 
-    it("should filter misure by tipologia", function () {
-        var getMisuraWithTipologia = function (day, month, pod, tipologia) {
-            return {
-                data: "2015-" + month + "-" + day,
-                pod: pod,
-                prop1: pod,
-                prop2: tipologia,
-                tipologia: tipologia
-            };
-        };
-        var getMisureWithTipologia = function (pod, tipologia) {
-            // index must not be between 1 and 31, because this is the number of day
-            return R.range(1, 31).reduce(function (misure, index) {
-                var month = "04";
-                var day = index;
-                return R.assoc(
-                    "m" + index,
-                    getMisuraWithTipologia(day, month, pod, tipologia),
-                    misure
-                );
-            }, {});
-        };
-        var getInstanceWithTipologia = function (pod, tipologia) {
-            return {
-                props: {
-                    misure: Immutable.fromJS(getMisureWithTipologia(pod, tipologia)),
-                    siti: [Immutable.Map({
-                        pod: pod
-                    })],
-                    tipologia: {
-                        key: tipologia
-                    },
-                    valori: [
-                        {key: "prop1"}
-                    ]
-                }
-            };
-        };
-        var peaceInstance = getInstanceWithTipologia(1, 2);
-        var peaceCoordinates = getCoordinates.call(peaceInstance);
-        expect(peaceCoordinates.length).to.be.equal(30);
-    });
-
     it("should format misure to match the DygraphCoordinate prop type", function () {
         var instance = getInstance([1, 3], 3);
         getCoordinates.call(instance)
@@ -139,16 +96,6 @@ describe("The `getCoordinates` method of the SitiCompare component", function ()
                 }, "prop");
                 expect(ret).not.to.be.an.instanceOf(Error);
                 expect(ret).to.equal(null);
-            });
-    });
-
-    it("should sort misure by data", function () {
-        var instance = getInstance(3, 3);
-        getCoordinates.call(instance)
-            .map(R.prop("0"))
-            .reduce(function (pre, cur) {
-                expect(pre <= cur).to.equal(true);
-                return cur;
             });
     });
 
