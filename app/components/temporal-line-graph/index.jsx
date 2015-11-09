@@ -303,7 +303,6 @@ var TemporalLineGraph = React.createClass({
         }
     },
     render: function () {
-        console.log(this.graph);
         return (
             <span>
                 {this.renderSpinner()}
@@ -312,6 +311,10 @@ var TemporalLineGraph = React.createClass({
                     ".alarmPoint": {
                         border: `4px solid ${colors.red} !important`,
                         borderRadius: "50%"
+                    },
+                    ".dygraph-y2label": {
+                        backgroundColor: colors.white,
+                        height: "56px"
                     }
                 }} />
                 <div ref="graphContainer" style={styles.graphContainer}/>
