@@ -38,6 +38,7 @@ var consumptionButtonStyle = {
 
 var dateCompareProps;
 var sitoInputProps;
+var consumptionProps;
 
 var Chart = React.createClass({
     propTypes: {
@@ -95,15 +96,17 @@ var Chart = React.createClass({
     },
     getConsumptions: function () {
         return [
-            {label: "Temperatura", color: colors.consumption, key: "temperature", icon: icons.iconAlarm, action: R.partial(this.consumptionFunction, "temperature")},
-            {label: "Umidità", color: colors.consumption, key: "umidity", icon: icons.iconAlarm, action: R.partial(this.consumptionFunction, "umidity")},
-            {label: "Lux", color: colors.consumption, key: "illuminance", icon: icons.iconAlarm, action: R.partial(this.consumptionFunction, "lux")},
-            {label: "CO2", color: colors.consumption, key: "co2", icon: icons.iconAlarm, action: R.partial(this.consumptionFunction, "co2")}
-            // {label: "Allarmi", key: "allarms", icon: icons.iconAlarm, action: R.partial(this.consumptionFunction, "alarms")}
+            {label: "Temperatura", color: colors.consumption, key: "temperature", icon: icons.iconAlarm},
+            {label: "Umidità", color: colors.consumption, key: "humidity", icon: icons.iconAlarm},
+            {label: "Lux", color: colors.consumption, key: "illuminance", icon: icons.iconAlarm},
+            {label: "CO2", color: colors.consumption, key: "co2", icon: icons.iconAlarm}
+            // {label: "Allarmi", key: "allarms", icon: icons.iconAlarm}
         ];
     },
     consumptionFunction: function (consumptionObject) {
-        console.log(consumptionObject);
+        if (!R.isNil(consumptionProps)) {
+            consumptionProps.onChange(consumptionObject, "consumption");
+        }
     },
     getExportType: function () {
         return [
@@ -175,7 +178,7 @@ var Chart = React.createClass({
         return (
             <bootstrap.Button
                 key={consumption.key}
-                onClick={consumption.action}
+                onClick={R.partial(this.consumptionFunction, consumption)}
                 style={consumptionButtonStyle}>
                 <img src={consumption.icon} style={{height: "25px", marginRight: "10px"}} />
                 {consumption.label}
@@ -232,7 +235,7 @@ var Chart = React.createClass({
         );
         // Consumption
         var consumptions = this.getConsumptions();
-        var consumptionProps = this.bindToQueryParameter(
+        consumptionProps = this.bindToQueryParameter(
             "consumption",
             transformers.consumption(consumptions)
         );
