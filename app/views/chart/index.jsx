@@ -96,10 +96,10 @@ var Chart = React.createClass({
     },
     getConsumptions: function () {
         return [
-            {label: "Temperatura", color: colors.consumption, key: "temperature", icon: icons.iconAlarm},
-            {label: "Umidità", color: colors.consumption, key: "humidity", icon: icons.iconAlarm},
-            {label: "Lux", color: colors.consumption, key: "illuminance", icon: icons.iconAlarm},
-            {label: "CO2", color: colors.consumption, key: "co2", icon: icons.iconAlarm}
+            {label: "Temperatura", color: colors.consumption, key: "temperature", icon: icons.iconTemperature},
+            {label: "Umidità", color: colors.consumption, key: "humidity", icon: icons.iconHumidity},
+            {label: "Lux", color: colors.consumption, key: "illuminance", icon: icons.iconIdea},
+            {label: "CO2", color: colors.consumption, key: "co2", icon: icons.iconCO2}
             // {label: "Allarmi", key: "allarms", icon: icons.iconAlarm}
         ];
     },
