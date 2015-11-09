@@ -148,6 +148,50 @@ describe("The `measures` method", function () {
         });
     });
 
+    describe("the `convertByDatesAndVariable` function", function () {
+
+        it("should return the correct array filter by variable", function () {
+            var month1 = "2015-10";
+            var month2 = "2015-11";
+            var measures = Immutable.Map({
+                id1: Immutable.Map({
+                    month: month1,
+                    podId: "pod1",
+                    readings: Immutable.Map({
+                        lux: "1,2,3,4,,6,7.8,",
+                        potenza: "11,22,33,44,55,,,8.9"
+                    })
+                }),
+                id2: Immutable.Map({
+                    month: month2,
+                    podId: "pod1",
+                    readings: Immutable.Map({
+                        lux: "11,22,33,44,55,,,8.9",
+                        co2: "1,2,3,4,,6,7.8"
+                    })
+                })
+            });
+
+            var dateMonthTime = function (pos) {
+                return new Date(0).getTime() + (pos * fiveMinutesInMS);
+            };
+
+            var expected = [
+                [new Date(dateMonthTime(0)), [parseFloat(11), 0], [parseFloat(1), 0]],
+                [new Date(dateMonthTime(1)), [parseFloat(22), 0], [parseFloat(2), 0]],
+                [new Date(dateMonthTime(2)), [parseFloat(33), 0], [parseFloat(3), 0]],
+                [new Date(dateMonthTime(3)), [parseFloat(44), 0], [parseFloat(4), 0]],
+                [new Date(dateMonthTime(4)), [parseFloat(55), 0], [parseFloat(null), 0]],
+                [new Date(dateMonthTime(5)), [parseFloat(null), 0], [parseFloat(6), 0]],
+                [new Date(dateMonthTime(6)), [parseFloat(null), 0], [parseFloat(7.8), 0]],
+                [new Date(dateMonthTime(7)), [parseFloat(8.9), 0], [parseFloat(null), 0]]
+            ];
+            var result = CollectionUtils.measures.convertByDatesAndVariable(measures, "pod1", "lux", [month2, month1]);
+            expect(expected).to.deep.equal(result);
+        });
+
+    });
+
     describe("the `mergeCoordinates` function", function () {
 
         it("should return the correct array if 2 arrays are given", function () {

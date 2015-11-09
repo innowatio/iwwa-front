@@ -52,9 +52,9 @@ exports.labelGraph = {
     }
 */
 exports.measures = {
-    convertByVariables: R.memoize(function (measures, variables) {
+    convertByVariables: R.memoize(function (measures, variables, startOfTime) {
         const fiveMinutesInMS = 5 * 60 * 1000;
-        const startOfMonthInMS = new Date(measures.get("month")).getTime();
+        const startOfMonthInMS = !R.isNil(startOfTime) ? startOfTime.getTime() : new Date(measures.get("month")).getTime();
         const measuresFirstVariable = measures.get("readings").get(variables[0]);
 
         var splittedMeasures = R.map(function (value) {
@@ -93,7 +93,23 @@ exports.measures = {
                 measuresBySito.push(self.convertByVariables(values, [variable]));
             });
         });
-        return this.mergeCoordinates(measuresBySito[0], measuresBySito[1]);
+        return this.mergeCoordinates(measuresBySito[0] || [], measuresBySito[1] || []);
+    },
+    convertByDatesAndVariable: function (measures, pod, variable, dates) {
+        var self = this;
+        var measuresByDates = [];
+        dates.forEach(date => {
+            measures.filter(function (misura) {
+                return misura.get("podId") === pod;
+            })
+            .filter(function (misura) {
+                return misura.get("month") === date;
+            })
+            .forEach(function (values) {
+                measuresByDates.push(self.convertByVariables(values, [variable], new Date(0)));
+            });
+        });
+        return this.mergeCoordinates(measuresByDates[0] || [], measuresByDates[1] || []);
     },
     mergeCoordinates: function (coordinate1, coordinate2) {
         /*
@@ -109,7 +125,7 @@ exports.measures = {
         var maxCoordinate = R.maxBy(maxCriteria, coordinate1, coordinate2);
         var minCoordinate = maxCoordinate === coordinate1 ? coordinate2 : coordinate1;
 
-        return R.isNil(maxCoordinate) || R.isNil(minCoordinate) ? [] : maxCoordinate.map(function (value, index) {
+        return maxCoordinate.map(function (value, index) {
             var toConcat = [NaN, 0];
             if (minCoordinate.length > index) {
                 toConcat = minCoordinate[index][1];
