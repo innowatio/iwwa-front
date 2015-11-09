@@ -1,4 +1,3 @@
-var R          = require("ramda");
 var Radium     = require("radium");
 var React      = require("react");
 var IPropTypes = require("react-immutable-proptypes");
@@ -22,7 +21,6 @@ var HistoricalGraph = React.createClass({
         misure: IPropTypes.map,
         resetCompare: React.PropTypes.func,
         siti: React.PropTypes.arrayOf(IPropTypes.map),
-        style: React.PropTypes.object,
         tipologia: React.PropTypes.object,
         valori: React.PropTypes.arrayOf(React.PropTypes.object)
     },
@@ -77,18 +75,7 @@ var HistoricalGraph = React.createClass({
     },
     render: function () {
         return (
-                <div style={R.merge({width: "100%", height: "100%"}, this.props.style)}>
-                    <Radium.Style
-                        rules={{
-                            ".dygraph-legend": {
-                                top: "-60px !important",
-                                boxShadow: "2px 2px 5px " + colors.greySubTitle,
-                                left: "85% !important",
-                                width: "186px !important"
-                            }
-                        }}
-                        scopeSelector=".col-sm-12"
-                    />
+                <div style={{width: "100%", height: "100%"}}>
                     {this.renderTitle()}
                     <div
                         onClick={this.props.resetCompare}

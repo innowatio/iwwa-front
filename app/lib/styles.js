@@ -18,7 +18,9 @@ exports.buttonSelectValore = {
 
 exports.colVerticalPadding = {
     paddingTop: "10px",
-    paddingBottom: "15px"
+    paddingBottom: "15px",
+    paddingLeft: "0px",
+    paddingRight: "0px"
 };
 
 exports.flexBase = {

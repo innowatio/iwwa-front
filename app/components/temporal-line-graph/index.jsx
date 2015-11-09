@@ -13,7 +13,7 @@ var colors           = require("lib/colors");
 var styles = {
     graphContainer: {
         width: ENVIRONMENT === "cordova" ? "calc(100vw - 100px)" : "calc(100vw - 130px)",
-        height: "calc(100vh - 350px)",
+        height: "calc(100vh - 400px)",
         margin: "20px 20px 30px 20px"
     }
 };
