@@ -10,6 +10,7 @@ var measuresUtils = require("lib/collection-utils").measures;
 var ValoriCompare = React.createClass({
     propTypes: {
         alarms: React.PropTypes.arrayOf(React.PropTypes.number),
+        consumption: React.PropTypes.object,
         dateFilter: React.PropTypes.oneOfType([
             React.PropTypes.object,
             React.PropTypes.string
@@ -24,6 +25,9 @@ var ValoriCompare = React.createClass({
     getCoordinates: function () {
         var selectedPod = this.props.siti[0] ? this.props.siti[0].get("pod") : "";
         var selectedTipologia = [this.props.tipologia.key];
+        if (this.props.consumption.key) {
+            selectedTipologia = selectedTipologia.concat(this.props.consumption.key);
+        }
         var result = [];
 
         this.props.misure
@@ -36,15 +40,26 @@ var ValoriCompare = React.createClass({
         return result;
     },
     getLabels: function () {
-        return ["Data"].concat(
+        var label = ["Data"].concat(
             R.map(R.prop("label"), this.props.valori)
         );
+        if (R.prop(("label"), this.props.consumption)) {
+            label = label.concat(R.prop(("label"), this.props.consumption));
+        }
+        return label;
+    },
+    getColors: function () {
+        var colors = this.props.valori.map(R.prop("color"));
+        if (R.prop(("color"), this.props.consumption)) {
+            colors = colors.concat(R.prop(("color"), this.props.consumption));
+        }
+        return colors;
     },
     render: function () {
         return (
             <components.TemporalLineGraph
                 alarms={this.props.alarms}
-                colors={this.props.valori.map(R.prop("color"))}
+                colors={this.getColors()}
                 coordinates={this.getCoordinates()}
                 dateFilter={this.props.dateFilter}
                 labels={this.getLabels()}

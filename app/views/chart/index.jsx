@@ -94,14 +94,13 @@ var Chart = React.createClass({
         ];
     },
     getConsumptions: function () {
-        var values = [
-            {label: "Temperatura", key: "temperature", icon: icons.iconAlarm, action: R.partial(this.consumptionFunction, "temperature")},
-            {label: "Umidità", key: "umidity", icon: icons.iconAlarm, action: R.partial(this.consumptionFunction, "umidity")},
-            {label: "Lux", key: "lux", icon: icons.iconAlarm, action: R.partial(this.consumptionFunction, "lux")},
-            {label: "CO2", key: "co2", icon: icons.iconAlarm, action: R.partial(this.consumptionFunction, "co2")},
-            {label: "Allarmi", key: "allarms", icon: icons.iconAlarm, action: R.partial(this.consumptionFunction, "alarms")}
+        return [
+            {label: "Temperatura", color: colors.consumption, key: "temperature", icon: icons.iconAlarm, action: R.partial(this.consumptionFunction, "temperature")},
+            {label: "Umidità", color: colors.consumption, key: "umidity", icon: icons.iconAlarm, action: R.partial(this.consumptionFunction, "umidity")},
+            {label: "Lux", color: colors.consumption, key: "illuminance", icon: icons.iconAlarm, action: R.partial(this.consumptionFunction, "lux")},
+            {label: "CO2", color: colors.consumption, key: "co2", icon: icons.iconAlarm, action: R.partial(this.consumptionFunction, "co2")}
+            // {label: "Allarmi", key: "allarms", icon: icons.iconAlarm, action: R.partial(this.consumptionFunction, "alarms")}
         ];
-        return values;
     },
     consumptionFunction: function (consumptionObject) {
         console.log(consumptionObject);
@@ -175,6 +174,7 @@ var Chart = React.createClass({
     renderConsumptionButton: function (consumption) {
         return (
             <bootstrap.Button
+                key={consumption.key}
                 onClick={consumption.action}
                 style={consumptionButtonStyle}>
                 <img src={consumption.icon} style={{height: "25px", marginRight: "10px"}} />
@@ -229,6 +229,12 @@ var Chart = React.createClass({
         var tipologiaInputProps = this.bindToQueryParameter(
             "tipologia",
             transformers.tipologia(tipologie)
+        );
+        // Consumption
+        var consumptions = this.getConsumptions();
+        var consumptionProps = this.bindToQueryParameter(
+            "consumption",
+            transformers.consumption(consumptions)
         );
         // Valore
         var valori = this.getValori();
@@ -390,6 +396,7 @@ var Chart = React.createClass({
                     >
                         <components.HistoricalGraph
                             alarms={alarms.value}
+                            consumption={consumptionProps.value}
                             dateCompare={dateCompareProps.value}
                             dateFilter={dateFilterProps.value}
                             getYLabel={CollectionUtils.labelGraph.getYLabel}

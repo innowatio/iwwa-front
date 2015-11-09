@@ -84,6 +84,18 @@ exports.tipologia = function (tipologie) {
     };
 };
 
+exports.consumption = function (consumptions) {
+    return {
+        parse: function (query) {
+            return (
+                R.find(R.propEq("key", query), consumptions) ||
+                {}
+            );
+        },
+        stringify: R.prop("key")
+    };
+};
+
 exports.valore = function (valori) {
     return {
         parse: function (query) {
