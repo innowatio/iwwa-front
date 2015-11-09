@@ -109,9 +109,8 @@ var Chart = React.createClass({
         ];
     },
     consumptionFunction: function (consumptionObject) {
-        if (!R.isNil(consumptionProps)) {
-            consumptionProps.onChange(consumptionObject, "consumption");
-        }
+        var newValue = R.equals(consumptionObject, consumptionProps.value) ? "deleteValueFromURL" : consumptionObject;
+        consumptionProps.onChange(newValue, "consumption");
     },
     getExportType: function () {
         return [
@@ -412,7 +411,7 @@ var Chart = React.createClass({
                                 dateFilter={dateFilterProps.value}
                                 getY2Label={CollectionUtils.labelGraph.getY2Label}
                                 getYLabel={CollectionUtils.labelGraph.getYLabel}
-                                misure={this.props.collections.get("month_readings") || Immutable.Map()}
+                                misure={this.props.collections.get("site-month-readings-aggregates") || Immutable.Map()}
                                 ref="historicalGraph"
                                 resetCompare={this.resetCompare}
                                 siti={sitoInputProps.value}
