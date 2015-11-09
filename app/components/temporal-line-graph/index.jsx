@@ -68,13 +68,19 @@ var TemporalLineGraph = React.createClass({
             legend: "always",
             sigma: 2,
             strokeWidth: 1.5,
-            xlabel: props.xLabel,
+            xlabel: props.xLabel || "Data",
             ylabel: props.yLabel,
+            y2label: props.y2label || "Temperatura",
             axes: {
                 x: {},
                 y: {}
             }
         };
+        if (props.series) {
+            var labels = this.getLabelsFromProps(props);
+            var externalLabel = labels[2];
+            options.series[externalLabel] = {axis: "y2"};
+        }
         if (props.coordinates.length !== 0) {
             var lastDate;
             options.underlayCallback = function (canvas, area, g) {
