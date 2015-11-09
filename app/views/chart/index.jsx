@@ -109,9 +109,8 @@ var Chart = React.createClass({
         ];
     },
     consumptionFunction: function (consumptionObject) {
-        if (!R.isNil(consumptionProps)) {
-            consumptionProps.onChange(consumptionObject, "consumption");
-        }
+        var newValue = R.equals(consumptionObject, consumptionProps.value) ? "deleteValueFromURL" : consumptionObject;
+        consumptionProps.onChange(newValue, "consumption");
     },
     getExportType: function () {
         return [
