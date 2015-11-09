@@ -96,6 +96,10 @@ exports.measures = {
         return this.mergeCoordinates(measuresBySito[0] || [], measuresBySito[1] || []);
     },
     convertByDatesAndVariable: function (measures, pod, variable, dates) {
+        // console.log(measures);
+        // console.log(pod);
+        // console.log(variable);
+        // console.log(dates);
         var self = this;
         var measuresByDates = [];
         dates.forEach(date => {

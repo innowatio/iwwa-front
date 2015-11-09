@@ -116,9 +116,9 @@ var Chart = React.createClass({
     },
     getDateCompare: function () {
         return [
-            {label: "IERI", key: "days"},
-            {label: "7 GG FA", key: "7 days before"},
-            {label: "SETTIMANA SCORSA", key: "weeks"},
+            // {label: "IERI", key: "days"},
+            // {label: "7 GG FA", key: "7 days before"},
+            // {label: "SETTIMANA SCORSA", key: "weeks"},
             {label: "MESE SCORSO", key: "months"},
             {label: "12 MESI FA", key: "years"}
         ];
@@ -153,14 +153,16 @@ var Chart = React.createClass({
         var self = this;
         var sitoQuery = R.path(["location", "query", "sito"], props);
         var date;
-        // else if (!R.isNil(R.path(["location", "query", "dateCompare"], props))) {
-        //
-        // }
-        if (!R.isNil(R.path(["location", "query", "dateFilter"], props))) {
+        if (!R.isNil(R.path(["location", "query", "dateCompare"], props))) {
+            const dateQuery = R.path(["location", "query", "dateCompare"], props);
+            const dateArray = R.split("-", dateQuery);
+            const dateString1 = moment(dateArray[1], "YYYYMMDD").subtract(1, dateArray[0]).format("YYYY-MM");
+            const dateString2 = moment(dateArray[1], "YYYYMMDD").format("YYYY-MM");
+            date = [dateString1, dateString2];
+        } else if (!R.isNil(R.path(["location", "query", "dateFilter"], props))) {
             const dateQuery = R.path(["location", "query", "dateFilter"], props);
-            const dateURL = R.split("-", dateQuery)[0];
-            const dateString = R.remove(7, 2, R.insert(4, "-", R.split("", dateURL))).join("");
-            date = R.append(dateString, []);
+            const dateString = moment(dateQuery, "YYYYMMDD").format("YYYY-MM");
+            date = [dateString];
         } else {
             // If no data is selected, is displayed the past month.
             const month = moment().subtract(1, "month").month() + 1;

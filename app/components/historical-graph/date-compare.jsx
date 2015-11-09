@@ -5,9 +5,9 @@ var R          = require("ramda");
 var React      = require("react");
 var IPropTypes = require("react-immutable-proptypes");
 
-var colors      = require("lib/colors");
-var components  = require("components");
-var formatValue = require("./format-value.js");
+var colors          = require("lib/colors");
+var components      = require("components");
+var measuresUtils = require("lib/collection-utils").measures;
 
 var DateCompare = React.createClass({
     propTypes: {
@@ -71,48 +71,17 @@ var DateCompare = React.createClass({
             }
         };
     },
+    getDateFormatter: function () {
+        var date = this.props.dateCompare;
+        var date1 = moment(date.dateOne).format("YYYY-MM");
+        var date2 = moment(date.dateOne).subtract(1, date.periods).format("YYYY-MM");
+        return [date1, date2];
+    },
     getCoordinates: function () {
         var self = this;
         var sito = self.props.siti[0] || Immutable.Map();
         var pod = sito.get("pod");
-        var ranges = self.getDateRanges();
-        var valore = self.props.valori[0];
-        return self.props.misure
-            .filter(function (misura) {
-                return misura.get("pod") === pod;
-            })
-            .filter(function (misura) {
-                return misura.get("tipologia") === self.props.tipologia.key;
-            })
-            .reduce(function (acc, misura) {
-                var date = moment(misura.get("data")).valueOf();
-                if (
-                    moment(date).isBetween(ranges.rangeOne.start, ranges.rangeOne.end)
-                ) {
-                    acc = acc.withMutations(function (map) {
-                        var position = date - ranges.rangeOne.start;
-                        var value = map.get(position) || [position, null, null];
-                        value[1] = formatValue(misura.get(valore.key));
-                        map.set(position, value);
-                    });
-                }
-                if (
-                    moment(date).isBetween(ranges.rangeTwo.start, ranges.rangeTwo.end)
-                ) {
-                    acc = acc.withMutations(function (map) {
-                        var position = date - ranges.rangeTwo.start;
-                        var value = map.get(position) || [position, null, null];
-                        value[2] = formatValue(misura.get(valore.key));
-                        map.set(position, value);
-                    });
-                }
-                return acc;
-            }, Immutable.Map())
-            .toList()
-            .sort(function (m1, m2) {
-                return (m1[0] < m2[0] ? -1 : 1);
-            })
-            .toArray();
+        return measuresUtils.convertByDatesAndVariable(self.props.misure, pod, self.props.tipologia.key, self.getDateFormatter());
     },
     getLabels: function () {
         if (this.props.dateCompare.period.key === "7 days before") {
