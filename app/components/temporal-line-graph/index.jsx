@@ -12,9 +12,9 @@ var colors           = require("lib/colors");
 
 var styles = {
     graphContainer: {
-        width: ENVIRONMENT === "cordova" ? "calc(100vw - 100px)" : "calc(100vw - 130px)",
+        width: ENVIRONMENT === "cordova" ? "calc(100vw - 100px)" : "calc(100vw - 115px)",
         height: "calc(100vh - 400px)",
-        margin: "20px 20px 30px 20px"
+        margin: "20px 20px 30px 0px"
     }
 };
 
@@ -60,6 +60,7 @@ var TemporalLineGraph = React.createClass({
     },
     getOptionsFromProps: function (props) {
         var options = {
+            series: {},
             drawPoints: true,
             errorBars: true,
             hideOverlayOnMouseOut: false,
@@ -68,13 +69,20 @@ var TemporalLineGraph = React.createClass({
             legend: "always",
             sigma: 2,
             strokeWidth: 1.5,
-            xlabel: props.xLabel,
+            xlabel: props.xLabel || "Data",
             ylabel: props.yLabel,
+            y2label: !R.isNil(props.y2label) ? props.y2label : "",
             axes: {
                 x: {},
-                y: {}
+                y: {},
+                y2: {}
             }
         };
+        if (!R.isEmpty(props.coordinates)) {
+            var labels = this.getLabelsFromProps(props);
+            var externalLabel = labels[2];
+            options.series[externalLabel] = {axis: "y2"};
+        }
         if (props.coordinates.length !== 0) {
             var lastDate;
             options.underlayCallback = function (canvas, area, g) {
@@ -303,6 +311,10 @@ var TemporalLineGraph = React.createClass({
                     ".alarmPoint": {
                         border: `4px solid ${colors.red} !important`,
                         borderRadius: "50%"
+                    },
+                    ".dygraph-y2label": {
+                        backgroundColor: colors.white,
+                        height: "56px"
                     }
                 }} />
                 <div ref="graphContainer" style={styles.graphContainer}/>

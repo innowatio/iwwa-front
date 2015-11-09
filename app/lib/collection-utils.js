@@ -26,12 +26,25 @@ exports.siti = {
 
 exports.labelGraph = {
     getYLabel: function (tipologia) {
-        if (tipologia.key === 1) {
+        if (tipologia.key === "energia attiva") {
             return "kWh";
-        } else if (tipologia.key === 2) {
+        } else if (tipologia.key === "potenza totale") {
             return "kW";
-        } else if (tipologia.key === 3) {
+        } else if (tipologia.key === "energia reattiva") {
             return "kVARh";
+        } else {
+            return "";
+        }
+    },
+    getY2Label: function (consumption) {
+        if (consumption.key === "temperature") {
+            return "°C";
+        } else if (consumption.key === "humidity") {
+            return "%";
+        } else if (consumption.key === "illuminance") {
+            return "Lux";
+        } else if (consumption.key === "co2") {
+            return "ppm";
         } else {
             return "";
         }
