@@ -41,6 +41,11 @@ var consumptionButtonStyle = {
     borderRadius: "0px"
 };
 
+var consumptionButtonSelectedStyle = {
+    color: colors.white,
+    backgroundColor: colors.consumption
+};
+
 var dateCompareProps;
 var sitoInputProps;
 var consumptionProps;
@@ -181,11 +186,12 @@ var Chart = React.createClass({
         });
     },
     renderConsumptionButton: function (consumption) {
+        var isSelected = R.equals(consumption, consumptionProps.value);
         return (
             <bootstrap.Button
                 key={consumption.key}
                 onClick={R.partial(this.consumptionFunction, consumption)}
-                style={consumptionButtonStyle}>
+                style={R.merge(consumptionButtonStyle, isSelected ? consumptionButtonSelectedStyle : {})}>
                 <img src={consumption.icon} style={{height: "25px", marginRight: "10px", borderRadius: "0px"}} />
                 {consumption.label}
             </bootstrap.Button>);
