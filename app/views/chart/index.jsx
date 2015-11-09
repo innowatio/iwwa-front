@@ -29,8 +29,8 @@ var div = {
     marginTop: "6px !important",
     boxShadow: "2px 2px 5px " + colors.greySubTitle,
     marginLeft: "5px !important",
-    width: "calc(100vw - 65px) !important",
-    height: "calc(100vh - 132px) !important"
+    width: "calc(100vw - 65px)",
+    height: "calc(100vh - 132px)"
 };
 
 var consumptionButtonStyle = {
@@ -410,6 +410,7 @@ var Chart = React.createClass({
                                 consumption={consumptionProps.value}
                                 dateCompare={dateCompareProps.value}
                                 dateFilter={dateFilterProps.value}
+                                getY2Label={CollectionUtils.labelGraph.getY2Label}
                                 getYLabel={CollectionUtils.labelGraph.getYLabel}
                                 misure={this.props.collections.get("month_readings") || Immutable.Map()}
                                 ref="historicalGraph"

@@ -15,6 +15,7 @@ var ValoriCompare = React.createClass({
             React.PropTypes.object,
             React.PropTypes.string
         ]),
+        getY2Label: React.PropTypes.func,
         getYLabel: React.PropTypes.func,
         misure: IPropTypes.map,
         siti: React.PropTypes.arrayOf(IPropTypes.map),
@@ -67,6 +68,7 @@ var ValoriCompare = React.createClass({
                 showRangeSelector={true}
                 sito={this.props.siti[0] || Immutable.Map()}
                 xLabel=""
+                y2label={this.props.getY2Label(this.props.consumption)}
                 yLabel={this.props.getYLabel(this.props.tipologia)}
             />
         );
