@@ -29,7 +29,7 @@ var div = {
     marginTop: "6px !important",
     boxShadow: "2px 2px 5px " + colors.greySubTitle,
     marginLeft: "5px !important",
-    width: "calc(100vw - 65px)",
+    width: ENVIRONMENT === "cordova" ? "calc(100vw - 15px)" : "calc(100vw - 65px)",
     height: "calc(100vh - 132px)"
 };
 
