@@ -5,6 +5,7 @@ exports.Button                  = require("./button/");
 exports.ButtonGroupSelect       = require("./button-group-select/");
 exports.CollectionElementsTable = require("./collection-elements-table/");
 exports.Compare                 = require("./compare-modal/");
+exports.ConsumptionButtons      = require("./consumption-buttons/");
 exports.DataCompare             = require("./data-compare/");
 exports.DatefilterModal         = require("./datefilter-modal/");
 exports.DatefilterMonthlyModal  = require("./datefilter-monthly-modal/");
