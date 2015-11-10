@@ -60,20 +60,21 @@ var TemporalLineGraph = React.createClass({
     },
     getOptionsFromProps: function (props) {
         var options = {
+            axes: {
+                x: {},
+                y: {}
+            },
             drawPoints: true,
             errorBars: true,
             hideOverlayOnMouseOut: false,
+            includeZero: true,
             labels: this.getLabelsFromProps(props),
             labelsSeparateLines: true,
             legend: "always",
             sigma: 2,
             strokeWidth: 1.5,
             xlabel: props.xLabel,
-            ylabel: props.yLabel,
-            axes: {
-                x: {},
-                y: {}
-            }
+            ylabel: props.yLabel
         };
         if (props.coordinates.length !== 0) {
             var lastDate;
