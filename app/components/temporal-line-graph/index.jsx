@@ -261,6 +261,7 @@ var TemporalLineGraph = React.createClass({
                         container={this}
                         enforceFocus={false}
                         onHide={R.identity()}
+                        show={true}
                         style={{zIndex: 1000}}
                     >
                         <Radium.Style
@@ -306,7 +307,7 @@ var TemporalLineGraph = React.createClass({
     },
     render: function () {
         return (
-            <span>
+            <div>
                 {this.renderSpinner()}
                 <Radium.Style
                     rules={{
@@ -324,7 +325,7 @@ var TemporalLineGraph = React.createClass({
                     }
                 }} />
                 <div ref="graphContainer" style={styles.graphContainer}/>
-            </span>
+            </div>
         );
     }
 });
