@@ -49,7 +49,6 @@ var DropdownSelect = React.createClass({
                     borderTopRightRadius: (index === 0 ? "4px" : undefined),
                     borderBottom: (index === 2 ? "0px" : undefined),
                     fontSize: "12px",
-                    width: "90px",
                     textAlign: "center"
                 }}
             >
