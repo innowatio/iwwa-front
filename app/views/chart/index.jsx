@@ -94,7 +94,7 @@ var Chart = React.createClass({
     getTipologie: function () {
         return [
             {label: "Attiva", key: "energia attiva"},
-            {label: "Potenza", key: "potenza totale"},
+            {label: "Potenza", key: "potenza massima"},
             {label: "Reattiva", key: "energia reattiva"}
         ];
     },

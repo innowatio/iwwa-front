@@ -62,7 +62,7 @@ var TemporalLineGraph = React.createClass({
         var options = {
             series: {},
             drawPoints: true,
-            errorBars: true,
+            errorBars: false,
             hideOverlayOnMouseOut: false,
             includeZero: true,
             labels: this.getLabelsFromProps(props),
@@ -316,6 +316,10 @@ var TemporalLineGraph = React.createClass({
                     ".dygraph-y2label": {
                         backgroundColor: colors.white,
                         height: "56px"
+                    },
+                    ".dygraph-legend": {
+                        top: "-55px !important",
+                        boxShadow: "2px 2px 5px " + colors.greySubTitle
                     }
                 }} />
                 <div ref="graphContainer" style={styles.graphContainer}/>

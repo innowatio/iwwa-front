@@ -25,13 +25,13 @@ describe("The `measures` method", function () {
             });
             var variable = ["lux"];
             var expected = [
-                [new Date(toDateTime(0)), [parseFloat(1), 0]],
-                [new Date(toDateTime(1)), [parseFloat(2), 0]],
-                [new Date(toDateTime(2)), [parseFloat(3), 0]],
-                [new Date(toDateTime(3)), [parseFloat(4), 0]],
-                [new Date(toDateTime(4)), [parseFloat(null), 0]],
-                [new Date(toDateTime(5)), [parseFloat(6), 0]],
-                [new Date(toDateTime(6)), [parseFloat(7.8), 0]]
+                [new Date(toDateTime(0)), [parseFloat(1)]],
+                [new Date(toDateTime(1)), [parseFloat(2)]],
+                [new Date(toDateTime(2)), [parseFloat(3)]],
+                [new Date(toDateTime(3)), [parseFloat(4)]],
+                [new Date(toDateTime(4)), [parseFloat(null)]],
+                [new Date(toDateTime(5)), [parseFloat(6)]],
+                [new Date(toDateTime(6)), [parseFloat(7.8)]]
             ];
             var result = CollectionUtils.measures.convertByVariables(measures, variable);
             expect(expected).to.deep.equal(result);
@@ -48,13 +48,13 @@ describe("The `measures` method", function () {
             });
             var variables = ["lux", "potenza"];
             var expected = [
-                [new Date(toDateTime(0)), [parseFloat(1), 0], [parseFloat(111), 0]],
-                [new Date(toDateTime(1)), [parseFloat(2), 0], [parseFloat(222), 0]],
-                [new Date(toDateTime(2)), [parseFloat(3), 0], [parseFloat(333), 0]],
-                [new Date(toDateTime(3)), [parseFloat(4), 0], [parseFloat(444), 0]],
-                [new Date(toDateTime(4)), [parseFloat(null), 0], [parseFloat(555), 0]],
-                [new Date(toDateTime(5)), [parseFloat(6), 0], [parseFloat(null), 0]],
-                [new Date(toDateTime(6)), [parseFloat(7.8), 0], [parseFloat(7.77), 0]]
+                [new Date(toDateTime(0)), [parseFloat(1)], [parseFloat(111)]],
+                [new Date(toDateTime(1)), [parseFloat(2)], [parseFloat(222)]],
+                [new Date(toDateTime(2)), [parseFloat(3)], [parseFloat(333)]],
+                [new Date(toDateTime(3)), [parseFloat(4)], [parseFloat(444)]],
+                [new Date(toDateTime(4)), [parseFloat(null)], [parseFloat(555)]],
+                [new Date(toDateTime(5)), [parseFloat(6)], [parseFloat(null)]],
+                [new Date(toDateTime(6)), [parseFloat(7.8)], [parseFloat(7.77)]]
             ];
             var result = CollectionUtils.measures.convertByVariables(measures, variables);
             expect(expected).to.deep.equal(result);
@@ -70,13 +70,13 @@ describe("The `measures` method", function () {
             });
             var variables = ["lux", "other"];
             var expected = [
-                [new Date(toDateTime(0)), [parseFloat(1), 0], [parseFloat(null), 0]],
-                [new Date(toDateTime(1)), [parseFloat(2), 0], [parseFloat(null), 0]],
-                [new Date(toDateTime(2)), [parseFloat(3), 0], [parseFloat(null), 0]],
-                [new Date(toDateTime(3)), [parseFloat(4), 0], [parseFloat(null), 0]],
-                [new Date(toDateTime(4)), [parseFloat(null), 0], [parseFloat(null), 0]],
-                [new Date(toDateTime(5)), [parseFloat(6), 0], [parseFloat(null), 0]],
-                [new Date(toDateTime(6)), [parseFloat(7.8), 0], [parseFloat(null), 0]]
+                [new Date(toDateTime(0)), [parseFloat(1)], [parseFloat(null)]],
+                [new Date(toDateTime(1)), [parseFloat(2)], [parseFloat(null)]],
+                [new Date(toDateTime(2)), [parseFloat(3)], [parseFloat(null)]],
+                [new Date(toDateTime(3)), [parseFloat(4)], [parseFloat(null)]],
+                [new Date(toDateTime(4)), [parseFloat(null)], [parseFloat(null)]],
+                [new Date(toDateTime(5)), [parseFloat(6)], [parseFloat(null)]],
+                [new Date(toDateTime(6)), [parseFloat(7.8)], [parseFloat(null)]]
             ];
             var result = CollectionUtils.measures.convertByVariables(measures, variables);
             expect(expected).to.deep.equal(result);
@@ -106,14 +106,14 @@ describe("The `measures` method", function () {
             });
 
             var expected = [
-                [new Date(toDateTime(0)), [parseFloat(11), 0], [parseFloat(1), 0]],
-                [new Date(toDateTime(1)), [parseFloat(22), 0], [parseFloat(2), 0]],
-                [new Date(toDateTime(2)), [parseFloat(33), 0], [parseFloat(3), 0]],
-                [new Date(toDateTime(3)), [parseFloat(44), 0], [parseFloat(4), 0]],
-                [new Date(toDateTime(4)), [parseFloat(55), 0], [parseFloat(null), 0]],
-                [new Date(toDateTime(5)), [parseFloat(null), 0], [parseFloat(6), 0]],
-                [new Date(toDateTime(6)), [parseFloat(null), 0], [parseFloat(7.8), 0]],
-                [new Date(toDateTime(7)), [parseFloat(8.9), 0], [parseFloat(null), 0]]
+                [new Date(toDateTime(0)), [parseFloat(11)], [parseFloat(1)]],
+                [new Date(toDateTime(1)), [parseFloat(22)], [parseFloat(2)]],
+                [new Date(toDateTime(2)), [parseFloat(33)], [parseFloat(3)]],
+                [new Date(toDateTime(3)), [parseFloat(44)], [parseFloat(4)]],
+                [new Date(toDateTime(4)), [parseFloat(55)], [parseFloat(null)]],
+                [new Date(toDateTime(5)), [parseFloat(null)], [parseFloat(6)]],
+                [new Date(toDateTime(6)), [parseFloat(null)], [parseFloat(7.8)]],
+                [new Date(toDateTime(7)), [parseFloat(8.9)], [parseFloat(null)]]
             ];
 
             var result = CollectionUtils.measures.convertBySitesAndVariable(measures, ["pod2", "pod1"], "lux");
@@ -133,14 +133,14 @@ describe("The `measures` method", function () {
             });
 
             var expected = [
-                [new Date(toDateTime(0)), [parseFloat(1), 0], [parseFloat(1), 0]],
-                [new Date(toDateTime(1)), [parseFloat(2), 0], [parseFloat(2), 0]],
-                [new Date(toDateTime(2)), [parseFloat(3), 0], [parseFloat(3), 0]],
-                [new Date(toDateTime(3)), [parseFloat(4), 0], [parseFloat(4), 0]],
-                [new Date(toDateTime(4)), [parseFloat(null), 0], [parseFloat(null), 0]],
-                [new Date(toDateTime(5)), [parseFloat(6), 0], [parseFloat(6), 0]],
-                [new Date(toDateTime(6)), [parseFloat(7.8), 0], [parseFloat(7.8), 0]],
-                [new Date(toDateTime(7)), [parseFloat(null), 0], [parseFloat(null), 0]]
+                [new Date(toDateTime(0)), [parseFloat(1)], [parseFloat(1)]],
+                [new Date(toDateTime(1)), [parseFloat(2)], [parseFloat(2)]],
+                [new Date(toDateTime(2)), [parseFloat(3)], [parseFloat(3)]],
+                [new Date(toDateTime(3)), [parseFloat(4)], [parseFloat(4)]],
+                [new Date(toDateTime(4)), [parseFloat(null)], [parseFloat(null)]],
+                [new Date(toDateTime(5)), [parseFloat(6)], [parseFloat(6)]],
+                [new Date(toDateTime(6)), [parseFloat(7.8)], [parseFloat(7.8)]],
+                [new Date(toDateTime(7)), [parseFloat(null)], [parseFloat(null)]]
             ];
 
             var result = CollectionUtils.measures.convertBySitesAndVariable(measures, ["pod1", "pod1"], "lux");
@@ -177,14 +177,14 @@ describe("The `measures` method", function () {
             };
 
             var expected = [
-                [new Date(dateMonthTime(0)), [parseFloat(11), 0], [parseFloat(1), 0]],
-                [new Date(dateMonthTime(1)), [parseFloat(22), 0], [parseFloat(2), 0]],
-                [new Date(dateMonthTime(2)), [parseFloat(33), 0], [parseFloat(3), 0]],
-                [new Date(dateMonthTime(3)), [parseFloat(44), 0], [parseFloat(4), 0]],
-                [new Date(dateMonthTime(4)), [parseFloat(55), 0], [parseFloat(null), 0]],
-                [new Date(dateMonthTime(5)), [parseFloat(null), 0], [parseFloat(6), 0]],
-                [new Date(dateMonthTime(6)), [parseFloat(null), 0], [parseFloat(7.8), 0]],
-                [new Date(dateMonthTime(7)), [parseFloat(8.9), 0], [parseFloat(null), 0]]
+                [new Date(dateMonthTime(0)), [parseFloat(11)], [parseFloat(1)]],
+                [new Date(dateMonthTime(1)), [parseFloat(22)], [parseFloat(2)]],
+                [new Date(dateMonthTime(2)), [parseFloat(33)], [parseFloat(3)]],
+                [new Date(dateMonthTime(3)), [parseFloat(44)], [parseFloat(4)]],
+                [new Date(dateMonthTime(4)), [parseFloat(55)], [parseFloat(null)]],
+                [new Date(dateMonthTime(5)), [parseFloat(null)], [parseFloat(6)]],
+                [new Date(dateMonthTime(6)), [parseFloat(null)], [parseFloat(7.8)]],
+                [new Date(dateMonthTime(7)), [parseFloat(8.9)], [parseFloat(null)]]
             ];
             var result = CollectionUtils.measures.convertByDatesAndVariable(measures, "pod1", "lux", [month2, month1]);
             expect(expected).to.deep.equal(result);
@@ -196,34 +196,34 @@ describe("The `measures` method", function () {
 
         it("should return the correct array if 2 arrays are given", function () {
             var coordinate1 = [
-                [new Date(toDateTime(0)), [parseFloat(1), 0]],
-                [new Date(toDateTime(1)), [parseFloat(2), 0]],
-                [new Date(toDateTime(2)), [parseFloat(3), 0]],
-                [new Date(toDateTime(3)), [parseFloat(4), 0]],
-                [new Date(toDateTime(4)), [parseFloat(null), 0]],
-                [new Date(toDateTime(5)), [parseFloat(6), 0]],
-                [new Date(toDateTime(6)), [parseFloat(7.8), 0]],
-                [new Date(toDateTime(7)), [parseFloat(null), 0]]
+                [new Date(toDateTime(0)), [parseFloat(1)]],
+                [new Date(toDateTime(1)), [parseFloat(2)]],
+                [new Date(toDateTime(2)), [parseFloat(3)]],
+                [new Date(toDateTime(3)), [parseFloat(4)]],
+                [new Date(toDateTime(4)), [parseFloat(null)]],
+                [new Date(toDateTime(5)), [parseFloat(6)]],
+                [new Date(toDateTime(6)), [parseFloat(7.8)]],
+                [new Date(toDateTime(7)), [parseFloat(null)]]
             ];
             var coordinate2 = [
-                [new Date(toDateTime(0)), [parseFloat(11), 0]],
-                [new Date(toDateTime(1)), [parseFloat(22), 0]],
-                [new Date(toDateTime(2)), [parseFloat(33), 0]],
-                [new Date(toDateTime(3)), [parseFloat(44), 0]],
-                [new Date(toDateTime(4)), [parseFloat(55), 0]],
-                [new Date(toDateTime(5)), [parseFloat(null), 0]],
-                [new Date(toDateTime(6)), [parseFloat(null), 0]],
-                [new Date(toDateTime(7)), [parseFloat(8.9), 0]]
+                [new Date(toDateTime(0)), [parseFloat(11)]],
+                [new Date(toDateTime(1)), [parseFloat(22)]],
+                [new Date(toDateTime(2)), [parseFloat(33)]],
+                [new Date(toDateTime(3)), [parseFloat(44)]],
+                [new Date(toDateTime(4)), [parseFloat(55)]],
+                [new Date(toDateTime(5)), [parseFloat(null)]],
+                [new Date(toDateTime(6)), [parseFloat(null)]],
+                [new Date(toDateTime(7)), [parseFloat(8.9)]]
             ];
             var expected = [
-                [new Date(toDateTime(0)), [parseFloat(1), 0], [parseFloat(11), 0]],
-                [new Date(toDateTime(1)), [parseFloat(2), 0], [parseFloat(22), 0]],
-                [new Date(toDateTime(2)), [parseFloat(3), 0], [parseFloat(33), 0]],
-                [new Date(toDateTime(3)), [parseFloat(4), 0], [parseFloat(44), 0]],
-                [new Date(toDateTime(4)), [parseFloat(null), 0], [parseFloat(55), 0]],
-                [new Date(toDateTime(5)), [parseFloat(6), 0], [parseFloat(null), 0]],
-                [new Date(toDateTime(6)), [parseFloat(7.8), 0], [parseFloat(null), 0]],
-                [new Date(toDateTime(7)), [parseFloat(null), 0], [parseFloat(8.9), 0]]
+                [new Date(toDateTime(0)), [parseFloat(1)], [parseFloat(11)]],
+                [new Date(toDateTime(1)), [parseFloat(2)], [parseFloat(22)]],
+                [new Date(toDateTime(2)), [parseFloat(3)], [parseFloat(33)]],
+                [new Date(toDateTime(3)), [parseFloat(4)], [parseFloat(44)]],
+                [new Date(toDateTime(4)), [parseFloat(null)], [parseFloat(55)]],
+                [new Date(toDateTime(5)), [parseFloat(6)], [parseFloat(null)]],
+                [new Date(toDateTime(6)), [parseFloat(7.8)], [parseFloat(null)]],
+                [new Date(toDateTime(7)), [parseFloat(null)], [parseFloat(8.9)]]
             ];
 
             var result = CollectionUtils.measures.mergeCoordinates(coordinate1, coordinate2);
@@ -232,31 +232,31 @@ describe("The `measures` method", function () {
 
         it("should fill the empty fields with NaN", function () {
             var coordinate1 = [
-                [new Date(toDateTime(0)), [parseFloat(1), 0]],
-                [new Date(toDateTime(1)), [parseFloat(2), 0]],
-                [new Date(toDateTime(2)), [parseFloat(3), 0]],
-                [new Date(toDateTime(3)), [parseFloat(4), 0]],
-                [new Date(toDateTime(4)), [parseFloat(5), 0]]
+                [new Date(toDateTime(0)), [parseFloat(1)]],
+                [new Date(toDateTime(1)), [parseFloat(2)]],
+                [new Date(toDateTime(2)), [parseFloat(3)]],
+                [new Date(toDateTime(3)), [parseFloat(4)]],
+                [new Date(toDateTime(4)), [parseFloat(5)]]
             ];
             var coordinate2 = [
-                [new Date(toDateTime(0)), [parseFloat(11), 0]],
-                [new Date(toDateTime(1)), [parseFloat(22), 0]],
-                [new Date(toDateTime(2)), [parseFloat(33), 0]],
-                [new Date(toDateTime(3)), [parseFloat(44), 0]],
-                [new Date(toDateTime(4)), [parseFloat(55), 0]],
-                [new Date(toDateTime(5)), [parseFloat(6), 0]],
-                [new Date(toDateTime(6)), [parseFloat(7.8), 0]],
-                [new Date(toDateTime(7)), [parseFloat(null), 0]]
+                [new Date(toDateTime(0)), [parseFloat(11)]],
+                [new Date(toDateTime(1)), [parseFloat(22)]],
+                [new Date(toDateTime(2)), [parseFloat(33)]],
+                [new Date(toDateTime(3)), [parseFloat(44)]],
+                [new Date(toDateTime(4)), [parseFloat(55)]],
+                [new Date(toDateTime(5)), [parseFloat(6)]],
+                [new Date(toDateTime(6)), [parseFloat(7.8)]],
+                [new Date(toDateTime(7)), [parseFloat(null)]]
             ];
             var expected = [
-                [new Date(toDateTime(0)), [parseFloat(1), 0], [parseFloat(11), 0]],
-                [new Date(toDateTime(1)), [parseFloat(2), 0], [parseFloat(22), 0]],
-                [new Date(toDateTime(2)), [parseFloat(3), 0], [parseFloat(33), 0]],
-                [new Date(toDateTime(3)), [parseFloat(4), 0], [parseFloat(44), 0]],
-                [new Date(toDateTime(4)), [parseFloat(5), 0], [parseFloat(55), 0]],
-                [new Date(toDateTime(5)), [parseFloat(null), 0], [parseFloat(6), 0]],
-                [new Date(toDateTime(6)), [parseFloat(null), 0], [parseFloat(7.8), 0]],
-                [new Date(toDateTime(7)), [parseFloat(null), 0], [parseFloat(null), 0]]
+                [new Date(toDateTime(0)), [parseFloat(1)], [parseFloat(11)]],
+                [new Date(toDateTime(1)), [parseFloat(2)], [parseFloat(22)]],
+                [new Date(toDateTime(2)), [parseFloat(3)], [parseFloat(33)]],
+                [new Date(toDateTime(3)), [parseFloat(4)], [parseFloat(44)]],
+                [new Date(toDateTime(4)), [parseFloat(5)], [parseFloat(55)]],
+                [new Date(toDateTime(5)), [parseFloat(null)], [parseFloat(6)]],
+                [new Date(toDateTime(6)), [parseFloat(null)], [parseFloat(7.8)]],
+                [new Date(toDateTime(7)), [parseFloat(null)], [parseFloat(null)]]
             ];
 
             var result = CollectionUtils.measures.mergeCoordinates(coordinate1, coordinate2);

@@ -87,10 +87,10 @@ exports.measures = {
         return measuresFirstVariable.split(",").map(function (value, index) {
             var arrayResult = [
                 new Date(toDateTime(index)),
-                [parseFloat(value), 0]
+                [parseFloat(value)]
             ];
             splittedMeasures.forEach(function (measureByVariable) {
-                arrayResult.push([parseFloat(measureByVariable[index]), 0]);
+                arrayResult.push([parseFloat(measureByVariable[index])]);
             });
             return arrayResult;
         });
@@ -143,7 +143,7 @@ exports.measures = {
         var minCoordinate = maxCoordinate === coordinate1 ? coordinate2 : coordinate1;
 
         return maxCoordinate.map(function (value, index) {
-            var toConcat = [NaN, 0];
+            var toConcat = [NaN];
             if (minCoordinate.length > index) {
                 toConcat = minCoordinate[index][1];
             }
