@@ -167,17 +167,17 @@ var User = React.createClass({
     },
     renderRolesTab: function () {
         return (
-            <bootstrap.TabPane eventKey={1} style={{marginLeft: "15px"}} tab="Ruoli dell'utente">
+            <bootstrap.Tab eventKey={1} style={{marginLeft: "15px"}} title="Ruoli dell'utente">
                     <components.Spacer direction="v" size={15} />
                     <span>{stringIt.roleTab}</span>
                     <components.Spacer direction="v" size={40} />
                     {this.renderRolesButtons()}
-            </bootstrap.TabPane>
+            </bootstrap.Tab>
         );
     },
     renderPasswordTab: function () {
         return (
-            <bootstrap.TabPane eventKey={2} tab="Password" >
+            <bootstrap.Tab eventKey={2} title="Password" >
                 {/* Automatic change of the password */}
                 <bootstrap.Col style={{height: "calc(100vh - 200px)", paddingRight: "0px"}} xs={6} >
                     <div style={{
@@ -226,7 +226,7 @@ var User = React.createClass({
                     </div>
                 </bootstrap.Col>
 
-            </bootstrap.TabPane>
+            </bootstrap.Tab>
         );
     },
     renderUserSitiTab: function () {
@@ -234,7 +234,7 @@ var User = React.createClass({
             .filter(value => CollectionUtils.siti.filter(value, this.state.inputFilter))
             .map(this.renderTableSitiToUser);
         return (
-            <bootstrap.TabPane eventKey={3} style={{marginLeft: "15px"}} tab="Siti">
+            <bootstrap.Tab eventKey={3} style={{marginLeft: "15px"}} title="Siti">
                 <h4 style={R.merge(styles.titleTab, {marginTop: "0px", paddingTop: "30px"})} >
                     {stringIt.setSitiOfUser}
                 </h4>
@@ -290,7 +290,7 @@ var User = React.createClass({
                         </tbody>
                     </bootstrap.Table>
                 </div>
-            </bootstrap.TabPane>
+            </bootstrap.Tab>
         );
     },
     render: function () {
@@ -330,7 +330,7 @@ var User = React.createClass({
                     </h4>
                 </div>
                 <div className="tabbed-area" style={R.merge(styles.tabbedArea, {marginTop: "0px"})}>
-                    <bootstrap.TabbedArea
+                    <bootstrap.Tabs
                         activeKey={this.state.key}
                         animation={false}
                         bsStyle={"tabs"}
@@ -339,7 +339,7 @@ var User = React.createClass({
                         {this.renderRolesTab()}
                         {this.renderPasswordTab()}
                         {this.renderUserSitiTab()}
-                    </bootstrap.TabbedArea>
+                    </bootstrap.Tabs>
                 </div>
             </div>
         );
