@@ -6,15 +6,15 @@ var moment     = require("moment");
 var bootstrap  = require("react-bootstrap");
 var IPropTypes = require("react-immutable-proptypes");
 
-var CollectionUtils  = require("lib/collection-utils");
-var colors           = require("lib/colors");
-var components       = require("components/");
-var icons            = require("lib/icons");
-var QuerystringMixin = require("lib/querystring-mixin");
-var styles           = require("lib/styles");
-var transformers     = require("./transformers.js");
-var GetTutorialMixin = require("lib/get-tutorial-mixin");
-var tutorialString   = require("assets/JSON/tutorial-string.json").historicalGraph;
+var CollectionUtils    = require("lib/collection-utils");
+var colors             = require("lib/colors");
+var components         = require("components/");
+var icons              = require("lib/icons");
+var QuerystringMixin   = require("lib/querystring-mixin");
+var styles             = require("lib/styles");
+var transformers       = require("./transformers.js");
+var GetTutorialMixin   = require("lib/get-tutorial-mixin");
+var tutorialString     = require("assets/JSON/tutorial-string.json").historicalGraph;
 
 var selectStyles = {
     selectCompare: {
@@ -106,10 +106,10 @@ var Chart = React.createClass({
     },
     getConsumptions: function () {
         return [
-            {label: "Temperatura", color: colors.consumption, key: "temperature", icon: icons.iconTemperature},
-            {label: "Umidità", color: colors.consumption, key: "humidity", icon: icons.iconHumidity},
-            {label: "Lux", color: colors.consumption, key: "illuminance", icon: icons.iconIdea},
-            {label: "CO2", color: colors.consumption, key: "co2", icon: icons.iconCO2}
+            {label: "Temperatura", color: colors.consumption, key: "temperature", icon: icons.iconTemperature, selected: icons.iconTemperatureSelected},
+            {label: "Umidità", color: colors.consumption, key: "humidity", icon: icons.iconHumidity, selected: icons.iconHumiditySelected},
+            {label: "Lux", color: colors.consumption, key: "illuminance", icon: icons.iconIdea, selected: icons.iconIdeaSelected},
+            {label: "CO2", color: colors.consumption, key: "co2", icon: icons.iconCO2, selected: icons.iconCO2Selected}
             // {label: "Allarmi", key: "allarms", icon: icons.iconAlarm}
         ];
     },
@@ -184,24 +184,6 @@ var Chart = React.createClass({
                 self.props.asteroid.subscribe("misureBySitoAndMonth", sito, data);
             });
         });
-    },
-    renderConsumptionButton: function (consumption) {
-        var isSelected = R.equals(consumption, consumptionProps.value);
-        return (
-            <bootstrap.Button
-                key={consumption.key}
-                onClick={R.partial(this.consumptionFunction, consumption)}
-                style={R.merge(consumptionButtonStyle, isSelected ? consumptionButtonSelectedStyle : {})}>
-                <img src={consumption.icon} style={{height: "25px", marginRight: "10px", borderRadius: "0px"}} />
-                {consumption.label}
-            </bootstrap.Button>);
-    },
-    renderConsumptionButtonList: function () {
-        return (
-            <bootstrap.ButtonGroup style={{width: "calc(100vw - 13px)"}}>
-                {this.getConsumptions().map(this.renderConsumptionButton)}
-            </bootstrap.ButtonGroup>
-        );
     },
     renderExportButton: function () {
         return (
@@ -401,7 +383,15 @@ var Chart = React.createClass({
                         </span>
                     </bootstrap.Col>
                     <bootstrap.Col >
-                        {this.renderConsumptionButtonList()}
+                        <components.ConsumptionButtons
+                            allowedValues={this.getConsumptions()}
+                            onChange={this.consumptionFunction}
+                            selectedValue={consumptionProps.value}
+                            style={{width: "calc(100vw - 13px)"}}
+                            styleButton={consumptionButtonStyle}
+                            styleButtonSelected={consumptionButtonSelectedStyle}
+                            styleIcon={{height: "25px", marginRight: "10px", borderRadius: "0px"}}
+                        />
                     </bootstrap.Col>
                     <bootstrap.Col  className="modal-container" sm={12}>
                         <components.TutorialAnchor
