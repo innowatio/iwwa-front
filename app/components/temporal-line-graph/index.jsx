@@ -61,6 +61,7 @@ var TemporalLineGraph = React.createClass({
     getOptionsFromProps: function (props) {
         var options = {
             series: {},
+            connectSeparatedPoints: true,
             drawPoints: true,
             errorBars: false,
             hideOverlayOnMouseOut: false,
@@ -318,7 +319,7 @@ var TemporalLineGraph = React.createClass({
                         height: "56px"
                     },
                     ".dygraph-legend": {
-                        top: "-55px !important",
+                        top: "-50px !important",
                         boxShadow: "2px 2px 5px " + colors.greySubTitle
                     }
                 }} />

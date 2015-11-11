@@ -106,7 +106,7 @@ var configureCordovaApp = function () {
                 xml.widget.platform.preference = [
                     {$: {
                         name: "Orientation",
-                        value: "all"
+                        value: "landscape"
                     }},
                     {$: {
                         name: "StatusBarOverlaysWebView",

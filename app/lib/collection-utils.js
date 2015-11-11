@@ -68,32 +68,52 @@ exports.measures = {
     convertByVariables: R.memoize(function (measures, variables, startOfTime) {
         const fiveMinutesInMS = 5 * 60 * 1000;
         const startOfMonthInMS = !R.isNil(startOfTime) ? startOfTime.getTime() : new Date(measures.get("month")).getTime();
-        const measuresFirstVariable = measures.get("readings").get(variables[0]);
-
-        var splittedMeasures = R.map(function (value) {
-            if (R.isNil(measures.get("readings").get(value))) {
-                return [];
-            }
-            return measures.get("readings").get(value).split(",");
-        }, R.slice(1, variables.length, variables));
-
-        var toDateTime = function (index) {
-            return startOfMonthInMS + (index * fiveMinutesInMS);
-        };
-
-        /*
-            * Add 0 as placeholder for standard deviation
-        */
-        return measuresFirstVariable.split(",").map(function (value, index) {
-            var arrayResult = [
-                new Date(toDateTime(index)),
-                [parseFloat(value)]
+        const measuresArray = R.map(variable => {
+            const m = measures.getIn(["readings", variable])
+                .split(",")
+                .map(v => parseFloat(v));
+            return R.range(0, 8640).map(idx => m[idx] || 0.01);
+        }, variables);
+        const toDateTime = (index) => (
+            startOfMonthInMS + (index * fiveMinutesInMS)
+        );
+        const isInRange = (val1, val2) => (
+            val1 * 1.10 > val2 &&
+            val1 * 0.90 < val2
+        );
+        const getValue = (idx, ...vals) => {
+            return [
+                new Date(toDateTime(idx)),
+                ...vals.map(val => [val])
             ];
-            splittedMeasures.forEach(function (measureByVariable) {
-                arrayResult.push([parseFloat(measureByVariable[index])]);
-            });
-            return arrayResult;
-        });
+        };
+        const needsToAdd = (val, prevVal, idx) => {
+            return (
+                // Add the first
+                idx === 0 ||
+                // Add the last
+                idx === 8639 ||
+                // Add out of range values
+                !isInRange(prevVal, val) ||
+                // Add every even hour
+                idx % 24 === 12
+            );
+        };
+        return R.reduce((acc, num) => {
+            const needsTo = measuresArray.reduce((need, m, midx) => {
+                return need || needsToAdd(
+                    m[num],
+                    R.path([midx + 1, 0], R.last(acc)),
+                    num
+                );
+            }, false);
+            return needsTo ? (
+                acc.concat([getValue(
+                    num,
+                    ...measuresArray.map(m => m[num])
+                )])
+            ) : acc;
+        }, [], R.range(0, 8640));
     }),
     convertBySitesAndVariable: function (measures, pods, variable) {
         var self = this;

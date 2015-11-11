@@ -37,7 +37,7 @@ var HistoricalGraph = React.createClass({
                 {" - "}
                 {titleCase(sito.get("idCoin"))}
                 {" - "}
-                {titleCase(sito.get("pod"))}
+                {titleCase(sito.get("pod")).toUpperCase()}
             </span>
         ) : null;
     },
