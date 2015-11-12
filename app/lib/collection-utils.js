@@ -71,7 +71,7 @@ exports.measures = {
         const fiveMinutesInMS = 5 * 60 * 1000;
         const startOfMonthInMS = !R.isNil(startOfTime) ? startOfTime.getTime() : new Date(measures.get("month")).getTime();
         const measuresArray = R.map(variable => {
-            const m = measures.getIn(["readings", variable])
+            const m = (measures.getIn(["readings", variable]) || "")
                 .split(",")
                 .map(v => parseFloat(v));
             mLength = m.length;
@@ -95,7 +95,7 @@ exports.measures = {
                 // Add the first
                 idx === 0 ||
                 // Add the last
-                idx === mLength ||
+                idx === mLength - 1 ||
                 // Add out of range values
                 !isInRange(prevVal, val) ||
                 // Add every even hour

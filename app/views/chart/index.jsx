@@ -35,7 +35,7 @@ var div = {
 
 var consumptionButtonStyle = {
     color: colors.greySubTitle,
-    width: "23%",
+    width: ENVIRONMENT === "cordova" ? "23%" : "180px",
     textAlign: "left",
     marginRight: "15px !important",
     borderRadius: "0px"
@@ -174,7 +174,7 @@ var Chart = React.createClass({
             date = [dateString];
         } else {
             // If no data is selected, is displayed the past month.
-            const month = moment().subtract(1, "month").month() + 1;
+            const month = moment().month() + 1;
             const year = moment().year();
             date = [`${year}-${month}`];
         }

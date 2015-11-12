@@ -3,6 +3,7 @@ var Radium     = require("radium");
 var R          = require("ramda");
 var React      = require("react");
 var IPropTypes = require("react-immutable-proptypes");
+var moment     = require("moment");
 
 var components    = require("components");
 var measuresUtils = require("lib/collection-utils").measures;
@@ -24,16 +25,24 @@ var ValoriCompare = React.createClass({
     },
     mixins: [React.addons.PureRenderMixin],
     getCoordinates: function () {
-        var selectedPod = this.props.siti[0] ? this.props.siti[0].get("pod") : "";
-        var selectedTipologia = [this.props.tipologia.key];
-        if (this.props.consumption.key) {
-            selectedTipologia = selectedTipologia.concat(this.props.consumption.key);
+        var self = this;
+        var selectedPod = self.props.siti[0] ? self.props.siti[0].get("pod") : "";
+        var selectedTipologia = [self.props.tipologia.key];
+        if (self.props.consumption.key) {
+            selectedTipologia = selectedTipologia.concat(self.props.consumption.key);
         }
         var result = [];
-
-        this.props.misure
+        self.props.misure
             .filter(function (measure) {
                 return measure.get("podId") === selectedPod;
+            })
+            .filter(function (measure) {
+                if (self.props.dateFilter) {
+                    // TODO: filter data only for the selected month
+                    var measureMonthToDate = moment(measure.get("month"), "YYYY-MM");
+                    return self.props.dateFilter.start <= measureMonthToDate && self.props.dateFilter.end > measureMonthToDate;
+                }
+                return true;
             })
             .forEach(function (measure) {
                 result = R.concat(result, measuresUtils.convertByVariables(measure, selectedTipologia));

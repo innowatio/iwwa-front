@@ -62,7 +62,7 @@ var DatefilterMonthlyModal = React.createClass({
         return moment().subtract(1, "months").startOf("month")._d;
     },
     defaultEndDate: function () {
-        return moment().subtract(1, "months").endOf("month")._d;
+        return moment().startOf("month")._d;
     },
     open: function () {
         this.setState({
@@ -84,7 +84,7 @@ var DatefilterMonthlyModal = React.createClass({
     },
     setDate: function (dateValue) {
         var startDate = moment(dateValue)._d;
-        var endDate = moment(dateValue).endOf("month")._d;
+        var endDate = moment(dateValue).add(1, "months").startOf("month")._d;
         this.setState({
             value: {
                 start: startDate,
