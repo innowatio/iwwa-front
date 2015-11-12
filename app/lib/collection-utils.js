@@ -75,7 +75,15 @@ exports.measures = {
                 .split(",")
                 .map(v => parseFloat(v));
             mLength = m.length;
-            return R.range(0, mLength).map(idx => m[idx] || 0.006);
+            var lastNotNull = null;
+            return R.range(0, mLength).map(idx => {
+                if (m[idx]) {
+                    lastNotNull = m[idx];
+                    return m[idx];
+                } else {
+                    return lastNotNull;
+                }
+            });
         }, variables);
         const toDateTime = (index) => (
             startOfMonthInMS + (index * fiveMinutesInMS)
@@ -91,7 +99,7 @@ exports.measures = {
             ];
         };
         const needsToAdd = (val, prevVal, idx) => {
-            return (
+            return val && (
                 // Add the first
                 idx === 0 ||
                 // Add the last
@@ -132,10 +140,6 @@ exports.measures = {
         return this.mergeCoordinates(measuresBySito[0] || [], measuresBySito[1] || []);
     },
     convertByDatesAndVariable: function (measures, pod, variable, dates) {
-        // console.log(measures);
-        // console.log(pod);
-        // console.log(variable);
-        // console.log(dates);
         var self = this;
         var measuresByDates = [];
         dates.forEach(date => {
