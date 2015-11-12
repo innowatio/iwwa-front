@@ -28,7 +28,7 @@ exports.labelGraph = {
     getYLabel: function (tipologia) {
         if (tipologia.key === "energia attiva") {
             return "kWh";
-        } else if (tipologia.key === "potenza totale") {
+        } else if (tipologia.key === "potenza massima") {
             return "kW";
         } else if (tipologia.key === "energia reattiva") {
             return "kVARh";
@@ -58,8 +58,9 @@ exports.labelGraph = {
         podId: uuid,
         month: "YYYY-MM",
         readings: {
-            "energia attiva" : JSON string of array,
-            "energia reattiva" : JSON string of array,
+            "energia attiva": JSON string of array,
+            "energia reattiva": JSON string of array,
+            "potenza massima": JSON string of array,
             ...
         }
     }
