@@ -29,6 +29,13 @@ var graphStyle = {
     boxShadow: "2px 2px 5px " + colors.greySubTitle
 };
 
+var consumptionButtonStyle = {
+    color: colors.greySubTitle,
+    width: "90%",
+    textAlign: "left",
+    borderRadius: 0
+};
+
 var dateCompareProps;
 var sitoInputProps;
 
@@ -86,6 +93,19 @@ var Chart = React.createClass({
             {label: "Previsionale", color: colors.linePrevisionale, key: "previsionale"}
         ];
     },
+    getConsumptions: function () {
+        var values = [
+            {label: "Temperatura", key: "temperature", icon: icons.iconAlarm, action: R.partial(this.consumptionFunction, "temperature")},
+            {label: "Umidità", key: "umidity", icon: icons.iconAlarm, action: R.partial(this.consumptionFunction, "umidity")},
+            {label: "Lux", key: "lux", icon: icons.iconAlarm, action: R.partial(this.consumptionFunction, "lux")},
+            {label: "CO2", key: "co2", icon: icons.iconAlarm, action: R.partial(this.consumptionFunction, "co2")},
+            {label: "Allarmi", key: "allarms", icon: icons.iconAlarm, action: R.partial(this.consumptionFunction, "alarms")}
+        ];
+        return values;
+    },
+    consumptionFunction: function (consumptionObject) {
+        console.log(consumptionObject);
+    },
     getExportType: function () {
         return [
             {label: "Png", key: "png", icon: icons.iconPNG},
@@ -134,6 +154,24 @@ var Chart = React.createClass({
         siti.forEach(function (sito) {
             self.props.asteroid.subscribe("misureBySito", sito);
         });
+    },
+    renderConsumptionButton: function (consumption) {
+        return (
+            <div style={{width: "19%", display: "inline-block"}}>
+                <bootstrap.Button
+                    onClick={consumption.action}
+                    style={consumptionButtonStyle}>
+                    <img src={consumption.icon} style={{height: "25px", marginRight: "10px"}} />
+                    {consumption.label}
+                </bootstrap.Button>
+            </div>);
+    },
+    renderConsumptionButtonList: function () {
+        return (
+            <bootstrap.ButtonGroup justified style={{width: "calc(100vw - 20px)", left: "14px"}}>
+                {this.getConsumptions().map(this.renderConsumptionButton)}
+            </bootstrap.ButtonGroup>
+        );
     },
     renderExportButton: function () {
         return (
@@ -324,6 +362,9 @@ var Chart = React.createClass({
                             </components.Compare>
                         </components.TutorialAnchor>
                     </span>
+                </bootstrap.Col>
+                <bootstrap.Col >
+                    {this.renderConsumptionButtonList()}
                 </bootstrap.Col>
                 <bootstrap.Col  className="modal-container" sm={12} style={{height: "100%"}}>
                     <components.TutorialAnchor
