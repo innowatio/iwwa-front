@@ -1,4 +1,4 @@
-FROM iojs
+FROM node:4-onbuild
 RUN mkdir /iwwa-front
 ADD ./ /iwwa-front/
 WORKDIR /iwwa-front
