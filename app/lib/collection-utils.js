@@ -75,7 +75,7 @@ exports.measures = {
                 .split(",")
                 .map(v => parseFloat(v));
             mLength = m.length;
-            return R.range(0, mLength).map(idx => m[idx]);
+            return R.range(0, mLength).map(idx => m[idx] || 0.006);
         }, variables);
         const toDateTime = (index) => (
             startOfMonthInMS + (index * fiveMinutesInMS)
