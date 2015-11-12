@@ -67,13 +67,15 @@ exports.labelGraph = {
 */
 exports.measures = {
     convertByVariables: R.memoize(function (measures, variables, startOfTime) {
+        var mLength;
         const fiveMinutesInMS = 5 * 60 * 1000;
         const startOfMonthInMS = !R.isNil(startOfTime) ? startOfTime.getTime() : new Date(measures.get("month")).getTime();
         const measuresArray = R.map(variable => {
             const m = measures.getIn(["readings", variable])
                 .split(",")
                 .map(v => parseFloat(v));
-            return R.range(0, 8640).map(idx => m[idx] || 0.01);
+            mLength = m.length;
+            return R.range(0, mLength).map(idx => m[idx]);
         }, variables);
         const toDateTime = (index) => (
             startOfMonthInMS + (index * fiveMinutesInMS)
@@ -93,7 +95,7 @@ exports.measures = {
                 // Add the first
                 idx === 0 ||
                 // Add the last
-                idx === 8639 ||
+                idx === mLength ||
                 // Add out of range values
                 !isInRange(prevVal, val) ||
                 // Add every even hour
@@ -114,7 +116,7 @@ exports.measures = {
                     ...measuresArray.map(m => m[num])
                 )])
             ) : acc;
-        }, [], R.range(0, 8640));
+        }, [], R.range(0, mLength));
     }),
     convertBySitesAndVariable: function (measures, pods, variable) {
         var self = this;

@@ -61,7 +61,6 @@ var TemporalLineGraph = React.createClass({
     getOptionsFromProps: function (props) {
         var options = {
             series: {},
-            connectSeparatedPoints: true,
             drawPoints: true,
             errorBars: false,
             hideOverlayOnMouseOut: false,
@@ -306,6 +305,7 @@ var TemporalLineGraph = React.createClass({
         }
     },
     render: function () {
+        console.log(this.graph);
         return (
             <div>
                 {this.renderSpinner()}
