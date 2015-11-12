@@ -17,6 +17,10 @@ var getKeyFromAlarm = function (alarm) {
     return alarm.get("_id");
 };
 
+var getKeyFromNotification = function (alarm) {
+    return alarm.get("date");
+};
+
 var Alarms = React.createClass({
     propTypes: {
         asteroid: React.PropTypes.object,
@@ -351,21 +355,21 @@ var Alarms = React.createClass({
                     rules={styles.tabForm}
                     scopeSelector=".alarm-tab"
                 />
-            <div className="tabbed-area" style={styles.tabbedArea}>
-                <bootstrap.TabbedArea
-                    activeKey={this.state.key}
-                    animation={false}
-                    bsStyle={"tabs"}
-                    onSelect={this.activeKey}
-                >
-                    <bootstrap.TabPane eventKey={1} tab="Impostazione">
-                        <components.AlarmForm
-                            alarm={this.getAlarm()}
-                            siti={this.getSiti()}
-                            type={this.getType()}
-                        />
-                    </bootstrap.TabPane>
-                        <bootstrap.TabPane eventKey={2} tab="Allarmi">
+                <div className="tabbed-area" style={styles.tabbedArea}>
+                    <bootstrap.Tabs
+                        activeKey={this.state.key}
+                        animation={false}
+                        bsStyle={"tabs"}
+                        onSelect={this.activeKey}
+                    >
+                        <bootstrap.Tab eventKey={1} title="Impostazione">
+                            <components.AlarmForm
+                                alarm={this.getAlarm()}
+                                siti={this.getSiti()}
+                                type={this.getType()}
+                            />
+                        </bootstrap.Tab>
+                        <bootstrap.Tab eventKey={2} title="Allarmi">
                             {this.renderFilterButton()}
                             <components.CollectionElementsTable
                                 collection={ R.isNil(allowedValues) ? Immutable.Map() : allowedValues.filter(this.filterAlarms)}
@@ -374,8 +378,8 @@ var Alarms = React.createClass({
                                 hover={true}
                                 width={"40%"}
                             />
-                        </bootstrap.TabPane>
-                        <bootstrap.TabPane eventKey={3} tab="Storico allarmi">
+                        </bootstrap.Tab>
+                        <bootstrap.Tab eventKey={3} title="Storico allarmi">
                             {/* <div style={{marginRight: "30px", height: "40px", paddingTop: "20px"}}>
                                 <div onClick={this.onClickFilter} style={{float: "right", display: "flex", cursor: "pointer"}}>
                                     <components.Icon icon="filter" style={{paddingTop: "13px"}}/>
@@ -387,12 +391,12 @@ var Alarms = React.createClass({
                             <components.CollectionElementsTable
                                 collection={this.getNotifications().sort(R.partialRight(this.sortByDate, false))}
                                 columns={this.getColumnsNotifications()}
-                                getKey={getKeyFromAlarm}
+                                getKey={getKeyFromNotification}
                                 hover={true}
                                 width={"30%"}
                             />
-                        </bootstrap.TabPane>
-                    </bootstrap.TabbedArea>
+                        </bootstrap.Tab>
+                    </bootstrap.Tabs>
                 </div>
             </div>
         );
