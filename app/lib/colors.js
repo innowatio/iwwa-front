@@ -17,5 +17,5 @@ exports.titleColor       = "#7275a0";
 exports.white            = "#ffffff";
 exports.green            = "#a8e1d4";
 exports.red              = "#f71c50";
-exports.consumption      = "#6cb5c0";
+exports.consumption      = "#F74F68";
 exports.transparent      = "rgba(0, 0, 0, 0)";
