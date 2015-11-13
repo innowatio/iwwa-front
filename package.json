@@ -32,7 +32,6 @@
     "browser-sync": "^2.7.12",
     "chai": "^3.0.0",
     "chalk": "^1.1.1",
-    "cordova": "^5.3.1",
     "dev-ip": "^1.0.1",
     "eslint": "^0.23.0",
     "eslint-html-reporter": "^0.4.11",
@@ -103,6 +102,7 @@
     ]
   },
   "optionalDependencies": {
+    "cordova": "^5.3.1",
     "ios-sim": "^5.0.1"
   }
 }
