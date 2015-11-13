@@ -77,9 +77,9 @@ exports.measures = {
             mLength = m.length;
             var lastNotNull = null;
             return R.range(0, mLength).map(idx => {
-                if (m[idx]) {
-                    lastNotNull = m[idx];
-                    return m[idx];
+                if (!isNaN(m[idx])) {
+                    lastNotNull = m[idx] || 0.01;
+                    return m[idx] || 0.01;
                 } else {
                     return lastNotNull;
                 }
