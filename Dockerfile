@@ -1,4 +1,4 @@
-FROM node:4-onbuild
+FROM node:5-onbuild
 RUN mkdir /iwwa-front
 ADD ./ /iwwa-front/
 WORKDIR /iwwa-front
