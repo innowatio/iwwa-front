@@ -46,7 +46,7 @@ var LoginView = React.createClass({
             password: this.refs.password.getValue()
         };
         this.setLoginError(null);
-        this.props.asteroid.login(credentials).catch(this.setLoginError);
+        this.props.asteroid.loginWithPassword(credentials).catch(this.setLoginError);
     },
     renderError: function () {
         return this.state.loginError ? (

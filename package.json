@@ -63,7 +63,8 @@
     "xml2js": "^0.4.12"
   },
   "dependencies": {
-    "asteroid": "mondora/asteroid#40436f493dac6a37c42c9289c666091b12cd773c",
+    "asteroid": "mondora/asteroid#1.0.0-rewrite",
+    "asteroid-immutable-collections-mixin": "^1.0.1",
     "axios": "^0.5.4",
     "bootstrap": "^3.3.5",
     "color": "^0.10.1",
@@ -92,7 +93,7 @@
   },
   "cordova": {
     "name": "iwwa",
-    "version": "1.9.0",
+    "version": "1.10.0",
     "plugins": [
       "cordova-plugin-device",
       "cordova-plugin-inappbrowser",
