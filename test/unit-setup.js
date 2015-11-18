@@ -1,9 +1,11 @@
-var chai       = require("chai");
-var jsdom      = require("jsdom");
-var proxyquire = require("proxyquire");
-var React      = require("react/addons");
-var sinon      = require("sinon");
-var sinonChai  = require("sinon-chai");
+var chai           = require("chai");
+var jsdom          = require("jsdom");
+var proxyquire     = require("proxyquire");
+var React          = require("react");
+var ReactDOM       = require("react-dom");
+var ReactTestUtils = require("react-addons-test-utils");
+var sinon          = require("sinon");
+var sinonChai      = require("sinon-chai");
 
 // Setup fake DOM
 global.document = jsdom.jsdom();
@@ -24,7 +26,8 @@ global.proxyquire = proxyquire;
 
 // Setup React
 global.React = React;
-global.TestUtils = React.addons.TestUtils;
+global.ReactDOM = ReactDOM;
+global.TestUtils = ReactTestUtils;
 
 // Avoid `Dygraph is not defined` when running tests
 global.Dygraph = {};

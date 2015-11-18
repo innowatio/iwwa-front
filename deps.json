@@ -24,11 +24,13 @@
         "radium",
         "ramda",
         "react",
-        "react/addons",
+        "react-dom",
         "react-bootstrap",
         "react-immutable-proptypes",
         "react-router",
-        "react-router/lib/BrowserHistory",
+        "history/lib/createBrowserHistory",
+        "history/lib/createHashHistory",
+        "react-addons-test-utils",
         "react-widgets",
         "title-case"
     ]

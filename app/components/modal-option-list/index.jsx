@@ -37,7 +37,7 @@ var ModalOptionList = React.createClass({
             return (
                 <bootstrap.ListGroupItem
                     key={this.props.getKey(value)}
-                    onClick={R.partial(value.action, this.props.getKey(value))}
+                    onClick={R.partial(value.action, [this.props.getKey(value)])}
                     style={{
                         color: colors.greySubTitle,
                         textAlign: "left"

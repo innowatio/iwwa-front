@@ -1,13 +1,14 @@
-var Immutable  = require("immutable");
-var moment     = require("moment");
-var Radium     = require("radium");
-var R          = require("ramda");
-var React      = require("react");
-var IPropTypes = require("react-immutable-proptypes");
+var Immutable       = require("immutable");
+var moment          = require("moment");
+var Radium          = require("radium");
+var R               = require("ramda");
+var React           = require("react");
+var ReactPureRender = require("react-addons-pure-render-mixin");
+var IPropTypes      = require("react-immutable-proptypes");
 
 var colors          = require("lib/colors");
 var components      = require("components");
-var measuresUtils = require("lib/collection-utils").measures;
+var measuresUtils   = require("lib/collection-utils").measures;
 
 var DateCompare = React.createClass({
     propTypes: {
@@ -21,7 +22,7 @@ var DateCompare = React.createClass({
         tipologia: React.PropTypes.object,
         valori: React.PropTypes.arrayOf(React.PropTypes.object)
     },
-    mixins: [React.addons.PureRenderMixin],
+    mixins: [ReactPureRender],
     getDateRanges: function () {
         var dc = this.props.dateCompare;
         if (dc.period.key === "7 days before") {

@@ -1,13 +1,16 @@
-var R         = require("ramda");
-var Radium    = require("radium");
-var React     = require("react");
-var bootstrap = require("react-bootstrap");
-var Calendar  = require("react-widgets").Calendar;
-var moment    = require("moment");
+var R               = require("ramda");
+var Radium          = require("radium");
+var React           = require("react");
+var bootstrap       = require("react-bootstrap");
+var Calendar        = require("react-widgets").Calendar;
+var moment          = require("moment");
+var momentLocalizer = require("react-widgets/lib/localizers/moment");
 
 var colors     = require("lib/colors");
 var components = require("components/");
 var measures   = require("lib/measures");
+
+momentLocalizer(moment);
 
 var DatefilterMonthlyModal = React.createClass({
     propTypes: {
@@ -50,7 +53,7 @@ var DatefilterMonthlyModal = React.createClass({
         return result;
     },
     confirmAndClose: function () {
-        R.partial(this.props.onChange, this.state.value, "dateCompare")();
+        R.partial(this.props.onChange, [this.state.value, "dateCompare"])();
         this.close();
     },
     close: function () {
@@ -59,10 +62,10 @@ var DatefilterMonthlyModal = React.createClass({
         });
     },
     defaultStartDate: function () {
-        return moment().subtract(1, "months").startOf("month")._d;
+        return moment().startOf("month")._d;
     },
     defaultEndDate: function () {
-        return moment().startOf("month")._d;
+        return moment().add(1, "months").startOf("month")._d;
     },
     open: function () {
         this.setState({
@@ -149,14 +152,14 @@ var DatefilterMonthlyModal = React.createClass({
                     <bootstrap.Modal.Body style={{textAlign: "center"}}>
                         <Calendar
                             className="centering"
-                            culture={"en-GB"}
-                            finalView={"decade"}
-                            format="MMM dd, yyyy"
-                            initialView={"year"}
-                            monthFormat={"MMMM"}
+                            culture="it"
+                            finalView="decade"
+                            format="DD MMM YYYY"
+                            initialView="year"
+                            monthFormat="MMMM"
                             onChange={this.setDate}
                             style={{borderRadius: "0px", outline: "0px"}}
-                            value={R.isNil(this.state.value.start) ? undefined : this.state.value.start}
+                            value={this.state.value.start ? this.state.value.start : undefined}
                         />
                     </bootstrap.Modal.Body>
                     <bootstrap.Modal.Footer style={{textAlign: "center", border: "0px", marginTop: "20px"}}>

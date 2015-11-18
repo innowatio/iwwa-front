@@ -115,26 +115,23 @@ var CollectionElementsTable = React.createClass({
     },
     renderBody: function () {
         return (
-            <div>
-                {this.renderHead()}
-                <tbody>
-                    {this.props.collection.map(item => {
-                        var key = (
-                            this.props.getKey ?
-                            this.props.getKey(item) :
-                            item.hashCode()
-                        );
-                        return (
-                            <Row
-                                columns={this.props.columns}
-                                item={item}
-                                key={key}
-                                width={this.props.width}
-                            />
-                        );
-                    }).toArray()}
-                </tbody>
-            </div>
+            <tbody>
+                {this.props.collection.map(item => {
+                    var key = (
+                        this.props.getKey ?
+                        this.props.getKey(item) :
+                        item.hashCode()
+                    );
+                    return (
+                        <Row
+                            columns={this.props.columns}
+                            item={item}
+                            key={key}
+                            width={this.props.width}
+                        />
+                    );
+                }).toArray()}
+            </tbody>
         );
     },
     render: function () {
@@ -147,6 +144,7 @@ var CollectionElementsTable = React.createClass({
                     striped={this.props.striped}
                     style={{borderBottom: "1px solid" + colors.greyBorder}}
                 >
+                    {this.renderHead()}
                     {this.renderBody()}
                 </bootstrap.Table>
             </div>

@@ -1,7 +1,7 @@
-var Radium    = require("radium");
-var React     = require("react");
-var bootstrap = require("react-bootstrap");
-var R         = require("ramda");
+var bootstrap           = require("react-bootstrap");
+var R                   = require("ramda");
+var Radium              = require("radium");
+var React               = require("react");
 
 var components = require("components/");
 
@@ -27,7 +27,7 @@ var Popover = React.createClass({
     },
     addOnClickCloseToChild: function (child) {
         var self = this;
-        return React.addons.cloneWithProps(child, {
+        return React.cloneElement(child, {
             onChange: (a) => {
                 self.closePopover();
                 if (!R.isNil(child.props.onChange)) {

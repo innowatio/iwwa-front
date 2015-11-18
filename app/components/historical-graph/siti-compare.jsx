@@ -1,7 +1,8 @@
-var Immutable  = require("immutable");
-var Radium     = require("radium");
-var React      = require("react");
-var IPropTypes = require("react-immutable-proptypes");
+var Immutable       = require("immutable");
+var IPropTypes      = require("react-immutable-proptypes");
+var Radium          = require("radium");
+var React           = require("react");
+var ReactPureRender = require("react-addons-pure-render-mixin");
 
 var colors      = require("lib/colors");
 var components  = require("components");
@@ -15,7 +16,7 @@ var SitiCompare = React.createClass({
         tipologia: React.PropTypes.object,
         valori: React.PropTypes.arrayOf(React.PropTypes.object)
     },
-    mixins: [React.addons.PureRenderMixin],
+    mixins: [ReactPureRender],
     getCoordinates: function () {
         var pods = this.props.siti.map(function (sito) {
             return sito.get("pod");

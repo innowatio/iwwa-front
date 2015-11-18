@@ -1,10 +1,11 @@
-var Radium     = require("radium");
-var bootstrap  = require("react-bootstrap");
-var R          = require("ramda");
-var React      = require("react");
-var ReactLink  = require("react/lib/ReactLink");
-var IPropTypes = require("react-immutable-proptypes");
-var Waypoint   = require("react-waypoint");
+var bootstrap       = require("react-bootstrap");
+var IPropTypes      = require("react-immutable-proptypes");
+var R               = require("ramda");
+var Radium          = require("radium");
+var React           = require("react");
+var ReactLink       = require("react/lib/ReactLink");
+var ReactPureRender = require("react-addons-pure-render-mixin");
+var Waypoint        = require("react-waypoint");
 
 var components = require("components");
 var colors     = require("lib/colors");
@@ -27,7 +28,7 @@ var SelectTree = React.createClass({
         ]),
         valueLink: ReactLink.PropTypes.link()
     },
-    mixins: [React.addons.PureRenderMixin],
+    mixins: [ReactPureRender],
     getDefaultProps: function () {
         return {
             getLabel: function (allowedValue) {
@@ -86,7 +87,7 @@ var SelectTree = React.createClass({
             <span>
                 <components.Button
                     bsStyle="link"
-                    onClick={R.partial(this.onClickActiveSite, allowedValue)}
+                    onClick={R.partial(this.onClickActiveSite, [allowedValue])}
                     style={{
                         textDecoration: "none",
                         width: this.state.subMenu ? "80%" : "100%",
@@ -110,7 +111,7 @@ var SelectTree = React.createClass({
         return this.state.subMenu ?
             <components.Button
                 bsStyle="link"
-                onClick={R.partial(this.onClickOpenPanel, allowedValue)}
+                onClick={R.partial(this.onClickOpenPanel, [allowedValue])}
                 style={{
                     height: "54px",
                     width: this.state.subMenu ? "20%" : "0%",

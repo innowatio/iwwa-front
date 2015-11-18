@@ -151,7 +151,7 @@ var AlarmRepetitionModal = React.createClass({
                     {"Dalle ore"}
                     <TimePicker
                         className="timepicker"
-                        onChange={R.partial(this.onChange, "valueTimeStart")}
+                        onChange={R.partial(this.onChange, ["valueTimeStart"])}
                         style={style.timePicker}
                         value={this.state.valueTimeStart}
                     />
@@ -173,7 +173,7 @@ var AlarmRepetitionModal = React.createClass({
                     />
                     <TimePicker
                         className="timepicker"
-                        onChange={R.partial(this.onChange, "valueTimeEnd")}
+                        onChange={R.partial(this.onChange, ["valueTimeEnd"])}
                         style={style.timePicker}
                         value={this.state.valueTimeEnd}
                     />

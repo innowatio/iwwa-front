@@ -1,6 +1,7 @@
 var R         = require("ramda");
 var Radium    = require("radium");
 var React     = require("react");
+var ReactDOM  = require("react-dom");
 var Loader    = require("halogen/PacmanLoader");
 var bootstrap = require("react-bootstrap");
 var moment    = require("moment");
@@ -164,7 +165,7 @@ var TemporalLineGraph = React.createClass({
         this.graph.setAnnotations(annotations);
     },
     drawGraph: function () {
-        var container = this.refs.graphContainer.getDOMNode();
+        var container = this.refs.graphContainer;
         var coordinates = this.getCoordinatesFromProps(this.props);
         var options = this.getOptionsFromProps(this.props);
         /*

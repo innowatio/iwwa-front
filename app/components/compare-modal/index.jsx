@@ -1,7 +1,7 @@
-var R              = require("ramda");
-var Radium         = require("radium");
-var React          = require("react");
-var bootstrap      = require("react-bootstrap");
+var bootstrap           = require("react-bootstrap");
+var R                   = require("ramda");
+var Radium              = require("radium");
+var React               = require("react");
 
 var colors     = require("lib/colors");
 var components = require("components/");
@@ -26,7 +26,7 @@ var Compare = React.createClass({
     },
     addCloseModalToChild: function (child) {
         var closeAction = this.close;
-        return React.addons.cloneWithProps(child, {
+        return React.cloneElement(child, {
             closeModal: closeAction
         });
     },

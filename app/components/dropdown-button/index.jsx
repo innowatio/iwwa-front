@@ -53,8 +53,8 @@ var DropdownButton = React.createClass({
         return (
             <bootstrap.ListGroupItem
                 key={this.props.getKey(allowedValue)}
-                onClick={R.partial(this.props.onChange, allowedValue)}
-                onMouseOver={R.partial(this.mouseOver, allowedValue)}
+                onClick={R.partial(this.props.onChange, [allowedValue])}
+                onMouseOver={R.partial(this.mouseOver, [allowedValue])}
                 style={{
                     borderLeft: "0px",
                     borderRight: "0px",

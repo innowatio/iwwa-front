@@ -38,7 +38,7 @@ var DropdownSelect = React.createClass({
         return (
             <bootstrap.ListGroupItem
                 key={this.props.getKey(allowedValue)}
-                onClick={R.partial(this.props.onChange, allowedValue)}
+                onClick={R.partial(this.props.onChange, [allowedValue])}
                 style={{
                     background: (active ? colors.primary : ""),
                     color: (active ? colors.white : colors.darkBlack),

@@ -1,21 +1,22 @@
-var axios      = require("axios");
-var Immutable  = require("immutable");
-var moment     = require("moment");
-var Radium     = require("radium");
-var R          = require("ramda");
-var React      = require("react");
-var bootstrap  = require("react-bootstrap");
-var IPropTypes = require("react-immutable-proptypes");
-var Router     = require("react-router");
+var axios           = require("axios");
+var bootstrap       = require("react-bootstrap");
+var Immutable       = require("immutable");
+var IPropTypes      = require("react-immutable-proptypes");
+var moment          = require("moment");
+var R               = require("ramda");
+var Radium          = require("radium");
+var React           = require("react");
+var ReactStateMixin = require("react-addons-linked-state-mixin");
+var Router          = require("react-router");
 
-var components      = require("components");
-var CollectionUtils = require("lib/collection-utils");
-var colors          = require("lib/colors");
-var stringIt        = require("lib/string-it");
-var styles          = require("lib/styles");
-var tutorialString  = require("assets/JSON/tutorial-string.json");
-var GetTutorialMixin   = require("lib/get-tutorial-mixin");
-var icons           = require("lib/icons");
+var components       = require("components");
+var CollectionUtils  = require("lib/collection-utils");
+var colors           = require("lib/colors");
+var stringIt         = require("lib/string-it");
+var styles           = require("lib/styles");
+var tutorialString   = require("assets/JSON/tutorial-string.json");
+var GetTutorialMixin = require("lib/get-tutorial-mixin");
+var icons            = require("lib/icons");
 
 var less = function (time1, time2) {
     return (
@@ -32,7 +33,7 @@ var AlarmForm = React.createClass({
         siti: IPropTypes.map.isRequired,
         type: React.PropTypes.oneOf(["insert", "update"]).isRequired
     },
-    mixins: [React.addons.LinkedStateMixin, GetTutorialMixin(
+    mixins: [ReactStateMixin, GetTutorialMixin(
         "alarm-form", ["siti", "threshold", "name", "notification", "repetition"])],
     getInitialState: function () {
         return this.getStateFromProps(this.props);

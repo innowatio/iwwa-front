@@ -1,8 +1,9 @@
-var Immutable  = require("immutable");
-var R          = require("ramda");
-var React      = require("react");
-var bootstrap  = require("react-bootstrap");
-var IPropTypes = require("react-immutable-proptypes");
+var bootstrap       = require("react-bootstrap");
+var Immutable       = require("immutable");
+var IPropTypes      = require("react-immutable-proptypes");
+var R               = require("ramda");
+var React           = require("react");
+var ReactPureRender = require("react-addons-pure-render-mixin");
 
 var colors     = require("lib/colors");
 var components = require("components");
@@ -26,7 +27,7 @@ var ButtonGroupSelect = React.createClass({
             IPropTypes.list
         ])
     },
-    mixins: [React.addons.PureRenderMixin],
+    mixins: [ReactPureRender],
     getDefaultProps: function () {
         var defaultGetter = function (allowedValue) {
             return allowedValue.toString();
@@ -106,7 +107,7 @@ var ButtonGroupSelect = React.createClass({
                 active={active}
                 disabled={this.props.getKey(allowedValue) === "previsionale" ? true : false}
                 key={this.props.getKey(allowedValue)}
-                onClick={R.partial(this.onChange, allowedValue)}
+                onClick={R.partial(this.onChange, [allowedValue])}
                 style={active ? this.props.getActiveStyle(allowedValue) : styleDropdown}
             >
                 {this.props.getLabel(allowedValue)}

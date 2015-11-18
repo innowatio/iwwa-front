@@ -1,9 +1,10 @@
-var Immutable  = require("immutable");
-var Radium     = require("radium");
-var R          = require("ramda");
-var React      = require("react");
-var IPropTypes = require("react-immutable-proptypes");
-var moment     = require("moment");
+var Immutable       = require("immutable");
+var IPropTypes      = require("react-immutable-proptypes");
+var moment          = require("moment");
+var Radium          = require("radium");
+var R               = require("ramda");
+var React           = require("react");
+var ReactPureRender = require("react-addons-pure-render-mixin");
 
 var components    = require("components");
 var measuresUtils = require("lib/collection-utils").measures;
@@ -23,7 +24,7 @@ var ValoriCompare = React.createClass({
         tipologia: React.PropTypes.object,
         valori: React.PropTypes.arrayOf(React.PropTypes.object)
     },
-    mixins: [React.addons.PureRenderMixin],
+    mixins: [ReactPureRender],
     getCoordinates: function () {
         var self = this;
         var selectedPod = self.props.siti[0] ? self.props.siti[0].get("pod") : "";

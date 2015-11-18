@@ -97,7 +97,7 @@ describe("The `DropdownSelect` component ", function () {
         var selectNode = TestUtils.renderIntoDocument(selectElement);
         var itemNodes = TestUtils.scryRenderedComponentsWithType(selectNode, bootstrap.MenuItem);
         itemNodes.forEach(function (itemNode, index) {
-            var itemDOMNode = itemNode.getDOMNode();
+            var itemDOMNode = ReactDOM.findDOMNode(itemNode);
             TestUtils.Simulate.select(itemDOMNode);
             expect(changeSpy).to.have.been.calledWith(allowedValues[index]);
             changeSpy.reset();

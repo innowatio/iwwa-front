@@ -18,7 +18,7 @@ var ConsumptionButtons = React.createClass({
         return (
             <bootstrap.Button
                 key={consumption.key}
-                onClick={R.partial(this.props.onChange, consumption)}
+                onClick={R.partial(this.props.onChange, [consumption])}
                 style={R.merge(this.props.styleButton, isSelected ? this.props.styleButtonSelected : {})}
             >
                 {consumption.icon ? <img src={isSelected && consumption.selected ? consumption.selected : consumption.icon} style={this.props.styleIcon} /> : ""}

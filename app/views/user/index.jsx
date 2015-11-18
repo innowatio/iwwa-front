@@ -142,7 +142,7 @@ var User = React.createClass({
                 <td style={{textAlign: "left", color: colors.greySubTitle}}>
                     {sito.get("pod")} <components.Spacer direction="h" size={20}/> {CollectionUtils.siti.getLabel(sito)}
                 </td>
-                <td onClick={R.partial(this.removeSiteFromUser, sito)}
+                <td onClick={R.partial(this.removeSiteFromUser, [sito])}
                     style={{width: "36px", textAlign: "center", cursor: "pointer", paddingRight: "20px"}}>
                     <components.Icon icon="minus" style={{color: colors.primary}} />
                 </td>
@@ -154,7 +154,7 @@ var User = React.createClass({
         return this.getRoles().map(role => {
             const userHasRole = userRoles.includes(role.get("name"));
             return role.get("name") !== "admin" ? (
-                <components.Button key={role.get("_id")} onClick={R.partial(this.onToggleUserRoles, role.get("name"))}
+                <components.Button key={role.get("_id")} onClick={R.partial(this.onToggleUserRoles, [role.get("name")])}
                     style={{
                         marginRight: "20px",
                         backgroundColor: userHasRole ? colors.primary : colors.greyBackground,

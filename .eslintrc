@@ -17,6 +17,7 @@
         "expect": true,
         "proxyquire": true,
         "React": true,
+        "ReactDOM": true,
         "sinon": true,
         "TestUtils": true
     },

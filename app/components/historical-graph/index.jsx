@@ -1,7 +1,8 @@
-var Radium     = require("radium");
-var React      = require("react");
-var IPropTypes = require("react-immutable-proptypes");
-var titleCase  = require("title-case");
+var IPropTypes      = require("react-immutable-proptypes");
+var Radium          = require("radium");
+var React           = require("react");
+var ReactPureRender = require("react-addons-pure-render-mixin");
+var titleCase       = require("title-case");
 
 var icons              = require("lib/icons");
 var colors             = require("lib/colors");
@@ -24,7 +25,7 @@ var HistoricalGraph = React.createClass({
         tipologia: React.PropTypes.object,
         valori: React.PropTypes.arrayOf(React.PropTypes.object)
     },
-    mixins: [React.addons.PureRenderMixin],
+    mixins: [ReactPureRender],
     exportPNG: function () {
         return this.refs.temporalLineGraph.exportPNG;
     },

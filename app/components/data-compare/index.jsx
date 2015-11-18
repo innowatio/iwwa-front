@@ -55,7 +55,7 @@ var DataCompare = React.createClass({
             <components.Button
                 active={active}
                 key={this.props.getKey(allowedValue)}
-                onClick={R.partial(this.selectedCheckboxDate, allowedValue)}
+                onClick={R.partial(this.selectedCheckboxDate, [allowedValue])}
                 style={styles.buttonCompare}
                 value={allowedValue}
             >

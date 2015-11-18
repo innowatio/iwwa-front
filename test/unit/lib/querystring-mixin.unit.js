@@ -12,7 +12,7 @@ describe("The `QuerystringMixin`", function () {
     });
 
     it("should have been mixed in with react-router's `Navigation` mixin", function () {
-        expect(QuerystringMixin).to.include.keys(R.keys(Router.Navigation));
+        expect(QuerystringMixin).to.include.keys(R.keys(Router.History));
     });
 
     it("should define a `bindToQueryParameter` method", function () {
@@ -70,7 +70,9 @@ describe("The `onChange` property of the object returned by the `bindToQueryPara
                     }
                 }
             },
-            replaceWith: sinon.spy()
+            history: {
+                replaceState: sinon.spy()
+            }
         };
         var transformer = {
             parse: sinon.spy(R.identity),
@@ -79,7 +81,8 @@ describe("The `onChange` property of the object returned by the `bindToQueryPara
         var actual = QuerystringMixin.bindToQueryParameter.call(instance, "queryKey", transformer);
         actual.onChange.call(instance, "newQueryValue");
         expect(transformer.stringify).to.have.been.calledWith("newQueryValue");
-        expect(instance.replaceWith).to.have.been.calledWith(
+        expect(instance.history.replaceState).to.have.been.calledWith(
+            null,
             instance.props.location.pathname,
             {queryKey: "newQueryValue"}
         );

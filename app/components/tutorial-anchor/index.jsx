@@ -12,7 +12,7 @@ var TutorialAnchor = React.createClass({
     },
     getOptions: function () {
         return {
-            element: this.refs.div.getDOMNode(),
+            element: this.refs.div,
             intro: this.props.message,
             position: this.props.position,
             order: this.props.order

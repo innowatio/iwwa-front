@@ -1,7 +1,7 @@
-var React          = require("react");
-var Router         = require("react-router");
-var BrowserHistory = require("react-router/lib/BrowserHistory");
-var HashHistory    = require("react-router/lib/HashHistory");
+import {Router, Route} from "react-router";
+import BrowserHistory from "history/lib/createBrowserHistory";
+import HashHistory from "history/lib/createHashHistory";
+var React = require("react");
 
 var views = require("views");
 
@@ -13,15 +13,15 @@ var checkLocalStorageAndRedirect = function (nextState, replaceState) {
 };
 
 module.exports = (
-    <Router.Router history={ENVIRONMENT === "cordova" ? HashHistory.history : BrowserHistory.history}>
-        <Router.Route component={views.Root} name="root">
-            <Router.Route component={views.Alarms} name="alarms" path="/alarms/" />
-            <Router.Route component={views.Alarms} name="alarm" path="/alarms/:id" />
-            <Router.Route component={views.Users} name="users" path="/users/" />
-            <Router.Route component={views.User} name="user" path="/users/:id" />
-            <Router.Route component={views.Chart} name="chart" onEnter={checkLocalStorageAndRedirect} path="/chart/" />
-            <Router.Route component={views.Dashboard} name="dashboard" path="/dashboard/" />
-            <Router.Route component={views.Dashboard} name="home" path="/" />
-        </Router.Route>
-    </Router.Router>
+    <Router history={ENVIRONMENT === "cordova" ? HashHistory() : BrowserHistory()}>
+        <Route component={views.Root} name="root">
+            <Route component={views.Alarms} name="alarms" path="/alarms/" />
+            <Route component={views.Alarms} name="alarm" path="/alarms/:id" />
+            <Route component={views.Users} name="users" path="/users/" />
+            <Route component={views.User} name="user" path="/users/:id" />
+            <Route component={views.Chart} name="chart" onEnter={checkLocalStorageAndRedirect} path="/chart/" />
+            <Route component={views.Dashboard} name="dashboard" path="/dashboard/" />
+            <Route component={views.Dashboard} name="home" path="/" />
+        </Route>
+    </Router>
 );

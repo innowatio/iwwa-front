@@ -81,7 +81,7 @@ describe("The `ButtonGroupSelect` component ", function () {
             />
         );
         var selectNode = TestUtils.renderIntoDocument(selectElement);
-        var selectDOMNode = selectNode.getDOMNode();
+        var selectDOMNode = ReactDOM.findDOMNode(selectNode);
         expect(selectDOMNode.children.length).to.equal(allowedValues.length);
     });
 
@@ -128,7 +128,7 @@ describe("The `ButtonGroupSelect` component ", function () {
             var selectNode = TestUtils.renderIntoDocument(selectElement);
             var buttonNodes = TestUtils.scryRenderedComponentsWithType(selectNode, Button);
             buttonNodes.forEach(function (buttonNode, index) {
-                var buttonDOMNode = buttonNode.getDOMNode();
+                var buttonDOMNode = ReactDOM.findDOMNode(buttonNode);
                 TestUtils.Simulate.click(buttonDOMNode);
                 expect(changeSpy).to.have.been.calledWith(allowedValues.slice(index, index + 1));
                 changeSpy.reset();
@@ -181,7 +181,7 @@ describe("The `ButtonGroupSelect` component ", function () {
             var selectNode = TestUtils.renderIntoDocument(selectElement);
             var buttonNodes = TestUtils.scryRenderedComponentsWithType(selectNode, Button);
             buttonNodes.forEach(function (buttonNode, index) {
-                var buttonDOMNode = buttonNode.getDOMNode();
+                var buttonDOMNode = ReactDOM.findDOMNode(buttonNode);
                 TestUtils.Simulate.click(buttonDOMNode);
                 expect(changeSpy).to.have.been.calledWith([allowedValues[index]]);
                 changeSpy.reset();

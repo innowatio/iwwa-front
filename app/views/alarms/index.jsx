@@ -268,7 +268,7 @@ var Alarms = React.createClass({
         return (
             <bootstrap.ListGroupItem
                 key={[allowedValue, label]}
-                onClick={R.partial(this.onClickFilter, label, allowedValue)}
+                onClick={R.partial(this.onClickFilter, [label, allowedValue])}
                 style={{
                     paddingLeft: "10px",
                     borderRadius: "0px",
@@ -293,7 +293,7 @@ var Alarms = React.createClass({
                 <bootstrap.ListGroup>
                     {
                         R.is(Array, value.label) ?
-                        value.label.map(R.partial(this.renderFilterTableCell, value)) :
+                        value.label.map(R.partial(this.renderFilterTableCell, [value])) :
                         this.renderFilterTableCell(value, value.label)
                     }
                 </bootstrap.ListGroup>
@@ -389,7 +389,7 @@ var Alarms = React.createClass({
                             </div> */}
                             <components.Spacer direction="v" size={30}/>
                             <components.CollectionElementsTable
-                                collection={this.getNotifications().sort(R.partialRight(this.sortByDate, false))}
+                                collection={this.getNotifications().sort(R.partialRight(this.sortByDate, [false]))}
                                 columns={this.getColumnsNotifications()}
                                 getKey={getKeyFromNotification}
                                 hover={true}

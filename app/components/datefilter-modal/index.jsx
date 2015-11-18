@@ -1,13 +1,16 @@
-var R         = require("ramda");
-var Radium    = require("radium");
-var React     = require("react");
-var bootstrap = require("react-bootstrap");
-var Calendar  = require("react-widgets").Calendar;
-var moment    = require("moment");
+var R               = require("ramda");
+var Radium          = require("radium");
+var React           = require("react");
+var bootstrap       = require("react-bootstrap");
+var Calendar        = require("react-widgets").Calendar;
+var moment          = require("moment");
+var momentLocalizer = require("react-widgets/lib/localizers/moment");
 
 var colors     = require("lib/colors");
 var components = require("components/");
 var measures   = require("lib/measures");
+
+momentLocalizer(moment);
 
 var styles = {
     buttonCompare: {
@@ -57,7 +60,7 @@ var DatefilterModal = React.createClass({
         return result;
     },
     confirmAndClose: function () {
-        R.partial(this.props.onChange, this.state.value, "dateCompare")();
+        R.partial(this.props.onChange, [this.state.value, "dateCompare"])();
         this.close();
     },
     close: function () {
@@ -138,7 +141,7 @@ var DatefilterModal = React.createClass({
             <components.Button
                 active={active}
                 key={this.props.getKey(allowedValue)}
-                onClick={R.partial(this.selectedCheckboxDate, allowedValue)}
+                onClick={R.partial(this.selectedCheckboxDate, [allowedValue])}
                 style={styles.buttonCompare}
                 value={allowedValue}
             >
@@ -180,14 +183,14 @@ var DatefilterModal = React.createClass({
                         culture={"en-GB"}
                         dayFormat={day => ["D", "L", "M", "M", "G", "V", "S"][day]}
                         format="MMM dd, yyyy"
-                        onChange={R.partial(this.setDate, "end")}
+                        onChange={R.partial(this.setDate, ["end"])}
                         style={{width: "40%"}}
                         value={this.state.value.end}
                     />
                     <Calendar
                         dayFormat={day => ["D", "L", "M", "M", "G", "V", "S"][day]}
                         format="MMM dd, yyyy"
-                        onChange={R.partial(this.setDate, "start")}
+                        onChange={R.partial(this.setDate, ["start"])}
                         style={{width: "40%"}}
                         value={this.state.value.start}
                     />
