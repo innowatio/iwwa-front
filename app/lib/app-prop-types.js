@@ -24,9 +24,9 @@ exports.DygraphCoordinate = function (props, propName) {
             return error;
         }
         return (
-            R.isNil(y) || (isArrayOfNumbers(y) && y.length === 2) ?
+            R.isNil(y) || (isArrayOfNumbers(y) && y.length === 1) ?
             null :
-            new Error(propName + "[" + index + "] must be a 2-tuple of numbers")
+            new Error(propName + "[" + index + "] must be a 1-tuple of numbers")
         );
     }, null);
 };

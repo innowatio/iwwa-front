@@ -5,12 +5,12 @@ var AppPropTypes = proxyquire("lib/app-prop-types.js", {});
 describe("The DygraphCoordinate method", function () {
 
     it("should not return an error if the prop is a DygraphCoordinate format", function () {
-        var case1 = [new Date(), [2, 2]];
-        var case2 = [new Date(), [1, 2], [3, 4]];
+        var case1 = [new Date(), [2]];
+        var case2 = [new Date(), [1], [3]];
         var props = {coordinates: case1};
-        expect(AppPropTypes.DygraphCoordinate(props, "coordinates")).to.be.null;
+        expect(AppPropTypes.DygraphCoordinate(props, "coordinates")).to.equal(null);
         props = {coordinates: case2};
-        expect(AppPropTypes.DygraphCoordinate(props, "coordinates")).to.be.null;
+        expect(AppPropTypes.DygraphCoordinate(props, "coordinates")).to.equal(null);
     });
 
     it("should return an error if the first element of the coordinates is not a Date", function () {
@@ -28,7 +28,7 @@ describe("The DygraphCoordinate method", function () {
 
         var validationResult = AppPropTypes.DygraphCoordinate(props, "coordinates");
         expect(validationResult).to.be.an.instanceOf(Error);
-        expect(validationResult.message).to.contains("must be a 2-tuple of numbers");
+        expect(validationResult.message).to.contains("must be a 1-tuple of numbers");
     });
 
     it("should return an error if the array don't contains numbers only", function () {
@@ -38,16 +38,16 @@ describe("The DygraphCoordinate method", function () {
 
         var validationResult = AppPropTypes.DygraphCoordinate(props, "coordinates");
         expect(validationResult).to.be.an.instanceOf(Error);
-        expect(validationResult.message).to.contains("must be a 2-tuple of numbers");
+        expect(validationResult.message).to.contains("must be a 1-tuple of numbers");
     });
 
-    it("should return an error if the array contains more than two values", function () {
+    it("should return an error if the array contains more than one values", function () {
 
-        var case1 = [new Date(), [1, 2, 3]];
+        var case1 = [new Date(), [1, 2]];
         var props = {coordinates: case1};
 
         var validationResult = AppPropTypes.DygraphCoordinate(props, "coordinates");
         expect(validationResult).to.be.an.instanceOf(Error);
-        expect(validationResult.message).to.contains("must be a 2-tuple of numbers");
+        expect(validationResult.message).to.contains("must be a 1-tuple of numbers");
     });
 });
