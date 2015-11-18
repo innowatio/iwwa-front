@@ -176,7 +176,6 @@ var AlarmForm = React.createClass({
                     <components.Popover
                         arrow="none"
                         hideOnChange={true}
-                        style="inherit"
                         title={this.renderTitleSelectSite()}
                     >
                         <components.SelectTree
