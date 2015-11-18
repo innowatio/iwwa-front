@@ -16,6 +16,7 @@ var styles = {
         transition: "left 0.3s ease"
     },
     content: {
+        width: "100%",
         top: measures.headerHeight,
         height: "100%",
         transition: "left 0.3s ease"
@@ -119,7 +120,7 @@ var Root = React.createClass({
                 </div>
                 <div style={ENVIRONMENT === "cordova" ?
                         styles.content :
-                        R.merge(styles.content, {width: "calc(100vw - 55px)", float: "right"})} >
+                        R.merge(styles.content, {width: `calc(100% - ${measures.sidebarShoulderWidth})`, float: "right"})} >
                     {this.renderChildren()}
                 </div>
                 <div style={styles.footer} >

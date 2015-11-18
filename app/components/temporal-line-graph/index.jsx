@@ -1,7 +1,6 @@
 var R         = require("ramda");
 var Radium    = require("radium");
 var React     = require("react");
-var ReactDOM  = require("react-dom");
 var Loader    = require("halogen/PacmanLoader");
 var bootstrap = require("react-bootstrap");
 var moment    = require("moment");
@@ -13,7 +12,7 @@ var colors           = require("lib/colors");
 
 var styles = {
     graphContainer: {
-        width: ENVIRONMENT === "cordova" ? "calc(100vw - 100px)" : "calc(100vw - 115px)",
+        width: ENVIRONMENT === "cordova" ? "calc(100vw - 100px)" : `calc(100vw - 165px)`,
         height: "calc(100vh - 400px)",
         margin: "20px 20px 30px 0px"
     }

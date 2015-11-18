@@ -10,10 +10,11 @@ var CollectionUtils    = require("lib/collection-utils");
 var colors             = require("lib/colors");
 var components         = require("components/");
 var icons              = require("lib/icons");
+var GetTutorialMixin   = require("lib/get-tutorial-mixin");
+var measures           = require("lib/measures");
 var QuerystringMixin   = require("lib/querystring-mixin");
 var styles             = require("lib/styles");
 var transformers       = require("./transformers.js");
-var GetTutorialMixin   = require("lib/get-tutorial-mixin");
 var tutorialString     = require("assets/JSON/tutorial-string.json").historicalGraph;
 
 var selectStyles = {
@@ -386,13 +387,13 @@ var Chart = React.createClass({
                             allowedValues={this.getConsumptions()}
                             onChange={this.consumptionFunction}
                             selectedValue={consumptionProps.value}
-                            style={{width: "calc(100vw - 13px)"}}
+                            style={{width: "100%"}}
                             styleButton={consumptionButtonStyle}
                             styleButtonSelected={consumptionButtonSelectedStyle}
                             styleIcon={{height: "25px", marginRight: "10px", borderRadius: "0px"}}
                         />
                     </bootstrap.Col>
-                    <bootstrap.Col  className="modal-container" sm={12}>
+                    <div className="modal-container">
                         <components.TutorialAnchor
                             message={ENVIRONMENT === "cordova" ? tutorialString.appGraph : tutorialString.webGraph}
                             order={7}
@@ -414,7 +415,7 @@ var Chart = React.createClass({
                                 valori={valoreInputProps.value}
                             />
                         </components.TutorialAnchor>
-                    </bootstrap.Col>
+                    </div>
                 </div>
             </div>
         );
