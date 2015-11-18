@@ -12,7 +12,7 @@ var colors           = require("lib/colors");
 
 var styles = {
     graphContainer: {
-        width: ENVIRONMENT === "cordova" ? "calc(100vw - 100px)" : `calc(100vw - 165px)`,
+        width: ENVIRONMENT === "cordova" ? "calc(100vw - 100px)" : `calc(100vw - 130px)`,
         height: "calc(100vh - 400px)",
         margin: "20px 20px 30px 0px"
     }
@@ -279,8 +279,7 @@ var TemporalLineGraph = React.createClass({
                                 },
                                 ".modal-container .modal, .modal-container .modal-backdrop": {
                                     position: "absolute",
-                                    width: "98%",
-                                    left: "1%"
+                                    width: "98%"
                                 },
                                 ".modal": {
                                     top: "50%",
@@ -324,6 +323,7 @@ var TemporalLineGraph = React.createClass({
                         height: "56px"
                     },
                     ".dygraph-legend": {
+                        display: ENVIRONMENT === "cordova" ? "none" : "initial",
                         top: "-50px !important",
                         boxShadow: "2px 2px 5px " + colors.greySubTitle
                     }

@@ -155,7 +155,7 @@ var SelectTree = React.createClass({
                     position: "relative",
                     overflow: "scroll",
                     maxHeight: "400px",
-                    width: this.props.buttonCloseDefault ? "430px" : "200px"
+                    width: this.props.buttonCloseDefault ? "430px" : ""
                 }}>
                 <Radium.Style
                     rules={{
