@@ -87,7 +87,6 @@ var Popover = React.createClass({
                     rules={{
                         "": {
                             padding: "0px",
-                            // height: this.props.style === "inherit" ? "calc(100vh - 420px)" : "",
                             maxWidth: "500px",
                             width: this.props.arrow === "none" ? "430px" : "",
                             marginTop: this.props.arrow === "none" ? "0px !important" : ""

@@ -326,7 +326,6 @@ var Chart = React.createClass({
                             >
                                 <components.Popover
                                     hideOnChange={true}
-                                    style="inherit"
                                     title={<img src={icons.iconSiti} style={{width: "75%"}} />}
                                     tooltipId="tooltipMisurazione"
                                     tooltipMessage="Punti di misurazione"
