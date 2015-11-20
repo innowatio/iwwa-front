@@ -1,12 +1,22 @@
-var R         = require("ramda");
-var React     = require("react");
-var ReactDOM  = require("react-dom");
-var FastClick = require("fastclick");
+import R from "ramda";
+import React from "react";
+import {render} from "react-dom";
+import FastClick from "fastclick";
+import {Provider} from "react-redux";
+
+import store from "lib/redux-store";
+import routes from "lib/routes";
 
 FastClick.attach(document.body);
 
-var routes = require("lib/routes");
-ReactDOM.render(routes, document.getElementById("root"));
+
+const App = (
+    <Provider store={store}>
+        {routes}
+    </Provider>
+);
+
+render(App, document.getElementById("root"));
 
 window.R = R;
 window.React = React;

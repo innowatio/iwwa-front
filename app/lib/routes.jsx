@@ -1,9 +1,8 @@
-import {Router, Route} from "react-router";
-import BrowserHistory from "history/lib/createBrowserHistory";
-import HashHistory from "history/lib/createHashHistory";
-var React = require("react");
+import React from "react";
+import {Route} from "react-router";
+import {ReduxRouter} from "redux-router";
 
-var views = require("views");
+import * as views from "views";
 
 var checkLocalStorageAndRedirect = function (nextState, replaceState) {
     if (!nextState.location.query && localStorage.query) {
@@ -13,7 +12,7 @@ var checkLocalStorageAndRedirect = function (nextState, replaceState) {
 };
 
 module.exports = (
-    <Router history={ENVIRONMENT === "cordova" ? HashHistory() : BrowserHistory()}>
+    <ReduxRouter>
         <Route component={views.Root} name="root">
             <Route component={views.Alarms} name="alarms" path="/alarms/" />
             <Route component={views.Alarms} name="alarm" path="/alarms/:id" />
@@ -23,5 +22,5 @@ module.exports = (
             <Route component={views.Dashboard} name="dashboard" path="/dashboard/" />
             <Route component={views.Dashboard} name="home" path="/" />
         </Route>
-    </Router>
+    </ReduxRouter>
 );
