@@ -1,7 +1,8 @@
 import createBrowserHistory from "history/lib/createBrowserHistory";
 import createHashHistory from "history/lib/createHashHistory";
-import {compose, createStore} from "redux";
+import {compose, createStore, applyMiddleware} from "redux";
 import {reduxReactRouter} from "redux-router";
+import thunk from "redux-thunk";
 
 import rootReducer from "../reducers";
 
@@ -10,5 +11,8 @@ const createHistory = ENVIRONMENT === "cordova" ?
     createBrowserHistory;
 
 export default compose(
+    applyMiddleware(
+        thunk
+    ),
     reduxReactRouter({createHistory})
 )(createStore)(rootReducer);
