@@ -11,6 +11,7 @@ exports.DatefilterModal         = require("./datefilter-modal/");
 exports.DatefilterMonthlyModal  = require("./datefilter-monthly-modal/");
 exports.DropdownButton          = require("./dropdown-button/");
 exports.DropdownSelect          = require("./dropdown-select/");
+exports.Gauge                   = require("./gauge/");
 exports.Header                  = require("./header/");
 exports.HistoricalGraph         = require("./historical-graph/");
 exports.Icon                    = require("./icon/");

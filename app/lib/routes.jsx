@@ -21,6 +21,7 @@ module.exports = (
             <Route component={views.User} name="user" path="/users/:id" />
             <Route component={views.Chart} name="chart" onEnter={checkLocalStorageAndRedirect} path="/chart/" />
             <Route component={views.Dashboard} name="dashboard" path="/dashboard/" />
+            <Route component={views.RealTime} name="live" path="/live/" />
             <Route component={views.Dashboard} name="home" path="/" />
         </Route>
     </Router>
