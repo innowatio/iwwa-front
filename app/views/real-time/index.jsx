@@ -7,7 +7,11 @@ var RealTime = React.createClass({
     propTypes: {},
     render: function () {
         return (
-            <Gauge value={90}/>
+            <Gauge
+                maximum={100}
+                minimum={0}
+                value={50}
+            />
         );
     }
 });
