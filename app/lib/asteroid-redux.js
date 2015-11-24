@@ -1,3 +1,5 @@
+import debounce from "lodash.debounce";
+
 export const COLLECTIONS_CHANGE = "COLLECTIONS_CHANGE";
 
 function changeCollections (collections) {
@@ -9,7 +11,7 @@ function changeCollections (collections) {
 
 export function syncStoreAndAsteroid (store, asteroid) {
     store.dispatch(changeCollections(asteroid.collections));
-    asteroid.on("collections:change", () => {
+    asteroid.on("collections:change", debounce(() => {
         store.dispatch(changeCollections(asteroid.collections));
-    });
+    }, 50));
 }

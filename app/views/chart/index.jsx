@@ -1,10 +1,10 @@
 var Immutable  = require("immutable");
-var Radium     = require("radium");
 var R          = require("ramda");
 var React      = require("react");
 var moment     = require("moment");
 var bootstrap  = require("react-bootstrap");
 var IPropTypes = require("react-immutable-proptypes");
+import {connect} from "react-redux";
 
 var CollectionUtils    = require("lib/collection-utils");
 var colors             = require("lib/colors");
@@ -49,6 +49,13 @@ var consumptionButtonSelectedStyle = {
 var dateCompareProps;
 var sitoInputProps;
 var consumptionProps;
+
+function mapStateToProps (state) {
+    return {
+        location: state.router.location,
+        collections: state.collections
+    };
+}
 
 var Chart = React.createClass({
     propTypes: {
@@ -106,15 +113,38 @@ var Chart = React.createClass({
     },
     getConsumptions: function () {
         return [
-            {label: "Temperatura", color: colors.consumption, key: "temperature", icon: icons.iconTemperature, selected: icons.iconTemperatureSelected},
-            {label: "Umidità", color: colors.consumption, key: "humidity", icon: icons.iconHumidity, selected: icons.iconHumiditySelected},
-            {label: "Lux", color: colors.consumption, key: "illuminance", icon: icons.iconIdea, selected: icons.iconIdeaSelected},
-            {label: "CO2", color: colors.consumption, key: "co2", icon: icons.iconCO2, selected: icons.iconCO2Selected}
+            {
+                label: "Temperatura",
+                color: colors.consumption, key: "temperature",
+                icon: icons.iconTemperature,
+                selected: icons.iconTemperatureSelected
+
+            },
+            {
+                label: "Umidità", color: colors.consumption,
+                key: "humidity",
+                icon: icons.iconHumidity,
+                selected: icons.iconHumiditySelected
+            },
+            {
+                label: "Lux", color: colors.consumption,
+                key: "illuminance",
+                icon: icons.iconIdea,
+                selected: icons.iconIdeaSelected
+            },
+            {
+                label: "CO2", color: colors.consumption,
+                key: "co2",
+                icon: icons.iconCO2,
+                selected: icons.iconCO2Selected
+            }
             // {label: "Allarmi", key: "allarms", icon: icons.iconAlarm}
         ];
     },
     consumptionFunction: function (consumptionObject) {
-        var newValue = R.equals(consumptionObject, consumptionProps.value) ? "deleteValueFromURL" : consumptionObject;
+        var newValue = R.equals(consumptionObject, consumptionProps.value) ?
+            "deleteValueFromURL" :
+            consumptionObject;
         consumptionProps.onChange(newValue, "consumption");
     },
     getExportType: function () {
@@ -421,4 +451,4 @@ var Chart = React.createClass({
     }
 });
 
-module.exports = Radium(Chart);
+module.exports = connect(mapStateToProps)(Chart);
