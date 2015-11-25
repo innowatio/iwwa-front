@@ -24,14 +24,6 @@ var selectStyles = {
     }
 };
 
-var mainDivStyle = {
-    padding: "10px",
-    boxShadow: "2px 2px 5px " + colors.greySubTitle,
-    margin: "10px",
-    width: ENVIRONMENT === "cordova" ? "calc(100vw - 15px)" : "calc(100vw - 80px)",
-    height: "calc(100vh - 140px)"
-};
-
 var consumptionButtonStyle = {
     color: colors.greySubTitle,
     width: ENVIRONMENT === "cordova" ? "23%" : "180px",
@@ -266,7 +258,7 @@ var Chart = React.createClass({
         );
 
         return (
-            <div style={mainDivStyle}>
+            <div style={styles.mainDivStyle}>
                 <bootstrap.Col sm={12} style={styles.colVerticalPadding}>
                     <span className="pull-left" style={{display: "flex"}}>
                         <components.TutorialAnchor

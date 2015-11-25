@@ -3,6 +3,7 @@ var React  = require("react");
 var TimerMixin = require("react-timer-mixin");
 
 var Gauge  = require("components/").Gauge;
+var styles = require("lib/styles");
 
 var SetIntervalMixin = {
   componentWillMount: function() {
@@ -33,11 +34,35 @@ var RealTime = React.createClass({
     },
     render: function () {
         return (
-            <Gauge
-                maximum={100}
-                minimum={0}
-                value={this.state.value}
-            />
+            <div style={styles.mainDivStyle}>
+                <div>
+                    {/*     Barra Export (?) e ricerca sito
+                    <components.Popover
+                        hideOnChange={true}
+                        title={<img src={icons.iconSiti} style={{width: "75%"}} />}
+                        tooltipId="tooltipMisurazione"
+                        tooltipMessage="Punti di misurazione"
+                        tooltipPosition="top"
+                    >
+                        <components.SelectTree
+                            allowedValues={siti}
+                            filter={CollectionUtils.siti.filter}
+                            getKey={CollectionUtils.siti.getKey}
+                            getLabel={CollectionUtils.siti.getLabel}
+                            placeholder={"Punto di misurazione"}
+                            {...sitoInputProps}
+                        />
+                    </components.Popover>
+                     */}
+                </div>
+                {/* Barra Rilevazioni ambientali */}
+                {/* Gauge/s */}
+                <Gauge
+                    maximum={100}
+                    minimum={0}
+                    value={this.state.value}
+                />
+            </div>
         );
     }
 });

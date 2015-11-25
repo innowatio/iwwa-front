@@ -1,6 +1,7 @@
 var color = require("color");
 
-var colors = require("lib/colors");
+var colors   = require("lib/colors");
+var measures = require("lib/measures");
 
 exports.base = {
     display: "flex",
@@ -30,6 +31,17 @@ exports.flexBase = {
 exports.flexCentered = {
     justifyContent: "center",
     alignItems: "center"
+};
+
+exports.mainDivStyle = {
+    width: "96%",
+    marginLeft: "2%",
+    marginTop: "1%",
+    borderRadius: "3px",
+    overflow: "hidden",
+    padding: "10px",
+    boxShadow: "2px 2px 5px " + colors.greySubTitle,
+    height: measures.mainComponentHeight
 };
 
 exports.tabbedArea = {
