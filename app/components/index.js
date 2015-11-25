@@ -18,6 +18,7 @@ exports.Icon                    = require("./icon/");
 exports.LoginModal              = require("./login-modal/");
 exports.MeasureLabel            = require("./measure-label/");
 exports.ModalOptionList         = require("./modal-option-list/");
+exports.PageContainer           = require("./page-container/");
 exports.Popover                 = require("./popover/");
 exports.SelectTree              = require("./select-tree");
 exports.SideNav                 = require("./sidenav/");
