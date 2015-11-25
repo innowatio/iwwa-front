@@ -300,6 +300,9 @@ var DateCompare = React.createClass({
     },
     render: function () {
         var valori = this.props.valori[0];
+        /*
+            WARNING: `y2label` is empty, it's a workaround to prevent this dygraph bug https://github.com/danvk/dygraphs/issues/629
+        */
         return (
             <components.TemporalLineGraph
                 colors={[valori.color, colors.lineCompare]}
@@ -311,6 +314,7 @@ var DateCompare = React.createClass({
                 sito={this.props.siti[0] || Immutable.Map()}
                 xLegendFormatter={this.xLegendFormatter}
                 xTicker={this.xTicker}
+                y2label={" "}
                 yLabel={this.props.getYLabel(this.props.tipologia)}
             />
         );

@@ -118,9 +118,6 @@ var Root = React.createClass({
                         menuClickAction={this.toggleSidebar}
                     />
                 </div>
-                <div style={styles.titleLocation}>
-
-                </div>
                 <div style={ENVIRONMENT === "cordova" ?
                         styles.content :
                         R.merge(styles.content, {width: `calc(100% - ${measures.sidebarShoulderWidth})`, float: "right"})} >

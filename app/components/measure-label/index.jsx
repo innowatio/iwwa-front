@@ -1,5 +1,5 @@
-var Radium = require("radium");
 var R      = require("ramda");
+var Radium = require("radium");
 var React  = require("react");
 
 var colors = require("lib/colors");
@@ -13,8 +13,7 @@ var styleLabelUnit = {
     color: colors.primary,
     fontSize: "20px",
     display: "inline-block",
-    verticalAlign: "top",
-    height: "32px"
+    verticalAlign: "top"
 };
 
 var styleTextDiv = {
