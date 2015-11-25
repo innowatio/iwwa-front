@@ -1,13 +1,13 @@
-var Radium    = require("radium");
 var R         = require("ramda");
+var Radium    = require("radium");
 var React     = require("react");
 
-var components        = require("components");
 var asteroid          = require("lib/asteroid");
-var measures          = require("lib/measures");
 var colors            = require("lib/colors");
+var components        = require("components");
 var icons             = require("lib/icons");
 var LocalStorageMixin = require("lib/localstorage-mixin");
+var measures          = require("lib/measures");
 
 var styles = {
     header: {
@@ -118,10 +118,15 @@ var Root = React.createClass({
                         menuClickAction={this.toggleSidebar}
                     />
                 </div>
+                <div style={styles.titleLocation}>
+
+                </div>
                 <div style={ENVIRONMENT === "cordova" ?
                         styles.content :
                         R.merge(styles.content, {width: `calc(100% - ${measures.sidebarShoulderWidth})`, float: "right"})} >
-                    {this.renderChildren()}
+                    <components.PageContainer
+                        children={this.renderChildren()}
+                    />
                 </div>
                 <div style={styles.footer} >
                     Copyright 2015 - Innowatio

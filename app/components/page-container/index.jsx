@@ -1,16 +1,8 @@
 var R     = require("ramda");
 var React = require("react");
 
-var styles = require("lib/styles");
-
-const customStyles = {
-    pageContainer: {
-        boxSizing: "border-box",
-        height: "100%",
-        width: "100%",
-        padding: "30px"
-    }
-};
+var styles     = require("lib/styles");
+var components = require("components");
 
 var PageContainer = React.createClass({
     propTypes: {
@@ -28,6 +20,7 @@ var PageContainer = React.createClass({
                     className="text-center"
                     style={styles.titlePage}
                 >
+                    <components.Spacer direction="v" size={5} />
                     {this.props.children.props.route.titleView}
                 </h2>);
         }
@@ -37,10 +30,12 @@ var PageContainer = React.createClass({
         return (
             <div
                 {...this.props}
-                style={{...customStyles.pageContainer, ...style}}
+                style={{...style}}
             >
                 {this.getViewTitle()}
-                {this.props.children}
+                <div>
+                    {this.props.children}
+                </div>
             </div>
         );
     }
