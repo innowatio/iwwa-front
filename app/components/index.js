@@ -16,6 +16,7 @@ exports.Header                  = require("./header/");
 exports.HistoricalGraph         = require("./historical-graph/");
 exports.Icon                    = require("./icon/");
 exports.LoginModal              = require("./login-modal/");
+exports.MeasureLabel            = require("./measure-label/");
 exports.ModalOptionList         = require("./modal-option-list/");
 exports.Popover                 = require("./popover/");
 exports.SelectTree              = require("./select-tree");
