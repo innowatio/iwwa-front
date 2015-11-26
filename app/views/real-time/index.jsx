@@ -83,15 +83,14 @@ var RealTime = React.createClass({
             this.state.selectedSito,
             [res]
         );
-        res = R.merge(res, {value: values[0][values.length - 1]});
-        console.log(res);
+        res = R.merge(res, {value: values[0][values[0].length - 1]});
         return res;
     },
     findLatestMeasuresForVariables: function () {
         var res = this.getVariables();
         var values = this.findLatestMeasures();
         for (var i = 0; i < values.length; i++) {
-            res[i] = R.merge(res[i], {value: values[i][values.length - 1]});
+            res[i] = R.merge(res[i], {value: values[i][values[i].length - 1]});
         }
         return res;
     },
