@@ -32,6 +32,7 @@ var Gauge = React.createClass({
         minimum: React.PropTypes.number.isRequired,
         styleGaugeBar: React.PropTypes.object,
         styleGaugeBody: React.PropTypes.object,
+        unit: React.PropTypes.string,
         value: React.PropTypes.number.isRequired
     },
     calculateAngle: function () {
@@ -73,7 +74,7 @@ var Gauge = React.createClass({
                         position: "relative",
                         top: "-40px"
                     }}
-                    unit={"UNIT"}
+                    unit={this.props.unit || ""}
                     value={this.props.value}
                 />
             </div>
