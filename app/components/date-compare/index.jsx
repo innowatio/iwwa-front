@@ -20,14 +20,17 @@ var DateCompare = React.createClass({
         getKey: React.PropTypes.func,
         getLabel: React.PropTypes.func,
         onChange: React.PropTypes.func,
-        value: React.PropTypes.array
+        value: React.PropTypes.object
     },
     getInitialState: function () {
-        var now = new Date();
         return {
             value: {
-                period: R.isNil(this.props.value) ? this.props.allowedValues[2] : this.props.value.period,
-                dateOne: R.isNil(this.props.value) ? now : this.props.value.dateOne
+                period: R.isNil(this.props.value) || R.isNil(this.props.value.period) ?
+                    this.props.allowedValues[0] :
+                    this.props.value.period,
+                dateOne: R.isNil(this.props.value) || R.isNil(this.props.value.dateOne) ?
+                    new Date() :
+                    this.props.value.dateOne
             }
         };
     },
@@ -47,13 +50,12 @@ var DateCompare = React.createClass({
     },
     onClickButton: function () {
         this.props.closeModal();
-        this.props.onChange(this.state.value, "sito");
+        this.props.onChange(this.state.value);
     },
     renderDataCompare: function (allowedValue) {
-        var active = allowedValue === this.state.value.period;
         return (
             <components.Button
-                active={active}
+                active={R.equals(allowedValue, R.path(["period"], this.state.value))}
                 key={this.props.getKey(allowedValue)}
                 onClick={R.partial(this.selectedCheckboxDate, [allowedValue])}
                 style={styles.buttonCompare}

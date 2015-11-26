@@ -41,7 +41,7 @@ export function chart (state = defaultChartState, {type, payload}) {
             ...state,
             sites: firstSites,
             types: firstTypes,
-            dateRanges: [payload.firstDate, payload.secondDate]
+            dateRanges: [payload]
         };
     // OK
     case SELECT_ENVIRONMENTAL:
@@ -64,8 +64,6 @@ export function chart (state = defaultChartState, {type, payload}) {
             sources: payload
         };
     case SELECT_DATE_RANGES:
-        console.log("PAYLOAD");
-        console.log(payload);
         return {
             ...state,
             dateRanges: [payload]

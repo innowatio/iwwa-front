@@ -193,15 +193,15 @@ var Chart = React.createClass({
             {label: "12 MESI FA", key: "years"}
         ];
     },
-    getDateFilter: function () {
-        return [
-            {label: "IERI", key: "days"},
-            {label: "SETTIMANA SCORSA", key: "weeks"},
-            {label: "MESE SCORSO", key: "months"},
-            {label: "2 MESI FA", key: "2months"},
-            {label: "ALTRO PERIODO", key: "custom"}
-        ];
-    },
+    // getDateFilter: function () {
+    //     return [
+    //         {label: "IERI", key: "days"},
+    //         {label: "SETTIMANA SCORSA", key: "weeks"},
+    //         {label: "MESE SCORSO", key: "months"},
+    //         {label: "2 MESI FA", key: "2months"},
+    //         {label: "ALTRO PERIODO", key: "custom"}
+    //     ];
+    // },
     onChangeExport: function (valueChanged) {
         var exportAPILocation = this.refs.historicalGraph.refs.compareGraph.refs.temporalLineGraph;
         if (valueChanged.key === "png") {
@@ -309,7 +309,7 @@ var Chart = React.createClass({
             transformers.dateCompare(compareDate)
         );
         // Date filter
-        var filterDate = this.getDateFilter();
+        // var filterDate = this.getDateFilter();
         var dateFilterProps = this.bindToQueryParameter(
             "dateFilter",
             transformers.dateFilter()
@@ -399,6 +399,7 @@ var Chart = React.createClass({
                                         getLabel={CollectionUtils.siti.getLabel}
                                         onChange={this.props.selectSingleSite}
                                         placeholder={"Punto di misurazione"}
+                                        value={this.props.chart.sites}
                                     />
                                 </components.Popover>
                             </components.TutorialAnchor>
@@ -438,7 +439,7 @@ var Chart = React.createClass({
                                         getKey={R.prop("key")}
                                         getLabel={R.prop("label")}
                                         onChange={this.props.selectDateRangesCompare}
-                                        value={this.props.chart.dateRanges}
+                                        value={this.props.chart.dateRanges[0]}
                                     />
                                 </components.Compare>
                             </components.TutorialAnchor>
@@ -472,7 +473,7 @@ var Chart = React.createClass({
                                 misure={this.props.collections.get("site-month-readings-aggregates") || Immutable.Map()}
                                 ref="historicalGraph"
                                 resetCompare={this.resetCompare}
-                                siti={sitoInputProps.value}
+                                siti={this.props.chart.sites}
                                 tipologia={tipologiaInputProps.value}
                                 valori={valoreInputProps.value}
                             />
