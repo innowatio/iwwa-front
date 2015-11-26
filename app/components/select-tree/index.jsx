@@ -18,6 +18,7 @@ var SelectTree = React.createClass({
             IPropTypes.iterable
         ]).isRequired,
         buttonCloseDefault: React.PropTypes.bool,
+        chart: React.PropTypes.object,
         filter: React.PropTypes.func.isRequired,
         getKey: React.PropTypes.func,
         getLabel: React.PropTypes.func,

@@ -8,18 +8,18 @@ export const SELECT_DATA_RANGES_COMPARE = "SELECT_DATA_RANGES_COMPARE";
 
 /**
 *   A click on select-tree component for the choice of site
-*   @param {string} site - id site of the site
+*   @param {array} site - id site of the site
 */
 export function selectSingleSite (site) {
     return {
         type: SELECT_SINGLE_SITE,
-        payload: [site]
+        payload: site
     };
 }
 
 /**
 *   A click on button select component for the choice of type
-*   @param {string} type - data type
+*   @param {object} type - data type
 */
 export function selectType (type) {
     return {

@@ -5,6 +5,7 @@ var moment     = require("moment");
 var bootstrap  = require("react-bootstrap");
 var IPropTypes = require("react-immutable-proptypes");
 import {connect} from "react-redux";
+import {bindActionCreators} from "redux";
 
 var CollectionUtils    = require("lib/collection-utils");
 var colors             = require("lib/colors");
@@ -15,6 +16,15 @@ var QuerystringMixin   = require("lib/querystring-mixin");
 var styles             = require("lib/styles");
 var transformers       = require("./transformers.js");
 var tutorialString     = require("assets/JSON/tutorial-string.json").historicalGraph;
+import {
+    selectSingleSite,
+    selectType,
+    selectEnvironmental,
+    selectSource,
+    selectMultipleSite,
+    selectDateRanges,
+    selectDateRangesCompare
+} from "actions/chart";
 
 var selectStyles = {
     selectCompare: {
@@ -53,17 +63,38 @@ var consumptionProps;
 function mapStateToProps (state) {
     return {
         location: state.router.location,
-        collections: state.collections
+        collections: state.collections,
+        chart: state.chart
+    };
+}
+
+function mapDispatchToProps (dispatch) {
+    return {
+        selectSingleSite: bindActionCreators(selectSingleSite, dispatch),
+        selectType: bindActionCreators(selectType, dispatch),
+        selectEnvironmental: bindActionCreators(selectEnvironmental, dispatch),
+        selectSource: bindActionCreators(selectSource, dispatch),
+        selectMultipleSite: bindActionCreators(selectMultipleSite, dispatch),
+        selectDateRanges: bindActionCreators(selectDateRanges, dispatch),
+        selectDateRangesCompare: bindActionCreators(selectDateRangesCompare, dispatch)
     };
 }
 
 var Chart = React.createClass({
     propTypes: {
         asteroid: React.PropTypes.object,
-        collections: IPropTypes.map,
+        chart: React.PropTypes.object.isRequired,
+        collections: IPropTypes.map.isRequired,
         localStorage: React.PropTypes.object,
-        location: React.PropTypes.object,
-        params: React.PropTypes.object
+        location: React.PropTypes.object.isRequired,
+        params: React.PropTypes.object,
+        selectDateRanges: React.PropTypes.func.isRequired,
+        selectDateRangesCompare: React.PropTypes.func.isRequired,
+        selectEnvironmental: React.PropTypes.func.isRequired,
+        selectMultipleSite: React.PropTypes.func.isRequired,
+        selectSingleSite: React.PropTypes.func.isRequired,
+        selectSource: React.PropTypes.func.isRequired,
+        selectType: React.PropTypes.func.isRequired
     },
     mixins: [QuerystringMixin,
         GetTutorialMixin("historicalGraph", [
@@ -250,7 +281,6 @@ var Chart = React.createClass({
             "sito",
             transformers.sito(siti)
         );
-
         // Tipologia
         var tipologie = this.getTipologie();
         var tipologiaInputProps = this.bindToQueryParameter(
@@ -293,7 +323,7 @@ var Chart = React.createClass({
 
         var valoriMulti = (
             !dateCompareProps.value &&
-            sitoInputProps.value.length <= 1
+            this.props.chart.sites.length <= 1
         );
 
         return (
@@ -343,8 +373,9 @@ var Chart = React.createClass({
                                         allowedValues={tipologie}
                                         getKey={R.prop("key")}
                                         getLabel={R.prop("label")}
+                                        onChange={this.props.selectType}
                                         style={{float: "left"}}
-                                        {...tipologiaInputProps}
+                                        value={this.props.chart.types[0]}
                                     />
                                 </components.Popover>
                             </components.TutorialAnchor>
@@ -366,8 +397,8 @@ var Chart = React.createClass({
                                         filter={CollectionUtils.siti.filter}
                                         getKey={CollectionUtils.siti.getKey}
                                         getLabel={CollectionUtils.siti.getLabel}
+                                        onChange={this.props.selectSingleSite}
                                         placeholder={"Punto di misurazione"}
-                                        {...sitoInputProps}
                                     />
                                 </components.Popover>
                             </components.TutorialAnchor>
@@ -451,4 +482,4 @@ var Chart = React.createClass({
     }
 });
 
-module.exports = connect(mapStateToProps)(Chart);
+module.exports = connect(mapStateToProps, mapDispatchToProps)(Chart);

@@ -12,7 +12,7 @@ import {
 
 const defaultChartState = {
     sites: [],
-    types: [],
+    types: [{label: "Attiva", key: "energia attiva"}],
     dateRanges: [],
     sources: ["real"]
 };
@@ -51,7 +51,7 @@ export function chart (state = defaultChartState, {type, payload}) {
     case SELECT_TYPE:
         return {
             ...state,
-            types: prepend(payload, state.type.slice(1, 2))
+            types: state.types.length <= 1 ? [payload] : prepend(payload, state.types.slice(1, 2))
         };
     case SELECT_SOURCES:
         return {
