@@ -4,6 +4,7 @@ var IPropTypes = require("react-immutable-proptypes");
 var R          = require("ramda");
 var Radium     = require("radium");
 var React      = require("react");
+var TimerMixin = require("react-timer-mixin");
 
 var CollectionUtils = require("lib/collection-utils");
 var components      = require("components");
@@ -26,7 +27,6 @@ var RealTime = React.createClass({
         };
     },
     componentDidMount: function () {
-        this.setInterval(this.rand, 2500); // Call a method on the mixin
         this.props.asteroid.subscribe("siti");
     },
     getSiti: function () {
