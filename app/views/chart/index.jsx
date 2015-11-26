@@ -409,11 +409,11 @@ var Chart = React.createClass({
                                 ref="dateFilter"
                             >
                                 <components.DatefilterMonthlyModal
-                                    allowedValues={filterDate}
                                     getKey={R.prop("key")}
                                     getLabel={R.prop("label")}
+                                    onChange={this.props.selectDateRanges}
                                     title={<img src={icons.iconCalendar} style={{width: "75%"}} />}
-                                    {...dateFilterProps}
+                                    value={this.props.chart.dateRanges}
                                 />
                             </components.TutorialAnchor>
                             <components.TutorialAnchor

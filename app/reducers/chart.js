@@ -64,9 +64,11 @@ export function chart (state = defaultChartState, {type, payload}) {
             sources: payload
         };
     case SELECT_DATE_RANGES:
+        console.log("PAYLOAD");
+        console.log(payload);
         return {
             ...state,
-            dateRanges: [payload.start, payload.end]
+            dateRanges: [payload]
         };
     default:
         return state;

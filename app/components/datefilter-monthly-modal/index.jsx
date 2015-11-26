@@ -14,24 +14,22 @@ momentLocalizer(moment);
 
 var DatefilterMonthlyModal = React.createClass({
     propTypes: {
-        allowedValues: React.PropTypes.array.isRequired,
         children: React.PropTypes.oneOfType([
             React.PropTypes.array,
             React.PropTypes.object
         ]),
         getKey: React.PropTypes.func,
         getLabel: React.PropTypes.func,
-        onChange: React.PropTypes.func,
+        onChange: React.PropTypes.func.isRequired,
         style: React.PropTypes.object,
         title: React.PropTypes.element,
-        value: React.PropTypes.shape({
+        value: React.PropTypes.arrayOf(React.PropTypes.shape({
             start: React.PropTypes.date,
             end: React.PropTypes.date
-        })
+        })).isRequired
     },
     getInitialState: function () {
         return {
-            active: this.props.getKey(this.props.allowedValues[2]),
             custom: false,
             data: "",
             showModal: false,
@@ -53,7 +51,9 @@ var DatefilterMonthlyModal = React.createClass({
         return result;
     },
     confirmAndClose: function () {
-        R.partial(this.props.onChange, [this.state.value, "dateCompare"])();
+        console.log("STATE");
+        console.log(this.state.value);
+        this.props.onChange(this.state.value);
         this.close();
     },
     close: function () {
@@ -65,7 +65,7 @@ var DatefilterMonthlyModal = React.createClass({
         return moment().startOf("month")._d;
     },
     defaultEndDate: function () {
-        return moment().add(1, "months").startOf("month")._d;
+        return moment().endOf("month")._d;
     },
     open: function () {
         this.setState({
@@ -87,7 +87,7 @@ var DatefilterMonthlyModal = React.createClass({
     },
     setDate: function (dateValue) {
         var startDate = moment(dateValue)._d;
-        var endDate = moment(dateValue).add(1, "months").startOf("month")._d;
+        var endDate = moment(dateValue).endOf("month")._d;
         this.setState({
             value: {
                 start: startDate,
@@ -159,7 +159,7 @@ var DatefilterMonthlyModal = React.createClass({
                             monthFormat="MMMM"
                             onChange={this.setDate}
                             style={{borderRadius: "0px", outline: "0px"}}
-                            value={this.state.value.start ? this.state.value.start : undefined}
+                            value={this.state.value ? this.state.value.start : undefined}
                         />
                     </bootstrap.Modal.Body>
                     <bootstrap.Modal.Footer style={{textAlign: "center", border: "0px", marginTop: "20px"}}>

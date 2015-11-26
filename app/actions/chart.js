@@ -72,9 +72,7 @@ export function selectMultipleSite (sites) {
 export function selectDateRanges (dateRanges) {
     return {
         type: SELECT_DATE_RANGES,
-        payload: {
-            dateRanges
-        }
+        payload: dateRanges
     };
 }
 
