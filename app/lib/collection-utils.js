@@ -155,6 +155,22 @@ exports.measures = {
         });
         return this.mergeCoordinates(measuresByDates[0] || [], measuresByDates[1] || []);
     },
+    findMeasuresBySitoAndVariables: R.memoize(function (measures, sito, variables) {
+        return variables.map(function (variable) {
+            var variableKey = variable.key;
+            var podId = sito.get("pod");
+            var values = measures.filter(function (measure) {
+                return measure.get("podId") === podId;
+            }).sort(function (a, b) {
+                return a.get("month") > b.get("month");
+            });
+
+            return values.size > 0 && values.last().getIn(["readings", variableKey]) ?
+                values.last().getIn(["readings", variableKey]).split(",").map(function (val) {
+                    return parseFloat(val);
+                }) : [];
+        });
+    }),
     mergeCoordinates: function (coordinate1, coordinate2) {
         /*
             f(a,b) => c

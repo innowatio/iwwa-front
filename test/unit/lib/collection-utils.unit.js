@@ -251,4 +251,56 @@ describe("The `measures` method", function () {
             expect(expected).to.deep.equal(result);
         });
     });
+
+    describe("the `findMeasuresBySitoAndVariables` function", function () {
+
+        it("if the given variable has no measures should return an empty array", function () {
+            var sito = Immutable.Map({
+                _id: "ididididid",
+                pod: "pod1"
+            });
+            var variables = [
+                {key: "variabile"}
+            ];
+            var measures = Immutable.Map({
+                id1: Immutable.Map({
+                    month: monthString,
+                    podId: "pod1",
+                    readings: Immutable.Map({
+                        lux: "1,2,3,4,,6,7.8,",
+                        potenza: "11,22,33,44,55,,,8.9"
+                    })
+                })
+            });
+
+            var result = CollectionUtils.measures.findMeasuresBySitoAndVariables(measures, sito, variables);
+            expect([[]]).to.deep.equal(result);
+        });
+
+        it("should return the array of the readings for each given variable", function () {
+            var sito = Immutable.Map({
+                _id: "ididididid",
+                pod: "pod1"
+            });
+            var variables = [
+                {key: "lux"},
+                {key: "variabile"},
+                {key: "potenza"}
+            ];
+            var measures = Immutable.Map({
+                id1: Immutable.Map({
+                    month: monthString,
+                    podId: "pod1",
+                    readings: Immutable.Map({
+                        lux: "1,2,3,4",
+                        potenza: "11,22,33,44,55,,8.9"
+                    })
+                })
+            });
+
+            var expected = [[1, 2, 3, 4], [], [11, 22, 33, 44, 55, NaN, 8.9]];
+            var result = CollectionUtils.measures.findMeasuresBySitoAndVariables(measures, sito, variables);
+            expect(expected).to.deep.equal(result);
+        });
+    });
 });
