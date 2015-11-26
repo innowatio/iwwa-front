@@ -4,7 +4,6 @@ var IPropTypes = require("react-immutable-proptypes");
 var R          = require("ramda");
 var Radium     = require("radium");
 var React      = require("react");
-var TimerMixin = require("react-timer-mixin");
 
 var CollectionUtils = require("lib/collection-utils");
 var components      = require("components");
@@ -13,25 +12,12 @@ var icons           = require("lib/icons");
 var styles          = require("lib/styles");
 var VariablesPanel  = require("components/").VariablesPanel;
 
-var SetIntervalMixin = {
-  componentWillMount: function() {
-    this.intervals = [];
-  },
-  setInterval: function() {
-    this.intervals.push(setInterval.apply(null, arguments));
-  },
-  componentWillUnmount: function() {
-    this.intervals.forEach(clearInterval);
-  }
-};
-
 
 var RealTime = React.createClass({
     propTypes: {
         asteroid: React.PropTypes.object,
         collections: IPropTypes.map
     },
-    mixins: [TimerMixin],
     getInitialState: function () {
         return {
             selectedSito: Immutable.Map(),
