@@ -13,14 +13,14 @@ var styles = {
     }
 };
 
-var DataCompare = React.createClass({
+var DateCompare = React.createClass({
     propTypes: {
         allowedValues: React.PropTypes.array.isRequired,
         closeModal: React.PropTypes.func,
         getKey: React.PropTypes.func,
         getLabel: React.PropTypes.func,
         onChange: React.PropTypes.func,
-        value: React.PropTypes.object
+        value: React.PropTypes.array
     },
     getInitialState: function () {
         var now = new Date();
@@ -84,4 +84,4 @@ var DataCompare = React.createClass({
     }
 });
 
-module.exports = DataCompare;
+module.exports = DateCompare;

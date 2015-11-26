@@ -31,7 +31,7 @@ export function selectType (type) {
 /**
 *   A click on select environmental component for the choice of environmental
 *   variable
-*   @param {string} type - environmental variable
+*   @param {object} type - environmental variable
 */
 export function selectEnvironmental (type) {
     return {
@@ -44,6 +44,7 @@ export function selectEnvironmental (type) {
 *   A click on select source button
 *   @param {string} source - source of the data
 */
+// TODO:
 export function selectSource (sources) {
     return {
         type: SELECT_SOURCES,
@@ -79,7 +80,7 @@ export function selectDateRanges (dateRanges) {
 
 /**
 *   A click on date-compare-modal modal
-*   @param {object: {start, end, period}} dateRanges - beginning date for the two temporal range and
+*   @param {object: {start, end}} dateRanges - beginning date for the two temporal range and
 *       temporal period to visualize.
 *
 */

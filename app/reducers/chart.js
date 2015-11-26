@@ -1,4 +1,4 @@
-import {prepend} from "ramda";
+import {prepend, equals} from "ramda";
 
 import {
     SELECT_SINGLE_SITE,
@@ -22,11 +22,13 @@ export function chart (state = defaultChartState, {type, payload}) {
     const firstTypes = state.types.slice(0, 1) || [];
     const firstSites = state.sites.slice(0, 1) || [];
     switch (type) {
+    //OK
     case SELECT_SINGLE_SITE:
         return {
             ...state,
             sites: payload
         };
+    // OK
     case SELECT_MULTIPLE_SITE:
         return {
             ...state,
@@ -39,15 +41,18 @@ export function chart (state = defaultChartState, {type, payload}) {
             ...state,
             sites: firstSites,
             types: firstTypes,
-            dateRanges: [payload.start, payload.end, payload.period]
+            dateRanges: [payload.firstDate, payload.secondDate]
         };
+    // OK
     case SELECT_ENVIRONMENTAL:
+        const types = state.types.slice(0, 1);
         return {
             ...state,
             sites: firstSites,
-            types: state.types.slice(0, 1).concat(payload),
+            types: equals(state.types[1], payload) ? types : types.concat(payload),
             dateRanges: firstDateRanges
         };
+    // OK
     case SELECT_TYPE:
         return {
             ...state,

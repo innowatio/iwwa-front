@@ -428,15 +428,17 @@ var Chart = React.createClass({
                                         filter={CollectionUtils.siti.filter}
                                         getKey={CollectionUtils.siti.getKey}
                                         getSitoLabel={CollectionUtils.siti.getLabel}
+                                        onChange={this.props.selectMultipleSite}
                                         open={"undefined"}
                                         style={selectStyles.selectCompare}
-                                        {...sitoInputProps}
+                                        value={this.props.chart.sites}
                                     />
-                                    <components.DataCompare
+                                    <components.DateCompare
                                         allowedValues={compareDate}
                                         getKey={R.prop("key")}
                                         getLabel={R.prop("label")}
-                                        {...dateCompareProps}
+                                        onChange={this.props.selectDateRangesCompare}
+                                        value={this.props.chart.dateRanges}
                                     />
                                 </components.Compare>
                             </components.TutorialAnchor>
@@ -445,8 +447,8 @@ var Chart = React.createClass({
                     <bootstrap.Col sm={12}>
                         <components.ConsumptionButtons
                             allowedValues={this.getConsumptions()}
-                            onChange={this.consumptionFunction}
-                            selectedValue={consumptionProps.value}
+                            onChange={this.props.selectEnvironmental}
+                            selectedValue={this.props.chart.types[1]}
                             style={{width: "100%"}}
                             styleButton={consumptionButtonStyle}
                             styleButtonSelected={consumptionButtonSelectedStyle}

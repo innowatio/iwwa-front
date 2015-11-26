@@ -20,7 +20,7 @@ var SitiCompare = React.createClass({
         open: React.PropTypes.string,
         resetParam: React.PropTypes.func,
         style: React.PropTypes.object,
-        value: React.PropTypes.array
+        value: React.PropTypes.array.isRequired
     },
     getInitialState: function () {
         return {
@@ -56,7 +56,7 @@ var SitiCompare = React.createClass({
         );
         if (list.length === 2) {
             return () => {
-                this.props.onChange(list, "dateCompare");
+                this.props.onChange(list);
                 this.props.closeModal();
             };
         }
@@ -93,7 +93,6 @@ var SitiCompare = React.createClass({
                 <components.Popover
                     arrow="none"
                     hideOnChange={true}
-                    style="inherit"
                     title={this.titleFirstSelect()}
                 >
                     <components.SelectTree
@@ -110,7 +109,6 @@ var SitiCompare = React.createClass({
                 <components.Popover
                     arrow="none"
                     hideOnChange={true}
-                    style="inherit"
                     title={this.titleSecondSelect()}
                 >
                     <components.SelectTree
