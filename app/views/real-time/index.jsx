@@ -2,8 +2,10 @@ var Radium = require("radium");
 var React  = require("react");
 var TimerMixin = require("react-timer-mixin");
 
-var Gauge  = require("components/").Gauge;
-var styles = require("lib/styles");
+var Gauge          = require("components/").Gauge;
+var icons          = require("lib/icons");
+var styles         = require("lib/styles");
+var VariablesPanel = require("components/").VariablesPanel;
 
 var SetIntervalMixin = {
   componentWillMount: function() {
@@ -28,6 +30,30 @@ var RealTime = React.createClass({
     },
     componentDidMount: function () {
         this.setInterval(this.rand, 2500); // Call a method on the mixin
+    },
+    getMockVariables: function () {
+        return [
+            {
+                icon: icons.iconTemperature,
+                unit: "°C",
+                value: 20
+            },
+            {
+                icon: icons.iconHumidity,
+                unit: "g/m3",
+                value: 22
+            },
+            {
+                icon: icons.iconIdea,
+                unit: "lx",
+                value: 39
+            },
+            {
+                icon: icons.iconCO2,
+                unit: "ppm",
+                value: 39
+            }
+        ];
     },
     rand: function () {
         this.setState({value: Math.round(Math.random() * 10000) / 100});
@@ -56,6 +82,9 @@ var RealTime = React.createClass({
                      */}
                 </div>
                 {/* Barra Rilevazioni ambientali */}
+                <VariablesPanel
+                    values={this.getMockVariables()}
+                />
                 {/* Gauge/s */}
                 <Gauge
                     maximum={100}
