@@ -127,7 +127,7 @@ var RealTime = React.createClass({
                 <components.Gauge
                     maximum={1.2}
                     minimum={0}
-                    unit={"kHw"}
+                    unit={"kWh"}
                     value={this.findLatestMeasuresForEnergy().value || 0}
                 />
             </div>
