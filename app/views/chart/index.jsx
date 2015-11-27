@@ -57,7 +57,6 @@ var consumptionButtonSelectedStyle = {
 };
 
 var dateCompareProps;
-var sitoInputProps;
 var consumptionProps;
 
 function mapStateToProps (state) {
@@ -119,7 +118,7 @@ var Chart = React.createClass({
     componentDidUpdate: function () {
         var siti = this.props.collections.get("siti") || Immutable.Map();
         if (siti.size > 0 && this.refs.historicalGraph.props.siti.length < 1) {
-            sitoInputProps.onChange([siti.first()], "sito");
+            this.props.selectSingleSite([siti.first()]);
         }
     },
     getPeriods: function () {
@@ -211,9 +210,9 @@ var Chart = React.createClass({
         }
     },
     resetCompare: function () {
-        if (sitoInputProps.value && sitoInputProps.value.length > 1) {
-            var val = sitoInputProps.value[0];
-            sitoInputProps.onChange([val], "sito");
+        if (this.props.chart.sites.length > 1) {
+            var site = this.props.chart.sites[0];
+            this.props.selectSingleSite([site]);
         }
         if (this.refs.historicalGraph.props.dateCompare) {
             dateCompareProps.onChange("deleteValueFromURL", "dateCompare");
@@ -221,28 +220,25 @@ var Chart = React.createClass({
     },
     subscribeToMisure: function (props) {
         var self = this;
-        var sitoQuery = R.path(["location", "query", "sito"], props);
         var date;
-        if (!R.isNil(R.path(["location", "query", "dateCompare"], props))) {
-            const dateQuery = R.path(["location", "query", "dateCompare"], props);
-            const dateArray = R.split("-", dateQuery);
-            const dateString1 = moment(dateArray[1], "YYYYMMDD").subtract(1, dateArray[0]).format("YYYY-MM");
-            const dateString2 = moment(dateArray[1], "YYYYMMDD").format("YYYY-MM");
+        // Query for date-compare
+        if (R.contains("period", R.keys(props.chart.dateRanges[0]))) {
+            const data = new Date(props.chart.dateRanges[0].dateOne);
+            const periodKey = props.chart.dateRanges[0].period.key;
+            const dateString1 = moment(data).subtract(1, periodKey).format("YYYY-MM");
+            const dateString2 = moment(data).format("YYYY-MM");
             date = [dateString1, dateString2];
-        } else if (!R.isNil(R.path(["location", "query", "dateFilter"], props))) {
-            const dateQuery = R.path(["location", "query", "dateFilter"], props);
-            const dateString = moment(dateQuery, "YYYYMMDD").format("YYYY-MM");
-            date = [dateString];
+        // Query for date-filter
+        } else if (R.contains("start", R.keys(props.chart.dateRanges[0]))) {
+            const data = new Date(props.chart.dateRanges[0].start);
+            date = [moment(data).format("YYYY-MM")];
         } else {
             // If no data is selected, is displayed the past month.
-            const month = moment().month() + 1;
-            const year = moment().year();
-            date = [`${year}-${month}`];
+            date = [moment().format("YYYY-MM")];
         }
-        var siti = (sitoQuery && sitoQuery.split(",")) || [];
-        siti.forEach(function (sito) {
+        props.chart.sites.forEach(function (sito) {
             date.forEach(function (data) {
-                self.props.asteroid.subscribe("misureBySitoAndMonth", sito, data);
+                self.props.asteroid.subscribe("misureBySitoAndMonth", sito.get("_id"), data);
             });
         });
     },
@@ -277,10 +273,7 @@ var Chart = React.createClass({
     render: function () {
         // Sito
         var siti = this.props.collections.get("siti") || Immutable.Map();
-        sitoInputProps = this.bindToQueryParameter(
-            "sito",
-            transformers.sito(siti)
-        );
+
         // Tipologia
         var tipologie = this.getTipologie();
         var tipologiaInputProps = this.bindToQueryParameter(

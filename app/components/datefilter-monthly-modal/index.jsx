@@ -51,8 +51,6 @@ var DatefilterMonthlyModal = React.createClass({
         return result;
     },
     confirmAndClose: function () {
-        console.log("STATE");
-        console.log(this.state.value);
         this.props.onChange(this.state.value);
         this.close();
     },
