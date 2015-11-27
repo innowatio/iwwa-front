@@ -73,7 +73,7 @@ export function chart (state = defaultChartState, {type, payload}) {
     case REMOVE_ALL_COMPARE:
         return {
             ...state,
-            dateRanges: firstDateRanges,
+            dateRanges: [],
             sites: firstSites,
             types: firstTypes
         };

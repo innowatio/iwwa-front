@@ -57,8 +57,6 @@ var consumptionButtonSelectedStyle = {
     backgroundColor: colors.consumption
 };
 
-var dateCompareProps;
-
 function mapStateToProps (state) {
     return {
         location: state.router.location,
@@ -210,7 +208,6 @@ var Chart = React.createClass({
         var date;
         // Query for date-compare
         if (R.contains("period", R.keys(props.chart.dateRanges[0]))) {
-            console.log("CCC");
             const data = new Date(props.chart.dateRanges[0].dateOne);
             const periodKey = props.chart.dateRanges[0].period.key;
             const dateString1 = moment(data).subtract(1, periodKey).format("YYYY-MM");
@@ -229,6 +226,15 @@ var Chart = React.createClass({
                 self.props.asteroid.subscribe("misureBySitoAndMonth", sito.get("_id"), data);
             });
         });
+    },
+    getValoreActiveStyle: function (valore) {
+        return R.merge(
+            styles.buttonSelectValore,
+            {background: valore.color, color: colors.white}
+        );
+    },
+    switchDateCompareAndFilter: function () {
+        return R.contains("period", R.keys(this.props.chart.dateRanges[0]));
     },
     renderExportButton: function () {
         return (
@@ -259,29 +265,6 @@ var Chart = React.createClass({
         );
     },
     render: function () {
-        // Valore
-        // TODO:
-        var valori = this.getValori();
-        var valoreInputProps = this.bindToQueryParameter(
-            "valore",
-            transformers.valore(valori)
-        );
-        var valoreGetActiveStyle = function (valore) {
-            return R.merge(styles.buttonSelectValore, {background: valore.color, color: colors.white});
-        };
-        // Compare
-        var compareDate = this.getDateCompare();
-        dateCompareProps = this.bindToQueryParameter(
-            "dateCompare",
-            transformers.dateCompare(compareDate)
-        );
-        // Date filter
-        // var filterDate = this.getDateFilter();
-        var dateFilterProps = this.bindToQueryParameter(
-            "dateFilter",
-            transformers.dateFilter()
-        );
-
         // Alarms
         var alarms = this.bindToQueryParameter(
             "alarms",
@@ -289,7 +272,7 @@ var Chart = React.createClass({
         );
 
         var valoriMulti = (
-            !dateCompareProps.value &&
+            this.switchDateCompareAndFilter() &&
             this.props.chart.sites.length <= 1
         );
 
@@ -312,8 +295,8 @@ var Chart = React.createClass({
                                 ref="valori"
                             >
                                 <components.ButtonGroupSelect
-                                    allowedValues={valori}
-                                    getActiveStyle={valoreGetActiveStyle}
+                                    allowedValues={this.getValori()}
+                                    getActiveStyle={this.getValoreActiveStyle}
                                     getKey={R.prop("key")}
                                     getLabel={R.prop("label")}
                                     multi={valoriMulti}
@@ -403,7 +386,7 @@ var Chart = React.createClass({
                                         value={this.props.chart.sites}
                                     />
                                     <components.DateCompare
-                                        allowedValues={compareDate}
+                                        allowedValues={this.getDateCompare()}
                                         getKey={R.prop("key")}
                                         getLabel={R.prop("label")}
                                         onChange={this.props.selectDateRangesCompare}
@@ -434,8 +417,8 @@ var Chart = React.createClass({
                             <components.HistoricalGraph
                                 alarms={alarms.value}
                                 consumption={this.props.chart.types[1]}
-                                dateCompare={dateCompareProps.value}
-                                dateFilter={dateFilterProps.value}
+                                dateCompare={this.switchDateCompareAndFilter() ? this.props.chart.dateRanges[0] : undefined}
+                                dateFilter={this.props.chart.dateRanges[0]}
                                 getY2Label={CollectionUtils.labelGraph.getY2Label}
                                 getYLabel={CollectionUtils.labelGraph.getYLabel}
                                 misure={this.props.collections.get("site-month-readings-aggregates") || Immutable.Map()}
@@ -443,7 +426,7 @@ var Chart = React.createClass({
                                 resetCompare={this.props.removeAllCompare}
                                 siti={this.props.chart.sites}
                                 tipologia={this.props.chart.types[0]}
-                                valori={valoreInputProps.value}
+                                valori={this.props.chart.sources}
                             />
                         </components.TutorialAnchor>
                     </bootstrap.Col>
