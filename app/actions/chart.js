@@ -5,6 +5,7 @@ export const SELECT_SOURCES = "SELECT_SOURCES";
 export const SELECT_MULTIPLE_SITE = "SELECT_MULTIPLE_SITE";
 export const SELECT_DATE_RANGES = "SELECT_DATE_RANGES";
 export const SELECT_DATA_RANGES_COMPARE = "SELECT_DATA_RANGES_COMPARE";
+export const REMOVE_ALL_COMPARE = "REMOVE_ALL_COMPARE";
 
 /**
 *   A click on select-tree component for the choice of site
@@ -42,17 +43,25 @@ export function selectEnvironmental (type) {
 
 /**
 *   A click on select source button
-*   @param {string} source - source of the data
+*   @param {object} source - source of the data
 */
-// TODO:
 export function selectSource (sources) {
     return {
         type: SELECT_SOURCES,
-        payload: {
-            sources
-        }
+        payload: sources
     };
 }
+
+/**
+*   A click on select source button
+*   @param {object} source - source of the data
+*/
+// export function selectSourceCompare (sources) {
+//     return {
+//         type: SELECT_SOURCES,
+//         payload: sources
+//     };
+// }
 
 /**
 *   A click on site-compare-modal
@@ -86,5 +95,11 @@ export function selectDateRangesCompare (dateRanges) {
     return {
         type: SELECT_DATA_RANGES_COMPARE,
         payload: dateRanges
+    };
+}
+
+export function removeAllCompare () {
+    return {
+        type: REMOVE_ALL_COMPARE
     };
 }

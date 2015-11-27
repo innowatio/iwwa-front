@@ -11,7 +11,10 @@ var styles     = require("lib/styles");
 
 var styleDropdown = R.merge(
         styles.buttonSelectValore,
-        {color: colors.greySubTitle, backgroundColor: colors.greyBackground}
+        {
+            color: colors.greySubTitle,
+            backgroundColor: colors.greyBackground
+        }
     );
 
 var ButtonGroupSelect = React.createClass({
@@ -20,6 +23,7 @@ var ButtonGroupSelect = React.createClass({
         getActiveStyle: React.PropTypes.func,
         getKey: React.PropTypes.func,
         getLabel: React.PropTypes.func,
+        // This parameter is for check if the sources are two (real and previsional)
         multi: React.PropTypes.bool,
         onChange: React.PropTypes.func.isRequired,
         value: React.PropTypes.oneOfType([
@@ -39,15 +43,15 @@ var ButtonGroupSelect = React.createClass({
             multi: false
         };
     },
-    isActiveMulti: function (allowedValue) {
-        var keys = this.props.value.map(this.props.getKey);
-        var key = this.props.getKey(allowedValue);
-        return (
-            R.is(Immutable.List, keys) ?
-            keys.contains(key) :
-            R.contains(key, keys)
-        );
-    },
+    // isActiveMulti: function (allowedValue) {
+    //     var keys = this.props.value.map(this.props.getKey);
+    //     var key = this.props.getKey(allowedValue);
+    //     return (
+    //         R.is(Immutable.List, keys) ?
+    //         keys.contains(key) :
+    //         R.contains(key, keys)
+    //     );
+    // },
     isActiveSingle: function (allowedValue) {
         var keys = this.props.value.map(this.props.getKey);
         var key = this.props.getKey(allowedValue);
@@ -58,47 +62,10 @@ var ButtonGroupSelect = React.createClass({
         );
     },
     isActive: function (allowedValue) {
-        return (
-            this.props.multi ?
-            this.isActiveMulti(allowedValue) :
-            this.isActiveSingle(allowedValue)
-        );
-    },
-    onChangeMulti: function (allowedValue) {
-        var index = this.props.value.indexOf(allowedValue);
-        if (index === -1) {
-            /*
-            *   The array does not contain the current value, hence we add it
-            */
-            this.props.onChange(
-                R.is(Immutable.List, this.props.value) ?
-                this.props.value.push(allowedValue) :
-                R.append(allowedValue, this.props.value)
-            );
-        } else {
-            /*
-            *   The array contains the current value, hence we remove it
-            */
-            this.props.onChange(
-                R.is(Immutable.List, this.props.value) ?
-                this.props.value.remove(index) :
-                R.remove(index, 1, this.props.value)
-            );
-        }
-    },
-    onChangeSingle: function (allowedValue) {
-        this.props.onChange(
-            R.is(Immutable.List, this.props.value) ?
-            Immutable.List(allowedValue) :
-            [allowedValue]
-        );
+        return this.isActiveSingle(allowedValue);
     },
     onChange: function (allowedValue) {
-        return (
-            this.props.multi ?
-            this.onChangeMulti(allowedValue) :
-            this.onChangeSingle(allowedValue)
-        );
+        this.props.onChange([allowedValue]);
     },
     renderButtonOption: function (allowedValue) {
         var active = this.isActive(allowedValue);

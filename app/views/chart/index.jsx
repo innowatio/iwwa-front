@@ -23,7 +23,8 @@ import {
     selectSource,
     selectMultipleSite,
     selectDateRanges,
-    selectDateRangesCompare
+    selectDateRangesCompare,
+    removeAllCompare
 } from "actions/chart";
 
 var selectStyles = {
@@ -57,7 +58,6 @@ var consumptionButtonSelectedStyle = {
 };
 
 var dateCompareProps;
-var consumptionProps;
 
 function mapStateToProps (state) {
     return {
@@ -75,7 +75,8 @@ function mapDispatchToProps (dispatch) {
         selectSource: bindActionCreators(selectSource, dispatch),
         selectMultipleSite: bindActionCreators(selectMultipleSite, dispatch),
         selectDateRanges: bindActionCreators(selectDateRanges, dispatch),
-        selectDateRangesCompare: bindActionCreators(selectDateRangesCompare, dispatch)
+        selectDateRangesCompare: bindActionCreators(selectDateRangesCompare, dispatch),
+        removeAllCompare: bindActionCreators(removeAllCompare, dispatch)
     };
 }
 
@@ -87,6 +88,7 @@ var Chart = React.createClass({
         localStorage: React.PropTypes.object,
         location: React.PropTypes.object.isRequired,
         params: React.PropTypes.object,
+        removeAllCompare: React.PropTypes.func.isRequired,
         selectDateRanges: React.PropTypes.func.isRequired,
         selectDateRangesCompare: React.PropTypes.func.isRequired,
         selectEnvironmental: React.PropTypes.func.isRequired,
@@ -137,7 +139,7 @@ var Chart = React.createClass({
     },
     getValori: function () {
         return [
-            {label: "Reale", color: colors.lineReale, key: "reale"},
+            {label: "Reale", color: colors.lineReale, key: "real"},
             {label: "Previsionale", color: colors.linePrevisionale, key: "previsionale"}
         ];
     },
@@ -171,12 +173,6 @@ var Chart = React.createClass({
             // {label: "Allarmi", key: "allarms", icon: icons.iconAlarm}
         ];
     },
-    consumptionFunction: function (consumptionObject) {
-        var newValue = R.equals(consumptionObject, consumptionProps.value) ?
-            "deleteValueFromURL" :
-            consumptionObject;
-        consumptionProps.onChange(newValue, "consumption");
-    },
     getExportType: function () {
         return [
             {label: "Png", key: "png", icon: icons.iconPNG},
@@ -209,20 +205,12 @@ var Chart = React.createClass({
             exportAPILocation.exportCSV();
         }
     },
-    resetCompare: function () {
-        if (this.props.chart.sites.length > 1) {
-            var site = this.props.chart.sites[0];
-            this.props.selectSingleSite([site]);
-        }
-        if (this.refs.historicalGraph.props.dateCompare) {
-            dateCompareProps.onChange("deleteValueFromURL", "dateCompare");
-        }
-    },
     subscribeToMisure: function (props) {
         var self = this;
         var date;
         // Query for date-compare
         if (R.contains("period", R.keys(props.chart.dateRanges[0]))) {
+            console.log("CCC");
             const data = new Date(props.chart.dateRanges[0].dateOne);
             const periodKey = props.chart.dateRanges[0].period.key;
             const dateString1 = moment(data).subtract(1, periodKey).format("YYYY-MM");
@@ -271,22 +259,8 @@ var Chart = React.createClass({
         );
     },
     render: function () {
-        // Sito
-        var siti = this.props.collections.get("siti") || Immutable.Map();
-
-        // Tipologia
-        var tipologie = this.getTipologie();
-        var tipologiaInputProps = this.bindToQueryParameter(
-            "tipologia",
-            transformers.tipologia(tipologie)
-        );
-        // Consumption
-        var consumptions = this.getConsumptions();
-        consumptionProps = this.bindToQueryParameter(
-            "consumption",
-            transformers.consumption(consumptions)
-        );
         // Valore
+        // TODO:
         var valori = this.getValori();
         var valoreInputProps = this.bindToQueryParameter(
             "valore",
@@ -343,7 +317,8 @@ var Chart = React.createClass({
                                     getKey={R.prop("key")}
                                     getLabel={R.prop("label")}
                                     multi={valoriMulti}
-                                    {...valoreInputProps}
+                                    onChange={this.props.selectSource}
+                                    value={this.props.chart.sources}
                                 />
                             </components.TutorialAnchor>
                             {ENVIRONMENT === "cordova" ? null : this.renderExportButton()}
@@ -363,7 +338,7 @@ var Chart = React.createClass({
                                     tooltipPosition="left"
                                 >
                                     <components.DropdownSelect
-                                        allowedValues={tipologie}
+                                        allowedValues={this.getTipologie()}
                                         getKey={R.prop("key")}
                                         getLabel={R.prop("label")}
                                         onChange={this.props.selectType}
@@ -386,7 +361,7 @@ var Chart = React.createClass({
                                     tooltipPosition="top"
                                 >
                                     <components.SelectTree
-                                        allowedValues={siti}
+                                        allowedValues={this.props.collections.get("siti") || Immutable.Map()}
                                         filter={CollectionUtils.siti.filter}
                                         getKey={CollectionUtils.siti.getKey}
                                         getLabel={CollectionUtils.siti.getLabel}
@@ -418,7 +393,7 @@ var Chart = React.createClass({
                             >
                                 <components.Compare>
                                     <components.SitiCompare
-                                        allowedValues={siti}
+                                        allowedValues={this.props.collections.get("siti") || Immutable.Map()}
                                         filter={CollectionUtils.siti.filter}
                                         getKey={CollectionUtils.siti.getKey}
                                         getSitoLabel={CollectionUtils.siti.getLabel}
@@ -458,16 +433,16 @@ var Chart = React.createClass({
                         >
                             <components.HistoricalGraph
                                 alarms={alarms.value}
-                                consumption={consumptionProps.value}
+                                consumption={this.props.chart.types[1]}
                                 dateCompare={dateCompareProps.value}
                                 dateFilter={dateFilterProps.value}
                                 getY2Label={CollectionUtils.labelGraph.getY2Label}
                                 getYLabel={CollectionUtils.labelGraph.getYLabel}
                                 misure={this.props.collections.get("site-month-readings-aggregates") || Immutable.Map()}
                                 ref="historicalGraph"
-                                resetCompare={this.resetCompare}
+                                resetCompare={this.props.removeAllCompare}
                                 siti={this.props.chart.sites}
-                                tipologia={tipologiaInputProps.value}
+                                tipologia={this.props.chart.types[0]}
                                 valori={valoreInputProps.value}
                             />
                         </components.TutorialAnchor>

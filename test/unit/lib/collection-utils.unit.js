@@ -80,9 +80,11 @@ describe("The `measures` method", function () {
         // });
     });
 
+    // TODO:
+    //    This tests are skipped because there is a problem to fix in data-fixing algorithm.
     describe.skip("the `convertBySitesAndVariable` function", function () {
 
-        it.skip("should return the correct array filter by variable", function () {
+        it("should return the correct array filter by variable", function () {
             var measures = Immutable.Map({
                 id1: Immutable.Map({
                     month: monthString,

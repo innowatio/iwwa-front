@@ -1,5 +1,6 @@
 import {prepend, equals} from "ramda";
 
+import * as colors from "lib/colors";
 import {
     SELECT_SINGLE_SITE,
     SELECT_TYPE,
@@ -7,19 +8,20 @@ import {
     SELECT_SOURCES,
     SELECT_MULTIPLE_SITE,
     SELECT_DATE_RANGES,
-    SELECT_DATA_RANGES_COMPARE
+    SELECT_DATA_RANGES_COMPARE,
+    REMOVE_ALL_COMPARE
 } from "../actions/chart";
 
 const defaultChartState = {
     sites: [],
-    types: [{label: "Attiva", key: "energia attiva"}],
+    types: [{label: "Attiva", key: "energia attiva"}, {}],
     dateRanges: [],
-    sources: ["real"]
+    sources: [{label: "Reale", color: colors.lineReale, key: "real"}]
 };
 
 export function chart (state = defaultChartState, {type, payload}) {
     const firstDateRanges = state.dateRanges.slice(0, 1) || [];
-    const firstTypes = state.types.slice(0, 1) || [];
+    const firstTypes = state.types.slice(0, 1).concat({}) || [];
     const firstSites = state.sites.slice(0, 1) || [];
     switch (type) {
     //OK
@@ -49,7 +51,7 @@ export function chart (state = defaultChartState, {type, payload}) {
         return {
             ...state,
             sites: firstSites,
-            types: equals(state.types[1], payload) ? types : types.concat(payload),
+            types: equals(state.types[1], payload) ? types.concat({}) : types.concat(payload),
             dateRanges: firstDateRanges
         };
     // OK
@@ -67,6 +69,13 @@ export function chart (state = defaultChartState, {type, payload}) {
         return {
             ...state,
             dateRanges: [payload]
+        };
+    case REMOVE_ALL_COMPARE:
+        return {
+            ...state,
+            dateRanges: firstDateRanges,
+            sites: firstSites,
+            types: firstTypes
         };
     default:
         return state;

@@ -7,6 +7,7 @@ var DygraphCoordinate = require("lib/app-prop-types.js").DygraphCoordinate;
 
 var ValoriCompareGraph = proxyquire("components/historical-graph/valori-compare.jsx", {});
 
+// TODO:
 describe("The `getCoordinates` method of the ValoriCompare component", function () {
 
     // var getCoordinates = ValoriCompareGraph.prototype.getCoordinates;
