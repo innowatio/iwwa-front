@@ -24,13 +24,11 @@ export function chart (state = defaultChartState, {type, payload}) {
     const firstTypes = state.types.slice(0, 1).concat({}) || [];
     const firstSites = state.sites.slice(0, 1) || [];
     switch (type) {
-    //OK
     case SELECT_SINGLE_SITE:
         return {
             ...state,
             sites: payload
         };
-    // OK
     case SELECT_MULTIPLE_SITE:
         return {
             ...state,
@@ -45,7 +43,6 @@ export function chart (state = defaultChartState, {type, payload}) {
             types: firstTypes,
             dateRanges: [payload]
         };
-    // OK
     case SELECT_ENVIRONMENTAL:
         const types = state.types.slice(0, 1);
         return {
@@ -54,7 +51,6 @@ export function chart (state = defaultChartState, {type, payload}) {
             types: equals(state.types[1], payload) ? types.concat({}) : types.concat(payload),
             dateRanges: firstDateRanges
         };
-    // OK
     case SELECT_TYPE:
         return {
             ...state,

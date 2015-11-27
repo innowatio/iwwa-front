@@ -68,9 +68,9 @@ var SitiCompare = React.createClass({
             <img src={icons.iconDown} style={{float: "right", paddingTop: "5px", width: "16px"}}/>
         </span> :
         <span>
-            {this.props.getSitoLabel(this.state.valueFirst)}
+            {this.props.getSitoLabel(this.props.allowedValues.get(this.state.valueFirst))}
             <components.Spacer direction="h" size={30} />
-            {this.state.valueFirst.get("pod")}
+            {this.props.allowedValues.get(this.state.valueFirst).get("pod")}
             <img src={icons.iconDown} style={{float: "right", paddingTop: "5px", width: "16px"}}/>
         </span>;
     },
@@ -81,9 +81,9 @@ var SitiCompare = React.createClass({
             <img src={icons.iconDown} style={{float: "right", paddingTop: "5px", width: "16px"}}/>
         </span> :
         <span>
-            {this.props.getSitoLabel(this.state.valueSecond)}
+            {this.props.getSitoLabel(this.props.allowedValues.get(this.state.valueSecond))}
             <components.Spacer direction="h" size={30} />
-            {this.state.valueSecond.get("pod")}
+            {this.props.allowedValues.get(this.state.valueSecond).get("pod")}
             <img src={icons.iconDown} style={{float: "right", paddingTop: "5px", width: "16px"}}/>
         </span>;
     },
@@ -102,7 +102,7 @@ var SitiCompare = React.createClass({
                         getKey={this.props.getKey}
                         getLabel={this.props.getSitoLabel}
                         onChange={this.multi1}
-                        value={this.state.valueFirst}
+                        value={this.props.allowedValues.get(this.state.valueFirst)}
                     />
                 </components.Popover>
                 <components.Spacer direction="v" size={30} />
@@ -118,7 +118,7 @@ var SitiCompare = React.createClass({
                         getKey={this.props.getKey}
                         getLabel={this.props.getSitoLabel}
                         onChange={this.multi2}
-                        value={this.state.valueSecond}
+                        value={this.props.allowedValues.get(this.state.valueSecond)}
                     />
                 </components.Popover>
                 <components.Button

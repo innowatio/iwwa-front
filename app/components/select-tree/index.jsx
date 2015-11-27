@@ -62,7 +62,7 @@ var SelectTree = React.createClass({
             value: allowedValue
         });
         if (this.props.onChange) {
-            this.props.onChange([allowedValue]);
+            this.props.onChange([allowedValue.get("_id")]);
         }
         if (this.props.valueLink) {
             this.props.valueLink.requestChange(allowedValue);

@@ -118,7 +118,7 @@ var Chart = React.createClass({
     componentDidUpdate: function () {
         var siti = this.props.collections.get("siti") || Immutable.Map();
         if (siti.size > 0 && this.refs.historicalGraph.props.siti.length < 1) {
-            this.props.selectSingleSite([siti.first()]);
+            this.props.selectSingleSite([siti.first().get("_id")]);
         }
     },
     getPeriods: function () {
@@ -223,7 +223,7 @@ var Chart = React.createClass({
         }
         props.chart.sites.forEach(function (sito) {
             date.forEach(function (data) {
-                self.props.asteroid.subscribe("misureBySitoAndMonth", sito.get("_id"), data);
+                self.props.asteroid.subscribe("misureBySitoAndMonth", sito, data);
             });
         });
     },
@@ -235,6 +235,9 @@ var Chart = React.createClass({
     },
     switchDateCompareAndFilter: function () {
         return R.contains("period", R.keys(this.props.chart.dateRanges[0]));
+    },
+    getSitoById: function (siti, sitoId) {
+        return siti.get(sitoId);
     },
     renderExportButton: function () {
         return (
@@ -265,6 +268,7 @@ var Chart = React.createClass({
         );
     },
     render: function () {
+        const siti = this.props.collections.get("siti") || Immutable.Map();
         // Alarms
         var alarms = this.bindToQueryParameter(
             "alarms",
@@ -344,13 +348,13 @@ var Chart = React.createClass({
                                     tooltipPosition="top"
                                 >
                                     <components.SelectTree
-                                        allowedValues={this.props.collections.get("siti") || Immutable.Map()}
+                                        allowedValues={siti}
                                         filter={CollectionUtils.siti.filter}
                                         getKey={CollectionUtils.siti.getKey}
                                         getLabel={CollectionUtils.siti.getLabel}
                                         onChange={this.props.selectSingleSite}
                                         placeholder={"Punto di misurazione"}
-                                        value={this.props.chart.sites}
+                                        value={siti.get(this.props.chart.sites[0])}
                                     />
                                 </components.Popover>
                             </components.TutorialAnchor>
@@ -376,7 +380,7 @@ var Chart = React.createClass({
                             >
                                 <components.Compare>
                                     <components.SitiCompare
-                                        allowedValues={this.props.collections.get("siti") || Immutable.Map()}
+                                        allowedValues={siti}
                                         filter={CollectionUtils.siti.filter}
                                         getKey={CollectionUtils.siti.getKey}
                                         getSitoLabel={CollectionUtils.siti.getLabel}
@@ -424,7 +428,7 @@ var Chart = React.createClass({
                                 misure={this.props.collections.get("site-month-readings-aggregates") || Immutable.Map()}
                                 ref="historicalGraph"
                                 resetCompare={this.props.removeAllCompare}
-                                siti={this.props.chart.sites}
+                                siti={this.props.chart.sites.map(R.partial(this.getSitoById, [siti]))}
                                 tipologia={this.props.chart.types[0]}
                                 valori={this.props.chart.sources}
                             />

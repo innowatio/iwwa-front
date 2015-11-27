@@ -9,12 +9,12 @@ export const REMOVE_ALL_COMPARE = "REMOVE_ALL_COMPARE";
 
 /**
 *   A click on select-tree component for the choice of site
-*   @param {array} site - id site of the site
+*   @param {string} site - id site of the site
 */
-export function selectSingleSite (site) {
+export function selectSingleSite (siteId) {
     return {
         type: SELECT_SINGLE_SITE,
-        payload: site
+        payload: siteId
     };
 }
 
@@ -67,10 +67,10 @@ export function selectSource (sources) {
 *   A click on site-compare-modal
 *   @param {array} sites - id site of the two sites
 */
-export function selectMultipleSite (sites) {
+export function selectMultipleSite (sitesId) {
     return {
         type: SELECT_MULTIPLE_SITE,
-        payload: sites
+        payload: sitesId
     };
 }
 
