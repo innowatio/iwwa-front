@@ -2,6 +2,8 @@ var Immutable = require("immutable");
 var R         = require("ramda");
 var titleCase = require("title-case");
 
+var icons     = require("lib/icons");
+
 exports.siti = {
     filter: function (item, search) {
         var searchRegExp = new RegExp(search, "i");
@@ -195,6 +197,72 @@ exports.measures = {
             } else {
                 return [value[0], toConcat].concat([value[1]]);
             }
+        });
+    }
+};
+
+exports.sites = {
+    filter: function (item, search) {
+        var searchRegExp = new RegExp(search, "i");
+        return !R.isNil(item) ? (
+            searchRegExp.test(item.get("_id")) ||
+            searchRegExp.test(item.get("name"))
+        ) : null;
+    },
+    getLabel: function (sito) {
+        return R.is(Immutable.Map, sito) ? (
+            [
+                titleCase(sito.get("_id")),
+                titleCase(sito.get("name"))
+            ].join(" - ")
+        ) : "";
+    },
+    getKey: function (sito) {
+        return R.is(Immutable.Map, sito) ? sito.get("_id") : "";
+    }
+};
+
+exports.variables = {
+    decorators: [
+        Immutable.Map({
+            key: "co2",
+            icon: icons.iconCO2,
+            type: "co2",
+            unit: "ppm"
+        }),
+        Immutable.Map({
+            key: "humidity",
+            icon: icons.iconHumidity,
+            type: "thl",
+            unit: "g/m3"
+        }),
+        Immutable.Map({
+            key: "illuminance",
+            icon: icons.iconIdea,
+            type: "thl",
+            unit: "lx"
+        }),
+        Immutable.Map({
+            key: "temperature",
+            icon: icons.iconTemperature,
+            type: "thl",
+            unit: "°C"
+        })
+    ],
+    addValueToSensors: function (sensors, measures) {
+        return sensors.map(function (sensor) {
+            if (measures.getIn([sensor.name, sensor.key])) {
+                return R.merge(sensor, {value: measures.getIn([sensor.name, sensor.key])});
+            }
+        });
+    },
+    decorateSensor: function (sensor) {
+        return this.decorators.map(function (decorator) {
+            if (decorator.get("type") === sensor.get("type")) {
+                return sensor.set("id", sensor.get("id") + "-" + decorator.get("key")).merge(decorator);
+            }
+        }).filter(function (value) {
+            return !R.isNil(value);
         });
     }
 };

@@ -3,6 +3,7 @@ require("unit-setup.js");
 var Immutable = require("immutable");
 
 var CollectionUtils = proxyquire("lib/collection-utils.js", {});
+var icons           = proxyquire("lib/icons.js", {});
 
 describe("The `measures` method", function () {
 
@@ -300,6 +301,53 @@ describe("The `measures` method", function () {
 
             var expected = [[1, 2, 3, 4], [], [11, 22, 33, 44, 55, NaN, 8.9]];
             var result = CollectionUtils.measures.findMeasuresBySitoAndVariables(measures, sito, variables);
+            expect(expected).to.deep.equal(result);
+        });
+    });
+});
+
+describe("The `variables` method", function () {
+
+    describe("the `decorateSensor` function", function () {
+        it("should return more than an object if the given sensor is mapped on more than one decorator", function () {
+            var sensor = Immutable.Map({
+                id: "ZTHL01",
+                children: [],
+                description: "desc",
+                type: "thl"
+            });
+
+            var expected = [Immutable.Map({
+                id: "ZTHL01-humidity",
+                children: [],
+                description: "desc",
+                type: "thl",
+                key: "humidity",
+                icon: icons.iconHumidity,
+                unit: "g/m3"
+            }),
+            Immutable.Map({
+                id: "ZTHL01-illuminance",
+                children: [],
+                description: "desc",
+                type: "thl",
+                key: "illuminance",
+                icon: icons.iconIdea,
+                unit: "lx"
+            }),
+            Immutable.Map({
+                id: "ZTHL01-temperature",
+                children: [],
+                description: "desc",
+                type: "thl",
+                key: "temperature",
+                icon: icons.iconTemperature,
+                unit: "°C"
+            })];
+
+            var result = CollectionUtils.variables.decorateSensor(sensor);
+            console.log(result);
+            console.log(expected);
             expect(expected).to.deep.equal(result);
         });
     });
