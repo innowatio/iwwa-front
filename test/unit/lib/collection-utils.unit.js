@@ -322,6 +322,7 @@ describe("The `variables` method", function () {
                 children: [],
                 description: "desc",
                 type: "thl",
+                sensorId: "ZTHL01",
                 key: "humidity",
                 icon: icons.iconHumidity,
                 unit: "g/m3"
@@ -331,6 +332,7 @@ describe("The `variables` method", function () {
                 children: [],
                 description: "desc",
                 type: "thl",
+                sensorId: "ZTHL01",
                 key: "illuminance",
                 icon: icons.iconIdea,
                 unit: "lx"
@@ -340,15 +342,93 @@ describe("The `variables` method", function () {
                 children: [],
                 description: "desc",
                 type: "thl",
+                sensorId: "ZTHL01",
                 key: "temperature",
                 icon: icons.iconTemperature,
                 unit: "°C"
             })];
 
             var result = CollectionUtils.variables.decorateSensor(sensor);
-            console.log(result);
-            console.log(expected);
-            expect(expected).to.deep.equal(result);
+            expect(result).to.deep.equal(expected);
+        });
+    });
+
+    describe("the `addValueToSensors` function", function () {
+        it("should return attach the given measures at the given sensors", function () {
+            var sensors = [Immutable.Map({
+                id: "ZTHL01-humidity",
+                children: [],
+                description: "desc",
+                type: "thl",
+                sensorId: "ZTHL01",
+                key: "humidity",
+                icon: icons.iconHumidity,
+                unit: "g/m3"
+            }),
+            Immutable.Map({
+                id: "ZTHL01-illuminance",
+                children: [],
+                description: "desc",
+                type: "thl",
+                sensorId: "ZTHL01",
+                key: "illuminance",
+                icon: icons.iconIdea,
+                unit: "lx"
+            }),
+            Immutable.Map({
+                id: "ZTHL01-temperature",
+                children: [],
+                description: "desc",
+                type: "thl",
+                sensorId: "ZTHL01",
+                key: "temperature",
+                icon: icons.iconTemperature,
+                unit: "°C"
+            })];
+
+            var measures = Immutable.Map({
+                "ZTHL01": Immutable.Map({
+                    "illuminance": 1,
+                    "temperature": 2
+                })
+            });
+
+            var expected = [Immutable.Map({
+                id: "ZTHL01-humidity",
+                children: [],
+                description: "desc",
+                type: "thl",
+                sensorId: "ZTHL01",
+                key: "humidity",
+                icon: icons.iconHumidity,
+                unit: "g/m3",
+                value: undefined
+            }),
+            Immutable.Map({
+                id: "ZTHL01-illuminance",
+                children: [],
+                description: "desc",
+                type: "thl",
+                sensorId: "ZTHL01",
+                key: "illuminance",
+                icon: icons.iconIdea,
+                unit: "lx",
+                value: 1
+            }),
+            Immutable.Map({
+                id: "ZTHL01-temperature",
+                children: [],
+                description: "desc",
+                type: "thl",
+                sensorId: "ZTHL01",
+                key: "temperature",
+                icon: icons.iconTemperature,
+                unit: "°C",
+                value: 2
+            })];
+
+            var result = CollectionUtils.variables.addValueToSensors(sensors, measures);
+            expect(result).to.deep.equal(expected);
         });
     });
 });

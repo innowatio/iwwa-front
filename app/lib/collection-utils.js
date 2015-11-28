@@ -251,15 +251,19 @@ exports.variables = {
     ],
     addValueToSensors: function (sensors, measures) {
         return sensors.map(function (sensor) {
-            if (measures.getIn([sensor.name, sensor.key])) {
-                return R.merge(sensor, {value: measures.getIn([sensor.name, sensor.key])});
-            }
+            console.log(sensor);
+            return sensor.merge({
+                value: measures.getIn([sensor.get("sensorId"), sensor.get("key")]) || undefined
+            });
         });
     },
     decorateSensor: function (sensor) {
         return this.decorators.map(function (decorator) {
             if (decorator.get("type") === sensor.get("type")) {
-                return sensor.set("id", sensor.get("id") + "-" + decorator.get("key")).merge(decorator);
+                return sensor
+                    .set("id", sensor.get("id") + "-" + decorator.get("key"))
+                    .set("sensorId", sensor.get("id"))
+                    .merge(decorator);
             }
         }).filter(function (value) {
             return !R.isNil(value);
