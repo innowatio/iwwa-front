@@ -304,11 +304,8 @@ describe("The `measures` method", function () {
             expect(expected).to.deep.equal(result);
         });
     });
-});
 
-describe("The `variables` method", function () {
-
-    describe("the `decorateSensor` function", function () {
+    describe("the `decorateMeasures` function", function () {
         it("should return more than an object if the given sensor is mapped on more than one decorator", function () {
             var sensor = Immutable.Map({
                 id: "ZTHL01",
@@ -317,7 +314,7 @@ describe("The `variables` method", function () {
                 type: "thl"
             });
 
-            var expected = [Immutable.Map({
+            var expected = Immutable.List([Immutable.Map({
                 id: "ZTHL01-humidity",
                 children: [],
                 description: "desc",
@@ -346,9 +343,9 @@ describe("The `variables` method", function () {
                 key: "temperature",
                 icon: icons.iconTemperature,
                 unit: "°C"
-            })];
+            })]);
 
-            var result = CollectionUtils.variables.decorateSensor(sensor);
+            var result = CollectionUtils.measures.decorateMeasure(sensor);
             expect(result).to.deep.equal(expected);
         });
     });
@@ -427,7 +424,7 @@ describe("The `variables` method", function () {
                 value: 2
             })];
 
-            var result = CollectionUtils.variables.addValueToSensors(sensors, measures);
+            var result = CollectionUtils.measures.addValueToMeasures(sensors, measures);
             expect(result).to.deep.equal(expected);
         });
     });

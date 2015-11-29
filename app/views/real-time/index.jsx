@@ -26,19 +26,38 @@ var RealTime = React.createClass({
         };
     },
     componentDidMount: function () {
-        this.props.asteroid.subscribe("siti");
+        this.props.asteroid.subscribe("sites");
     },
-    getSiti: function () {
-        return this.props.collections.get("siti") || Immutable.Map();
+    drawGauges: function () {
+        if (this.findLatestMeasuresForEnergy().size > 0) {
+            console.log("this.findLatestMeasuresForEnergy().size");
+            console.log(this.findLatestMeasuresForEnergy());
+            console.log(this.findLatestMeasuresForEnergy().size);
+            return this.findLatestMeasuresForEnergy().map((measure) => {
+                console.log("gauge");
+                console.log(measure);
+                return (
+                    <components.Gauge
+                        maximum={1.2}
+                        minimum={0}
+                        unit={measure.get("unit")}
+                        value={measure.get("value") || 0}
+                    />
+                );
+            });
+        }
+
+    },
+    getSites: function () {
+        var sites = this.props.collections.get("sites") || Immutable.Map();
+        return sites;
     },
     getMeasures: function () {
-        return this.props.collections.get("site-month-readings-aggregates") || Immutable.Map();
+        return this.props.collections.get("real-time-measures") || Immutable.Map();
     },
-    getMisureBySito: function (sito) {
-        var period = `${new Date().getYear() + 1900}-${new Date().getMonth() + 1}`;
-        this.props.asteroid.subscribe("misureBySitoAndMonth", sito[0].get("_id"), period);
-        this.setState({"selectedSito": sito[0]});
-        this.findLatestMeasures();
+    getMisureBySite: function (site) {
+        this.props.asteroid.subscribe("findRealTimeMeasuresBySite", site[0].get("_id"));
+        this.setState({"selectedSite": site[0]});
     },
     getVariables: function () {
         return [
@@ -64,38 +83,41 @@ var RealTime = React.createClass({
             }
         ];
     },
-    findLatestMeasures: function () {
-        var values = CollectionUtils.measures.findMeasuresBySitoAndVariables(
-            this.getMeasures(),
-            this.state.selectedSito,
-            this.getVariables()
-        );
-        // this.setState({values: values});
-        return values;
-    },
     findLatestMeasuresForEnergy: function () {
         var res = {
-            key: "energia attiva",
+            key: "activeEnergy",
             unit: "KWh"
         };
-        var values = CollectionUtils.measures.findMeasuresBySitoAndVariables(
-            this.getMeasures(),
-            this.state.selectedSito,
-            [res]
-        );
-        res = R.merge(res, {value: values[0][values[0].length - 1]});
-        return res;
-    },
-    findLatestMeasuresForVariables: function () {
-        var res = this.getVariables();
-        var values = this.findLatestMeasures();
-        for (var i = 0; i < values.length; i++) {
-            res[i] = R.merge(res[i], {value: values[i][values[i].length - 1]});
+        if (this.state.selectedSite && this.getMeasures().size) {
+            var decoMeasurements = R.map((sensor) => {
+                return CollectionUtils.measures.decorateMeasure(sensor.set("type", "pod"));
+            }, this.state.selectedSite.get("pods"));
+            res = R.filter(
+                function (measure) {
+                    return measure.get("key") === "activeEnergy";
+                },
+                CollectionUtils.measures.addValueToMeasures(
+                    decoMeasurements.flatten(1),
+                    this.getMeasures().first().get("measurements")
+            ));
+            console.log(res);
         }
         return res;
     },
-    rand: function () {
-        this.setState({value: Math.round(Math.random() * 10000) / 100});
+    findLatestMeasuresForVariables: function () {
+        var res = CollectionUtils.measures.decorators.filter(function (decorator) {
+            return decorator.get("type") !== "pod";
+        });
+        if (this.state.selectedSite && this.getMeasures().size) {
+            var decoMeasurements = R.map((sensor) => {
+                return CollectionUtils.measures.decorateMeasure(sensor);
+            }, this.state.selectedSite.get("otherSensors"));
+            res = CollectionUtils.measures.addValueToMeasures(
+                decoMeasurements.flatten(1),
+                this.getMeasures().first().get("measurements")
+            ).toArray();
+        }
+        return res;
     },
     render: function () {
         return (
@@ -109,27 +131,22 @@ var RealTime = React.createClass({
                         tooltipPosition="top"
                     >
                         <components.SelectTree
-                            allowedValues={this.getSiti()}
-                            filter={CollectionUtils.siti.filter}
-                            getKey={CollectionUtils.siti.getKey}
-                            getLabel={CollectionUtils.siti.getLabel}
-                            onChange={this.getMisureBySito}
+                            allowedValues={this.getSites()}
+                            onChange={this.getMisureBySite}
                             placeholder={"Punto di misurazione"}
-                            value={this.state.selectedSito}
+                            value={this.state.selectedSite}
+                            {...CollectionUtils.sites}
                         />
                     </components.Popover>
                 </bootstrap.Col>
                 {/* Barra Rilevazioni ambientali */}
+                <components.Spacer direction="h" size={1} />
                 <VariablesPanel
                     values={this.findLatestMeasuresForVariables()}
                 />
                 {/* Gauge/s */}
-                <components.Gauge
-                    maximum={1.2}
-                    minimum={0}
-                    unit={"kWh"}
-                    value={this.findLatestMeasuresForEnergy().value || 0}
-                />
+                <components.Spacer direction="h" size={1} />
+                {this.drawGauges()}
             </div>
         );
     }

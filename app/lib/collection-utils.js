@@ -68,6 +68,54 @@ exports.labelGraph = {
     }
 */
 exports.measures = {
+    decorators: [
+        Immutable.Map({
+            key: "co2",
+            icon: icons.iconCO2,
+            type: "co2",
+            unit: "ppm"
+        }),
+        Immutable.Map({
+            key: "humidity",
+            icon: icons.iconHumidity,
+            type: "thl",
+            unit: "g/m3"
+        }),
+        Immutable.Map({
+            key: "illuminance",
+            icon: icons.iconIdea,
+            type: "thl",
+            unit: "lx"
+        }),
+        Immutable.Map({
+            key: "temperature",
+            icon: icons.iconTemperature,
+            type: "thl",
+            unit: "°C"
+        }),
+        Immutable.Map({
+            key: "activeEnergy",
+            type: "pod",
+            unit: "kWh"
+        }),
+        Immutable.Map({
+            key: "maxPower",
+            type: "pod",
+            unit: "kW"
+        }),
+        Immutable.Map({
+            key: "reactiveEnergy",
+            type: "pod",
+            unit: "kVARh"
+        })
+    ],
+    addValueToMeasures: function (sensors, measures) {
+        return sensors.map(function (sensor) {
+            return sensor.merge({
+                value: measures.getIn([sensor.get("sensorId"), sensor.get("key")]) || undefined
+            });
+        });
+    },
     convertByVariables: R.memoize(function (measures, variables, startOfTime) {
         var mLength;
         const fiveMinutesInMS = 5 * 60 * 1000;
@@ -157,6 +205,21 @@ exports.measures = {
         });
         return this.mergeCoordinates(measuresByDates[0] || [], measuresByDates[1] || []);
     },
+    decorateMeasure: function (sensor) {
+        // return an Immutable list for avoid subsequent `.flatten` mismatch
+        return Immutable.List(R.filter(
+            function (value) {
+                return !R.isNil(value);
+            },
+            this.decorators.map(function (decorator) {
+                if (decorator.get("type") === sensor.get("type")) {
+                    return sensor
+                        .set("id", sensor.get("id") + "-" + decorator.get("key"))
+                        .set("sensorId", sensor.get("id"))
+                        .merge(decorator);
+                }
+            })));
+    },
     findMeasuresBySitoAndVariables: R.memoize(function (measures, sito, variables) {
         return variables.map(function (variable) {
             var variableKey = variable.key;
@@ -219,54 +282,5 @@ exports.sites = {
     },
     getKey: function (sito) {
         return R.is(Immutable.Map, sito) ? sito.get("_id") : "";
-    }
-};
-
-exports.variables = {
-    decorators: [
-        Immutable.Map({
-            key: "co2",
-            icon: icons.iconCO2,
-            type: "co2",
-            unit: "ppm"
-        }),
-        Immutable.Map({
-            key: "humidity",
-            icon: icons.iconHumidity,
-            type: "thl",
-            unit: "g/m3"
-        }),
-        Immutable.Map({
-            key: "illuminance",
-            icon: icons.iconIdea,
-            type: "thl",
-            unit: "lx"
-        }),
-        Immutable.Map({
-            key: "temperature",
-            icon: icons.iconTemperature,
-            type: "thl",
-            unit: "°C"
-        })
-    ],
-    addValueToSensors: function (sensors, measures) {
-        return sensors.map(function (sensor) {
-            console.log(sensor);
-            return sensor.merge({
-                value: measures.getIn([sensor.get("sensorId"), sensor.get("key")]) || undefined
-            });
-        });
-    },
-    decorateSensor: function (sensor) {
-        return this.decorators.map(function (decorator) {
-            if (decorator.get("type") === sensor.get("type")) {
-                return sensor
-                    .set("id", sensor.get("id") + "-" + decorator.get("key"))
-                    .set("sensorId", sensor.get("id"))
-                    .merge(decorator);
-            }
-        }).filter(function (value) {
-            return !R.isNil(value);
-        });
     }
 };
