@@ -384,9 +384,25 @@ describe("The `measures` method", function () {
             })];
 
             var measures = Immutable.Map({
-                "ZTHL01": Immutable.Map({
-                    "illuminance": 1,
-                    "temperature": 2
+                "id": "un-id",
+                "siteId": "siteid",
+                "sensors": Immutable.Map({
+                    "ZTHL01": Immutable.Map({
+                        "measurements": Immutable.Map({
+                            "illuminance": 1,
+                            "temperature": 2,
+                            "activeEnergy": 3
+                        }),
+                        "lastUpdate": ""
+                    }),
+                    "AZN01": Immutable.Map({
+                        "measurements": Immutable.Map({
+                            "illuminance": 91,
+                            "temperature": 92,
+                            "activeEnergy": 93
+                        }),
+                        "lastUpdate": ""
+                    })
                 })
             });
 
@@ -424,7 +440,7 @@ describe("The `measures` method", function () {
                 value: 2
             })];
 
-            var result = CollectionUtils.measures.addValueToMeasures(sensors, measures);
+            var result = CollectionUtils.measures.addValueToMeasures(sensors, measures.get("sensors"));
             expect(result).to.deep.equal(expected);
         });
     });

@@ -78,7 +78,7 @@ var RealTime = React.createClass({
         var selectedSiteId = this.state.selectedSite.get("_id");
         return this.getMeasures().find(function (measure) {
             return measure.get("siteId") === selectedSiteId;
-        }).get("measurements");
+        }).get("sensors");
     },
     getVariables: function () {
         return [
