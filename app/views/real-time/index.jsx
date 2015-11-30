@@ -89,8 +89,7 @@ var RealTime = React.createClass({
         }).get("sensors");
     },
     getGaugeLabel: function (params) {
-        return (
-            <components.MeasureLabel {...params} />);
+        return (<components.MeasureLabel {...params} />);
     },
     getVariables: function () {
         return [

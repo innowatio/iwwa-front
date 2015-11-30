@@ -1,4 +1,3 @@
-var bootstrap = require("react-bootstrap");
 var React     = require("react");
 
 var MeasureLabel = require("components/").MeasureLabel;
@@ -8,9 +7,8 @@ var style = {
     box: {
         border: "1px solid " + colors.greyBorder,
         borderRadius: "2px",
-        margin: "1%",
-        textAlign: "center",
-        width: "21%"
+        margin: "5%",
+        textAlign: "center"
     }
 };
 
@@ -21,20 +19,21 @@ var VariablesPanel = React.createClass({
     renderVariableBox: function () {
         return this.props.values.map((variable) => {
             return (
-                <div key={variable.get("key")} style={style.box} styleName="variableContainer">
-                    <img src={variable.get("icon")} style={{height: "50px"}}/>
-                    <MeasureLabel
-                        unit={variable.get("unit")}
-                        value={variable.get("value")}
-                    />
+                <div style={{width: "25%", flex: "1 0 auto"}}>
+                    <div key={variable.get("key")} style={style.box} styleName="variableContainer">
+                        <img src={variable.get("icon")} style={{height: "50px"}}/>
+                        <MeasureLabel
+                            unit={variable.get("unit")}
+                            value={variable.get("value")}
+                        />
+                    </div>
                 </div>
             );
         });
     },
     render: function () {
-        // <div style={{display: "-webkit-inline-box", overflow: "auto", width: "100%"}}>
         return (
-            <div style={{display: "inline-flex", overflow: "auto", width: "100%"}}>
+            <div style={{display: "flex", overflow: "auto"}}>
                 {this.renderVariableBox()}
             </div>
         );

@@ -112,7 +112,6 @@ exports.measures = {
     addValueToMeasures: function (sensors, measures) {
         return sensors.map(function (sensor) {
             const PATH = [sensor.get("id"), "measurements", sensor.get("keyType")];
-            console.log(PATH);
             return sensor.merge({
                 value: measures.getIn(PATH) || undefined
             });
