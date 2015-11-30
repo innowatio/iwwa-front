@@ -18,9 +18,7 @@ var RealTime = React.createClass({
     },
     getInitialState: function () {
         return {
-            selectedSito: Immutable.Map(),
-            value: 0,
-            values: this.getVariables()
+            selectedSito: Immutable.Map()
         };
     },
     componentDidMount: function () {
@@ -90,30 +88,6 @@ var RealTime = React.createClass({
             <components.MeasureLabel {...params} />
         );
     },
-    getVariables: function () {
-        return [
-            {
-                key: "temperature",
-                icon: icons.iconTemperature,
-                unit: "°C"
-            },
-            {
-                key: "humidity",
-                icon: icons.iconHumidity,
-                unit: "g/m3"
-            },
-            {
-                key: "illuminance",
-                icon: icons.iconIdea,
-                unit: "lx"
-            },
-            {
-                key: "co2",
-                icon: icons.iconCO2,
-                unit: "ppm"
-            }
-        ];
-    },
     findLatestMeasuresForEnergy: function () {
         var res = {
             key: "activeEnergy",
@@ -176,8 +150,14 @@ var RealTime = React.createClass({
                 />
                 {/* Gauge/s */}
                 <components.Spacer direction="h" size={1} />
-                {this.drawGaugeTotal()}
-                {this.drawGauges()}
+                <div style={{display: "flex", alignItems: "center"}}>
+                    <div style={{width: "40%"}}>
+                        {this.drawGaugeTotal()}
+                    </div>
+                    <div style={{width: "60%"}}>
+                        {this.drawGauges()}
+                    </div>
+                </div>
             </div>
         );
     }
