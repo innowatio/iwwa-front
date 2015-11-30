@@ -44,6 +44,25 @@ var RealTime = React.createClass({
         }
 
     },
+    drawGaugeTotal: function () {
+        if (this.findLatestMeasuresForEnergy().size > 0) {
+            const {value, unit} = this.findLatestMeasuresForEnergy().reduce((acc, measure) => {
+                return {
+                    value: acc.value || 0 + measure.get("value"),
+                    unit: measure.get("unit")
+                };
+            }, {value: 0, unit: ""});
+            return (
+                <components.Gauge
+                    key={"total"}
+                    maximum={1.2}
+                    minimum={0}
+                    unit={unit}
+                    value={value}
+                />
+            );
+        }
+    },
     getSites: function () {
         var sites = this.props.collections.get("sites") || Immutable.Map();
         return sites;
@@ -147,6 +166,7 @@ var RealTime = React.createClass({
                 />
                 {/* Gauge/s */}
                 <components.Spacer direction="h" size={1} />
+                {this.drawGaugeTotal()}
                 {this.drawGauges()}
             </div>
         );
