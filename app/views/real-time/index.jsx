@@ -9,7 +9,6 @@ var CollectionUtils = require("lib/collection-utils");
 var components      = require("components");
 var icons           = require("lib/icons");
 var styles          = require("lib/styles");
-var VariablesPanel  = require("components/").VariablesPanel;
 
 
 var RealTime = React.createClass({
@@ -27,7 +26,7 @@ var RealTime = React.createClass({
     componentDidMount: function () {
         this.props.asteroid.subscribe("sites");
     },
-    drawGauge: function (key, value, unit, max, min) {
+    drawGauge: function (key, value, unit, max, min, id) {
         return (
             <components.Gauge
                 key={key}
@@ -36,10 +35,7 @@ var RealTime = React.createClass({
                 unit={unit}
                 value={value}
                 valueLabel={this.getGaugeLabel({
-                    style: {
-                        position: "relative",
-                        top: "-40px"
-                    },
+                    id: id,
                     unit: unit || "",
                     value: value
                 })}
@@ -54,7 +50,8 @@ var RealTime = React.createClass({
                     measure.get("value") || 0,
                     measure.get("unit"),
                     1.2,
-                    0
+                    0,
+                    measure.get("id")
                 );
             });
         }
@@ -89,7 +86,9 @@ var RealTime = React.createClass({
         }).get("sensors");
     },
     getGaugeLabel: function (params) {
-        return (<components.MeasureLabel {...params} />);
+        return (
+            <components.MeasureLabel {...params} />
+        );
     },
     getVariables: function () {
         return [
@@ -172,7 +171,7 @@ var RealTime = React.createClass({
                 </bootstrap.Col>
                 {/* Barra Rilevazioni ambientali */}
                 <components.Spacer direction="h" size={1} />
-                <VariablesPanel
+                <components.VariablesPanel
                     values={this.findLatestMeasuresForVariables()}
                 />
                 {/* Gauge/s */}

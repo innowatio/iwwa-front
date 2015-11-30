@@ -7,8 +7,9 @@ var style = {
     box: {
         border: "1px solid " + colors.greyBorder,
         borderRadius: "2px",
+        display: "flex",
         margin: "5%",
-        textAlign: "center"
+        padding: "1%"
     }
 };
 
@@ -23,6 +24,7 @@ var VariablesPanel = React.createClass({
                     <div key={variable.get("key")} style={style.box} styleName="variableContainer">
                         <img src={variable.get("icon")} style={{height: "50px"}}/>
                         <MeasureLabel
+                            id={variable.get("id")}
                             unit={variable.get("unit")}
                             value={variable.get("value")}
                         />
