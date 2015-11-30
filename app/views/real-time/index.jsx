@@ -30,14 +30,10 @@ var RealTime = React.createClass({
     },
     drawGauges: function () {
         if (this.findLatestMeasuresForEnergy().size > 0) {
-            console.log("this.findLatestMeasuresForEnergy().size");
-            console.log(this.findLatestMeasuresForEnergy());
-            console.log(this.findLatestMeasuresForEnergy().size);
             return this.findLatestMeasuresForEnergy().map((measure) => {
-                console.log("gauge");
-                console.log(measure);
                 return (
                     <components.Gauge
+                        key={measure.get("key")}
                         maximum={1.2}
                         minimum={0}
                         unit={measure.get("unit")}
@@ -55,9 +51,15 @@ var RealTime = React.createClass({
     getMeasures: function () {
         return this.props.collections.get("real-time-measures") || Immutable.Map();
     },
-    getMisureBySite: function (site) {
+    setSelectedSite: function (site) {
         this.props.asteroid.subscribe("findRealTimeMeasuresBySite", site[0].get("_id"));
         this.setState({"selectedSite": site[0]});
+    },
+    getMeasuresBySite: function () {
+        var selectedSiteId = this.state.selectedSite.get("_id");
+        return this.getMeasures().find(function (measure) {
+            return measure.get("siteId") === selectedSiteId;
+        }).get("measurements");
     },
     getVariables: function () {
         return [
@@ -94,13 +96,12 @@ var RealTime = React.createClass({
             }, this.state.selectedSite.get("pods"));
             res = R.filter(
                 function (measure) {
-                    return measure.get("key") === "activeEnergy";
+                    return measure.get("keyType") === "activeEnergy";
                 },
                 CollectionUtils.measures.addValueToMeasures(
                     decoMeasurements.flatten(1),
-                    this.getMeasures().first().get("measurements")
+                    this.getMeasuresBySite()
             ));
-            console.log(res);
         }
         return res;
     },
@@ -114,7 +115,7 @@ var RealTime = React.createClass({
             }, this.state.selectedSite.get("otherSensors"));
             res = CollectionUtils.measures.addValueToMeasures(
                 decoMeasurements.flatten(1),
-                this.getMeasures().first().get("measurements")
+                this.getMeasuresBySite()
             ).toArray();
         }
         return res;
@@ -132,7 +133,7 @@ var RealTime = React.createClass({
                     >
                         <components.SelectTree
                             allowedValues={this.getSites()}
-                            onChange={this.getMisureBySite}
+                            onChange={this.setSelectedSite}
                             placeholder={"Punto di misurazione"}
                             value={this.state.selectedSite}
                             {...CollectionUtils.sites}

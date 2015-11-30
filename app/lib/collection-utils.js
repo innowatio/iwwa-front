@@ -112,7 +112,7 @@ exports.measures = {
     addValueToMeasures: function (sensors, measures) {
         return sensors.map(function (sensor) {
             return sensor.merge({
-                value: measures.getIn([sensor.get("sensorId"), sensor.get("key")]) || undefined
+                value: measures.getIn([sensor.get("id"), sensor.get("keyType")]) || undefined
             });
         });
     },
@@ -213,10 +213,11 @@ exports.measures = {
             },
             this.decorators.map(function (decorator) {
                 if (decorator.get("type") === sensor.get("type")) {
-                    return sensor
-                        .set("id", sensor.get("id") + "-" + decorator.get("key"))
-                        .set("sensorId", sensor.get("id"))
-                        .merge(decorator);
+                    return decorator.merge(
+                        sensor
+                        .set("key", sensor.get("id") + "-" + decorator.get("key"))
+                        .set("keyType", decorator.get("key"))
+                    );
                 }
             })));
     },

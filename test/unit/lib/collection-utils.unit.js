@@ -315,34 +315,34 @@ describe("The `measures` method", function () {
             });
 
             var expected = Immutable.List([Immutable.Map({
-                id: "ZTHL01-humidity",
-                children: [],
-                description: "desc",
-                type: "thl",
-                sensorId: "ZTHL01",
-                key: "humidity",
+                key: "ZTHL01-humidity",
                 icon: icons.iconHumidity,
-                unit: "g/m3"
-            }),
-            Immutable.Map({
-                id: "ZTHL01-illuminance",
+                type: "thl",
+                unit: "g/m3",
+                id: "ZTHL01",
                 children: [],
                 description: "desc",
-                type: "thl",
-                sensorId: "ZTHL01",
-                key: "illuminance",
+                keyType: "humidity"
+            }),
+            Immutable.Map({
+                key: "ZTHL01-illuminance",
                 icon: icons.iconIdea,
-                unit: "lx"
-            }),
-            Immutable.Map({
-                id: "ZTHL01-temperature",
+                type: "thl",
+                unit: "lx",
+                id: "ZTHL01",
                 children: [],
                 description: "desc",
-                type: "thl",
-                sensorId: "ZTHL01",
-                key: "temperature",
+                keyType: "illuminance"
+            }),
+            Immutable.Map({
+                key: "ZTHL01-temperature",
                 icon: icons.iconTemperature,
-                unit: "°C"
+                type: "thl",
+                unit: "°C",
+                id: "ZTHL01",
+                children: [],
+                description: "desc",
+                keyType: "temperature"
             })]);
 
             var result = CollectionUtils.measures.decorateMeasure(sensor);
@@ -353,34 +353,34 @@ describe("The `measures` method", function () {
     describe("the `addValueToSensors` function", function () {
         it("should return attach the given measures at the given sensors", function () {
             var sensors = [Immutable.Map({
-                id: "ZTHL01-humidity",
-                children: [],
-                description: "desc",
-                type: "thl",
-                sensorId: "ZTHL01",
-                key: "humidity",
+                key: "ZTHL01-humidity",
                 icon: icons.iconHumidity,
-                unit: "g/m3"
-            }),
-            Immutable.Map({
-                id: "ZTHL01-illuminance",
+                type: "thl",
+                unit: "g/m3",
+                id: "ZTHL01",
                 children: [],
                 description: "desc",
-                type: "thl",
-                sensorId: "ZTHL01",
-                key: "illuminance",
+                keyType: "humidity"
+            }),
+            Immutable.Map({
+                key: "ZTHL01-illuminance",
                 icon: icons.iconIdea,
-                unit: "lx"
-            }),
-            Immutable.Map({
-                id: "ZTHL01-temperature",
+                type: "thl",
+                unit: "lx",
+                id: "ZTHL01",
                 children: [],
                 description: "desc",
-                type: "thl",
-                sensorId: "ZTHL01",
-                key: "temperature",
+                keyType: "illuminance"
+            }),
+            Immutable.Map({
+                key: "ZTHL01-temperature",
                 icon: icons.iconTemperature,
-                unit: "°C"
+                type: "thl",
+                unit: "°C",
+                id: "ZTHL01",
+                children: [],
+                description: "desc",
+                keyType: "temperature"
             })];
 
             var measures = Immutable.Map({
@@ -391,34 +391,34 @@ describe("The `measures` method", function () {
             });
 
             var expected = [Immutable.Map({
-                id: "ZTHL01-humidity",
+                id: "ZTHL01",
                 children: [],
                 description: "desc",
                 type: "thl",
-                sensorId: "ZTHL01",
-                key: "humidity",
+                key: "ZTHL01-humidity",
+                keyType: "humidity",
                 icon: icons.iconHumidity,
                 unit: "g/m3",
                 value: undefined
             }),
             Immutable.Map({
-                id: "ZTHL01-illuminance",
+                id: "ZTHL01",
                 children: [],
                 description: "desc",
                 type: "thl",
-                sensorId: "ZTHL01",
-                key: "illuminance",
+                key: "ZTHL01-illuminance",
+                keyType: "illuminance",
                 icon: icons.iconIdea,
                 unit: "lx",
                 value: 1
             }),
             Immutable.Map({
-                id: "ZTHL01-temperature",
+                id: "ZTHL01",
                 children: [],
                 description: "desc",
                 type: "thl",
-                sensorId: "ZTHL01",
-                key: "temperature",
+                key: "ZTHL01-temperature",
+                keyType: "temperature",
                 icon: icons.iconTemperature,
                 unit: "°C",
                 value: 2
