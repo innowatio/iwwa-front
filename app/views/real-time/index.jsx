@@ -7,7 +7,6 @@ var React      = require("react");
 
 var CollectionUtils = require("lib/collection-utils");
 var components      = require("components");
-var Gauge           = require("components/").Gauge;
 var icons           = require("lib/icons");
 var styles          = require("lib/styles");
 var VariablesPanel  = require("components/").VariablesPanel;
@@ -28,17 +27,34 @@ var RealTime = React.createClass({
     componentDidMount: function () {
         this.props.asteroid.subscribe("sites");
     },
+    drawGauge: function (key, value, unit, max, min) {
+        return (
+            <components.Gauge
+                key={key}
+                maximum={max}
+                minimum={min}
+                unit={unit}
+                value={value}
+                valueLabel={this.getGaugeLabel({
+                    style: {
+                        position: "relative",
+                        top: "-40px"
+                    },
+                    unit: unit || "",
+                    value: value
+                })}
+            />
+        );
+    },
     drawGauges: function () {
         if (this.findLatestMeasuresForEnergy().size > 0) {
             return this.findLatestMeasuresForEnergy().map((measure) => {
-                return (
-                    <components.Gauge
-                        key={measure.get("key")}
-                        maximum={1.2}
-                        minimum={0}
-                        unit={measure.get("unit")}
-                        value={measure.get("value") || 0}
-                    />
+                return this.drawGauge(
+                    measure.get("key"),
+                    measure.get("value") || 0,
+                    measure.get("unit"),
+                    1.2,
+                    0
                 );
             });
         }
@@ -52,15 +68,7 @@ var RealTime = React.createClass({
                     unit: measure.get("unit")
                 };
             }, {value: 0, unit: ""});
-            return (
-                <components.Gauge
-                    key={"total"}
-                    maximum={1.2}
-                    minimum={0}
-                    unit={unit}
-                    value={value}
-                />
-            );
+            return this.drawGauge("total", value, unit, 1.2, 0);
         }
     },
     getSites: function () {
@@ -79,6 +87,10 @@ var RealTime = React.createClass({
         return this.getMeasures().find(function (measure) {
             return measure.get("siteId") === selectedSiteId;
         }).get("sensors");
+    },
+    getGaugeLabel: function (params) {
+        return (
+            <components.MeasureLabel {...params} />);
     },
     getVariables: function () {
         return [

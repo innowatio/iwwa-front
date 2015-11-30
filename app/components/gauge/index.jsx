@@ -2,7 +2,6 @@ var Radium = require("radium");
 var React  = require("react");
 
 var colors       = require("lib/colors");
-var MeasureLabel = require("../measure-label");
 
 var styleGauge = {
     fill: "none",
@@ -33,7 +32,8 @@ var Gauge = React.createClass({
         styleGaugeBar: React.PropTypes.object,
         styleGaugeBody: React.PropTypes.object,
         unit: React.PropTypes.string,
-        value: React.PropTypes.number.isRequired
+        value: React.PropTypes.number.isRequired,
+        valueLabel: React.PropTypes.object
     },
     calculateAngle: function () {
         var grad = (this.props.maximum - this.props.minimum) / 180;
@@ -69,14 +69,8 @@ var Gauge = React.createClass({
                     </g>
 
                 </svg>
-                <MeasureLabel
-                    style={{
-                        position: "relative",
-                        top: "-40px"
-                    }}
-                    unit={this.props.unit || ""}
-                    value={this.props.value}
-                />
+
+                {this.props.valueLabel || this.props.value}
             </div>
         );
     }
