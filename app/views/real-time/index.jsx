@@ -150,14 +150,8 @@ var RealTime = React.createClass({
                 />
                 {/* Gauge/s */}
                 <components.Spacer direction="h" size={1} />
-                <div style={{display: "flex", alignItems: "center"}}>
-                    <div style={{width: "40%"}}>
-                        {this.drawGaugeTotal()}
-                    </div>
-                    <div style={{width: "60%"}}>
-                        {this.drawGauges()}
-                    </div>
-                </div>
+                {this.drawGaugeTotal()}
+                {this.drawGauges()}
             </div>
         );
     }
