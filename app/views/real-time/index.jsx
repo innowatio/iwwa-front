@@ -62,11 +62,11 @@ var RealTime = React.createClass({
         if (this.findLatestMeasuresForEnergy().size > 0) {
             const {value, unit} = this.findLatestMeasuresForEnergy().reduce((acc, measure) => {
                 return {
-                    value: acc.value + measure.get("value"),
+                    value: acc.value + parseFloat(measure.get("value")),
                     unit: measure.get("unit")
                 };
             }, {value: 0, unit: ""});
-            return this.drawGauge("Consumi totali", value, unit, 1.2, 0);
+            return this.drawGauge("Consumi totali", value.toFixed(2), unit, 1.2, 0);
         }
     },
     getSites: function () {
