@@ -4,13 +4,6 @@ import {ReduxRouter} from "redux-router";
 
 import * as views from "views";
 
-var checkLocalStorageAndRedirect = function (nextState, replaceState) {
-    if (!nextState.location.query && localStorage.query) {
-        nextState.location.query = JSON.parse(localStorage.query);
-    }
-    return replaceState;
-};
-
 module.exports = (
     <ReduxRouter>
         <Route component={views.Root} name="root">

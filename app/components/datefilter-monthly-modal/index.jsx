@@ -23,10 +23,10 @@ var DatefilterMonthlyModal = React.createClass({
         onChange: React.PropTypes.func.isRequired,
         style: React.PropTypes.object,
         title: React.PropTypes.element,
-        value: React.PropTypes.arrayOf(React.PropTypes.shape({
+        value: React.PropTypes.shape({
             start: React.PropTypes.date,
             end: React.PropTypes.date
-        })).isRequired
+        })
     },
     getInitialState: function () {
         return {
@@ -34,10 +34,21 @@ var DatefilterMonthlyModal = React.createClass({
             data: "",
             showModal: false,
             value: {
-                start: this.getDefault(this.props.value, "start", this.defaultStartDate()),
-                end: this.getDefault(this.props.value, "end", this.defaultEndDate())
+                start: this.defaultStartDate(),
+                end: this.defaultEndDate()
             }
         };
+    },
+    componentWillReceiveProps: function (props) {
+        return this.getStateFromProps(props);
+    },
+    getStateFromProps: function (props) {
+        this.setState({
+            value: {
+                start: this.getDefault(props.value, "start", this.defaultStartDate()),
+                end: this.getDefault(props.value, "end", this.defaultEndDate())
+            }
+        });
     },
     getDefault: function (valueObject, key, defaultValue) {
         var defaultTo = R.defaultTo(defaultValue);
@@ -45,7 +56,7 @@ var DatefilterMonthlyModal = React.createClass({
         var result = defaultValue;
         var hasKey = R.has(key);
         if (!R.isNil(valueObject) && hasKey(valueObject)) {
-            return defaultTo(valueObject[key]);
+            return defaultTo(new Date(valueObject[key]));
         }
 
         return result;

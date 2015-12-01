@@ -369,7 +369,7 @@ var Chart = React.createClass({
                                     getLabel={R.prop("label")}
                                     onChange={this.props.selectDateRanges}
                                     title={<img src={icons.iconCalendar} style={{width: "75%"}} />}
-                                    value={this.props.chart.dateRanges}
+                                    value={this.props.chart.dateRanges[0]}
                                 />
                             </components.TutorialAnchor>
                             <components.TutorialAnchor
