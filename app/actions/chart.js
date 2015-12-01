@@ -77,6 +77,7 @@ export function selectMultipleSite (sitesId) {
 /**
 *   A click on dateFilter modal
 *   @param {object: {start, end}} dateRanges - range of the date
+*   Date value are in millisecond unix timestamp.
 */
 export function selectDateRanges (dateRanges) {
     return {
@@ -89,7 +90,7 @@ export function selectDateRanges (dateRanges) {
 *   A click on date-compare-modal modal
 *   @param {object: {start, end}} dateRanges - beginning date for the two temporal range and
 *       temporal period to visualize.
-*
+*   Date value are in millisecond unix timestamp.
 */
 export function selectDateRangesCompare (dateRanges) {
     return {

@@ -117,7 +117,7 @@ var Chart = React.createClass({
     },
     componentDidUpdate: function () {
         var siti = this.props.collections.get("siti") || Immutable.Map();
-        if (siti.size > 0 && this.refs.historicalGraph.props.siti.length < 1) {
+        if (siti.size > 0 && this.props.chart.sites < 1) {
             this.props.selectSingleSite([siti.first().get("_id")]);
         }
     },
