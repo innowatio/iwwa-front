@@ -5,6 +5,7 @@ var colors = require("lib/colors");
 
 const styles = {
     container: {
+        display: "inline-block",
         position: "relative",
         width: "200px",
         height: "100px"

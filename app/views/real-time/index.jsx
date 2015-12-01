@@ -5,11 +5,11 @@ var R          = require("ramda");
 var Radium     = require("radium");
 var React      = require("react");
 
-var CollectionUtils = require("lib/collection-utils");
 var components      = require("components");
+var CollectionUtils = require("lib/collection-utils");
+var colors          = require("lib/colors");
 var icons           = require("lib/icons");
 var styles          = require("lib/styles");
-
 
 var RealTime = React.createClass({
     propTypes: {
@@ -26,18 +26,22 @@ var RealTime = React.createClass({
     },
     drawGauge: function (key, value, unit, max, min, id) {
         return (
-            <components.Gauge
-                key={key}
-                maximum={max}
-                minimum={min}
-                unit={unit}
-                value={value}
-                valueLabel={this.getGaugeLabel({
-                    id: id,
-                    unit: unit || "",
-                    value: value
-                })}
-            />
+            <span>
+                <components.Spacer direction="h" size={16} />
+                <components.Gauge
+                    key={key}
+                    maximum={max}
+                    minimum={min}
+                    unit={unit}
+                    value={value}
+                    valueLabel={this.getGaugeLabel({
+                        id: id,
+                        unit: unit || "",
+                        value: value
+                    })}
+                />
+                <components.Spacer direction="h" size={16} />
+            </span>
         );
     },
     drawGauges: function () {
@@ -53,17 +57,16 @@ var RealTime = React.createClass({
                 );
             });
         }
-
     },
     drawGaugeTotal: function () {
         if (this.findLatestMeasuresForEnergy().size > 0) {
             const {value, unit} = this.findLatestMeasuresForEnergy().reduce((acc, measure) => {
                 return {
-                    value: acc.value || 0 + measure.get("value"),
+                    value: acc.value + measure.get("value"),
                     unit: measure.get("unit")
                 };
             }, {value: 0, unit: ""});
-            return this.drawGauge("total", value, unit, 1.2, 0);
+            return this.drawGauge("Consumi totali", value, unit, 1.2, 0);
         }
     },
     getSites: function () {
@@ -71,11 +74,18 @@ var RealTime = React.createClass({
         return sites;
     },
     getMeasures: function () {
-        return this.props.collections.get("real-time-measures") || Immutable.Map();
+        return this.props.collections.get("readings-real-time-aggregates") || Immutable.Map();
     },
     setSelectedSite: function (site) {
-        this.props.asteroid.subscribe("findRealTimeMeasuresBySite", site[0].get("_id"));
-        this.setState({"selectedSite": site[0]});
+        this.props.asteroid.subscribe("readingsRealTimeAggregatesBySite", site[0].get("_id"));
+        this.setState({selectedSite: site[0]});
+    },
+    getSelectedSiteName: function () {
+        return (
+            this.state.selectedSite ?
+            this.state.selectedSite.get("name") :
+            null
+        );
     },
     getMeasuresBySite: function () {
         var selectedSiteId = this.state.selectedSite.get("_id");
@@ -113,9 +123,10 @@ var RealTime = React.createClass({
             return decorator.get("type") !== "pod";
         });
         if (this.state.selectedSite && this.getMeasures().size) {
-            var decoMeasurements = R.map((sensor) => {
-                return CollectionUtils.measures.decorateMeasure(sensor);
-            }, this.state.selectedSite.get("otherSensors"));
+            var decoMeasurements = this.state.selectedSite.get("otherSensors")
+                .map(sensor => {
+                    return CollectionUtils.measures.decorateMeasure(sensor);
+                });
             res = CollectionUtils.measures.addValueToMeasures(
                 decoMeasurements.flatten(1),
                 this.getMeasuresBySite()
@@ -124,34 +135,47 @@ var RealTime = React.createClass({
         return res;
     },
     render: function () {
+        const selectedSiteName = this.getSelectedSiteName();
         return (
             <div style={styles.mainDivStyle}>
                 <bootstrap.Col sm={12}>
                     {/*     Barra Export (?) e ricerca sito     */}
-                    <components.Popover
-                        hideOnChange={true}
-                        title={<img src={icons.iconSiti} style={{width: "75%"}} />}
-                        tooltipId="tooltipMisurazione"
-                        tooltipPosition="top"
-                    >
-                        <components.SelectTree
-                            allowedValues={this.getSites()}
-                            onChange={this.setSelectedSite}
-                            placeholder={"Punto di misurazione"}
-                            value={this.state.selectedSite}
-                            {...CollectionUtils.sites}
-                        />
-                    </components.Popover>
+                    <span className="pull-right">
+                        <components.Popover
+                            hideOnChange={true}
+                            title={<img src={icons.iconSiti} style={{width: "75%"}} />}
+                            tooltipId="tooltipMisurazione"
+                            tooltipPosition="top"
+                        >
+                            <components.SelectTree
+                                allowedValues={this.getSites()}
+                                onChange={this.setSelectedSite}
+                                placeholder={"Punto di misurazione"}
+                                value={this.state.selectedSite}
+                                {...CollectionUtils.sites}
+                            />
+                        </components.Popover>
+                    </span>
                 </bootstrap.Col>
                 {/* Barra Rilevazioni ambientali */}
-                <components.Spacer direction="h" size={1} />
+                <h3 className="text-center" style={{color: colors.primary}}>
+                    {`${selectedSiteName} - Rilevazioni ambientali`}
+                </h3>
                 <components.VariablesPanel
                     values={this.findLatestMeasuresForVariables()}
                 />
                 {/* Gauge/s */}
-                <components.Spacer direction="h" size={1} />
-                {this.drawGaugeTotal()}
-                {this.drawGauges()}
+                <h3 className="text-center" style={{color: colors.primary}}>
+                    {`${selectedSiteName} - Pods`}
+                </h3>
+                <components.Spacer direction="v" size={24} />
+                <bootstrap.Col className="text-center" sm={4}>
+                    {this.drawGaugeTotal()}
+                    <h5>{"Totale"}</h5>
+                </bootstrap.Col>
+                <bootstrap.Col sm={8}>
+                    {this.drawGauges()}
+                </bootstrap.Col>
             </div>
         );
     }

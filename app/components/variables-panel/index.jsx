@@ -20,8 +20,8 @@ var VariablesPanel = React.createClass({
     renderVariableBox: function () {
         return this.props.values.map((variable) => {
             return (
-                <div style={{width: "25%", flex: "1 0 auto"}}>
-                    <div key={variable.get("key")} style={style.box} styleName="variableContainer">
+                <div  key={variable.get("key")} style={{width: "25%", flex: "1 0 auto"}}>
+                    <div style={style.box} styleName="variableContainer">
                         <img src={variable.get("icon")} style={{height: "50px"}}/>
                         <MeasureLabel
                             id={variable.get("id")}
