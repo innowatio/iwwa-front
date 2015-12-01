@@ -1,8 +1,26 @@
 var Radium = require("radium");
 var React  = require("react");
 
-var colors       = require("lib/colors");
-var MeasureLabel = require("../measure-label");
+var colors = require("lib/colors");
+
+const styles = {
+    container: {
+        display: "inline-block",
+        position: "relative",
+        width: "200px",
+        height: "100px"
+    },
+    label: {
+        position: "absolute",
+        top: "0px",
+        left: "0px",
+        height: "100%",
+        width: "100%",
+        display: "flex",
+        justifyContent: "center",
+        alignItems: "flex-end"
+    }
+};
 
 var styleGauge = {
     fill: "none",
@@ -33,7 +51,8 @@ var Gauge = React.createClass({
         styleGaugeBar: React.PropTypes.object,
         styleGaugeBody: React.PropTypes.object,
         unit: React.PropTypes.string,
-        value: React.PropTypes.number.isRequired
+        value: React.PropTypes.number.isRequired,
+        valueLabel: React.PropTypes.object
     },
     calculateAngle: function () {
         var grad = (this.props.maximum - this.props.minimum) / 180;
@@ -41,7 +60,7 @@ var Gauge = React.createClass({
     },
     render: function () {
         return (
-            <div id="container" style={{width: "200px"}}>
+            <div style={styles.container}>
                 <svg height="100" width="200">
                     <defs>
                         <clipPath id="cut-off-top">
@@ -69,14 +88,9 @@ var Gauge = React.createClass({
                     </g>
 
                 </svg>
-                <MeasureLabel
-                    style={{
-                        position: "relative",
-                        top: "-40px"
-                    }}
-                    unit={this.props.unit || ""}
-                    value={this.props.value}
-                />
+                <div style={styles.label}>
+                    {this.props.valueLabel || this.props.value}
+                </div>
             </div>
         );
     }

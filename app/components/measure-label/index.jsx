@@ -12,12 +12,11 @@ var styleLabelValue = {
 var styleLabelUnit = {
     color: colors.primary,
     fontSize: "20px",
-    display: "inline-block",
-    verticalAlign: "top"
+    display: "inline-block"
 };
 
 var styleTextDiv = {
-    textAlign: "center"
+    display: "flex"
 };
 
 var MeasureLabel = React.createClass({
@@ -29,13 +28,22 @@ var MeasureLabel = React.createClass({
     },
     render: function () {
         return (
-            <div id="text" style={R.merge(styleTextDiv, this.props.style)}>
-                <div className="labelValue" style={R.merge(styleLabelValue, this.props.styleText)}>
-                    {this.props.value}
-                    <span className="labelUnit" style={R.merge(styleLabelUnit, this.props.styleText)}>
-                        {this.props.unit}
-                    </span>
-                </div>
+            <div id="text">
+                <b>
+                    <div style={R.merge(styleTextDiv, this.props.style)}>
+                        <div className="labelValue" style={R.merge(styleLabelValue, this.props.styleText)}>
+                            {this.props.value}
+                        </div>
+                        <div>
+                            <div className="labelUnit" style={R.merge(styleLabelUnit, this.props.styleText)}>
+                                {this.props.unit}
+                            </div>
+                            <div className="subject" style={{fontSize: "9px"}}>
+                                {this.props.id}
+                            </div>
+                        </div>
+                    </div>
+                </b>
             </div>
         );
     }

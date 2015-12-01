@@ -1,4 +1,3 @@
-var bootstrap = require("react-bootstrap");
 var React     = require("react");
 
 var MeasureLabel = require("components/").MeasureLabel;
@@ -7,9 +6,10 @@ var colors       = require("lib/colors");
 var style = {
     box: {
         border: "1px solid " + colors.greyBorder,
-        textAlign: "center",
-        margin: "1%",
-        display: "flex"
+        borderRadius: "2px",
+        display: "flex",
+        margin: "5%",
+        padding: "1%"
     }
 };
 
@@ -20,21 +20,22 @@ var VariablesPanel = React.createClass({
     renderVariableBox: function () {
         return this.props.values.map((variable) => {
             return (
-                <bootstrap.Col lg={3} md={3} sm={3} >
-                    <div style={style.box} styleName="variableContainer" >
-                        <img src={variable.icon} style={{width: "50px"}}/>
+                <div  key={variable.get("key")} style={{width: "25%", flex: "1 0 auto"}}>
+                    <div style={style.box} styleName="variableContainer">
+                        <img src={variable.get("icon")} style={{height: "50px"}}/>
                         <MeasureLabel
-                            unit={variable.unit}
-                            value={variable.value}
+                            id={variable.get("id")}
+                            unit={variable.get("unit")}
+                            value={variable.get("value")}
                         />
                     </div>
-                </bootstrap.Col>
+                </div>
             );
         });
     },
     render: function () {
         return (
-            <div>
+            <div style={{display: "flex", overflow: "auto"}}>
                 {this.renderVariableBox()}
             </div>
         );
