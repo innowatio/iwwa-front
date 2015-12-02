@@ -6,12 +6,15 @@ var IPropTypes = require("react-immutable-proptypes");
 var Router     = require("react-router");
 var moment     = require("moment");
 var R          = require("ramda");
+import {connect} from "react-redux";
+import {bindActionCreators} from "redux";
 
 var CollectionUtils = require("lib/collection-utils");
 var components      = require("components");
 var styles          = require("lib/styles");
 var colors          = require("lib/colors");
 var icons           = require("lib/icons");
+import {displayAlarmsOnChart} from "actions/alarms";
 
 var getKeyFromAlarm = function (alarm) {
     return alarm.get("_id");
@@ -21,10 +24,24 @@ var getKeyFromNotification = function (alarm) {
     return alarm.get("date");
 };
 
+function mapStateToProps (state) {
+    return {
+        location: state.router.location,
+        collections: state.collections
+    };
+}
+
+function mapDispatchToProps (dispatch) {
+    return {
+        displayAlarmsOnChart: bindActionCreators(displayAlarmsOnChart, dispatch)
+    };
+}
+
 var Alarms = React.createClass({
     propTypes: {
         asteroid: React.PropTypes.object,
-        collections: IPropTypes.map,
+        collections: IPropTypes.map.isRequired,
+        displayAlarmsOnChart: React.PropTypes.func.isRequired,
         location: React.PropTypes.object,
         params: React.PropTypes.object
     },
@@ -151,15 +168,19 @@ var Alarms = React.createClass({
                     // value is a list of maps
                     var notificationDates = self.getNotificationsList(value);
                     if (notificationDates.length > 0) {
-                        var lowerDate = moment(notificationDates[notificationDates.length - 1]).subtract(15, "days").format("YYYYMMDD");
-                        var upperDate = moment(notificationDates[notificationDates.length - 1]).add(15, "days").format("YYYYMMDD");
-                        var alarms = R.dropRepeats(notificationDates).join("-");
-                        const sito = self.getSitoByPod(item.get("podId")).get("_id");
-                        var chartUrl = self.getChartUrl(sito, alarms, lowerDate, upperDate);
+                        const startDate = moment(notificationDates[notificationDates.length - 1]).startOf("month").valueOf();
+                        const endDate = moment(notificationDates[notificationDates.length - 1]).endOf("month").valueOf();
+                        const alarms = R.dropRepeats(notificationDates);
+                        const siteId = self.getSitoByPod(item.get("podId")) ?
+                            self.getSitoByPod(item.get("podId")).get("_id") :
+                            "";
                         return (
-                            <Router.Link to={chartUrl}>
-                                <img src={icons.iconPNG}
-                                    style={{float: "right", height: "28px"}}/>
+                            <Router.Link to={"/chart/"}>
+                                <img
+                                    onClick={R.partial(self.props.displayAlarmsOnChart, [siteId, alarms, startDate, endDate])}
+                                    src={icons.iconPNG}
+                                    style={{float: "right", height: "28px"}}
+                                />
                             </Router.Link>
                         );
                     } else {
@@ -216,7 +237,9 @@ var Alarms = React.createClass({
                     var notificationDate = item.get("date");
                     var lowerDate = moment(notificationDate).subtract(15, "days").format("YYYYMMDD");
                     var upperDate = moment(notificationDate).add(15, "days").format("YYYYMMDD");
-                    const sito = self.getSitoByPod(item.get("podId")).get("_id");
+                    const sito = self.getSitoByPod(item.get("podId")) ?
+                        self.getSitoByPod(item.get("podId")).get("_id") :
+                        "";
                     var chartUrl = self.getChartUrl(sito, notificationDate, lowerDate, upperDate);
                     return (
                         <Router.Link to={chartUrl}>
@@ -403,4 +426,4 @@ var Alarms = React.createClass({
     }
 });
 
-module.exports = Radium(Alarms);
+module.exports = connect(mapStateToProps, mapDispatchToProps)(Radium(Alarms));

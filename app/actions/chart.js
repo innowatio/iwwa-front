@@ -99,6 +99,9 @@ export function selectDateRangesCompare (dateRanges) {
     };
 }
 
+/*
+*   A click on reset-compare
+*/
 export function removeAllCompare () {
     return {
         type: REMOVE_ALL_COMPARE

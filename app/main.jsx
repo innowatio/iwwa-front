@@ -8,8 +8,10 @@ import asteroid from "lib/asteroid";
 import {syncStoreAndAsteroid} from "lib/asteroid-redux";
 import store from "lib/redux-store";
 import routes from "lib/routes";
+import {load} from "lib/redux-store";
 
 FastClick.attach(document.body);
+load(store);
 syncStoreAndAsteroid(store, asteroid);
 
 const App = (

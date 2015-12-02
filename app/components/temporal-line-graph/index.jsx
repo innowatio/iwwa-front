@@ -146,20 +146,19 @@ var TemporalLineGraph = React.createClass({
     drawAnnotations: function () {
         var annotations = [];
         if (this.props.alarms) {
-            for (var i = 0; i < this.props.alarms.length; i++) {
+            this.props.alarms.map((alarm) =>
                 annotations.push({
                     series: "Reale",
-                    x: this.props.alarms[i],
+                    x: alarm,
                     text: "alarm",
                     cssClass: "alarmPoint",
                     attachAtBottom: false,
                     tickHeight: 0,
                     width: 8,
                     height: 4
-                });
-            }
+                })
+            );
         }
-
         this.graph.setAnnotations(annotations);
     },
     drawGraph: function () {
@@ -169,7 +168,6 @@ var TemporalLineGraph = React.createClass({
         /*
         *   Instantiating the graph automatically renders it to the page
         */
-
         Dygraph.Interaction.moveTouch = function (event, g, context) {
             // If the tap moves, then it's definitely not part of a double-tap.
             context.startTimeForDoubleTapMs = null;
@@ -309,28 +307,30 @@ var TemporalLineGraph = React.createClass({
     },
     render: function () {
         return (
-            <div>
+            <div className="container-graph">
                 {this.renderSpinner()}
                 <Radium.Style
                     rules={{
-                    ".alarmPoint": {
-                        border: `4px solid ${colors.red} !important`,
-                        borderRadius: "50%"
-                    },
-                    ".dygraph-y2label": {
-                        backgroundColor: colors.white,
-                        height: "56px"
-                    },
-                    ".dygraph-legend": {
-                        display: ENVIRONMENT === "cordova" ? "none" : "initial",
-                        top: "-50px !important",
-                        boxShadow: "2px 2px 5px " + colors.greySubTitle
-                    }
-                }} />
+                        ".alarmPoint": {
+                            border: `4px solid ${colors.red} !important`,
+                            borderRadius: "50%"
+                        },
+                        ".dygraph-y2label": {
+                            backgroundColor: colors.white,
+                            height: "56px"
+                        },
+                        ".dygraph-legend": {
+                            display: ENVIRONMENT === "cordova" ? "none" : "initial",
+                            top: "-50px !important",
+                            boxShadow: "2px 2px 5px " + colors.greySubTitle
+                        }
+                    }}
+                    scopeSelector=".container-graph"
+                />
                 <div ref="graphContainer" style={styles.graphContainer}/>
             </div>
         );
     }
 });
 
-module.exports = TemporalLineGraph;
+module.exports = Radium(TemporalLineGraph);

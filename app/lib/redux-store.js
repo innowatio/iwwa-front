@@ -34,6 +34,5 @@ const store = compose(
 )(createStore)(rootReducer);
 
 export const load = storage.createLoader(storageEngine);
-load(store);
 
 export default store;

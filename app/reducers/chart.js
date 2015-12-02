@@ -12,7 +12,10 @@ import {
     REMOVE_ALL_COMPARE
 } from "../actions/chart";
 
+import {DISPLAY_ALARMS_ON_CHART} from "../actions/alarms";
+
 const defaultChartState = {
+    alarms: undefined,
     sites: [],
     types: [{label: "Attiva", key: "energia attiva"}, {}],
     dateRanges: [],
@@ -20,25 +23,27 @@ const defaultChartState = {
 };
 
 export function chart (state = defaultChartState, {type, payload}) {
-    const firstDateRanges = state.dateRanges.slice(0, 1) || [];
     const firstTypes = state.types.slice(0, 1).concat({}) || [];
     const firstSites = state.sites.slice(0, 1) || [];
     switch (type) {
     case SELECT_SINGLE_SITE:
         return {
             ...state,
+            alarms: undefined,
             sites: payload
         };
     case SELECT_MULTIPLE_SITE:
         return {
             ...state,
+            alarms: undefined,
             sites: payload,
             types: firstTypes,
-            dateRanges: firstDateRanges
+            dateRanges: []
         };
     case SELECT_DATA_RANGES_COMPARE:
         return {
             ...state,
+            alarms: undefined,
             sites: firstSites,
             types: firstTypes,
             dateRanges: [payload]
@@ -47,31 +52,48 @@ export function chart (state = defaultChartState, {type, payload}) {
         const types = state.types.slice(0, 1);
         return {
             ...state,
+            alarms: undefined,
             sites: firstSites,
             types: equals(state.types[1], payload) ? types.concat({}) : types.concat(payload),
-            dateRanges: firstDateRanges
+            dateRanges: []
         };
     case SELECT_TYPE:
         return {
             ...state,
+            alarms: undefined,
             types: state.types.length <= 1 ? [payload] : prepend(payload, state.types.slice(1, 2))
         };
     case SELECT_SOURCES:
         return {
             ...state,
+            alarms: undefined,
             sources: payload
         };
     case SELECT_DATE_RANGES:
         return {
             ...state,
+            alarms: undefined,
             dateRanges: [payload]
         };
     case REMOVE_ALL_COMPARE:
         return {
             ...state,
             dateRanges: [],
+            alarms: undefined,
             sites: firstSites,
             types: firstTypes
+        };
+    case DISPLAY_ALARMS_ON_CHART:
+        console.log(payload);
+        return {
+            ...state,
+            dateRanges: [{
+                start: payload.startDate,
+                end: payload.endDate
+            }],
+            sites: [payload.siteId],
+            alarms: payload.alarms,
+            types: [{label: "Attiva", key: "energia attiva"}, {}]
         };
     default:
         return state;

@@ -269,12 +269,8 @@ var Chart = React.createClass({
     },
     render: function () {
         const siti = this.props.collections.get("siti") || Immutable.Map();
-        // Alarms
-        var alarms = this.bindToQueryParameter(
-            "alarms",
-            transformers.alarms()
-        );
 
+        // console.log(this.props.chart.alarms);
         var valoriMulti = (
             this.switchDateCompareAndFilter() &&
             this.props.chart.sites.length <= 1
@@ -419,7 +415,7 @@ var Chart = React.createClass({
                             ref="graph"
                         >
                             <components.HistoricalGraph
-                                alarms={alarms.value}
+                                alarms={this.props.chart.alarms}
                                 consumption={this.props.chart.types[1]}
                                 dateCompare={this.switchDateCompareAndFilter() ? this.props.chart.dateRanges[0] : undefined}
                                 dateFilter={this.props.chart.dateRanges[0]}
