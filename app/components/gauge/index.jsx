@@ -1,3 +1,4 @@
+var R      = require("ramda");
 var Radium = require("radium");
 var React  = require("react");
 
@@ -48,6 +49,7 @@ var Gauge = React.createClass({
     propTypes: {
         maximum: React.PropTypes.number.isRequired,
         minimum: React.PropTypes.number.isRequired,
+        style: React.PropTypes.object,
         styleGaugeBar: React.PropTypes.object,
         styleGaugeBody: React.PropTypes.object,
         unit: React.PropTypes.string,
@@ -56,18 +58,17 @@ var Gauge = React.createClass({
     },
     calculateAngle: function () {
         var grad = (this.props.maximum - this.props.minimum) / 180;
-        return this.props.value / grad;
+        return Math.min(this.props.value / grad, 180);
     },
     render: function () {
         return (
-            <div style={styles.container}>
-                <svg height="100" width="200">
+            <div style={R.merge(styles.container, this.props.style)}>
+                <svg height="100%" preserveAspectRatio="none" viewBox="0 0 200 100" width="100%" >
                     <defs>
                         <clipPath id="cut-off-top">
                             <rect height="200" width="200" x="-100" y="0" />
                         </clipPath>
                     </defs>
-
                     {/* rotate controlla la percentuale del gauge, andando da 0 a 180 */}
                     <g transform={"translate(100, 100) rotate(" + this.calculateAngle() + ")"} >
                         <circle
@@ -86,7 +87,6 @@ var Gauge = React.createClass({
                         {/* r del cerchio qui sotto controlla lo spessore del gauge */}
                         <rect height="5" style={stylePointer} width="10" x="-90" y="-2.5"  />
                     </g>
-
                 </svg>
                 <div style={styles.label}>
                     {this.props.valueLabel || this.props.value}
