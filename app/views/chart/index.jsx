@@ -144,25 +144,29 @@ var Chart = React.createClass({
         return [
             {
                 label: "Temperatura",
-                color: colors.consumption, key: "temperature",
+                color: colors.consumption,
+                key: "temperature",
                 icon: icons.iconTemperature,
                 selected: icons.iconTemperatureSelected
 
             },
             {
-                label: "Umidità", color: colors.consumption,
+                label: "Umidità",
+                color: colors.consumption,
                 key: "humidity",
                 icon: icons.iconHumidity,
                 selected: icons.iconHumiditySelected
             },
             {
-                label: "Lux", color: colors.consumption,
+                label: "Lux",
+                color: colors.consumption,
                 key: "illuminance",
                 icon: icons.iconIdea,
                 selected: icons.iconIdeaSelected
             },
             {
-                label: "CO2", color: colors.consumption,
+                label: "CO2",
+                color: colors.consumption,
                 key: "co2",
                 icon: icons.iconCO2,
                 selected: icons.iconCO2Selected

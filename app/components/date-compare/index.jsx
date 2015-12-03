@@ -1,5 +1,6 @@
 var R          = require("ramda");
 var React      = require("react");
+var moment     = require("moment");
 
 var colors     = require("lib/colors");
 var components = require("components/");
@@ -29,7 +30,7 @@ var DateCompare = React.createClass({
                     this.props.allowedValues[0] :
                     this.props.value.period,
                 dateOne: R.isNil(this.props.value) || R.isNil(this.props.value.dateOne) ?
-                    new Date() :
+                    moment().valueOf() :
                     this.props.value.dateOne
             }
         };
