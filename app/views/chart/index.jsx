@@ -14,7 +14,6 @@ var icons              = require("lib/icons");
 var GetTutorialMixin   = require("lib/get-tutorial-mixin");
 var QuerystringMixin   = require("lib/querystring-mixin");
 var styles             = require("lib/styles");
-var transformers       = require("./transformers.js");
 var tutorialString     = require("assets/JSON/tutorial-string.json").historicalGraph;
 import {
     selectSingleSite,

@@ -32,6 +32,12 @@ export function chart (state = defaultChartState, {type, payload}) {
             alarms: undefined,
             sites: payload
         };
+    case SELECT_TYPE:
+        return {
+            ...state,
+            alarms: undefined,
+            types: state.types.length === 1 ? [payload] : prepend(payload, state.types.slice(1, 2))
+        };
     case SELECT_MULTIPLE_SITE:
         return {
             ...state,
@@ -49,19 +55,14 @@ export function chart (state = defaultChartState, {type, payload}) {
             dateRanges: [payload]
         };
     case SELECT_ENVIRONMENTAL:
-        const types = state.types.slice(0, 1);
         return {
             ...state,
             alarms: undefined,
             sites: firstSites,
-            types: equals(state.types[1], payload) ? types.concat({}) : types.concat(payload),
+            types: equals(state.types[1], payload) ?
+                state.types.slice(0, 1).concat({}) :
+                state.types.slice(0, 1).concat(payload),
             dateRanges: []
-        };
-    case SELECT_TYPE:
-        return {
-            ...state,
-            alarms: undefined,
-            types: state.types.length <= 1 ? [payload] : prepend(payload, state.types.slice(1, 2))
         };
     case SELECT_SOURCES:
         return {
@@ -84,7 +85,6 @@ export function chart (state = defaultChartState, {type, payload}) {
             types: firstTypes
         };
     case DISPLAY_ALARMS_ON_CHART:
-        console.log(payload);
         return {
             ...state,
             dateRanges: [{

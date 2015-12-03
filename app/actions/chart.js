@@ -1,3 +1,6 @@
+import {validate} from "tcomb-validation";
+import {String, tuple} from "tcomb";
+
 export const SELECT_SINGLE_SITE = "SELECT_SINGLE_SITE";
 export const SELECT_TYPE = "SELECT_TYPE";
 export const SELECT_ENVIRONMENTAL = "SELECT_ENVIRONMENTAL";
@@ -9,9 +12,13 @@ export const REMOVE_ALL_COMPARE = "REMOVE_ALL_COMPARE";
 
 /**
 *   A click on select-tree component for the choice of site
-*   @param {string} site - id site of the site
+*   @param {array} site - id site of the site
 */
 export function selectSingleSite (siteId) {
+    var siteForm = tuple([String]);
+    if (!validate(siteId, siteForm).isValid()) {
+        throw new Error(`siteId in "selectSingleSite" action is not an Array of one string`);
+    }
     return {
         type: SELECT_SINGLE_SITE,
         payload: siteId
