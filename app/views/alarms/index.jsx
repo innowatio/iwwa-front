@@ -373,13 +373,6 @@ var Alarms = React.createClass({
         var allowedValues = this.props.collections.get("alarms") || Immutable.Map();
         return (
             <div className="alarm-tab" style={{paddingBottom: "15px"}}>
-                <h2
-                    className="text-center"
-                    style={styles.titlePage}
-                >
-                    <components.Spacer direction="v" size={5} />
-                    Allarmi
-                </h2>
                 <Radium.Style
                     rules={styles.tabForm}
                     scopeSelector=".alarm-tab"

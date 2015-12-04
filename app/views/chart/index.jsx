@@ -34,15 +34,6 @@ var selectStyles = {
     }
 };
 
-var div = {
-    padding: "10px",
-    marginTop: "6px !important",
-    boxShadow: "2px 2px 5px " + colors.greySubTitle,
-    marginLeft: "5px !important",
-    width: ENVIRONMENT === "cordova" ? "calc(100vw - 15px)" : "calc(100vw - 65px)",
-    height: "calc(100vh - 132px)"
-};
-
 var consumptionButtonStyle = {
     color: colors.greySubTitle,
     width: ENVIRONMENT === "cordova" ? "23%" : "180px",
@@ -279,160 +270,151 @@ var Chart = React.createClass({
         );
 
         return (
-            <div>
-                <h2
-                    className="text-center"
-                    style={styles.titlePage}
-                >
-                    <components.Spacer direction="v" size={5} />
-                    Storico consumi
-                </h2>
-                <div style={div}>
-                    <bootstrap.Col sm={12} style={styles.colVerticalPadding}>
-                        <span className="pull-left" style={{display: "flex"}}>
-                            <components.TutorialAnchor
-                                message={tutorialString.valori}
-                                order={1}
-                                position="right"
-                                ref="valori"
-                            >
-                                <components.ButtonGroupSelect
-                                    allowedValues={this.getValori()}
-                                    getActiveStyle={this.getValoreActiveStyle}
-                                    getKey={R.prop("key")}
-                                    getLabel={R.prop("label")}
-                                    multi={valoriMulti}
-                                    onChange={this.props.selectSource}
-                                    value={this.props.chart.sources}
-                                />
-                            </components.TutorialAnchor>
-                            {ENVIRONMENT === "cordova" ? null : this.renderExportButton()}
-                        </span>
-                        <span className="pull-right" style={{display: "flex"}}>
-                            <components.TutorialAnchor
-                                message={tutorialString.tipologie}
-                                order={3}
-                                position="left"
-                                ref="tipologie"
-                            >
-                                <components.Popover
-                                    hideOnChange={true}
-                                    title={<img src={icons.iconPower} style={{width: "75%"}} />}
-                                    tooltipId="tooltipInterest"
-                                    tooltipMessage="Quantità d'interesse"
-                                    tooltipPosition="left"
-                                >
-                                    <components.DropdownSelect
-                                        allowedValues={this.getTipologie()}
-                                        getKey={R.prop("key")}
-                                        getLabel={R.prop("label")}
-                                        onChange={this.props.selectType}
-                                        style={{float: "left"}}
-                                        value={this.props.chart.types[0]}
-                                    />
-                                </components.Popover>
-                            </components.TutorialAnchor>
-                            <components.TutorialAnchor
-                                message={tutorialString.siti}
-                                order={4}
-                                position="left"
-                                ref="siti"
-                            >
-                                <components.Popover
-                                    hideOnChange={true}
-                                    title={<img src={icons.iconSiti} style={{width: "75%"}} />}
-                                    tooltipId="tooltipMisurazione"
-                                    tooltipMessage="Punti di misurazione"
-                                    tooltipPosition="top"
-                                >
-                                    <components.SelectTree
-                                        allowedValues={siti}
-                                        filter={CollectionUtils.siti.filter}
-                                        getKey={CollectionUtils.siti.getKey}
-                                        getLabel={CollectionUtils.siti.getLabel}
-                                        onChange={this.props.selectSingleSite}
-                                        placeholder={"Punto di misurazione"}
-                                        value={siti.get(this.props.chart.sites[0])}
-                                    />
-                                </components.Popover>
-                            </components.TutorialAnchor>
-                            <components.TutorialAnchor
-                                message={tutorialString.dateFilter}
-                                order={5}
-                                position="left"
-                                ref="dateFilter"
-                            >
-                                <components.DatefilterMonthlyModal
-                                    getKey={R.prop("key")}
-                                    getLabel={R.prop("label")}
-                                    onChange={this.props.selectDateRanges}
-                                    title={<img src={icons.iconCalendar} style={{width: "75%"}} />}
-                                    value={this.props.chart.dateRanges[0]}
-                                />
-                            </components.TutorialAnchor>
-                            <components.TutorialAnchor
-                                message={tutorialString.compare}
-                                order={6}
-                                position="left"
-                                ref="compare"
-                            >
-                                <components.Compare>
-                                    <components.SitiCompare
-                                        allowedValues={siti}
-                                        filter={CollectionUtils.siti.filter}
-                                        getKey={CollectionUtils.siti.getKey}
-                                        getSitoLabel={CollectionUtils.siti.getLabel}
-                                        onChange={this.props.selectMultipleSite}
-                                        open={"undefined"}
-                                        style={selectStyles.selectCompare}
-                                        value={this.props.chart.sites}
-                                    />
-                                    <components.DateCompare
-                                        allowedValues={this.getDateCompare()}
-                                        getKey={R.prop("key")}
-                                        getLabel={R.prop("label")}
-                                        onChange={this.props.selectDateRangesCompare}
-                                        value={this.props.chart.dateRanges[0]}
-                                    />
-                                </components.Compare>
-                            </components.TutorialAnchor>
-                        </span>
-                    </bootstrap.Col>
-                    <bootstrap.Col sm={12}>
-                        <components.ConsumptionButtons
-                            allowedValues={this.getConsumptions()}
-                            onChange={this.props.selectEnvironmental}
-                            selectedValue={this.props.chart.types[1]}
-                            style={{width: "100%"}}
-                            styleButton={consumptionButtonStyle}
-                            styleButtonSelected={consumptionButtonSelectedStyle}
-                            styleIcon={{height: "25px", marginRight: "10px", borderRadius: "0px"}}
-                        />
-                    </bootstrap.Col>
-                    <bootstrap.Col className="modal-container" sm={12}>
+            <div style={styles.mainDivStyle}>
+                <bootstrap.Col sm={12} style={styles.colVerticalPadding}>
+                    <span className="pull-left" style={{display: "flex"}}>
                         <components.TutorialAnchor
-                            message={ENVIRONMENT === "cordova" ? tutorialString.appGraph : tutorialString.webGraph}
-                            order={7}
-                            position="top"
-                            ref="graph"
+                            message={tutorialString.valori}
+                            order={1}
+                            position="right"
+                            ref="valori"
                         >
-                            <components.HistoricalGraph
-                                alarms={this.props.chart.alarms}
-                                consumption={this.props.chart.types[1]}
-                                dateCompare={this.switchDateCompareAndFilter() ? this.props.chart.dateRanges[0] : undefined}
-                                dateFilter={this.props.chart.dateRanges[0]}
-                                getY2Label={CollectionUtils.labelGraph.getY2Label}
-                                getYLabel={CollectionUtils.labelGraph.getYLabel}
-                                misure={this.props.collections.get("site-month-readings-aggregates") || Immutable.Map()}
-                                ref="historicalGraph"
-                                resetCompare={this.props.removeAllCompare}
-                                siti={this.props.chart.sites.map(R.partial(this.getSitoById, [siti]))}
-                                tipologia={this.props.chart.types[0]}
-                                valori={this.props.chart.sources}
+                            <components.ButtonGroupSelect
+                                allowedValues={this.getValori()}
+                                getActiveStyle={this.getValoreActiveStyle}
+                                getKey={R.prop("key")}
+                                getLabel={R.prop("label")}
+                                multi={valoriMulti}
+                                onChange={this.props.selectSource}
+                                value={this.props.chart.sources}
                             />
                         </components.TutorialAnchor>
-                    </bootstrap.Col>
-                </div>
+                    {ENVIRONMENT === "cordova" ? null : this.renderExportButton()}
+                    </span>
+                    <span className="pull-right" style={{display: "flex"}}>
+                        <components.TutorialAnchor
+                            message={tutorialString.tipologie}
+                            order={3}
+                            position="left"
+                            ref="tipologie"
+                        >
+                            <components.Popover
+                                hideOnChange={true}
+                                title={<img src={icons.iconPower} style={{width: "75%"}} />}
+                                tooltipId="tooltipInterest"
+                                tooltipMessage="Quantità d'interesse"
+                                tooltipPosition="left"
+                            >
+                                <components.DropdownSelect
+                                    allowedValues={this.getTipologie()}
+                                    getKey={R.prop("key")}
+                                    getLabel={R.prop("label")}
+                                    onChange={this.props.selectType}
+                                    style={{float: "left"}}
+                                    value={this.props.chart.types[0]}
+                                />
+                            </components.Popover>
+                        </components.TutorialAnchor>
+                        <components.TutorialAnchor
+                            message={tutorialString.siti}
+                            order={4}
+                            position="left"
+                            ref="siti"
+                        >
+                            <components.Popover
+                                hideOnChange={true}
+                                title={<img src={icons.iconSiti} style={{width: "75%"}} />}
+                                tooltipId="tooltipMisurazione"
+                                tooltipMessage="Punti di misurazione"
+                                tooltipPosition="top"
+                            >
+                                <components.SelectTree
+                                    allowedValues={siti}
+                                    filter={CollectionUtils.siti.filter}
+                                    getKey={CollectionUtils.siti.getKey}
+                                    getLabel={CollectionUtils.siti.getLabel}
+                                    onChange={this.props.selectSingleSite}
+                                    placeholder={"Punto di misurazione"}
+                                    value={siti.get(this.props.chart.sites[0])}
+                                />
+                            </components.Popover>
+                        </components.TutorialAnchor>
+                        <components.TutorialAnchor
+                            message={tutorialString.dateFilter}
+                            order={5}
+                            position="left"
+                            ref="dateFilter"
+                        >
+                            <components.DatefilterMonthlyModal
+                                getKey={R.prop("key")}
+                                getLabel={R.prop("label")}
+                                onChange={this.props.selectDateRanges}
+                                title={<img src={icons.iconCalendar} style={{width: "75%"}} />}
+                                value={this.props.chart.dateRanges[0]}
+                            />
+                        </components.TutorialAnchor>
+                        <components.TutorialAnchor
+                            message={tutorialString.compare}
+                            order={6}
+                            position="left"
+                            ref="compare"
+                        >
+                            <components.Compare>
+                                <components.SitiCompare
+                                    allowedValues={siti}
+                                    filter={CollectionUtils.siti.filter}
+                                    getKey={CollectionUtils.siti.getKey}
+                                    getSitoLabel={CollectionUtils.siti.getLabel}
+                                    onChange={this.props.selectMultipleSite}
+                                    open={"undefined"}
+                                    style={selectStyles.selectCompare}
+                                    value={this.props.chart.sites}
+                                />
+                                <components.DateCompare
+                                    allowedValues={this.getDateCompare()}
+                                    getKey={R.prop("key")}
+                                    getLabel={R.prop("label")}
+                                    onChange={this.props.selectDateRangesCompare}
+                                    value={this.props.chart.dateRanges[0]}
+                                />
+                            </components.Compare>
+                        </components.TutorialAnchor>
+                    </span>
+                </bootstrap.Col>
+                <bootstrap.Col sm={12}>
+                    <components.ConsumptionButtons
+                        allowedValues={this.getConsumptions()}
+                        onChange={this.props.selectEnvironmental}
+                        selectedValue={this.props.chart.types[1]}
+                        style={{width: "100%"}}
+                        styleButton={consumptionButtonStyle}
+                        styleButtonSelected={consumptionButtonSelectedStyle}
+                        styleIcon={{height: "25px", marginRight: "10px", borderRadius: "0px"}}
+                    />
+                </bootstrap.Col>
+                <bootstrap.Col className="modal-container" sm={12}>
+                    <components.TutorialAnchor
+                        message={ENVIRONMENT === "cordova" ? tutorialString.appGraph : tutorialString.webGraph}
+                        order={7}
+                        position="top"
+                        ref="graph"
+                    >
+                        <components.HistoricalGraph
+                            alarms={this.props.chart.alarms}
+                            consumption={this.props.chart.types[1]}
+                            dateCompare={this.switchDateCompareAndFilter() ? this.props.chart.dateRanges[0] : undefined}
+                            dateFilter={this.props.chart.dateRanges[0]}
+                            getY2Label={CollectionUtils.labelGraph.getY2Label}
+                            getYLabel={CollectionUtils.labelGraph.getYLabel}
+                            misure={this.props.collections.get("site-month-readings-aggregates") || Immutable.Map()}
+                            ref="historicalGraph"
+                            resetCompare={this.props.removeAllCompare}
+                            siti={this.props.chart.sites.map(R.partial(this.getSitoById, [siti]))}
+                            tipologia={this.props.chart.types[0]}
+                            valori={this.props.chart.sources}
+                        />
+                    </components.TutorialAnchor>
+                </bootstrap.Col>
             </div>
         );
     }

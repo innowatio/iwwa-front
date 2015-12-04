@@ -17,13 +17,6 @@ var Dashboard = React.createClass({
         return (
             <bootstrap.Grid>
                 <components.Spacer direction="h" size={32} />
-                <bootstrap.Col
-                    lg={1}
-                    style={{textAlign: "center", width: "100%", fontSize: "20pt", color: colors.primary}}
-                >
-                    {"Dashboards"}
-                </bootstrap.Col>
-                <components.Spacer direction="h" size={32} />
                 <bootstrap.Col lg={1} style={{textAlign: "center", width: "100%"}}>
                     <img
                         src={widget1}

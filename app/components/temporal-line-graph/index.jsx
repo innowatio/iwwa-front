@@ -12,8 +12,8 @@ var colors           = require("lib/colors");
 
 var styles = {
     graphContainer: {
-        width: ENVIRONMENT === "cordova" ? "calc(100vw - 100px)" : `calc(100vw - 130px)`,
-        height: "calc(100vh - 400px)",
+        width: "100%",
+        height: "calc(100vh - 450px)",
         margin: "20px 20px 30px 0px"
     }
 };
@@ -70,7 +70,7 @@ var TemporalLineGraph = React.createClass({
             legend: "always",
             sigma: 2,
             strokeWidth: 1.5,
-            xlabel: props.xLabel || "Data",
+            xlabel: props.xLabel,
             ylabel: props.yLabel,
             y2label: props.y2label ? props.y2label : "",
             axes: {

@@ -2,6 +2,8 @@ var Immutable = require("immutable");
 var R         = require("ramda");
 var titleCase = require("title-case");
 
+var icons     = require("lib/icons");
+
 exports.siti = {
     filter: function (item, search) {
         var searchRegExp = new RegExp(search, "i");
@@ -66,6 +68,55 @@ exports.labelGraph = {
     }
 */
 exports.measures = {
+    decorators: [
+        Immutable.Map({
+            key: "co2",
+            icon: icons.iconCO2,
+            type: "co2",
+            unit: "ppm"
+        }),
+        Immutable.Map({
+            key: "humidity",
+            icon: icons.iconHumidity,
+            type: "thl",
+            unit: "g/m3"
+        }),
+        Immutable.Map({
+            key: "illuminance",
+            icon: icons.iconIdea,
+            type: "thl",
+            unit: "lx"
+        }),
+        Immutable.Map({
+            key: "temperature",
+            icon: icons.iconTemperature,
+            type: "thl",
+            unit: "°C"
+        }),
+        Immutable.Map({
+            key: "activeEnergy",
+            type: "pod",
+            unit: "kWh"
+        }),
+        Immutable.Map({
+            key: "maxPower",
+            type: "pod",
+            unit: "kW"
+        }),
+        Immutable.Map({
+            key: "reactiveEnergy",
+            type: "pod",
+            unit: "kVARh"
+        })
+    ],
+    addValueToMeasures: function (sensors, measures) {
+        return sensors.map(function (sensor) {
+            const PATH = [sensor.get("id"), "measurements", sensor.get("keyType")];
+            return sensor.merge({
+                value: measures.getIn(PATH) || undefined
+            });
+        });
+    },
     convertByVariables: R.memoize(function (measures, variables, startOfTime) {
         var mLength;
         const fiveMinutesInMS = 5 * 60 * 1000;
@@ -155,6 +206,38 @@ exports.measures = {
         });
         return this.mergeCoordinates(measuresByDates[0] || [], measuresByDates[1] || []);
     },
+    decorateMeasure: function (sensor) {
+        // return an Immutable list for avoid subsequent `.flatten` mismatch
+        return Immutable.List(R.filter(
+            function (value) {
+                return !R.isNil(value);
+            },
+            this.decorators.map(function (decorator) {
+                if (decorator.get("type") === sensor.get("type")) {
+                    return decorator.merge(
+                        sensor
+                        .set("key", sensor.get("id") + "-" + decorator.get("key"))
+                        .set("keyType", decorator.get("key"))
+                    );
+                }
+            })));
+    },
+    findMeasuresBySitoAndVariables: R.memoize(function (measures, sito, variables) {
+        return variables.map(function (variable) {
+            var variableKey = variable.key;
+            var podId = sito.get("pod");
+            var values = measures.filter(function (measure) {
+                return measure.get("podId") === podId;
+            }).sort(function (a, b) {
+                return a.get("month") > b.get("month");
+            });
+
+            return values.size > 0 && values.last().getIn(["readings", variableKey]) ?
+                values.last().getIn(["readings", variableKey]).split(",").map(function (val) {
+                    return parseFloat(val);
+                }) : [];
+        });
+    }),
     mergeCoordinates: function (coordinate1, coordinate2) {
         /*
             f(a,b) => c
@@ -180,5 +263,26 @@ exports.measures = {
                 return [value[0], toConcat].concat([value[1]]);
             }
         });
+    }
+};
+
+exports.sites = {
+    filter: function (item, search) {
+        var searchRegExp = new RegExp(search, "i");
+        return !R.isNil(item) ? (
+            searchRegExp.test(item.get("_id")) ||
+            searchRegExp.test(item.get("name"))
+        ) : null;
+    },
+    getLabel: function (sito) {
+        return R.is(Immutable.Map, sito) ? (
+            [
+                titleCase(sito.get("_id")),
+                titleCase(sito.get("name"))
+            ].join(" - ")
+        ) : "";
+    },
+    getKey: function (sito) {
+        return R.is(Immutable.Map, sito) ? sito.get("_id") : "";
     }
 };
