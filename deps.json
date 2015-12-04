@@ -29,7 +29,6 @@
         "react-redux",
         "react-router",
         "redux",
-        "redux-persist",
         "redux-router",
         "history/lib/createBrowserHistory",
         "history/lib/createHashHistory",
