@@ -45,6 +45,44 @@ export function selectType (type) {
 }
 
 /**
+*   A click on site-compare-modal
+*   @param {array} sites - id site of the two sites
+*/
+const typeofSelectMultipleSiteDomain = actionTypeValidator(
+    tuple([String, String])
+);
+export function selectMultipleSite (sitesId) {
+    typeofSelectMultipleSiteDomain(...arguments);
+    return {
+        type: SELECT_MULTIPLE_SITE,
+        payload: sitesId
+    };
+}
+
+/**
+*   A click on date-compare-modal modal
+*   @param {object} dateRanges - beginning date for the two temporal range and
+*       temporal period to visualize.
+*   Date value are in millisecond unix timestamp.
+*/
+const typeofSelectedDateRangesCompare = actionTypeValidator(
+    struct({
+        period: struct({
+            label: String,
+            key: String
+        }),
+        dateOne: Number
+    })
+);
+export function selectDateRangesCompare (dateRanges) {
+    typeofSelectedDateRangesCompare(...arguments);
+    return {
+        type: SELECT_DATA_RANGES_COMPARE,
+        payload: dateRanges
+    };
+}
+
+/**
 *   A click on select environmental component for the choice of environmental
 *   variable
 *   @param {object} type - environmental variable
@@ -97,21 +135,6 @@ export function selectSource (sources) {
 // }
 
 /**
-*   A click on site-compare-modal
-*   @param {array} sites - id site of the two sites
-*/
-const typeofSelectMultipleSiteDomain = actionTypeValidator(
-    tuple([String, String])
-);
-export function selectMultipleSite (sitesId) {
-    typeofSelectMultipleSiteDomain(...arguments);
-    return {
-        type: SELECT_MULTIPLE_SITE,
-        payload: sitesId
-    };
-}
-
-/**
 *   A click on dateFilter modal
 *   @param {object} dateRanges - range of the date
 *   Date value are in millisecond unix timestamp.
@@ -126,29 +149,6 @@ export function selectDateRanges (dateRanges) {
     typeofSelectDateRanges(...arguments);
     return {
         type: SELECT_DATE_RANGES,
-        payload: dateRanges
-    };
-}
-
-/**
-*   A click on date-compare-modal modal
-*   @param {object} dateRanges - beginning date for the two temporal range and
-*       temporal period to visualize.
-*   Date value are in millisecond unix timestamp.
-*/
-const typeofSelectedDateRangesCompare = actionTypeValidator(
-    struct({
-        period: struct({
-            label: String,
-            key: String
-        }),
-        dateOne: Number
-    })
-);
-export function selectDateRangesCompare (dateRanges) {
-    typeofSelectedDateRangesCompare(...arguments);
-    return {
-        type: SELECT_DATA_RANGES_COMPARE,
         payload: dateRanges
     };
 }

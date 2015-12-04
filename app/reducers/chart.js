@@ -1,4 +1,4 @@
-import {prepend, equals} from "ramda";
+import {prepend, equals, contains, keys} from "ramda";
 
 import * as colors from "lib/colors";
 import {
@@ -36,7 +36,7 @@ export function chart (state = defaultChartState, {type, payload}) {
         return {
             ...state,
             alarms: undefined,
-            types: state.types.length === 1 ? [payload] : prepend(payload, state.types.slice(1, 2))
+            types: prepend(payload, state.types.slice(1, 2))
         };
     case SELECT_MULTIPLE_SITE:
         return {
@@ -44,7 +44,9 @@ export function chart (state = defaultChartState, {type, payload}) {
             alarms: undefined,
             sites: payload,
             types: firstTypes,
-            dateRanges: []
+            dateRanges: contains("start", keys(state.dateRanges[0])) ?
+                state.dateRanges :
+                []
         };
     case SELECT_DATA_RANGES_COMPARE:
         return {
@@ -62,7 +64,9 @@ export function chart (state = defaultChartState, {type, payload}) {
             types: equals(state.types[1], payload) ?
                 state.types.slice(0, 1).concat({}) :
                 state.types.slice(0, 1).concat(payload),
-            dateRanges: []
+            dateRanges: contains("start", keys(state.dateRanges[0])) ?
+                state.dateRanges :
+                []
         };
     case SELECT_SOURCES:
         return {
@@ -79,7 +83,9 @@ export function chart (state = defaultChartState, {type, payload}) {
     case REMOVE_ALL_COMPARE:
         return {
             ...state,
-            dateRanges: [],
+            dateRanges: contains("start", keys(state.dateRanges[0])) ?
+                state.dateRanges :
+                [],
             alarms: undefined,
             sites: firstSites,
             types: firstTypes
