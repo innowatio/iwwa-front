@@ -91,7 +91,7 @@ export function chart (state = defaultChartState, {type, payload}) {
                 start: payload.startDate,
                 end: payload.endDate
             }],
-            sites: [payload.siteId],
+            sites: payload.siteId,
             alarms: payload.alarms,
             types: [{label: "Attiva", key: "energia attiva"}, {}]
         };

@@ -2,7 +2,7 @@ require("unit-setup.js");
 
 import * as chart from "actions/chart";
 
-describe("Chart actions", () => {
+describe("`chart` actions", () => {
 
     describe("`selectSingleSite` function", () => {
 

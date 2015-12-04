@@ -100,13 +100,6 @@ var Alarms = React.createClass({
         ), Immutable.Map());
         return ret;
     },
-    getChartUrl: function (sito, alarms, startDate, endDate) {
-        var url = `/chart/`;
-        url += `?sito=${sito}`;
-        url += `&dateFilter=${startDate}-${endDate}`;
-        url += `&alarms=${alarms}`;
-        return url;
-    },
     getColumnsAlarms: function () {
         var self = this;
         return [
@@ -168,16 +161,23 @@ var Alarms = React.createClass({
                     // value is a list of maps
                     var notificationDates = self.getNotificationsList(value);
                     if (notificationDates.length > 0) {
-                        const startDate = moment(notificationDates[notificationDates.length - 1]).startOf("month").valueOf();
-                        const endDate = moment(notificationDates[notificationDates.length - 1]).endOf("month").valueOf();
+                        const startDate = moment(notificationDates[notificationDates.length - 1])
+                            .startOf("month").valueOf();
+                        const endDate = moment(notificationDates[notificationDates.length - 1])
+                            .endOf("month").valueOf();
                         const alarms = R.dropRepeats(notificationDates);
                         const siteId = self.getSitoByPod(item.get("podId")) ?
-                            self.getSitoByPod(item.get("podId")).get("_id") :
-                            "";
+                            [self.getSitoByPod(item.get("podId")).get("_id")] :
+                            [];
                         return (
                             <Router.Link to={"/chart/"}>
                                 <img
-                                    onClick={R.partial(self.props.displayAlarmsOnChart, [siteId, alarms, startDate, endDate])}
+                                    onClick={
+                                        R.partial(
+                                            self.props.displayAlarmsOnChart,
+                                            [siteId, alarms, startDate, endDate]
+                                        )
+                                    }
                                     src={icons.iconPNG}
                                     style={{float: "right", height: "28px"}}
                                 />
@@ -235,15 +235,21 @@ var Alarms = React.createClass({
                 key: "dateNotification",
                 valueFormatter: function (value, item) {
                     var notificationDate = item.get("date");
-                    var lowerDate = moment(notificationDate).subtract(15, "days").format("YYYYMMDD");
-                    var upperDate = moment(notificationDate).add(15, "days").format("YYYYMMDD");
-                    const sito = self.getSitoByPod(item.get("podId")) ?
-                        self.getSitoByPod(item.get("podId")).get("_id") :
-                        "";
-                    var chartUrl = self.getChartUrl(sito, notificationDate, lowerDate, upperDate);
+                    const startDate = moment(notificationDate).startOf("month").valueOf();
+                    const endDate = moment(notificationDate).endOf("month").valueOf();
+                    const siteId = self.getSitoByPod(item.get("podId")) ?
+                        [self.getSitoByPod(item.get("podId")).get("_id")] :
+                        [];
                     return (
-                        <Router.Link to={chartUrl}>
-                            <img src={icons.iconPNG}
+                        <Router.Link to={"/chart/"}>
+                            <img
+                                onClick={
+                                    R.partial(
+                                        self.props.displayAlarmsOnChart,
+                                        [siteId, [notificationDate], startDate, endDate]
+                                    )
+                                }
+                                src={icons.iconPNG}
                                 style={{float: "right", height: "28px"}}/>
                         </Router.Link>
                     );
@@ -395,7 +401,10 @@ var Alarms = React.createClass({
                         <bootstrap.Tab eventKey={2} title="Allarmi">
                             {this.renderFilterButton()}
                             <components.CollectionElementsTable
-                                collection={ R.isNil(allowedValues) ? Immutable.Map() : allowedValues.filter(this.filterAlarms)}
+                                collection={
+                                    R.isNil(allowedValues) ?
+                                    Immutable.Map() :
+                                    allowedValues.filter(this.filterAlarms)}
                                 columns={this.getColumnsAlarms()}
                                 getKey={getKeyFromAlarm}
                                 hover={true}
@@ -404,7 +413,8 @@ var Alarms = React.createClass({
                         </bootstrap.Tab>
                         <bootstrap.Tab eventKey={3} title="Storico allarmi">
                             {/* <div style={{marginRight: "30px", height: "40px", paddingTop: "20px"}}>
-                                <div onClick={this.onClickFilter} style={{float: "right", display: "flex", cursor: "pointer"}}>
+                                <div onClick={this.onClickFilter}
+                                    style={{float: "right", display: "flex", cursor: "pointer"}}>
                                     <components.Icon icon="filter" style={{paddingTop: "13px"}}/>
                                     <components.Spacer direction="h" size={10} />
                                     <h4 style={{color: colors.primary}}>Filter</h4>
