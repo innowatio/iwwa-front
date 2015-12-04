@@ -273,7 +273,6 @@ var Chart = React.createClass({
     render: function () {
         const siti = this.props.collections.get("siti") || Immutable.Map();
 
-        // console.log(this.props.chart.alarms);
         var valoriMulti = (
             this.switchDateCompareAndFilter() &&
             this.props.chart.sites.length <= 1
