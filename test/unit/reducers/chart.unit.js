@@ -491,4 +491,12 @@ describe("`chart` reducer", () => {
 
     });
 
+    it("should return the previous state if any correct `type` is checked", () => {
+        const valuePassedFromAction = {
+            type: "NOT_A_CORRECT_TYPE_CASE"
+        };
+        const ret = chart(chartState, valuePassedFromAction);
+        expect(ret).to.deep.equal(chartState);
+    });
+
 });

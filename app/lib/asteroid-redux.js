@@ -1,13 +1,6 @@
 import debounce from "lodash.debounce";
 
-export const COLLECTIONS_CHANGE = "COLLECTIONS_CHANGE";
-
-function changeCollections (collections) {
-    return {
-        type: COLLECTIONS_CHANGE,
-        payload: collections
-    };
-}
+import {changeCollections} from "actions/collections";
 
 export function syncStoreAndAsteroid (store, asteroid) {
     store.dispatch(changeCollections(asteroid.collections));
