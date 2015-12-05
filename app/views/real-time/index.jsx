@@ -24,37 +24,45 @@ var RealTime = React.createClass({
     componentDidMount: function () {
         this.props.asteroid.subscribe("sites");
     },
-    drawGauge: function (key, value, unit, max, min, id) {
+    drawGauge: function (params) {
         return (
-            <span>
-                <components.Spacer direction="h" size={16} />
+            <div style={{margin: "auto", width: R.path(["style", "width"], params) || "200px"}}>
                 <components.Gauge
-                    key={key}
-                    maximum={max}
-                    minimum={min}
-                    unit={unit}
-                    value={value}
                     valueLabel={this.getGaugeLabel({
-                        id: id,
-                        unit: unit || "",
-                        value: value
+                        id: params.id,
+                        styleText: params.styleText,
+                        unit: params.unit || "",
+                        value: params.value
                     })}
+                    {...params}
                 />
-                <components.Spacer direction="h" size={16} />
-            </span>
+                <div style={{textAlign: "center"}}>
+                    <div>{params.id}</div>
+                    <div>{"description"}</div>
+                </div>
+            </div>
         );
     },
     drawGauges: function () {
         if (this.findLatestMeasuresForEnergy().size > 0) {
+            var sizeValues = this.findLatestMeasuresForEnergy().size;
             return this.findLatestMeasuresForEnergy().map((measure) => {
-                return this.drawGauge(
-                    measure.get("key"),
-                    measure.get("value") || 0,
-                    measure.get("unit"),
-                    1.2,
-                    0,
-                    measure.get("id")
-                );
+                var gaugeParams = {
+                    id: measure.get("id"),
+                    key: measure.get("key"),
+                    maximum: 1.2,
+                    minimum: 0,
+                    style: {height: "auto", width: "100%"},
+                    styleGaugeBar: {stroke: colors.lineReale},
+                    stylePointer: {fill: colors.greyBorder},
+                    styleText: {color: colors.lineReale},
+                    unit: measure.get("unit"),
+                    value: measure.get("value") || 0
+                };
+                return (
+                    <bootstrap.Col lg={sizeValues > 4 ? 4 : 6} md={sizeValues > 4 ? 4 : 6} sm={6} style={{padding: "20px"}}>
+                        {this.drawGauge(gaugeParams)}
+                    </bootstrap.Col>);
             });
         }
     },
@@ -62,11 +70,22 @@ var RealTime = React.createClass({
         if (this.findLatestMeasuresForEnergy().size > 0) {
             const {value, unit} = this.findLatestMeasuresForEnergy().reduce((acc, measure) => {
                 return {
-                    value: acc.value + measure.get("value"),
+                    value: acc.value + (measure.get("value") || 0),
                     unit: measure.get("unit")
                 };
             }, {value: 0, unit: ""});
-            return this.drawGauge("Consumi totali", value, unit, 1.2, 0);
+            var gaugeParams = {
+                id: "Consumi totali",
+                key: "Consumi totali",
+                maximum: 1.2,
+                minimum: 0,
+                style: {height: "auto", width: "100%"},
+                styleLabel: {top: "-30px"},
+                stylePointer: {fill: colors.greyBorder},
+                unit: unit,
+                value: value
+            };
+            return this.drawGauge(gaugeParams);
         }
     },
     getSites: function () {
@@ -159,23 +178,23 @@ var RealTime = React.createClass({
                 </bootstrap.Col>
                 {/* Barra Rilevazioni ambientali */}
                 <h3 className="text-center" style={{color: colors.primary}}>
-                    {`${selectedSiteName} - Rilevazioni ambientali`}
+                    {`${selectedSiteName ? selectedSiteName + " - " : ""}Rilevazioni ambientali`}
                 </h3>
                 <components.VariablesPanel
                     values={this.findLatestMeasuresForVariables()}
                 />
                 {/* Gauge/s */}
                 <h3 className="text-center" style={{color: colors.primary}}>
-                    {`${selectedSiteName} - Pods`}
+                    {`${selectedSiteName ? selectedSiteName + " - " : ""}Pods`}
                 </h3>
-                <components.Spacer direction="v" size={24} />
-                <bootstrap.Col className="text-center" sm={4}>
-                    {this.drawGaugeTotal()}
-                    <h5>{"Totale"}</h5>
-                </bootstrap.Col>
-                <bootstrap.Col sm={8}>
-                    {this.drawGauges()}
-                </bootstrap.Col>
+                <div style={{height: "100%", overflow: "scroll"}}>
+                    <bootstrap.Col className="text-center" sm={4} style={{padding: "20px"}}>
+                        {this.drawGaugeTotal()}
+                    </bootstrap.Col>
+                    <bootstrap.Col sm={8}>
+                        {this.drawGauges()}
+                    </bootstrap.Col>
+                </div>
             </div>
         );
     }
