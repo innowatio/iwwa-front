@@ -13,7 +13,7 @@
     "publish-reports": "node scripts/generate-reports.js && node scripts/publish-reports.js",
     "prestart": "gulp build",
     "start": "node scripts/server.js",
-    "test": "NODE_PATH=app:test mocha --compilers jsx:babel/register test/unit/**/*unit*"
+    "test": "NODE_ENV=test NODE_PATH=app:test mocha --compilers jsx:babel/register test/unit/**/*unit*"
   },
   "repository": {
     "type": "git",
