@@ -47,7 +47,7 @@ var Alarms = React.createClass({
     },
     getInitialState: function () {
         return {
-            key: 1,
+            key: 3,
             active: [
                 "TUTTI"
             ]

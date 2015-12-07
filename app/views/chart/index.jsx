@@ -75,7 +75,6 @@ var Chart = React.createClass({
         collections: IPropTypes.map.isRequired,
         localStorage: React.PropTypes.object,
         location: React.PropTypes.object.isRequired,
-        params: React.PropTypes.object,
         removeAllCompare: React.PropTypes.func.isRequired,
         selectDateRanges: React.PropTypes.func.isRequired,
         selectDateRangesCompare: React.PropTypes.func.isRequired,
@@ -97,15 +96,19 @@ var Chart = React.createClass({
     ])],
     componentDidMount: function () {
         this.props.asteroid.subscribe("siti");
-        if (R.has("idAlarm", this.props.params)) {
+        if (this.props.chart.alarms) {
             this.props.asteroid.subscribe("alarms");
         }
+        this.updateFirstSiteToChart();
         this.subscribeToMisure(this.props);
     },
     componentWillReceiveProps: function (props) {
         this.subscribeToMisure(props);
     },
     componentDidUpdate: function () {
+        this.updateFirstSiteToChart();
+    },
+    updateFirstSiteToChart: function () {
         var siti = this.props.collections.get("siti") || Immutable.Map();
         if (siti.size > 0 && this.props.chart.sites < 1) {
             this.props.selectSingleSite([siti.first().get("_id")]);
