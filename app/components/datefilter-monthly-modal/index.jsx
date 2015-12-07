@@ -43,12 +43,14 @@ var DatefilterMonthlyModal = React.createClass({
         return this.getStateFromProps(props);
     },
     getStateFromProps: function (props) {
-        this.setState({
-            value: {
-                start: this.getDefault(props.value, "start", this.defaultStartDate()),
-                end: this.getDefault(props.value, "end", this.defaultEndDate())
-            }
-        });
+        if (props.value) {
+            this.setState({
+                value: {
+                    start: new Date(props.value.start),
+                    end: new Date(props.value.end)
+                }
+            });
+        }
     },
     getDefault: function (valueObject, key, defaultValue) {
         var defaultTo = R.defaultTo(defaultValue);

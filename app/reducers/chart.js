@@ -77,7 +77,6 @@ export function chart (state = defaultChartState, {type, payload}) {
     case SELECT_DATE_RANGES:
         return {
             ...state,
-            alarms: undefined,
             dateRanges: [payload]
         };
     case REMOVE_ALL_COMPARE:

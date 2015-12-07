@@ -5,7 +5,7 @@ import {chart} from "reducers/chart";
 describe("`chart` reducer", () => {
 
     const chartState = Object.freeze({
-        alarms: undefined,
+        alarms: 1449157137862,
         sites: [],
         types: [
             {
@@ -315,7 +315,7 @@ describe("`chart` reducer", () => {
             };
             const ret = chart(chartState, valuePassedFromAction);
             expect(ret).to.deep.equal({
-                alarms: undefined,
+                alarms: 1449157137862,
                 sites: [],
                 types: [
                     {
