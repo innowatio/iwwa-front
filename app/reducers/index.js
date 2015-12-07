@@ -4,11 +4,13 @@ import storage from "redux-storage";
 
 import {collections} from "reducers/collections";
 import {chart} from "reducers/chart";
+import {alarms} from "reducers/alarms";
 
 const rootReducer = storage.reducer(combineReducers({
     router,
     collections,
-    chart
+    chart,
+    alarms
 }));
 
 export default rootReducer;

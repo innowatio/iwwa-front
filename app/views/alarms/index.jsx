@@ -14,7 +14,11 @@ var components      = require("components");
 var styles          = require("lib/styles");
 var colors          = require("lib/colors");
 var icons           = require("lib/icons");
-import {displayAlarmsOnChart} from "actions/alarms";
+import {
+    displayAlarmsOnChart,
+    modifyExistentAlarm,
+    resetAlarmFormView
+} from "actions/alarms";
 
 var getKeyFromAlarm = function (alarm) {
     return alarm.get("_id");
@@ -27,23 +31,29 @@ var getKeyFromNotification = function (alarm) {
 function mapStateToProps (state) {
     return {
         location: state.router.location,
-        collections: state.collections
+        collections: state.collections,
+        alarms: state.alarms
     };
 }
 
 function mapDispatchToProps (dispatch) {
     return {
-        displayAlarmsOnChart: bindActionCreators(displayAlarmsOnChart, dispatch)
+        displayAlarmsOnChart: bindActionCreators(displayAlarmsOnChart, dispatch),
+        modifyExistentAlarm: bindActionCreators(modifyExistentAlarm, dispatch),
+        resetAlarmFormView: bindActionCreators(resetAlarmFormView, dispatch)
     };
 }
 
 var Alarms = React.createClass({
     propTypes: {
+        alarms: React.PropTypes.object.isRequired,
         asteroid: React.PropTypes.object,
         collections: IPropTypes.map.isRequired,
         displayAlarmsOnChart: React.PropTypes.func.isRequired,
         location: React.PropTypes.object,
-        params: React.PropTypes.object
+        modifyExistentAlarm: React.PropTypes.func.isRequired,
+        params: React.PropTypes.object,
+        resetAlarmFormView: React.PropTypes.func.isRequired
     },
     getInitialState: function () {
         return {
@@ -60,7 +70,7 @@ var Alarms = React.createClass({
     },
     getAlarm: function () {
         return (
-            this.props.collections.getIn(["alarms", this.props.params.id]) ||
+            this.props.collections.getIn(["alarms", this.props.alarms.id]) ||
             Immutable.Map()
         );
     },
@@ -71,7 +81,7 @@ var Alarms = React.createClass({
         return this.props.collections.get("siti") || Immutable.Map();
     },
     getType: function () {
-        return (this.props.params.id ? "update" : "insert");
+        return (this.props.alarms.id ? "update" : "insert");
     },
     getSitoByPod: function (pod) {
         return this.getSiti().find(
@@ -145,10 +155,10 @@ var Alarms = React.createClass({
                 key: "_id",
                 valueFormatter: function (value) {
                     return (
-                        <Router.Link onClick={self.onClickAction} to={`/alarms/${value}`}>
-                            <img src={icons.iconSettings}
-                                style={{float: "right", height: "28px"}}/>
-                        </Router.Link>
+                        <img
+                            onClick={R.partial(self.onClickAction, [value])}
+                            src={icons.iconSettings}
+                            style={{float: "right", height: "28px", cursor: "pointer"}}/>
                     );
                 }
             },
@@ -257,7 +267,8 @@ var Alarms = React.createClass({
             }
         ];
     },
-    onClickAction: function () {
+    onClickAction: function (alarmsId) {
+        this.props.modifyExistentAlarm(alarmsId);
         this.activeKey(1);
     },
     activeKey: function (key) {
@@ -387,6 +398,7 @@ var Alarms = React.createClass({
                         <bootstrap.Tab eventKey={1} title="Impostazione">
                             <components.AlarmForm
                                 alarm={this.getAlarm()}
+                                reset={this.props.resetAlarmFormView}
                                 siti={this.getSiti()}
                                 type={this.getType()}
                             />

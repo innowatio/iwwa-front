@@ -30,6 +30,7 @@ var AlarmForm = React.createClass({
         alarm: IPropTypes.map.isRequired,
         onCancel: React.PropTypes.func,
         onSubmit: React.PropTypes.func,
+        reset: React.PropTypes.func,
         siti: IPropTypes.map.isRequired,
         type: React.PropTypes.oneOf(["insert", "update"]).isRequired
     },
@@ -68,6 +69,7 @@ var AlarmForm = React.createClass({
         };
     },
     reset: function () {
+        this.props.reset();
         this.setState(this.getStateFromProps(this.props));
     },
     submit: function () {

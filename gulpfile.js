@@ -134,6 +134,7 @@ proGulp.task("runUnitTests", function () {
             compilers: "jsx:babel/register",
             reporter: "mochawesome",
             env: {
+                NODE_ENV: "test",
                 NODE_PATH: "app:test",
                 MOCHAWESOME_REPORTDIR: targetDir,
                 MOCHAWESOME_REPORTNAME: "index"

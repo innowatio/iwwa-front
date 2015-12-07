@@ -38,4 +38,36 @@ describe("`alarms` actions", () => {
 
     });
 
+    describe("`modifyExistentAlarm` function", () => {
+
+        it("should return the correct object if is passed the correct parameter", () => {
+            const alarmId = "alarmId";
+            const ret = alarms.modifyExistentAlarm(alarmId);
+            expect(ret).to.deep.equal({
+                type: "MODIFY_EXISTENT_ALARM",
+                payload: alarmId
+            });
+        });
+
+        it("should throw if isn't passed a string", () => {
+            const alarmId = ["wrongTypeOfAlarmId"];
+            function troubleMaker () {
+                alarms.modifyExistentAlarm(alarmId);
+            }
+            expect(troubleMaker).to.throw();
+        });
+
+    });
+
+    describe("`resetAlarmFormView` function", () => {
+
+        it("should return the correct object", () => {
+            const ret = alarms.resetAlarmFormView();
+            expect(ret).to.deep.equal({
+                type: "RESET_ALARM_FORM_VIEW"
+            });
+        });
+
+    });
+
 });
