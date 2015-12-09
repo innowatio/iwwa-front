@@ -17,7 +17,8 @@ var icons           = require("lib/icons");
 import {
     displayAlarmsOnChart,
     modifyExistentAlarm,
-    resetAlarmFormView
+    resetAlarmFormView,
+    submitAlarmCreationOrChange
 } from "actions/alarms";
 
 var getKeyFromAlarm = function (alarm) {
@@ -40,6 +41,7 @@ function mapDispatchToProps (dispatch) {
     return {
         displayAlarmsOnChart: bindActionCreators(displayAlarmsOnChart, dispatch),
         modifyExistentAlarm: bindActionCreators(modifyExistentAlarm, dispatch),
+        submitAlarmCreationOrChange: bindActionCreators(submitAlarmCreationOrChange, dispatch),
         resetAlarmFormView: bindActionCreators(resetAlarmFormView, dispatch)
     };
 }
@@ -53,7 +55,8 @@ var Alarms = React.createClass({
         location: React.PropTypes.object,
         modifyExistentAlarm: React.PropTypes.func.isRequired,
         params: React.PropTypes.object,
-        resetAlarmFormView: React.PropTypes.func.isRequired
+        resetAlarmFormView: React.PropTypes.func.isRequired,
+        submitAlarmCreationOrChange: React.PropTypes.func.isRequired
     },
     getInitialState: function () {
         return {
@@ -81,7 +84,7 @@ var Alarms = React.createClass({
         return this.props.collections.get("siti") || Immutable.Map();
     },
     getType: function () {
-        return (this.props.alarms.id ? "update" : "insert");
+        return this.props.alarms.id ? "update" : "insert";
     },
     getSitoByPod: function (pod) {
         return this.getSiti().find(
@@ -398,8 +401,10 @@ var Alarms = React.createClass({
                         <bootstrap.Tab eventKey={1} title="Impostazione">
                             <components.AlarmForm
                                 alarm={this.getAlarm()}
+                                alarmsReduxState={this.props.alarms}
                                 reset={this.props.resetAlarmFormView}
                                 siti={this.getSiti()}
+                                submit={this.props.submitAlarmCreationOrChange}
                                 type={this.getType()}
                             />
                         </bootstrap.Tab>

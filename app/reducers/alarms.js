@@ -2,7 +2,9 @@ import {combineReducers} from "redux";
 
 import {
     MODIFY_EXISTENT_ALARM,
-    RESET_ALARM_FORM_VIEW
+    RESET_ALARM_FORM_VIEW,
+    CREATE_OR_MODIFY_ALARM_START,
+    CREATION_ALARM_STOP
 } from "../actions/alarms";
 
 function id (state = null, {type, payload}) {
@@ -16,6 +18,18 @@ function id (state = null, {type, payload}) {
     }
 }
 
+function statePostAlarm (state = null, {type}) {
+    switch (type) {
+    case CREATE_OR_MODIFY_ALARM_START:
+        return true;
+    case CREATION_ALARM_STOP:
+        return false;
+    default:
+        return state;
+    }
+}
+
 export const alarms = combineReducers({
-    id
+    id,
+    statePostAlarm
 });

@@ -1,13 +1,10 @@
-var axios           = require("axios");
 var bootstrap       = require("react-bootstrap");
 var Immutable       = require("immutable");
 var IPropTypes      = require("react-immutable-proptypes");
-var moment          = require("moment");
 var R               = require("ramda");
 var Radium          = require("radium");
 var React           = require("react");
 var ReactStateMixin = require("react-addons-linked-state-mixin");
-var Router          = require("react-router");
 
 var components       = require("components");
 var CollectionUtils  = require("lib/collection-utils");
@@ -18,20 +15,13 @@ var tutorialString   = require("assets/JSON/tutorial-string.json");
 var GetTutorialMixin = require("lib/get-tutorial-mixin");
 var icons            = require("lib/icons");
 
-var less = function (time1, time2) {
-    return (
-        moment(time1, "hh:mm").toDate() <
-        moment(time2, "hh:mm").toDate()
-    );
-};
-
 var AlarmForm = React.createClass({
     propTypes: {
         alarm: IPropTypes.map.isRequired,
-        onCancel: React.PropTypes.func,
-        onSubmit: React.PropTypes.func,
+        alarmsReduxState: React.PropTypes.object.isRequired,
         reset: React.PropTypes.func,
         siti: IPropTypes.map.isRequired,
+        submit: React.PropTypes.func.isRequired,
         type: React.PropTypes.oneOf(["insert", "update"]).isRequired
     },
     mixins: [ReactStateMixin, GetTutorialMixin(
@@ -53,7 +43,6 @@ var AlarmForm = React.createClass({
             active: props.alarm.get("active") || true,
             name: props.alarm.get("name"),
             notification: props.alarm.get("notification") || ["mail"],
-            type: props.alarm.get("type"),
             sito: this.getSitoFromProps(props),
             repetition: {
                 weekDays: props.alarm.get("repetition") || [0, 1, 2, 3, 4, 5, 6],
@@ -73,75 +62,8 @@ var AlarmForm = React.createClass({
         this.setState(this.getStateFromProps(this.props));
     },
     submit: function () {
-        this.setState({
-            saving: true
-        });
-
-        var rule = {
-            $and: []
-        };
-
-        rule.$and.push({
-            reale: {
-                $gt: parseInt(this.state.threshold)
-            }
-        });
-
-        if (!R.isEmpty(this.state.repetition.weekDays)) {
-            rule.$and.push({
-                "date.weekDay": {
-                    $in: this.state.repetition.weekDays
-                }
-            });
-        }
-        if (this.state.repetition.day) {
-            var day = moment(this.state.repetition.day);
-            rule.$and.push({
-                "date.monthDay": day.date(),
-                "date.month": day.month(),
-                "date.year": day.year()
-            });
-        }
-
-        var timeStart = moment(this.state.repetition.timeStart, "hh:mm");
-        var timeEnd = moment(this.state.repetition.timeEnd, "hh:mm");
-        if (!less(this.state.repetition.timeEnd, this.state.repetition.timeStart)) {
-            rule.$and.push({
-                "date.hour": {
-                    $lt: timeEnd.hour()
-                }
-            });
-            rule.$and.push({
-                "date.hour": {
-                    $gt: timeStart.hour()
-                }
-            });
-        }
-
-        var alarm = {
-            active: this.state.active,
-            name: this.state.name,
-            podId: this.state.sito.get("pod"),
-            rule: JSON.stringify(rule),
-            notifications: []
-        };
-
-        var requestBody;
-        if (this.props.type === "update") {
-            requestBody = {
-                method: "/alarms/replace",
-                params: [this.props.alarm.get("_id"), alarm]
-            };
-        } else {
-            requestBody = {
-                method: "/alarms/insert",
-                params: [alarm]
-            };
-        }
-        var endpoint = WRITE_BACKEND_HOST + "/alarms";
-        axios.post(endpoint, requestBody)
-            .then(() => this.setState({saving: false}))
-            .catch(() => this.setState({saving: false}));
+        console.log("SUBMIT");
+        this.props.submit(this.state, this.props.type, this.props.alarm);
     },
     addTooltip: function () {
         return (
@@ -263,17 +185,18 @@ var AlarmForm = React.createClass({
     },
     renderResetButton: function () {
         return (
-            <Router.Link to={`/alarms/`}>
-                <components.Button bsStyle="link" disabled={this.state.saving} onClick={this.reset}>
-                    {<img src={icons.iconReset} style={{width: "75%"}}/>}
-                </components.Button>
-            </Router.Link>
+            <components.Button
+                bsStyle="link"
+                disabled={this.props.alarmsReduxState.statePostAlarm}
+                onClick={this.reset}>
+                {<img src={icons.iconReset} style={{width: "75%"}}/>}
+            </components.Button>
         );
     },
     renderSubmitButton: function () {
         return (
             <components.Button
-                disabled={this.state.saving}
+                disabled={this.props.alarmsReduxState.statePostAlarm}
                 onClick={this.submit}
                 style={{
                     backgroundColor: colors.primary,
