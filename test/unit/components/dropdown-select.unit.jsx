@@ -39,7 +39,7 @@ describe("The `DropdownSelect` component ", function () {
                 value={allowedValues[0]}
             />
         );
-        var selectNode = TestUtils.renderIntoDocument(element);
+        TestUtils.renderIntoDocument(element);
         expect(getLabelSpy.callCount).to.equal(allowedValues.length);
     });
 
@@ -58,7 +58,7 @@ describe("The `DropdownSelect` component ", function () {
         TestUtils.scryRenderedComponentsWithType(selectNode, bootstrap.MenuItem);
         expect(getKeySpy.callCount).to.equal(allowedValues.length);
     });
-// TODO
+// TODO:
     // it("should set the active state of the button which corresponds to the value we supply", function () {
     //     var allowedValues = [{id: 1}, {id: 2}, {id: 3}];
     //     var selectedIndex = 0;

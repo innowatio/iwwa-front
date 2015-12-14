@@ -6,12 +6,15 @@ var IPropTypes = require("react-immutable-proptypes");
 var Router     = require("react-router");
 var moment     = require("moment");
 var R          = require("ramda");
+import {connect} from "react-redux";
+import {bindActionCreators} from "redux";
 
 var CollectionUtils = require("lib/collection-utils");
 var components      = require("components");
 var styles          = require("lib/styles");
 var colors          = require("lib/colors");
 var icons           = require("lib/icons");
+import {displayAlarmsOnChart} from "actions/alarms";
 
 var getKeyFromAlarm = function (alarm) {
     return alarm.get("_id");
@@ -21,10 +24,24 @@ var getKeyFromNotification = function (alarm) {
     return alarm.get("date");
 };
 
+function mapStateToProps (state) {
+    return {
+        location: state.router.location,
+        collections: state.collections
+    };
+}
+
+function mapDispatchToProps (dispatch) {
+    return {
+        displayAlarmsOnChart: bindActionCreators(displayAlarmsOnChart, dispatch)
+    };
+}
+
 var Alarms = React.createClass({
     propTypes: {
         asteroid: React.PropTypes.object,
-        collections: IPropTypes.map,
+        collections: IPropTypes.map.isRequired,
+        displayAlarmsOnChart: React.PropTypes.func.isRequired,
         location: React.PropTypes.object,
         params: React.PropTypes.object
     },
@@ -39,7 +56,7 @@ var Alarms = React.createClass({
     componentDidMount: function () {
         this.props.asteroid.subscribe("alarms");
         this.props.asteroid.subscribe("notifications");
-        this.props.asteroid.subscribe("siti");
+        this.props.asteroid.subscribe("sites");
     },
     getAlarm: function () {
         return (
@@ -51,7 +68,7 @@ var Alarms = React.createClass({
         return this.props.collections.get("alarms") || Immutable.Map();
     },
     getSiti: function () {
-        return this.props.collections.get("siti") || Immutable.Map();
+        return this.props.collections.get("sites") || Immutable.Map();
     },
     getType: function () {
         return (this.props.params.id ? "update" : "insert");
@@ -82,13 +99,6 @@ var Alarms = React.createClass({
             acc.merge(this.getNotificationsFromAlarm(alarm))
         ), Immutable.Map());
         return ret;
-    },
-    getChartUrl: function (sito, alarms, startDate, endDate) {
-        var url = `/chart/`;
-        url += `?sito=${sito}`;
-        url += `&dateFilter=${startDate}-${endDate}`;
-        url += `&alarms=${alarms}`;
-        return url;
     },
     getColumnsAlarms: function () {
         var self = this;
@@ -126,7 +136,7 @@ var Alarms = React.createClass({
                     var latest = R.last(self.getNotificationsList(item.get("notifications").sort()));
                     return (
                         <span>
-                            {CollectionUtils.siti.getLabel(sito) + " - " + moment(latest).format("DD/MM/YYYY HH:mm")}
+                            {CollectionUtils.sites.getLabel(sito) + " - " + moment(latest).format("DD/MM/YYYY HH:mm")}
                         </span>
                     );
                 }
@@ -151,15 +161,26 @@ var Alarms = React.createClass({
                     // value is a list of maps
                     var notificationDates = self.getNotificationsList(value);
                     if (notificationDates.length > 0) {
-                        var lowerDate = moment(notificationDates[notificationDates.length - 1]).subtract(15, "days").format("YYYYMMDD");
-                        var upperDate = moment(notificationDates[notificationDates.length - 1]).add(15, "days").format("YYYYMMDD");
-                        var alarms = R.dropRepeats(notificationDates).join("-");
-                        const sito = self.getSitoByPod(item.get("podId")).get("_id");
-                        var chartUrl = self.getChartUrl(sito, alarms, lowerDate, upperDate);
+                        const startDate = moment(notificationDates[notificationDates.length - 1])
+                            .startOf("month").valueOf();
+                        const endDate = moment(notificationDates[notificationDates.length - 1])
+                            .endOf("month").valueOf();
+                        const alarms = R.dropRepeats(notificationDates);
+                        const siteId = self.getSitoByPod(item.get("podId")) ?
+                            [self.getSitoByPod(item.get("podId")).get("_id")] :
+                            [];
                         return (
-                            <Router.Link to={chartUrl}>
-                                <img src={icons.iconPNG}
-                                    style={{float: "right", height: "28px"}}/>
+                            <Router.Link to={"/chart/"}>
+                                <img
+                                    onClick={
+                                        R.partial(
+                                            self.props.displayAlarmsOnChart,
+                                            [siteId, alarms, startDate, endDate]
+                                        )
+                                    }
+                                    src={icons.iconPNG}
+                                    style={{float: "right", height: "28px"}}
+                                />
                             </Router.Link>
                         );
                     } else {
@@ -205,7 +226,7 @@ var Alarms = React.createClass({
                     });
                     return (
                         <span style={{marginLeft: "20px"}}>
-                            {CollectionUtils.siti.getLabel(sito)}
+                            {CollectionUtils.sites.getLabel(sito)}
                         </span>
                     );
                 }
@@ -214,13 +235,21 @@ var Alarms = React.createClass({
                 key: "dateNotification",
                 valueFormatter: function (value, item) {
                     var notificationDate = item.get("date");
-                    var lowerDate = moment(notificationDate).subtract(15, "days").format("YYYYMMDD");
-                    var upperDate = moment(notificationDate).add(15, "days").format("YYYYMMDD");
-                    const sito = self.getSitoByPod(item.get("podId")).get("_id");
-                    var chartUrl = self.getChartUrl(sito, notificationDate, lowerDate, upperDate);
+                    const startDate = moment(notificationDate).startOf("month").valueOf();
+                    const endDate = moment(notificationDate).endOf("month").valueOf();
+                    const siteId = self.getSitoByPod(item.get("podId")) ?
+                        [self.getSitoByPod(item.get("podId")).get("_id")] :
+                        [];
                     return (
-                        <Router.Link to={chartUrl}>
-                            <img src={icons.iconPNG}
+                        <Router.Link to={"/chart/"}>
+                            <img
+                                onClick={
+                                    R.partial(
+                                        self.props.displayAlarmsOnChart,
+                                        [siteId, [notificationDate], startDate, endDate]
+                                    )
+                                }
+                                src={icons.iconPNG}
                                 style={{float: "right", height: "28px"}}/>
                         </Router.Link>
                     );
@@ -365,7 +394,10 @@ var Alarms = React.createClass({
                         <bootstrap.Tab eventKey={2} title="Allarmi">
                             {this.renderFilterButton()}
                             <components.CollectionElementsTable
-                                collection={ R.isNil(allowedValues) ? Immutable.Map() : allowedValues.filter(this.filterAlarms)}
+                                collection={
+                                    R.isNil(allowedValues) ?
+                                    Immutable.Map() :
+                                    allowedValues.filter(this.filterAlarms)}
                                 columns={this.getColumnsAlarms()}
                                 getKey={getKeyFromAlarm}
                                 hover={true}
@@ -374,7 +406,8 @@ var Alarms = React.createClass({
                         </bootstrap.Tab>
                         <bootstrap.Tab eventKey={3} title="Storico allarmi">
                             {/* <div style={{marginRight: "30px", height: "40px", paddingTop: "20px"}}>
-                                <div onClick={this.onClickFilter} style={{float: "right", display: "flex", cursor: "pointer"}}>
+                                <div onClick={this.onClickFilter}
+                                    style={{float: "right", display: "flex", cursor: "pointer"}}>
                                     <components.Icon icon="filter" style={{paddingTop: "13px"}}/>
                                     <components.Spacer direction="h" size={10} />
                                     <h4 style={{color: colors.primary}}>Filter</h4>
@@ -396,4 +429,4 @@ var Alarms = React.createClass({
     }
 });
 
-module.exports = Radium(Alarms);
+module.exports = connect(mapStateToProps, mapDispatchToProps)(Radium(Alarms));

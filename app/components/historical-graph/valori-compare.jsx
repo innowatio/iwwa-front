@@ -27,7 +27,7 @@ var ValoriCompare = React.createClass({
     mixins: [ReactPureRender],
     getCoordinates: function () {
         var self = this;
-        var selectedPod = self.props.siti[0] ? self.props.siti[0].get("pod") : "";
+        var selectedSiteId = self.props.siti[0] ? self.props.siti[0].get("_id") : "";
         var selectedTipologia = [self.props.tipologia.key];
         if (self.props.consumption.key) {
             selectedTipologia = selectedTipologia.concat(self.props.consumption.key);
@@ -35,7 +35,7 @@ var ValoriCompare = React.createClass({
         var result = [];
         self.props.misure
             .filter(function (measure) {
-                return measure.get("podId") === selectedPod;
+                return measure.get("siteId") === selectedSiteId;
             })
             .filter(function (measure) {
                 if (self.props.dateFilter) {

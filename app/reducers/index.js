@@ -1,11 +1,14 @@
 import {combineReducers} from "redux";
 import {routerStateReducer as router} from "redux-router";
+import storage from "redux-storage";
 
 import {collections} from "reducers/collections";
+import {chart} from "reducers/chart";
 
-const rootReducer = combineReducers({
+const rootReducer = storage.reducer(combineReducers({
     router,
-    collections
-});
+    collections,
+    chart
+}));
 
 export default rootReducer;

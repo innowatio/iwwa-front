@@ -29,7 +29,7 @@ var DateCompare = React.createClass({
             return {
                 rangeOne: {
                     start: moment(dc.dateOne).subtract(1, "days").valueOf(),
-                    end: dc.dateOne.getTime()
+                    end: moment(dc.dateOne).valueOf()
                 },
                 rangeTwo: {
                     start: moment(dc.dateOne).subtract(1, "weeks").subtract(1, "days").valueOf(),
@@ -41,7 +41,7 @@ var DateCompare = React.createClass({
             return {
                 rangeOne: {
                     start: moment(dc.dateOne).subtract(5, "weeks").valueOf(),
-                    end: dc.dateOne.getTime()
+                    end: moment(dc.dateOne).valueOf()
                 },
                 rangeTwo: {
                     start: moment(dc.dateOne).subtract(57, "weeks").valueOf(),
@@ -53,7 +53,7 @@ var DateCompare = React.createClass({
             return {
                 rangeOne: {
                     start: moment(dc.dateOne).subtract(5, "weeks").valueOf(),
-                    end: dc.dateOne.getTime()
+                    end: moment(dc.dateOne).valueOf()
                 },
                 rangeTwo: {
                     start: moment(dc.dateOne).subtract(10, "weeks").valueOf(),
@@ -64,7 +64,7 @@ var DateCompare = React.createClass({
         return {
             rangeOne: {
                 start: moment(dc.dateOne).subtract(1, dc.period.key).valueOf(),
-                end: dc.dateOne.getTime()
+                end: moment(dc.dateOne).valueOf()
             },
             rangeTwo: {
                 start: moment(dc.dateOne).subtract(2, dc.period.key).valueOf(),
@@ -75,14 +75,14 @@ var DateCompare = React.createClass({
     getDateFormatter: function () {
         var date = this.props.dateCompare;
         var date1 = moment(date.dateOne).format("YYYY-MM");
-        var date2 = moment(date.dateOne).subtract(1, date.periods).format("YYYY-MM");
+        var date2 = moment(date.dateOne).subtract(1, date.period.key).format("YYYY-MM");
         return [date1, date2];
     },
     getCoordinates: function () {
         var self = this;
         var sito = self.props.siti[0] || Immutable.Map();
-        var pod = sito.get("pod");
-        return measuresUtils.convertByDatesAndVariable(self.props.misure, pod, self.props.tipologia.key, self.getDateFormatter());
+        var siteId = sito.get("siteId");
+        return measuresUtils.convertByDatesAndVariable(self.props.misure, siteId, self.props.tipologia.key, self.getDateFormatter());
     },
     getLabels: function () {
         if (this.props.dateCompare.period.key === "7 days before") {

@@ -14,7 +14,7 @@ var DropdownSelect = React.createClass({
         getKey: React.PropTypes.func,
         getLabel: React.PropTypes.func,
         onChange: React.PropTypes.func.isRequired,
-        value: React.PropTypes.any
+        value: React.PropTypes.object
     },
     getDefaultProps: function () {
         var defaultGetter = function (allowedValue) {
@@ -34,7 +34,7 @@ var DropdownSelect = React.createClass({
         );
     },
     renderButtonOption: function (allowedValue, index) {
-        var active = (allowedValue === this.props.value);
+        var active = R.equals(this.props.value, allowedValue);
         return (
             <bootstrap.ListGroupItem
                 key={this.props.getKey(allowedValue)}

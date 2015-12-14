@@ -19,7 +19,7 @@ describe("The `measures` method", function () {
         it("should return the correct filtered array with single variable", function () {
             var measures = Immutable.Map({
                 month: monthString,
-                readings: Immutable.Map({
+                measurements: Immutable.Map({
                     lux: "1,1.09,3,3.2,,6,6.1",
                     potenza: "11,22,33,44,55,,,8.9"
                 })
@@ -38,7 +38,7 @@ describe("The `measures` method", function () {
         it("should return the filtered array with two variables", function () {
             var measures = Immutable.Map({
                 month: monthString,
-                readings: Immutable.Map({
+                measurements: Immutable.Map({
                     lux: "1,2,3,4,,6,7.8",
                     co2: "11,22,33,44,55,,",
                     potenza: "111,222,333,444,555,,7.77"
@@ -61,7 +61,7 @@ describe("The `measures` method", function () {
         // it("should return the correct array even if a requested variable is missing", function () {
         //     var measures = Immutable.Map({
         //         month: monthString,
-        //         readings: Immutable.Map({
+        //         measurements: Immutable.Map({
         //             lux: "1,22,3,44,,36,7.8",
         //             potenza: "11,22,33,44,55,,,8.9"
         //         })
@@ -81,14 +81,16 @@ describe("The `measures` method", function () {
         // });
     });
 
+    // TODO:
+    //    This tests are skipped because there is a problem to fix in data-fixing algorithm.
     describe.skip("the `convertBySitesAndVariable` function", function () {
 
-        it.skip("should return the correct array filter by variable", function () {
+        it("should return the correct array filter by variable", function () {
             var measures = Immutable.Map({
                 id1: Immutable.Map({
                     month: monthString,
                     podId: "pod1",
-                    readings: Immutable.Map({
+                    measurements: Immutable.Map({
                         lux: "1,2,3,4,,6,7.8,",
                         potenza: "11,22,33,44,55,,,8.9"
                     })
@@ -96,7 +98,7 @@ describe("The `measures` method", function () {
                 id2: Immutable.Map({
                     month: monthString,
                     podId: "pod2",
-                    readings: Immutable.Map({
+                    measurements: Immutable.Map({
                         lux: "11,22,33,44,55,,,8.9",
                         co2: "1,2,3,4,,6,7.8"
                     })
@@ -120,7 +122,7 @@ describe("The `measures` method", function () {
                 id1: Immutable.Map({
                     month: monthString,
                     podId: "pod1",
-                    readings: Immutable.Map({
+                    measurements: Immutable.Map({
                         lux: "1,2,3,4,,6,7.8,",
                         potenza: "11,22,33,44,55,,,8.9"
                     })
@@ -149,7 +151,7 @@ describe("The `measures` method", function () {
                 id1: Immutable.Map({
                     month: month1,
                     podId: "pod1",
-                    readings: Immutable.Map({
+                    measurements: Immutable.Map({
                         lux: "1,2,3,4,,6,7.8,",
                         potenza: "11,22,33,44,55,,,8.9"
                     })
@@ -157,7 +159,7 @@ describe("The `measures` method", function () {
                 id2: Immutable.Map({
                     month: month2,
                     podId: "pod1",
-                    readings: Immutable.Map({
+                    measurements: Immutable.Map({
                         lux: "11,22,33,44,55,,,8.9",
                         co2: "1,2,3,4,,6,7.8"
                     })
@@ -267,7 +269,7 @@ describe("The `measures` method", function () {
                 id1: Immutable.Map({
                     month: monthString,
                     podId: "pod1",
-                    readings: Immutable.Map({
+                    measurements: Immutable.Map({
                         lux: "1,2,3,4,,6,7.8,",
                         potenza: "11,22,33,44,55,,,8.9"
                     })
@@ -278,7 +280,7 @@ describe("The `measures` method", function () {
             expect([[]]).to.deep.equal(result);
         });
 
-        it("should return the array of the readings for each given variable", function () {
+        it("should return the array of the measurements for each given variable", function () {
             var sito = Immutable.Map({
                 _id: "ididididid",
                 pod: "pod1"
@@ -292,7 +294,7 @@ describe("The `measures` method", function () {
                 id1: Immutable.Map({
                     month: monthString,
                     podId: "pod1",
-                    readings: Immutable.Map({
+                    measurements: Immutable.Map({
                         lux: "1,2,3,4",
                         potenza: "11,22,33,44,55,,8.9"
                     })

@@ -4,13 +4,6 @@ import {ReduxRouter} from "redux-router";
 
 import * as views from "views";
 
-var checkLocalStorageAndRedirect = function (nextState, replaceState) {
-    if (!nextState.location.query && localStorage.query) {
-        nextState.location.query = JSON.parse(localStorage.query);
-    }
-    return replaceState;
-};
-
 module.exports = (
     <ReduxRouter>
         <Route component={views.Root} name="root">
@@ -18,7 +11,7 @@ module.exports = (
             <Route component={views.Alarms} name="alarm" path="/alarms/:id" titleView="Allarmi" />
             <Route component={views.Users} name="users" path="/users/" titleView="Amministrazione utenti"/>
             <Route component={views.User} name="user" path="/users/:id" />
-            <Route component={views.Chart} name="chart" onEnter={checkLocalStorageAndRedirect} path="/chart/" titleView="Storico consumi" />
+            <Route component={views.Chart} name="chart" path="/chart/" titleView="Storico consumi" />
             <Route component={views.Dashboard} name="dashboard" path="/dashboard/" titleView="Dashboard"/>
             <Route component={views.RealTime} name="live" path="/live/" titleView="Consumi live" />
             <Route component={views.Dashboard} name="home" path="/" />

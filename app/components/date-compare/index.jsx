@@ -1,5 +1,6 @@
 var R          = require("ramda");
 var React      = require("react");
+var moment     = require("moment");
 
 var colors     = require("lib/colors");
 var components = require("components/");
@@ -13,7 +14,7 @@ var styles = {
     }
 };
 
-var DataCompare = React.createClass({
+var DateCompare = React.createClass({
     propTypes: {
         allowedValues: React.PropTypes.array.isRequired,
         closeModal: React.PropTypes.func,
@@ -23,11 +24,14 @@ var DataCompare = React.createClass({
         value: React.PropTypes.object
     },
     getInitialState: function () {
-        var now = new Date();
         return {
             value: {
-                period: R.isNil(this.props.value) ? this.props.allowedValues[2] : this.props.value.period,
-                dateOne: R.isNil(this.props.value) ? now : this.props.value.dateOne
+                period: R.isNil(this.props.value) || R.isNil(this.props.value.period) ?
+                    this.props.allowedValues[0] :
+                    this.props.value.period,
+                dateOne: R.isNil(this.props.value) || R.isNil(this.props.value.dateOne) ?
+                    moment().valueOf() :
+                    this.props.value.dateOne
             }
         };
     },
@@ -47,13 +51,12 @@ var DataCompare = React.createClass({
     },
     onClickButton: function () {
         this.props.closeModal();
-        this.props.onChange(this.state.value, "sito");
+        this.props.onChange(this.state.value);
     },
     renderDataCompare: function (allowedValue) {
-        var active = allowedValue === this.state.value.period;
         return (
             <components.Button
-                active={active}
+                active={R.equals(allowedValue, R.path(["period"], this.state.value))}
                 key={this.props.getKey(allowedValue)}
                 onClick={R.partial(this.selectedCheckboxDate, [allowedValue])}
                 style={styles.buttonCompare}
@@ -84,4 +87,4 @@ var DataCompare = React.createClass({
     }
 });
 
-module.exports = DataCompare;
+module.exports = DateCompare;

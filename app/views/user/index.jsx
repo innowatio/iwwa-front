@@ -34,7 +34,7 @@ var User = React.createClass({
         };
     },
     componentDidMount: function () {
-        this.props.asteroid.subscribe("siti");
+        this.props.asteroid.subscribe("sites");
         this.props.asteroid.subscribe("users");
     },
     getUser: function () {
@@ -63,13 +63,13 @@ var User = React.createClass({
         return this.props.collections.get("roles") || Immutable.Map();
     },
     selectAllSiteToUser: function () {
-        var siti = this.props.collections.get("siti") || Immutable.Map();
+        var siti = this.props.collections.get("sites") || Immutable.Map();
         siti.map((sito) => {
             this.selectSiteToUser(sito);
         });
     },
     removeAllSiteFromUser: function () {
-        var siti = this.props.collections.get("siti") || Immutable.Map();
+        var siti = this.props.collections.get("sites") || Immutable.Map();
         var userSiti = this.getUser().get("siti") || Immutable.List();
         siti.filter(sito => {
             return R.isNil(userSiti) ? {} : userSiti.includes(sito.get("_id"));
@@ -112,7 +112,7 @@ var User = React.createClass({
         );
     },
     renderSelectUserSite: function () {
-        var siti = this.props.collections.get("siti") || Immutable.Map();
+        var siti = this.props.collections.get("sites") || Immutable.Map();
         var userSiti = this.getUser().get("siti");
         var sitiToAdd = siti.filter(sito => {
             return R.isNil(userSiti) ? {} : !userSiti.includes(sito.get("_id"));
@@ -128,9 +128,9 @@ var User = React.createClass({
                 <components.SelectTree
                     allowedValues={sitiToAdd}
                     buttonCloseDefault={true}
-                    filter={CollectionUtils.siti.filter}
-                    getKey={CollectionUtils.siti.getKey}
-                    getLabel={CollectionUtils.siti.getLabel}
+                    filter={CollectionUtils.sites.filter}
+                    getKey={CollectionUtils.sites.getKey}
+                    getLabel={CollectionUtils.sites.getLabel}
                     onChange={this.selectSiteToUser}
                 />
             </components.Popover>
@@ -140,7 +140,7 @@ var User = React.createClass({
         return (
             <tr key={sito}>
                 <td style={{textAlign: "left", color: colors.greySubTitle}}>
-                    {sito.get("pod")} <components.Spacer direction="h" size={20}/> {CollectionUtils.siti.getLabel(sito)}
+                    {sito.get("pod")} <components.Spacer direction="h" size={20}/> {CollectionUtils.sites.getLabel(sito)}
                 </td>
                 <td onClick={R.partial(this.removeSiteFromUser, [sito])}
                     style={{width: "36px", textAlign: "center", cursor: "pointer", paddingRight: "20px"}}>
@@ -231,7 +231,7 @@ var User = React.createClass({
     },
     renderUserSitiTab: function () {
         var getSitiOfUser = this.getSiti()
-            .filter(value => CollectionUtils.siti.filter(value, this.state.inputFilter))
+            .filter(value => CollectionUtils.sites.filter(value, this.state.inputFilter))
             .map(this.renderTableSitiToUser);
         return (
             <bootstrap.Tab eventKey={3} style={{marginLeft: "15px"}} title="Siti">
