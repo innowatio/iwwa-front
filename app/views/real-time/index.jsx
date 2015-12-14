@@ -138,8 +138,21 @@ var RealTime = React.createClass({
         return res;
     },
     findLatestMeasuresForEnergy: function () {
-        return this.findLatestMeasuresWithCriteria(function (decorator) {
+        var measures = this.findLatestMeasuresWithCriteria(function (decorator) {
             return decorator.get("type") === "pod" && decorator.get("keyType") === "activeEnergy";
+        });
+        return measures.map(pod => {
+            var anzId = pod.get("children").map(anz => {
+                return CollectionUtils.measures.decorateMeasure(anz);
+            });
+            return pod.set("value", CollectionUtils.measures.addValueToMeasures(
+                anzId.flatten(1),
+                this.getMeasuresBySite()
+            ).filter(decorator => {
+                return decorator.get("keyType") === "activeEnergy";
+            }).reduce((acc, measure) => {
+                return acc + (measure.get("value") || 0);
+            }, 0));
         });
     },
     findLatestMeasuresForVariables: function () {

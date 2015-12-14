@@ -84,6 +84,21 @@ exports.measures = {
             key: "reactiveEnergy",
             type: "pod",
             unit: "kVARh"
+        }),
+        Immutable.Map({
+            key: "activeEnergy",
+            type: "pod-anz",
+            unit: "kWh"
+        }),
+        Immutable.Map({
+            key: "maxPower",
+            type: "pod-anz",
+            unit: "kW"
+        }),
+        Immutable.Map({
+            key: "reactiveEnergy",
+            type: "pod-anz",
+            unit: "kVARh"
         })
     ],
     addValueToMeasures: function (sensors, measures) {
@@ -189,7 +204,7 @@ exports.measures = {
             function (value) {
                 return !R.isNil(value);
             },
-            this.decorators.map(function (decorator) {
+            this.decorators.map(decorator => {
                 if (decorator.get("type") === sensor.get("type")) {
                     return decorator.merge(
                         sensor
@@ -197,7 +212,8 @@ exports.measures = {
                         .set("keyType", decorator.get("key"))
                     );
                 }
-            })));
+            })
+        ));
     },
     findMeasuresBySitoAndVariables: R.memoize(function (measures, sito, variables) {
         return variables.map(function (variable) {
