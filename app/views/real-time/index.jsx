@@ -95,9 +95,13 @@ var RealTime = React.createClass({
     getMeasures: function () {
         return this.props.collections.get("readings-real-time-aggregates") || Immutable.Map();
     },
-    setSelectedSite: function (site) {
-        this.props.asteroid.subscribe("readingsRealTimeAggregatesBySite", site[0].get("_id"));
-        this.setState({selectedSite: site[0]});
+    setSelectedSite: function (siteId) {
+        this.props.asteroid.subscribe("readingsRealTimeAggregatesBySite", siteId[0]);
+        this.setState({selectedSite:
+            this.getSites().find(function (site) {
+                return site.get("_id") === siteId[0];
+            })
+        });
     },
     getSelectedSiteName: function () {
         return (
