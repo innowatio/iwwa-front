@@ -109,7 +109,7 @@ var RealTime = React.createClass({
     getMeasuresBySite: function () {
         var selectedSiteId = this.state.selectedSite.get("_id");
         return this.getMeasures().find(function (measure) {
-            return measure.get("siteId") === selectedSiteId;
+            return measure.get("_id") === selectedSiteId;
         }).get("sensors");
     },
     getGaugeLabel: function (params) {
@@ -117,19 +117,15 @@ var RealTime = React.createClass({
             <components.MeasureLabel {...params} />
         );
     },
-    findLatestMeasuresForEnergy: function () {
-        var res = {
-            key: "activeEnergy",
-            unit: "KWh"
-        };
+    findLatestMeasuresWithCriteria: function (criteria) {
+        var res = CollectionUtils.measures.decorators.filter(criteria);
         if (this.state.selectedSite && this.getMeasures().size) {
-            var decoMeasurements = R.map((sensor) => {
-                return CollectionUtils.measures.decorateMeasure(sensor.set("type", "pod"));
-            }, this.state.selectedSite.get("pods"));
+            var decoMeasurements = this.state.selectedSite.get("sensors")
+                .map(sensor => {
+                    return CollectionUtils.measures.decorateMeasure(sensor);
+                });
             res = R.filter(
-                function (measure) {
-                    return measure.get("keyType") === "activeEnergy";
-                },
+                criteria,
                 CollectionUtils.measures.addValueToMeasures(
                     decoMeasurements.flatten(1),
                     this.getMeasuresBySite()
@@ -137,21 +133,15 @@ var RealTime = React.createClass({
         }
         return res;
     },
+    findLatestMeasuresForEnergy: function () {
+        return this.findLatestMeasuresWithCriteria(function (decorator) {
+            return decorator.get("type") === "pod" && decorator.get("keyType") === "activeEnergy";
+        });
+    },
     findLatestMeasuresForVariables: function () {
-        var res = CollectionUtils.measures.decorators.filter(function (decorator) {
+        return this.findLatestMeasuresWithCriteria(function (decorator) {
             return decorator.get("type") !== "pod";
         });
-        if (this.state.selectedSite && this.getMeasures().size) {
-            var decoMeasurements = this.state.selectedSite.get("otherSensors")
-                .map(sensor => {
-                    return CollectionUtils.measures.decorateMeasure(sensor);
-                });
-            res = CollectionUtils.measures.addValueToMeasures(
-                decoMeasurements.flatten(1),
-                this.getMeasuresBySite()
-            ).toArray();
-        }
-        return res;
     },
     render: function () {
         const selectedSiteName = this.getSelectedSiteName();
