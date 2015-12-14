@@ -17,7 +17,7 @@ import {DISPLAY_ALARMS_ON_CHART} from "../actions/alarms";
 const defaultChartState = {
     alarms: undefined,
     sites: [],
-    types: [{label: "Attiva", key: "energia attiva"}, {}],
+    types: [{label: "Attiva", key: "activeEnergy"}, {}],
     dateRanges: [],
     sources: [{label: "Reale", color: colors.lineReale, key: "real"}]
 };
@@ -99,7 +99,7 @@ export function chart (state = defaultChartState, {type, payload}) {
             }],
             sites: payload.siteId,
             alarms: payload.alarms,
-            types: [{label: "Attiva", key: "energia attiva"}, {}]
+            types: [{label: "Attiva", key: "activeEnergy"}, {}]
         };
     default:
         return state;

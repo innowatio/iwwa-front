@@ -181,9 +181,9 @@ var AlarmForm = React.createClass({
                         <components.SelectTree
                             allowedValues={this.props.siti}
                             buttonCloseDefault={true}
-                            filter={CollectionUtils.siti.filter}
-                            getKey={CollectionUtils.siti.getKey}
-                            getLabel={CollectionUtils.siti.getLabel}
+                            filter={CollectionUtils.sites.filter}
+                            getKey={CollectionUtils.sites.getKey}
+                            getLabel={CollectionUtils.sites.getLabel}
                             valueLink={this.linkState("sito")}
                         />
                     </components.Popover>
@@ -290,7 +290,7 @@ var AlarmForm = React.createClass({
                 <img src={icons.iconDown} style={{float: "right", paddingTop: "5px", width: "16px"}}/>
             </span> :
             <span>
-                {CollectionUtils.siti.getLabel(this.state.sito)}
+                {CollectionUtils.sites.getLabel(this.state.sito)}
                 <components.Spacer direction="h" size={30} />
                 {this.state.sito.get("pod")}
                 <img src={icons.iconDown} style={{float: "right", paddingTop: "5px", width: "16px"}}/>
