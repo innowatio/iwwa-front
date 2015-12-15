@@ -12,7 +12,6 @@ var colors             = require("lib/colors");
 var components         = require("components/");
 var icons              = require("lib/icons");
 var GetTutorialMixin   = require("lib/get-tutorial-mixin");
-var QuerystringMixin   = require("lib/querystring-mixin");
 var styles             = require("lib/styles");
 var tutorialString     = require("assets/JSON/tutorial-string.json").historicalGraph;
 import {
@@ -85,16 +84,19 @@ var Chart = React.createClass({
         selectSource: React.PropTypes.func.isRequired,
         selectType: React.PropTypes.func.isRequired
     },
-    mixins: [QuerystringMixin,
-        GetTutorialMixin("historicalGraph", [
-            "valori",
-            "export",
-            "tipologie",
-            "siti",
-            "dateFilter",
-            "compare",
-            "graph"
-    ])],
+    mixins: [
+        GetTutorialMixin("historicalGraph",
+            [
+                "valori",
+                "export",
+                "tipologie",
+                "siti",
+                "dateFilter",
+                "compare",
+                "graph"
+            ]
+        )
+    ],
     componentDidMount: function () {
         this.props.asteroid.subscribe("sites");
         if (R.has("idAlarm", this.props.params)) {

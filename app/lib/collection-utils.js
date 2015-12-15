@@ -118,7 +118,7 @@ exports.measures = {
                 .split(",")
                 .map(v => parseFloat(v));
             mLength = m.length;
-            var lastNotNull = null;
+            var lastNotNull = 0.01;
             return R.range(0, mLength).map(idx => {
                 if (!isNaN(m[idx])) {
                     lastNotNull = m[idx] || 0.01;
