@@ -49,7 +49,7 @@ var User = React.createClass({
         var user = this.getUser();
         var userSiti = user.get("siti") || Immutable.List();
         return (
-            userSiti.map(sitoId => this.props.collections.getIn(["siti", sitoId])) ||
+            userSiti.map(sitoId => this.props.collections.getIn(["sites", sitoId])) ||
             Immutable.List()
         );
     },
@@ -65,7 +65,7 @@ var User = React.createClass({
     selectAllSiteToUser: function () {
         var siti = this.props.collections.get("sites") || Immutable.Map();
         siti.map((sito) => {
-            this.selectSiteToUser(sito);
+            this.selectSiteToUser(sito.get("_id"));
         });
     },
     removeAllSiteFromUser: function () {
@@ -79,7 +79,7 @@ var User = React.createClass({
         if (R.is(Array, value)) {
             value = value[0];
         }
-        this.props.asteroid.call("addSitoToUser", value.get("_id"), this.getUser().get("_id"))
+        this.props.asteroid.call("addSitoToUser", value, this.getUser().get("_id"))
             .catch(e => console.log(e));
     },
     removeSiteFromUser: function (sito) {
