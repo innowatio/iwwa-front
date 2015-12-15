@@ -21,10 +21,11 @@ var styleTextDiv = {
 
 var MeasureLabel = React.createClass({
     propTypes: {
+        id: React.PropTypes.string,
         style: React.PropTypes.object,
         styleText: React.PropTypes.object,
         unit: React.PropTypes.string.isRequired,
-        value: React.PropTypes.number.isRequired
+        value: React.PropTypes.number
     },
     render: function () {
         return (

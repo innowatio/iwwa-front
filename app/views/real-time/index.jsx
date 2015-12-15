@@ -38,7 +38,6 @@ var RealTime = React.createClass({
                 />
                 <div style={{textAlign: "center"}}>
                     <div>{params.id}</div>
-                    <div>{"description"}</div>
                 </div>
             </div>
         );
@@ -50,17 +49,17 @@ var RealTime = React.createClass({
                 var gaugeParams = {
                     id: measure.get("id"),
                     key: measure.get("key"),
-                    maximum: 1.2,
+                    maximum: 100,
                     minimum: 0,
                     style: {height: "auto", width: "100%"},
                     styleGaugeBar: {stroke: colors.lineReale},
                     stylePointer: {fill: colors.greyBorder},
                     styleText: {color: colors.lineReale},
                     unit: measure.get("unit"),
-                    value: measure.get("value") || 0
+                    value: parseFloat(measure.get("value")).toFixed(2) / 1 || 0
                 };
                 return (
-                    <bootstrap.Col lg={sizeValues > 4 ? 4 : 6} md={sizeValues > 4 ? 4 : 6} sm={6} style={{padding: "20px"}}>
+                    <bootstrap.Col key={measure.get("key")} lg={sizeValues > 4 ? 4 : 6} md={sizeValues > 4 ? 4 : 6} sm={6} style={{padding: "20px"}}>
                         {this.drawGauge(gaugeParams)}
                     </bootstrap.Col>);
             });
@@ -77,13 +76,13 @@ var RealTime = React.createClass({
             var gaugeParams = {
                 id: "Consumi totali",
                 key: "Consumi totali",
-                maximum: 1.2,
+                maximum: 100,
                 minimum: 0,
                 style: {height: "auto", width: "100%"},
                 styleLabel: {top: "-30px"},
                 stylePointer: {fill: colors.greyBorder},
                 unit: unit,
-                value: value
+                value: parseFloat(value).toFixed(2) / 1
             };
             return this.drawGauge(gaugeParams);
         }
@@ -114,7 +113,7 @@ var RealTime = React.createClass({
         var selectedSiteId = this.state.selectedSite.get("_id");
         return this.getMeasures().find(function (measure) {
             return measure.get("_id") === selectedSiteId;
-        }).get("sensors");
+        }).get("sensors") || Immutable.Map();
     },
     getGaugeLabel: function (params) {
         return (
@@ -142,7 +141,7 @@ var RealTime = React.createClass({
             return decorator.get("type") === "pod" && decorator.get("keyType") === "activeEnergy";
         });
         return measures.map(pod => {
-            var anzId = pod.get("children").map(anz => {
+            var anzId = (pod.get("children") || Immutable.List()).map(anz => {
                 return CollectionUtils.measures.decorateMeasure(anz);
             });
             return pod.set("value", CollectionUtils.measures.addValueToMeasures(
@@ -157,7 +156,7 @@ var RealTime = React.createClass({
     },
     findLatestMeasuresForVariables: function () {
         return this.findLatestMeasuresWithCriteria(function (decorator) {
-            return decorator.get("type") !== "pod";
+            return decorator.get("type") !== "pod" && decorator.get("type") !== "pod-anz";
         });
     },
     render: function () {
@@ -194,7 +193,7 @@ var RealTime = React.createClass({
                 <h3 className="text-center" style={{color: colors.primary}}>
                     {`${selectedSiteName ? selectedSiteName + " - " : ""}Pods`}
                 </h3>
-                <div style={{height: "100%", overflow: "scroll"}}>
+                <div style={{overflow: "scroll"}}>
                     <bootstrap.Col className="text-center" sm={4} style={{padding: "20px"}}>
                         {this.drawGaugeTotal()}
                     </bootstrap.Col>

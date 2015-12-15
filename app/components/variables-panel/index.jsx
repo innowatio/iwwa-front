@@ -15,7 +15,10 @@ var style = {
 
 var VariablesPanel = React.createClass({
     propTypes: {
-        values: React.PropTypes.arrayOf(React.PropTypes.object).isRequired
+        values: React.PropTypes.oneOfType([
+            React.PropTypes.arrayOf(React.PropTypes.object),
+            React.PropTypes.object
+        ]).isRequired
     },
     renderVariableBox: function () {
         return this.props.values.map((variable) => {
