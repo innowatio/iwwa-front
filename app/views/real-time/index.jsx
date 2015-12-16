@@ -49,7 +49,7 @@ var RealTime = React.createClass({
                 var gaugeParams = {
                     id: measure.get("id"),
                     key: measure.get("key"),
-                    maximum: 100,
+                    maximum: 10,
                     minimum: 0,
                     style: {height: "auto", width: "100%"},
                     styleGaugeBar: {stroke: colors.lineReale},
@@ -69,14 +69,14 @@ var RealTime = React.createClass({
         if (this.findLatestMeasuresForEnergy().size > 0) {
             const {value, unit} = this.findLatestMeasuresForEnergy().reduce((acc, measure) => {
                 return {
-                    value: acc.value + (measure.get("value") || 0),
+                    value: acc.value + parseFloat((measure.get("value")) || 0),
                     unit: measure.get("unit")
                 };
             }, {value: 0, unit: ""});
             var gaugeParams = {
                 id: "Consumi totali",
                 key: "Consumi totali",
-                maximum: 100,
+                maximum: 10,
                 minimum: 0,
                 style: {height: "auto", width: "100%"},
                 styleLabel: {top: "-30px"},
