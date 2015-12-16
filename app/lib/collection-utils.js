@@ -113,10 +113,12 @@ exports.measures = {
         var mLength;
         const fiveMinutesInMS = 5 * 60 * 1000;
         const startOfMonthInMS = !R.isNil(startOfTime) ? startOfTime.getTime() : new Date(measures.get("month")).getTime();
-        const measuresArray = R.map(variable => {
-            const m = (measures.getIn(["measurements", variable]) || "")
-                .split(",")
-                .map(v => parseFloat(v));
+        var measuresArray = R.map(variable => {
+            const m = measures.getIn(["measurements", variable]) ?
+                measures.getIn(["measurements", variable])
+                    .split(",")
+                    .map(v => parseFloat(v)) :
+                [0.01];
             mLength = m.length;
             var lastNotNull = 0.01;
             return R.range(0, mLength).map(idx => {
@@ -128,6 +130,8 @@ exports.measures = {
                 }
             });
         }, variables);
+        // measuresArray.length === 0 ?
+
         const toDateTime = (index) => (
             startOfMonthInMS + (index * fiveMinutesInMS)
         );

@@ -91,7 +91,11 @@ var TemporalLineGraph = React.createClass({
             var maxYRange = R.reduce(function (prev, elm) {
                 return R.max(prev, elm[1][0]);
             }, 0, props.coordinates);
-            options.axes.y.valueRange = [0, maxYRange * 1.01];
+            if (maxYRange === 0.01) {
+                options.axes.y.valueRange = [0, 10]; // Tacconata
+            } else {
+                options.axes.y.valueRange = [0, maxYRange * 1.01];
+            }
             options.series[externalLabel] = {axis: "y2"};
         }
         if (props.coordinates.length !== 0) {
