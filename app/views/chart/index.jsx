@@ -12,7 +12,6 @@ var colors             = require("lib/colors");
 var components         = require("components/");
 var icons              = require("lib/icons");
 var GetTutorialMixin   = require("lib/get-tutorial-mixin");
-var QuerystringMixin   = require("lib/querystring-mixin");
 var styles             = require("lib/styles");
 var tutorialString     = require("assets/JSON/tutorial-string.json").historicalGraph;
 import {
@@ -84,18 +83,21 @@ var Chart = React.createClass({
         selectSource: React.PropTypes.func.isRequired,
         selectType: React.PropTypes.func.isRequired
     },
-    mixins: [QuerystringMixin,
-        GetTutorialMixin("historicalGraph", [
-            "valori",
-            "export",
-            "tipologie",
-            "siti",
-            "dateFilter",
-            "compare",
-            "graph"
-    ])],
+    mixins: [
+        GetTutorialMixin("historicalGraph",
+            [
+                "valori",
+                "export",
+                "tipologie",
+                "siti",
+                "dateFilter",
+                "compare",
+                "graph"
+            ]
+        )
+    ],
     componentDidMount: function () {
-        this.props.asteroid.subscribe("siti");
+        this.props.asteroid.subscribe("sites");
         if (this.props.chart.alarms) {
             this.props.asteroid.subscribe("alarms");
         }
@@ -109,7 +111,7 @@ var Chart = React.createClass({
         this.updateFirstSiteToChart();
     },
     updateFirstSiteToChart: function () {
-        var siti = this.props.collections.get("siti") || Immutable.Map();
+        var siti = this.props.collections.get("sites") || Immutable.Map();
         if (siti.size > 0 && this.props.chart.sites < 1) {
             this.props.selectSingleSite([siti.first().get("_id")]);
         }
@@ -123,9 +125,9 @@ var Chart = React.createClass({
     },
     getTipologie: function () {
         return [
-            {label: "Attiva", key: "energia attiva"},
-            {label: "Potenza Max", key: "potenza massima"},
-            {label: "Reattiva", key: "energia reattiva"}
+            {label: "Attiva", key: "activeEnergy"},
+            {label: "Potenza Max", key: "maxPower"},
+            {label: "Reattiva", key: "reactiveEnergy"}
         ];
     },
     getValori: function () {
@@ -265,7 +267,7 @@ var Chart = React.createClass({
         );
     },
     render: function () {
-        const siti = this.props.collections.get("siti") || Immutable.Map();
+        const sites = this.props.collections.get("sites") || Immutable.Map();
 
         var valoriMulti = (
             this.switchDateCompareAndFilter() &&
@@ -332,13 +334,13 @@ var Chart = React.createClass({
                                 tooltipPosition="top"
                             >
                                 <components.SelectTree
-                                    allowedValues={siti}
-                                    filter={CollectionUtils.siti.filter}
-                                    getKey={CollectionUtils.siti.getKey}
-                                    getLabel={CollectionUtils.siti.getLabel}
+                                    allowedValues={sites}
+                                    filter={CollectionUtils.sites.filter}
+                                    getKey={CollectionUtils.sites.getKey}
+                                    getLabel={CollectionUtils.sites.getLabel}
                                     onChange={this.props.selectSingleSite}
                                     placeholder={"Punto di misurazione"}
-                                    value={siti.get(this.props.chart.sites[0])}
+                                    value={sites.get(this.props.chart.sites[0])}
                                 />
                             </components.Popover>
                         </components.TutorialAnchor>
@@ -364,10 +366,10 @@ var Chart = React.createClass({
                         >
                             <components.Compare>
                                 <components.SitiCompare
-                                    allowedValues={siti}
-                                    filter={CollectionUtils.siti.filter}
-                                    getKey={CollectionUtils.siti.getKey}
-                                    getSitoLabel={CollectionUtils.siti.getLabel}
+                                    allowedValues={sites}
+                                    filter={CollectionUtils.sites.filter}
+                                    getKey={CollectionUtils.sites.getKey}
+                                    getSitoLabel={CollectionUtils.sites.getLabel}
                                     onChange={this.props.selectMultipleSite}
                                     open={"undefined"}
                                     style={selectStyles.selectCompare}
@@ -412,7 +414,7 @@ var Chart = React.createClass({
                             misure={this.props.collections.get("site-month-readings-aggregates") || Immutable.Map()}
                             ref="historicalGraph"
                             resetCompare={this.props.removeAllCompare}
-                            siti={this.props.chart.sites.map(R.partial(this.getSitoById, [siti]))}
+                            siti={this.props.chart.sites.map(R.partial(this.getSitoById, [sites]))}
                             tipologia={this.props.chart.types[0]}
                             valori={this.props.chart.sources}
                         />

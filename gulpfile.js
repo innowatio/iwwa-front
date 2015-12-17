@@ -170,7 +170,6 @@ proGulp.task("setupDevServer", function () {
                 next();
             }
         },
-        files: "./builds/**/*",
         port: 8080,
         ghostMode: false,
         injectChanges: false,
@@ -180,22 +179,22 @@ proGulp.task("setupDevServer", function () {
 });
 
 proGulp.task("setupWatchers", function () {
-    gulp.watch(
-        "app/main.html",
-        proGulp.task("buildMainHtml")
-    );
-    gulp.watch(
-        ["app/**/*.jsx", "app/**/*.js"],
-        proGulp.parallel(["buildAppScripts", "runUnitTests"])
-    );
-    gulp.watch(
-        "app/assets/**/*",
-        proGulp.task("buildAppAssets")
-    );
-    gulp.watch(
-        ["test/unit/**/*.jsx", "test/unit/**/*.js"],
-        proGulp.task("runUnitTests")
-    );
+    gulp.watch("app/main.html", () => {
+        proGulp.task("buildMainHtml")()
+            .then(browserSync.reload);
+    });
+    gulp.watch(["app/**/*.jsx", "app/**/*.js"], () => {
+        proGulp.parallel(["buildAppScripts", "runUnitTests"])()
+            .then(browserSync.reload);
+    });
+    gulp.watch("app/assets/**/*", () => {
+        proGulp.task("buildAppAssets")()
+            .then(browserSync.reload);
+    });
+    gulp.watch(["test/unit/**/*.jsx", "test/unit/**/*.js"], () => {
+        proGulp.task("runUnitTests")()
+            .then(browserSync.reload);
+    });
 });
 
 gulp.task("dev", proGulp.sequence([

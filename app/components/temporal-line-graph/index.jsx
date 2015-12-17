@@ -13,7 +13,7 @@ var colors           = require("lib/colors");
 var styles = {
     graphContainer: {
         width: "100%",
-        height: "calc(100vh - 450px)",
+        height: "calc(100vh - 420px)",
         margin: "20px 20px 30px 0px"
     }
 };
@@ -88,6 +88,14 @@ var TemporalLineGraph = React.createClass({
             }
             var labels = this.getLabelsFromProps(props);
             var externalLabel = labels[2];
+            var maxYRange = R.reduce(function (prev, elm) {
+                return R.max(prev, elm[1][0]);
+            }, 0, props.coordinates);
+            if (maxYRange === 0.01) {
+                options.axes.y.valueRange = [0, 10]; // Tacconata
+            } else {
+                options.axes.y.valueRange = [0, maxYRange * 1.01];
+            }
             options.series[externalLabel] = {axis: "y2"};
         }
         if (props.coordinates.length !== 0) {

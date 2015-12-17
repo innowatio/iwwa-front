@@ -69,7 +69,7 @@ var Alarms = React.createClass({
     componentDidMount: function () {
         this.props.asteroid.subscribe("alarms");
         this.props.asteroid.subscribe("notifications");
-        this.props.asteroid.subscribe("siti");
+        this.props.asteroid.subscribe("sites");
     },
     getAlarm: function () {
         return (
@@ -81,7 +81,7 @@ var Alarms = React.createClass({
         return this.props.collections.get("alarms") || Immutable.Map();
     },
     getSiti: function () {
-        return this.props.collections.get("siti") || Immutable.Map();
+        return this.props.collections.get("sites") || Immutable.Map();
     },
     getType: function () {
         return this.props.alarms.id ? "update" : "insert";
@@ -149,7 +149,7 @@ var Alarms = React.createClass({
                     var latest = R.last(self.getNotificationsList(item.get("notifications").sort()));
                     return (
                         <span>
-                            {CollectionUtils.siti.getLabel(sito) + " - " + moment(latest).format("DD/MM/YYYY HH:mm")}
+                            {CollectionUtils.sites.getLabel(sito) + " - " + moment(latest).format("DD/MM/YYYY HH:mm")}
                         </span>
                     );
                 }
@@ -239,7 +239,7 @@ var Alarms = React.createClass({
                     });
                     return (
                         <span style={{marginLeft: "20px"}}>
-                            {CollectionUtils.siti.getLabel(sito)}
+                            {CollectionUtils.sites.getLabel(sito)}
                         </span>
                     );
                 }

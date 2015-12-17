@@ -18,10 +18,10 @@ var SitiCompare = React.createClass({
     },
     mixins: [ReactPureRender],
     getCoordinates: function () {
-        var pods = this.props.siti.map(function (sito) {
-            return sito.get("pod");
+        var sitesId = this.props.siti.map(function (sito) {
+            return sito.get("siteId");
         });
-        return measuresUtils.convertBySitesAndVariable(this.props.misure, pods, this.props.tipologia.key);
+        return measuresUtils.convertBySitesAndVariable(this.props.misure, sitesId, this.props.tipologia.key);
     },
     getLabels: function () {
         var sitiLabels = this.props.siti.map(function (sito) {

@@ -81,8 +81,8 @@ var DateCompare = React.createClass({
     getCoordinates: function () {
         var self = this;
         var sito = self.props.siti[0] || Immutable.Map();
-        var pod = sito.get("pod");
-        return measuresUtils.convertByDatesAndVariable(self.props.misure, pod, self.props.tipologia.key, self.getDateFormatter());
+        var siteId = sito.get("siteId");
+        return measuresUtils.convertByDatesAndVariable(self.props.misure, siteId, self.props.tipologia.key, self.getDateFormatter());
     },
     getLabels: function () {
         if (this.props.dateCompare.period.key === "7 days before") {

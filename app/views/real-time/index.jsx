@@ -24,37 +24,44 @@ var RealTime = React.createClass({
     componentDidMount: function () {
         this.props.asteroid.subscribe("sites");
     },
-    drawGauge: function (key, value, unit, max, min, id) {
+    drawGauge: function (params) {
         return (
-            <span>
-                <components.Spacer direction="h" size={16} />
+            <div style={{margin: "auto", width: R.path(["style", "width"], params) || "200px"}}>
                 <components.Gauge
-                    key={key}
-                    maximum={max}
-                    minimum={min}
-                    unit={unit}
-                    value={value}
                     valueLabel={this.getGaugeLabel({
-                        id: id,
-                        unit: unit || "",
-                        value: value
+                        id: params.id,
+                        styleText: params.styleText,
+                        unit: params.unit || "",
+                        value: params.value
                     })}
+                    {...params}
                 />
-                <components.Spacer direction="h" size={16} />
-            </span>
+                <div style={{textAlign: "center"}}>
+                    <div>{params.id}</div>
+                </div>
+            </div>
         );
     },
     drawGauges: function () {
         if (this.findLatestMeasuresForEnergy().size > 0) {
+            var sizeValues = this.findLatestMeasuresForEnergy().size;
             return this.findLatestMeasuresForEnergy().map((measure) => {
-                return this.drawGauge(
-                    measure.get("key"),
-                    measure.get("value") || 0,
-                    measure.get("unit"),
-                    1.2,
-                    0,
-                    measure.get("id")
-                );
+                var gaugeParams = {
+                    id: measure.get("id"),
+                    key: measure.get("key"),
+                    maximum: 10,
+                    minimum: 0,
+                    style: {height: "auto", width: "100%"},
+                    styleGaugeBar: {stroke: colors.lineReale},
+                    stylePointer: {fill: colors.greyBorder},
+                    styleText: {color: colors.lineReale},
+                    unit: measure.get("unit"),
+                    value: parseFloat(measure.get("value")).toFixed(2) / 1 || 0
+                };
+                return (
+                    <bootstrap.Col key={measure.get("key")} lg={sizeValues > 4 ? 4 : 6} md={sizeValues > 4 ? 4 : 6} sm={6} style={{padding: "20px"}}>
+                        {this.drawGauge(gaugeParams)}
+                    </bootstrap.Col>);
             });
         }
     },
@@ -62,11 +69,22 @@ var RealTime = React.createClass({
         if (this.findLatestMeasuresForEnergy().size > 0) {
             const {value, unit} = this.findLatestMeasuresForEnergy().reduce((acc, measure) => {
                 return {
-                    value: acc.value + parseFloat(measure.get("value")),
+                    value: acc.value + parseFloat((measure.get("value")) || 0),
                     unit: measure.get("unit")
                 };
             }, {value: 0, unit: ""});
-            return this.drawGauge("Consumi totali", value.toFixed(2), unit, 1.2, 0);
+            var gaugeParams = {
+                id: "Consumi totali",
+                key: "Consumi totali",
+                maximum: 10,
+                minimum: 0,
+                style: {height: "auto", width: "100%"},
+                styleLabel: {top: "-30px"},
+                stylePointer: {fill: colors.greyBorder},
+                unit: unit,
+                value: parseFloat(value).toFixed(2) / 1
+            };
+            return this.drawGauge(gaugeParams);
         }
     },
     getSites: function () {
@@ -76,9 +94,13 @@ var RealTime = React.createClass({
     getMeasures: function () {
         return this.props.collections.get("readings-real-time-aggregates") || Immutable.Map();
     },
-    setSelectedSite: function (site) {
-        this.props.asteroid.subscribe("readingsRealTimeAggregatesBySite", site[0].get("_id"));
-        this.setState({selectedSite: site[0]});
+    setSelectedSite: function (siteId) {
+        this.props.asteroid.subscribe("readingsRealTimeAggregatesBySite", siteId[0]);
+        this.setState({selectedSite:
+            this.getSites().find(function (site) {
+                return site.get("_id") === siteId[0];
+            })
+        });
     },
     getSelectedSiteName: function () {
         return (
@@ -90,27 +112,23 @@ var RealTime = React.createClass({
     getMeasuresBySite: function () {
         var selectedSiteId = this.state.selectedSite.get("_id");
         return this.getMeasures().find(function (measure) {
-            return measure.get("siteId") === selectedSiteId;
-        }).get("sensors");
+            return measure.get("_id") === selectedSiteId;
+        }).get("sensors") || Immutable.Map();
     },
     getGaugeLabel: function (params) {
         return (
             <components.MeasureLabel {...params} />
         );
     },
-    findLatestMeasuresForEnergy: function () {
-        var res = {
-            key: "activeEnergy",
-            unit: "KWh"
-        };
+    findLatestMeasuresWithCriteria: function (criteria) {
+        var res = CollectionUtils.measures.decorators.filter(criteria);
         if (this.state.selectedSite && this.getMeasures().size) {
-            var decoMeasurements = R.map((sensor) => {
-                return CollectionUtils.measures.decorateMeasure(sensor.set("type", "pod"));
-            }, this.state.selectedSite.get("pods"));
+            var decoMeasurements = this.state.selectedSite.get("sensors")
+                .map(sensor => {
+                    return CollectionUtils.measures.decorateMeasure(sensor);
+                });
             res = R.filter(
-                function (measure) {
-                    return measure.get("keyType") === "activeEnergy";
-                },
+                criteria,
                 CollectionUtils.measures.addValueToMeasures(
                     decoMeasurements.flatten(1),
                     this.getMeasuresBySite()
@@ -118,21 +136,28 @@ var RealTime = React.createClass({
         }
         return res;
     },
-    findLatestMeasuresForVariables: function () {
-        var res = CollectionUtils.measures.decorators.filter(function (decorator) {
-            return decorator.get("type") !== "pod";
+    findLatestMeasuresForEnergy: function () {
+        var measures = this.findLatestMeasuresWithCriteria(function (decorator) {
+            return decorator.get("type") === "pod" && decorator.get("keyType") === "activeEnergy";
         });
-        if (this.state.selectedSite && this.getMeasures().size) {
-            var decoMeasurements = this.state.selectedSite.get("otherSensors")
-                .map(sensor => {
-                    return CollectionUtils.measures.decorateMeasure(sensor);
-                });
-            res = CollectionUtils.measures.addValueToMeasures(
-                decoMeasurements.flatten(1),
+        return measures.map(pod => {
+            var anzId = (pod.get("children") || Immutable.List()).map(anz => {
+                return CollectionUtils.measures.decorateMeasure(anz);
+            });
+            return pod.set("value", CollectionUtils.measures.addValueToMeasures(
+                anzId.flatten(1),
                 this.getMeasuresBySite()
-            ).toArray();
-        }
-        return res;
+            ).filter(decorator => {
+                return decorator.get("keyType") === "activeEnergy";
+            }).reduce((acc, measure) => {
+                return acc + (measure.get("value") || 0);
+            }, 0));
+        });
+    },
+    findLatestMeasuresForVariables: function () {
+        return this.findLatestMeasuresWithCriteria(function (decorator) {
+            return decorator.get("type") !== "pod" && decorator.get("type") !== "pod-anz";
+        });
     },
     render: function () {
         const selectedSiteName = this.getSelectedSiteName();
@@ -159,23 +184,23 @@ var RealTime = React.createClass({
                 </bootstrap.Col>
                 {/* Barra Rilevazioni ambientali */}
                 <h3 className="text-center" style={{color: colors.primary}}>
-                    {`${selectedSiteName} - Rilevazioni ambientali`}
+                    {`${selectedSiteName ? selectedSiteName + " - " : ""}Rilevazioni ambientali`}
                 </h3>
                 <components.VariablesPanel
                     values={this.findLatestMeasuresForVariables()}
                 />
                 {/* Gauge/s */}
                 <h3 className="text-center" style={{color: colors.primary}}>
-                    {`${selectedSiteName} - Pods`}
+                    {`${selectedSiteName ? selectedSiteName + " - " : ""}Pods`}
                 </h3>
-                <components.Spacer direction="v" size={24} />
-                <bootstrap.Col className="text-center" sm={4}>
-                    {this.drawGaugeTotal()}
-                    <h5>{"Totale"}</h5>
-                </bootstrap.Col>
-                <bootstrap.Col sm={8}>
-                    {this.drawGauges()}
-                </bootstrap.Col>
+                <div style={{overflow: "scroll"}}>
+                    <bootstrap.Col className="text-center" sm={4} style={{padding: "20px"}}>
+                        {this.drawGaugeTotal()}
+                    </bootstrap.Col>
+                    <bootstrap.Col sm={8}>
+                        {this.drawGauges()}
+                    </bootstrap.Col>
+                </div>
             </div>
         );
     }

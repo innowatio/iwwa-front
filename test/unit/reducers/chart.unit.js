@@ -473,7 +473,7 @@ describe("`chart` reducer", () => {
                 types: [
                     {
                         label: "Attiva",
-                        key: "energia attiva"
+                        key: "activeEnergy"
                     },
                     {}
                 ],
