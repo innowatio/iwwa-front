@@ -222,6 +222,7 @@ var AlarmForm = React.createClass({
             </span>;
     },
     render: function () {
+        console.log(this.state);
         return (
             <div className="alarm-form" style={{height: "100%"}}>
                 <div style={R.merge(styles.colVerticalPadding, {height: "100%", overflow: "auto"})}>

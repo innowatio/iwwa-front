@@ -7,7 +7,8 @@ import {
     list,
     struct,
     tuple,
-    maybe
+    maybe,
+    union
 } from "tcomb";
 import {isEmpty} from "ramda";
 import moment from "moment";
@@ -78,7 +79,7 @@ const typeofSubmitAlarmCreationOrChange = actionTypeValidator(
             timeStart: String
         }),
         sito: object,
-        threshold: Number
+        threshold: union([String, Number])
     }),
     String,
     object
