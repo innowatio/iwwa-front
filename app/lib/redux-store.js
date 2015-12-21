@@ -20,7 +20,8 @@ const logger = createLogger({
 });
 
 const storageEngine = storage.decorators.filter(createEngine("iwwaApp"), [
-    ["chart"]
+    "chart",
+    "realTime"
 ]);
 const storageMiddleware = storage.createMiddleware(storageEngine);
 

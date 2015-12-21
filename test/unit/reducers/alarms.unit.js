@@ -8,29 +8,21 @@ describe("`alarms` reducer", () => {
 
         const idReducer = alarmsReducer.__get__("id");
 
-        describe("`MODIFY_EXISTENT_ALARM` type", () => {
-
-            it("should return the correct object with `id` parameter", () => {
-                const valuePassedFromAction = {
-                    type: "MODIFY_EXISTENT_ALARM",
-                    payload: "siteId"
-                };
-                const ret = idReducer(null, valuePassedFromAction);
-                expect(ret).to.equal("siteId");
-            });
-
+        it("should return the correct object with `id` parameter if is passed type `MODIFY_EXISTENT_ALARM`", () => {
+            const valuePassedFromAction = {
+                type: "MODIFY_EXISTENT_ALARM",
+                payload: "siteId"
+            };
+            const ret = idReducer(null, valuePassedFromAction);
+            expect(ret).to.equal("siteId");
         });
 
-        describe("`RESET_ALARM_FORM_VIEW` type", () => {
-
-            it("should return the correct object with `id` parameter", () => {
-                const valuePassedFromAction = {
-                    type: "RESET_ALARM_FORM_VIEW"
-                };
-                const ret = idReducer(undefined, valuePassedFromAction);
-                expect(ret).to.equal(null);
-            });
-
+        it("should return the correct object with `id` parameter if is passed type `RESET_ALARM_FORM_VIEW`", () => {
+            const valuePassedFromAction = {
+                type: "RESET_ALARM_FORM_VIEW"
+            };
+            const ret = idReducer(undefined, valuePassedFromAction);
+            expect(ret).to.equal(null);
         });
 
         it("should return the previous state if any correct `type` is checked", () => {
@@ -45,6 +37,7 @@ describe("`alarms` reducer", () => {
         });
 
     });
+
 
     describe("`statePostAlarm` reducer", () => {
 

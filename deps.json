@@ -30,10 +30,13 @@
         "react-router",
         "redux",
         "redux-router",
+        "redux-storage",
         "history/lib/createBrowserHistory",
         "history/lib/createHashHistory",
         "react-addons-test-utils",
         "react-widgets",
+        "tcomb",
+        "tcomb-validation",
         "title-case"
     ]
 }

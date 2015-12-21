@@ -2,27 +2,47 @@ var bootstrap  = require("react-bootstrap");
 var Immutable  = require("immutable");
 var IPropTypes = require("react-immutable-proptypes");
 var R          = require("ramda");
-var Radium     = require("radium");
 var React      = require("react");
+import {connect} from "react-redux";
+import {bindActionCreators} from "redux";
 
 var components      = require("components");
 var CollectionUtils = require("lib/collection-utils");
 var colors          = require("lib/colors");
 var icons           = require("lib/icons");
 var styles          = require("lib/styles");
+import {selectRealTimeSite} from "actions/real-time";
+
+function mapStateToProps (state) {
+    return {
+        collections: state.collections,
+        realTime: state.realTime
+    };
+}
+
+function mapDispatchToProps (dispatch) {
+    return {
+        selectRealTimeSite: bindActionCreators(selectRealTimeSite, dispatch)
+    };
+}
 
 var RealTime = React.createClass({
     propTypes: {
         asteroid: React.PropTypes.object,
-        collections: IPropTypes.map
-    },
-    getInitialState: function () {
-        return {
-            selectedSito: Immutable.Map()
-        };
+        collections: IPropTypes.map,
+        realTime: React.PropTypes.object.isRequired,
+        selectRealTimeSite: React.PropTypes.func.isRequired
     },
     componentDidMount: function () {
         this.props.asteroid.subscribe("sites");
+        if (this.props.realTime.site) {
+            this.props.asteroid.subscribe("readingsRealTimeAggregatesBySite", this.props.realTime.site);
+        }
+    },
+    componentWillReceiveProps: function () {
+        if (this.props.realTime.site) {
+            this.props.asteroid.subscribe("readingsRealTimeAggregatesBySite", this.props.realTime.site);
+        }
     },
     drawGauge: function (params) {
         return (
@@ -59,7 +79,13 @@ var RealTime = React.createClass({
                     value: parseFloat(measure.get("value")).toFixed(2) / 1 || 0
                 };
                 return (
-                    <bootstrap.Col key={measure.get("key")} lg={sizeValues > 4 ? 4 : 6} md={sizeValues > 4 ? 4 : 6} sm={6} style={{padding: "20px"}}>
+                    <bootstrap.Col
+                        key={measure.get("key")}
+                        lg={sizeValues > 4 ? 4 : 6}
+                        md={sizeValues > 4 ? 4 : 6}
+                        sm={6}
+                        style={{padding: "20px"}}
+                    >
                         {this.drawGauge(gaugeParams)}
                     </bootstrap.Col>);
             });
@@ -88,29 +114,31 @@ var RealTime = React.createClass({
         }
     },
     getSites: function () {
-        var sites = this.props.collections.get("sites") || Immutable.Map();
-        return sites;
+        return this.props.collections.get("sites") || Immutable.Map();
+    },
+    getSite: function (siteId) {
+        return this.getSites().find(function (site) {
+            return site.get("_id") === siteId;
+        });
     },
     getMeasures: function () {
         return this.props.collections.get("readings-real-time-aggregates") || Immutable.Map();
     },
     setSelectedSite: function (siteId) {
         this.props.asteroid.subscribe("readingsRealTimeAggregatesBySite", siteId[0]);
-        this.setState({selectedSite:
-            this.getSites().find(function (site) {
-                return site.get("_id") === siteId[0];
-            })
-        });
+        this.props.selectRealTimeSite(siteId);
     },
     getSelectedSiteName: function () {
         return (
-            this.state.selectedSite ?
-            this.state.selectedSite.get("name") :
+            this.props.realTime.site && this.getSites().size > 0 ?
+            this.getSite(this.props.realTime.site).get("name") :
             null
         );
     },
     getMeasuresBySite: function () {
-        var selectedSiteId = this.state.selectedSite.get("_id");
+        var selectedSiteId = this.props.realTime.site ?
+            this.getSite(this.props.realTime.site).get("_id") :
+            null;
         return this.getMeasures().find(function (measure) {
             return measure.get("_id") === selectedSiteId;
         }).get("sensors") || Immutable.Map();
@@ -122,8 +150,8 @@ var RealTime = React.createClass({
     },
     findLatestMeasuresWithCriteria: function (criteria) {
         var res = CollectionUtils.measures.decorators.filter(criteria);
-        if (this.state.selectedSite && this.getMeasures().size) {
-            var decoMeasurements = this.state.selectedSite.get("sensors")
+        if (this.props.realTime.site && this.getMeasures().size) {
+            var decoMeasurements = this.getSite(this.props.realTime.site).get("sensors")
                 .map(sensor => {
                     return CollectionUtils.measures.decorateMeasure(sensor);
                 });
@@ -176,7 +204,7 @@ var RealTime = React.createClass({
                                 allowedValues={this.getSites()}
                                 onChange={this.setSelectedSite}
                                 placeholder={"Punto di misurazione"}
-                                value={this.state.selectedSite}
+                                value={this.props.realTime.selectedSite}
                                 {...CollectionUtils.sites}
                             />
                         </components.Popover>
@@ -206,4 +234,4 @@ var RealTime = React.createClass({
     }
 });
 
-module.exports = Radium(RealTime);
+module.exports = connect(mapStateToProps, mapDispatchToProps)(RealTime);
