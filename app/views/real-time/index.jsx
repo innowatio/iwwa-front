@@ -69,7 +69,7 @@ var RealTime = React.createClass({
                 var gaugeParams = {
                     id: measure.get("id"),
                     key: measure.get("key"),
-                    maximum: 10,
+                    maximum: 100,
                     minimum: 0,
                     style: {height: "auto", width: "100%"},
                     styleGaugeBar: {stroke: colors.lineReale},
@@ -102,7 +102,7 @@ var RealTime = React.createClass({
             var gaugeParams = {
                 id: "Consumi totali",
                 key: "Consumi totali",
-                maximum: 10,
+                maximum: 100,
                 minimum: 0,
                 style: {height: "auto", width: "100%"},
                 styleLabel: {top: "-30px"},
@@ -130,7 +130,9 @@ var RealTime = React.createClass({
     },
     getSelectedSiteName: function () {
         return (
-            this.props.realTime.site && this.getSites().size > 0 ?
+            this.props.realTime.site &&
+            this.getSites().size > 0 &&
+            this.getSite(this.props.realTime.site) ?
             this.getSite(this.props.realTime.site).get("name") :
             null
         );
