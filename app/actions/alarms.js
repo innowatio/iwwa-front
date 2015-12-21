@@ -20,7 +20,9 @@ export const MODIFY_EXISTENT_ALARM = "MODIFY_EXISTENT_ALARM";
 export const RESET_ALARM_FORM_VIEW = "RESET_ALARM_FORM_VIEW";
 export const CREATE_OR_MODIFY_ALARM_START = "CREATE_OR_MODIFY_ALARM_START";
 export const CREATION_ALARM_STOP = "CREATION_ALARM_STOP";
+export const NUMBER_OF_SELECTED_TABS = "NUMBER_OF_SELECTED_TABS";
 
+// TODO: test this function
 function less (time1, time2) {
     return (
         moment(time1, "hh:mm").toDate() <
@@ -28,6 +30,7 @@ function less (time1, time2) {
     );
 }
 
+// TODO: test this function
 function creationRuleAlarm ({repetition, threshold}) {
     const rule = {
         $and: []
@@ -84,6 +87,7 @@ const typeofSubmitAlarmCreationOrChange = actionTypeValidator(
     String,
     object
 );
+// TODO: test this function
 export function submitAlarmCreationOrChange (
     {active, name, repetition, sito, threshold}, typeProps, alarmProps) {
     typeofSubmitAlarmCreationOrChange(...arguments);
@@ -119,6 +123,15 @@ export function submitAlarmCreationOrChange (
             .catch(() => dispatch({
                 type: CREATION_ALARM_STOP
             }));
+    };
+}
+
+const typeofNumberOfSelectedTabs = actionTypeValidator(Number);
+export function numberOfSelectedTabs (selectedTab) {
+    typeofNumberOfSelectedTabs(...arguments);
+    return {
+        type: NUMBER_OF_SELECTED_TABS,
+        payload: selectedTab
     };
 }
 

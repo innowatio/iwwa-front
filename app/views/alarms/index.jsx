@@ -18,7 +18,8 @@ import {
     displayAlarmsOnChart,
     modifyExistentAlarm,
     resetAlarmFormView,
-    submitAlarmCreationOrChange
+    submitAlarmCreationOrChange,
+    numberOfSelectedTabs
 } from "actions/alarms";
 
 var getKeyFromAlarm = function (alarm) {
@@ -42,7 +43,8 @@ function mapDispatchToProps (dispatch) {
         displayAlarmsOnChart: bindActionCreators(displayAlarmsOnChart, dispatch),
         modifyExistentAlarm: bindActionCreators(modifyExistentAlarm, dispatch),
         submitAlarmCreationOrChange: bindActionCreators(submitAlarmCreationOrChange, dispatch),
-        resetAlarmFormView: bindActionCreators(resetAlarmFormView, dispatch)
+        resetAlarmFormView: bindActionCreators(resetAlarmFormView, dispatch),
+        numberOfSelectedTabs: bindActionCreators(numberOfSelectedTabs, dispatch)
     };
 }
 
@@ -54,13 +56,13 @@ var Alarms = React.createClass({
         displayAlarmsOnChart: React.PropTypes.func.isRequired,
         location: React.PropTypes.object,
         modifyExistentAlarm: React.PropTypes.func.isRequired,
+        numberOfSelectedTabs: React.PropTypes.func.isRequired,
         params: React.PropTypes.object,
         resetAlarmFormView: React.PropTypes.func.isRequired,
         submitAlarmCreationOrChange: React.PropTypes.func.isRequired
     },
     getInitialState: function () {
         return {
-            key: 3,
             active: [
                 "TUTTI"
             ]
@@ -272,12 +274,10 @@ var Alarms = React.createClass({
     },
     onClickAction: function (alarmsId) {
         this.props.modifyExistentAlarm(alarmsId);
-        this.activeKey(1);
+        this.props.numberOfSelectedTabs(1);
     },
     activeKey: function (key) {
-        this.setState({
-            key: key
-        });
+        this.props.numberOfSelectedTabs(key);
     },
     alarmFilterTitle: function () {
         return [
@@ -393,7 +393,7 @@ var Alarms = React.createClass({
                 />
                 <div className="tabbed-area" style={styles.tabbedArea}>
                     <bootstrap.Tabs
-                        activeKey={this.state.key}
+                        activeKey={this.props.alarms.selectedTab}
                         animation={false}
                         bsStyle={"tabs"}
                         onSelect={this.activeKey}

@@ -40,7 +40,7 @@ describe("`alarms` actions", () => {
 
     describe("`modifyExistentAlarm` function", () => {
 
-        it("should return the correct object if is passed the correct parameter", () => {
+        it("should return the correct object if is passed a string", () => {
             const alarmId = "alarmId";
             const ret = alarms.modifyExistentAlarm(alarmId);
             expect(ret).to.deep.equal({
@@ -53,6 +53,25 @@ describe("`alarms` actions", () => {
             const alarmId = ["wrongTypeOfAlarmId"];
             function troubleMaker () {
                 alarms.modifyExistentAlarm(alarmId);
+            }
+            expect(troubleMaker).to.throw();
+        });
+
+    });
+
+    describe("`numberOfSelectedTabs` function", () => {
+
+        it("should return the correct object if is passed a number", () => {
+            const ret = alarms.numberOfSelectedTabs(1);
+            expect(ret).to.deep.equal({
+                type: "NUMBER_OF_SELECTED_TABS",
+                payload: 1
+            });
+        });
+
+        it("should throw if isn't passed a number", () => {
+            function troubleMaker () {
+                alarms.numberOfSelectedTabs("1");
             }
             expect(troubleMaker).to.throw();
         });

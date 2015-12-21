@@ -4,7 +4,8 @@ import {
     MODIFY_EXISTENT_ALARM,
     RESET_ALARM_FORM_VIEW,
     CREATE_OR_MODIFY_ALARM_START,
-    CREATION_ALARM_STOP
+    CREATION_ALARM_STOP,
+    NUMBER_OF_SELECTED_TABS
 } from "../actions/alarms";
 
 function id (state = null, {type, payload}) {
@@ -18,7 +19,7 @@ function id (state = null, {type, payload}) {
     }
 }
 
-function statePostAlarm (state = null, {type}) {
+function statePostAlarm (state = false, {type}) {
     switch (type) {
     case CREATE_OR_MODIFY_ALARM_START:
         return true;
@@ -29,7 +30,17 @@ function statePostAlarm (state = null, {type}) {
     }
 }
 
+function selectedTab (state = 3, {type, payload}) {
+    switch (type) {
+    case NUMBER_OF_SELECTED_TABS:
+        return payload;
+    default:
+        return state;
+    }
+}
+
 export const alarms = combineReducers({
     id,
-    statePostAlarm
+    statePostAlarm,
+    selectedTab
 });
