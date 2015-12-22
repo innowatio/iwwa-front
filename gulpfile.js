@@ -89,7 +89,7 @@ proGulp.task("buildAppScripts", (function () {
         ].filter(R.identity)
     });
     return function () {
-        return BPromise.promisify(compiler.run, compiler)();
+        return BPromise.promisify(compiler.run, {context: compiler})();
     };
 })());
 
@@ -131,7 +131,7 @@ proGulp.task("runUnitTests", function () {
     mkdirp.sync(targetDir);
     return gulp.src("./test/unit/**/*unit*")
         .pipe(gp.spawnMocha({
-            compilers: "jsx:babel/register",
+            compilers: "jsx:babel-core/register",
             reporter: "mochawesome",
             env: {
                 NODE_ENV: "test",
