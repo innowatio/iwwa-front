@@ -29,7 +29,7 @@
         "comma-spacing": [2, {"before": false, "after": true}],
         "computed-property-spacing": [2, "never"],
         "indent": [2, 4],
-        "jsx-quotes": "double",
+        "jsx-quotes": [2, "prefer-double"],
         "linebreak-style": [2, "unix"],
         "new-cap": [2, {"capIsNew": false}],
         "no-multi-spaces": [0],
