@@ -37,7 +37,7 @@
         "one-var": [2, "never"],
         "quotes": [2, "double"],
         "react/jsx-no-undef": [2],
-        "react/jsx-quotes": [2, "double"],
+        "jsx-quotes": [2, "double"],
         "react/jsx-sort-prop-types": [2],
         "react/jsx-sort-props": [2],
         "react/jsx-uses-react": [2],

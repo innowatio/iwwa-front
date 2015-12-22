@@ -47,11 +47,11 @@ Dygraph.Export.DEFAULT_ATTRS = {
     vLabelLeft: 20,
 
     legendHeight: 20,    // Height of the legend area
-	legendMargin: 20,
-	lineHeight: 30,
-	maxlabelsWidth: 0,
-	labelTopMargin: 35,
-	magicNumbertop: 8
+    legendMargin: 20,
+    lineHeight: 30,
+    maxlabelsWidth: 0,
+    labelTopMargin: 35,
+    magicNumbertop: 8
 
 };
 
