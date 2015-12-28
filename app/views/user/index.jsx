@@ -14,10 +14,10 @@ var styles          = require("lib/styles");
 var stringIt        = require("lib/string-it");
 
 var buttonStyle = {
-        width: "200px",
-        height: "40px",
-        backgroundColor: colors.primary,
-        color: colors.white
+    width: "200px",
+    height: "40px",
+    backgroundColor: colors.primary,
+    color: colors.white
 };
 
 var User = React.createClass({
@@ -181,10 +181,10 @@ var User = React.createClass({
                 {/* Automatic change of the password */}
                 <bootstrap.Col style={{height: "calc(100vh - 200px)", paddingRight: "0px"}} xs={6} >
                     <div style={{
-                            borderRight: `1px solid ${colors.greyBorder}`,
-                            marginTop: "40px",
-                            height: "calc(100vh - 260px)"
-                        }}
+                        borderRight: `1px solid ${colors.greyBorder}`,
+                        marginTop: "40px",
+                        height: "calc(100vh - 260px)"
+                    }}
                     >
                         <h4 style={styles.titleTab}>{stringIt.automaticReset}</h4>
                         <components.Spacer direction="v" size={20} />
