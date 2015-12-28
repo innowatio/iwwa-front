@@ -125,8 +125,8 @@ var RealTime = React.createClass({
         return this.props.collections.get("readings-real-time-aggregates") || Immutable.Map();
     },
     setSelectedSite: function (siteId) {
-        this.props.asteroid.subscribe("readingsRealTimeAggregatesBySite", siteId[0]);
         this.props.selectRealTimeSite(siteId);
+        this.props.asteroid.subscribe("readingsRealTimeAggregatesBySite", siteId[0]);
     },
     getSelectedSiteName: function () {
         return (
@@ -141,9 +141,12 @@ var RealTime = React.createClass({
         var selectedSiteId = this.props.realTime.site ?
             this.getSite(this.props.realTime.site).get("_id") :
             null;
-        return this.getMeasures().find(function (measure) {
+        var selectSite = this.getMeasures().find(function (measure) {
             return measure.get("_id") === selectedSiteId;
-        }).get("sensors") || Immutable.Map();
+        });
+        return selectSite ?
+        selectSite.get("sensors") :
+        Immutable.Map();
     },
     getGaugeLabel: function (params) {
         return (
@@ -190,6 +193,7 @@ var RealTime = React.createClass({
         });
     },
     render: function () {
+        const sites = this.props.collections.get("sites") || Immutable.Map();
         const selectedSiteName = this.getSelectedSiteName();
         return (
             <div style={styles.mainDivStyle}>
@@ -206,7 +210,7 @@ var RealTime = React.createClass({
                                 allowedValues={this.getSites()}
                                 onChange={this.setSelectedSite}
                                 placeholder={"Punto di misurazione"}
-                                value={this.props.realTime.selectedSite}
+                                value={this.getSite(this.props.realTime.site)}
                                 {...CollectionUtils.sites}
                             />
                         </components.Popover>
