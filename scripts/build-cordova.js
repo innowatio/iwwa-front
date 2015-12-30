@@ -72,7 +72,8 @@ var configureCordovaApp = function () {
         .then(function (xml) {
 
             xml.widget.$.version = this.version;
-            xml.widget.$.id = this.name;
+            xml.widget.$.id = this.package;
+            xml.widget.$.name = this.name;
             xml.widget.platform = {$: {
                 name: this.platform
             }};
@@ -198,6 +199,7 @@ var argv = minimist(process.argv.slice(2), {
 
 var config = {
     name: pkg.cordova.name,
+    package: pkg.cordova.package,
     platform: argv.platform,
     version: pkg.cordova.version,
     plugins: pkg.cordova.plugins

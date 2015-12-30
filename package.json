@@ -113,8 +113,9 @@
     "title-case": "^1.1.1"
   },
   "cordova": {
-    "name": "iwwa",
-    "version": "1.12.0",
+    "name": "energy-coach",
+    "package": "com.innowatio.energycoach",
+    "version": "1.13.0",
     "plugins": [
       "cordova-plugin-device",
       "cordova-plugin-inappbrowser",
