@@ -2,7 +2,7 @@ import {prepend, equals, contains, keys} from "ramda";
 
 import * as colors from "lib/colors";
 import {
-    SELECT_SINGLE_SITE,
+    SELECT_SINGLE_SENSOR,
     SELECT_TYPE,
     SELECT_ENVIRONMENTAL,
     SELECT_SOURCES,
@@ -16,21 +16,23 @@ import {DISPLAY_ALARMS_ON_CHART} from "../actions/alarms";
 
 const defaultChartState = {
     alarms: undefined,
-    sites: [],
+    sensors: [],
+    sites: ["sitoDiTest1"],
     types: [{label: "Attiva", key: "activeEnergy"}, {}],
-    dateRanges: [],
+    dateRanges: {},
     sources: [{label: "Reale", color: colors.lineReale, key: "real"}]
 };
 
 export function chart (state = defaultChartState, {type, payload}) {
     const firstTypes = state.types.slice(0, 1).concat({}) || [];
-    const firstSites = state.sites.slice(0, 1) || [];
+    const firstSensor = state.sensors.slice(0, 1) || [];
     switch (type) {
-    case SELECT_SINGLE_SITE:
+    case SELECT_SINGLE_SENSOR:
         return {
             ...state,
             alarms: undefined,
-            sites: payload
+            sensors: payload.sensorId,
+            sites: payload.siteId
         };
     case SELECT_TYPE:
         return {
@@ -42,31 +44,31 @@ export function chart (state = defaultChartState, {type, payload}) {
         return {
             ...state,
             alarms: undefined,
-            sites: payload,
+            sensors: payload,
             types: firstTypes,
-            dateRanges: contains("start", keys(state.dateRanges[0])) ?
+            dateRanges: R.path("range", state.dateRanges[0]) === "dateRanges" ?
                 state.dateRanges :
-                []
+                {}
         };
     case SELECT_DATA_RANGES_COMPARE:
         return {
             ...state,
             alarms: undefined,
-            sites: firstSites,
+            sensors: firstSensor,
             types: firstTypes,
-            dateRanges: [payload]
+            dateRanges: payload
         };
     case SELECT_ENVIRONMENTAL:
         return {
             ...state,
             alarms: undefined,
-            sites: firstSites,
+            sensors: firstSensor,
             types: equals(state.types[1], payload) ?
                 state.types.slice(0, 1).concat({}) :
                 state.types.slice(0, 1).concat(payload),
-            dateRanges: contains("start", keys(state.dateRanges[0])) ?
+            dateRanges: R.path("range", state.dateRanges[0]) === "dateRanges" ?
                 state.dateRanges :
-                []
+                {}
         };
     case SELECT_SOURCES:
         return {
@@ -77,26 +79,26 @@ export function chart (state = defaultChartState, {type, payload}) {
     case SELECT_DATE_RANGES:
         return {
             ...state,
-            dateRanges: [payload]
+            dateRanges: payload
         };
     case REMOVE_ALL_COMPARE:
         return {
             ...state,
-            dateRanges: contains("start", keys(state.dateRanges[0])) ?
+            dateRanges: R.path("range", state.dateRanges[0]) === "dateRanges" ?
                 state.dateRanges :
-                [],
+                {},
             alarms: undefined,
-            sites: firstSites,
+            sensors: firstSensor,
             types: firstTypes
         };
     case DISPLAY_ALARMS_ON_CHART:
         return {
             ...state,
-            dateRanges: [{
+            dateRanges: {
                 start: payload.startDate,
                 end: payload.endDate
-            }],
-            sites: payload.siteId,
+            },
+            sensors: payload.siteId,
             alarms: payload.alarms,
             types: [{label: "Attiva", key: "activeEnergy"}, {}]
         };

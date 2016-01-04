@@ -20,33 +20,41 @@ var ValoriCompare = React.createClass({
         getY2Label: React.PropTypes.func,
         getYLabel: React.PropTypes.func,
         misure: IPropTypes.map,
+        sensors: React.PropTypes.arrayOf(React.PropTypes.string),
         siti: React.PropTypes.arrayOf(IPropTypes.map),
         tipologia: React.PropTypes.object,
         valori: React.PropTypes.arrayOf(React.PropTypes.object)
     },
     mixins: [ReactPureRender],
     getCoordinates: function () {
-        var self = this;
-        var selectedSiteId = self.props.siti[0] ? self.props.siti[0].get("_id") : "";
-        var selectedTipologia = [self.props.tipologia.key];
-        if (self.props.consumption.key) {
-            selectedTipologia = selectedTipologia.concat(self.props.consumption.key);
-        }
+        const self = this;
+        const selectedSiteId = self.props.siti[0] ? self.props.siti[0].get("_id") : "";
+        const selectedSensorId = self.props.sensors[0];
+        const selectedTipologia = [self.props.tipologia.key];
+        // if (self.props.consumption.key) {
+        //     selectedTipologia = selectedTipologia.concat(self.props.consumption.key);
+        // }
         var result = [];
         self.props.misure
-            .filter(function (measure) {
-                return measure.get("siteId") === selectedSiteId;
+            .filter(measure => {
+                return measure.get("sensorId") === selectedSensorId;
             })
-            .filter(function (measure) {
+            .sortBy(measure => measure.get("day"))
+            .filter(measure => {
                 if (self.props.dateFilter) {
-                    // TODO: filter data only for the selected month
-                    var measureMonthToDate = moment(measure.get("month"), "YYYY-MM");
-                    return self.props.dateFilter.start <= measureMonthToDate && self.props.dateFilter.end > measureMonthToDate;
+                    const dateMeasure = moment(measure.get("day"), "YYYY-MM-DD").valueOf();
+                    return (
+                        self.props.dateFilter.start <= dateMeasure &&
+                        self.props.dateFilter.end > dateMeasure
+                    );
                 }
                 return true;
             })
-            .forEach(function (measure) {
-                result = R.concat(result, measuresUtils.convertByVariables(measure, selectedTipologia));
+            .forEach(measure => {
+                result = R.concat(
+                    result,
+                    measuresUtils.convertByVariables(measure, selectedTipologia)
+                );
             });
         return result;
     },

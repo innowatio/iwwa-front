@@ -4,21 +4,51 @@ import * as chart from "actions/chart";
 
 describe("`chart` actions", () => {
 
-    describe("`selectSingleSite` function", () => {
+    describe("`selectSingleSensor` function", () => {
 
         it("should return the correct object if is passed an array with one string as parameter", () => {
+            const sensorId = ["sensorId"];
             const siteId = ["siteId"];
-            const ret = chart.selectSingleSite(siteId);
+            const ret = chart.selectSingleSensor(sensorId, siteId);
             expect(ret).to.deep.equal({
-                type: "SELECT_SINGLE_SITE",
-                payload: ["siteId"]
+                type: "SELECT_SINGLE_SENSOR",
+                payload: {
+                    sensorId: ["sensorId"],
+                    siteId: ["siteId"]
+                }
             });
         });
 
-        it("should throw if isn't passed an array with one string as parameter", () => {
+        it("should throw if isn't passed an array with more than one string as parameter of `sensorId`", () => {
+            const sensorId = ["sensorId", "anotherString"];
+            const siteId = ["siteId"];
+            function troubleMaker () {
+                chart.selectSingleSensor(sensorId, siteId);
+            }
+            expect(troubleMaker).to.throw();
+        });
+
+        it("should throw if isn't passed an array with more than one string as parameter of `siteId`", () => {
+            const sensorId = ["sensorId"];
             const siteId = ["siteId", "anotherString"];
             function troubleMaker () {
-                chart.selectSingleSite(siteId);
+                chart.selectSingleSensor(sensorIdsensorId, siteId);
+            }
+            expect(troubleMaker).to.throw();
+        });
+
+        it("should throw if isn't passed `siteId` parameter", () => {
+            const sensorId = ["sensorId", "anotherString"];
+            function troubleMaker () {
+                chart.selectSingleSensor(sensorIdsensorId);
+            }
+            expect(troubleMaker).to.throw();
+        });
+
+        it("should throw if isn't passed `sensorId` parameter", () => {
+            const sensorId = ["sensorId", "anotherString"];
+            function troubleMaker () {
+                chart.selectSingleSensor(null, siteId);
             }
             expect(troubleMaker).to.throw();
         });

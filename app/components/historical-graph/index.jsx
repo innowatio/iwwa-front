@@ -21,6 +21,7 @@ var HistoricalGraph = React.createClass({
         }),
         misure: IPropTypes.map,
         resetCompare: React.PropTypes.func,
+        sensors: React.PropTypes.arrayOf(React.PropTypes.string),
         siti: React.PropTypes.arrayOf(IPropTypes.map),
         tipologia: React.PropTypes.object,
         valori: React.PropTypes.arrayOf(React.PropTypes.object)

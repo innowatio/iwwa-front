@@ -2,7 +2,7 @@ import {String, Number, tuple, struct} from "tcomb";
 
 import actionTypeValidator from "../lib/action-type-validator";
 
-export const SELECT_SINGLE_SITE = "SELECT_SINGLE_SITE";
+export const SELECT_SINGLE_SENSOR = "SELECT_SINGLE_SENSOR";
 export const SELECT_TYPE = "SELECT_TYPE";
 export const SELECT_ENVIRONMENTAL = "SELECT_ENVIRONMENTAL";
 export const SELECT_SOURCES = "SELECT_SOURCES";
@@ -15,14 +15,18 @@ export const REMOVE_ALL_COMPARE = "REMOVE_ALL_COMPARE";
 *   A click on select-tree component for the choice of site
 *   @param {array} site - id site of the site
 */
-const typeofSelectSingleSiteDomain = actionTypeValidator(
+const typeofSelectSingleSensor = actionTypeValidator(
+    tuple([String]),
     tuple([String])
 );
-export function selectSingleSite (siteId) {
-    typeofSelectSingleSiteDomain(...arguments);
+export function selectSingleSensor (sensorId, siteId) {
+    typeofSelectSingleSensor(...arguments);
     return {
-        type: SELECT_SINGLE_SITE,
-        payload: siteId
+        type: SELECT_SINGLE_SENSOR,
+        payload: {
+            sensorId,
+            siteId
+        },
     };
 }
 
@@ -30,14 +34,14 @@ export function selectSingleSite (siteId) {
 *   A click on button select component for the choice of type
 *   @param {object} type - data type
 */
-const typeofSelectTypeDomain = actionTypeValidator(
+const typeofSelectType = actionTypeValidator(
     struct({
         label: String,
         key: String
     })
 );
 export function selectType (type) {
-    typeofSelectTypeDomain(...arguments);
+    typeofSelectType(...arguments);
     return {
         type: SELECT_TYPE,
         payload: type

@@ -15,7 +15,7 @@ var GetTutorialMixin   = require("lib/get-tutorial-mixin");
 var styles             = require("lib/styles");
 var tutorialString     = require("assets/JSON/tutorial-string.json").historicalGraph;
 import {
-    selectSingleSite,
+    selectSingleSensor,
     selectType,
     selectEnvironmental,
     selectSource,
@@ -56,7 +56,7 @@ function mapStateToProps (state) {
 
 function mapDispatchToProps (dispatch) {
     return {
-        selectSingleSite: bindActionCreators(selectSingleSite, dispatch),
+        selectSingleSensor: bindActionCreators(selectSingleSensor, dispatch),
         selectType: bindActionCreators(selectType, dispatch),
         selectEnvironmental: bindActionCreators(selectEnvironmental, dispatch),
         selectSource: bindActionCreators(selectSource, dispatch),
@@ -79,7 +79,7 @@ var Chart = React.createClass({
         selectDateRangesCompare: React.PropTypes.func.isRequired,
         selectEnvironmental: React.PropTypes.func.isRequired,
         selectMultipleSite: React.PropTypes.func.isRequired,
-        selectSingleSite: React.PropTypes.func.isRequired,
+        selectSingleSensor: React.PropTypes.func.isRequired,
         selectSource: React.PropTypes.func.isRequired,
         selectType: React.PropTypes.func.isRequired
     },
@@ -112,9 +112,9 @@ var Chart = React.createClass({
     },
     updateFirstSiteToChart: function () {
         var siti = this.props.collections.get("sites") || Immutable.Map();
-        if (siti.size > 0 && this.props.chart.sites < 1) {
-            this.props.selectSingleSite([siti.first().get("_id")]);
-        }
+        // if (siti.size > 0 && this.props.chart.sensors < 1) {
+        //     this.props.selectSingleSensor([siti.first().get("_id")]);
+        // }
     },
     getPeriods: function () {
         return [
@@ -204,26 +204,26 @@ var Chart = React.createClass({
     },
     subscribeToMisure: function (props) {
         var self = this;
-        var date;
+        var dayStart;
+        var dayEnd;
         // Query for date-compare
-        if (R.contains("period", R.keys(props.chart.dateRanges[0]))) {
-            const data = new Date(props.chart.dateRanges[0].dateOne);
-            const periodKey = props.chart.dateRanges[0].period.key;
-            const dateString1 = moment(data).subtract(1, periodKey).format("YYYY-MM");
-            const dateString2 = moment(data).format("YYYY-MM");
-            date = [dateString1, dateString2];
+        if (R.contains("period", R.keys(props.chart.dateRanges))) {
+            // const data = new Date(props.chart.dateRanges[0].dateOne);
+            // const periodKey = props.chart.dateRanges[0].period.key;
+            // const dateString1 = moment(data).subtract(1, periodKey).format("YYYY-MM");
+            // const dateString2 = moment(data).format("YYYY-MM");
+            // date = [dateString1, dateString2];
         // Query for date-filter
-        } else if (R.contains("start", R.keys(props.chart.dateRanges[0]))) {
-            const data = new Date(props.chart.dateRanges[0].start);
-            date = [moment(data).format("YYYY-MM")];
+        } else if (props.chart.dateRanges && props.chart.dateRanges.range === "dateFilter") {
+            dayStart = moment(props.chart.dateRanges.start).format("YYYY-MM-DD");
+            dayEnd = moment(props.chart.dateRanges.end).format("YYYY-MM-DD");
         } else {
             // If no data is selected, is displayed the past month.
-            date = [moment().format("YYYY-MM")];
+            dayStart = moment().startOf("month").format("YYYY-MM-DD");
+            dayEnd = moment().endOf("month").format("YYYY-MM-DD");
         }
-        props.chart.sites.forEach(function (sito) {
-            date.forEach(function (data) {
-                self.props.asteroid.subscribe("misureBySitoAndMonth", sito, data);
-            });
+        props.chart.sensors.forEach(function (sensorId) {
+            self.props.asteroid.subscribe("dailyMeasuresBySensor", sensorId, dayStart, dayEnd);
         });
     },
     getValoreActiveStyle: function (valore) {
@@ -233,10 +233,16 @@ var Chart = React.createClass({
         );
     },
     switchDateCompareAndFilter: function () {
-        return R.contains("period", R.keys(this.props.chart.dateRanges[0]));
+        return R.contains("period", R.keys(this.props.chart.dateRanges));
     },
-    getSitoById: function (siti, sitoId) {
-        return siti.get(sitoId);
+    getSitoById: function (sitoId) {
+        const siti = this.props.collections.get("sites") || Immutable.Map();
+        return siti.get(this.props.chart.sites[0]);
+    },
+    onChangeSensor: function (sensorId, siteId) {
+        siteId = ["sitoDiTest1"];
+        sensorId = ["ANZ01"];
+        this.props.selectSingleSensor(sensorId, siteId);
     },
     renderExportButton: function () {
         return (
@@ -269,9 +275,9 @@ var Chart = React.createClass({
     render: function () {
         const sites = this.props.collections.get("sites") || Immutable.Map();
 
-        var valoriMulti = (
+        const valoriMulti = (
             this.switchDateCompareAndFilter() &&
-            this.props.chart.sites.length <= 1
+            this.props.chart.sensors.length <= 1
         );
 
         return (
@@ -338,9 +344,9 @@ var Chart = React.createClass({
                                     filter={CollectionUtils.sites.filter}
                                     getKey={CollectionUtils.sites.getKey}
                                     getLabel={CollectionUtils.sites.getLabel}
-                                    onChange={this.props.selectSingleSite}
+                                    onChange={this.onChangeSensor}
                                     placeholder={"Punto di misurazione"}
-                                    value={sites.get(this.props.chart.sites[0])}
+                                    value={sites.get(this.props.chart.sensors[0])}
                                 />
                             </components.Popover>
                         </components.TutorialAnchor>
@@ -373,7 +379,7 @@ var Chart = React.createClass({
                                     onChange={this.props.selectMultipleSite}
                                     open={"undefined"}
                                     style={selectStyles.selectCompare}
-                                    value={this.props.chart.sites}
+                                    value={this.props.chart.sensors}
                                 />
                                 <components.DateCompare
                                     allowedValues={this.getDateCompare()}
@@ -407,14 +413,15 @@ var Chart = React.createClass({
                         <components.HistoricalGraph
                             alarms={this.props.chart.alarms}
                             consumption={this.props.chart.types[1]}
-                            dateCompare={this.switchDateCompareAndFilter() ? this.props.chart.dateRanges[0] : undefined}
-                            dateFilter={this.props.chart.dateRanges[0]}
+                            dateCompare={this.switchDateCompareAndFilter() ? this.props.chart.dateRanges : undefined}
+                            dateFilter={this.props.chart.dateRanges}
                             getY2Label={CollectionUtils.labelGraph.getY2Label}
                             getYLabel={CollectionUtils.labelGraph.getYLabel}
-                            misure={this.props.collections.get("site-month-readings-aggregates") || Immutable.Map()}
+                            misure={this.props.collections.get("sensors-daily-readings-aggregates") || Immutable.Map()}
                             ref="historicalGraph"
                             resetCompare={this.props.removeAllCompare}
-                            siti={this.props.chart.sites.map(R.partial(this.getSitoById, [sites]))}
+                            sensors={this.props.chart.sensors}
+                            siti={this.props.chart.sites.map(this.getSitoById)}
                             tipologia={this.props.chart.types[0]}
                             valori={this.props.chart.sources}
                         />

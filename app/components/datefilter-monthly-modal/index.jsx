@@ -66,6 +66,7 @@ var DatefilterMonthlyModal = React.createClass({
     confirmAndClose: function () {
         // Transform in UNIX timestamp for the redux-state.
         const date = {
+            range: "dateFilter",
             start: moment(this.state.value.start).valueOf(),
             end: moment(this.state.value.end).valueOf()
         };
