@@ -35,7 +35,7 @@ var TemporalLineGraph = React.createClass({
         labels: React.PropTypes.array,
         lockInteraction: React.PropTypes.bool,
         showRangeSelector: React.PropTypes.bool,
-        sito: React.PropTypes.object,
+        site: React.PropTypes.object,
         xLabel: React.PropTypes.string,
         xLegendFormatter: React.PropTypes.func,
         xTicker: React.PropTypes.func,
@@ -261,7 +261,7 @@ var TemporalLineGraph = React.createClass({
     },
     renderSpinner: function () {
         // TODO Set a timeout.
-        if (!R.isNil(this.props.sito) && this.props.sito.size > 0 && this.props.coordinates.length === 0) {
+        if (!R.isNil(this.props.site) && this.props.site.size > 0 && this.props.coordinates.length === 0) {
             return (
                 <div className="modal-spinner">
                     <bootstrap.Modal

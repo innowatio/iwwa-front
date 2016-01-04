@@ -2,27 +2,27 @@ import {String, Number, tuple, struct} from "tcomb";
 
 import actionTypeValidator from "../lib/action-type-validator";
 
-export const SELECT_SINGLE_SENSOR = "SELECT_SINGLE_SENSOR";
-export const SELECT_TYPE = "SELECT_TYPE";
-export const SELECT_ENVIRONMENTAL = "SELECT_ENVIRONMENTAL";
+export const SELECT_SINGLE_ELECTRICAL_SENSOR = "SELECT_SINGLE_ELECTRICAL_SENSOR";
+export const SELECT_ELECTRICAL_TYPE = "SELECT_ELECTRICAL_TYPE";
+export const SELECT_ENVIRONMENTAL_SENSOR = "SELECT_ENVIRONMENTAL_SENSOR";
 export const SELECT_SOURCES = "SELECT_SOURCES";
-export const SELECT_MULTIPLE_SITE = "SELECT_MULTIPLE_SITE";
+export const SELECT_MULTIPLE_ELECTRICAL_SENSOR = "SELECT_MULTIPLE_ELECTRICAL_SENSOR";
 export const SELECT_DATE_RANGES = "SELECT_DATE_RANGES";
-export const SELECT_DATA_RANGES_COMPARE = "SELECT_DATA_RANGES_COMPARE";
+export const SELECT_DATE_RANGES_COMPARE = "SELECT_DATE_RANGES_COMPARE";
 export const REMOVE_ALL_COMPARE = "REMOVE_ALL_COMPARE";
 
 /**
 *   A click on select-tree component for the choice of site
 *   @param {array} site - id site of the site
 */
-const typeofSelectSingleSensor = actionTypeValidator(
+const typeofSelectSingleElectricalSensor = actionTypeValidator(
     tuple([String]),
     tuple([String])
 );
-export function selectSingleSensor (sensorId, siteId) {
-    typeofSelectSingleSensor(...arguments);
+export function selectSingleElectricalSensor (sensorId, siteId) {
+    typeofSelectSingleElectricalSensor(...arguments);
     return {
-        type: SELECT_SINGLE_SENSOR,
+        type: SELECT_SINGLE_ELECTRICAL_SENSOR,
         payload: {
             sensorId,
             siteId
@@ -34,17 +34,17 @@ export function selectSingleSensor (sensorId, siteId) {
 *   A click on button select component for the choice of type
 *   @param {object} type - data type
 */
-const typeofSelectType = actionTypeValidator(
+const typeofSelectElectricalType = actionTypeValidator(
     struct({
         label: String,
         key: String
     })
 );
-export function selectType (type) {
-    typeofSelectType(...arguments);
+export function selectElectricalType (electricalType) {
+    typeofSelectElectricalType(...arguments);
     return {
-        type: SELECT_TYPE,
-        payload: type
+        type: SELECT_ELECTRICAL_TYPE,
+        payload: electricalType
     };
 }
 
@@ -52,13 +52,13 @@ export function selectType (type) {
 *   A click on site-compare-modal
 *   @param {array} sites - id site of the two sites
 */
-const typeofSelectMultipleSiteDomain = actionTypeValidator(
+const typeofSelectMultipleElectricalSensor = actionTypeValidator(
     tuple([String, String])
 );
-export function selectMultipleSite (sitesId) {
-    typeofSelectMultipleSiteDomain(...arguments);
+export function selectMultipleElectricalSensor (sitesId) {
+    typeofSelectMultipleElectricalSensor(...arguments);
     return {
-        type: SELECT_MULTIPLE_SITE,
+        type: SELECT_MULTIPLE_ELECTRICAL_SENSOR,
         payload: sitesId
     };
 }
@@ -81,7 +81,7 @@ const typeofSelectedDateRangesCompare = actionTypeValidator(
 export function selectDateRangesCompare (dateRanges) {
     typeofSelectedDateRangesCompare(...arguments);
     return {
-        type: SELECT_DATA_RANGES_COMPARE,
+        type: SELECT_DATE_RANGES_COMPARE,
         payload: dateRanges
     };
 }
@@ -91,7 +91,7 @@ export function selectDateRangesCompare (dateRanges) {
 *   variable
 *   @param {object} type - environmental variable
 */
-const typeofEnvironmentalDomain = actionTypeValidator(
+const typeofEnvironmentalSensor = actionTypeValidator(
     struct({
         label: String,
         key: String,
@@ -100,10 +100,10 @@ const typeofEnvironmentalDomain = actionTypeValidator(
         selected: String
     })
 );
-export function selectEnvironmental (type) {
-    typeofEnvironmentalDomain(...arguments);
+export function selectEnvironmentalSensor (type) {
+    typeofEnvironmentalSensor(...arguments);
     return {
-        type: SELECT_ENVIRONMENTAL,
+        type: SELECT_ENVIRONMENTAL_SENSOR,
         payload: type
     };
 }
@@ -112,7 +112,7 @@ export function selectEnvironmental (type) {
 *   A click on select source button
 *   @param {array} source - source of the data
 */
-const typeofSelectSourceDomain = actionTypeValidator(
+const typeofSelectSource = actionTypeValidator(
     tuple([struct({
         label: String,
         color: String,
@@ -120,7 +120,7 @@ const typeofSelectSourceDomain = actionTypeValidator(
     })])
 );
 export function selectSource (sources) {
-    typeofSelectSourceDomain(...arguments);
+    typeofSelectSource(...arguments);
     return {
         type: SELECT_SOURCES,
         payload: sources

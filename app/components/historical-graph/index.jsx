@@ -9,7 +9,7 @@ var colors             = require("lib/colors");
 var components         = require("components");
 var DateCompareGraph   = require("./date-compare.jsx");
 var ValoriCompareGraph = require("./valori-compare.jsx");
-var SitiCompareGraph   = require("./siti-compare.jsx");
+var SitesCompareGraph   = require("./sites-compare.jsx");
 
 var HistoricalGraph = React.createClass({
     propTypes: {
@@ -22,7 +22,7 @@ var HistoricalGraph = React.createClass({
         misure: IPropTypes.map,
         resetCompare: React.PropTypes.func,
         sensors: React.PropTypes.arrayOf(React.PropTypes.string),
-        siti: React.PropTypes.arrayOf(IPropTypes.map),
+        sites: React.PropTypes.arrayOf(IPropTypes.map),
         tipologia: React.PropTypes.object,
         valori: React.PropTypes.arrayOf(React.PropTypes.object)
     },
@@ -30,23 +30,23 @@ var HistoricalGraph = React.createClass({
     exportPNG: function () {
         return this.refs.temporalLineGraph.exportPNG;
     },
-    renderSitoTitle: function (sito) {
-        return sito ? (
+    renderSiteTitle: function (site) {
+        return site ? (
             <span>
                 <strong>
-                    {titleCase(sito.get("name"))}
+                    {titleCase(site.get("name"))}
                 </strong>
             </span>
         ) : null;
     },
     renderTitle: function () {
-        if (this.props.siti.length > 0) {
+        if (this.props.sites.length > 0) {
             return (
                 <div>
                     <h3 className="text-center" style={{marginTop: "20px"}}>
-                        {this.renderSitoTitle(this.props.siti[0])}
-                        {this.props.siti.length === 2 ? " & " : null}
-                        {this.renderSitoTitle(this.props.siti[1])}
+                        {this.renderSiteTitle(this.props.sites[0])}
+                        {this.props.sites.length === 2 ? " & " : null}
+                        {this.renderSiteTitle(this.props.sites[1])}
                     </h3>
                     <h4 className="text-center" style={{color: colors.greySubTitle}}>
                         {this.props.tipologia.label}
@@ -58,8 +58,8 @@ var HistoricalGraph = React.createClass({
     renderDateCompareGraph: function () {
         return <DateCompareGraph {...this.props} ref="compareGraph"/>;
     },
-    renderSitiCompareGraph: function () {
-        return <SitiCompareGraph {...this.props} ref="compareGraph"/>;
+    renderSitesCompareGraph: function () {
+        return <SitesCompareGraph {...this.props} ref="compareGraph"/>;
     },
     renderValoriCompareGraph: function () {
         return <ValoriCompareGraph {...this.props} ref="compareGraph"/>;
@@ -68,8 +68,8 @@ var HistoricalGraph = React.createClass({
         if (this.props.dateCompare) {
             return this.renderDateCompareGraph();
         }
-        if (this.props.siti.length > 1) {
-            return this.renderSitiCompareGraph();
+        if (this.props.sites.length > 1) {
+            return this.renderSitesCompareGraph();
         }
         return this.renderValoriCompareGraph();
     },
@@ -80,8 +80,8 @@ var HistoricalGraph = React.createClass({
                     <div
                         onClick={this.props.resetCompare}
                         style={{
-                            display: this.props.dateCompare || this.props.siti.length > 1 ? "flex" : "none",
-                            position: "relative",
+                            display: this.props.dateCompare || this.props.sites.length > 1 ? "flex" : "none",
+                            positeson: "relative",
                             marginLeft: "50px",
                             cursor: "pointer"
                         }}

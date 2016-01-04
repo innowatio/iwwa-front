@@ -18,7 +18,7 @@ var DateCompare = React.createClass({
         }),
         getYLabel: React.PropTypes.func,
         misure: IPropTypes.map,
-        siti: React.PropTypes.arrayOf(IPropTypes.map),
+        sites: React.PropTypes.arrayOf(IPropTypes.map),
         tipologia: React.PropTypes.object,
         valori: React.PropTypes.arrayOf(React.PropTypes.object)
     },
@@ -80,7 +80,7 @@ var DateCompare = React.createClass({
     },
     getCoordinates: function () {
         var self = this;
-        var sito = self.props.siti[0] || Immutable.Map();
+        var sito = self.props.sites[0] || Immutable.Map();
         var siteId = sito.get("siteId");
         return measuresUtils.convertByDatesAndVariable(self.props.misure, siteId, self.props.tipologia.key, self.getDateFormatter());
     },
@@ -311,7 +311,7 @@ var DateCompare = React.createClass({
                 labels={this.getLabels()}
                 lockInteraction={true}
                 ref="temporalLineGraph"
-                sito={this.props.siti[0] || Immutable.Map()}
+                site={this.props.sites[0] || Immutable.Map()}
                 xLegendFormatter={this.xLegendFormatter}
                 xTicker={this.xTicker}
                 y2label={" "}

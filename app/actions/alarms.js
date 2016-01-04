@@ -150,12 +150,12 @@ const typeofDisplayAlarmsOnChart = actionTypeValidator(
     Number,
     Number
 );
-export function displayAlarmsOnChart (siteId, alarms, startDate, endDate) {
+export function displayAlarmsOnChart (sensorId, alarms, startDate, endDate) {
     typeofDisplayAlarmsOnChart(...arguments);
     return {
         type: DISPLAY_ALARMS_ON_CHART,
         payload: {
-            siteId,
+            sensorId,
             alarms,
             startDate,
             endDate

@@ -2,13 +2,13 @@ import {prepend, equals, contains, keys} from "ramda";
 
 import * as colors from "lib/colors";
 import {
-    SELECT_SINGLE_SENSOR,
-    SELECT_TYPE,
-    SELECT_ENVIRONMENTAL,
+    SELECT_SINGLE_ELECTRICAL_SENSOR,
+    SELECT_ELECTRICAL_TYPE,
+    SELECT_ENVIRONMENTAL_SENSOR,
     SELECT_SOURCES,
-    SELECT_MULTIPLE_SITE,
+    SELECT_MULTIPLE_ELECTRICAL_SENSOR,
     SELECT_DATE_RANGES,
-    SELECT_DATA_RANGES_COMPARE,
+    SELECT_DATE_RANGES_COMPARE,
     REMOVE_ALL_COMPARE
 } from "../actions/chart";
 
@@ -16,59 +16,61 @@ import {DISPLAY_ALARMS_ON_CHART} from "../actions/alarms";
 
 const defaultChartState = {
     alarms: undefined,
-    sensors: [],
-    sites: ["sitoDiTest1"],
-    types: [{label: "Attiva", key: "activeEnergy"}, {}],
+    consumptionSensors: [],
+    consumptionTypes: [{}],
     dateRanges: {},
+    electricalSensors: [],
+    electricalTypes: [{label: "Attiva", key: "activeEnergy"}],
+    sites: ["sitoDiTest1"], // FIXME
     sources: [{label: "Reale", color: colors.lineReale, key: "real"}]
 };
 
 export function chart (state = defaultChartState, {type, payload}) {
-    const firstTypes = state.types.slice(0, 1).concat({}) || [];
-    const firstSensor = state.sensors.slice(0, 1) || [];
+    const firstSensor = state.electricalSensors.slice(0, 1) || [];
     switch (type) {
-    case SELECT_SINGLE_SENSOR:
+    case SELECT_SINGLE_ELECTRICAL_SENSOR:
         return {
             ...state,
             alarms: undefined,
-            sensors: payload.sensorId,
+            electricalSensors: payload.sensorId,
             sites: payload.siteId
         };
-    case SELECT_TYPE:
+    case SELECT_ELECTRICAL_TYPE:
         return {
             ...state,
             alarms: undefined,
-            types: prepend(payload, state.types.slice(1, 2))
+            electricalTypes: [payload]
         };
-    case SELECT_MULTIPLE_SITE:
+    case SELECT_MULTIPLE_ELECTRICAL_SENSOR:
         return {
             ...state,
             alarms: undefined,
-            sensors: payload,
-            types: firstTypes,
+            electricalSensors: payload,
             dateRanges: R.path("range", state.dateRanges[0]) === "dateRanges" ?
                 state.dateRanges :
-                {}
+                {},
+            consumptionSensors: [],
+            consumptionTypes: []
         };
-    case SELECT_DATA_RANGES_COMPARE:
+    case SELECT_DATE_RANGES_COMPARE:
         return {
             ...state,
             alarms: undefined,
-            sensors: firstSensor,
-            types: firstTypes,
-            dateRanges: payload
+            dateRanges: payload,
+            electricalSensors: firstSensor,
+            consumptionSensors: [],
+            consumptionTypes: []
         };
-    case SELECT_ENVIRONMENTAL:
+    case SELECT_ENVIRONMENTAL_SENSOR:
         return {
             ...state,
             alarms: undefined,
-            sensors: firstSensor,
-            types: equals(state.types[1], payload) ?
-                state.types.slice(0, 1).concat({}) :
-                state.types.slice(0, 1).concat(payload),
+            consumptionSensors: payload.sensorId,
+            consumptionTypes: payload.type,
             dateRanges: R.path("range", state.dateRanges[0]) === "dateRanges" ?
                 state.dateRanges :
-                {}
+                {},
+            electricalSensors: firstSensor
         };
     case SELECT_SOURCES:
         return {
@@ -88,8 +90,9 @@ export function chart (state = defaultChartState, {type, payload}) {
                 state.dateRanges :
                 {},
             alarms: undefined,
-            sensors: firstSensor,
-            types: firstTypes
+            electricalSensors: firstSensor,
+            consumptionSensors: [],
+            consumptionTypes: []
         };
     case DISPLAY_ALARMS_ON_CHART:
         return {
@@ -98,9 +101,9 @@ export function chart (state = defaultChartState, {type, payload}) {
                 start: payload.startDate,
                 end: payload.endDate
             },
-            sensors: payload.siteId,
+            electricalSensors: payload.sensorId,
             alarms: payload.alarms,
-            types: [{label: "Attiva", key: "activeEnergy"}, {}]
+            types: [{label: "Attiva", key: "activeEnergy"}]
         };
     default:
         return state;
