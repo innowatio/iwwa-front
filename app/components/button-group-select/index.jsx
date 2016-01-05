@@ -44,7 +44,8 @@ var ButtonGroupSelect = React.createClass({
             getActiveStyle: R.always({}),
             getKey: defaultGetter,
             getLabel: defaultGetter,
-            multi: false
+            multi: false,
+            vertical: false
         };
     },
     isActiveSingle: function (allowedValue) {
