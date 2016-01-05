@@ -1,6 +1,6 @@
-var bootstrap       = require("react-bootstrap");
-var Radium          = require("radium");
-var React           = require("react");
+var bootstrap  = require("react-bootstrap");
+var Radium     = require("radium");
+var React      = require("react");
 
 var components = require("components");
 var colors     = require("lib/colors");
