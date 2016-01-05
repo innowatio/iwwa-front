@@ -2,29 +2,29 @@ require("unit-setup.js");
 
 import {chart} from "reducers/chart";
 
-// TODO
-describe.skip("`chart` reducer", () => {
+describe("`chart` reducer", () => {
 
     const chartState = Object.freeze({
         alarms: 1449157137862,
-        sites: [],
-        types: [
-            {
-                label: "labelType",
-                key: "keyType"
-            },
-            {
-                label: "labelEnvironmental",
-                key: "keyEnvironment",
-                color: "color",
-                icon: "icon",
-                selected: "iconSelected"
-            }
-        ],
-        dateRanges: [{
+        sites: ["site"],
+        consumptionSensors: ["consumptionSensorsId"],
+        electricalSensors: ["electricalSensorsId"],
+        consumptionTypes: [{
+            label: "labelEnvironmental",
+            key: "keyEnvironment",
+            color: "color",
+            icon: "icon",
+            selected: "iconSelected"
+        }],
+        electricalTypes: [{
+            label: "labelType",
+            key: "keyType"
+        }],
+        dateRanges: {
+            range: "dateFilter",
             start: 1449157137862,
             end: 1449157157862
-        }],
+        },
         sources: [{
             label: "labelSource",
             color: "color",
@@ -32,34 +32,38 @@ describe.skip("`chart` reducer", () => {
         }]
     });
 
-    describe("`SELECT_SINGLE_SITE` type", () => {
+    describe("`SELECT_SINGLE_ELECTRICAL_SENSOR` type", () => {
 
-        it("should return the correct object", () => {
+        it("should return the correct object with a single sensorId and siteId", () => {
             const valuePassedFromAction = {
-                type: "SELECT_SINGLE_SITE",
-                payload: ["siteId"]
+                type: "SELECT_SINGLE_ELECTRICAL_SENSOR",
+                payload: {
+                    siteId: ["siteId"],
+                    sensorId: ["sensorId"]
+                }
             };
             const ret = chart(chartState, valuePassedFromAction);
             expect(ret).to.deep.equal({
                 alarms: undefined,
                 sites: ["siteId"],
-                types: [
-                    {
-                        label: "labelType",
-                        key: "keyType"
-                    },
-                    {
-                        label: "labelEnvironmental",
-                        key: "keyEnvironment",
-                        color: "color",
-                        icon: "icon",
-                        selected: "iconSelected"
-                    }
-                ],
-                dateRanges: [{
+                consumptionSensors: ["consumptionSensorsId"],
+                electricalSensors: ["sensorId"],
+                consumptionTypes: [{
+                    label: "labelEnvironmental",
+                    key: "keyEnvironment",
+                    color: "color",
+                    icon: "icon",
+                    selected: "iconSelected"
+                }],
+                electricalTypes: [{
+                    label: "labelType",
+                    key: "keyType"
+                }],
+                dateRanges: {
+                    range: "dateFilter",
                     start: 1449157137862,
                     end: 1449157157862
-                }],
+                },
                 sources: [{
                     label: "labelSource",
                     color: "color",
@@ -70,11 +74,11 @@ describe.skip("`chart` reducer", () => {
 
     });
 
-    describe("`SELECT_TYPE` type", () => {
+    describe("`SELECT_ELECTRICAL_TYPE` type", () => {
 
-        it("should return the correct object", () => {
+        it("should return the new electricalType passed", () => {
             const valuePassedFromAction = {
-                type: "SELECT_TYPE",
+                type: "SELECT_ELECTRICAL_TYPE",
                 payload: {
                     label: "labelTypeModify",
                     key: "keyTypeModify"
@@ -83,24 +87,25 @@ describe.skip("`chart` reducer", () => {
             const ret = chart(chartState, valuePassedFromAction);
             expect(ret).to.deep.equal({
                 alarms: undefined,
-                sites: [],
-                types: [
-                    {
-                        label: "labelTypeModify",
-                        key: "keyTypeModify"
-                    },
-                    {
-                        label: "labelEnvironmental",
-                        key: "keyEnvironment",
-                        color: "color",
-                        icon: "icon",
-                        selected: "iconSelected"
-                    }
-                ],
-                dateRanges: [{
+                sites: ["site"],
+                consumptionSensors: ["consumptionSensorsId"],
+                electricalSensors: ["electricalSensorsId"],
+                consumptionTypes: [{
+                    label: "labelEnvironmental",
+                    key: "keyEnvironment",
+                    color: "color",
+                    icon: "icon",
+                    selected: "iconSelected"
+                }],
+                electricalTypes: [{
+                    label: "labelTypeModify",
+                    key: "keyTypeModify"
+                }],
+                dateRanges: {
+                    range: "dateFilter",
                     start: 1449157137862,
                     end: 1449157157862
-                }],
+                },
                 sources: [{
                     label: "labelSource",
                     color: "color",
@@ -110,12 +115,12 @@ describe.skip("`chart` reducer", () => {
         });
 
     });
-
-    describe("`SELECT_MULTIPLE_SITE` type", () => {
+    // TODO
+    describe.skip("`SELECT_MULTIPLE_ELECTRICAL_SENSOR` type", () => {
 
         it("should return the correct object", () => {
             const valuePassedFromAction = {
-                type: "SELECT_MULTIPLE_SITE",
+                type: "SELECT_MULTIPLE_ELECTRICAL_SENSOR",
                 payload: ["siteId1", "siteId2"]
             };
             const ret = chart(chartState, valuePassedFromAction);
@@ -129,10 +134,11 @@ describe.skip("`chart` reducer", () => {
                     },
                     {}
                 ],
-                dateRanges: [{
+                dateRanges: {
+                    range: "dateFilter",
                     start: 1449157137862,
                     end: 1449157157862
-                }],
+                },
                 sources: [{
                     label: "labelSource",
                     color: "color",
@@ -142,8 +148,8 @@ describe.skip("`chart` reducer", () => {
         });
 
     });
-
-    describe("`SELECT_DATA_RANGES_COMPARE` type", () => {
+    // TODO
+    describe.skip("`SELECT_DATA_RANGES_COMPARE` type", () => {
 
         it("should return the correct object", () => {
             const valuePassedFromAction = {
@@ -184,34 +190,38 @@ describe.skip("`chart` reducer", () => {
 
     });
 
-    describe("`SELECT_ENVIRONMENTAL` type", () => {
+    describe("`SELECT_ENVIRONMENTAL_SENSOR` type", () => {
 
         it("should have the toggle functionality if the payload object is the same of that in the state", () => {
             const valuePassedFromAction = {
-                type: "SELECT_ENVIRONMENTAL",
+                type: "SELECT_ENVIRONMENTAL_SENSOR",
                 payload: {
-                    label: "labelEnvironmental",
-                    key: "keyEnvironment",
-                    color: "color",
-                    icon: "icon",
-                    selected: "iconSelected"
+                    sensorId: ["consumptionSensorsId"],
+                    type: [{
+                        label: "labelEnvironmental",
+                        key: "keyEnvironment",
+                        color: "color",
+                        icon: "icon",
+                        selected: "iconSelected"
+                    }]
                 }
             };
             const ret = chart(chartState, valuePassedFromAction);
             expect(ret).to.deep.equal({
                 alarms: undefined,
-                sites: [],
-                types: [
-                    {
-                        label: "labelType",
-                        key: "keyType"
-                    },
-                    {}
-                ],
-                dateRanges: [{
+                sites: ["site"],
+                consumptionSensors: [],
+                electricalSensors: ["electricalSensorsId"],
+                consumptionTypes: [{}],
+                electricalTypes: [{
+                    label: "labelType",
+                    key: "keyType"
+                }],
+                dateRanges: {
+                    range: "dateFilter",
                     start: 1449157137862,
                     end: 1449157157862
-                }],
+                },
                 sources: [{
                     label: "labelSource",
                     color: "color",
@@ -220,38 +230,42 @@ describe.skip("`chart` reducer", () => {
             });
         });
 
-        it("should return the correct object if the payload object isn't the same of that in the state", () => {
+        it("should return the new value of the payload passed for the environmental sensor", () => {
             const valuePassedFromAction = {
-                type: "SELECT_ENVIRONMENTAL",
+                type: "SELECT_ENVIRONMENTAL_SENSOR",
                 payload: {
-                    label: "labelEnvironmentalMod",
-                    key: "keyEnvironmentMod",
-                    color: "color",
-                    icon: "icon",
-                    selected: "iconSelected"
-                }
-            };
-            const ret = chart(chartState, valuePassedFromAction);
-            expect(ret).to.deep.equal({
-                alarms: undefined,
-                sites: [],
-                types: [
-                    {
-                        label: "labelType",
-                        key: "keyType"
-                    },
-                    {
+                    sensorId: ["sensorId"],
+                    type: [{
                         label: "labelEnvironmentalMod",
                         key: "keyEnvironmentMod",
                         color: "color",
                         icon: "icon",
                         selected: "iconSelected"
-                    }
-                ],
-                dateRanges: [{
+                    }]
+                }
+            };
+            const ret = chart(chartState, valuePassedFromAction);
+            expect(ret).to.deep.equal({
+                alarms: undefined,
+                sites: ["site"],
+                consumptionSensors: ["sensorId"],
+                electricalSensors: ["electricalSensorsId"],
+                consumptionTypes: [{
+                    label: "labelEnvironmentalMod",
+                    key: "keyEnvironmentMod",
+                    color: "color",
+                    icon: "icon",
+                    selected: "iconSelected"
+                }],
+                electricalTypes: [{
+                    label: "labelType",
+                    key: "keyType"
+                }],
+                dateRanges: {
+                    range: "dateFilter",
                     start: 1449157137862,
                     end: 1449157157862
-                }],
+                },
                 sources: [{
                     label: "labelSource",
                     color: "color",
@@ -264,7 +278,7 @@ describe.skip("`chart` reducer", () => {
 
     describe("`SELECT_SOURCES` type", () => {
 
-        it("should return the correct object", () => {
+        it("should return the new source", () => {
             const valuePassedFromAction = {
                 type: "SELECT_SOURCES",
                 payload: [{
@@ -276,24 +290,25 @@ describe.skip("`chart` reducer", () => {
             const ret = chart(chartState, valuePassedFromAction);
             expect(ret).to.deep.equal({
                 alarms: undefined,
-                sites: [],
-                types: [
-                    {
-                        label: "labelType",
-                        key: "keyType"
-                    },
-                    {
-                        label: "labelEnvironmental",
-                        key: "keyEnvironment",
-                        color: "color",
-                        icon: "icon",
-                        selected: "iconSelected"
-                    }
-                ],
-                dateRanges: [{
+                sites: ["site"],
+                consumptionSensors: ["consumptionSensorsId"],
+                electricalSensors: ["electricalSensorsId"],
+                consumptionTypes: [{
+                    label: "labelEnvironmental",
+                    key: "keyEnvironment",
+                    color: "color",
+                    icon: "icon",
+                    selected: "iconSelected"
+                }],
+                electricalTypes: [{
+                    label: "labelType",
+                    key: "keyType"
+                }],
+                dateRanges: {
+                    range: "dateFilter",
                     start: 1449157137862,
                     end: 1449157157862
-                }],
+                },
                 sources: [{
                     label: "labelSourceMod",
                     color: "color",
@@ -306,10 +321,11 @@ describe.skip("`chart` reducer", () => {
 
     describe("`SELECT_DATE_RANGES` type", () => {
 
-        it("should return the correct object", () => {
+        it("should return the new filter of the date, with `{range: `dateFilter`}`", () => {
             const valuePassedFromAction = {
                 type: "SELECT_DATE_RANGES",
                 payload: {
+                    range: "dateFilter",
                     start: 1498749876543,
                     end: 1516543214890
                 }
@@ -317,24 +333,25 @@ describe.skip("`chart` reducer", () => {
             const ret = chart(chartState, valuePassedFromAction);
             expect(ret).to.deep.equal({
                 alarms: 1449157137862,
-                sites: [],
-                types: [
-                    {
-                        label: "labelType",
-                        key: "keyType"
-                    },
-                    {
-                        label: "labelEnvironmental",
-                        key: "keyEnvironment",
-                        color: "color",
-                        icon: "icon",
-                        selected: "iconSelected"
-                    }
-                ],
-                dateRanges: [{
+                sites: ["site"],
+                consumptionSensors: ["consumptionSensorsId"],
+                electricalSensors: ["electricalSensorsId"],
+                consumptionTypes: [{
+                    label: "labelEnvironmental",
+                    key: "keyEnvironment",
+                    color: "color",
+                    icon: "icon",
+                    selected: "iconSelected"
+                }],
+                electricalTypes: [{
+                    label: "labelType",
+                    key: "keyType"
+                }],
+                dateRanges: {
+                    range: "dateFilter",
                     start: 1498749876543,
                     end: 1516543214890
-                }],
+                },
                 sources: [{
                     label: "labelSource",
                     color: "color",
@@ -345,32 +362,32 @@ describe.skip("`chart` reducer", () => {
 
     });
 
-    describe("`REMOVE_ALL_COMPARE` type", () => {
+    describe.skip("`REMOVE_ALL_COMPARE` type", () => {
 
-        it("should return the correct object if there is a date compare", () => {
+        it("should remove the date compare", () => {
             const chartRemoveDateCompareState = Object.freeze({
                 alarms: undefined,
                 sites: ["site1"],
-                types: [
-                    {
-                        label: "labelType",
-                        key: "keyType"
-                    },
-                    {
-                        label: "labelEnvironmental",
-                        key: "keyEnvironment",
-                        color: "color",
-                        icon: "icon",
-                        selected: "iconSelected"
-                    }
-                ],
-                dateRanges: [{
+                consumptionSensors: ["consumptionSensorsId"],
+                electricalSensors: ["electricalSensorsId"],
+                consumptionTypes: [{
+                    label: "labelEnvironmental",
+                    key: "keyEnvironment",
+                    color: "color",
+                    icon: "icon",
+                    selected: "iconSelected"
+                }],
+                electricalTypes: [{
+                    label: "labelType",
+                    key: "keyType"
+                }],
+                dateRanges: {
                     period: {
                         label: "labelPeriod",
                         key: "keyPeriod"
                     },
                     dateOne: 1449157157862
-                }],
+                },
                 sources: [{
                     label: "labelSource",
                     color: "color",
@@ -400,23 +417,23 @@ describe.skip("`chart` reducer", () => {
             });
         });
 
-        it("should return the correct object if there are two sites in the state", () => {
+        it("should remove the multiple sites compare", () => {
             const chartRemoveSiteCompareState = Object.freeze({
                 alarms: undefined,
                 sites: ["site1", "site2"],
-                types: [
-                    {
-                        label: "labelType",
-                        key: "keyType"
-                    },
-                    {
-                        label: "labelEnvironmental",
-                        key: "keyEnvironment",
-                        color: "color",
-                        icon: "icon",
-                        selected: "iconSelected"
-                    }
-                ],
+                consumptionSensors: ["consumptionSensorsId"],
+                electricalSensors: ["electricalSensorsId"],
+                consumptionTypes: [{
+                    label: "labelEnvironmental",
+                    key: "keyEnvironment",
+                    color: "color",
+                    icon: "icon",
+                    selected: "iconSelected"
+                }],
+                electricalTypes: [{
+                    label: "labelType",
+                    key: "keyType"
+                }],
                 dateRanges: [{
                     start: 1449157137862,
                     end: 1449157157862
@@ -455,7 +472,7 @@ describe.skip("`chart` reducer", () => {
 
     });
 
-    describe("`DISPLAY_ALARMS_ON_CHART` type", () => {
+    describe.skip("`DISPLAY_ALARMS_ON_CHART` type", () => {
 
         it("should return the correct object", () => {
             const valuePassedFromAction = {

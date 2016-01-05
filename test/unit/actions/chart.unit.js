@@ -82,17 +82,21 @@ describe("`chart` actions", () => {
     describe("`selectEnvironmentalSensor` function", () => {
 
         it("should return the correct object if is passed an object with the correct keys", () => {
-            const type = {
+            const sensorId = ["sensorId"];
+            const type = [{
                 label: "label",
                 key: "key",
                 color: "color",
                 icon: "icon",
                 selected: "selected"
-            };
-            const ret = chart.selectEnvironmentalSensor(type);
+            }];
+            const ret = chart.selectEnvironmentalSensor(sensorId, type);
             expect(ret).to.deep.equal({
                 type: "SELECT_ENVIRONMENTAL_SENSOR",
-                payload: type
+                payload: {
+                    sensorId,
+                    type
+                }
             });
         });
 

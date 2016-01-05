@@ -1,4 +1,4 @@
-import {prepend, equals, contains, keys} from "ramda";
+import {prepend, equals, contains, keys, path} from "ramda";
 
 import * as colors from "lib/colors";
 import {
@@ -46,7 +46,7 @@ export function chart (state = defaultChartState, {type, payload}) {
             ...state,
             alarms: undefined,
             electricalSensors: payload,
-            dateRanges: R.path("range", state.dateRanges[0]) === "dateRanges" ?
+            dateRanges: path("range", state.dateRanges) === "dateFilter" ?
                 state.dateRanges :
                 {},
             consumptionSensors: [],
@@ -62,12 +62,16 @@ export function chart (state = defaultChartState, {type, payload}) {
             consumptionTypes: []
         };
     case SELECT_ENVIRONMENTAL_SENSOR:
+        const toggle = (
+            equals(state.consumptionSensors, payload.sensorId) &&
+            equals(state.consumptionTypes, payload.type)
+        );
         return {
             ...state,
             alarms: undefined,
-            consumptionSensors: payload.sensorId,
-            consumptionTypes: payload.type,
-            dateRanges: R.path("range", state.dateRanges[0]) === "dateRanges" ?
+            consumptionSensors: toggle ? [] : payload.sensorId,
+            consumptionTypes: toggle ? [{}] : payload.type,
+            dateRanges: path(["range"], state.dateRanges) === "dateFilter" ?
                 state.dateRanges :
                 {},
             electricalSensors: firstSensor
@@ -86,7 +90,7 @@ export function chart (state = defaultChartState, {type, payload}) {
     case REMOVE_ALL_COMPARE:
         return {
             ...state,
-            dateRanges: R.path("range", state.dateRanges[0]) === "dateRanges" ?
+            dateRanges: path(["range"], state.dateRanges[0]) === "dateRanges" ?
                 state.dateRanges :
                 {},
             alarms: undefined,

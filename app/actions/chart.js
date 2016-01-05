@@ -1,4 +1,4 @@
-import {String, Number, tuple, struct} from "tcomb";
+import {String, Number, tuple, struct, list} from "tcomb";
 
 import actionTypeValidator from "../lib/action-type-validator";
 
@@ -92,19 +92,23 @@ export function selectDateRangesCompare (dateRanges) {
 *   @param {object} type - environmental variable
 */
 const typeofEnvironmentalSensor = actionTypeValidator(
-    struct({
+    tuple([String]),
+    list(struct({
         label: String,
         key: String,
         color: String,
         icon: String,
         selected: String
-    })
+    }))
 );
-export function selectEnvironmentalSensor (type) {
+export function selectEnvironmentalSensor (sensorId, type) {
     typeofEnvironmentalSensor(...arguments);
     return {
         type: SELECT_ENVIRONMENTAL_SENSOR,
-        payload: type
+        payload: {
+            sensorId,
+            type
+        }
     };
 }
 
