@@ -19,7 +19,10 @@ var styleDropdown = R.merge(
 
 var ButtonGroupSelect = React.createClass({
     propTypes: {
-        allowedValues: React.PropTypes.array.isRequired,
+        allowedValues: React.PropTypes.oneOfType([
+            React.PropTypes.array,
+            IPropTypes.list
+        ]).isRequired,
         getActiveStyle: React.PropTypes.func,
         getKey: React.PropTypes.func,
         getLabel: React.PropTypes.func,
@@ -29,7 +32,8 @@ var ButtonGroupSelect = React.createClass({
         value: React.PropTypes.oneOfType([
             React.PropTypes.array,
             IPropTypes.list
-        ])
+        ]),
+        vertical: React.PropTypes.bool
     },
     mixins: [ReactPureRender],
     getDefaultProps: function () {
@@ -43,15 +47,6 @@ var ButtonGroupSelect = React.createClass({
             multi: false
         };
     },
-    // isActiveMulti: function (allowedValue) {
-    //     var keys = this.props.value.map(this.props.getKey);
-    //     var key = this.props.getKey(allowedValue);
-    //     return (
-    //         R.is(Immutable.List, keys) ?
-    //         keys.contains(key) :
-    //         R.contains(key, keys)
-    //     );
-    // },
     isActiveSingle: function (allowedValue) {
         var keys = this.props.value.map(this.props.getKey);
         var key = this.props.getKey(allowedValue);
@@ -83,7 +78,7 @@ var ButtonGroupSelect = React.createClass({
     },
     render: function () {
         return (
-            <bootstrap.ButtonGroup>
+            <bootstrap.ButtonGroup vertical={this.props.vertical}>
                 {this.props.allowedValues.map(this.renderButtonOption)}
             </bootstrap.ButtonGroup>
         );
