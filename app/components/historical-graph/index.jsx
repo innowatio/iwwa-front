@@ -14,17 +14,21 @@ var SitesCompareGraph   = require("./sites-compare.jsx");
 var HistoricalGraph = React.createClass({
     propTypes: {
         alarms: React.PropTypes.arrayOf(React.PropTypes.number),
-        consumption: React.PropTypes.object,
+        consumptionSensors: React.PropTypes.arrayOf(React.PropTypes.string),
+        consumptionTypes: React.PropTypes.object,
         dateCompare: React.PropTypes.shape({
             period: React.PropTypes.object,
             dateOne: React.PropTypes.date
         }),
+        dateFilter: React.PropTypes.object,
+        electricalSensors: React.PropTypes.arrayOf(React.PropTypes.string),
+        electricalTypes: React.PropTypes.object,
+        getY2Label: React.PropTypes.func,
+        getYLabel: React.PropTypes.func,
         misure: IPropTypes.map,
         resetCompare: React.PropTypes.func,
-        sensors: React.PropTypes.arrayOf(React.PropTypes.string),
         sites: React.PropTypes.arrayOf(IPropTypes.map),
-        tipologia: React.PropTypes.object,
-        valori: React.PropTypes.arrayOf(React.PropTypes.object)
+        sources: React.PropTypes.arrayOf(React.PropTypes.object)
     },
     mixins: [ReactPureRender],
     exportPNG: function () {
@@ -49,7 +53,7 @@ var HistoricalGraph = React.createClass({
                         {this.renderSiteTitle(this.props.sites[1])}
                     </h3>
                     <h4 className="text-center" style={{color: colors.greySubTitle}}>
-                        {this.props.tipologia.label}
+                        {this.props.electricalTypes.label}
                     </h4>
                 </div>
             );

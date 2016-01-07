@@ -205,7 +205,8 @@ var Chart = React.createClass({
         // if (this.props.chart.consumption.key) {
         //
         // }
-        props.chart.electricalSensors.forEach(function (sensorId) {
+        const sensor = props.chart.electricalSensors.concat(props.chart.consumptionSensors);
+        sensor.forEach(function (sensorId) {
             self.props.asteroid.subscribe("dailyMeasuresBySensor", sensorId, dayStart, dayEnd);
         });
     },
@@ -229,6 +230,9 @@ var Chart = React.createClass({
         siteId = ["SitoDiTest1"];
         sensorId = ["ANZ01"];
         this.props.selectSingleElectricalSensor(sensorId, siteId);
+    },
+    onChangeConsumption: function (consumptionTypes) {
+        this.props.selectEnvironmentalSensor(["ZTHL01"], [consumptionTypes]);
     },
     renderExportButton: function () {
         return (
@@ -381,7 +385,7 @@ var Chart = React.createClass({
                 <bootstrap.Col sm={12}>
                     <components.ConsumptionButtons
                         allowedValues={this.getConsumptions()}
-                        onChange={this.props.selectEnvironmentalSensor}
+                        onChange={this.onChangeConsumption}
                         selectedValue={this.props.chart.consumptionTypes[0]}
                         style={{width: "100%"}}
                         styleButton={consumptionButtonStyle}
@@ -403,14 +407,14 @@ var Chart = React.createClass({
                             dateCompare={this.switchDateCompareAndFilter() ? this.props.chart.dateRanges : undefined}
                             dateFilter={this.props.chart.dateRanges}
                             electricalSensors={this.props.chart.electricalSensors}
+                            electricalTypes={this.props.chart.electricalTypes[0]}
                             getY2Label={CollectionUtils.labelGraph.getY2Label}
                             getYLabel={CollectionUtils.labelGraph.getYLabel}
                             misure={this.props.collections.get("readings-daily-aggregates") || Immutable.Map()}
                             ref="historicalGraph"
                             resetCompare={this.props.removeAllCompare}
                             sites={this.props.chart.sites.map(this.getSitoById)}
-                            tipologia={this.props.chart.electricalTypes[0]}
-                            valori={this.props.chart.sources}
+                            sources={this.props.chart.sources}
                         />
                     </components.TutorialAnchor>
                 </bootstrap.Col>

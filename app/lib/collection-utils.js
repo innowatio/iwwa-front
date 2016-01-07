@@ -174,6 +174,30 @@ exports.measures = {
             ) : acc;
         }, [], R.range(0, mLength));
     }),
+    convertBySensorsAndVariable: function (measures, sensors, variables, dateFilter) {
+        var measuresBySensor = sensors.map((sensorId, index) => {
+            return R.unnest(measures
+                .filter(measure => measure.get("sensorId") === sensorId)
+                .filter(measure => {
+                    if (dateFilter) {
+                        const dateMeasure = moment(measure.get("day"), "YYYY-MM-DD").valueOf();
+                        return (
+                            dateFilter.start <= dateMeasure &&
+                            dateFilter.end > dateMeasure
+                        );
+                    }
+                    return true;
+                })
+                .sortBy(measure => measure.get("day"))
+                .map(measure => exports.measures.convertByVariables(measure, [variables[index]]))
+                .toArray()
+            );
+        });
+        if (measuresBySensor.length === 1) {
+            return measuresBySensor[0];
+        }
+        return this.mergeCoordinates(measuresBySensor[0] || [], measuresBySensor[1] || []);
+    },
     convertBySitesAndVariable: function (measures, sitesId, variable) {
         var self = this;
         var measuresBySito = [];

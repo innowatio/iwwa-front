@@ -19,50 +19,28 @@ var ValoriCompare = React.createClass({
             React.PropTypes.string
         ]),
         electricalSensors: React.PropTypes.arrayOf(React.PropTypes.string),
+        electricalTypes: React.PropTypes.object,
         getY2Label: React.PropTypes.func,
         getYLabel: React.PropTypes.func,
         misure: IPropTypes.map,
         sites: React.PropTypes.arrayOf(IPropTypes.map),
-        tipologia: React.PropTypes.object,
-        valori: React.PropTypes.arrayOf(React.PropTypes.object)
+        sources: React.PropTypes.arrayOf(React.PropTypes.object)
     },
     mixins: [ReactPureRender],
     getCoordinates: function () {
         const self = this;
         const selectedSiteId = self.props.sites[0] ? self.props.sites[0].get("_id") : "";
-        const selectedElectricalSensorId = self.props.electricalSensors[0];
-        const selectedConsumptionSensorId = self.props.consumptionSensors[0];
-        var selectedTipologia = [self.props.tipologia.key];
-        if (self.props.consumptionTypes.key) {
-            selectedTipologia = selectedTipologia.concat(self.props.consumption.key);
+        var sensors = self.props.electricalSensors;
+        var selectedTypes = [self.props.electricalTypes.key];
+        if (self.props.consumptionSensors[0]) {
+            sensors = sensors.concat(self.props.consumptionSensors);
+            selectedTypes = selectedTypes.concat(self.props.consumptionTypes.key);
         }
-        var result = [];
-        self.props.misure
-            .filter(measure => {
-                return measure.get("sensorId") === selectedElectricalSensorId;
-            })
-            .sortBy(measure => measure.get("day"))
-            .filter(measure => {
-                if (self.props.dateFilter) {
-                    const dateMeasure = moment(measure.get("day"), "YYYY-MM-DD").valueOf();
-                    return (
-                        self.props.dateFilter.start <= dateMeasure &&
-                        self.props.dateFilter.end > dateMeasure
-                    );
-                }
-                return true;
-            })
-            .forEach(measure => {
-                result = R.concat(
-                    result,
-                    measuresUtils.convertByVariables(measure, selectedTipologia)
-                );
-            });
-        return result;
+        return measuresUtils.convertBySensorsAndVariable(self.props.misure, sensors, selectedTypes, self.props.dateFilter);
     },
     getLabels: function () {
         var label = ["Data"].concat(
-            R.map(R.prop("label"), this.props.valori)
+            R.map(R.prop("label"), this.props.sources)
         );
         if (R.prop(("label"), this.props.consumptionTypes)) {
             label = label.concat(R.prop(("label"), this.props.consumptionTypes));
@@ -70,7 +48,7 @@ var ValoriCompare = React.createClass({
         return label;
     },
     getColors: function () {
-        var colors = this.props.valori.map(R.prop("color"));
+        var colors = this.props.sources.map(R.prop("color"));
         if (R.prop(("color"), this.props.consumptionTypes)) {
             colors = colors.concat(R.prop(("color"), this.props.consumptionTypes));
         }
@@ -81,7 +59,7 @@ var ValoriCompare = React.createClass({
             <components.TemporalLineGraph
                 alarms={this.props.alarms}
                 colors={this.getColors()}
-                coordinates={this.getCoordinates()}
+                coordinates={this.getCoordinates() || []}
                 dateFilter={this.props.dateFilter}
                 labels={this.getLabels()}
                 ref="temporalLineGraph"
@@ -89,7 +67,7 @@ var ValoriCompare = React.createClass({
                 site={this.props.sites[0] || Immutable.Map()}
                 xLabel=""
                 y2label={this.props.getY2Label(this.props.consumptionTypes)}
-                yLabel={this.props.getYLabel(this.props.tipologia)}
+                yLabel={this.props.getYLabel(this.props.electricalTypes)}
             />
         );
     }
