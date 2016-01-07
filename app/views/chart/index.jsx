@@ -187,11 +187,10 @@ var Chart = React.createClass({
         var dayEnd;
         // Query for date-compare
         if (R.contains("period", R.keys(props.chart.dateRanges))) {
-            // const data = new Date(props.chart.dateRanges[0].dateOne);
-            // const periodKey = props.chart.dateRanges[0].period.key;
-            // const dateString1 = moment(data).subtract(1, periodKey).format("YYYY-MM");
-            // const dateString2 = moment(data).format("YYYY-MM");
-            // date = [dateString1, dateString2];
+            const data = new Date(props.chart.dateRanges.dateOne);
+            const periodKey = props.chart.dateRanges.period.key;
+            dayStart = moment(data).startOf("month").subtract(1, periodKey).format("YYYY-MM-DD");
+            dayEnd = moment(data).add(1, periodKey).format("YYYY-MM-DD");
         // Query for date-filter
         } else if (props.chart.dateRanges && props.chart.dateRanges.range === "dateFilter") {
             dayStart = moment(props.chart.dateRanges.start).format("YYYY-MM-DD");
@@ -279,7 +278,7 @@ var Chart = React.createClass({
 
         const valoriMulti = (
             this.switchDateCompareAndFilter() &&
-            this.props.chart.sensors.length <= 1
+            this.props.chart.electricalSensors.length <= 1
         );
 
         return (
@@ -381,7 +380,7 @@ var Chart = React.createClass({
                                     onChange={this.props.selectMultipleElectricalSensor}
                                     open={"undefined"}
                                     style={selectStyles.selectCompare}
-                                    value={this.props.chart.electricalSensors}
+                                    value={this.props.chart.sites}
                                 />
                                 <components.DateCompare
                                     allowedValues={this.getDateCompare()}

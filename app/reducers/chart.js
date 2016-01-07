@@ -26,7 +26,8 @@ const defaultChartState = {
 };
 
 export function chart (state = defaultChartState, {type, payload}) {
-    const firstSensor = state.electricalSensors.slice(0, 1) || [];
+    const firstElectricalSensor = state.electricalSensors.slice(0, 1) || [];
+    const firstSites = state.sites.slice(0, 1) || [];
     switch (type) {
     case SELECT_SINGLE_ELECTRICAL_SENSOR:
         return {
@@ -57,7 +58,7 @@ export function chart (state = defaultChartState, {type, payload}) {
             ...state,
             alarms: undefined,
             dateRanges: payload,
-            electricalSensors: firstSensor,
+            electricalSensors: firstElectricalSensor,
             consumptionSensors: [],
             consumptionTypes: []
         };
@@ -74,7 +75,7 @@ export function chart (state = defaultChartState, {type, payload}) {
             dateRanges: path(["range"], state.dateRanges) === "dateFilter" ?
                 state.dateRanges :
                 {},
-            electricalSensors: firstSensor
+            electricalSensors: firstElectricalSensor
         };
     case SELECT_SOURCES:
         return {
@@ -88,15 +89,17 @@ export function chart (state = defaultChartState, {type, payload}) {
             dateRanges: payload
         };
     case REMOVE_ALL_COMPARE:
+        console.log("AAA");
         return {
             ...state,
-            dateRanges: path(["range"], state.dateRanges[0]) === "dateRanges" ?
+            dateRanges: path(["range"], state.dateRanges) === "dateFilter" ?
                 state.dateRanges :
                 {},
             alarms: undefined,
-            electricalSensors: firstSensor,
+            electricalSensors: firstElectricalSensor,
+            sites: firstSites,
             consumptionSensors: [],
-            consumptionTypes: []
+            consumptionTypes: [{}]
         };
     case DISPLAY_ALARMS_ON_CHART:
         return {

@@ -112,8 +112,8 @@ exports.measures = {
     convertByVariables: R.memoize(function (measure, variables, startOfTime) {
         var mLength;
         const fiveMinutesInMS = 5 * 60 * 1000;
-        const startOfDayInMS = !R.isNil(startOfTime) ?
-            startOfTime.getTime() :
+        const startOfDayInMS = startOfTime ?
+            startOfTime:
             new Date(measure.get("day")).getTime();
         const measuresArray = R.map(variable => {
             const m = measure.getIn(["measurements", variable]) ?
@@ -211,21 +211,23 @@ exports.measures = {
         });
         return this.mergeCoordinates(measuresBySito[0] || [], measuresBySito[1] || []);
     },
-    convertByDatesAndVariable: function (measures, siteId, variable, dates) {
-        var self = this;
-        var measuresByDates = [];
-        dates.forEach(date => {
-            measures.filter(function (misura) {
-                return misura.get("siteId") === siteId;
-            })
-            .filter(function (misura) {
-                return misura.get("month") === date;
-            })
-            .forEach(function (values) {
-                measuresByDates.push(self.convertByVariables(values, [variable], new Date(0)));
-            });
+    convertByDatesAndVariable: function (measures, sensorId, variable, dates) {
+        const period = dates.period;
+        var measuresBySensor = dates.map((date, index) => {
+            return R.unnest(measures
+                .filter(measure => measure.get("sensorId") === sensorId[0])
+                .filter(measure => {
+                    const dateMeasure = moment(measure.get("day"), "YYYY-MM-DD").valueOf();
+                    return (new Date(date.start).getTime() <= dateMeasure && new Date(date.end).getTime() > dateMeasure);
+                })
+                .sortBy(measure => measure.get("day"))
+                .map(measure => {
+                    const dayStart = new Date(0) + measure.get("day") - date.start;
+                    return exports.measures.convertByVariables(measure, [variable], dayStart);
+                })
+                .toArray());
         });
-        return this.mergeCoordinates(measuresByDates[0] || [], measuresByDates[1] || []);
+        return this.mergeCoordinates(measuresBySensor[0] || [], measuresBySensor[1] || []);
     },
     decorateMeasure: function (sensor) {
         // return an Immutable list for avoid subsequent `.flatten` mismatch
