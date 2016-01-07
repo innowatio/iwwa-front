@@ -72,7 +72,6 @@ var TreeView = React.createClass({
         );
     },
     render: function () {
-        console.log(this.state.path);
         return (
             <div>
                 {this.state.path.map(this.renderLevel)}
