@@ -7,12 +7,19 @@ var colors     = require("lib/colors");
 
 var FullscreenModal = React.createClass({
     propTypes: {
-        childComponent: React.PropTypes.element
+        childComponent: React.PropTypes.element,
+        showModal: React.PropTypes.bool
     },
     getInitialState: function () {
         return {
-            showModal: true
-        }
+            showModal: this.props.showModal || false
+        };
+    },
+    componentWillReceiveProps: function (props) {
+        return this.getStateFromProps(props);
+    },
+    getStateFromProps: function (props) {
+        this.setState({showModal: props.showModal});
     },
     closeModal: function () {
         this.setState({showModal: false});

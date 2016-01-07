@@ -11,10 +11,12 @@ var SiteNavigator = React.createClass({
     propTypes: {
         allowedValues: IPropTypes.map.isRequired,
         onChange: React.PropTypes.func.isRequired,
+        showModal: React.PropTypes.bool,
         title: React.PropTypes.string
     },
     getInitialState: function () {
         return {
+            siteNavigatorView: this.props.showModal || false,
             pathParent: [],
             pathChildren: []
         }
@@ -31,15 +33,20 @@ var SiteNavigator = React.createClass({
     getLabelChildren: function (value) {
         return value.get("id");
     },
+    onClickChildren: function (value) {
+        this.setState({
+            pathChildren: value
+        });
+    },
     onClickParent: function (value) {
         this.setState({
             pathParent: value,
             pathChildren: []
         });
     },
-    onClickChildren: function (value) {
+    onClickSiteNavigatorButton: function () {
         this.setState({
-            pathChildren: value
+            siteNavigatorView: true
         });
     },
     getReturnValues: function () {
@@ -108,6 +115,7 @@ var SiteNavigator = React.createClass({
     render: function () {
         return (
             <components.FullscreenModal
+                showModal={this.props.showModal}
                 childComponent={this.renderChild()}
             />
         );
