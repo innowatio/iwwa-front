@@ -38,8 +38,8 @@ describe("`chart` reducer", () => {
             const valuePassedFromAction = {
                 type: "SELECT_SINGLE_ELECTRICAL_SENSOR",
                 payload: {
-                    siteId: ["siteId"],
-                    sensorId: ["sensorId"]
+                    site: "siteId",
+                    sensor: "sensorId"
                 }
             };
             const ret = chart(chartState, valuePassedFromAction);

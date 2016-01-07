@@ -21,7 +21,7 @@ const defaultChartState = {
     dateRanges: {},
     electricalSensors: [],
     electricalTypes: [{label: "Attiva", key: "activeEnergy"}],
-    sites: ["sitoDiTest1"], // FIXME
+    sites: [],
     sources: [{label: "Reale", color: colors.lineReale, key: "real"}]
 };
 
@@ -33,8 +33,8 @@ export function chart (state = defaultChartState, {type, payload}) {
         return {
             ...state,
             alarms: undefined,
-            electricalSensors: payload.sensorId,
-            sites: payload.siteId
+            electricalSensors: [payload.sensor],
+            sites: [payload.site]
         };
     case SELECT_ELECTRICAL_TYPE:
         return {
@@ -89,7 +89,6 @@ export function chart (state = defaultChartState, {type, payload}) {
             dateRanges: payload
         };
     case REMOVE_ALL_COMPARE:
-        console.log("AAA");
         return {
             ...state,
             dateRanges: path(["range"], state.dateRanges) === "dateFilter" ?

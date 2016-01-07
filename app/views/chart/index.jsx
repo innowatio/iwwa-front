@@ -225,12 +225,6 @@ var Chart = React.createClass({
             return site.get("_id") === sitoId;
         });
     },
-    onChangeSensor: function (sensorId, siteId) {
-        // TODO
-        siteId = ["SitoDiTest1"];
-        sensorId = ["ANZ01"];
-        this.props.selectSingleElectricalSensor(sensorId, siteId);
-    },
     firstSensorOfConsumptionInTheSite: function (consumptionTypes) {
         const site = this.getSitoById(this.props.chart.sites[0]);
         var typeOfSensorId;
@@ -340,8 +334,7 @@ var Chart = React.createClass({
                         >
                             <components.SiteNavigator
                                 allowedValues={sites}
-                                // TODO use proper onChange
-                                onChange={a =>console.log(a)}
+                                onChange={this.props.selectSingleElectricalSensor}
                                 title={"Quale punto di misurazione vuoi visualizzare?"}
                             />
                         </components.TutorialAnchor>

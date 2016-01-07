@@ -43,14 +43,28 @@ var HistoricalGraph = React.createClass({
             </span>
         ) : null;
     },
+    renderSensorTitle: function (sensor) {
+        return sensor ? (
+            <span>
+                <strong>
+                    {titleCase(sensor)}
+                </strong>
+            </span>
+        ) : null;
+    },
     renderTitle: function () {
         if (this.props.sites.length > 0) {
             return (
                 <div>
                     <h3 className="text-center" style={{marginTop: "20px"}}>
                         {this.renderSiteTitle(this.props.sites[0])}
+                        {" - "}
+                        {this.renderSensorTitle(this.props.electricalSensors[0])}
                         {this.props.sites.length === 2 ? " & " : null}
                         {this.renderSiteTitle(this.props.sites[1])}
+                        {this.props.electricalSensors.length === 2 ? " - " : null}
+                        {this.renderSensorTitle(this.props.sites[1])}
+
                     </h3>
                     <h4 className="text-center" style={{color: colors.greySubTitle}}>
                         {this.props.electricalTypes.label}

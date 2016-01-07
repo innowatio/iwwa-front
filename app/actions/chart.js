@@ -16,16 +16,18 @@ export const REMOVE_ALL_COMPARE = "REMOVE_ALL_COMPARE";
 *   @param {array} site - id site of the site
 */
 const typeofSelectSingleElectricalSensor = actionTypeValidator(
-    tuple([String]),
-    tuple([String])
+    struct({
+        sensor: String,
+        site: String
+    })
 );
-export function selectSingleElectricalSensor (sensorId, siteId) {
+export function selectSingleElectricalSensor ({sensor, site}) {
     typeofSelectSingleElectricalSensor(...arguments);
     return {
         type: SELECT_SINGLE_ELECTRICAL_SENSOR,
         payload: {
-            sensorId,
-            siteId
+            sensor,
+            site
         },
     };
 }
