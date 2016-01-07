@@ -336,11 +336,12 @@ var Chart = React.createClass({
                             position="left"
                             ref="siti"
                         >
-                            <bootstrap.Button
+                            <components.Button
+                                bsStyle="link"
                                 onClick={this.onClickSiteNavigatorButton}
-                                title={<img src={icons.iconSiti} style={{width: "75%"}} />}
                             >
-                            </bootstrap.Button>
+                                <img src={icons.iconSiti} style={{width: "75%"}} />
+                            </components.Button>
                         </components.TutorialAnchor>
                         <components.SiteNavigator
                             allowedValues={sites}
