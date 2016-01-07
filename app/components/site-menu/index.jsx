@@ -14,8 +14,8 @@ var SiteNavigator = React.createClass({
     },
     getInitialState: function () {
         return {
-            pathParent: undefined,
-            pathNavigator: []
+            pathParent: [],
+            pathChildren: []
         }
     },
     getKeyParent: function (value) {
@@ -32,41 +32,38 @@ var SiteNavigator = React.createClass({
     },
     onClickParent: function (value) {
         this.setState({
-            pathParent: value[0],
-            pathNavigator: []
+            pathParent: value,
+            pathChildren: []
         });
     },
-    onClickNavigator: function (value) {
+    onClickChildren: function (value) {
         this.setState({
-            pathNavigator: value
+            pathChildren: value
         });
     },
     renderSitesParent: function () {
         return (
-            <components.MenuBox
-                allowedValues={this.props.allowedValues}
-                depth={1}
+            <components.ButtonGroupSelect
+                allowedValues={this.props.allowedValues.toArray()}
                 getKey={this.getKeyParent}
                 getLabel={this.getLabelParent}
                 multi={false}
                 onChange={this.onClickParent}
-                value={this.state.pathParent ? [this.state.pathParent] : [undefined]}
+                value={this.state.pathParent}
                 vertical={true}
             />
         );
     },
     renderSitesChildren: function () {
-        if (this.state.pathParent) {
+        if (this.state.pathParent && this.state.pathParent.length > 0) {
             return (
-                <components.MenuBox
-                    allowedValues={Immutable.Map(this.props.allowedValues.get(this.state.pathParent))}
-                    depth={-1}
-                    getChildren={["sensors", "children"]}
+                <components.TreeView
+                    allowedValues={this.props.allowedValues.getIn([this.state.pathParent[0].get("_id"), "sensors"])}
                     getKey={this.getKeyChildren}
                     getLabel={this.getLabelChildren}
                     multi={false}
-                    onChange={this.onClickNavigator}
-                    value={this.state.pathNavigator.length > 1 ? this.state.pathNavigator : [undefined]}
+                    onChange={this.onClickChildren}
+                    value={this.state.pathChildren.length > 1 ? this.state.pathChildren : [undefined]}
                     vertical={true}
                 />
             );
@@ -80,20 +77,22 @@ var SiteNavigator = React.createClass({
                     {this.props.title}
                 </div>
                 {/*     BODY       */}
-                <div>
-                    <div style={{width: "35%"}}>
+                <div style={{width: "100%", height: "100%"}}>
+                    <div style={{width: "35%", float: "left"}}>
                         {this.renderSitesParent()}
                     </div>
-                    <div style={{width: "65%"}}>
+                    <div style={{width: "65%", float: "right"}}>
                         {this.renderSitesChildren()}
                     </div>
                 </div>
-                <bootstrap.Button>
-                    OK
-                </bootstrap.Button>
-                <bootstrap.Button>
-                    RESET
-                </bootstrap.Button>
+                <div style={{width: "100%"}}>
+                    <bootstrap.Button>
+                        OK
+                    </bootstrap.Button>
+                    <bootstrap.Button>
+                        RESET
+                    </bootstrap.Button>
+                </div>
             </div>
         );
     },
