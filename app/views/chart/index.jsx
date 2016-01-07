@@ -199,11 +199,6 @@ var Chart = React.createClass({
     //         {label: "ALTRO PERIODO", key: "custom"}
     //     ];
     // },
-    onClickSiteNavigatorButton: function () {
-        this.setState({
-            siteNavigatorView: true
-        });
-    },
     onChangeExport: function (valueChanged) {
         var exportAPILocation = this.refs.historicalGraph.refs.compareGraph.refs.temporalLineGraph;
         if (valueChanged.key === "png") {
@@ -336,20 +331,13 @@ var Chart = React.createClass({
                             position="left"
                             ref="siti"
                         >
-                            <components.Button
-                                bsStyle="link"
-                                onClick={this.onClickSiteNavigatorButton}
-                            >
-                                <img src={icons.iconSiti} style={{width: "75%"}} />
-                            </components.Button>
+                            <components.SiteNavigator
+                                allowedValues={sites}
+                                // TODO use proper onChange
+                                onChange={a =>console.log(a)}
+                                title={"Quale punto di misurazione vuoi visualizzare?"}
+                            />
                         </components.TutorialAnchor>
-                        <components.SiteNavigator
-                            allowedValues={sites}
-                            // TODO use proper onChange
-                            onChange={a =>console.log(a)}
-                            showModal={this.state.siteNavigatorView}
-                            title={"Quale punto di misurazione vuoi visualizzare?"}
-                        />
                         <components.TutorialAnchor
                             message={tutorialString.dateFilter}
                             order={5}
