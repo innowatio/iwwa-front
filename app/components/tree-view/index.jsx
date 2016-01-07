@@ -14,7 +14,6 @@ var TreeView = React.createClass({
             React.PropTypes.array,
             IPropTypes.list
         ]).isRequired,
-        getChildren: React.PropTypes.array,
         getKey: React.PropTypes.func,
         getLabel: React.PropTypes.func,
         onChange: React.PropTypes.func.isRequired,
@@ -65,6 +64,7 @@ var TreeView = React.createClass({
         return (
             <components.ButtonGroupSelect
                 allowedValues={allowedValues || []}
+                className={"btn-group-level" + position}
                 getKey={this.props.getKey}
                 getLabel={this.props.getLabel}
                 key={"level" + position}

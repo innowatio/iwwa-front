@@ -79,7 +79,9 @@ var ButtonGroupSelect = React.createClass({
     },
     render: function () {
         return (
-            <bootstrap.ButtonGroup vertical={this.props.vertical}>
+            <bootstrap.ButtonGroup
+                className={this.props.className}
+                vertical={this.props.vertical}>
                 {this.props.allowedValues.map(this.renderButtonOption)}
             </bootstrap.ButtonGroup>
         );
