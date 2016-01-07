@@ -6,6 +6,7 @@ var Radium     = require("radium");
 var React      = require("react");
 
 var components = require("components");
+var icons      = require("lib/icons");
 
 var SiteNavigator = React.createClass({
     propTypes: {
@@ -46,7 +47,7 @@ var SiteNavigator = React.createClass({
     },
     onClickSiteNavigatorButton: function () {
         this.setState({
-            siteNavigatorView: true
+            showModal: true
         });
     },
     getReturnValues: function () {
@@ -114,10 +115,18 @@ var SiteNavigator = React.createClass({
     },
     render: function () {
         return (
-            <components.FullscreenModal
-                showModal={this.props.showModal}
-                childComponent={this.renderChild()}
-            />
+            <span>
+                <components.Button
+                    bsStyle="link"
+                    onClick={this.onClickSiteNavigatorButton}
+                >
+                    <img src={icons.iconSiti} style={{width: "75%"}} />
+                </components.Button>
+                <components.FullscreenModal
+                    childComponent={this.renderChild()}
+                    showModal={this.state.showModal}
+                />
+            </span>
         );
     }
 });
