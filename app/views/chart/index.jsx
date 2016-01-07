@@ -75,6 +75,11 @@ var Chart = React.createClass({
             ]
         )
     ],
+    getInitialState: function () {
+        return {
+            siteNavigatorView: false
+        }
+    },
     componentDidMount: function () {
         this.props.asteroid.subscribe("sites");
         if (this.props.chart.alarms) {
@@ -111,8 +116,8 @@ var Chart = React.createClass({
     },
     getValori: function () {
         return [
-            {label: "Reale", color: colors.lineReale, key: "real"},
-            {label: "Previsionale", color: colors.linePrevisionale, key: "previsionale"}
+            {label: "Reale", color: colors.lineReale, key: "real", isDisabled: false},
+            {label: "Previsionale", color: colors.linePrevisionale, key: "previsionale", isDisabled: true}
         ];
     },
     getConsumptions: function () {
@@ -333,23 +338,12 @@ var Chart = React.createClass({
                             position="left"
                             ref="siti"
                         >
-                            <components.Popover
-                                hideOnChange={true}
-                                title={<img src={icons.iconSiti} style={{width: "75%"}} />}
-                                tooltipId="tooltipMisurazione"
-                                tooltipMessage="Punti di misurazione"
-                                tooltipPosition="top"
-                            >
-                                <components.SelectTree
-                                    allowedValues={sites}
-                                    filter={CollectionUtils.sites.filter}
-                                    getKey={CollectionUtils.sites.getKey}
-                                    getLabel={CollectionUtils.sites.getLabel}
-                                    onChange={this.onChangeSensor}
-                                    placeholder={"Punto di misurazione"}
-                                    value={this.getSitoById(this.props.chart.electricalSensors[0])}
-                                />
-                            </components.Popover>
+                            <components.SiteNavigator
+                                allowedValues={sites}
+                                // TODO use proper onChange
+                                onChange={a =>console.log(a)}
+                                title={"Quale punto di misurazione vuoi visualizzare?"}
+                            />
                         </components.TutorialAnchor>
                         <components.TutorialAnchor
                             message={tutorialString.dateFilter}
