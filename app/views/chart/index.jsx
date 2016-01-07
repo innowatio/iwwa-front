@@ -96,6 +96,11 @@ var Chart = React.createClass({
             ]
         )
     ],
+    getInitialState: function () {
+        return {
+            siteNavigatorView: false
+        }
+    },
     componentDidMount: function () {
         this.props.asteroid.subscribe("sites");
         if (this.props.chart.alarms) {
@@ -194,6 +199,11 @@ var Chart = React.createClass({
     //         {label: "ALTRO PERIODO", key: "custom"}
     //     ];
     // },
+    onClickSiteNavigatorButton: function () {
+        this.setState({
+            siteNavigatorView: true
+        });
+    },
     onChangeExport: function (valueChanged) {
         var exportAPILocation = this.refs.historicalGraph.refs.compareGraph.refs.temporalLineGraph;
         if (valueChanged.key === "png") {
@@ -326,24 +336,19 @@ var Chart = React.createClass({
                             position="left"
                             ref="siti"
                         >
-                            <components.Popover
-                                hideOnChange={true}
+                            <bootstrap.Button
+                                onClick={this.onClickSiteNavigatorButton}
                                 title={<img src={icons.iconSiti} style={{width: "75%"}} />}
-                                tooltipId="tooltipMisurazione"
-                                tooltipMessage="Punti di misurazione"
-                                tooltipPosition="top"
                             >
-                                <components.SelectTree
-                                    allowedValues={sites}
-                                    filter={CollectionUtils.sites.filter}
-                                    getKey={CollectionUtils.sites.getKey}
-                                    getLabel={CollectionUtils.sites.getLabel}
-                                    onChange={this.props.selectSingleSite}
-                                    placeholder={"Punto di misurazione"}
-                                    value={sites.get(this.props.chart.sites[0])}
-                                />
-                            </components.Popover>
+                            </bootstrap.Button>
                         </components.TutorialAnchor>
+                        <components.SiteNavigator
+                            allowedValues={sites}
+                            // TODO use proper onChange
+                            onChange={a =>console.log(a)}
+                            showModal={this.state.siteNavigatorView}
+                            title={"Quale punto di misurazione vuoi visualizzare?"}
+                        />
                         <components.TutorialAnchor
                             message={tutorialString.dateFilter}
                             order={5}
