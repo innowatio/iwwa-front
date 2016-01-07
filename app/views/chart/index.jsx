@@ -201,10 +201,6 @@ var Chart = React.createClass({
             dayStart = moment().startOf("month").format("YYYY-MM-DD");
             dayEnd = moment().endOf("month").format("YYYY-MM-DD");
         }
-        // Query for consumption
-        // if (this.props.chart.consumption.key) {
-        //
-        // }
         const sensor = props.chart.electricalSensors.concat(props.chart.consumptionSensors);
         sensor.forEach(function (sensorId) {
             self.props.asteroid.subscribe("dailyMeasuresBySensor", sensorId, dayStart, dayEnd);
@@ -231,8 +227,24 @@ var Chart = React.createClass({
         sensorId = ["ANZ01"];
         this.props.selectSingleElectricalSensor(sensorId, siteId);
     },
-    onChangeConsumption: function (consumptionTypes) {
-        this.props.selectEnvironmentalSensor(["ZTHL01"], [consumptionTypes]);
+    firstSensorOfConsumptionInTheSite: function (consumptionTypes) {
+        const site = this.getSitoById(this.props.chart.sites[0]);
+        var typeOfSensorId;
+        if (consumptionTypes.key === "co2") {
+            typeOfSensorId = "COOV";
+        } else {
+            typeOfSensorId = "ZTHL";
+        }
+        return site.get("sensorsIds").find(sensorId => {
+            if (!isNaN(parseInt(sensorId))) {
+                return true;
+            }
+            return sensorId.slice(0, 4) === typeOfSensorId;
+        });
+    },
+    onChangeConsumption: function (sensorId, consumptionTypes) {
+        const selectedSensorId = this.firstSensorOfConsumptionInTheSite(consumptionTypes);
+        this.props.selectEnvironmentalSensor([selectedSensorId], [consumptionTypes]);
     },
     renderExportButton: function () {
         return (
@@ -385,7 +397,7 @@ var Chart = React.createClass({
                 <bootstrap.Col sm={12}>
                     <components.ConsumptionButtons
                         allowedValues={this.getConsumptions()}
-                        onChange={this.onChangeConsumption}
+                        onChange={consumptionTypes => this.onChangeConsumption(null, consumptionTypes)}
                         selectedValue={this.props.chart.consumptionTypes[0]}
                         style={{width: "100%"}}
                         styleButton={consumptionButtonStyle}
