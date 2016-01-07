@@ -193,12 +193,6 @@ var RealTime = React.createClass({
         const selectedSiteName = this.getSelectedSiteName();
         return (
             <div style={styles.mainDivStyle}>
-                <components.SiteNavigator
-                    allowedValues={this.getSites()}
-                    onChange={function (a) { console.log(a);}}
-                    title={"Quale punto di misurazione vuoi visualizzare?"}
-                >
-                </components.SiteNavigator>
                 <bootstrap.Col sm={12}>
                     {/*     Barra Export (?) e ricerca sito     */}
                     <span className="pull-right">

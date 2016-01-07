@@ -9,7 +9,8 @@ var components = require("components");
 
 var SiteNavigator = React.createClass({
     propTypes: {
-        allowedValues: IPropTypes.map,
+        allowedValues: IPropTypes.map.isRequired,
+        onChange: React.PropTypes.func.isRequired,
         title: React.PropTypes.string
     },
     getInitialState: function () {
@@ -40,6 +41,16 @@ var SiteNavigator = React.createClass({
         this.setState({
             pathChildren: value
         });
+    },
+    getReturnValues: function () {
+        return {
+            site: this.state.pathParent.length > 0 ?
+                this.getKeyParent(this.state.pathParent[0]) :
+                "",
+            sensor: R.last(this.state.pathChildren.filter(function (value) {
+                return !R.isNil(value);
+            }))
+        }
     },
     renderSitesParent: function () {
         return (
@@ -72,11 +83,9 @@ var SiteNavigator = React.createClass({
     renderChild: function () {
         return (
             <div style={{width: "100%"}}>
-                {/*     TITLE       */}
                 <div>
                     {this.props.title}
                 </div>
-                {/*     BODY       */}
                 <div style={{width: "100%", height: "100%"}}>
                     <div style={{width: "35%", float: "left"}}>
                         {this.renderSitesParent()}
@@ -86,7 +95,7 @@ var SiteNavigator = React.createClass({
                     </div>
                 </div>
                 <div style={{width: "100%"}}>
-                    <bootstrap.Button>
+                    <bootstrap.Button onClick={R.partial(this.props.onChange, [this.getReturnValues()])}>
                         OK
                     </bootstrap.Button>
                     <bootstrap.Button>

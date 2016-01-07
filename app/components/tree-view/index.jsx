@@ -46,18 +46,22 @@ var TreeView = React.createClass({
         return path.slice(0, position).concat(newValue, undefined);
     },
     renderLevel: function (value, position) {
-        const {allowedValues} = this.state.path.slice(0, position).reduce((acc, selectedValue) => {
+        const self = this;
+        const path = this.state.path.slice(0, position);
+        const {allowedValues, selectedValue} = path.reduce((acc, pathValue) => {
+            const node = acc.allowedValues.find(function (value) {
+                return value.get("id") === pathValue;
+            });
+            const values = pathValue && acc.allowedValues.size > 0 ?
+                node.get("children") :
+                [];
             return {
                 position: acc.position + 1,
-                allowedValues: selectedValue && acc.allowedValues.size > 0 ?
-                    acc.allowedValues.find(function (value) {
-                        return value.get("id") === selectedValue;
-                    }).get("children") :
-                    []
+                allowedValues: values,
+                selectedValue: node ? node : acc.selectedValue
             };
-        }, {position: 0, allowedValues: this.props.allowedValues});
+        }, {position: 0, allowedValues: this.props.allowedValues, selectedValue: undefined});
 
-        const selectedValue = [];
         return (
             <components.ButtonGroupSelect
                 allowedValues={allowedValues || []}
@@ -66,7 +70,7 @@ var TreeView = React.createClass({
                 key={"level" + position}
                 multi={false}
                 onChange={R.partialRight(this.onChange, [position])}
-                value={selectedValue}
+                value={selectedValue ? [selectedValue] : []}
                 vertical={true}
             />
         );
