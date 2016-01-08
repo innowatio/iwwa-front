@@ -124,9 +124,10 @@ var RealTime = React.createClass({
     getMeasures: function () {
         return this.props.collections.get("readings-real-time-aggregates") || Immutable.Map();
     },
-    setSelectedSite: function (siteId) {
-        this.props.asteroid.subscribe("readingsRealTimeAggregatesBySite", siteId[0]);
-        this.props.selectRealTimeSite(siteId);
+    setSelectedSite: function (selectedValues) {
+        const siteId = selectedValues.site;
+        this.props.asteroid.subscribe("readingsRealTimeAggregatesBySite", siteId);
+        this.props.selectRealTimeSite([siteId]);
     },
     getSelectedSiteName: function () {
         return (
@@ -194,32 +195,21 @@ var RealTime = React.createClass({
         return (
             <div style={styles.mainDivStyle}>
                 <bootstrap.Col sm={12}>
-                    {/*     Barra Export (?) e ricerca sito     */}
                     <span className="pull-right">
-                        <components.Popover
-                            hideOnChange={true}
-                            title={<img src={icons.iconSiti} style={{width: "75%"}} />}
-                            tooltipId="tooltipMisurazione"
-                            tooltipPosition="top"
+                        <components.SiteNavigator
+                            allowedValues={this.getSites()}
+                            onChange={this.setSelectedSite}
+                            title={"Quale punto di misurazione vuoi visualizzare?"}
                         >
-                            <components.SelectTree
-                                allowedValues={this.getSites()}
-                                onChange={this.setSelectedSite}
-                                placeholder={"Punto di misurazione"}
-                                value={this.props.realTime.selectedSite}
-                                {...CollectionUtils.sites}
-                            />
-                        </components.Popover>
+                        </components.SiteNavigator>
                     </span>
                 </bootstrap.Col>
-                {/* Barra Rilevazioni ambientali */}
                 <h3 className="text-center" style={{color: colors.primary}}>
                     {`${selectedSiteName ? selectedSiteName + " - " : ""}Rilevazioni ambientali`}
                 </h3>
                 <components.VariablesPanel
                     values={this.findLatestMeasuresForVariables()}
                 />
-                {/* Gauge/s */}
                 <h3 className="text-center" style={{color: colors.primary}}>
                     {`${selectedSiteName ? selectedSiteName + " - " : ""}Pods`}
                 </h3>
