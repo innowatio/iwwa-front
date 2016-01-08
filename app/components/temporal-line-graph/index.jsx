@@ -119,7 +119,7 @@ var TemporalLineGraph = React.createClass({
         if (props.colors) {
             options.colors = props.colors;
         }
-        if (props.dateFilter) {
+        if (R.contains("start", R.keys(props.dateFilter))) {
             options.dateWindow = [props.dateFilter.start, props.dateFilter.end];
         } else {
             const {max, min} = props.coordinates.reduce((acc, coordinate) => {

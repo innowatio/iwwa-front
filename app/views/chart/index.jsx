@@ -78,7 +78,7 @@ var Chart = React.createClass({
     getInitialState: function () {
         return {
             siteNavigatorView: false
-        }
+        };
     },
     componentDidMount: function () {
         this.props.asteroid.subscribe("sites");
@@ -95,10 +95,14 @@ var Chart = React.createClass({
         this.updateFirstSiteToChart();
     },
     updateFirstSiteToChart: function () {
-        var siti = this.props.collections.get("sites") || Immutable.Map();
-        // if (siti.size > 0 && this.props.chart.sensors < 1) {
-        //     this.props.selectSingleElectricalSensor([siti.first().get("_id")]);
-        // }
+        var sites = this.props.collections.get("sites") || Immutable.Map();
+        if (sites.size > 0 && this.props.chart.electricalSensors < 1) {
+            const firstSite = sites.first();
+            this.props.selectSingleElectricalSensor({
+                sensor: firstSite.get("sensorsIds").first(),
+                site: firstSite.get("_id")
+            });
+        }
     },
     getPeriods: function () {
         return [

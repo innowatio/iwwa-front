@@ -179,14 +179,14 @@ exports.measures = {
             return R.unnest(measures
                 .filter(measure => measure.get("sensorId") === sensorId)
                 .filter(measure => {
-                    if (dateFilter) {
-                        const dateMeasure = moment(measure.get("day"), "YYYY-MM-DD").valueOf();
-                        return (
-                            dateFilter.start <= dateMeasure &&
-                            dateFilter.end > dateMeasure
-                        );
+                    if (R.isEmpty(dateFilter)) {
+                        return true;
                     }
-                    return true;
+                    const dateMeasure = moment(measure.get("day"), "YYYY-MM-DD").valueOf();
+                    return (
+                        dateFilter.start <= dateMeasure &&
+                        dateFilter.end > dateMeasure
+                    );
                 })
                 .sortBy(measure => measure.get("day"))
                 .map(measure => exports.measures.convertByVariables(measure, [variables[index]]))
