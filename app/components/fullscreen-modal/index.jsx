@@ -33,6 +33,9 @@ var FullscreenModal = React.createClass({
             >
                 <Radium.Style
                     rules={{
+                        ".modal-body": {
+                            paddingTop: 0
+                        },
                         ".modal-dialog": {
                             bottom: "0",
                             left: "0",
@@ -50,6 +53,16 @@ var FullscreenModal = React.createClass({
                             borderRadius: "0",
                             height: "100%",
                             width: "100%"
+                        },
+                        ".modal-header": {
+                            borderBottom: "none"
+                        },
+                        "button.close": {
+                            fontSize: "72px",
+                            fontWeight: "100",
+                            color: colors.primary,
+                            opacity: 1,
+                            marginTop: "-10px"
                         }
                     }}
                     scopeSelector=".fullscreen-modal-selector"
