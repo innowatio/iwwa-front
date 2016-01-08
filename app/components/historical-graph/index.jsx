@@ -60,6 +60,12 @@ var HistoricalGraph = React.createClass({
                         {this.renderSiteTitle(this.props.sites[0])}
                         {" - "}
                         {this.renderSensorTitle(this.props.electricalSensors[0])}
+                        {this.props.consumptionSensors.length > 0 ? " - " : null}
+                        {
+                            this.props.consumptionSensors.length > 0 ?
+                            this.renderSensorTitle(this.props.consumptionSensors[0]) :
+                            null
+                        }
                         {this.props.sites.length === 2 ? " & " : null}
                         {this.renderSiteTitle(this.props.sites[1])}
                         {this.props.electricalSensors.length === 2 ? " - " : null}
