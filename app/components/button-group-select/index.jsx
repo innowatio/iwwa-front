@@ -8,14 +8,15 @@ var ReactPureRender = require("react-addons-pure-render-mixin");
 var colors     = require("lib/colors");
 var components = require("components");
 var styles     = require("lib/styles");
+var icons      = require("lib/icons");
 
 var styleDropdown = R.merge(
-        styles.buttonSelectValore,
-        {
-            color: colors.greySubTitle,
-            backgroundColor: colors.greyBackground
-        }
-    );
+    styles.buttonSelectValore,
+    {
+        color: colors.greySubTitle,
+        backgroundColor: colors.greyBackground
+    }
+);
 
 var ButtonGroupSelect = React.createClass({
     propTypes: {
@@ -23,6 +24,7 @@ var ButtonGroupSelect = React.createClass({
             React.PropTypes.array,
             IPropTypes.list
         ]).isRequired,
+        filter: React.PropTypes.bool,
         getActiveStyle: React.PropTypes.func,
         getKey: React.PropTypes.func,
         getLabel: React.PropTypes.func,
@@ -77,11 +79,22 @@ var ButtonGroupSelect = React.createClass({
             </components.Button>
         );
     },
+    renderFilter: function () {
+        return (
+            <bootstrap.Input
+                addonAfter={<img src={icons.iconSearch} style={{height: "21px"}}/>}
+                className="input-search"
+                onChange={input => this.setState({inputFilter: input.target.value})}
+                placeholder="Ricerca"
+                type="text"
+            />
+    );
+    },
     render: function () {
         return (
             <bootstrap.ButtonGroup
-                className={this.props.className}
                 vertical={this.props.vertical}>
+                {this.props.filter ? this.renderFilter() : null}
                 {this.props.allowedValues.map(this.renderButtonOption)}
             </bootstrap.ButtonGroup>
         );

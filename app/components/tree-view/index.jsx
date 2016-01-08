@@ -13,7 +13,7 @@ var TreeView = React.createClass({
         allowedValues: React.PropTypes.oneOfType([
             React.PropTypes.array,
             IPropTypes.list
-        ]).isRequired,
+        ]),
         filterCriteria: React.PropTypes.func,
         getKey: React.PropTypes.func,
         getLabel: React.PropTypes.func,

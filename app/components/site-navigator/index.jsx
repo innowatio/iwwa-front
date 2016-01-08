@@ -41,6 +41,7 @@ var SiteNavigator = React.createClass({
     propTypes: {
         allowedValues: IPropTypes.map.isRequired,
         onChange: React.PropTypes.func.isRequired,
+        selectedSite: IPropTypes.map,
         showModal: React.PropTypes.bool,
         title: React.PropTypes.string
     },
@@ -50,6 +51,14 @@ var SiteNavigator = React.createClass({
             pathParent: [],
             pathChildren: []
         };
+    },
+    componentWillReceiveProps: function (props) {
+        return this.getStateFromProps(props);
+    },
+    getStateFromProps: function (props) {
+        this.setState({
+            pathParent: [props.selectedSite]
+        });
     },
     getKeyParent: function (value) {
         return value.get("_id");
