@@ -8,26 +8,26 @@ var colors      = require("lib/colors");
 var components  = require("components");
 var measuresUtils = require("lib/collection-utils").measures;
 
-var SitiCompare = React.createClass({
+var sitesCompare = React.createClass({
     propTypes: {
         getYLabel: React.PropTypes.func,
         misure: IPropTypes.map,
-        siti: React.PropTypes.arrayOf(IPropTypes.map),
+        sites: React.PropTypes.arrayOf(IPropTypes.map),
         tipologia: React.PropTypes.object,
         valori: React.PropTypes.arrayOf(React.PropTypes.object)
     },
     mixins: [ReactPureRender],
     getCoordinates: function () {
-        var sitesId = this.props.siti.map(function (sito) {
+        var sitesId = this.props.sites.map(function (sito) {
             return sito.get("siteId");
         });
         return measuresUtils.convertBySitesAndVariable(this.props.misure, sitesId, this.props.tipologia.key);
     },
     getLabels: function () {
-        var sitiLabels = this.props.siti.map(function (sito) {
+        var sitesLabels = this.props.sites.map(function (sito) {
             return sito.get("idCoin");
         });
-        return ["Data"].concat(sitiLabels);
+        return ["Data"].concat(sitesLabels);
     },
     render: function () {
         var valori = this.props.valori[0];
@@ -37,7 +37,7 @@ var SitiCompare = React.createClass({
                 coordinates={this.getCoordinates()}
                 labels={this.getLabels()}
                 ref="temporalLineGraph"
-                sito={this.props.siti[0] || Immutable.Map()}
+                site={this.props.sites[0] || Immutable.Map()}
                 xLabel=""
                 yLabel={this.props.getYLabel(this.props.tipologia)}
             />
@@ -45,4 +45,4 @@ var SitiCompare = React.createClass({
     }
 });
 
-module.exports = Radium(SitiCompare);
+module.exports = Radium(sitesCompare);

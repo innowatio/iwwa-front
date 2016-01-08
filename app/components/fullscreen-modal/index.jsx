@@ -28,8 +28,8 @@ var FullscreenModal = React.createClass({
         return (
             <bootstrap.Modal
                 className="fullscreen-modal-selector"
-                show={this.state.showModal}
                 onHide={this.closeModal}
+                show={this.state.showModal}
             >
                 <Radium.Style
                     rules={{

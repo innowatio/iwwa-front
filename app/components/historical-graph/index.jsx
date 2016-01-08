@@ -9,46 +9,71 @@ var colors             = require("lib/colors");
 var components         = require("components");
 var DateCompareGraph   = require("./date-compare.jsx");
 var ValoriCompareGraph = require("./valori-compare.jsx");
-var SitiCompareGraph   = require("./siti-compare.jsx");
+var SitesCompareGraph   = require("./sites-compare.jsx");
 
 var HistoricalGraph = React.createClass({
     propTypes: {
         alarms: React.PropTypes.arrayOf(React.PropTypes.number),
-        consumption: React.PropTypes.object,
+        consumptionSensors: React.PropTypes.arrayOf(React.PropTypes.string),
+        consumptionTypes: React.PropTypes.object,
         dateCompare: React.PropTypes.shape({
             period: React.PropTypes.object,
             dateOne: React.PropTypes.date
         }),
+        dateFilter: React.PropTypes.object,
+        electricalSensors: React.PropTypes.arrayOf(React.PropTypes.string),
+        electricalTypes: React.PropTypes.object,
+        getY2Label: React.PropTypes.func,
+        getYLabel: React.PropTypes.func,
         misure: IPropTypes.map,
         resetCompare: React.PropTypes.func,
-        siti: React.PropTypes.arrayOf(IPropTypes.map),
-        tipologia: React.PropTypes.object,
-        valori: React.PropTypes.arrayOf(React.PropTypes.object)
+        sites: React.PropTypes.arrayOf(IPropTypes.map),
+        sources: React.PropTypes.arrayOf(React.PropTypes.object)
     },
     mixins: [ReactPureRender],
     exportPNG: function () {
         return this.refs.temporalLineGraph.exportPNG;
     },
-    renderSitoTitle: function (sito) {
-        return sito ? (
+    renderSiteTitle: function (site) {
+        return site ? (
             <span>
                 <strong>
-                    {titleCase(sito.get("name"))}
+                    {titleCase(site.get("name"))}
+                </strong>
+            </span>
+        ) : null;
+    },
+    renderSensorTitle: function (sensor) {
+        return sensor ? (
+            <span>
+                <strong>
+                    {sensor}
                 </strong>
             </span>
         ) : null;
     },
     renderTitle: function () {
-        if (this.props.siti.length > 0) {
+        if (this.props.sites.length > 0) {
             return (
                 <div>
                     <h3 className="text-center" style={{marginTop: "20px"}}>
-                        {this.renderSitoTitle(this.props.siti[0])}
-                        {this.props.siti.length === 2 ? " & " : null}
-                        {this.renderSitoTitle(this.props.siti[1])}
+                        {this.renderSiteTitle(this.props.sites[0])}
+                        {" - "}
+                        {this.renderSensorTitle(this.props.electricalSensors[0])}
+                        {this.props.consumptionSensors.length > 0 ? " - " : null}
+                        {
+                            this.props.consumptionSensors.length > 0 ?
+                            this.renderSensorTitle(this.props.consumptionSensors[0]) :
+                            null
+                        }
+                        {this.props.sites.length === 2 ? " & " : null}
+                        {this.renderSiteTitle(this.props.sites[1])}
+                        {this.props.electricalSensors.length === 2 ? " - " : null}
+                        {this.renderSensorTitle(this.props.sites[1])}
+
                     </h3>
                     <h4 className="text-center" style={{color: colors.greySubTitle}}>
-                        {this.props.tipologia.label}
+                        {this.props.electricalTypes.label}
                     </h4>
                 </div>
             );
@@ -57,8 +82,8 @@ var HistoricalGraph = React.createClass({
     renderDateCompareGraph: function () {
         return <DateCompareGraph {...this.props} ref="compareGraph"/>;
     },
-    renderSitiCompareGraph: function () {
-        return <SitiCompareGraph {...this.props} ref="compareGraph"/>;
+    renderSitesCompareGraph: function () {
+        return <SitesCompareGraph {...this.props} ref="compareGraph"/>;
     },
     renderValoriCompareGraph: function () {
         return <ValoriCompareGraph {...this.props} ref="compareGraph"/>;
@@ -67,8 +92,8 @@ var HistoricalGraph = React.createClass({
         if (this.props.dateCompare) {
             return this.renderDateCompareGraph();
         }
-        if (this.props.siti.length > 1) {
-            return this.renderSitiCompareGraph();
+        if (this.props.sites.length > 1) {
+            return this.renderSitesCompareGraph();
         }
         return this.renderValoriCompareGraph();
     },
@@ -79,8 +104,8 @@ var HistoricalGraph = React.createClass({
                     <div
                         onClick={this.props.resetCompare}
                         style={{
-                            display: this.props.dateCompare || this.props.siti.length > 1 ? "flex" : "none",
-                            position: "relative",
+                            display: this.props.dateCompare || this.props.sites.length > 1 ? "flex" : "none",
+                            positeson: "relative",
                             marginLeft: "50px",
                             cursor: "pointer"
                         }}

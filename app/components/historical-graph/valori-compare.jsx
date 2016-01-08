@@ -12,57 +12,45 @@ var measuresUtils = require("lib/collection-utils").measures;
 var ValoriCompare = React.createClass({
     propTypes: {
         alarms: React.PropTypes.arrayOf(React.PropTypes.number),
-        consumption: React.PropTypes.object,
+        consumptionSensors: React.PropTypes.arrayOf(React.PropTypes.string),
+        consumptionTypes: React.PropTypes.object,
         dateFilter: React.PropTypes.oneOfType([
             React.PropTypes.object,
             React.PropTypes.string
         ]),
+        electricalSensors: React.PropTypes.arrayOf(React.PropTypes.string),
+        electricalTypes: React.PropTypes.object,
         getY2Label: React.PropTypes.func,
         getYLabel: React.PropTypes.func,
         misure: IPropTypes.map,
-        siti: React.PropTypes.arrayOf(IPropTypes.map),
-        tipologia: React.PropTypes.object,
-        valori: React.PropTypes.arrayOf(React.PropTypes.object)
+        sites: React.PropTypes.arrayOf(IPropTypes.map),
+        sources: React.PropTypes.arrayOf(React.PropTypes.object)
     },
     mixins: [ReactPureRender],
     getCoordinates: function () {
-        var self = this;
-        var selectedSiteId = self.props.siti[0] ? self.props.siti[0].get("_id") : "";
-        var selectedTipologia = [self.props.tipologia.key];
-        if (self.props.consumption.key) {
-            selectedTipologia = selectedTipologia.concat(self.props.consumption.key);
+        const self = this;
+        const selectedSiteId = self.props.sites[0] ? self.props.sites[0].get("_id") : "";
+        var sensors = self.props.electricalSensors;
+        var selectedTypes = [self.props.electricalTypes.key];
+        if (self.props.consumptionSensors[0]) {
+            sensors = sensors.concat(self.props.consumptionSensors);
+            selectedTypes = selectedTypes.concat(self.props.consumptionTypes.key);
         }
-        var result = [];
-        self.props.misure
-            .filter(function (measure) {
-                return measure.get("siteId") === selectedSiteId;
-            })
-            .filter(function (measure) {
-                if (self.props.dateFilter) {
-                    // TODO: filter data only for the selected month
-                    var measureMonthToDate = moment(measure.get("month"), "YYYY-MM");
-                    return self.props.dateFilter.start <= measureMonthToDate && self.props.dateFilter.end > measureMonthToDate;
-                }
-                return true;
-            })
-            .forEach(function (measure) {
-                result = R.concat(result, measuresUtils.convertByVariables(measure, selectedTipologia));
-            });
-        return result;
+        return measuresUtils.convertBySensorsAndVariable(self.props.misure, sensors, selectedTypes, self.props.dateFilter);
     },
     getLabels: function () {
         var label = ["Data"].concat(
-            R.map(R.prop("label"), this.props.valori)
+            R.map(R.prop("label"), this.props.sources)
         );
-        if (R.prop(("label"), this.props.consumption)) {
-            label = label.concat(R.prop(("label"), this.props.consumption));
+        if (R.prop(("label"), this.props.consumptionTypes)) {
+            label = label.concat(R.prop(("label"), this.props.consumptionTypes));
         }
         return label;
     },
     getColors: function () {
-        var colors = this.props.valori.map(R.prop("color"));
-        if (R.prop(("color"), this.props.consumption)) {
-            colors = colors.concat(R.prop(("color"), this.props.consumption));
+        var colors = this.props.sources.map(R.prop("color"));
+        if (R.prop(("color"), this.props.consumptionTypes)) {
+            colors = colors.concat(R.prop(("color"), this.props.consumptionTypes));
         }
         return colors;
     },
@@ -71,15 +59,15 @@ var ValoriCompare = React.createClass({
             <components.TemporalLineGraph
                 alarms={this.props.alarms}
                 colors={this.getColors()}
-                coordinates={this.getCoordinates()}
+                coordinates={this.getCoordinates() || []}
                 dateFilter={this.props.dateFilter}
                 labels={this.getLabels()}
                 ref="temporalLineGraph"
                 showRangeSelector={true}
-                sito={this.props.siti[0] || Immutable.Map()}
+                site={this.props.sites[0] || Immutable.Map()}
                 xLabel=""
-                y2label={this.props.getY2Label(this.props.consumption)}
-                yLabel={this.props.getYLabel(this.props.tipologia)}
+                y2label={this.props.getY2Label(this.props.consumptionTypes)}
+                yLabel={this.props.getYLabel(this.props.electricalTypes)}
             />
         );
     }

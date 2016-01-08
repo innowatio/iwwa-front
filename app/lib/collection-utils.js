@@ -1,6 +1,7 @@
 var Immutable = require("immutable");
 var R         = require("ramda");
 var titleCase = require("title-case");
+var moment    = require("moment");
 
 var icons     = require("lib/icons");
 
@@ -33,14 +34,13 @@ exports.labelGraph = {
 
 /*
     objFromDB: {
-        _id: uuid,
-        siteId: innowatio pod string,
-        month: "YYYY-MM",
+        _id: sensorId-day,
+        sensorId: innowatio sensor string,
+        day: "YYYY-MM-DD",
         measurements: {
-            "energia attiva": JSON string of array,
-            "energia reattiva": JSON string of array,
-            "potenza massima": JSON string of array,
-            ...
+            "activeEnergy": JSON string of array,
+            "reactiveEnergy": JSON string of array,
+            "maxPower": JSON string of array
         }
     }
 */
@@ -109,15 +109,18 @@ exports.measures = {
             });
         });
     },
-    convertByVariables: R.memoize(function (measures, variables, startOfTime) {
+    convertByVariables: R.memoize(function (measure, variables, startOfTime) {
         var mLength;
         const fiveMinutesInMS = 5 * 60 * 1000;
-        const startOfMonthInMS = !R.isNil(startOfTime) ? startOfTime.getTime() : new Date(measures.get("month")).getTime();
-        var measuresArray = R.map(variable => {
-            const m = measures.getIn(["measurements", variable]) ?
-                measures.getIn(["measurements", variable])
+        const startOfDayInMS = startOfTime ?
+            startOfTime:
+            new Date(measure.get("day")).getTime();
+        const measuresArray = R.map(variable => {
+            const m = measure.getIn(["measurements", variable]) ?
+                measure
+                    .getIn(["measurements", variable])
                     .split(",")
-                    .map(v => parseFloat(v)) :
+                    .map(n => parseFloat(n)) :
                 [0.01];
             mLength = m.length;
             var lastNotNull = 0.01;
@@ -130,10 +133,8 @@ exports.measures = {
                 }
             });
         }, variables);
-        // measuresArray.length === 0 ?
-
         const toDateTime = (index) => (
-            startOfMonthInMS + (index * fiveMinutesInMS)
+            startOfDayInMS + (index * fiveMinutesInMS)
         );
         const isInRange = (val1, val2) => (
             val1 * 1.10 > val2 &&
@@ -173,6 +174,30 @@ exports.measures = {
             ) : acc;
         }, [], R.range(0, mLength));
     }),
+    convertBySensorsAndVariable: function (measures, sensors, variables, dateFilter) {
+        var measuresBySensor = sensors.map((sensorId, index) => {
+            return R.unnest(measures
+                .filter(measure => measure.get("sensorId") === sensorId)
+                .filter(measure => {
+                    if (R.isEmpty(dateFilter)) {
+                        return true;
+                    }
+                    const dateMeasure = moment(measure.get("day"), "YYYY-MM-DD").valueOf();
+                    return (
+                        dateFilter.start <= dateMeasure &&
+                        dateFilter.end > dateMeasure
+                    );
+                })
+                .sortBy(measure => measure.get("day"))
+                .map(measure => exports.measures.convertByVariables(measure, [variables[index]]))
+                .toArray()
+            );
+        });
+        if (measuresBySensor.length === 1) {
+            return measuresBySensor[0];
+        }
+        return this.mergeCoordinates(measuresBySensor[0] || [], measuresBySensor[1] || []);
+    },
     convertBySitesAndVariable: function (measures, sitesId, variable) {
         var self = this;
         var measuresBySito = [];
@@ -186,21 +211,23 @@ exports.measures = {
         });
         return this.mergeCoordinates(measuresBySito[0] || [], measuresBySito[1] || []);
     },
-    convertByDatesAndVariable: function (measures, siteId, variable, dates) {
-        var self = this;
-        var measuresByDates = [];
-        dates.forEach(date => {
-            measures.filter(function (misura) {
-                return misura.get("siteId") === siteId;
-            })
-            .filter(function (misura) {
-                return misura.get("month") === date;
-            })
-            .forEach(function (values) {
-                measuresByDates.push(self.convertByVariables(values, [variable], new Date(0)));
-            });
+    convertByDatesAndVariable: function (measures, sensorId, variable, dates) {
+        const period = dates.period;
+        var measuresBySensor = dates.map((date, index) => {
+            return R.unnest(measures
+                .filter(measure => measure.get("sensorId") === sensorId[0])
+                .filter(measure => {
+                    const dateMeasure = moment(measure.get("day"), "YYYY-MM-DD").valueOf();
+                    return (new Date(date.start).getTime() <= dateMeasure && new Date(date.end).getTime() > dateMeasure);
+                })
+                .sortBy(measure => measure.get("day"))
+                .map(measure => {
+                    const dayStart = moment(measure.get("day")).valueOf() - moment(date.start).valueOf();
+                    return exports.measures.convertByVariables(measure, [variable], dayStart);
+                })
+                .toArray());
         });
-        return this.mergeCoordinates(measuresByDates[0] || [], measuresByDates[1] || []);
+        return this.mergeCoordinates(measuresBySensor[0] || [], measuresBySensor[1] || []);
     },
     decorateMeasure: function (sensor) {
         // return an Immutable list for avoid subsequent `.flatten` mismatch

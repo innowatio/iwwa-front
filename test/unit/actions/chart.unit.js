@@ -4,37 +4,48 @@ import * as chart from "actions/chart";
 
 describe("`chart` actions", () => {
 
-    describe("`selectSingleSite` function", () => {
+    describe("`selectSingleSensor` function", () => {
 
         it("should return the correct object if is passed an array with one string as parameter", () => {
-            const siteId = ["siteId"];
-            const ret = chart.selectSingleSite(siteId);
+            const selectedSensor = {sensor: "sensorId", site: "siteId"};
+            const ret = chart.selectSingleElectricalSensor(selectedSensor);
             expect(ret).to.deep.equal({
-                type: "SELECT_SINGLE_SITE",
-                payload: ["siteId"]
+                type: "SELECT_SINGLE_ELECTRICAL_SENSOR",
+                payload: {
+                    sensor: "sensorId",
+                    site: "siteId"
+                }
             });
         });
 
-        it("should throw if isn't passed an array with one string as parameter", () => {
-            const siteId = ["siteId", "anotherString"];
+        it("should throw if isn't passed `siteId` parameter", () => {
+            const sensor = {sensor: "sensorId"};
             function troubleMaker () {
-                chart.selectSingleSite(siteId);
+                chart.selectSingleElectricalSensor(sensor);
+            }
+            expect(troubleMaker).to.throw();
+        });
+
+        it("should throw if isn't passed `sensorId` parameter", () => {
+            const site = {site: "sitesId"};
+            function troubleMaker () {
+                chart.selectSingleElectricalSensor(site);
             }
             expect(troubleMaker).to.throw();
         });
 
     });
 
-    describe("`selectType` function", () => {
+    describe("`selectElectricalType` function", () => {
 
         it("should return the correct object if is passed an object with `label` and `key` keys", () => {
             const type = {
                 label: "label",
                 key: "key"
             };
-            const ret = chart.selectType(type);
+            const ret = chart.selectElectricalType(type);
             expect(ret).to.deep.equal({
-                type: "SELECT_TYPE",
+                type: "SELECT_ELECTRICAL_TYPE",
                 payload: type
             });
         });
@@ -42,34 +53,38 @@ describe("`chart` actions", () => {
         it("should throw if isn't passed passed an object with `label` and `key` keys", () => {
             const type = {label: "label"};
             function troubleMaker () {
-                chart.selectType(type);
+                chart.selectElectricalType(type);
             }
             expect(troubleMaker).to.throw();
         });
 
     });
 
-    describe("`selectEnvironmental` function", () => {
+    describe("`selectEnvironmentalSensor` function", () => {
 
         it("should return the correct object if is passed an object with the correct keys", () => {
-            const type = {
+            const sensorId = ["sensorId"];
+            const type = [{
                 label: "label",
                 key: "key",
                 color: "color",
                 icon: "icon",
                 selected: "selected"
-            };
-            const ret = chart.selectEnvironmental(type);
+            }];
+            const ret = chart.selectEnvironmentalSensor(sensorId, type);
             expect(ret).to.deep.equal({
-                type: "SELECT_ENVIRONMENTAL",
-                payload: type
+                type: "SELECT_ENVIRONMENTAL_SENSOR",
+                payload: {
+                    sensorId,
+                    type
+                }
             });
         });
 
         it("should throw if isn't passed an object with the correct keys", () => {
             const type = {label: "label"};
             function troubleMaker () {
-                chart.selectEnvironmental(type);
+                chart.selectEnvironmentalSensor(type);
             }
             expect(troubleMaker).to.throw();
         });
@@ -101,13 +116,13 @@ describe("`chart` actions", () => {
 
     });
 
-    describe("`selectMultipleSite` function", () => {
+    describe("`selectMultipleElectricalSensor` function", () => {
 
         it("should return the correct object if is passed an array with two string", () => {
             const sitesId = ["siteId1", "siteId2"];
-            const ret = chart.selectMultipleSite(sitesId);
+            const ret = chart.selectMultipleElectricalSensor(sitesId);
             expect(ret).to.deep.equal({
-                type: "SELECT_MULTIPLE_SITE",
+                type: "SELECT_MULTIPLE_ELECTRICAL_SENSOR",
                 payload: sitesId
             });
         });
@@ -115,7 +130,7 @@ describe("`chart` actions", () => {
         it("should throw if isn't passed an array with two string", () => {
             const source = ["site"];
             function troubleMaker () {
-                chart.selectMultipleSite(source);
+                chart.selectMultipleElectricalSensor(source);
             }
             expect(troubleMaker).to.throw();
         });
@@ -161,7 +176,7 @@ describe("`chart` actions", () => {
             };
             const ret = chart.selectDateRangesCompare(dateRangesCompare);
             expect(ret).to.deep.equal({
-                type: "SELECT_DATA_RANGES_COMPARE",
+                type: "SELECT_DATE_RANGES_COMPARE",
                 payload: dateRangesCompare
             });
         });

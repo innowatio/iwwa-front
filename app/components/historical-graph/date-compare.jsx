@@ -16,11 +16,12 @@ var DateCompare = React.createClass({
             period: React.PropTypes.object,
             dateOne: React.PropTypes.date
         }),
+        electricalSensors: React.PropTypes.arrayOf(React.PropTypes.string),
+        electricalTypes: React.PropTypes.object,
         getYLabel: React.PropTypes.func,
         misure: IPropTypes.map,
-        siti: React.PropTypes.arrayOf(IPropTypes.map),
-        tipologia: React.PropTypes.object,
-        valori: React.PropTypes.arrayOf(React.PropTypes.object)
+        sites: React.PropTypes.arrayOf(IPropTypes.map),
+        sources: React.PropTypes.arrayOf(React.PropTypes.object)
     },
     mixins: [ReactPureRender],
     getDateRanges: function () {
@@ -74,15 +75,20 @@ var DateCompare = React.createClass({
     },
     getDateFormatter: function () {
         var date = this.props.dateCompare;
-        var date1 = moment(date.dateOne).format("YYYY-MM");
-        var date2 = moment(date.dateOne).subtract(1, date.period.key).format("YYYY-MM");
-        return [date1, date2];
+        var startOne = moment(date.dateOne).format("YYYY-MM-DD");
+        var endOne = moment(date.dateOne).add(1, date.period.key).format("YYYY-MM-DD");
+        var startTwo = moment(date.dateOne).subtract(1, date.period.key).format("YYYY-MM-DD");
+        var endTwo = moment(date.dateOne).format("YYYY-MM-DD");
+        return [{start: startOne, end: endOne}, {start: startTwo, end: endTwo}];
     },
     getCoordinates: function () {
-        var self = this;
-        var sito = self.props.siti[0] || Immutable.Map();
-        var siteId = sito.get("siteId");
-        return measuresUtils.convertByDatesAndVariable(self.props.misure, siteId, self.props.tipologia.key, self.getDateFormatter());
+        var sensorId = this.props.electricalSensors;
+        return measuresUtils.convertByDatesAndVariable(
+            this.props.misure,
+            sensorId,
+            this.props.electricalTypes.key,
+            this.getDateFormatter()
+        );
     },
     getLabels: function () {
         if (this.props.dateCompare.period.key === "7 days before") {
@@ -93,8 +99,8 @@ var DateCompare = React.createClass({
         }
         if (this.props.dateCompare.period.key === "months") {
             return ["Data"].concat([
-                moment(this.props.dateCompare.dateOne).subtract(5, "weeks").format("MMM DD, YYYY"),
-                moment(this.props.dateCompare.dateOne).subtract(10, "weeks").format("MMM DD, YYYY")
+                moment(this.props.dateCompare.dateOne).endOf("month").subtract(5, "weeks").format("MMM DD, YYYY"),
+                moment(this.props.dateCompare.dateOne).endOf("month").subtract(10, "weeks").format("MMM DD, YYYY")
             ]);
         }
         if (this.props.dateCompare.period.key === "years") {
@@ -299,7 +305,7 @@ var DateCompare = React.createClass({
         return [];
     },
     render: function () {
-        var valori = this.props.valori[0];
+        var valori = this.props.sources[0];
         /*
             WARNING: `y2label` is empty, it's a workaround to prevent this dygraph bug https://github.com/danvk/dygraphs/issues/629
         */
@@ -311,11 +317,11 @@ var DateCompare = React.createClass({
                 labels={this.getLabels()}
                 lockInteraction={true}
                 ref="temporalLineGraph"
-                sito={this.props.siti[0] || Immutable.Map()}
+                site={this.props.sites[0] || Immutable.Map()}
                 xLegendFormatter={this.xLegendFormatter}
                 xTicker={this.xTicker}
                 y2label={" "}
-                yLabel={this.props.getYLabel(this.props.tipologia)}
+                yLabel={this.props.getYLabel(this.props.electricalTypes)}
             />
         );
     }
