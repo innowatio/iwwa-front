@@ -20,7 +20,7 @@ var SiteNavigator = React.createClass({
             siteNavigatorView: this.props.showModal || false,
             pathParent: [],
             pathChildren: []
-        }
+        };
     },
     getKeyParent: function (value) {
         return value.get("_id");
@@ -50,6 +50,9 @@ var SiteNavigator = React.createClass({
             showModal: true
         });
     },
+    closeModal: function () {
+        this.setState({showModal: false});
+    },
     getReturnValues: function () {
         return {
             site: this.state.pathParent.length > 0 ?
@@ -58,7 +61,11 @@ var SiteNavigator = React.createClass({
             sensor: R.last(this.state.pathChildren.filter(function (value) {
                 return !R.isNil(value);
             }))
-        }
+        };
+    },
+    onClickConfirm: function () {
+        this.closeModal();
+        this.props.onChange(this.getReturnValues());
     },
     renderSitesParent: function () {
         return (
@@ -103,7 +110,8 @@ var SiteNavigator = React.createClass({
                     </div>
                 </div>
                 <div style={{width: "100%"}}>
-                    <bootstrap.Button onClick={R.partial(this.props.onChange, [this.getReturnValues()])}>
+                    <bootstrap.Button onClick={this.onClickConfirm}
+                    >
                         OK
                     </bootstrap.Button>
                     <bootstrap.Button>
