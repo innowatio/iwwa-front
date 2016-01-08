@@ -83,7 +83,12 @@ var DateCompare = React.createClass({
     },
     getCoordinates: function () {
         var sensorId = this.props.electricalSensors;
-        return measuresUtils.convertByDatesAndVariable(this.props.misure, sensorId, this.props.electricalTypes.key, this.getDateFormatter());
+        return measuresUtils.convertByDatesAndVariable(
+            this.props.misure,
+            sensorId,
+            this.props.electricalTypes.key,
+            this.getDateFormatter()
+        );
     },
     getLabels: function () {
         if (this.props.dateCompare.period.key === "7 days before") {
@@ -94,8 +99,8 @@ var DateCompare = React.createClass({
         }
         if (this.props.dateCompare.period.key === "months") {
             return ["Data"].concat([
-                moment(this.props.dateCompare.dateOne).subtract(5, "weeks").format("MMM DD, YYYY"),
-                moment(this.props.dateCompare.dateOne).subtract(10, "weeks").format("MMM DD, YYYY")
+                moment(this.props.dateCompare.dateOne).endOf("month").subtract(5, "weeks").format("MMM DD, YYYY"),
+                moment(this.props.dateCompare.dateOne).endOf("month").subtract(10, "weeks").format("MMM DD, YYYY")
             ]);
         }
         if (this.props.dateCompare.period.key === "years") {

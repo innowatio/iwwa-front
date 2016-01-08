@@ -222,7 +222,7 @@ exports.measures = {
                 })
                 .sortBy(measure => measure.get("day"))
                 .map(measure => {
-                    const dayStart = new Date(0) + measure.get("day") - date.start;
+                    const dayStart = moment(measure.get("day")).valueOf() - moment(date.start).valueOf();
                     return exports.measures.convertByVariables(measure, [variable], dayStart);
                 })
                 .toArray());

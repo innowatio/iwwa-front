@@ -47,7 +47,7 @@ var HistoricalGraph = React.createClass({
         return sensor ? (
             <span>
                 <strong>
-                    {titleCase(sensor)}
+                    {sensor}
                 </strong>
             </span>
         ) : null;
