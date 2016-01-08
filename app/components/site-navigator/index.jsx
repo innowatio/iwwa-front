@@ -15,16 +15,16 @@ var buttonBasicStyle = {
     color: colors.primary + "!important",
     borderRadius: "0px !important",
     fontSize: "13px" + "!important"
-}
+};
 
 var buttonBasicStyleActive = {
     background: colors.primary + "!important",
     color: colors.white + "!important",
     fontSize: "13px" + "!important"
-}
+};
 
 var itemsStyle = R.merge(buttonBasicStyle, {
-    background: "white !important",
+    background: `${colors.white} !important`,
     border: "1px solid " + colors.greySubTitle + " !important",
     marginTop: "5px !important",
     width: "100%",
@@ -63,7 +63,7 @@ var SiteNavigator = React.createClass({
     getLabelChildren: function (value) {
         return value.get("id");
     },
-    getFilterCriteria(values) {
+    getFilterCriteria (values) {
         return values.filter((value) => {
             return ["CO2", "THL"].indexOf(value.get("type").toUpperCase()) < 0;
         });
@@ -119,9 +119,9 @@ var SiteNavigator = React.createClass({
             return (
                 <components.TreeView
                     allowedValues={this.props.allowedValues.getIn([this.state.pathParent[0].get("_id"), "sensors"])}
+                    filterCriteria={this.getFilterCriteria}
                     getKey={this.getKeyChildren}
                     getLabel={this.getLabelChildren}
-                    filterCriteria={this.getFilterCriteria}
                     multi={false}
                     onChange={this.onClickChildren}
                     value={this.state.pathChildren.length > 1 ? this.state.pathChildren : [undefined]}
@@ -136,8 +136,8 @@ var SiteNavigator = React.createClass({
                 <div>
                     <h3 className="text-center" style={{color: colors.primary}}>{this.props.title}</h3>
                 </div>
-                <div style={{width: "100%", height: "70vh", padding: "20px"}}>
-                    <div style={{width: "35%", float: "left"}} className="site-navigator-parent">
+                <bootstrap.Col style={{height: "70vh", padding: "20px", overflow: "auto"}} xs={4}>
+                    <div className="site-navigator-parent">
                         <Radium.Style
                             rules={{
                                 ".btn-group-vertical": {
@@ -152,13 +152,14 @@ var SiteNavigator = React.createClass({
                         />
                         {this.renderSitesParent()}
                     </div>
-                    <div className="site-navigator-child" style={{width: "65%", height: "100%", float: "right", border: "solid " + colors.primary}}>
+                </bootstrap.Col>
+                <bootstrap.Col xs={8}>
+                    <div className="site-navigator-child" style={{height: "60vh", margin: "20px", border: "solid " + colors.primary}}>
                         <Radium.Style
                             rules={{
                                 ".btn-group-vertical": {
                                     width: "30%",
-                                    padding: "12px",
-                                    overflow: "auto"
+                                    padding: "12px"
                                 },
                                 "button.btn": itemsStyle,
                                 "button.btn.active": itemsStyleActive
@@ -167,7 +168,7 @@ var SiteNavigator = React.createClass({
                         />
                         {this.renderSitesChildren()}
                     </div>
-                </div>
+                </bootstrap.Col>
                 <div style={{width: "100%", height: "100%", bottom: 0, textAlign: "center"}}>
                     <bootstrap.Button
                         onClick={this.onClickConfirm}
