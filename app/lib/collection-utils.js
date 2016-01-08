@@ -193,6 +193,7 @@ exports.measures = {
                 .toArray()
             );
         });
+        console.log(measuresBySensor[0]);
         if (measuresBySensor.length === 1) {
             return measuresBySensor[0];
         }

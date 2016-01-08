@@ -193,6 +193,12 @@ var RealTime = React.createClass({
             return decorator.get("type") !== "pod" && decorator.get("type") !== "pod-anz";
         });
     },
+    getSitoById: function (sitoId) {
+        const sites = this.props.collections.get("sites") || Immutable.Map();
+        return sites.find(site => {
+            return site.get("_id") === sitoId;
+        });
+    },
     render: function () {
         const sites = this.props.collections.get("sites") || Immutable.Map();
         const selectedSiteName = this.getSelectedSiteName();
@@ -203,6 +209,7 @@ var RealTime = React.createClass({
                         <components.SiteNavigator
                             allowedValues={this.getSites()}
                             onChange={this.setSelectedSite}
+                            selectedSite={this.getSitoById(this.props.realTime.site) || Immutable.Map()}
                             title={"Quale punto di misurazione vuoi visualizzare?"}
                         >
                         </components.SiteNavigator>
