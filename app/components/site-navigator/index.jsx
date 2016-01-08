@@ -5,8 +5,37 @@ var R          = require("ramda");
 var Radium     = require("radium");
 var React      = require("react");
 
+var colors     = require("lib/colors");
 var components = require("components");
 var icons      = require("lib/icons");
+
+// TODO remove importants
+var buttonBasicStyle = {
+    background: colors.greyBackground + "!important",
+    color: colors.primary + "!important",
+    borderRadius: "0px !important",
+    fontSize: "13px" + "!important"
+}
+
+var buttonBasicStyleActive = {
+    background: colors.primary + "!important",
+    color: colors.white + "!important",
+    fontSize: "13px" + "!important"
+}
+
+var itemsStyle = R.merge(buttonBasicStyle, {
+    background: "white !important",
+    border: "1px solid " + colors.greySubTitle + " !important",
+    marginTop: "5px !important",
+    width: "100%",
+    padding: "10px"
+});
+
+var itemsStyleActive = {
+    background: colors.primary + "!important",
+    color: colors.white + "!important",
+    fontSize: "13px" + "!important"
+};
 
 var SiteNavigator = React.createClass({
     propTypes: {
@@ -92,21 +121,57 @@ var SiteNavigator = React.createClass({
         return (
             <div style={{width: "100%"}}>
                 <div>
-                    {this.props.title}
+                    <h3 className="text-center" style={{color: colors.primary}}>{this.props.title}</h3>
                 </div>
-                <div style={{width: "100%", height: "100%"}}>
-                    <div style={{width: "35%", float: "left"}}>
+                <div style={{width: "100%", height: "70vh", padding: "20px"}}>
+                    <div style={{width: "35%", float: "left"}} className="site-navigator-parent">
+                        <Radium.Style
+                            rules={{
+                                ".btn-group-vertical": {
+                                    width: "100%",
+                                    padding: "12px",
+                                    overflow: "auto"
+                                },
+                                "button.btn": itemsStyle,
+                                "button.btn.active": itemsStyleActive
+                            }}
+                            scopeSelector=".site-navigator-parent"
+                        />
                         {this.renderSitesParent()}
                     </div>
-                    <div style={{width: "65%", float: "right"}}>
+                    <div className="site-navigator-child" style={{width: "65%", height: "100%", float: "right", border: "solid " + colors.primary}}>
+                        <Radium.Style
+                            rules={{
+                                ".btn-group-vertical": {
+                                    width: "30%",
+                                    padding: "12px",
+                                    overflow: "auto"
+                                },
+                                "button.btn": itemsStyle,
+                                "button.btn.active": itemsStyleActive
+                            }}
+                            scopeSelector=".site-navigator-child"
+                        />
                         {this.renderSitesChildren()}
                     </div>
                 </div>
-                <div style={{width: "100%"}}>
-                    <bootstrap.Button onClick={R.partial(this.props.onChange, [this.getReturnValues()])}>
+                <div style={{width: "100%", height: "100%", bottom: 0, textAlign: "center"}}>
+                    <bootstrap.Button
+                        onClick={R.partial(this.props.onChange, [this.getReturnValues()])}
+                        style={R.merge(buttonBasicStyleActive, {
+                            width: "230px",
+                            height: "45px"
+                        })}
+                    >
                         OK
                     </bootstrap.Button>
-                    <bootstrap.Button>
+                    <components.Spacer direction="h" size={20} />
+                    <bootstrap.Button
+                        style={R.merge(buttonBasicStyle, {
+                            width: "230px",
+                            height: "45px"
+                        })}
+                    >
                         RESET
                     </bootstrap.Button>
                 </div>
