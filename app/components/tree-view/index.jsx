@@ -16,6 +16,7 @@ var TreeView = React.createClass({
         ]).isRequired,
         getKey: React.PropTypes.func,
         getLabel: React.PropTypes.func,
+        filterCriteria: React.PropTypes.func,
         onChange: React.PropTypes.func.isRequired,
         value: React.PropTypes.oneOfType([
             React.PropTypes.array,
@@ -36,6 +37,11 @@ var TreeView = React.createClass({
             path: props.value
         });
     },
+    applyFilters: function (values) {
+        return this.props.filterCriteria ?
+            this.props.filterCriteria(values) :
+            values;
+    },
     onChange: function (value, position) {
         const path = this.setPath(this.state.path, this.props.getKey(value[0]), position);
         this.setState({path});
@@ -47,7 +53,7 @@ var TreeView = React.createClass({
     renderLevel: function (value, position) {
         const self = this;
         const path = this.state.path.slice(0, position);
-        const {allowedValues} = path.reduce((acc, pathValue) => {
+        var {allowedValues} = path.reduce((acc, pathValue) => {
             const node = acc.allowedValues.find(function (value) {
                 return value.get("id") === pathValue;
             });
@@ -60,10 +66,12 @@ var TreeView = React.createClass({
             };
         }, {position: 0, allowedValues: this.props.allowedValues});
 
+        allowedValues = this.applyFilters(allowedValues || []);
+
         const selectedValue = value ? [Immutable.Map({"id": value})] : [];
         return (
             <components.ButtonGroupSelect
-                allowedValues={allowedValues || []}
+                allowedValues={allowedValues}
                 className={"btn-group-level" + position}
                 getKey={this.props.getKey}
                 getLabel={this.props.getLabel}

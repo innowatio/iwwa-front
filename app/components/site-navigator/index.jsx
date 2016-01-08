@@ -63,6 +63,11 @@ var SiteNavigator = React.createClass({
     getLabelChildren: function (value) {
         return value.get("id");
     },
+    getFilterCriteria(values) {
+        return values.filter((value) => {
+            return ["CO2", "THL"].indexOf(value.get("type").toUpperCase()) < 0;
+        });
+    },
     onClickChildren: function (value) {
         this.setState({
             pathChildren: value
@@ -116,6 +121,7 @@ var SiteNavigator = React.createClass({
                     allowedValues={this.props.allowedValues.getIn([this.state.pathParent[0].get("_id"), "sensors"])}
                     getKey={this.getKeyChildren}
                     getLabel={this.getLabelChildren}
+                    filterCriteria={this.getFilterCriteria}
                     multi={false}
                     onChange={this.onClickChildren}
                     value={this.state.pathChildren.length > 1 ? this.state.pathChildren : [undefined]}
