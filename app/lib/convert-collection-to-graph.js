@@ -1,4 +1,5 @@
 import {memoize, map, range, unnest, isEmpty, reduce, path, last, isNil, maxBy} from "ramda";
+import moment from "moment";
 
 /*
     objFromDB: {
@@ -10,6 +11,7 @@ import {memoize, map, range, unnest, isEmpty, reduce, path, last, isNil, maxBy} 
             "reactiveEnergy": JSON string of array,
             "maxPower": JSON string of array
         }
+        measurementsDeltaInMs: Number
     }
 */
 var convertByVariables = memoize(function (measure, variables, startOfTime) {

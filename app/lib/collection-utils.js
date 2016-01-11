@@ -1,7 +1,6 @@
 var Immutable = require("immutable");
 var R         = require("ramda");
 var titleCase = require("title-case");
-var moment    = require("moment");
 
 exports.labelGraph = {
     getYLabel: function (tipologia) {
