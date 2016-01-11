@@ -209,10 +209,9 @@ var RealTime = React.createClass({
                         <components.SiteNavigator
                             allowedValues={this.getSites()}
                             onChange={this.setSelectedSite}
-                            selectedSite={this.getSitoById(this.props.realTime.site) || Immutable.Map()}
+                            selectedSite={this.getSitoById(this.props.realTime.site)}
                             title={"Quale punto di misurazione vuoi visualizzare?"}
-                        >
-                        </components.SiteNavigator>
+                        />
                     </span>
                 </bootstrap.Col>
                 <h3 className="text-center" style={{color: colors.primary}}>

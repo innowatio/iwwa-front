@@ -57,7 +57,7 @@ var SiteNavigator = React.createClass({
     },
     getStateFromProps: function (props) {
         this.setState({
-            pathParent: [props.selectedSite]
+            pathParent: props.selectedSite ? [props.selectedSite] : [] // FIXME
         });
     },
     getKeyParent: function (value) {
