@@ -111,7 +111,7 @@ exports.measures = {
     },
     convertByVariables: R.memoize(function (measure, variables, startOfTime) {
         var mLength;
-        const fiveMinutesInMS = 5 * 60 * 1000;
+        const fiveMinutesInMS = measure.get("measurementsDeltaInMs");
         const startOfDayInMS = startOfTime ?
             startOfTime:
             new Date(measure.get("day")).getTime();

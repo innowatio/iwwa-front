@@ -7,11 +7,10 @@ var icons           = proxyquire("lib/icons.js", {});
 
 describe("The `measures` method", function () {
 
-    const fiveMinutesInMS = 5 * 60 * 1000;
     const dayString = "2015-10-10";
 
-    var toDateTime = function (pos) {
-        return new Date(dayString).getTime() + (pos * fiveMinutesInMS);
+    var toDateTime = function (pos, deltaInMS) {
+        return new Date(dayString).getTime() + (pos * deltaInMS);
     };
 
     describe("the `convertByVariables` function", function () {
@@ -22,14 +21,16 @@ describe("The `measures` method", function () {
                 measurements: Immutable.Map({
                     lux: "1,1.09,3,3.2,,6,6.1",
                     potenza: "11,22,33,44,55,,,8.9"
-                })
+                }),
+                measurementsDeltaInMs: 300000
             });
+            const deltaInMs = measures.get("measurementsDeltaInMs");
             var variable = ["lux"];
             var expected = [
-                [new Date(toDateTime(0)), [parseFloat(1)]],
-                [new Date(toDateTime(2)), [parseFloat(3)]],
-                [new Date(toDateTime(5)), [parseFloat(6)]],
-                [new Date(toDateTime(6)), [parseFloat(6.1)]]
+                [new Date(toDateTime(0, deltaInMs)), [parseFloat(1)]],
+                [new Date(toDateTime(2, deltaInMs)), [parseFloat(3)]],
+                [new Date(toDateTime(5, deltaInMs)), [parseFloat(6)]],
+                [new Date(toDateTime(6, deltaInMs)), [parseFloat(6.1)]]
             ];
             var result = CollectionUtils.measures.convertByVariables(measures, variable);
             expect(expected).to.deep.equal(result);
@@ -42,17 +43,19 @@ describe("The `measures` method", function () {
                     lux: "1,2,3,4,,6,7.8",
                     co2: "11,22,33,44,55,,",
                     potenza: "111,222,333,444,555,,7.77"
-                })
+                }),
+                measurementsDeltaInMs: 600000
             });
+            const deltaInMs = measures.get("measurementsDeltaInMs");
             var variables = ["lux", "potenza"];
             var expected = [
-                [new Date(toDateTime(0)), [parseFloat(1)], [parseFloat(111)]],
-                [new Date(toDateTime(1)), [parseFloat(2)], [parseFloat(222)]],
-                [new Date(toDateTime(2)), [parseFloat(3)], [parseFloat(333)]],
-                [new Date(toDateTime(3)), [parseFloat(4)], [parseFloat(444)]],
-                [new Date(toDateTime(4)), [parseFloat(4)], [parseFloat(555)]],
-                [new Date(toDateTime(5)), [parseFloat(6)], [parseFloat(555)]],
-                [new Date(toDateTime(6)), [parseFloat(7.8)], [parseFloat(7.77)]]
+                [new Date(toDateTime(0, deltaInMs)), [parseFloat(1)], [parseFloat(111)]],
+                [new Date(toDateTime(1, deltaInMs)), [parseFloat(2)], [parseFloat(222)]],
+                [new Date(toDateTime(2, deltaInMs)), [parseFloat(3)], [parseFloat(333)]],
+                [new Date(toDateTime(3, deltaInMs)), [parseFloat(4)], [parseFloat(444)]],
+                [new Date(toDateTime(4, deltaInMs)), [parseFloat(4)], [parseFloat(555)]],
+                [new Date(toDateTime(5, deltaInMs)), [parseFloat(6)], [parseFloat(555)]],
+                [new Date(toDateTime(6, deltaInMs)), [parseFloat(7.8)], [parseFloat(7.77)]]
             ];
             var result = CollectionUtils.measures.convertByVariables(measures, variables);
             expect(expected).to.deep.equal(result);
