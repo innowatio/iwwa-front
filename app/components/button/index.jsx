@@ -20,7 +20,7 @@ var Button = React.createClass({
                 outline: "0px",
                 outlineStyle: "none",
                 outlineWidth: "0px"
-            }, this.props.style)
+            }, this.props.style || {})
         });
     }
 });

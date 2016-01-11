@@ -36,13 +36,13 @@ var styleGaugeBar = {
     strokeWidth: "10",
     zIndex: 2,
     WebkitTransition: "-webkit-transform 800ms ease",
-        transition: "transform 800ms ease"
+    transition: "transform 800ms ease"
 };
 
 var stylePointer = {
     fill: colors.darkBlack,
     WebkitTransition: "-webkit-transform 800ms ease",
-        transition: "transform 800ms ease",
+    transition: "transform 800ms ease",
     zIndex: 5
 };
 
@@ -80,24 +80,24 @@ var Gauge = React.createClass({
                             cx="0"
                             cy="0"
                             r="95"
-                            style={R.merge(styleGauge, this.props.styleGaugeBody)}
+                            style={R.merge(styleGauge, this.props.styleGaugeBody || {})}
                         />
                         <circle
                             clipPath="url(#cut-off-top)"
                             cx="0"
                             cy="0"
                             r="95"
-                            style={R.merge(styleGaugeBar, this.props.styleGaugeBar)}
+                            style={R.merge(styleGaugeBar, this.props.styleGaugeBar || {})}
                         />
                     </g>
-                    <rect height="5" width="200" x="0" y="100" fill="white" style={{zIndex: 4}} />
+                    <rect fill={colors.white} height="5" style={{zIndex: 4}} width="200" x="0" y="100"  />
                     {/* Pointer */}
                     <g transform={transform} >
-                        <circle cx="-84.5" cy="0" r="3" style={R.merge(stylePointer, this.props.stylePointer)} />
-                        <path d="M-85 -3 L -90 0 -85 3 Z" style={R.merge(stylePointer, this.props.stylePointer)} />
+                        <circle cx="-84.5" cy="0" r="3" style={R.merge(stylePointer, this.props.stylePointer || {})} />
+                        <path d="M-85 -3 L -90 0 -85 3 Z" style={R.merge(stylePointer, this.props.stylePointer || {})} />
                     </g>
                 </svg>
-                <div style={R.merge(styles.label, this.props.styleLabel)}>
+                <div style={R.merge(styles.label, this.props.styleLabel || {})}>
                     {this.props.valueLabel || this.props.value}
                 </div>
             </div>

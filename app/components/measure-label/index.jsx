@@ -31,12 +31,12 @@ var MeasureLabel = React.createClass({
         return (
             <div id="text">
                 <b>
-                    <div style={R.merge(styleTextDiv, this.props.style)}>
-                        <div className="labelValue" style={R.merge(styleLabelValue, this.props.styleText)}>
+                    <div style={R.merge(styleTextDiv, this.props.style || {})}>
+                        <div className="labelValue" style={R.merge(styleLabelValue, this.props.styleText || {})}>
                             {this.props.value}
                         </div>
                         <div>
-                            <div className="labelUnit" style={R.merge(styleLabelUnit, this.props.styleText)}>
+                            <div className="labelUnit" style={R.merge(styleLabelUnit, this.props.styleText || {})}>
                                 {this.props.unit}
                             </div>
                             <div className="subject" style={{fontSize: "9px"}}>

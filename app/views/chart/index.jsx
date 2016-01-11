@@ -278,10 +278,10 @@ var Chart = React.createClass({
     },
     render: function () {
         const sites = this.props.collections.get("sites") || Immutable.Map();
-        // const valoriMulti = (
-        //     this.switchDateCompareAndFilter() &&
-        //     this.props.chart.electricalSensors.length <= 1
-        // );
+        const valoriMulti = (
+            this.switchDateCompareAndFilter() &&
+            this.props.chart.electricalSensors.length <= 1
+        );
         return (
             <div style={styles.mainDivStyle}>
                 <bootstrap.Col sm={12} style={styles.colVerticalPadding}>
