@@ -7,7 +7,7 @@ var React           = require("react");
 var ReactPureRender = require("react-addons-pure-render-mixin");
 
 var components    = require("components");
-var measuresUtils = require("lib/collection-utils").measures;
+var convertToGraph = require("lib/convert-collection-to-graph");
 
 var ValoriCompare = React.createClass({
     propTypes: {
@@ -36,7 +36,7 @@ var ValoriCompare = React.createClass({
             sensors = sensors.concat(self.props.consumptionSensors);
             selectedTypes = selectedTypes.concat(self.props.consumptionTypes.key);
         }
-        return measuresUtils.convertBySensorsAndVariable(self.props.misure, sensors, selectedTypes, self.props.dateFilter);
+        return convertToGraph.convertBySensorsAndVariable(self.props.misure, sensors, selectedTypes, self.props.dateFilter);
     },
     getLabels: function () {
         var label = ["Data"].concat(

@@ -6,9 +6,9 @@ var React           = require("react");
 var ReactPureRender = require("react-addons-pure-render-mixin");
 var IPropTypes      = require("react-immutable-proptypes");
 
-var colors          = require("lib/colors");
-var components      = require("components");
-var measuresUtils   = require("lib/collection-utils").measures;
+var colors           = require("lib/colors");
+var components       = require("components");
+var convertToGraph   = require("lib/convert-collection-to-graph");
 
 var DateCompare = React.createClass({
     propTypes: {
@@ -83,7 +83,7 @@ var DateCompare = React.createClass({
     },
     getCoordinates: function () {
         var sensorId = this.props.electricalSensors;
-        return measuresUtils.convertByDatesAndVariable(
+        return convertToGraph.convertByDatesAndVariable(
             this.props.misure,
             sensorId,
             this.props.electricalTypes.key,

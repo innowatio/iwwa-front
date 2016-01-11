@@ -6,25 +6,12 @@ var React      = require("react");
 import {connect} from "react-redux";
 import {bindActionCreators} from "redux";
 
-var components      = require("components");
-var CollectionUtils = require("lib/collection-utils");
-var colors          = require("lib/colors");
-var icons           = require("lib/icons");
-var styles          = require("lib/styles");
+var components        = require("components");
+var convertToRealTime = require("lib/convert-collection-to-realtime");
+var colors            = require("lib/colors");
+var icons             = require("lib/icons");
+var styles            = require("lib/styles");
 import {selectRealTimeSite} from "actions/real-time";
-
-function mapStateToProps (state) {
-    return {
-        collections: state.collections,
-        realTime: state.realTime
-    };
-}
-
-function mapDispatchToProps (dispatch) {
-    return {
-        selectRealTimeSite: bindActionCreators(selectRealTimeSite, dispatch)
-    };
-}
 
 var RealTime = React.createClass({
     propTypes: {
@@ -155,15 +142,15 @@ var RealTime = React.createClass({
         );
     },
     findLatestMeasuresWithCriteria: function (criteria) {
-        var res = CollectionUtils.measures.decorators.filter(criteria);
+        var res = convertToRealTime.decorators.filter(criteria);
         if (this.props.realTime.site && this.getMeasures().size) {
             var decoMeasurements = this.getSite(this.props.realTime.site).get("sensors")
                 .map(sensor => {
-                    return CollectionUtils.measures.decorateMeasure(sensor);
+                    return convertToRealTime.decorateMeasure(sensor);
                 });
             res = R.filter(
                 criteria,
-                CollectionUtils.measures.addValueToMeasures(
+                convertToRealTime.addValueToMeasures(
                     decoMeasurements.flatten(1),
                     this.getMeasuresBySite()
             ));
@@ -176,9 +163,9 @@ var RealTime = React.createClass({
         });
         return measures.map(pod => {
             var anzId = (pod.get("children") || Immutable.List()).map(anz => {
-                return CollectionUtils.measures.decorateMeasure(anz);
+                return convertToRealTime.decorateMeasure(anz);
             });
-            return pod.set("value", CollectionUtils.measures.addValueToMeasures(
+            return pod.set("value", convertToRealTime.addValueToMeasures(
                 anzId.flatten(1),
                 this.getMeasuresBySite()
             ).filter(decorator => {
@@ -236,4 +223,16 @@ var RealTime = React.createClass({
     }
 });
 
+function mapStateToProps (state) {
+    return {
+        collections: state.collections,
+        realTime: state.realTime
+    };
+}
+
+function mapDispatchToProps (dispatch) {
+    return {
+        selectRealTimeSite: bindActionCreators(selectRealTimeSite, dispatch)
+    };
+}
 module.exports = connect(mapStateToProps, mapDispatchToProps)(RealTime);
