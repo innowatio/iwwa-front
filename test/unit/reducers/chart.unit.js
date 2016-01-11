@@ -362,21 +362,15 @@ describe("`chart` reducer", () => {
 
     });
 
-    describe.skip("`REMOVE_ALL_COMPARE` type", () => {
+    describe("`REMOVE_ALL_COMPARE` type", () => {
 
         it("should remove the date compare", () => {
             const chartRemoveDateCompareState = Object.freeze({
                 alarms: undefined,
                 sites: ["site1"],
-                consumptionSensors: ["consumptionSensorsId"],
+                consumptionSensors: [],
                 electricalSensors: ["electricalSensorsId"],
-                consumptionTypes: [{
-                    label: "labelEnvironmental",
-                    key: "keyEnvironment",
-                    color: "color",
-                    icon: "icon",
-                    selected: "iconSelected"
-                }],
+                consumptionTypes: [{}],
                 electricalTypes: [{
                     label: "labelType",
                     key: "keyType"
@@ -401,14 +395,14 @@ describe("`chart` reducer", () => {
             expect(ret).to.deep.equal({
                 alarms: undefined,
                 sites: ["site1"],
-                types: [
-                    {
-                        label: "labelType",
-                        key: "keyType"
-                    },
-                    {}
-                ],
-                dateRanges: [],
+                consumptionSensors: [],
+                electricalSensors: ["electricalSensorsId"],
+                consumptionTypes: [{}],
+                electricalTypes: [{
+                    label: "labelType",
+                    key: "keyType"
+                }],
+                dateRanges: {},
                 sources: [{
                     label: "labelSource",
                     color: "color",
@@ -421,23 +415,18 @@ describe("`chart` reducer", () => {
             const chartRemoveSiteCompareState = Object.freeze({
                 alarms: undefined,
                 sites: ["site1", "site2"],
-                consumptionSensors: ["consumptionSensorsId"],
-                electricalSensors: ["electricalSensorsId"],
-                consumptionTypes: [{
-                    label: "labelEnvironmental",
-                    key: "keyEnvironment",
-                    color: "color",
-                    icon: "icon",
-                    selected: "iconSelected"
-                }],
+                consumptionSensors: [],
+                electricalSensors: ["electricalSensorsIdSite1", "electricalSensorsIdSite2"],
+                consumptionTypes: [{}],
                 electricalTypes: [{
                     label: "labelType",
                     key: "keyType"
                 }],
-                dateRanges: [{
+                dateRanges: {
+                    range: "dateFilter",
                     start: 1449157137862,
                     end: 1449157157862
-                }],
+                },
                 sources: [{
                     label: "labelSource",
                     color: "color",
@@ -451,17 +440,73 @@ describe("`chart` reducer", () => {
             expect(ret).to.deep.equal({
                 alarms: undefined,
                 sites: ["site1"],
-                types: [
-                    {
-                        label: "labelType",
-                        key: "keyType"
-                    },
-                    {}
-                ],
-                dateRanges: [{
+                consumptionSensors: [],
+                electricalSensors: ["electricalSensorsIdSite1"],
+                consumptionTypes: [{}],
+                electricalTypes: [{
+                    label: "labelType",
+                    key: "keyType"
+                }],
+                dateRanges: {
+                    range: "dateFilter",
                     start: 1449157137862,
                     end: 1449157157862
+                },
+                sources: [{
+                    label: "labelSource",
+                    color: "color",
+                    key: "keySource"
+                }]
+            });
+        });
+
+        it("should remove the consumption sensor", () => {
+            const chartRemoveSiteCompareState = Object.freeze({
+                alarms: undefined,
+                sites: ["site1", "site2"],
+                consumptionSensors: ["consumptionSensorsId"],
+                electricalSensors: ["electricalSensorsIdSite1", "electricalSensorsIdSite2"],
+                consumptionTypes: [{
+                    label: "labelEnvironmental",
+                    key: "keyEnvironment",
+                    color: "color",
+                    icon: "icon",
+                    selected: "iconSelected"
                 }],
+                electricalTypes: [{
+                    label: "labelType",
+                    key: "keyType"
+                }],
+                dateRanges: {
+                    range: "dateFilter",
+                    start: 1449157137862,
+                    end: 1449157157862
+                },
+                sources: [{
+                    label: "labelSource",
+                    color: "color",
+                    key: "keySource"
+                }]
+            });
+            const valuePassedFromAction = {
+                type: "REMOVE_ALL_COMPARE"
+            };
+            const ret = chart(chartRemoveSiteCompareState, valuePassedFromAction);
+            expect(ret).to.deep.equal({
+                alarms: undefined,
+                sites: ["site1"],
+                consumptionSensors: [],
+                electricalSensors: ["electricalSensorsIdSite1"],
+                consumptionTypes: [{}],
+                electricalTypes: [{
+                    label: "labelType",
+                    key: "keyType"
+                }],
+                dateRanges: {
+                    range: "dateFilter",
+                    start: 1449157137862,
+                    end: 1449157157862
+                },
                 sources: [{
                     label: "labelSource",
                     color: "color",

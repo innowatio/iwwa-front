@@ -56,9 +56,9 @@ describe("The `ButtonGroupSelect` component ", function () {
         var selectNode = TestUtils.renderIntoDocument(
             <ButtonGroupSelect
                 allowedValues={allowedValues}
-                isDisabled={false}
                 getActiveStyle={R.identity}
                 getKey={getKeySpy}
+                isDisabled={false}
                 onChange={R.identity}
                 value={allowedValues.slice(0, 1)}
             />
