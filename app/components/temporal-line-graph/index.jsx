@@ -103,7 +103,10 @@ var TemporalLineGraph = React.createClass({
             options.underlayCallback = function (canvas, area, g) {
                 props.coordinates.map(value => {
                     var date = value[0];
-                    if (moment(lastDate).date() !== moment(date).date() && R.equals(moment(date), moment(date).day(6))) {
+                    if (
+                        moment(lastDate).format("D") !== moment(date).format("D") &&
+                        R.equals(moment(date).format("YYYY-MM-DD"), moment(date).day(6).format("YYYY-MM-DD"))
+                    ) {
                         lastDate = date;
                         var bottomLeft = g.toDomCoords(moment(date).startOf("day"), -20);
                         var topRight = g.toDomCoords(moment(date).add(1, "days").endOf("day"), +20);
