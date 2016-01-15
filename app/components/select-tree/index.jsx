@@ -121,7 +121,7 @@ var SelectTree = React.createClass({
                 }}
             >
                 <img src={icons.iconDown}/>
-        </components.Button> : null;
+            </components.Button> : null;
     },
     renderPanel: function (allowedValue) {
         return (
