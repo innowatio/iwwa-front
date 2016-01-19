@@ -60,7 +60,7 @@ var Chart = React.createClass({
         selectEnvironmentalSensor: React.PropTypes.func.isRequired,
         selectMultipleElectricalSensor: React.PropTypes.func.isRequired,
         selectSingleElectricalSensor: React.PropTypes.func.isRequired,
-        selectSource: React.PropTypes.func.isRequired,
+        selectSource: React.PropTypes.func.isRequired
     },
     mixins: [
         GetTutorialMixin("historicalGraph",

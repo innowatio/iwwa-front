@@ -126,7 +126,7 @@ var SelectTree = React.createClass({
     renderPanel: function (allowedValue) {
         return (
             <bootstrap.Panel
-                collapsible
+                collapsible={true}
                 eventKey={this.props.getLabel(allowedValue)}
                 header={this.renderHeader(allowedValue)}
                 key={this.props.getKey(allowedValue)}
@@ -157,7 +157,8 @@ var SelectTree = React.createClass({
                     overflow: "scroll",
                     maxHeight: "400px",
                     width: this.props.buttonCloseDefault ? "430px" : ""
-                }}>
+                }}
+            >
                 <Radium.Style
                     rules={{
                         ".form-group": {
@@ -212,15 +213,15 @@ var SelectTree = React.createClass({
                     type="text"
                 />
                 <bootstrap.PanelGroup
-                    accordion
+                    accordion={true}
                     activeKey={this.state.activeKey}
                     style={{maxHeight: "300px"}}
                 >
                     {panelOfSite}
                     <Waypoint
-                      onEnter={() => this.setState({
-                          numberOfValues: this.state.numberOfValues + 20
-                      })}
+                        onEnter={() => this.setState({
+                            numberOfValues: this.state.numberOfValues + 20
+                        })}
                     />
                 </bootstrap.PanelGroup>
             </div>

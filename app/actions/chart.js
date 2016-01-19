@@ -28,7 +28,7 @@ export function selectSingleElectricalSensor ({sensor, site}) {
         payload: {
             sensor,
             site
-        },
+        }
     };
 }
 

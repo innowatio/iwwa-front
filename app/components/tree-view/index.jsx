@@ -1,4 +1,3 @@
-var bootstrap  = require("react-bootstrap");
 var Immutable  = require("immutable");
 var IPropTypes = require("react-immutable-proptypes");
 var R          = require("ramda");
@@ -22,7 +21,7 @@ var TreeView = React.createClass({
         value: React.PropTypes.oneOfType([
             React.PropTypes.array,
             IPropTypes.list
-        ]),
+        ])
     },
     getInitialState: function () {
         return {
@@ -51,7 +50,6 @@ var TreeView = React.createClass({
         return path.slice(0, position).concat(newValue, undefined);
     },
     renderLevel: function (value, position) {
-        const self = this;
         const path = this.state.path.slice(0, position);
         var {allowedValues} = path.reduce((acc, pathValue) => {
             const node = acc.allowedValues.find(function (value) {
@@ -62,7 +60,7 @@ var TreeView = React.createClass({
                 [];
             return {
                 position: acc.position + 1,
-                allowedValues: values,
+                allowedValues: values
             };
         }, {position: 0, allowedValues: this.props.allowedValues});
 

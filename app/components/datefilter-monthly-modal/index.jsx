@@ -161,7 +161,7 @@ var DatefilterMonthlyModal = React.createClass({
                         scopeSelector=".modal-dialog"
                     />
                     <bootstrap.Modal.Header
-                        closeButton
+                        closeButton={true}
                         style={{borderBottom: "none"}}
                     >
                         <h3 className="text-center" style={{color: colors.primary}}>{"Seleziona periodo"}</h3>

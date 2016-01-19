@@ -124,7 +124,9 @@ var AlarmForm = React.createClass({
                         style={{
                             color: colors.primary,
                             marginTop: "8px"
-                        }}> {`Soglia (${this.state.threshold} kWh)`}
+                        }}
+                    >
+                        {`Soglia (${this.state.threshold} kWh)`}
                     </h4>
                     <components.Spacer direction="v" size={10} />
                     <bootstrap.Input
@@ -188,7 +190,8 @@ var AlarmForm = React.createClass({
             <components.Button
                 bsStyle="link"
                 disabled={this.props.alarmsReduxState.statePostAlarm}
-                onClick={this.reset}>
+                onClick={this.reset}
+            >
                 {<img src={icons.iconReset} style={{width: "75%"}}/>}
             </components.Button>
         );
@@ -203,7 +206,8 @@ var AlarmForm = React.createClass({
                     color: colors.white,
                     width: "230px",
                     height: "45px"
-                }}>
+                }}
+            >
                 {this.props.type === "update" ? "SALVA" : "CREA"}
             </components.Button>
         );
@@ -211,7 +215,7 @@ var AlarmForm = React.createClass({
     renderTitleSelectSite: function () {
         return this.state.sito.size === 0 ?
             <span>
-                Seleziona punto di misurazione
+                {"Seleziona punto di misurazione"}
                 <img src={icons.iconDown} style={{float: "right", paddingTop: "5px", width: "16px"}}/>
             </span> :
             <span>

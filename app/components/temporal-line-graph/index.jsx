@@ -308,7 +308,7 @@ var TemporalLineGraph = React.createClass({
                             }}
                             scopeSelector=".modal-container"
                         />
-                    <Loader color={colors.primary} style={{zIndex: 1010, position: "relative"}}/>
+                        <Loader color={colors.primary} style={{zIndex: 1010, position: "relative"}}/>
                     </bootstrap.Modal>
                 </div>
             );

@@ -9,7 +9,6 @@ import {bindActionCreators} from "redux";
 var components        = require("components");
 var convertToRealTime = require("lib/convert-collection-to-realtime");
 var colors            = require("lib/colors");
-var icons             = require("lib/icons");
 var styles            = require("lib/styles");
 import {selectRealTimeSite} from "actions/real-time";
 
@@ -187,7 +186,6 @@ var RealTime = React.createClass({
         });
     },
     render: function () {
-        const sites = this.props.collections.get("sites") || Immutable.Map();
         const selectedSiteName = this.getSelectedSiteName();
         return (
             <div style={styles.mainDivStyle}>

@@ -143,11 +143,13 @@ var AlarmRepetitionModal = React.createClass({
                     paddingBottom: "2px"
                 }}
             >
-                <span style={{
-                    color: colors.greySubTitle,
-                    alignItems: "center",
-                    display: "flex"
-                }}>
+                <span
+                    style={{
+                        color: colors.greySubTitle,
+                        alignItems: "center",
+                        display: "flex"
+                    }}
+                >
                     {"Dalle ore"}
                     <TimePicker
                         className="timepicker"
@@ -157,11 +159,13 @@ var AlarmRepetitionModal = React.createClass({
                     />
                 </span>
                 <components.Spacer direction="h" size={50} />
-                <span style={{
-                    color: colors.greySubTitle,
-                    alignItems: "center",
-                    display: "flex"
-                }}>
+                <span
+                    style={{
+                        color: colors.greySubTitle,
+                        alignItems: "center",
+                        display: "flex"
+                    }}
+                >
                     {"Alle ore"}
                     <Radium.Style
                         rules={{

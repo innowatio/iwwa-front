@@ -10,17 +10,12 @@ function filterByDate (measure, dateFilter) {
     const dateMeasure = moment(measure.get("day"), "YYYY-MM-DD").valueOf();
     return (dateFilter.start <= dateMeasure && dateFilter.end > dateMeasure);
 }
-function filterBySource (measure, source, sensors) {
-    const sensorId = measure.get("sensorId");
-    const index = sensors.indexOf(sensorId);
-    return measures.get("source") === source[index];
-}
 function arrayToReturn (measureObject, sensors, variables) {
     const date = keys(measureObject);
     return reduce((acc, singleData) => {
         const arrayFirstData = [
             new Date(parseInt(singleData)),
-            [measureObject[singleData][`${sensors[0]}-${variables[0]}`] || 0.01],
+            [measureObject[singleData][`${sensors[0]}-${variables[0]}`] || 0.01]
         ];
         const finalArray = variables[1] ? arrayFirstData.concat([[measureObject[singleData][`${sensors[1]}-${variables[1]}`] || 0.01]]) : arrayFirstData;
         return acc.concat([finalArray]);
@@ -74,8 +69,7 @@ function filterAndMergeMeasures (measures, sensors, variables, dateFilter) {
         };
     }, {mergedMeasures: Map(), sensorVariables: []});
 }
-export function convertBySensorsAndVariable (measures, sensors, variables, dateFilter, source) {
-    var sensorVariables = {};
+export function convertBySensorsAndVariable (measures, sensors, variables, dateFilter) {
     const measuresMerged = filterAndMergeMeasures(measures, sensors, variables, dateFilter);
     console.log("START M");
     const measuresDateAggregate = measuresDateObject(measuresMerged.mergedMeasures, measuresMerged.sensorVariables);

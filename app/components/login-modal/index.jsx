@@ -5,8 +5,8 @@ var R      = require("ramda");
 var components        = require("components");
 var assetsPathTo      = require("lib/assets-path-to");
 var colors            = require("lib/colors");
-var LoginView         = require("./login-view.jsx");
-var PasswordResetView = require("./password-reset-view.jsx");
+var LoginView         = require("./login-view");
+var PasswordResetView = require("./password-reset-view");
 
 var styles = {
     overlay: {
@@ -91,8 +91,7 @@ var LoginModal = React.createClass({
         });
     },
     renderActiveView: function () {
-        return (
-            this.state.activeView === "login" ?
+        return (this.state.activeView === "login" ?
             <LoginView asteroid={this.props.asteroid} /> :
             <PasswordResetView asteroid={this.props.asteroid} />
         );

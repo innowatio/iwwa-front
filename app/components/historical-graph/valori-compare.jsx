@@ -1,6 +1,6 @@
 var Immutable       = require("immutable");
 var IPropTypes      = require("react-immutable-proptypes");
-var moment          = require("moment");
+
 var Radium          = require("radium");
 var R               = require("ramda");
 var React           = require("react");
@@ -29,7 +29,6 @@ var ValoriCompare = React.createClass({
     mixins: [ReactPureRender],
     getCoordinates: function () {
         const self = this;
-        const selectedSiteId = self.props.sites[0] ? self.props.sites[0].get("_id") : "";
         var sensors = self.props.electricalSensors;
         var selectedTypes = [self.props.electricalTypes.key];
         if (self.props.consumptionSensors[0]) {

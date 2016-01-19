@@ -63,29 +63,29 @@ var SitiCompare = React.createClass({
     },
     titleFirstSelect: function () {
         return R.isNil(this.state.valueFirst) ?
-        <span>
-            Seleziona punto 1
-            <img src={icons.iconDown} style={{float: "right", paddingTop: "5px", width: "16px"}}/>
-        </span> :
-        <span>
-            {this.props.getSitoLabel(this.props.allowedValues.get(this.state.valueFirst))}
-            <components.Spacer direction="h" size={30} />
-            {this.props.allowedValues.get(this.state.valueFirst).get("pod")}
-            <img src={icons.iconDown} style={{float: "right", paddingTop: "5px", width: "16px"}}/>
-        </span>;
+            <span>
+                {"Seleziona punto 1"}
+                <img src={icons.iconDown} style={{float: "right", paddingTop: "5px", width: "16px"}}/>
+            </span> :
+            <span>
+                {this.props.getSitoLabel(this.props.allowedValues.get(this.state.valueFirst))}
+                <components.Spacer direction="h" size={30} />
+                {this.props.allowedValues.get(this.state.valueFirst).get("pod")}
+                <img src={icons.iconDown} style={{float: "right", paddingTop: "5px", width: "16px"}}/>
+            </span>;
     },
     titleSecondSelect: function () {
         return R.isNil(this.state.valueSecond) ?
-        <span>
-            Seleziona punto 2
-            <img src={icons.iconDown} style={{float: "right", paddingTop: "5px", width: "16px"}}/>
-        </span> :
-        <span>
-            {this.props.getSitoLabel(this.props.allowedValues.get(this.state.valueSecond))}
-            <components.Spacer direction="h" size={30} />
-            {this.props.allowedValues.get(this.state.valueSecond).get("pod")}
-            <img src={icons.iconDown} style={{float: "right", paddingTop: "5px", width: "16px"}}/>
-        </span>;
+            <span>
+                {"Seleziona punto 2"}
+                <img src={icons.iconDown} style={{float: "right", paddingTop: "5px", width: "16px"}}/>
+            </span> :
+            <span>
+                {this.props.getSitoLabel(this.props.allowedValues.get(this.state.valueSecond))}
+                <components.Spacer direction="h" size={30} />
+                {this.props.allowedValues.get(this.state.valueSecond).get("pod")}
+                <img src={icons.iconDown} style={{float: "right", paddingTop: "5px", width: "16px"}}/>
+            </span>;
     },
     render: function () {
         return (

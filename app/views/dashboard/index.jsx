@@ -4,7 +4,6 @@ var React      = require("react");
 
 var components   = require("components");
 var assetsPathTo = require("lib/assets-path-to");
-var colors       = require("lib/colors");
 
 var Dashboard = React.createClass({
     propTypes: {
