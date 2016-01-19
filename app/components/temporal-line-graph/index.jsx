@@ -266,24 +266,59 @@ var TemporalLineGraph = React.createClass({
         // TODO Set a timeout.
         if (!R.isNil(this.props.site) && this.props.site.size > 0 && this.props.coordinates.length === 0) {
             return (
-                <bootstrap.Modal
-                    animation={false}
-                    autoFocus={false}
-                    container={this}
-                    enforceFocus={false}
-                    onHide={R.identity()}
-                    show={true}
-                    style={{zIndex: 1000}}
-                >
-                    <Loader color={colors.primary} style={{zIndex: 1010, position: "relative"}}/>
-                </bootstrap.Modal>
+                <div className="modal-spinner">
+                    <bootstrap.Modal
+                        animation={false}
+                        autoFocus={false}
+                        container={this}
+                        enforceFocus={false}
+                        onHide={R.identity()}
+                        show={true}
+                        style={{zIndex: 1000}}
+                    >
+                        <Radium.Style
+                            rules={{
+                                ".modal-dialog": {
+                                    width: "98%"
+                                },
+                                ".modal-container": {
+                                    position: "relative",
+                                    width: "100%"
+                                },
+                                ".modal-container .modal, .modal-container .modal-backdrop": {
+                                    position: "absolute",
+                                    width: "98%"
+                                },
+                                ".modal": {
+                                    top: "50%",
+                                    zIndex: 1039
+                                },
+                                ".modal-content > div > div": {
+                                    left: "45%"
+                                },
+                                ".modal-content": {
+                                    backgroundColor: colors.transparent,
+                                    boxShadow: "none",
+                                    WebkitBoxShadow: "none",
+                                    border: "none"
+                                },
+                                ".modal-backdrop": {
+                                    opacity: "0.8",
+                                    backgroundColor: colors.white,
+                                    zIndex: 1039
+                                }
+                            }}
+                            scopeSelector=".modal-container"
+                        />
+                        <Loader color={colors.primary} style={{zIndex: 1010, position: "relative"}}/>
+                    </bootstrap.Modal>
+                </div>
             );
         }
     },
     render: function () {
         return (
             <div className="container-graph">
-                {this.renderSpinner()}
                 <Radium.Style
                     rules={{
                         ".alarmPoint": {
@@ -298,36 +333,6 @@ var TemporalLineGraph = React.createClass({
                             display: ENVIRONMENT === "cordova" ? "none" : "initial",
                             top: "-50px !important",
                             boxShadow: "2px 2px 5px " + colors.greySubTitle
-                        },
-                        ".modal-dialog": {
-                            width: "98%"
-                        },
-                        ".modal-container": {
-                            position: "relative",
-                            width: "100%"
-                        },
-                        ".modal-container .modal, .modal-container .modal-backdrop": {
-                            position: "absolute",
-                            width: "98%"
-                        },
-                        ".modal": {
-                            top: "50%",
-                            zIndex: 1039
-                        },
-                        ".modal-content > div > div": {
-                            left: "45%"
-                        },
-                        ".modal-content": {
-                            backgroundColor: colors.transparent,
-                            boxShadow: "none",
-                            WebkitBoxShadow: "none",
-                            border: "none"
-                        },
-                        ".modal-backdrop": {
-                            opacity: "0.8",
-                            backgroundColor: colors.white,
-                            zIndex: 1039,
-                            top: "80px"
                         }
                     }}
                     scopeSelector=".container-graph"
