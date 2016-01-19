@@ -48,6 +48,7 @@ var SiteNavigator = React.createClass({
     getInitialState: function () {
         return {
             siteNavigatorView: this.props.showModal || false,
+            inputFilter: "",
             pathParent: [],
             pathChildren: []
         };
@@ -72,9 +73,20 @@ var SiteNavigator = React.createClass({
     getLabelChildren: function (value) {
         return value.get("id");
     },
-    getFilterCriteria (values) {
+    getFilterCriteria: function (values) {
         return values.filter((value) => {
             return ["CO2", "THL"].indexOf(value.get("type").toUpperCase()) < 0;
+        });
+    },
+    getFilteredValues: function () {
+        var clause = this.state.inputFilter.toLowerCase();
+        return this.props.allowedValues.filter((value) => {
+            var pods = this.getFilterCriteria(value.get("sensors") || Immutable.Map())
+                .map(this.getLabelChildren);
+            return value.get("name").toLowerCase().includes(clause) ||
+                pods.map((pod) => {
+                    return pod.toLowerCase().includes(clause);
+                }).contains(true);
         });
     },
     onClickChildren: function (value) {
@@ -113,7 +125,7 @@ var SiteNavigator = React.createClass({
     renderSitesParent: function () {
         return (
             <components.ButtonGroupSelect
-                allowedValues={this.props.allowedValues.toArray()}
+                allowedValues={this.getFilteredValues().toArray()}
                 getKey={this.getKeyParent}
                 getLabel={this.getLabelParent}
                 multi={false}
@@ -127,7 +139,7 @@ var SiteNavigator = React.createClass({
         if (this.state.pathParent && this.state.pathParent.length > 0) {
             return (
                 <components.TreeView
-                    allowedValues={this.props.allowedValues.getIn([this.state.pathParent[0].get("_id"), "sensors"])}
+                    allowedValues={this.getFilteredValues().getIn([this.state.pathParent[0].get("_id"), "sensors"])}
                     filterCriteria={this.getFilterCriteria}
                     getKey={this.getKeyChildren}
                     getLabel={this.getLabelChildren}
@@ -145,6 +157,13 @@ var SiteNavigator = React.createClass({
                 <div>
                     <h3 className="text-center" style={{color: colors.primary}}>{this.props.title}</h3>
                 </div>
+                <bootstrap.Input
+                    addonAfter={<img src={icons.iconSearch} style={{height: "21px"}}/>}
+                    className="input-search"
+                    onChange={(input) => this.setState({inputFilter: input.target.value})}
+                    placeholder="Ricerca"
+                    type="text"
+                />
                 <bootstrap.Col style={{height: "70vh", padding: "20px", overflow: "auto"}} xs={4}>
                     <div className="site-navigator-parent">
                         <Radium.Style
