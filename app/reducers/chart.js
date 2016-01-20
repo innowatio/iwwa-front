@@ -34,6 +34,7 @@ export function chart (state = defaultChartState, {type, payload}) {
             ...state,
             alarms: undefined,
             electricalSensors: [payload.sensor],
+            fullPath: payload.fullPath,
             sites: [payload.site]
         };
     case SELECT_ELECTRICAL_TYPE:

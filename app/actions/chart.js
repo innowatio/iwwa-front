@@ -17,15 +17,17 @@ export const REMOVE_ALL_COMPARE = "REMOVE_ALL_COMPARE";
 */
 const typeofSelectSingleElectricalSensor = actionTypeValidator(
     struct({
+        fullPath: Array,
         sensor: String,
         site: String
     })
 );
-export function selectSingleElectricalSensor ({sensor, site}) {
+export function selectSingleElectricalSensor ({fullPath, sensor, site}) {
     typeofSelectSingleElectricalSensor(...arguments);
     return {
         type: SELECT_SINGLE_ELECTRICAL_SENSOR,
         payload: {
+            fullPath,
             sensor,
             site
         },

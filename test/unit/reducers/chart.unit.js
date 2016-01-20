@@ -39,7 +39,8 @@ describe("`chart` reducer", () => {
                 type: "SELECT_SINGLE_ELECTRICAL_SENSOR",
                 payload: {
                     site: "siteId",
-                    sensor: "sensorId"
+                    sensor: "sensorId",
+                    fullPath: ["siteId", "podId", "sensorId"]
                 }
             };
             const ret = chart(chartState, valuePassedFromAction);
@@ -48,6 +49,7 @@ describe("`chart` reducer", () => {
                 sites: ["siteId"],
                 consumptionSensors: ["consumptionSensorsId"],
                 electricalSensors: ["sensorId"],
+                fullPath: ["siteId", "podId", "sensorId"],
                 consumptionTypes: [{
                     label: "labelEnvironmental",
                     key: "keyEnvironment",
