@@ -209,9 +209,11 @@ var Chart = React.createClass({
             dayStart = moment().startOf("month").format("YYYY-MM-DD");
             dayEnd = moment().endOf("month").format("YYYY-MM-DD");
         }
-        const sensor = props.chart.electricalSensors.concat(props.chart.consumptionSensors);
-        sensor.forEach(function (sensorId) {
-            self.props.asteroid.subscribe("dailyMeasuresBySensor", sensorId, dayStart, dayEnd);
+        const sensors = props.chart.electricalSensors.concat(props.chart.consumptionSensors);
+        const measurementType = props.chart.electricalTypes.concat(props.chart.consumptionTypes);
+        const source = "reading";
+        sensors.forEach(function (sensorId, idx) {
+            self.props.asteroid.subscribe("dailyMeasuresBySensor", sensorId, dayStart, dayEnd, source, measurementType[idx]);
         });
     },
     getValoreActiveStyle: function (valore) {
