@@ -7,7 +7,7 @@ describe("The `TreeView` component ", function () {
 
     var TreeView = proxyquire("components/tree-view/", {});
 
-    describe("the `setPath` function ", function (){
+    describe("the `setPath` function ", function () {
         it("should return the expected array", function () {
             const givenArray = ["a", "b", "c"];
             const expected = ["a", "b", "c", "d", undefined];

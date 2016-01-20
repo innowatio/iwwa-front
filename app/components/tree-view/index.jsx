@@ -13,7 +13,7 @@ var TreeView = React.createClass({
         allowedValues: React.PropTypes.oneOfType([
             React.PropTypes.array,
             IPropTypes.list
-        ]),
+        ]).isRequired,
         filterCriteria: React.PropTypes.func,
         getKey: React.PropTypes.func,
         getLabel: React.PropTypes.func,
@@ -22,20 +22,21 @@ var TreeView = React.createClass({
         value: React.PropTypes.oneOfType([
             React.PropTypes.array,
             IPropTypes.list
-        ]),
+        ]).isRequired,
     },
     getInitialState: function () {
         return {
-            path: this.props.value || [undefined]
+            path: (this.props.value || []).concat(undefined)
         };
     },
     componentWillReceiveProps: function (props) {
-        return this.getStateFromProps(props);
+        this.getStateFromProps(props);
     },
     getStateFromProps: function (props) {
-        this.setState({
-            path: props.value
-        });
+        const path = (props.value || []).concat(undefined);
+        return {
+            path: path
+        };
     },
     applyFilters: function (values) {
         return this.props.filterCriteria ?

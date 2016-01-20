@@ -40,15 +40,18 @@ var itemsStyleActive = {
 var SiteNavigator = React.createClass({
     propTypes: {
         allowedValues: IPropTypes.map.isRequired,
+        defaultPath: React.PropTypes.oneOfType([
+            React.PropTypes.array,
+            IPropTypes.list
+        ]),
         onChange: React.PropTypes.func.isRequired,
-        selectedSite: IPropTypes.map,
         showModal: React.PropTypes.bool,
         title: React.PropTypes.string
     },
     getInitialState: function () {
         return {
             siteNavigatorView: this.props.showModal || false,
-            pathParent: [],
+            pathParent: undefined,
             pathChildren: []
         };
     },
@@ -56,8 +59,16 @@ var SiteNavigator = React.createClass({
         return this.getStateFromProps(props);
     },
     getStateFromProps: function (props) {
+        const path = props.defaultPath;
+        var parent = [];
+        var children = [];
+        if (path.length > 0) {
+            parent = path[0];
+            children = path.slice(1, path.length);
+        }
         this.setState({
-            pathParent: props.selectedSite ? [props.selectedSite] : [] // FIXME
+            pathParent: parent,
+            pathChildren: children
         });
     },
     getKeyParent: function (value) {
@@ -84,7 +95,7 @@ var SiteNavigator = React.createClass({
     },
     onClickParent: function (value) {
         this.setState({
-            pathParent: value,
+            pathParent: this.getKeyParent(value[0]),
             pathChildren: []
         });
     },
@@ -97,13 +108,14 @@ var SiteNavigator = React.createClass({
         this.setState({showModal: false});
     },
     getReturnValues: function () {
+        var site = this.state.pathParent;
+        var childrenPath = this.state.pathChildren.filter(function (value) {
+            return !R.isNil(value);
+        });
         return {
-            site: this.state.pathParent.length > 0 ?
-                this.getKeyParent(this.state.pathParent[0]) :
-                "",
-            sensor: R.last(this.state.pathChildren.filter(function (value) {
-                return !R.isNil(value);
-            }))
+            fullPath: [site].concat(childrenPath),
+            site: site,
+            sensor: R.last(childrenPath)
         };
     },
     onClickConfirm: function () {
@@ -111,6 +123,7 @@ var SiteNavigator = React.createClass({
         this.props.onChange(this.getReturnValues());
     },
     renderSitesParent: function () {
+        var self = this;
         return (
             <components.ButtonGroupSelect
                 allowedValues={this.props.allowedValues.toArray()}
@@ -118,22 +131,26 @@ var SiteNavigator = React.createClass({
                 getLabel={this.getLabelParent}
                 multi={false}
                 onChange={this.onClickParent}
-                value={this.state.pathParent}
+                value={[this.props.allowedValues.find((value) => {
+                    return self.getKeyParent(value) === self.state.pathParent;
+                })].filter(function (value) {
+                    return !R.isNil(value);
+                })}
                 vertical={true}
             />
         );
     },
     renderSitesChildren: function () {
-        if (this.state.pathParent && this.state.pathParent.length > 0) {
+        if (this.state.pathParent) {
             return (
                 <components.TreeView
-                    allowedValues={this.props.allowedValues.getIn([this.state.pathParent[0].get("_id"), "sensors"])}
+                    allowedValues={this.props.allowedValues.getIn([this.state.pathParent, "sensors"]) || []}
                     filterCriteria={this.getFilterCriteria}
                     getKey={this.getKeyChildren}
                     getLabel={this.getLabelChildren}
                     multi={false}
                     onChange={this.onClickChildren}
-                    value={this.state.pathChildren.length > 1 ? this.state.pathChildren : [undefined]}
+                    value={this.state.pathChildren.length > 0 ? this.state.pathChildren : [undefined]}
                     vertical={true}
                 />
             );
