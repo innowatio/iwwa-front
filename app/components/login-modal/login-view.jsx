@@ -4,12 +4,12 @@ var React     = require("react");
 var bootstrap = require("react-bootstrap");
 
 var components = require("components");
-var colors     = require("lib/colors");
-var icons      = require("lib/icons");
+var colors     = require("lib/colors_restyling");
+var icons      = require("lib/icons_restyling");
 
 var styles = {
     inputs: {
-        borderRadius: "6px",
+        borderRadius: "15px",
         overflow: "hidden",
         borderWidth: "1px",
         borderColor: color(colors.white).alpha(0.3).rgbString(),
@@ -17,8 +17,14 @@ var styles = {
         color: colors.white
     },
     loginButton: {
-        background: colors.primary,
-        color: colors.white
+        background: colors.buttonPrimary,
+        color: colors.white,
+        height: "68px",
+        width: "80%",
+        margin: "auto",
+        borderRadius: "30px",
+        border: "0px none",
+        fontSize: "22px"
     },
     errorAlert: {
         marginTop: "16px",
@@ -66,7 +72,7 @@ var LoginView = React.createClass({
                         rules={{
                             ".form-group": {
                                 marginBottom: "0px",
-                                border: "solid 1px " + color(colors.white).alpha(0.3).rgbString()
+                                border: "solid 1px " + color(colors.white).alpha(0.3).rgbString(),
                             },
                             ".form-group div, .form-group span, .form-group input": {
                                 border: "0px",
@@ -79,29 +85,29 @@ var LoginView = React.createClass({
                                 boxShadow: "none"
                             },
                             "::-webkit-input-placeholder": {
-                               color: colors.white
+                                color: color(colors.white).alpha(0.7).rgbString()
                             },
                             ":-moz-placeholder": { /* Firefox 18- */
-                               color: colors.white
+                                color: color(colors.white).alpha(0.7).rgbString()
                             },
                             "::-moz-placeholder": {  /* Firefox 19+ */
-                               color: colors.white
+                                color: color(colors.white).alpha(0.7).rgbString()
                             },
                             ":-ms-input-placeholder": {
-                               color: colors.white
+                                color: color(colors.white).alpha(0.7).rgbString()
                             }
                         }}
                         scopeSelector=".ac-login-modal-inputs"
                     />
                     <bootstrap.Input
-                        addonBefore={<img src={icons.iconUser} style={{width: "20px"}}/>}
+                        addonBefore={<img src={icons.iconUser} style={{height: "40px"}}/>}
                         bsSize="large"
                         placeholder="Email"
                         ref="email"
                         type="email"
                     />
                     <bootstrap.Input
-                        addonBefore={<img src={icons.iconLock} style={{width: "20px"}}/>}
+                        addonBefore={<img src={icons.iconLock} style={{height: "40px"}}/>}
                         bsSize="large"
                         placeholder="Password"
                         ref="password"
