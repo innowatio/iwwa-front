@@ -1,11 +1,11 @@
-import {String, Number, tuple, struct, list} from "tcomb";
+import {String, Number, tuple, struct, list, maybe} from "tcomb";
 
 import actionTypeValidator from "../lib/action-type-validator";
 
 export const SELECT_SINGLE_ELECTRICAL_SENSOR = "SELECT_SINGLE_ELECTRICAL_SENSOR";
 export const SELECT_ELECTRICAL_TYPE = "SELECT_ELECTRICAL_TYPE";
 export const SELECT_ENVIRONMENTAL_SENSOR = "SELECT_ENVIRONMENTAL_SENSOR";
-export const SELECT_SOURCES = "SELECT_SOURCES";
+export const SELECT_SOURCE = "SELECT_SOURCE";
 export const SELECT_MULTIPLE_ELECTRICAL_SENSOR = "SELECT_MULTIPLE_ELECTRICAL_SENSOR";
 export const SELECT_DATE_RANGES = "SELECT_DATE_RANGES";
 export const SELECT_DATE_RANGES_COMPARE = "SELECT_DATE_RANGES_COMPARE";
@@ -55,13 +55,17 @@ export function selectElectricalType (electricalType) {
 *   @param {array} sites - id site of the two sites
 */
 const typeofSelectMultipleElectricalSensor = actionTypeValidator(
-    tuple([String, String])
+    tuple([String, String]),
+    tuple([String, maybe(String)])
 );
-export function selectMultipleElectricalSensor (sitesId) {
+export function selectMultipleElectricalSensor (sensors, sites) {
     typeofSelectMultipleElectricalSensor(...arguments);
     return {
         type: SELECT_MULTIPLE_ELECTRICAL_SENSOR,
-        payload: sitesId
+        payload: {
+            sites,
+            sensors
+        }
     };
 }
 
@@ -128,7 +132,7 @@ const typeofSelectSource = actionTypeValidator(
 export function selectSource (sources) {
     typeofSelectSource(...arguments);
     return {
-        type: SELECT_SOURCES,
+        type: SELECT_SOURCE,
         payload: sources
     };
 }

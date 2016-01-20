@@ -49,7 +49,7 @@ var consumptionButtonSelectedStyle = {
 var Chart = React.createClass({
     propTypes: {
         asteroid: React.PropTypes.object,
-        chart: React.PropTypes.object.isRequired,
+        chart: React.PropTypes.arrayOf(React.PropTypes.object).isRequired,
         collections: IPropTypes.map.isRequired,
         localStorage: React.PropTypes.object,
         location: React.PropTypes.object.isRequired,
@@ -403,6 +403,7 @@ var Chart = React.createClass({
                     >
                         <components.HistoricalGraph
                             alarms={this.props.chart.alarms}
+                            chart={this.props.chart}
                             consumptionSensors={this.props.chart.consumptionSensors}
                             consumptionTypes={this.props.chart.consumptionTypes[0]}
                             dateCompare={this.switchDateCompareAndFilter() ? this.props.chart.dateRanges : undefined}

@@ -1,11 +1,11 @@
-import {equals, path} from "ramda";
+import {equals, path, last} from "ramda";
 
 import * as colors from "lib/colors";
 import {
     SELECT_SINGLE_ELECTRICAL_SENSOR,
     SELECT_ELECTRICAL_TYPE,
     SELECT_ENVIRONMENTAL_SENSOR,
-    SELECT_SOURCES,
+    SELECT_SOURCE,
     SELECT_MULTIPLE_ELECTRICAL_SENSOR,
     SELECT_DATE_RANGES,
     SELECT_DATE_RANGES_COMPARE,
@@ -14,103 +14,91 @@ import {
 
 import {DISPLAY_ALARMS_ON_CHART} from "../actions/alarms";
 
-const defaultChartState = {
+const defaultChartState = [{
     alarms: undefined,
-    consumptionSensors: [],
-    consumptionTypes: [{}],
-    dateRanges: {},
-    electricalSensors: [],
-    electricalTypes: [{label: "Attiva", key: "activeEnergy"}],
-    sites: [],
-    sources: [{label: "Reale", color: colors.lineReale, key: "real"}]
-};
+    sensorId: null,
+    date: {},
+    measurementType: {label: "Attiva", key: "activeEnergy"},
+    sites: null,
+    source: {label: "Reale", color: colors.lineReale, key: "real"}
+}];
 
 export function chart (state = defaultChartState, {type, payload}) {
-    const firstElectricalSensor = state.electricalSensors.slice(0, 1) || [];
-    const firstSites = state.sites.slice(0, 1) || [];
     switch (type) {
     case SELECT_SINGLE_ELECTRICAL_SENSOR:
-        return {
-            ...state,
+        return [{
+            ...state[0],
             alarms: undefined,
-            electricalSensors: [payload.sensor],
-            sites: [payload.site]
-        };
+            sensorId: payload.sensor,
+            site: payload.site
+        }];
     case SELECT_ELECTRICAL_TYPE:
-        return {
-            ...state,
+        return state.map((stateObj, idx) => ({
+            ...state[idx],
             alarms: undefined,
-            electricalTypes: [payload]
-        };
+            measurementType: payload
+        }));
     case SELECT_MULTIPLE_ELECTRICAL_SENSOR:
-        return {
-            ...state,
+        const measurementType = state[0].measurementType;
+        return payload.sensors.map((sensorId, idx) => ({
+            ...state[0],
             alarms: undefined,
-            electricalSensors: payload,
-            dateRanges: path("range", state.dateRanges) === "dateFilter" ?
-                state.dateRanges :
-                {},
-            consumptionSensors: [],
-            consumptionTypes: []
-        };
-    case SELECT_DATE_RANGES_COMPARE:
-        return {
-            ...state,
-            alarms: undefined,
-            dateRanges: payload,
-            electricalSensors: firstElectricalSensor,
-            consumptionSensors: [],
-            consumptionTypes: []
-        };
+            sensorId,
+            site: payload.sites.length <= 1 ? payload.sites[0] : payload.sites[idx],
+            measurementType,
+            date: state[0].date.range === "dateFilter" ?
+                state[0].date :
+                {}
+        }));
+    // case SELECT_DATE_RANGES_COMPARE:
+    //     const
+    //     return
+    //
+    //     {
+    //         ...state,
+    //         alarms: undefined,
+    //         dateRanges: payload,
+    //         electricalSensors: firstElectricalSensor,
+    //         consumptionSensors: [],
+    //         consumptionTypes: []
+    //     };
     case SELECT_ENVIRONMENTAL_SENSOR:
         const toggle = (
-            equals(state.consumptionSensors, payload.sensorId) &&
-            equals(state.consumptionTypes, payload.type)
+            equals(last(state).sensorId, payload.sensorId) &&
+            equals(last(state).measurementType, payload.type[0])
         );
-        return {
-            ...state,
+        if (toggle) {
+            return state[0];
+        }
+        const environmentalSensor = {
             alarms: undefined,
-            consumptionSensors: toggle ? [] : payload.sensorId,
-            consumptionTypes: toggle ? [{}] : payload.type,
-            dateRanges: path(["range"], state.dateRanges) === "dateFilter" ?
-                state.dateRanges :
+            sensorId: payload.sensorId[0],
+            site: state[0].site,
+            measurementType: payload.type[0],
+            date: path(["range"], state[0].date) === "dateFilter" ?
+                state[0].date :
                 {},
-            electricalSensors: firstElectricalSensor
+            source: defaultChartState[0].source
         };
-    case SELECT_SOURCES:
-        return {
-            ...state,
+        return state.length <= 1 ?
+            state.concat(environmentalSensor) :
+            state[0].concat(environmentalSensor);
+    case SELECT_SOURCE:
+        return payload.map(source => ({
+            ...state[0],
             alarms: undefined,
-            sources: payload
-        };
+            source
+        }));
     case SELECT_DATE_RANGES:
-        return {
-            ...state,
-            dateRanges: payload
-        };
+        return state.map((stateObj, idx) => ({
+            ...state[idx],
+            date: payload
+        }));
     case REMOVE_ALL_COMPARE:
-        return {
-            ...state,
-            dateRanges: path(["range"], state.dateRanges) === "dateFilter" ?
-                state.dateRanges :
-                {},
-            alarms: undefined,
-            electricalSensors: firstElectricalSensor,
-            sites: firstSites,
-            consumptionSensors: [],
-            consumptionTypes: [{}]
-        };
+        return state[0];
     case DISPLAY_ALARMS_ON_CHART:
-        return {
-            ...state,
-            dateRanges: {
-                start: payload.startDate,
-                end: payload.endDate
-            },
-            electricalSensors: payload.sensorId,
-            alarms: payload.alarms,
-            types: [{label: "Attiva", key: "activeEnergy"}]
-        };
+        // TODO
+        return state;
     default:
         return state;
     }
