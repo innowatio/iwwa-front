@@ -3,9 +3,9 @@ var Radium    = require("radium");
 var React     = require("react");
 
 var asteroid          = require("lib/asteroid");
-var colors            = require("lib/colors");
+var colors            = require("lib/colors_restyling");
 var components        = require("components");
-var icons             = require("lib/icons");
+var icons             = require("lib/icons_restyling");
 var LocalStorageMixin = require("lib/localstorage-mixin");
 var measures          = require("lib/measures");
 
@@ -104,6 +104,7 @@ var Root = React.createClass({
         });
     },
     render: function () {
+        var titleView = this.props.children.props.route.titleView || "";
         return (
             <div>
                 <components.SideNav
@@ -116,6 +117,7 @@ var Root = React.createClass({
                     <components.Header
                         asteroid={asteroid}
                         menuClickAction={this.toggleSidebar}
+                        title={titleView}
                     />
                 </div>
                 <div style={ENVIRONMENT === "cordova" ?

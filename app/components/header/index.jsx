@@ -4,8 +4,8 @@ var Radium    = require("radium");
 var React     = require("react");
 var R         = require("ramda");
 
-var colors = require("lib/colors");
-var icons  = require("lib/icons");
+var colors = require("lib/colors_restyling");
+var icons  = require("lib/icons_restyling");
 
 var styles = {
     base: {
@@ -14,7 +14,6 @@ var styles = {
         justifyContent: "space-between",
         padding: "8px",
         background: colors.primary,
-        width: "100%",
         height: "100%",
         color: colors.white
     },
@@ -24,6 +23,11 @@ var styles = {
     },
     hamburger: {
         cursor: "pointer"
+    },
+    viewTitle: {
+        margin: "auto",
+        fontSize: "20px",
+        borderBottom: `3px solid ${colors.buttonPrimary}`
     }
 };
 
@@ -58,6 +62,9 @@ var Header = React.createClass({
                         <img src={icons.iconLogo} />
                     </Router.Link>
                 </span>
+                <div style={styles.viewTitle}>
+                    {this.props.title.toUpperCase()}
+                </div>
                 {this.renderAdminPage()}
                 <span onClick={this.logout} style={styles.icon}>
                     <img className="pull-right" src={icons.iconLogout} style={{width: "85%"}}/>
