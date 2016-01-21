@@ -61,7 +61,6 @@ describe("readingsDailyAggregatesToDygraphData", () => {
             filters
         );
         console.log(`Result in ${Date.now() - start}ms`);
-        // console.log(result);
         expect(result).to.be.an("array");
     });
 

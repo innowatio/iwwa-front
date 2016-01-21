@@ -86,18 +86,18 @@ var Gauge = React.createClass({
                             cx="0"
                             cy="0"
                             r="95"
-                            style={R.merge(styleGauge, this.props.styleGaugeBody)}
+                            style={R.merge(styleGauge, this.props.styleGaugeBody || {})}
                         />
                         <circle
                             clipPath="url(#cut-off-top)"
                             cx="0"
                             cy="0"
                             r="95"
-                            style={R.merge(styleGaugeBar, this.props.styleGaugeBar)}
+                            style={R.merge(styleGaugeBar, this.props.styleGaugeBar || {})}
                         />
                     </g>
                     <rect
-                        fill="white"
+                        fill={colors.white}
                         height="5"
                         style={{zIndex: 4}}
                         width="200"
@@ -106,11 +106,11 @@ var Gauge = React.createClass({
                     />
                     {/* Pointer */}
                     <g transform={transform} >
-                        <circle cx="-84.5" cy="0" r="3" style={R.merge(stylePointer, this.props.stylePointer)} />
-                        <path d="M-85 -3 L -90 0 -85 3 Z" style={R.merge(stylePointer, this.props.stylePointer)} />
+                        <circle cx="-84.5" cy="0" r="3" style={R.merge(stylePointer, this.props.stylePointer || {})} />
+                        <path d="M-85 -3 L -90 0 -85 3 Z" style={R.merge(stylePointer, this.props.stylePointer || {})} />
                     </g>
                 </svg>
-                <div style={R.merge(styles.label, this.props.styleLabel)}>
+                <div style={R.merge(styles.label, this.props.styleLabel || {})}>
                     {this.props.valueLabel || this.props.value}
                 </div>
             </div>

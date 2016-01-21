@@ -101,7 +101,7 @@ proGulp.task("buildAppAssets", function () {
 proGulp.task("buildVendorStyles", function () {
     return gulp.src(deps.css)
         .pipe(gp.concat("vendor.css"))
-        .pipe(gp.if(MINIFY_FILES, gp.minifyCss()))
+        .pipe(gp.if(MINIFY_FILES, gp.cssnano()))
         .pipe(gulp.dest("builds/" + ENVIRONMENT + "/_assets/css/"));
 });
 

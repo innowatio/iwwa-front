@@ -7,7 +7,8 @@ var React           = require("react");
 var ReactPureRender = require("react-addons-pure-render-mixin");
 
 var components    = require("components");
-var convertToGraph = require("lib/convert-collection-to-graph");
+// var convertToGraph = require("lib/convert-collection-to-graph");
+import readingsDailyAggregatesToDygraphData from "lib/readings-daily-aggregates-to-dygraph-data";
 
 var ValoriCompare = React.createClass({
     propTypes: {
@@ -35,7 +36,17 @@ var ValoriCompare = React.createClass({
             sensors = sensors.concat(self.props.consumptionSensors);
             selectedTypes = selectedTypes.concat(self.props.consumptionTypes.key);
         }
-        return convertToGraph.convertBySensorsAndVariable(self.props.misure, sensors, selectedTypes, self.props.dateFilter);
+        const filters = sensors.map((sensorId, index) => ({
+            sensorId,
+            date: this.props.dateFilter,
+            measurementType: selectedTypes.length <= 1 ? selectedTypes[0] : selectedTypes[index],
+            source: "reading"
+        }));
+        const start = Date.now();
+        console.log("Start");
+        const result = readingsDailyAggregatesToDygraphData(self.props.misure, filters);
+        console.log(`Result in ${Date.now() - start}ms`);
+        return result;
     },
     getLabels: function () {
         var label = ["Data"].concat(
