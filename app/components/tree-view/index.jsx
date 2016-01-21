@@ -34,9 +34,9 @@ var TreeView = React.createClass({
     },
     getStateFromProps: function (props) {
         const path = (props.value || []).concat(undefined);
-        return {
+        this.setState({
             path: path
-        };
+        });
     },
     applyFilters: function (values) {
         return this.props.filterCriteria ?
@@ -54,8 +54,9 @@ var TreeView = React.createClass({
     renderLevel: function (value, position) {
         const self = this;
         const path = this.state.path.slice(0, position);
+        console.log(this.props.allowedValues);
         var {allowedValues} = path.reduce((acc, pathValue) => {
-            const node = acc.allowedValues.find(function (value) {
+            const node = acc.allowedValues && acc.allowedValues.find(function (value) {
                 return value.get("id") === pathValue;
             });
             const values = pathValue && acc.allowedValues.size > 0 ?

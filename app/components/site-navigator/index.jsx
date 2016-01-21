@@ -141,6 +141,7 @@ var SiteNavigator = React.createClass({
         );
     },
     renderSitesChildren: function () {
+        console.log(this.state);
         if (this.state.pathParent) {
             return (
                 <components.TreeView
@@ -150,7 +151,7 @@ var SiteNavigator = React.createClass({
                     getLabel={this.getLabelChildren}
                     multi={false}
                     onChange={this.onClickChildren}
-                    value={this.state.pathChildren.length > 0 ? this.state.pathChildren : [undefined]}
+                    value={this.state.pathChildren}
                     vertical={true}
                 />
             );
