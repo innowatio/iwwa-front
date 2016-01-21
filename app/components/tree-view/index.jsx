@@ -24,37 +24,21 @@ var TreeView = React.createClass({
             IPropTypes.list
         ]).isRequired,
     },
-    getInitialState: function () {
-        return {
-            path: (this.props.value || []).concat(undefined)
-        };
-    },
-    componentWillReceiveProps: function (props) {
-        this.getStateFromProps(props);
-    },
-    getStateFromProps: function (props) {
-        const path = (props.value || []).concat(undefined);
-        this.setState({
-            path: path
-        });
-    },
     applyFilters: function (values) {
         return this.props.filterCriteria ?
             this.props.filterCriteria(values) :
             values;
     },
     onChange: function (value, position) {
-        const path = this.setPath(this.state.path, this.props.getKey(value[0]), position);
-        this.setState({path});
+        const path = this.setPath(this.props.value, this.props.getKey(value[0]), position);
         this.props.onChange(path);
     },
     setPath: function (path, newValue, position) {
-        return path.slice(0, position).concat(newValue, undefined);
+        return path.slice(0, position).concat(newValue);
     },
     renderLevel: function (value, position) {
         const self = this;
-        const path = this.state.path.slice(0, position);
-        console.log(this.props.allowedValues);
+        const path = this.props.value.slice(0, position);
         var {allowedValues} = path.reduce((acc, pathValue) => {
             const node = acc.allowedValues && acc.allowedValues.find(function (value) {
                 return value.get("id") === pathValue;
@@ -88,10 +72,10 @@ var TreeView = React.createClass({
     render: function () {
         return (
             <div>
-                {this.state.path.map(this.renderLevel)}
+                {this.props.value.concat(undefined).map(this.renderLevel)}
             </div>
         );
     }
 });
 
-module.exports = Radium(TreeView);
+module.exports = TreeView;

@@ -141,7 +141,6 @@ var SiteNavigator = React.createClass({
         );
     },
     renderSitesChildren: function () {
-        console.log(this.state);
         if (this.state.pathParent) {
             return (
                 <components.TreeView
