@@ -21,6 +21,7 @@ const defaultChartState = {
     dateRanges: {},
     electricalSensors: [],
     electricalTypes: [{label: "Attiva", key: "activeEnergy"}],
+    fullPath: [],
     sites: [],
     sources: [{label: "Reale", color: colors.lineReale, key: "real"}]
 };

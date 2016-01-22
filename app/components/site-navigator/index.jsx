@@ -123,7 +123,7 @@ var SiteNavigator = React.createClass({
             return !R.isNil(value);
         });
         return {
-            fullPath: [site].concat(childrenPath),
+            fullPath: [site].concat(childrenPath) || [],
             site: site,
             sensor: R.last(childrenPath)
         };
@@ -228,6 +228,7 @@ var SiteNavigator = React.createClass({
                         </bootstrap.Button>
                         <components.Spacer direction="h" size={20} />
                         <bootstrap.Button
+                            onClick={this.closeModal}
                             style={R.merge(buttonBasicStyle, {
                                 width: "230px",
                                 height: "45px"

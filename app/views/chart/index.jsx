@@ -100,7 +100,8 @@ var Chart = React.createClass({
             const firstSite = sites.first();
             this.props.selectSingleElectricalSensor({
                 sensor: firstSite.get("sensorsIds").first(),
-                site: firstSite.get("_id")
+                site: firstSite.get("_id"),
+                fullPath: [firstSite.get("_id")]
             });
         }
     },
