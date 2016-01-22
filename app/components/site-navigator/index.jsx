@@ -224,7 +224,7 @@ var SiteNavigator = React.createClass({
                                 height: "45px"
                             })}
                         >
-                            OK
+                            {"OK"}
                         </bootstrap.Button>
                         <components.Spacer direction="h" size={20} />
                         <bootstrap.Button
@@ -234,7 +234,7 @@ var SiteNavigator = React.createClass({
                                 height: "45px"
                             })}
                         >
-                            RESET
+                            {"RESET"}
                         </bootstrap.Button>
                     </div>
                 </div>
