@@ -182,7 +182,7 @@ var SiteNavigator = React.createClass({
                         value={this.state.inputFilter}
                     />
                 </bootstrap.Col>
-                <bootstrap.Col style={{overflow: "auto", marginTop: "10px"}} xs={4}>
+                <bootstrap.Col style={{overflow: "auto", marginTop: "10px", height: "calc(100vh - 350px)"}} xs={4}>
                     <div className="site-navigator-parent">
                         <Radium.Style
                             rules={{
