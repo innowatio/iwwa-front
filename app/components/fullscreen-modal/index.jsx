@@ -2,7 +2,6 @@ var bootstrap  = require("react-bootstrap");
 var Radium     = require("radium");
 var React      = require("react");
 
-var components = require("components");
 var colors     = require("lib/colors");
 
 var FullscreenModal = React.createClass({
@@ -53,7 +52,7 @@ var FullscreenModal = React.createClass({
                     }}
                     scopeSelector=".fullscreen-modal-selector"
                 />
-                <bootstrap.Modal.Header closeButton />
+                <bootstrap.Modal.Header closeButton={true} />
                 <bootstrap.Modal.Body>
                     {this.props.childComponent}
                 </bootstrap.Modal.Body>

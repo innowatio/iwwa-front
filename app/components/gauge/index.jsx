@@ -68,7 +68,13 @@ var Gauge = React.createClass({
         return (
             <div style={R.merge(styles.container, this.props.style)}>
                 <svg height="100%" preserveAspectRatio="none" viewBox="0 0 200 105" width="100%" >
-                    <line style={{stroke: colors.greyLight, strokeWidth: "3"}} x1="5" x2="195" y1="99" y2="99"/>
+                    <line
+                        style={{stroke: colors.greyLight, strokeWidth: "3"}}
+                        x1="5"
+                        x2="195"
+                        y1="99"
+                        y2="99"
+                    />
                     <defs>
                         <clipPath id="cut-off-top">
                             <rect height="200" width="200" x="-100" y="0" />
@@ -90,7 +96,14 @@ var Gauge = React.createClass({
                             style={R.merge(styleGaugeBar, this.props.styleGaugeBar || {})}
                         />
                     </g>
-                    <rect fill={colors.white} height="5" style={{zIndex: 4}} width="200" x="0" y="100"  />
+                    <rect
+                        fill={colors.white}
+                        height="5"
+                        style={{zIndex: 4}}
+                        width="200"
+                        x="0"
+                        y="100"
+                    />
                     {/* Pointer */}
                     <g transform={transform} >
                         <circle cx="-84.5" cy="0" r="3" style={R.merge(stylePointer, this.props.stylePointer || {})} />

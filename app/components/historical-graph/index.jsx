@@ -7,9 +7,9 @@ var titleCase       = require("title-case");
 var icons              = require("lib/icons");
 var colors             = require("lib/colors");
 var components         = require("components");
-var DateCompareGraph   = require("./date-compare.jsx");
-var ValoriCompareGraph = require("./valori-compare.jsx");
-var SitesCompareGraph   = require("./sites-compare.jsx");
+var DateCompareGraph   = require("./date-compare");
+var ValoriCompareGraph = require("./valori-compare");
+var SitesCompareGraph   = require("./sites-compare");
 
 var HistoricalGraph = React.createClass({
     propTypes: {
@@ -99,23 +99,23 @@ var HistoricalGraph = React.createClass({
     },
     render: function () {
         return (
-                <div style={{width: "100%", height: "100%"}}>
-                    {this.renderTitle()}
-                    <div
-                        onClick={this.props.resetCompare}
-                        style={{
-                            display: this.props.dateCompare || this.props.sites.length > 1 ? "flex" : "none",
-                            positeson: "relative",
-                            marginLeft: "50px",
-                            cursor: "pointer"
-                        }}
-                    >
-                        <img src={icons.iconLogoutColor} style={{width: "30px", height: "20px"}}/>
-                        <components.Spacer direction="h" size={5} />
-                        {"Esci dal confronto"}
-                    </div>
-                    {this.renderGraph()}
+            <div style={{width: "100%", height: "100%"}}>
+                {this.renderTitle()}
+                <div
+                    onClick={this.props.resetCompare}
+                    style={{
+                        display: this.props.dateCompare || this.props.sites.length > 1 ? "flex" : "none",
+                        positeson: "relative",
+                        marginLeft: "50px",
+                        cursor: "pointer"
+                    }}
+                >
+                    <img src={icons.iconLogoutColor} style={{width: "30px", height: "20px"}}/>
+                    <components.Spacer direction="h" size={5} />
+                    {"Esci dal confronto"}
                 </div>
+                {this.renderGraph()}
+            </div>
         );
     }
 });

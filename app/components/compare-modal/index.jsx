@@ -122,30 +122,30 @@ var Compare = React.createClass({
                         />
                     </components.Popover>
                 </bootstrap.ButtonGroup>
-                    <bootstrap.Modal
-                        container={this}
-                        enforceFocus={false}
-                        onHide={this.close}
-                        show={this.state.showModal}
+                <bootstrap.Modal
+                    container={this}
+                    enforceFocus={false}
+                    onHide={this.close}
+                    show={this.state.showModal}
+                >
+                    <Radium.Style
+                        rules={{
+                            ".modal-content": {
+                                width: measures.modalWidthLarge
+                            }
+                        }}
+                        scopeSelector=".modal-dialog"
+                    />
+                    <bootstrap.Modal.Header
+                        closeButton={true}
+                        style={{borderBottom: "none"}}
                     >
-                        <Radium.Style
-                            rules={{
-                                ".modal-content": {
-                                    width: measures.modalWidthLarge
-                                }
-                            }}
-                            scopeSelector=".modal-dialog"
-                        />
-                        <bootstrap.Modal.Header
-                            closeButton
-                            style={{borderBottom: "none"}}
-                        >
-                            {this.headerTitleCompare()}
-                        </bootstrap.Modal.Header>
-                        <bootstrap.Modal.Body style={{textAlign: "center"}}>
-                            {this.modalCompare()}
-                        </bootstrap.Modal.Body>
-                    </bootstrap.Modal>
+                        {this.headerTitleCompare()}
+                    </bootstrap.Modal.Header>
+                    <bootstrap.Modal.Body style={{textAlign: "center"}}>
+                        {this.modalCompare()}
+                    </bootstrap.Modal.Body>
+                </bootstrap.Modal>
             </span>
         );
     }

@@ -1,4 +1,3 @@
-var bootstrap  = require("react-bootstrap");
 var Immutable  = require("immutable");
 var IPropTypes = require("react-immutable-proptypes");
 var R          = require("ramda");
@@ -22,7 +21,7 @@ var TreeView = React.createClass({
         value: React.PropTypes.oneOfType([
             React.PropTypes.array,
             IPropTypes.list
-        ]).isRequired,
+        ]).isRequired
     },
     applyFilters: function (values) {
         return this.props.filterCriteria ?
@@ -37,7 +36,6 @@ var TreeView = React.createClass({
         return path.slice(0, position).concat(newValue);
     },
     renderLevel: function (value, position) {
-        const self = this;
         const path = this.props.value.slice(0, position);
         var {allowedValues} = path.reduce((acc, pathValue) => {
             const node = acc.allowedValues && acc.allowedValues.find(function (value) {
@@ -48,7 +46,7 @@ var TreeView = React.createClass({
                 [];
             return {
                 position: acc.position + 1,
-                allowedValues: values,
+                allowedValues: values
             };
         }, {position: 0, allowedValues: this.props.allowedValues});
 
@@ -78,4 +76,4 @@ var TreeView = React.createClass({
     }
 });
 
-module.exports = TreeView;
+module.exports = Radium(TreeView);

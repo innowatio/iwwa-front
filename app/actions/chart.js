@@ -30,7 +30,7 @@ export function selectSingleElectricalSensor ({fullPath, sensor, site}) {
             fullPath,
             sensor,
             site
-        },
+        }
     };
 }
 

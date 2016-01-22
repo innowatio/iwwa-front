@@ -143,7 +143,8 @@ var User = React.createClass({
                     {sito.get("pod")} <components.Spacer direction="h" size={20}/> {CollectionUtils.sites.getLabel(sito)}
                 </td>
                 <td onClick={R.partial(this.removeSiteFromUser, [sito])}
-                    style={{width: "36px", textAlign: "center", cursor: "pointer", paddingRight: "20px"}}>
+                    style={{width: "36px", textAlign: "center", cursor: "pointer", paddingRight: "20px"}}
+                >
                     <components.Icon icon="minus" style={{color: colors.primary}} />
                 </td>
             </tr>
@@ -159,7 +160,8 @@ var User = React.createClass({
                         marginRight: "20px",
                         backgroundColor: userHasRole ? colors.primary : colors.greyBackground,
                         color: userHasRole ? colors.white : colors.greySubTitle
-                    }}>
+                    }}
+                >
                     {role.get("name").toUpperCase()}
                 </components.Button>
             ) : null;
@@ -168,10 +170,10 @@ var User = React.createClass({
     renderRolesTab: function () {
         return (
             <bootstrap.Tab eventKey={1} style={{marginLeft: "15px"}} title="Ruoli dell'utente">
-                    <components.Spacer direction="v" size={15} />
-                    <span>{stringIt.roleTab}</span>
-                    <components.Spacer direction="v" size={40} />
-                    {this.renderRolesButtons()}
+                <components.Spacer direction="v" size={15} />
+                <span>{stringIt.roleTab}</span>
+                <components.Spacer direction="v" size={40} />
+                {this.renderRolesButtons()}
             </bootstrap.Tab>
         );
     },
@@ -284,7 +286,7 @@ var User = React.createClass({
                     </div>
                 </div>
                 <div style={{width: "100%", height: "calc(100vh - 442px)", overflowY: "auto"}}>
-                    <bootstrap.Table hover style={{marginBottom: "0px"}}>
+                    <bootstrap.Table hover={true} style={{marginBottom: "0px"}}>
                         <tbody>
                             {getSitiOfUser}
                         </tbody>
@@ -319,7 +321,7 @@ var User = React.createClass({
                     })}
                     scopeSelector=".users-admin"
                 />
-            <div style={{display: "inline-block", textAlign: "center", width: "100%"}}>
+                <div style={{display: "inline-block", textAlign: "center", width: "100%"}}>
                     <Router.Link style={{float: "left"}} to="/users/">
                         <bootstrap.Button bsStyle="link" style={{height: "40px", outline: "0px"}}>
                             <img src={icons.iconArrowLeft} style={{height: "30px", float: "left"}} />

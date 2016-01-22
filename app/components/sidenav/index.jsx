@@ -93,7 +93,7 @@ var SideNav = React.createClass({
         return ENVIRONMENT === "cordova" || this.props.sidebarOpen ? (
             <div style={this.props.style}>
                 <div id="menu" style={styles.menu}>
-                    <bootstrap.Nav bsStyle="pills" stacked >
+                    <bootstrap.Nav bsStyle="pills" stacked={true} >
                         {this.props.items.map(this.renderNavItem)}
                     </bootstrap.Nav>
                 </div>
@@ -101,7 +101,7 @@ var SideNav = React.createClass({
         ) : (
             <div style={this.props.style}>
                 <div id="menu" style={styles.menu}>
-                    <bootstrap.Nav bsStyle="pills" stacked >
+                    <bootstrap.Nav bsStyle="pills" stacked={true} >
                         {this.props.items.map(this.renderIconSideBar)}
                     </bootstrap.Nav>
                 </div>

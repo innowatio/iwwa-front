@@ -1,4 +1,4 @@
-import {prepend, equals, contains, keys, path} from "ramda";
+import {equals, path} from "ramda";
 
 import * as colors from "lib/colors";
 import {

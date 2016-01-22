@@ -79,16 +79,16 @@ var LoginView = React.createClass({
                                 boxShadow: "none"
                             },
                             "::-webkit-input-placeholder": {
-                               color: colors.white
+                                color: colors.white
                             },
                             ":-moz-placeholder": { /* Firefox 18- */
-                               color: colors.white
+                                color: colors.white
                             },
                             "::-moz-placeholder": {  /* Firefox 19+ */
-                               color: colors.white
+                                color: colors.white
                             },
                             ":-ms-input-placeholder": {
-                               color: colors.white
+                                color: colors.white
                             }
                         }}
                         scopeSelector=".ac-login-modal-inputs"
