@@ -13,7 +13,6 @@ var icons      = require("lib/icons");
 var buttonBasicStyle = {
     background: colors.greyBackground + "!important",
     color: colors.primary + "!important",
-    borderRadius: "0px !important",
     fontSize: "13px" + "!important"
 };
 
@@ -45,12 +44,11 @@ var SiteNavigator = React.createClass({
             IPropTypes.list
         ]),
         onChange: React.PropTypes.func.isRequired,
-        showModal: React.PropTypes.bool,
         title: React.PropTypes.string
     },
     getInitialState: function () {
         return {
-            siteNavigatorView: this.props.showModal || false,
+            showModal: false,
             inputFilter: "",
             pathParent: [],
             pathChildren: []
@@ -170,18 +168,21 @@ var SiteNavigator = React.createClass({
     },
     renderChild: function () {
         return (
-            <div style={{width: "100%"}}>
+            <div style={{padding: "0 20px 20px 20px"}}>
                 <div>
                     <h3 className="text-center" style={{color: colors.primary}}>{this.props.title}</h3>
                 </div>
-                <bootstrap.Input
-                    addonAfter={<img src={icons.iconSearch} style={{height: "21px"}}/>}
-                    className="input-search"
-                    onChange={(input) => this.setState({inputFilter: input.target.value})}
-                    placeholder="Ricerca"
-                    type="text"
-                />
-                <bootstrap.Col style={{height: "70vh", padding: "20px", overflow: "auto"}} xs={4}>
+                <bootstrap.Col style={{marginTop: "15px"}} xs={12}>
+                    <bootstrap.Input
+                        addonAfter={<img src={icons.iconSearch} style={{height: "21px"}}/>}
+                        className="input-search"
+                        onChange={(input) => this.setState({inputFilter: input.target.value})}
+                        placeholder="Ricerca"
+                        type="text"
+                        value={this.state.inputFilter}
+                    />
+                </bootstrap.Col>
+                <bootstrap.Col style={{overflow: "auto", marginTop: "10px"}} xs={4}>
                     <div className="site-navigator-parent">
                         <Radium.Style
                             rules={{
@@ -198,8 +199,8 @@ var SiteNavigator = React.createClass({
                         {this.renderSitesParent()}
                     </div>
                 </bootstrap.Col>
-                <bootstrap.Col xs={8}>
-                    <div className="site-navigator-child" style={{height: "60vh", margin: "20px", border: "solid " + colors.primary}}>
+                <bootstrap.Col style={{height: "calc(100vh - 350px)"}} xs={8}>
+                    <div className="site-navigator-child" style={{border: "solid " + colors.primary, height: "100%", marginTop: "10px"}}>
                         <Radium.Style
                             rules={{
                                 ".btn-group-vertical": {
@@ -214,25 +215,27 @@ var SiteNavigator = React.createClass({
                         {this.renderSitesChildren()}
                     </div>
                 </bootstrap.Col>
-                <div style={{width: "100%", height: "100%", bottom: 0, textAlign: "center"}}>
-                    <bootstrap.Button
-                        onClick={this.onClickConfirm}
-                        style={R.merge(buttonBasicStyleActive, {
-                            width: "230px",
-                            height: "45px"
-                        })}
-                    >
-                        OK
-                    </bootstrap.Button>
-                    <components.Spacer direction="h" size={20} />
-                    <bootstrap.Button
-                        style={R.merge(buttonBasicStyle, {
-                            width: "230px",
-                            height: "45px"
-                        })}
-                    >
-                        RESET
-                    </bootstrap.Button>
+                <div style={{width: "100%", marginTop: "10px", padding: "20px", bottom: 0, position: "fixed"}}>
+                    <div style={{bottom: "15px", textAlign: "center", margin: "auto"}}>
+                        <bootstrap.Button
+                            onClick={this.onClickConfirm}
+                            style={R.merge(buttonBasicStyleActive, {
+                                width: "230px",
+                                height: "45px"
+                            })}
+                        >
+                            OK
+                        </bootstrap.Button>
+                        <components.Spacer direction="h" size={20} />
+                        <bootstrap.Button
+                            style={R.merge(buttonBasicStyle, {
+                                width: "230px",
+                                height: "45px"
+                            })}
+                        >
+                            RESET
+                        </bootstrap.Button>
+                    </div>
                 </div>
             </div>
         );
@@ -248,7 +251,8 @@ var SiteNavigator = React.createClass({
                 </components.Button>
                 <components.FullscreenModal
                     childComponent={this.renderChild()}
-                    showModal={this.state.showModal}
+                    onHide={this.closeModal}
+                    show={this.state.showModal}
                 />
             </span>
         );
