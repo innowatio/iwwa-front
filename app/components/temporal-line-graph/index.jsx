@@ -1,6 +1,7 @@
+import React, {PropTypes} from "react";
+import IPropTypes from "react-immutable-proptypes";
 var R         = require("ramda");
 var Radium    = require("radium");
-var React     = require("react");
 var Loader    = require("halogen/PacmanLoader");
 var bootstrap = require("react-bootstrap");
 var moment    = require("moment");
@@ -22,24 +23,25 @@ const oneMonthInMilliseconds = moment.duration(1, "months").asMilliseconds();
 
 var TemporalLineGraph = React.createClass({
     propTypes: {
-        alarms: React.PropTypes.arrayOf(React.PropTypes.number),
-        colors: React.PropTypes.arrayOf(React.PropTypes.string),
-        coordinates: React.PropTypes.arrayOf(
+        alarms: PropTypes.arrayOf(PropTypes.number),
+        colors: PropTypes.arrayOf(PropTypes.string),
+        coordinates: PropTypes.arrayOf(
             AppPropTypes.DygraphCoordinate
         ).isRequired,
-        dateFilter: React.PropTypes.oneOfType([
-            React.PropTypes.object,
-            React.PropTypes.string
-        ]),
-        dateWindow: React.PropTypes.arrayOf(React.PropTypes.number),
-        labels: React.PropTypes.array,
-        lockInteraction: React.PropTypes.bool,
-        showRangeSelector: React.PropTypes.bool,
-        site: React.PropTypes.object,
-        xLabel: React.PropTypes.string,
-        xLegendFormatter: React.PropTypes.func,
-        xTicker: React.PropTypes.func,
-        yLabel: React.PropTypes.string
+        dateFilter: PropTypes.object,
+        // TODO: serve ancora?
+        dateWindow: PropTypes.arrayOf(PropTypes.number),
+        labels: PropTypes.array,
+        // TODO: serve ancora?
+        lockInteraction: PropTypes.bool,
+        showRangeSelector: PropTypes.bool,
+        site: IPropTypes.map,
+        xLabel: PropTypes.string,
+        xLegendFormatter: PropTypes.func,
+        // TODO: serve ancora?
+        xTicker: PropTypes.func,
+        y2Label: PropTypes.string,
+        yLabel: PropTypes.string
     },
     componentDidMount: function () {
         this.drawGraph();

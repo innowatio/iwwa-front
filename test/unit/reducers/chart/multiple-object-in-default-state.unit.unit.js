@@ -25,7 +25,7 @@ describe("`chart` reducer [CASE: multiple object in default state array]", () =>
     });
 
     const defaultChartStateSecondObject = Object.freeze({
-        alarms: [undefined],
+        alarms: undefined,
         site: "site2",
         sensorId: "consumptionSensorsId",
         measurementType: {
@@ -73,7 +73,7 @@ describe("`chart` reducer [CASE: multiple object in default state array]", () =>
             const ret = chart(chartState, valuePassedFromAction);
             expect(ret).to.deep.equal([{
                 ...defaultChartStateFirstObject,
-                alarms: [undefined],
+                alarms: undefined,
                 site: "newSiteId",
                 sensorId: "newSensorId"
             }]);
@@ -104,7 +104,7 @@ describe("`chart` reducer [CASE: multiple object in default state array]", () =>
             const ret = chart(chartState, valuePassedFromAction);
             expect(ret).to.deep.equal([{
                 ...defaultChartStateFirstObject,
-                alarms: [undefined],
+                alarms: undefined,
                 measurementType: {
                     label: "labelTypeModify",
                     key: "keyTypeModify"
@@ -126,14 +126,14 @@ describe("`chart` reducer [CASE: multiple object in default state array]", () =>
             const ret = chart(chartStateWithEqualMeasurementType, valuePassedFromAction);
             expect(ret).to.deep.equal([{
                 ...defaultChartStateFirstObject,
-                alarms: [undefined],
+                alarms: undefined,
                 measurementType: {
                     label: "labelTypeModify",
                     key: "keyTypeModify"
                 }
             }, {
                 ...chartStateWithEqualMeasurementType[1],
-                alarms: [undefined],
+                alarms: undefined,
                 measurementType: {
                     label: "labelTypeModify",
                     key: "keyTypeModify"
@@ -156,12 +156,12 @@ describe("`chart` reducer [CASE: multiple object in default state array]", () =>
             const ret = chart(chartState, valuePassedFromAction);
             expect(ret).to.deep.equal([{
                 ...defaultChartStateFirstObject,
-                alarms: [undefined],
+                alarms: undefined,
                 site: "siteId1",
                 sensorId: "sensorId1"
             }, {
                 ...defaultChartStateFirstObject,
-                alarms: [undefined],
+                alarms: undefined,
                 site: "siteId1",
                 sensorId: "sensorId2"
             }]);
@@ -240,7 +240,7 @@ describe("`chart` reducer [CASE: multiple object in default state array]", () =>
             const ret = chart(chartState, valuePassedFromAction);
             expect(ret).to.deep.equal([{
                 ...defaultChartStateFirstObject,
-                alarms: [undefined],
+                alarms: undefined,
                 source: {
                     label: "labelSourceMod",
                     color: "color",
@@ -248,7 +248,7 @@ describe("`chart` reducer [CASE: multiple object in default state array]", () =>
                 }
             }, {
                 ...defaultChartStateSecondObject,
-                alarms: [undefined],
+                alarms: undefined,
                 source: {
                     label: "labelSourceMod",
                     color: "color",

@@ -13,6 +13,7 @@ var components         = require("components/");
 var icons              = require("lib/icons");
 var GetTutorialMixin   = require("lib/get-tutorial-mixin");
 var styles             = require("lib/styles");
+import * as parameters from "./parameters";
 var tutorialString     = require("assets/JSON/tutorial-string.json").historicalGraph;
 import {
     selectSingleElectricalSensor,
@@ -64,15 +65,7 @@ var Chart = React.createClass({
     },
     mixins: [
         GetTutorialMixin("historicalGraph",
-            [
-                "valori",
-                "export",
-                "tipologie",
-                "siti",
-                "dateFilter",
-                "compare",
-                "graph"
-            ]
+            ["valori", "export", "tipologie", "siti", "dateFilter", "compare", "graph"]
         )
     ],
     getInitialState: function () {
@@ -82,7 +75,7 @@ var Chart = React.createClass({
     },
     componentDidMount: function () {
         this.props.asteroid.subscribe("sites");
-        if (this.props.chart.alarms) {
+        if (this.props.chart[0].alarms) {
             this.props.asteroid.subscribe("alarms");
         }
         this.updateFirstSiteToChart();
@@ -96,7 +89,7 @@ var Chart = React.createClass({
     },
     updateFirstSiteToChart: function () {
         var sites = this.props.collections.get("sites") || Immutable.Map();
-        if (sites.size > 0 && this.props.chart.electricalSensors < 1) {
+        if (sites.size > 0 && !this.props.chart[0].sensorId) {
             const firstSite = sites.first();
             this.props.selectSingleElectricalSensor({
                 sensor: firstSite.get("sensorsIds").first(),
@@ -104,84 +97,6 @@ var Chart = React.createClass({
             });
         }
     },
-    getPeriods: function () {
-        return [
-            {label: "Settimana", key: "week"},
-            {label: "Mese", key: "month"},
-            {label: "Trimestre", key: "quarter"}
-        ];
-    },
-    getTipologie: function () {
-        return [
-            {label: "Attiva", key: "activeEnergy"},
-            {label: "Potenza Max", key: "maxPower"},
-            {label: "Reattiva", key: "reactiveEnergy"}
-        ];
-    },
-    getValori: function () {
-        return [
-            {label: "Reale", color: colors.lineReale, key: "real", isDisabled: false},
-            {label: "Previsionale", color: colors.linePrevisionale, key: "previsionale", isDisabled: true}
-        ];
-    },
-    getConsumptions: function () {
-        return [
-            {
-                label: "Temperatura",
-                color: colors.consumption,
-                key: "temperature",
-                icon: icons.iconTemperature,
-                selected: icons.iconTemperatureSelected
-
-            },
-            {
-                label: "Umidità",
-                color: colors.consumption,
-                key: "humidity",
-                icon: icons.iconHumidity,
-                selected: icons.iconHumiditySelected
-            },
-            {
-                label: "Lux",
-                color: colors.consumption,
-                key: "illuminance",
-                icon: icons.iconIdea,
-                selected: icons.iconIdeaSelected
-            },
-            {
-                label: "CO2",
-                color: colors.consumption,
-                key: "co2",
-                icon: icons.iconCO2,
-                selected: icons.iconCO2Selected
-            }
-            // {label: "Allarmi", key: "allarms", icon: icons.iconAlarm}
-        ];
-    },
-    getExportType: function () {
-        return [
-            {label: "Png", key: "png", icon: icons.iconPNG},
-            {label: "Csv", key: "csv", icon: icons.iconCSV}
-        ];
-    },
-    getDateCompare: function () {
-        return [
-            // {label: "IERI", key: "days"},
-            // {label: "7 GG FA", key: "7 days before"},
-            // {label: "SETTIMANA SCORSA", key: "weeks"},
-            {label: "MESE SCORSO", key: "months"},
-            {label: "12 MESI FA", key: "years"}
-        ];
-    },
-    // getDateFilter: function () {
-    //     return [
-    //         {label: "IERI", key: "days"},
-    //         {label: "SETTIMANA SCORSA", key: "weeks"},
-    //         {label: "MESE SCORSO", key: "months"},
-    //         {label: "2 MESI FA", key: "2months"},
-    //         {label: "ALTRO PERIODO", key: "custom"}
-    //     ];
-    // },
     onChangeExport: function (valueChanged) {
         var exportAPILocation = this.refs.historicalGraph.refs.compareGraph.refs.temporalLineGraph;
         if (valueChanged.key === "png") {
@@ -191,29 +106,28 @@ var Chart = React.createClass({
         }
     },
     subscribeToMisure: function (props) {
-        var self = this;
-        var dayStart;
-        var dayEnd;
+        var dateStart;
+        var dateEnd;
         // Query for date-compare
-        if (R.contains("period", R.keys(props.chart.dateRanges))) {
+        if (R.path(["date", "range"], props.chart[0]) === "dateCompare") {
             const data = new Date(props.chart.dateRanges.dateOne);
             const periodKey = props.chart.dateRanges.period.key;
-            dayStart = moment(data).startOf("month").subtract(1, periodKey).format("YYYY-MM-DD");
-            dayEnd = moment(data).add(1, periodKey).format("YYYY-MM-DD");
+            dateStart = moment(data).startOf("month").subtract(1, periodKey).format("YYYY-MM-DD");
+            dateEnd = moment(data).add(1, periodKey).format("YYYY-MM-DD");
         // Query for date-filter
-        } else if (props.chart.dateRanges && props.chart.dateRanges.range === "dateFilter") {
-            dayStart = moment(props.chart.dateRanges.start).format("YYYY-MM-DD");
-            dayEnd = moment(props.chart.dateRanges.end).format("YYYY-MM-DD");
+        } else if (R.path(["date", "range"], props.chart[0]) === "dateFilter") {
+            dateStart = moment(props.chart[0].date.start).format("YYYY-MM-DD");
+            dateEnd = moment(props.chart[0].date.end).format("YYYY-MM-DD");
         } else {
             // If no data is selected, is displayed the past month.
-            dayStart = moment().startOf("month").format("YYYY-MM-DD");
-            dayEnd = moment().endOf("month").format("YYYY-MM-DD");
+            dateStart = moment().startOf("month").format("YYYY-MM-DD");
+            dateEnd = moment().endOf("month").format("YYYY-MM-DD");
         }
-        const sensors = props.chart.electricalSensors.concat(props.chart.consumptionSensors);
-        const measurementType = props.chart.electricalTypes.concat(props.chart.consumptionTypes);
-        const source = "reading";
-        sensors.forEach(function (sensorId, idx) {
-            self.props.asteroid.subscribe("dailyMeasuresBySensor", sensorId, dayStart, dayEnd, source, measurementType[idx]);
+        const sensors = props.chart.map(singleSelection => singleSelection.sensorId);
+        const measurementTypes = props.chart.map(singleSelection => singleSelection.measurementType.key);
+        const sources = props.chart.map(singleSelection => singleSelection.source.key);
+        sensors[0] && sensors.forEach((sensorId, idx) => {
+            props.asteroid.subscribe("dailyMeasuresBySensor", sensorId, dateStart, dateEnd, sources[idx], measurementTypes[idx]);
         });
     },
     getValoreActiveStyle: function (valore) {
@@ -222,9 +136,6 @@ var Chart = React.createClass({
             {background: valore.color, color: colors.white}
         );
     },
-    switchDateCompareAndFilter: function () {
-        return R.contains("period", R.keys(this.props.chart.dateRanges));
-    },
     getSitoById: function (sitoId) {
         const sites = this.props.collections.get("sites") || Immutable.Map();
         return sites.find(site => {
@@ -232,7 +143,7 @@ var Chart = React.createClass({
         });
     },
     firstSensorOfConsumptionInTheSite: function (consumptionTypes) {
-        const site = this.getSitoById(this.props.chart.sites[0]);
+        const site = this.getSitoById(this.props.chart[0].site);
         var typeOfSensorId;
         if (consumptionTypes.key === "co2") {
             typeOfSensorId = "COOV";
@@ -249,6 +160,9 @@ var Chart = React.createClass({
     onChangeConsumption: function (sensorId, consumptionTypes) {
         const selectedSensorId = this.firstSensorOfConsumptionInTheSite(consumptionTypes);
         this.props.selectEnvironmentalSensor([selectedSensorId], [consumptionTypes]);
+    },
+    isDateCompare: function () {
+        return R.equals(R.path(["date", "range"], this.props.chart), "dateCompare");
     },
     renderExportButton: function () {
         return (
@@ -267,7 +181,7 @@ var Chart = React.createClass({
                         tooltipPosition="right"
                     >
                         <components.DropdownButton
-                            allowedValues={this.getExportType()}
+                            allowedValues={parameters.getExportType()}
                             getIcon={R.prop("icon")}
                             getKey={R.prop("key")}
                             getLabel={R.prop("label")}
@@ -280,10 +194,15 @@ var Chart = React.createClass({
     },
     render: function () {
         const sites = this.props.collections.get("sites") || Immutable.Map();
-        const valoriMulti = (
-            this.switchDateCompareAndFilter() &&
-            this.props.chart.electricalSensors.length <= 1
-        );
+        const selectedSites = this.props.chart.map(singleSelection => this.getSitoById(singleSelection.site));
+        const selectedSources = this.props.chart.map(singleSelection => singleSelection.source);
+        const selectedConsumptionType = (
+            this.props.chart.length > 1 &&
+            R.allUniq(this.props.chart.map(singleSelection => singleSelection.measurementType))
+        ) ?
+            this.props.chart[1].measurementType :
+            null;
+        const valoriMulti = (this.isDateCompare() && selectedSites.length < 2);
         return (
             <div style={styles.mainDivStyle}>
                 <bootstrap.Col sm={12} style={styles.colVerticalPadding}>
@@ -295,13 +214,13 @@ var Chart = React.createClass({
                             ref="valori"
                         >
                             <components.ButtonGroupSelect
-                                allowedValues={this.getValori()}
+                                allowedValues={parameters.getSources()}
                                 getActiveStyle={this.getValoreActiveStyle}
                                 getKey={R.prop("key")}
                                 getLabel={R.prop("label")}
                                 multi={valoriMulti}
                                 onChange={this.props.selectSource}
-                                value={this.props.chart.sources}
+                                value={selectedSources}
                             />
                         </components.TutorialAnchor>
                     {ENVIRONMENT === "cordova" ? null : this.renderExportButton()}
@@ -321,12 +240,12 @@ var Chart = React.createClass({
                                 tooltipPosition="left"
                             >
                                 <components.DropdownSelect
-                                    allowedValues={this.getTipologie()}
+                                    allowedValues={parameters.getMeasurementTypes()}
                                     getKey={R.prop("key")}
                                     getLabel={R.prop("label")}
                                     onChange={this.props.selectElectricalType}
                                     style={{float: "left"}}
-                                    value={this.props.chart.electricalTypes[0]}
+                                    value={this.props.chart[0].measurementType}
                                 />
                             </components.Popover>
                         </components.TutorialAnchor>
@@ -339,7 +258,7 @@ var Chart = React.createClass({
                             <components.SiteNavigator
                                 allowedValues={sites}
                                 onChange={this.props.selectSingleElectricalSensor}
-                                selectedSite={this.getSitoById(this.props.chart.sites[0])}
+                                selectedSite={this.getSitoById(this.props.chart[0].site)}
                                 title={"Quale punto di misurazione vuoi visualizzare?"}
                             />
                         </components.TutorialAnchor>
@@ -354,7 +273,7 @@ var Chart = React.createClass({
                                 getLabel={R.prop("label")}
                                 onChange={this.props.selectDateRanges}
                                 title={<img src={icons.iconCalendar} style={{width: "75%"}} />}
-                                value={this.props.chart.dateRanges[0]}
+                                value={this.props.chart[0].date}
                             />
                         </components.TutorialAnchor>
                         <components.TutorialAnchor
@@ -372,14 +291,14 @@ var Chart = React.createClass({
                                     onChange={this.props.selectMultipleElectricalSensor}
                                     open={"undefined"}
                                     style={selectStyles.selectCompare}
-                                    value={this.props.chart.sites}
+                                    value={selectedSites}
                                 />
                                 <components.DateCompare
-                                    allowedValues={this.getDateCompare()}
+                                    allowedValues={parameters.getDateCompare()}
                                     getKey={R.prop("key")}
                                     getLabel={R.prop("label")}
                                     onChange={this.props.selectDateRangesCompare}
-                                    value={this.props.chart.dateRanges[0]}
+                                    value={{}}
                                 />
                             </components.Compare>
                         </components.TutorialAnchor>
@@ -387,9 +306,9 @@ var Chart = React.createClass({
                 </bootstrap.Col>
                 <bootstrap.Col sm={12}>
                     <components.ConsumptionButtons
-                        allowedValues={this.getConsumptions()}
+                        allowedValues={parameters.getConsumptions()}
                         onChange={consumptionTypes => this.onChangeConsumption(null, consumptionTypes)}
-                        selectedValue={this.props.chart.consumptionTypes[0]}
+                        selectedValue={selectedConsumptionType}
                         style={{width: "100%"}}
                         styleButton={consumptionButtonStyle}
                         styleButtonSelected={consumptionButtonSelectedStyle}
@@ -404,21 +323,15 @@ var Chart = React.createClass({
                         ref="graph"
                     >
                         <components.HistoricalGraph
-                            alarms={this.props.chart.alarms}
                             chart={this.props.chart}
-                            consumptionSensors={this.props.chart.consumptionSensors}
-                            consumptionTypes={this.props.chart.consumptionTypes[0]}
-                            dateCompare={this.switchDateCompareAndFilter() ? this.props.chart.dateRanges : undefined}
-                            dateFilter={this.props.chart.dateRanges}
-                            electricalSensors={this.props.chart.electricalSensors}
-                            electricalTypes={this.props.chart.electricalTypes[0]}
                             getY2Label={CollectionUtils.labelGraph.getY2Label}
                             getYLabel={CollectionUtils.labelGraph.getYLabel}
+                            isComparationActive={valoriMulti}
+                            isDateCompareActive={this.isDateCompare()}
                             misure={this.props.collections.get("readings-daily-aggregates") || Immutable.Map()}
                             ref="historicalGraph"
                             resetCompare={this.props.removeAllCompare}
-                            sites={this.props.chart.sites.map(this.getSitoById)}
-                            sources={this.props.chart.sources}
+                            sites={selectedSites}
                         />
                     </components.TutorialAnchor>
                 </bootstrap.Col>

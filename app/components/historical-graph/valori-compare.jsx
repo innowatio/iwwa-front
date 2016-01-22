@@ -1,86 +1,61 @@
-var Immutable       = require("immutable");
-var IPropTypes      = require("react-immutable-proptypes");
+import Immutable from "immutable";
+import IPropTypes from "react-immutable-proptypes";
+import {prop, map, uniq} from "ramda";
+import React, {PropTypes} from "react";
+import ReactPureRender from "react-addons-pure-render-mixin";
 
-var Radium          = require("radium");
-var R               = require("ramda");
-var React           = require("react");
-var ReactPureRender = require("react-addons-pure-render-mixin");
-
-var components    = require("components");
-// var convertToGraph = require("lib/convert-collection-to-graph");
+import components from "components";
 import readingsDailyAggregatesToDygraphData from "lib/readings-daily-aggregates-to-dygraph-data";
 
 var ValoriCompare = React.createClass({
     propTypes: {
-        alarms: React.PropTypes.arrayOf(React.PropTypes.number),
-        consumptionSensors: React.PropTypes.arrayOf(React.PropTypes.string),
-        consumptionTypes: React.PropTypes.object,
-        dateFilter: React.PropTypes.oneOfType([
-            React.PropTypes.object,
-            React.PropTypes.string
-        ]),
-        electricalSensors: React.PropTypes.arrayOf(React.PropTypes.string),
-        electricalTypes: React.PropTypes.object,
-        getY2Label: React.PropTypes.func,
-        getYLabel: React.PropTypes.func,
+        chart: PropTypes.arrayOf(PropTypes.object),
+        getY2Label: PropTypes.func,
+        getYLabel: PropTypes.func,
         misure: IPropTypes.map,
-        sites: React.PropTypes.arrayOf(IPropTypes.map),
-        sources: React.PropTypes.arrayOf(React.PropTypes.object)
+        sites: PropTypes.arrayOf(IPropTypes.map)
     },
     mixins: [ReactPureRender],
     getCoordinates: function () {
-        const self = this;
-        var sensors = self.props.electricalSensors;
-        var selectedTypes = [self.props.electricalTypes.key];
-        if (self.props.consumptionSensors[0]) {
-            sensors = sensors.concat(self.props.consumptionSensors);
-            selectedTypes = selectedTypes.concat(self.props.consumptionTypes.key);
-        }
-        const filters = sensors.map((sensorId, index) => ({
-            sensorId,
-            date: this.props.dateFilter,
-            measurementType: selectedTypes.length <= 1 ? selectedTypes[0] : selectedTypes[index],
-            source: "reading"
-        }));
         const start = Date.now();
         console.log("Start");
-        const result = readingsDailyAggregatesToDygraphData(self.props.misure, filters);
+        const result = readingsDailyAggregatesToDygraphData(this.props.misure, this.props.chart);
         console.log(`Result in ${Date.now() - start}ms`);
         return result;
     },
-    getLabels: function () {
+    getLabels: function (sources) {
         var label = ["Data"].concat(
-            R.map(R.prop("label"), this.props.sources)
+            map(prop("label"), sources)
         );
-        if (R.prop(("label"), this.props.consumptionTypes)) {
-            label = label.concat(R.prop(("label"), this.props.consumptionTypes));
+        if (this.props.chart.length > 1 && prop("label", this.props.chart[1].measurementType)) {
+            label = label.concat(prop("label", this.props.chart[1].measurementType));
         }
         return label;
     },
-    getColors: function () {
-        var colors = this.props.sources.map(R.prop("color"));
-        if (R.prop(("color"), this.props.consumptionTypes)) {
-            colors = colors.concat(R.prop(("color"), this.props.consumptionTypes));
+    getColors: function (sources) {
+        var colors = uniq(map(prop("color"), sources));
+        if (this.props.chart.length > 1 && prop("color", this.props.chart[1].measurementType)) {
+            colors = colors.concat(prop("color", this.props.chart[1].measurementType));
         }
         return colors;
     },
     render: function () {
+        const sources = this.props.chart.map(singleSelection => singleSelection.source);
         return (
             <components.TemporalLineGraph
-                alarms={this.props.alarms}
-                colors={this.getColors()}
+                alarms={this.props.chart[0].alarms}
+                colors={this.getColors(sources)}
                 coordinates={this.getCoordinates() || []}
-                dateFilter={this.props.dateFilter}
-                labels={this.getLabels()}
+                dateFilter={this.props.chart[0].date}
+                labels={this.getLabels(sources)}
                 ref="temporalLineGraph"
                 showRangeSelector={true}
                 site={this.props.sites[0] || Immutable.Map()}
-                xLabel=""
-                y2label={this.props.getY2Label(this.props.consumptionTypes)}
-                yLabel={this.props.getYLabel(this.props.electricalTypes)}
+                y2label={this.props.chart.length > 1 ? this.props.getY2Label(this.props.chart[1].measurementType.key) : null}
+                yLabel={this.props.getYLabel(this.props.chart[0].measurementType.key)}
             />
         );
     }
 });
 
-module.exports = Radium(ValoriCompare);
+module.exports = ValoriCompare;

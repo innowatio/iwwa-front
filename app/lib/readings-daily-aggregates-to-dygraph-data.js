@@ -6,8 +6,8 @@ var lastNotNull = 0.01;
 function getFilterFn (filter) {
     return aggregate => (
         aggregate.get("sensorId") === filter.sensorId &&
-        aggregate.get("source") === filter.source &&
-        aggregate.get("measurementType") === filter.measurementType &&
+        aggregate.get("source") === filter.source.key &&
+        aggregate.get("measurementType") === filter.measurementType.key &&
         (filter.date.start ? moment(aggregate.get("day")).isSameOrAfter(filter.date.start) : true) &&
         (filter.date.end ? moment(aggregate.get("day")).isSameOrBefore(filter.date.end) : true)
     );

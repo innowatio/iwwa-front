@@ -1,4 +1,4 @@
-import {equals, head, last, path, update} from "ramda";
+import {equals, last, path, update} from "ramda";
 
 import * as colors from "lib/colors";
 import {
@@ -15,7 +15,7 @@ import {
 import {DISPLAY_ALARMS_ON_CHART} from "../actions/alarms";
 
 const defaultChartState = [{
-    alarms: [undefined],
+    alarms: undefined,
     sensorId: null,
     date: {},
     measurementType: {label: "Attiva", key: "activeEnergy"},
@@ -28,7 +28,7 @@ export function chart (state = defaultChartState, {type, payload}) {
     case SELECT_SINGLE_ELECTRICAL_SENSOR:
         return [{
             ...state[0],
-            alarms: [undefined],
+            alarms: undefined,
             sensorId: payload.sensor,
             site: payload.site
         }];
@@ -36,18 +36,18 @@ export function chart (state = defaultChartState, {type, payload}) {
         const twoElectricalSensor = state.length === 1 || equals(state[0].measurementType, state[1] ? state[1].measurementType : {});
         return twoElectricalSensor ? state.map(stateObj => ({
             ...stateObj,
-            alarms: [undefined],
+            alarms: undefined,
             measurementType: payload
         })) : update(0, {
             ...state[0],
-            alarms: [undefined],
+            alarms: undefined,
             measurementType: payload
         }, state);
     case SELECT_MULTIPLE_ELECTRICAL_SENSOR:
         const measurementType = state[0].measurementType;
         return payload.sensors.map((sensorId, idx) => ({
             ...state[0],
-            alarms: [undefined],
+            alarms: undefined,
             sensorId,
             site: payload.sites.length <= 1 ? payload.sites[0] : payload.sites[idx],
             measurementType,
@@ -76,7 +76,7 @@ export function chart (state = defaultChartState, {type, payload}) {
             return [state[0]];
         }
         const environmentalSensor = {
-            alarms: [undefined],
+            alarms: undefined,
             sensorId: payload.sensorId[0],
             site: state[0].site,
             measurementType: payload.type[0],
@@ -92,11 +92,11 @@ export function chart (state = defaultChartState, {type, payload}) {
         const sameSourceToAllStateObj = state.length === 1 && payload.length === 2;
         return sameSourceToAllStateObj ? payload.map(source => ({
             ...state[0],
-            alarms: [undefined],
+            alarms: undefined,
             source
         })) : state.map(stateObj => ({
             ...stateObj,
-            alarms: [undefined],
+            alarms: undefined,
             source: payload[0]
         }));
     case SELECT_DATE_RANGES:

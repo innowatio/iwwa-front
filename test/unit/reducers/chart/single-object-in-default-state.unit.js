@@ -47,7 +47,7 @@ describe("`chart` reducer [CASE: single object in default state array]", () => {
             const ret = chart(chartState, valuePassedFromAction);
             expect(ret).to.deep.equal([{
                 ...defaultChartStateObject,
-                alarms: [undefined],
+                alarms: undefined,
                 site: "newSiteId",
                 sensorId: "newSensorId"
             }]);
@@ -68,7 +68,7 @@ describe("`chart` reducer [CASE: single object in default state array]", () => {
             const ret = chart(chartState, valuePassedFromAction);
             expect(ret).to.deep.equal([{
                 ...defaultChartStateObject,
-                alarms: [undefined],
+                alarms: undefined,
                 measurementType: {
                     label: "labelTypeModify",
                     key: "keyTypeModify"
@@ -91,12 +91,12 @@ describe("`chart` reducer [CASE: single object in default state array]", () => {
             const ret = chart(chartState, valuePassedFromAction);
             expect(ret).to.deep.equal([{
                 ...defaultChartStateObject,
-                alarms: [undefined],
+                alarms: undefined,
                 site: "siteId1",
                 sensorId: "sensorId1"
             }, {
                 ...defaultChartStateObject,
-                alarms: [undefined],
+                alarms: undefined,
                 site: "siteId1",
                 sensorId: "sensorId2"
             }]);
@@ -166,7 +166,7 @@ describe("`chart` reducer [CASE: single object in default state array]", () => {
                 ...defaultChartStateObject
             }, {
                 ...defaultChartStateObject,
-                alarms: [undefined],
+                alarms: undefined,
                 site: "site",
                 sensorId: "environmentalSensorId",
                 measurementType: {
@@ -195,7 +195,7 @@ describe("`chart` reducer [CASE: single object in default state array]", () => {
             const ret = chart(chartState, valuePassedFromAction);
             expect(ret).to.deep.equal([{
                 ...defaultChartStateObject,
-                alarms: [undefined],
+                alarms: undefined,
                 source: {
                     label: "labelSourceMod",
                     color: "color",
@@ -220,7 +220,7 @@ describe("`chart` reducer [CASE: single object in default state array]", () => {
             const ret = chart(chartState, valuePassedFromAction);
             expect(ret).to.deep.equal([{
                 ...defaultChartStateObject,
-                alarms: [undefined],
+                alarms: undefined,
                 source: {
                     label: "labelSourceMod1",
                     color: "color1",
@@ -228,7 +228,7 @@ describe("`chart` reducer [CASE: single object in default state array]", () => {
                 }
             }, {
                 ...defaultChartStateObject,
-                alarms: [undefined],
+                alarms: undefined,
                 source: {
                     label: "labelSourceMod2",
                     color: "color2",
