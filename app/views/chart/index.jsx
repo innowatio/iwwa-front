@@ -121,8 +121,8 @@ var Chart = React.createClass({
     },
     getValori: function () {
         return [
-            {label: "Reale", color: colors.lineReale, key: "real", isDisabled: false},
-            {label: "Previsionale", color: colors.linePrevisionale, key: "previsionale", isDisabled: true}
+            {label: "Reale", color: colors.lineReale, key: "reading", isDisabled: false},
+            {label: "Previsionale", color: colors.linePrevisionale, key: "forecast", isDisabled: true}
         ];
     },
     getConsumptions: function () {

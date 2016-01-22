@@ -84,7 +84,7 @@ var SiteNavigator = React.createClass({
     },
     getFilterCriteria: function (values) {
         return values.filter((value) => {
-            return ["CO2", "THL"].indexOf(value.get("measurementType").toUpperCase()) < 0;
+            return ["CO2", "THL"].indexOf(value.get("type").toUpperCase()) < 0;
         });
     },
     getFilteredValues: function () {
