@@ -2,6 +2,7 @@ import IPropTypes from "react-immutable-proptypes";
 import React, {PropTypes} from "react";
 import ReactPureRender from "react-addons-pure-render-mixin";
 import titleCase from "title-case";
+import {uniq} from "ramda";
 
 import icons from "lib/icons";
 import colors from "lib/colors";
@@ -44,14 +45,15 @@ var HistoricalGraph = React.createClass({
         ) : null;
     },
     renderTitle: function (singleSelectionChart, idx) {
+        // FIXME
         const numberOfSelectionInGraph = this.props.chart.length;
         return (
-            <h3 className="text-center" key={idx} style={{marginTop: "20px"}}>
+            <span key={idx}>
                 {this.renderSiteTitle(this.props.sites[idx])}
                 {" - "}
-                {this.renderSensorTitle(this.props.chart[idx].sensorId)}
-                {idx <= numberOfSelectionInGraph ? null : " & "}
-            </h3>
+                {this.renderSensorTitle(singleSelectionChart.sensorId)}
+                {numberOfSelectionInGraph > idx + 1 ? " & " : null}
+            </span>
         );
     },
     renderDateCompareGraph: function () {
@@ -64,10 +66,11 @@ var HistoricalGraph = React.createClass({
         return <ValoriCompareGraph {...this.props} ref="compareGraph"/>;
     },
     renderGraph: function () {
+        const site = uniq(this.props.chart.map(singleSelection => singleSelection.site));
         if (this.props.isDateCompareActive) {
             return this.renderDateCompareGraph();
         }
-        if (this.props.sites.length > 1) {
+        if (site.length > 1) {
             return this.renderSitesCompareGraph();
         }
         return this.renderValoriCompareGraph();
@@ -75,7 +78,9 @@ var HistoricalGraph = React.createClass({
     render: function () {
         return (
             <div style={{width: "100%", height: "100%"}}>
-                {this.props.chart.map(this.renderTitle)}
+                <h3 className="text-center" style={{marginTop: "20px"}}>
+                    {this.props.chart.map(this.renderTitle)}
+                </h3>
                 <h4 className="text-center" style={{color: colors.greySubTitle}}>
                     {this.props.chart[0].measurementType.label}
                 </h4>

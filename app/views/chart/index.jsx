@@ -127,7 +127,14 @@ var Chart = React.createClass({
         const measurementTypes = props.chart.map(singleSelection => singleSelection.measurementType.key);
         const sources = props.chart.map(singleSelection => singleSelection.source.key);
         sensors[0] && sensors.forEach((sensorId, idx) => {
-            props.asteroid.subscribe("dailyMeasuresBySensor", sensorId, dateStart, dateEnd, sources[idx], measurementTypes[idx]);
+            props.asteroid.subscribe(
+                "dailyMeasuresBySensor",
+                sensorId,
+                dateStart,
+                dateEnd,
+                sources[idx],
+                measurementTypes[idx]
+            );
         });
     },
     getValoreActiveStyle: function (valore) {

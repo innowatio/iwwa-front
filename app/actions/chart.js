@@ -99,13 +99,15 @@ export function selectDateRangesCompare (dateRanges) {
 */
 const typeofEnvironmentalSensor = actionTypeValidator(
     tuple([String]),
-    list(struct({
-        label: String,
-        key: String,
-        color: String,
-        icon: String,
-        selected: String
-    }))
+    tuple([
+        struct({
+            label: String,
+            key: String,
+            color: String,
+            icon: String,
+            selected: String
+        })
+    ])
 );
 export function selectEnvironmentalSensor (sensorId, type) {
     typeofEnvironmentalSensor(...arguments);

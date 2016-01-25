@@ -20,7 +20,7 @@ const defaultChartState = [{
     date: {},
     measurementType: {label: "Attiva", key: "activeEnergy"},
     sites: null,
-    source: {label: "Reale", color: colors.lineReale, key: "real"}
+    source: {label: "Reale", color: colors.lineReale, key: "reading"}
 }];
 
 export function chart (state = defaultChartState, {type, payload}) {
@@ -75,7 +75,7 @@ export function chart (state = defaultChartState, {type, payload}) {
         if (toggle) {
             return [state[0]];
         }
-        const environmentalSensor = {
+        const environmentalSensorState = {
             alarms: undefined,
             sensorId: payload.sensorId[0],
             site: state[0].site,
@@ -86,8 +86,8 @@ export function chart (state = defaultChartState, {type, payload}) {
             source: defaultChartState[0].source
         };
         return state.length <= 1 ?
-            state.concat([environmentalSensor]) :
-            [state[0]].concat([environmentalSensor]);
+            state.concat([environmentalSensorState]) :
+            [state[0]].concat([environmentalSensorState]);
     case SELECT_SOURCE:
         const sameSourceToAllStateObj = state.length === 1 && payload.length === 2;
         return sameSourceToAllStateObj ? payload.map(source => ({

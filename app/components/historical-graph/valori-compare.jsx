@@ -40,7 +40,7 @@ var ValoriCompare = React.createClass({
         return colors;
     },
     render: function () {
-        const sources = this.props.chart.map(singleSelection => singleSelection.source);
+        const sources = uniq(this.props.chart.map(singleSelection => singleSelection.source));
         return (
             <components.TemporalLineGraph
                 alarms={this.props.chart[0].alarms}
