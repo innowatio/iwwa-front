@@ -43,7 +43,7 @@ var DatefilterMonthlyModal = React.createClass({
         return this.getStateFromProps(props);
     },
     getStateFromProps: function (props) {
-        if (props.value) {
+        if (!R.isEmpty(props.value)) {
             this.setState({
                 value: {
                     start: new Date(props.value.start),
