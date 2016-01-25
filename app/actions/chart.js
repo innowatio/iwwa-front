@@ -1,4 +1,4 @@
-import {String, Number, tuple, struct, list, maybe} from "tcomb";
+import {String, Number, tuple, struct, maybe} from "tcomb";
 
 import actionTypeValidator from "../lib/action-type-validator";
 

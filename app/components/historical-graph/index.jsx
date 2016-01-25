@@ -45,7 +45,6 @@ var HistoricalGraph = React.createClass({
         ) : null;
     },
     renderTitle: function (singleSelectionChart, idx) {
-        // FIXME
         const numberOfSelectionInGraph = this.props.chart.length;
         return (
             <span key={idx}>
