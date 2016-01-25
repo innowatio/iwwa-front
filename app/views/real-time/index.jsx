@@ -21,13 +21,13 @@ var RealTime = React.createClass({
     },
     componentDidMount: function () {
         this.props.asteroid.subscribe("sites");
-        if (this.props.realTime.site) {
-            this.props.asteroid.subscribe("readingsRealTimeAggregatesBySite", this.props.realTime.site);
+        if (this.props.realTime.fullPath) {
+            this.props.asteroid.subscribe("readingsRealTimeAggregatesBySite", this.props.realTime.fullPath[0]);
         }
     },
     componentWillReceiveProps: function () {
-        if (this.props.realTime.site) {
-            this.props.asteroid.subscribe("readingsRealTimeAggregatesBySite", this.props.realTime.site);
+        if (this.props.realTime.fullPath) {
+            this.props.asteroid.subscribe("readingsRealTimeAggregatesBySite", this.props.realTime.fullPath[0]);
         }
     },
     drawGauge: function (params) {
@@ -113,20 +113,20 @@ var RealTime = React.createClass({
     setSelectedSite: function (selectedValues) {
         const siteId = selectedValues.site;
         this.props.asteroid.subscribe("readingsRealTimeAggregatesBySite", siteId);
-        this.props.selectRealTimeSite([siteId]);
+        this.props.selectRealTimeSite(selectedValues);
     },
     getSelectedSiteName: function () {
         return (
-            this.props.realTime.site &&
+            this.props.realTime.fullPath &&
             this.getSites().size > 0 &&
-            this.getSite(this.props.realTime.site) ?
-            this.getSite(this.props.realTime.site).get("name") :
+            this.getSite(this.props.realTime.fullPath) ?
+            this.getSite(this.props.realTime.fullPath[0]).get("name") :
             null
         );
     },
     getMeasuresBySite: function () {
-        var selectedSiteId = this.props.realTime.site ?
-            this.getSite(this.props.realTime.site).get("_id") :
+        var selectedSiteId = this.props.realTime.fullPath[0] ?
+            this.getSite(this.props.realTime.fullPath[0]).get("_id") :
             null;
         var selectSite = this.getMeasures().find(function (measure) {
             return measure.get("_id") === selectedSiteId;
@@ -142,8 +142,8 @@ var RealTime = React.createClass({
     },
     findLatestMeasuresWithCriteria: function (criteria) {
         var res = convertToRealTime.decorators.filter(criteria);
-        if (this.props.realTime.site && this.getMeasures().size) {
-            var decoMeasurements = this.getSite(this.props.realTime.site).get("sensors")
+        if (this.props.realTime.fullPath && this.getMeasures().size) {
+            var decoMeasurements = this.getSite(this.props.realTime.fullPath[0]).get("sensors")
                 .map(sensor => {
                     return convertToRealTime.decorateMeasure(sensor);
                 });
@@ -193,8 +193,8 @@ var RealTime = React.createClass({
                     <span className="pull-right">
                         <components.SiteNavigator
                             allowedValues={this.getSites()}
+                            defaultPath={this.props.realTime.fullPath || []}
                             onChange={this.setSelectedSite}
-                            selectedSite={this.getSitoById(this.props.realTime.site)}
                             title={"Quale punto di misurazione vuoi visualizzare?"}
                         />
                     </span>

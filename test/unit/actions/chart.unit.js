@@ -7,11 +7,15 @@ describe("`chart` actions", () => {
     describe("`selectSingleSensor` function", () => {
 
         it("should return the correct object if is passed an array with one string as parameter", () => {
-            const selectedSensor = {sensor: "sensorId", site: "siteId"};
+            const selectedSensor = {
+                fullPath: ["siteId", "podId", "sensorId"],
+                sensor: "sensorId",
+                site: "siteId"};
             const ret = chart.selectSingleElectricalSensor(selectedSensor);
             expect(ret).to.deep.equal({
                 type: "SELECT_SINGLE_ELECTRICAL_SENSOR",
                 payload: {
+                    fullPath: ["siteId", "podId", "sensorId"],
                     sensor: "sensorId",
                     site: "siteId"
                 }

@@ -7,28 +7,14 @@ var colors     = require("lib/colors");
 var FullscreenModal = React.createClass({
     propTypes: {
         childComponent: React.PropTypes.element,
+        onHide: React.PropTypes.func,
         showModal: React.PropTypes.bool
-    },
-    getInitialState: function () {
-        return {
-            showModal: this.props.showModal || false
-        };
-    },
-    componentWillReceiveProps: function (props) {
-        return this.getStateFromProps(props);
-    },
-    getStateFromProps: function (props) {
-        this.setState({showModal: props.showModal});
-    },
-    closeModal: function () {
-        this.setState({showModal: false});
     },
     render: function () {
         return (
             <bootstrap.Modal
                 className="fullscreen-modal-selector"
-                onHide={this.closeModal}
-                show={this.state.showModal}
+                {...this.props}
             >
                 <Radium.Style
                     rules={{

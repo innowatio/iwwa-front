@@ -17,6 +17,7 @@ import {DISPLAY_ALARMS_ON_CHART} from "../actions/alarms";
 const defaultChartState = [{
     alarms: undefined,
     sensorId: null,
+    fullPath: [],
     date: {},
     measurementType: {label: "Attiva", key: "activeEnergy"},
     sites: null,
@@ -29,6 +30,7 @@ export function chart (state = defaultChartState, {type, payload}) {
         return [{
             ...state[0],
             alarms: undefined,
+            fullPath: payload.fullPath,
             sensorId: payload.sensor,
             site: payload.site
         }];
@@ -89,10 +91,12 @@ export function chart (state = defaultChartState, {type, payload}) {
         if (toggle) {
             return [state[0]];
         }
+        const sensorId = payload.sensorId[0];
         const environmentalSensorState = {
             alarms: undefined,
-            sensorId: payload.sensorId[0],
+            sensorId,
             site: state[0].site,
+            fullPath: undefined,
             measurementType: payload.type[0],
             date: path(["range"], state[0].date) === "dateFilter" ?
                 state[0].date :

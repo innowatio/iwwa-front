@@ -8,6 +8,7 @@ describe("`chart` reducer [CASE: single object in default state array]", () => {
         alarms: [1449157137862],
         site: "site",
         sensorId: "sensorId",
+        fullPath: ["site", "sensorId"],
         measurementType: {
             label: "labelType",
             key: "keyType"
@@ -41,6 +42,7 @@ describe("`chart` reducer [CASE: single object in default state array]", () => {
                 type: "SELECT_SINGLE_ELECTRICAL_SENSOR",
                 payload: {
                     site: "newSiteId",
+                    fullPath: ["newSiteId", "newSensorId"],
                     sensor: "newSensorId"
                 }
             };
@@ -49,6 +51,7 @@ describe("`chart` reducer [CASE: single object in default state array]", () => {
                 ...defaultChartStateObject,
                 alarms: undefined,
                 site: "newSiteId",
+                fullPath: ["newSiteId", "newSensorId"],
                 sensorId: "newSensorId"
             }]);
         });
@@ -169,6 +172,7 @@ describe("`chart` reducer [CASE: single object in default state array]", () => {
                 alarms: undefined,
                 site: "site",
                 sensorId: "environmentalSensorId",
+                fullPath: undefined,
                 measurementType: {
                     label: "labelEnvironmentalMod",
                     key: "keyEnvironmentMod",

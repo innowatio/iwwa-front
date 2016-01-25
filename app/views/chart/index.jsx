@@ -93,7 +93,8 @@ var Chart = React.createClass({
             const firstSite = sites.first();
             this.props.selectSingleElectricalSensor({
                 sensor: firstSite.get("sensorsIds").first(),
-                site: firstSite.get("_id")
+                site: firstSite.get("_id"),
+                fullPath: [firstSite.get("_id")]
             });
         }
     },
@@ -264,8 +265,8 @@ var Chart = React.createClass({
                         >
                             <components.SiteNavigator
                                 allowedValues={sites}
+                                defaultPath={this.props.chart.fullPath || []}
                                 onChange={this.props.selectSingleElectricalSensor}
-                                selectedSite={this.getSitoById(this.props.chart[0].site)}
                                 title={"Quale punto di misurazione vuoi visualizzare?"}
                             />
                         </components.TutorialAnchor>

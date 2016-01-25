@@ -4,17 +4,28 @@ import {SELECT_REAL_TIME_SITE} from "../actions/real-time";
 
 /**
 *   A click to select a siteId
-*   @param {String} siteId - id of the site to display in real-time views
+*   @param {Array} fullPath - full path of the selected item
+*   (i.e. [Site, Pod, Sensor])
 */
 function site (state = null, {type, payload}) {
     switch (type) {
     case SELECT_REAL_TIME_SITE:
-        return payload[0];
+        return payload.site;
+    default:
+        return state;
+    }
+}
+
+function fullPath (state = null, {type, payload}) {
+    switch (type) {
+    case SELECT_REAL_TIME_SITE:
+        return payload.fullPath;
     default:
         return state;
     }
 }
 
 export const realTime = combineReducers({
-    site
+    site,
+    fullPath
 });

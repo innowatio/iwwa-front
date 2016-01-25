@@ -7,6 +7,7 @@ describe("`chart` reducer [CASE: multiple object in default state array]", () =>
     const defaultChartStateFirstObject = Object.freeze({
         alarms: [1449157137862],
         site: "site1",
+        fullPath: ["site1", "sensorId"],
         sensorId: "sensorId",
         measurementType: {
             label: "labelType1",
@@ -28,6 +29,7 @@ describe("`chart` reducer [CASE: multiple object in default state array]", () =>
         alarms: undefined,
         site: "site2",
         sensorId: "consumptionSensorsId",
+        fullPath: ["site2", "consumptionSensorsId"],
         measurementType: {
             label: "labelEnvironmental",
             key: "keyEnvironment",
@@ -67,6 +69,7 @@ describe("`chart` reducer [CASE: multiple object in default state array]", () =>
                 type: "SELECT_SINGLE_ELECTRICAL_SENSOR",
                 payload: {
                     site: "newSiteId",
+                    fullPath: ["newSiteId", "newSensorId"],
                     sensor: "newSensorId"
                 }
             };
@@ -75,7 +78,8 @@ describe("`chart` reducer [CASE: multiple object in default state array]", () =>
                 ...defaultChartStateFirstObject,
                 alarms: undefined,
                 site: "newSiteId",
-                sensorId: "newSensorId"
+                sensorId: "newSensorId",
+                fullPath: ["newSiteId", "newSensorId"]
             }]);
         });
 
@@ -208,6 +212,7 @@ describe("`chart` reducer [CASE: multiple object in default state array]", () =>
                 defaultChartStateFirstObject, {
                     ...defaultChartStateSecondObject,
                     site: "site1",
+                    fullPath: undefined,
                     measurementType: {
                         label: "labelEnvironmentalMod",
                         key: "keyEnvironmentMod",
