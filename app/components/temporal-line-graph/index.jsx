@@ -75,7 +75,7 @@ var TemporalLineGraph = React.createClass({
             strokeWidth: 1.5,
             xlabel: props.xLabel,
             ylabel: props.yLabel,
-            y2label: props.y2label ? props.y2label : "",
+            y2label: props.y2Label ? props.y2Label : "",
             axes: {
                 x: {},
                 y: {},
@@ -83,7 +83,7 @@ var TemporalLineGraph = React.createClass({
             }
         };
         if (!R.isEmpty(props.coordinates)) {
-            if (props.coordinates[0].length === 3) {
+            if (props.y2Label) {
                 var maxY2Range = R.reduce(function (prev, elm) {
                     return R.max(prev, elm[2][0]);
                 }, 0, props.coordinates);
@@ -99,7 +99,7 @@ var TemporalLineGraph = React.createClass({
             } else {
                 options.axes.y.valueRange = [0, maxYRange * 1.01];
             }
-            options.series[externalLabel] = {axis: "y2"};
+            props.y2Label ? options.series[externalLabel] = {axis: "y2"} : null;
         }
         if (props.coordinates.length !== 0) {
             var lastDate;

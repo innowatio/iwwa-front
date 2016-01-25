@@ -11,8 +11,8 @@ export function getMeasurementTypes () {
 
 export function getSources () {
     return [
-        {label: "Reale", color: colors.lineReale, key: "reading", isDisabled: false},
-        {label: "Previsionale", color: colors.linePrevisionale, key: "previsional", isDisabled: true}
+        {label: "Reale", color: colors.lineReale, key: "reading"},
+        {label: "Previsionale", color: colors.linePrevisionale, key: "forecast"}
     ];
 }
 

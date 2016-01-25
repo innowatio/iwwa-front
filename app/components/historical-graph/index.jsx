@@ -48,7 +48,11 @@ var HistoricalGraph = React.createClass({
         const numberOfSelectionInGraph = this.props.chart.length;
         return (
             <span key={idx}>
-                {this.renderSiteTitle(this.props.sites[idx])}
+                {
+                    this.props.sites.length === 2 ?
+                    this.renderSiteTitle(this.props.sites[idx]) :
+                    this.renderSiteTitle(this.props.sites[0])
+                }
                 {" - "}
                 {this.renderSensorTitle(singleSelectionChart.sensorId)}
                 {numberOfSelectionInGraph > idx + 1 ? " & " : null}
@@ -65,11 +69,11 @@ var HistoricalGraph = React.createClass({
         return <ValoriCompareGraph {...this.props} ref="compareGraph"/>;
     },
     renderGraph: function () {
-        const site = uniq(this.props.chart.map(singleSelection => singleSelection.site));
+        const sites = uniq(this.props.chart.map(singleSelection => singleSelection.site));
         if (this.props.isDateCompareActive) {
             return this.renderDateCompareGraph();
         }
-        if (site.length > 1) {
+        if (sites.length > 1) {
             return this.renderSitesCompareGraph();
         }
         return this.renderValoriCompareGraph();

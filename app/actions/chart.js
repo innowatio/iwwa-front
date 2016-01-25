@@ -126,12 +126,16 @@ export function selectEnvironmentalSensor (sensorId, type) {
 *   A click on select source button
 *   @param {array} source - source of the data
 */
+const structureExpected = struct({
+    label: String,
+    color: String,
+    key: String
+});
 const typeofSelectSource = actionTypeValidator(
-    tuple([struct({
-        label: String,
-        color: String,
-        key: String
-    })])
+    tuple([
+        structureExpected,
+        maybe(structureExpected)
+    ])
 );
 export function selectSource (sources) {
     typeofSelectSource(...arguments);

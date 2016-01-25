@@ -103,14 +103,23 @@ export function chart (state = defaultChartState, {type, payload}) {
                 {},
             source: defaultChartState[0].source
         };
-        return state.length <= 1 ?
-            state.concat([environmentalSensorState]) :
-            [state[0]].concat([environmentalSensorState]);
+        return [state[0]].concat([environmentalSensorState]);
     case SELECT_SOURCE:
         /*
         *   The source can be `reading` and/or `forecast`.
         *   Forecast is only for electrical sensor.
+        *   Toggle functionality.
         */
+        const toggleSource = (
+            state.length > 1 &&
+            equals({...state[0], source: null}, {...state[1], source: null})
+        );
+        if (toggleSource) {
+            return [{
+                ...state[0],
+                source: payload[0]
+            }];
+        }
         const sameSourceToAllStateObj = state.length === 1 && payload.length === 2;
         return sameSourceToAllStateObj ? payload.map(source => ({
             ...state[0],

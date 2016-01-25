@@ -169,8 +169,24 @@ var Chart = React.createClass({
         const selectedSensorId = this.firstSensorOfConsumptionInTheSite(consumptionTypes);
         this.props.selectEnvironmentalSensor([selectedSensorId], [consumptionTypes]);
     },
+    onChangeMultiSources: function (currentValue, allowedValue) {
+        const value = currentValue.map(value => value.key);
+        const index = value.indexOf(allowedValue.key);
+        if (index === -1) {
+            /*
+            *   The array does not contain the current value, hence we add it
+            */
+            this.props.selectSource(R.append(allowedValue, R.uniq(currentValue)));
+        } else {
+            /*
+            *   The array contains the current value, hence we remove it
+            */
+            const arrayWithValueRemoved = R.remove(index, 1, currentValue);
+            arrayWithValueRemoved.length > 0 ? this.props.selectSource(arrayWithValueRemoved) : null;
+        }
+    },
     isDateCompare: function () {
-        return R.equals(R.path(["date", "range"], this.props.chart), "dateCompare");
+        return R.equals(R.path(["0", "date", "range"], this.props.chart), "dateCompare");
     },
     renderExportButton: function () {
         return (
@@ -202,7 +218,8 @@ var Chart = React.createClass({
     },
     render: function () {
         const sites = this.props.collections.get("sites") || Immutable.Map();
-        const selectedSites = this.props.chart.map(singleSelection => this.getSitoById(singleSelection.site));
+        const selectedSitesId = R.uniq(this.props.chart.map(singleSelection => singleSelection.site));
+        const selectedSites = selectedSitesId.map(siteId => this.getSitoById(siteId));
         const selectedSources = this.props.chart.map(singleSelection => singleSelection.source);
         const selectedConsumptionType = (
             this.props.chart.length > 1 &&
@@ -210,7 +227,7 @@ var Chart = React.createClass({
         ) ?
             this.props.chart[1].measurementType :
             null;
-        const valoriMulti = (this.isDateCompare() && selectedSites.length < 2);
+        const valoriMulti = (!this.isDateCompare() && selectedSitesId.length < 2 && !selectedConsumptionType);
         return (
             <div style={styles.mainDivStyle}>
                 <bootstrap.Col sm={12} style={styles.colVerticalPadding}>
@@ -228,6 +245,7 @@ var Chart = React.createClass({
                                 getLabel={R.prop("label")}
                                 multi={valoriMulti}
                                 onChange={this.props.selectSource}
+                                onChangeMulti={this.onChangeMultiSources}
                                 value={selectedSources}
                             />
                         </components.TutorialAnchor>
@@ -334,7 +352,7 @@ var Chart = React.createClass({
                             chart={this.props.chart}
                             getY2Label={CollectionUtils.labelGraph.getY2Label}
                             getYLabel={CollectionUtils.labelGraph.getYLabel}
-                            isComparationActive={valoriMulti}
+                            isComparationActive={this.isDateCompare() || selectedSitesId.length > 2}
                             isDateCompareActive={this.isDateCompare()}
                             misure={this.props.collections.get("readings-daily-aggregates") || Immutable.Map()}
                             ref="historicalGraph"

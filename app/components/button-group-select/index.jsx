@@ -8,7 +8,6 @@ var ReactPureRender = require("react-addons-pure-render-mixin");
 var colors     = require("lib/colors");
 var components = require("components");
 var styles     = require("lib/styles");
-var icons      = require("lib/icons");
 
 var styleDropdown = R.merge(
     styles.buttonSelectValore,
@@ -31,6 +30,7 @@ var ButtonGroupSelect = React.createClass({
         // This parameter is for check if the sources are two (real and previsional)
         multi: React.PropTypes.bool,
         onChange: React.PropTypes.func.isRequired,
+        onChangeMulti: React.PropTypes.func,
         value: React.PropTypes.oneOfType([
             React.PropTypes.array,
             IPropTypes.list
@@ -50,6 +50,15 @@ var ButtonGroupSelect = React.createClass({
             vertical: false
         };
     },
+    isActiveMulti: function (allowedValue) {
+        var keys = this.props.value.map(this.props.getKey);
+        var key = this.props.getKey(allowedValue);
+        return (
+            R.is(Immutable.List, keys) ?
+            keys.contains(key) :
+            R.contains(key, keys)
+        );
+    },
     isActiveSingle: function (allowedValue) {
         var keys = this.props.value.map(this.props.getKey);
         var key = this.props.getKey(allowedValue);
@@ -60,10 +69,16 @@ var ButtonGroupSelect = React.createClass({
         );
     },
     isActive: function (allowedValue) {
-        return this.isActiveSingle(allowedValue);
+        return (
+            this.props.multi ?
+            this.isActiveMulti(allowedValue) :
+            this.isActiveSingle(allowedValue)
+        );
     },
     onChange: function (allowedValue) {
-        this.props.onChange([allowedValue]);
+        return this.props.multi ?
+            this.props.onChangeMulti(this.props.value, allowedValue) :
+            this.props.onChange([allowedValue]);
     },
     renderButtonOption: function (allowedValue) {
         var active = this.isActive(allowedValue);
@@ -79,23 +94,11 @@ var ButtonGroupSelect = React.createClass({
             </components.Button>
         );
     },
-    renderFilter: function () {
-        return (
-            <bootstrap.Input
-                addonAfter={<img src={icons.iconSearch} style={{height: "21px"}}/>}
-                className="input-search"
-                onChange={input => this.setState({inputFilter: input.target.value})}
-                placeholder="Ricerca"
-                type="text"
-            />
-    );
-    },
     render: function () {
         return (
             <bootstrap.ButtonGroup
                 vertical={this.props.vertical}
             >
-                {this.props.filter ? this.renderFilter() : null}
                 {this.props.allowedValues.map(this.renderButtonOption)}
             </bootstrap.ButtonGroup>
         );

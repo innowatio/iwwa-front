@@ -1,6 +1,6 @@
 import Immutable from "immutable";
 import IPropTypes from "react-immutable-proptypes";
-import {prop, map, uniq} from "ramda";
+import {prop, map, uniq, dropLast} from "ramda";
 import React, {PropTypes} from "react";
 import ReactPureRender from "react-addons-pure-render-mixin";
 
@@ -24,18 +24,19 @@ var ValoriCompare = React.createClass({
         return result;
     },
     getLabels: function (sources) {
-        var label = ["Data"].concat(
-            map(prop("label"), sources)
-        );
-        if (this.props.chart.length > 1 && prop("label", this.props.chart[1].measurementType)) {
+        var label = ["Data"].concat(map(prop("label"), sources));
+        if (this.props.chart.length > 1 && prop("color", this.props.chart[1].measurementType)) {
+            if (sources.length > 1) {
+                label = dropLast(1, label);
+            }
             label = label.concat(prop("label", this.props.chart[1].measurementType));
         }
         return label;
     },
     getColors: function (sources) {
-        var colors = uniq(map(prop("color"), sources));
+        var colors = map(prop("color"), sources);
         if (this.props.chart.length > 1 && prop("color", this.props.chart[1].measurementType)) {
-            colors = colors.concat(prop("color", this.props.chart[1].measurementType));
+            colors = [colors[0]].concat(prop("color", this.props.chart[1].measurementType));
         }
         return colors;
     },
@@ -51,8 +52,8 @@ var ValoriCompare = React.createClass({
                 ref="temporalLineGraph"
                 showRangeSelector={true}
                 site={this.props.sites[0] || Immutable.Map()}
-                y2label={this.props.chart.length > 1 ? this.props.getY2Label(this.props.chart[1].measurementType.key) : null}
-                yLabel={this.props.getYLabel(this.props.chart[0].measurementType.key)}
+                y2Label={this.props.chart.length > 1 && prop("color", this.props.chart[1].measurementType) ? this.props.getY2Label(this.props.chart[1].measurementType) : null}
+                yLabel={this.props.getYLabel(this.props.chart[0].measurementType)}
             />
         );
     }
