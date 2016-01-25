@@ -182,28 +182,30 @@ describe("`chart` actions", () => {
     describe("`selectDateRangesCompare` function", () => {
 
         it("should return the correct object if is passed the correct object", () => {
-            const dateRangesCompare = {
-                period: {
-                    label: "label",
-                    key: "key"
-                },
-                dateOne: 1449157137862
+            const period = {
+                label: "label",
+                key: "key"
             };
-            const ret = chart.selectDateRangesCompare(dateRangesCompare);
+            const range = "range";
+            const dateOne = Date.now();
+            const ret = chart.selectDateRangesCompare(dateOne, period, range);
             expect(ret).to.deep.equal({
                 type: "SELECT_DATE_RANGES_COMPARE",
-                payload: dateRangesCompare
+                payload: {
+                    period,
+                    range,
+                    dateOne
+                }
             });
         });
 
         it("should return an `Error` if isn't passed the correct object", () => {
-            const dateRanges = {
-                period: {
-                    label: "label",
-                    key: "key"
-                },
-                dateOne: "Thu Dec 03 2015 16:57:56 GMT+0100 (CET)"
-            };
+            const dateRanges = ({
+                label: "label",
+                key: "key"
+            },
+            1234
+            );
             function troubleMaker () {
                 chart.selectDateRangesCompare(dateRanges);
             }

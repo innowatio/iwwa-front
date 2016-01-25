@@ -1,9 +1,9 @@
-var R          = require("ramda");
-var React      = require("react");
-var moment     = require("moment");
+import {equals, partial} from "ramda";
+import React, {PropTypes} from "react";
+import moment from "moment";
 
-var colors     = require("lib/colors");
-var components = require("components/");
+import * as colors from "lib/colors";
+import * as components from "components";
 
 var styles = {
     buttonCompare: {
@@ -16,23 +16,16 @@ var styles = {
 
 var DateCompare = React.createClass({
     propTypes: {
-        allowedValues: React.PropTypes.array.isRequired,
-        closeModal: React.PropTypes.func,
-        getKey: React.PropTypes.func,
-        getLabel: React.PropTypes.func,
-        onChange: React.PropTypes.func,
-        value: React.PropTypes.object
+        allowedValues: PropTypes.array.isRequired,
+        closeModal: PropTypes.func,
+        getKey: PropTypes.func,
+        getLabel: PropTypes.func,
+        onChange: PropTypes.func,
+        period: PropTypes.object
     },
     getInitialState: function () {
         return {
-            value: {
-                period: R.isNil(this.props.value) || R.isNil(this.props.value.period) ?
-                    this.props.allowedValues[0] :
-                    this.props.value.period,
-                dateOne: R.isNil(this.props.value) || R.isNil(this.props.value.dateOne) ?
-                    moment().valueOf() :
-                    this.props.value.dateOne
-            }
+            period: this.props.period || this.props.allowedValues[0]
         };
     },
     componentWillReceiveProps: function (props) {
@@ -40,25 +33,24 @@ var DateCompare = React.createClass({
     },
     getStateFromProps: function (props) {
         this.setState({
-            value: props.value
+            period: props.period || this.props.allowedValues[0]
         });
     },
     selectedCheckboxDate: function (allowedValue) {
-        var newState = R.merge(this.state.value, {period: allowedValue});
         this.setState({
-            value: newState
+            period: allowedValue
         });
     },
     onClickButton: function () {
         this.props.closeModal();
-        this.props.onChange(this.state.value);
+        this.props.onChange(moment().valueOf(), this.state.period, "dateCompare");
     },
     renderDataCompare: function (allowedValue) {
         return (
             <components.Button
-                active={R.equals(allowedValue, R.path(["period"], this.state.value))}
+                active={equals(allowedValue, this.state.period)}
                 key={this.props.getKey(allowedValue)}
-                onClick={R.partial(this.selectedCheckboxDate, [allowedValue])}
+                onClick={partial(this.selectedCheckboxDate, [allowedValue])}
                 style={styles.buttonCompare}
                 value={allowedValue}
             >

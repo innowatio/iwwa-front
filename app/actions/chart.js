@@ -78,19 +78,22 @@ export function selectMultipleElectricalSensor (sensors, sites) {
 *   Date value are in millisecond unix timestamp.
 */
 const typeofSelectedDateRangesCompare = actionTypeValidator(
+    Number,
     struct({
-        period: struct({
-            label: String,
-            key: String
-        }),
-        dateOne: Number
-    })
+        label: String,
+        key: String
+    }),
+    String
 );
-export function selectDateRangesCompare (dateRanges) {
+export function selectDateRangesCompare (dateOne, period, range) {
     typeofSelectedDateRangesCompare(...arguments);
     return {
         type: SELECT_DATE_RANGES_COMPARE,
-        payload: dateRanges
+        payload: {
+            period,
+            range,
+            dateOne
+        }
     };
 }
 
@@ -144,17 +147,6 @@ export function selectSource (sources) {
         payload: sources
     };
 }
-
-/**
-*   A click on select source button
-*   @param {array} source - source of the data
-*/
-// export function selectSourceCompare (sources) {
-//     return {
-//         type: SELECT_SOURCES,
-//         payload: sources
-//     };
-// }
 
 /**
 *   A click on dateFilter modal

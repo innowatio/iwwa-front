@@ -1,4 +1,5 @@
 import {equals, last, path, update} from "ramda";
+import moment from "moment";
 
 import * as colors from "lib/colors";
 import {
@@ -8,7 +9,7 @@ import {
     SELECT_SOURCE,
     SELECT_MULTIPLE_ELECTRICAL_SENSOR,
     SELECT_DATE_RANGES,
-    // SELECT_DATE_RANGES_COMPARE,
+    SELECT_DATE_RANGES_COMPARE,
     REMOVE_ALL_COMPARE
 } from "../actions/chart";
 
@@ -68,18 +69,11 @@ export function chart (state = defaultChartState, {type, payload}) {
                 state[0].date :
                 {}
         }));
-    // case SELECT_DATE_RANGES_COMPARE:
-    //     const
-    //     return
-    //
-    //     {
-    //         ...state,
-    //         alarms: undefined,
-    //         dateRanges: payload,
-    //         electricalSensors: firstElectricalSensor,
-    //         consumptionSensors: [],
-    //         consumptionTypes: []
-    //     };
+    case SELECT_DATE_RANGES_COMPARE:
+        return state.map(() => ({
+            ...state[0],
+            date: payload
+        }));
     case SELECT_ENVIRONMENTAL_SENSOR:
         /*
         *   When click on consumption button, this can have a toggle functionality.
