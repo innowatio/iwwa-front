@@ -283,7 +283,7 @@ var Chart = React.createClass({
                         >
                             <components.SiteNavigator
                                 allowedValues={sites}
-                                defaultPath={this.props.chart.fullPath || []}
+                                defaultPath={this.props.chart[0].fullPath || []}
                                 onChange={this.props.selectSingleElectricalSensor}
                                 title={"Quale punto di misurazione vuoi visualizzare?"}
                             />

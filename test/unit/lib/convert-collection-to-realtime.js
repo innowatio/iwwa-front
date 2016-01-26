@@ -2,7 +2,7 @@ require("unit-setup.js");
 
 var Immutable = require("immutable");
 
-var CollectionUtils = proxyquire("lib/convert-collection-to-realtime", {});
+var CollectionUtils = proxyquire("lib/readings-real-time-aggregates-to-realtime-view", {});
 var icons           = proxyquire("lib/icons", {});
 
 describe("the `decorateMeasures` function", function () {

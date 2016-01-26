@@ -7,7 +7,7 @@ import {connect} from "react-redux";
 import {bindActionCreators} from "redux";
 
 var components        = require("components");
-var convertToRealTime = require("lib/convert-collection-to-realtime");
+var readingsRealTime  = require("lib/readings-real-time-aggregates-to-realtime-view");
 var colors            = require("lib/colors");
 var styles            = require("lib/styles");
 import {selectRealTimeSite} from "actions/real-time";
@@ -141,15 +141,15 @@ var RealTime = React.createClass({
         );
     },
     findLatestMeasuresWithCriteria: function (criteria) {
-        var res = convertToRealTime.decorators.filter(criteria);
+        var res = readingsRealTime.decorators.filter(criteria);
         if (this.props.realTime.fullPath && this.getMeasures().size) {
             var decoMeasurements = this.getSite(this.props.realTime.fullPath[0]).get("sensors")
                 .map(sensor => {
-                    return convertToRealTime.decorateMeasure(sensor);
+                    return readingsRealTime.decorateMeasure(sensor);
                 });
             res = R.filter(
                 criteria,
-                convertToRealTime.addValueToMeasures(
+                readingsRealTime.addValueToMeasures(
                     decoMeasurements.flatten(1),
                     this.getMeasuresBySite()
             ));
@@ -162,9 +162,9 @@ var RealTime = React.createClass({
         });
         return measures.map(pod => {
             var anzId = (pod.get("children") || Immutable.List()).map(anz => {
-                return convertToRealTime.decorateMeasure(anz);
+                return readingsRealTime.decorateMeasure(anz);
             });
-            return pod.set("value", convertToRealTime.addValueToMeasures(
+            return pod.set("value", readingsRealTime.addValueToMeasures(
                 anzId.flatten(1),
                 this.getMeasuresBySite()
             ).filter(decorator => {
