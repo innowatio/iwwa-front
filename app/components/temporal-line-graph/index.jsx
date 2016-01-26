@@ -146,7 +146,6 @@ var TemporalLineGraph = React.createClass({
             options.axes.x.valueFormatter = props.xLegendFormatter;
         }
         if (props.xTicker) {
-            console.log(props.xTicker());
             options.axes.x.ticker = props.xTicker;
         }
         return options;

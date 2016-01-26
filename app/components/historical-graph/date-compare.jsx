@@ -22,9 +22,7 @@ var DateCompare = React.createClass({
     },
     // TODO
     getCoordinates: function () {
-        var a = readingsDailyAggregatesToDygraphData(this.props.misure, this.props.chart);
-        // console.log(a);
-        return a;
+        return readingsDailyAggregatesToDygraphData(this.props.misure, this.props.chart);
     },
     getLabels: function () {
         const dates = this.getDatesFromChartState();

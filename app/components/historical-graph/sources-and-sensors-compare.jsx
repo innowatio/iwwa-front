@@ -5,7 +5,7 @@ import React, {PropTypes} from "react";
 import ReactPureRender from "react-addons-pure-render-mixin";
 
 import components from "components";
-import readingsDailyAggregatesToDygraphData from "lib/readings-daily-aggregates-to-dygraph-data/";
+import readingsDailyAggregatesToDygraphData from "lib/readings-daily-aggregates-to-dygraph-data";
 
 var ValoriCompare = React.createClass({
     propTypes: {
@@ -17,11 +17,7 @@ var ValoriCompare = React.createClass({
     },
     mixins: [ReactPureRender],
     getCoordinates: function () {
-        const start = Date.now();
-        console.log("Start");
-        const result = readingsDailyAggregatesToDygraphData(this.props.misure, this.props.chart);
-        console.log(`Result in ${Date.now() - start}ms`);
-        return result;
+        return readingsDailyAggregatesToDygraphData(this.props.misure, this.props.chart);
     },
     getLabels: function (sources) {
         var label = ["Data"].concat(map(prop("label"), sources));

@@ -8,7 +8,7 @@ import icons from "lib/icons";
 import colors from "lib/colors";
 import components from "components";
 import DateCompareGraph from "./date-compare";
-import ValoriCompareGraph from "./valori-compare";
+import SourcesAndSensorsCompare from "./sources-and-sensors-compare";
 import SitesCompareGraph from "./sites-compare";
 
 var HistoricalGraph = React.createClass({
@@ -66,7 +66,7 @@ var HistoricalGraph = React.createClass({
         return <SitesCompareGraph {...this.props} ref="compareGraph"/>;
     },
     renderValoriCompareGraph: function () {
-        return <ValoriCompareGraph {...this.props} ref="compareGraph"/>;
+        return <SourcesAndSensorsCompare {...this.props} ref="compareGraph"/>;
     },
     renderGraph: function () {
         const sites = uniq(this.props.chart.map(singleSelection => singleSelection.site));
