@@ -4,7 +4,7 @@ export function getDateRangesCompare ({period, dateOne}) {
     if (period.key === "years") {
         return [{
             start: moment(dateOne).subtract(4, "weeks").startOf("day").valueOf(),
-            end: moment(dateOne).format("YYYY-MM-DD").endOf("day").valueOf()
+            end: moment(dateOne).endOf("day").valueOf()
         }, {
             start: moment(dateOne).subtract(57, "weeks").startOf("day").valueOf(),
             end: moment(dateOne).subtract(53, "weeks").endOf("day").valueOf()
