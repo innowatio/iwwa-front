@@ -20,7 +20,7 @@ const defaultChartState = [{
     fullPath: [],
     date: {},
     measurementType: {label: "Attiva", key: "activeEnergy"},
-    sites: null,
+    site: null,
     source: {label: "Reale", color: colors.lineReale, key: "reading"}
 }];
 
@@ -90,16 +90,20 @@ export function chart (state = defaultChartState, {type, payload}) {
             return [state[0]];
         }
         const sensorId = payload.sensorId[0];
+        const date = state[0].date.type === "dateFilter" ? state[0].date : {};
         const environmentalSensorState = {
             alarms: undefined,
             sensorId,
             site: state[0].site,
             fullPath: undefined,
             measurementType: payload.type[0],
-            date: state[0].date.type === "dateFilter" ? state[0].date : {},
+            date,
             source: defaultChartState[0].source
         };
-        return [state[0]].concat([environmentalSensorState]);
+        return [{
+            ...state[0],
+            date
+        }].concat([environmentalSensorState]);
     case SELECT_SOURCE:
         /*
         *   The source can be `reading` and/or `forecast`.

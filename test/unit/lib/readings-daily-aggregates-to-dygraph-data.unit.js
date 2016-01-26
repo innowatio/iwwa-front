@@ -36,20 +36,30 @@ describe("readingsDailyAggregatesToDygraphData", () => {
         const filters = [
             {
                 sensorId: "sensor_3",
-                source: "reading",
-                measurementType: "activeEnergy",
+                source: {
+                    key: "reading"
+                },
+                measurementType: {
+                    key: "activeEnergy"
+                },
                 date: {
                     start: moment("2015-02-01").valueOf(),
-                    end: moment("2015-02-28").valueOf()
+                    end: moment("2015-02-28").valueOf(),
+                    type: "dateFilter"
                 }
             },
             {
                 sensorId: "sensor_3",
-                source: "reading",
-                measurementType: "activeEnergy",
+                source: {
+                    key: "reading"
+                },
+                measurementType: {
+                    key: "activeEnergy"
+                },
                 date: {
                     start: moment("2015-01-01").valueOf(),
-                    end: moment("2015-01-31").valueOf()
+                    end: moment("2015-01-31").valueOf(),
+                    type: "dateFilter"
                 }
             }
         ];
@@ -64,7 +74,7 @@ describe("readingsDailyAggregatesToDygraphData", () => {
         expect(result).to.be.an("array");
     });
 
-    it.skip("readings-daily-aggtregates -> dygraph data structure [CASE: date-compare]", () => {
+    it("readings-daily-aggtregates -> dygraph data structure [CASE: date-compare]", () => {
 
         const padLeft = n => (n < 10 ? `0${n}` : `${n}`);
         const measurementsString = idx => repeat(1 * idx, 288).join(",");
@@ -91,29 +101,33 @@ describe("readingsDailyAggregatesToDygraphData", () => {
 
         const filters = [
             {
-                sensorId: "sensor_3",
-                source: "reading",
-                measurementType: "activeEnergy",
+                sensorId: "sensor_1",
+                source: {
+                    key: "reading"
+                },
+                measurementType: {
+                    key: "activeEnergy"
+                },
                 date: {
-                    rangeOne: {
-                        start: "",
-                        end: ""
-                    },
+                    start: moment("2015-03-28").subtract(4, "weeks").valueOf(),
+                    end: moment("2015-03-28").valueOf(),
                     type: "dateCompare",
-                    period: {label: "", key: ""}
+                    period: {label: "Mese", key: "months"}
                 }
             },
             {
-                sensorId: "sensor_3",
-                source: "reading",
-                measurementType: "activeEnergy",
+                sensorId: "sensor_1",
+                source: {
+                    key: "reading"
+                },
+                measurementType: {
+                    key: "activeEnergy"
+                },
                 date: {
-                    rangeTwo: {
-                        start: "",
-                        end: ""
-                    },
+                    start: moment("2015-03-28").subtract(8, "weeks").valueOf(),
+                    end: moment("2015-03-28").subtract(4, "weeks").valueOf(),
                     type: "dateCompare",
-                    period: {label: "", key: ""}
+                    period: {label: "Mese", key: "months"}
                 }
             }
         ];

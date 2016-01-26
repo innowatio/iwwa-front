@@ -7,7 +7,7 @@ import IPropTypes from "react-immutable-proptypes";
 
 import * as colors from "lib/colors";
 import components from "components";
-// import readingsDailyAggregatesToDygraphData from "lib/readings-daily-aggregates-to-dygraph-data";
+import readingsDailyAggregatesToDygraphData from "lib/readings-daily-aggregates-to-dygraph-data";
 
 var DateCompare = React.createClass({
     propTypes: {
@@ -22,15 +22,9 @@ var DateCompare = React.createClass({
     },
     // TODO
     getCoordinates: function () {
-        // return readingsDailyAggregatesToDygraphData(this.props.misure, this.props.chart, this.getDateFormatter());
-        return [];
-        // const sensorId = this.props.chart[0].sensorId;
-        // return readingsDailyAggregatesToDygraphData.dateCompare(
-        //     this.props.misure,
-        //     sensorId,
-        //     this.props.,
-        //     this.getDateFormatter()
-        // );
+        var a = readingsDailyAggregatesToDygraphData(this.props.misure, this.props.chart);
+        // console.log(a);
+        return a;
     },
     getLabels: function () {
         const dates = this.getDatesFromChartState();
@@ -105,24 +99,24 @@ var DateCompare = React.createClass({
                 var rangeTwo = moment(dates[1].start).add(n, "days");
                 if (n === 0 && period.key === "months") {
                     // In the first tick of the month, write day and month.
-                    rangeOne.format("DD MMM");
-                    rangeTwo.format("DD MMM");
+                    rangeOne = moment(rangeOne).format("DD MMM");
+                    rangeTwo = moment(rangeTwo).format("DD MMM");
                 } else if (n === 0 && period.key === "years") {
                     // In the first tick of the year, write the year.
-                    rangeOne.format("YYYY");
-                    rangeTwo.format("YYYY");
+                    rangeOne = moment(rangeOne).format("YYYY");
+                    rangeTwo = moment(rangeTwo).format("YYYY");
                 } else if (rangeOne.format("DD") === "01") {
                     // If is the first of the month, write also the month.
-                    rangeOne.format("DD MMM");
-                    rangeTwo.format("DD");
+                    rangeOne = moment(rangeOne).format("DD MMM");
+                    rangeTwo = moment(rangeTwo).format("DD");
                 } else if (rangeTwo.format("DD") === "01") {
                     // If is the first of the month, write also the month.
-                    rangeOne.format("DD");
-                    rangeTwo.format("DD MMM");
+                    rangeOne = moment(rangeOne).format("DD");
+                    rangeTwo = moment(rangeTwo).format("DD MMM");
                 } else {
                     // In the other cases, write only the day
-                    rangeOne.format("DD");
-                    rangeTwo.format("DD");
+                    rangeOne = moment(rangeOne).format("DD");
+                    rangeTwo = moment(rangeTwo).format("DD");
                 }
                 return self.getXTickerLabel(delta, rangeOne, rangeTwo);
             });

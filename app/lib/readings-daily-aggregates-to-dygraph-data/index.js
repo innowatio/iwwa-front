@@ -22,8 +22,14 @@ function fillMissingData (dygraphData) {
     }, [], dygraphData);
 }
 
-export default memoize(function readingsDailyAggregatesToDygraphData (aggregates, filters, dateRanges) {
-    const group = aggregates.reduce(dateRanges ? groupForDateCompare(filters, dateRanges) : groupByDate(filters), {});
+function switchCreateGroupFunction (filters) {
+    return filters[0].date.type === "dateCompare" ?
+    groupForDateCompare(filters) :
+    groupByDate(filters);
+}
+
+export default memoize(function readingsDailyAggregatesToDygraphData (aggregates, filters) {
+    const group = aggregates.reduce(switchCreateGroupFunction(filters), {});
     const filledData = fillMissingData(
         sortBy(prop(0), values(group))
     );

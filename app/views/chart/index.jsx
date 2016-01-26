@@ -107,18 +107,18 @@ var Chart = React.createClass({
         }
     },
     subscribeToMisure: function (props) {
+        const dateFirstChartState = props.chart[0].date;
         var dateStart;
         var dateEnd;
         // Query for date-compare
-        if (props.chart[0].date.type === "dateCompare") {
-            const data = new Date(props.chart[0].date.dateOne);
-            const periodKey = props.chart[0].date.period.key;
-            dateStart = moment(data).startOf("month").subtract(1, periodKey).format("YYYY-MM-DD");
-            dateEnd = moment(data).add(1, periodKey).format("YYYY-MM-DD");
+        if (dateFirstChartState.type === "dateCompare") {
+            const dateSecondChartState = props.chart[1].date;
+            dateStart = [moment(dateFirstChartState.start).format("YYYY-MM-DD"), moment(dateSecondChartState.start).format("YYYY-MM-DD")];
+            dateEnd = [moment(dateFirstChartState.end).format("YYYY-MM-DD"), moment(dateSecondChartState.end).format("YYYY-MM-DD")];
         // Query for date-filter
-        } else if (props.chart[0].date.type === "dateFilter") {
-            dateStart = moment(props.chart[0].date.start).format("YYYY-MM-DD");
-            dateEnd = moment(props.chart[0].date.end).format("YYYY-MM-DD");
+        } else if (dateFirstChartState.type === "dateFilter") {
+            dateStart = moment(dateFirstChartState.start).format("YYYY-MM-DD");
+            dateEnd = moment(dateFirstChartState.end).format("YYYY-MM-DD");
         } else {
             // If no data is selected, is displayed the past month.
             dateStart = moment().startOf("month").format("YYYY-MM-DD");
@@ -131,8 +131,8 @@ var Chart = React.createClass({
             props.asteroid.subscribe(
                 "dailyMeasuresBySensor",
                 sensorId,
-                dateStart,
-                dateEnd,
+                R.is(Array, dateStart) ? dateStart[idx] : dateStart,
+                R.is(Array, dateEnd) ? dateEnd[idx] : dateEnd,
                 sources[idx],
                 measurementTypes[idx]
             );
