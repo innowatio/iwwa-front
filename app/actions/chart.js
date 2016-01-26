@@ -82,16 +82,14 @@ const typeofSelectedDateRangesCompare = actionTypeValidator(
     struct({
         label: String,
         key: String
-    }),
-    String
+    })
 );
-export function selectDateRangesCompare (dateOne, period, range) {
+export function selectDateRangesCompare (dateOne, period) {
     typeofSelectedDateRangesCompare(...arguments);
     return {
         type: SELECT_DATE_RANGES_COMPARE,
         payload: {
             period,
-            range,
             dateOne
         }
     };

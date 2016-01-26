@@ -110,13 +110,13 @@ var Chart = React.createClass({
         var dateStart;
         var dateEnd;
         // Query for date-compare
-        if (props.chart[0].date.range === "dateCompare") {
+        if (props.chart[0].date.type === "dateCompare") {
             const data = new Date(props.chart[0].date.dateOne);
             const periodKey = props.chart[0].date.period.key;
             dateStart = moment(data).startOf("month").subtract(1, periodKey).format("YYYY-MM-DD");
             dateEnd = moment(data).add(1, periodKey).format("YYYY-MM-DD");
         // Query for date-filter
-        } else if (R.path(["date", "range"], props.chart[0]) === "dateFilter") {
+        } else if (props.chart[0].date.type === "dateFilter") {
             dateStart = moment(props.chart[0].date.start).format("YYYY-MM-DD");
             dateEnd = moment(props.chart[0].date.end).format("YYYY-MM-DD");
         } else {
@@ -186,7 +186,7 @@ var Chart = React.createClass({
         }
     },
     isDateCompare: function () {
-        return this.props.chart[0].date.range === "dateCompare";
+        return this.props.chart[0].date.type === "dateCompare";
     },
     renderExportButton: function () {
         return (
@@ -324,7 +324,7 @@ var Chart = React.createClass({
                                     getKey={R.prop("key")}
                                     getLabel={R.prop("label")}
                                     onChange={this.props.selectDateRangesCompare}
-                                    period={R.path(["date", "period"], this.props.chart[0])}
+                                    period={this.props.chart[0].date.period}
                                 />
                             </components.Compare>
                         </components.TutorialAnchor>

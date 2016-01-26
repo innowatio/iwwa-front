@@ -186,14 +186,12 @@ describe("`chart` actions", () => {
                 label: "label",
                 key: "key"
             };
-            const range = "range";
             const dateOne = Date.now();
-            const ret = chart.selectDateRangesCompare(dateOne, period, range);
+            const ret = chart.selectDateRangesCompare(dateOne, period);
             expect(ret).to.deep.equal({
                 type: "SELECT_DATE_RANGES_COMPARE",
                 payload: {
                     period,
-                    range,
                     dateOne
                 }
             });

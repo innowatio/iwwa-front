@@ -14,7 +14,7 @@ describe("`chart` reducer [CASE: multiple object in default state array]", () =>
             key: "keyType1"
         },
         date: {
-            range: "dateFilter",
+            type: "dateFilter",
             start: 1449157137862,
             end: 1449157157862
         },
@@ -38,7 +38,7 @@ describe("`chart` reducer [CASE: multiple object in default state array]", () =>
             selected: "iconSelected"
         },
         date: {
-            range: "dateFilter",
+            type: "dateFilter",
             start: 1449157137862,
             end: 1449157157862
         },
@@ -264,13 +264,54 @@ describe("`chart` reducer [CASE: multiple object in default state array]", () =>
 
     });
 
+    describe("`SELECT_DATA_RANGES_COMPARE` type", () => {
+
+        it("should return an array of two object with type `dateCompare`", () => {
+            const valuePassedFromAction = {
+                type: "SELECT_DATE_RANGES_COMPARE",
+                payload: {
+                    period: {
+                        label: "Mese",
+                        key: "months"
+                    },
+                    dateOne: 1449157137862
+                }
+            };
+            const ret = chart(chartState, valuePassedFromAction);
+            expect(ret).to.deep.equal([{
+                ...defaultChartStateFirstObject,
+                date: {
+                    type: "dateCompare",
+                    period: {
+                        label: "Mese",
+                        key: "months"
+                    },
+                    start: 1446678000000,
+                    end: 1449183599999
+                }
+            }, {
+                ...defaultChartStateFirstObject,
+                date: {
+                    type: "dateCompare",
+                    period: {
+                        label: "Mese",
+                        key: "months"
+                    },
+                    start: 1444255200000,
+                    end: 1446764399999
+                }
+            }]);
+        });
+
+    });
+
     describe("`SELECT_DATE_RANGES` type", () => {
 
-        it("should return the new filter of the date, with `{range: `dateFilter`}`", () => {
+        it("should return the new filter of the date, with `{type: `dateFilter`}`", () => {
             const valuePassedFromAction = {
                 type: "SELECT_DATE_RANGES",
                 payload: {
-                    range: "dateFilter",
+                    type: "dateFilter",
                     start: 1498749876543,
                     end: 1516543214890
                 }
@@ -279,14 +320,14 @@ describe("`chart` reducer [CASE: multiple object in default state array]", () =>
             expect(ret).to.deep.equal([{
                 ...defaultChartStateFirstObject,
                 date: {
-                    range: "dateFilter",
+                    type: "dateFilter",
                     start: 1498749876543,
                     end: 1516543214890
                 }
             }, {
                 ...defaultChartStateSecondObject,
                 date: {
-                    range: "dateFilter",
+                    type: "dateFilter",
                     start: 1498749876543,
                     end: 1516543214890
                 }
@@ -303,7 +344,10 @@ describe("`chart` reducer [CASE: multiple object in default state array]", () =>
                 type: "REMOVE_ALL_COMPARE"
             };
             const ret = chart(chartState, valuePassedFromAction);
-            expect(ret).to.deep.equal([defaultChartStateFirstObject]);
+            expect(ret).to.deep.equal([{
+                ...defaultChartStateFirstObject,
+                date: {}
+            }]);
         });
 
     });

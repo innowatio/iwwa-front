@@ -99,7 +99,7 @@ describe("readingsDailyAggregatesToDygraphData", () => {
                         start: "",
                         end: ""
                     },
-                    range: "dateCompare",
+                    type: "dateCompare",
                     period: {label: "", key: ""}
                 }
             },
@@ -112,7 +112,7 @@ describe("readingsDailyAggregatesToDygraphData", () => {
                         start: "",
                         end: ""
                     },
-                    range: "dateCompare",
+                    type: "dateCompare",
                     period: {label: "", key: ""}
                 }
             }

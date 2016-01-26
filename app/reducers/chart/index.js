@@ -10,9 +10,9 @@ import {
     SELECT_DATE_RANGES,
     SELECT_DATE_RANGES_COMPARE,
     REMOVE_ALL_COMPARE
-} from "../actions/chart";
-
-import {DISPLAY_ALARMS_ON_CHART} from "../actions/alarms";
+} from "actions/chart";
+import {DISPLAY_ALARMS_ON_CHART} from "actions/alarms";
+import {getDateRangesCompare} from "./date-ranges";
 
 const defaultChartState = [{
     alarms: undefined,
@@ -33,7 +33,7 @@ export function chart (state = defaultChartState, {type, payload}) {
             fullPath: payload.fullPath,
             sensorId: payload.sensor,
             site: payload.site,
-            date: state[0].date.range === "dateFilter" ? state[0].date : {}
+            date: state[0].date.type === "dateFilter" ? state[0].date : {}
         }];
     case SELECT_ELECTRICAL_TYPE:
         /*
@@ -65,12 +65,18 @@ export function chart (state = defaultChartState, {type, payload}) {
             sensorId,
             site: payload.sites.length <= 1 ? payload.sites[0] : payload.sites[idx],
             measurementType,
-            date: state[0].date.range === "dateFilter" ? state[0].date : {}
+            date: state[0].date.type === "dateFilter" ? state[0].date : {}
         }));
     case SELECT_DATE_RANGES_COMPARE:
-        return state.map(() => ({
+        const dateRanges = getDateRangesCompare(payload);
+        return dateRanges.map(dateRange => ({
             ...state[0],
-            date: payload
+            date: {
+                period: payload.period,
+                type: "dateCompare",
+                start: dateRange.start,
+                end: dateRange.end
+            }
         }));
     case SELECT_ENVIRONMENTAL_SENSOR:
         /*
@@ -90,7 +96,7 @@ export function chart (state = defaultChartState, {type, payload}) {
             site: state[0].site,
             fullPath: undefined,
             measurementType: payload.type[0],
-            date: state[0].date.range === "dateFilter" ? state[0].date : {},
+            date: state[0].date.type === "dateFilter" ? state[0].date : {},
             source: defaultChartState[0].source
         };
         return [state[0]].concat([environmentalSensorState]);
@@ -126,13 +132,19 @@ export function chart (state = defaultChartState, {type, payload}) {
         */
         return state.map(stateObj => ({
             ...stateObj,
-            date: payload
+            date: {
+                ...payload,
+                type: "dateFilter"
+            }
         }));
     case REMOVE_ALL_COMPARE:
         /*
         *   Remove all the comparation.
         */
-        return [state[0]];
+        return [{
+            ...state[0],
+            date: {}
+        }];
     case DISPLAY_ALARMS_ON_CHART:
         // TODO
         return state;

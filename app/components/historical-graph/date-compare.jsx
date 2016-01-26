@@ -17,30 +17,8 @@ var DateCompare = React.createClass({
         sites: React.PropTypes.arrayOf(IPropTypes.map)
     },
     mixins: [ReactPureRender],
-    getDateRanges: function () {
-        var {dateOne, period} = this.props.chart[0].date;
-        var rangeOne;
-        var rangeTwo;
-        if (period.key === "years") {
-            rangeOne = moment(dateOne).subtract(4, "weeks");
-            rangeTwo = moment(dateOne).subtract(57, "weeks");
-        } else if (period.key === "months") {
-            rangeOne = moment(dateOne).subtract(4, "weeks");
-            rangeTwo = moment(dateOne).subtract(8, "weeks");
-        } else {
-            rangeOne = moment(dateOne).subtract(1, period.key);
-            rangeTwo = moment(dateOne).subtract(2, period.key);
-        }
-        return {
-            rangeOne: {
-                start: rangeOne.format("YYYY-MM-DD"),
-                end: rangeOne.format("YYYY-MM-DD")
-            },
-            rangeTwo: {
-                start: rangeTwo.format("YYYY-MM-DD"),
-                end: rangeTwo.format("YYYY-MM-DD")
-            }
-        };
+    getDatesFromChartState: function () {
+        return this.props.chart.map(singleSelection => singleSelection.date);
     },
     // TODO
     getCoordinates: function () {
@@ -55,10 +33,10 @@ var DateCompare = React.createClass({
         // );
     },
     getLabels: function () {
-        const dateRanges = this.getDateRanges();
+        const dates = this.getDatesFromChartState();
         return ["Data"].concat([
-            moment(dateRanges.rangeOne.start).format("MMM DD, YYYY"),
-            moment(dateRanges.rangeTwo.start).format("MMM DD, YYYY")
+            moment(dates[0].start).format("MMM DD, YYYY"),
+            moment(dates[1].start).format("MMM DD, YYYY")
         ]);
     },
     getDateWindow: function () {
@@ -91,13 +69,13 @@ var DateCompare = React.createClass({
     xTicker: function () {
         const self = this;
         const {period} = self.props.chart[0].date;
-        const dateRanges = self.getDateRanges();
+        const dates = this.getDatesFromChartState();
         if (period.key === "days") {
             // Range of 24h.
             return range(0, 25).map(n => {
                 const delta = moment(0).add(n, "hours").valueOf();
-                var rangeOne = moment(dateRanges.rangeOne.start).add(n, "hours");
-                var rangeTwo = moment(dateRanges.rangeTwo.start).add(n, "hours");
+                var rangeOne = moment(dates[0].start).add(n, "hours");
+                var rangeTwo = moment(dates[1].start).add(n, "hours");
                 if (n === 0) {
                     // In the first tick of the day, write day and month.
                     rangeOne.format("DD MMM");
@@ -114,8 +92,8 @@ var DateCompare = React.createClass({
             // Range of 1 week --> 7 days.
             return range(0, 8).map(function (n) {
                 const delta = moment(0).add(n, "days").valueOf();
-                const rangeOne = moment(dateRanges.rangeOne.start).add(n, "days").format("DD MMM");
-                const rangeTwo = moment(dateRanges.rangeTwo.start).add(n, "days").format("DD MMM");
+                const rangeOne = moment(dates[0].start).add(n, "days").format("DD MMM");
+                const rangeTwo = moment(dates[1].start).add(n, "days").format("DD MMM");
                 return self.getXTickerLabel(delta, rangeOne, rangeTwo);
             });
         }
@@ -123,8 +101,8 @@ var DateCompare = React.createClass({
             // Range of 4 weeks --> 28 days.
             return range(0, 29).map(function (n) {
                 const delta = moment(0).add(n, "days").valueOf();
-                var rangeOne = moment(dateRanges.rangeOne.start).add(n, "days");
-                var rangeTwo = moment(dateRanges.rangeTwo.start).add(n, "days");
+                var rangeOne = moment(dates[0].start).add(n, "days");
+                var rangeTwo = moment(dates[1].start).add(n, "days");
                 if (n === 0 && period.key === "months") {
                     // In the first tick of the month, write day and month.
                     rangeOne.format("DD MMM");
