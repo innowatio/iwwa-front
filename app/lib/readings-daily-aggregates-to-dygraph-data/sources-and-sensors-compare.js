@@ -1,18 +1,7 @@
 import moment from "moment";
-import {
-    findIndex,
-    last,
-    memoize,
-    prop,
-    reduce,
-    sortBy,
-    values
-} from "ramda";
+import {findIndex, memoize} from "ramda";
 
-import decimate from "./decimate-data-to-dygraph";
-
-const EMPTY = Symbol("EMPTY");
-const ALMOST_ZERO = 0.01;
+import {ALMOST_ZERO, EMPTY} from "./index";
 
 function getFilterFn (filter) {
     return memoize(aggregate => (
@@ -29,7 +18,7 @@ function getFindAggregateFilterIndex (filters) {
     return aggregate => findIndex(filterFn => filterFn(aggregate), filterFns);
 }
 
-function groupByDate (filters) {
+export function groupByDate (filters) {
     const defaultGroup = filters.map(() => [EMPTY]);
     const findAggregateFilterIndex = getFindAggregateFilterIndex(filters);
     return (group, aggregate) => {
@@ -52,26 +41,3 @@ function groupByDate (filters) {
         return group;
     };
 }
-
-function fillMissingData (dygraphData) {
-    return reduce((acc, dataPoint) => {
-        const newDataPoint = [dataPoint[0]];
-        dataPoint.slice(1).forEach(([value], index) => {
-            newDataPoint[index + 1] = [
-                value === EMPTY ?
-                (last(acc) ? last(acc)[index + 1][0] : ALMOST_ZERO) :
-                value
-            ];
-        });
-        acc.push(newDataPoint);
-        return acc;
-    }, [], dygraphData);
-}
-
-export default memoize(function readingsDailyAggregatesToDygraphData (aggregates, filters) {
-    const group = aggregates.reduce(groupByDate(filters), {});
-    const filledData = fillMissingData(
-        sortBy(prop(0), values(group))
-    );
-    return decimate(filledData);
-});

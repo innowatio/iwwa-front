@@ -5,7 +5,7 @@ import React, {PropTypes} from "react";
 import ReactPureRender from "react-addons-pure-render-mixin";
 
 import components from "components";
-import readingsDailyAggregatesToDygraphData from "lib/readings-daily-aggregates-to-dygraph-data";
+import readingsDailyAggregatesToDygraphData from "lib/readings-daily-aggregates-to-dygraph-data/";
 
 var ValoriCompare = React.createClass({
     propTypes: {

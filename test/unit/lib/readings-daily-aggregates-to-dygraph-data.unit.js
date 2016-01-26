@@ -8,7 +8,7 @@ import readingsDailyAggregatesToDygraphData from "lib/readings-daily-aggregates-
 
 describe("readingsDailyAggregatesToDygraphData", () => {
 
-    it("readings-daily-aggtregates -> dygraph data structure", () => {
+    it("readings-daily-aggtregates -> dygraph data structure [CASE: sources-and-sensors-compare]", () => {
 
         const padLeft = n => (n < 10 ? `0${n}` : `${n}`);
         const measurementsString = idx => repeat(1 * idx, 288).join(",");
@@ -50,6 +50,70 @@ describe("readingsDailyAggregatesToDygraphData", () => {
                 date: {
                     start: moment("2015-01-01").valueOf(),
                     end: moment("2015-01-31").valueOf()
+                }
+            }
+        ];
+
+        const start = Date.now();
+        console.log("Start");
+        const result = readingsDailyAggregatesToDygraphData(
+            readingsDailyAggregates,
+            filters
+        );
+        console.log(`Result in ${Date.now() - start}ms`);
+        expect(result).to.be.an("array");
+    });
+
+    it.skip("readings-daily-aggtregates -> dygraph data structure [CASE: date-compare]", () => {
+
+        const padLeft = n => (n < 10 ? `0${n}` : `${n}`);
+        const measurementsString = idx => repeat(1 * idx, 288).join(",");
+
+        const readingsDailyAggregates = pipe(
+            map(idx => {
+                const sensorId = `sensor_${idx % 5}`;
+                const day = `2015-${padLeft((idx % 3) + 1)}-${padLeft((idx % 28) + 1)}`;
+                const _id = `${sensorId}-${day}-reading-activeEnergy`;
+                return [_id, {
+                    _id,
+                    sensorId,
+                    // Only testing Janury for now
+                    day,
+                    source: "reading",
+                    measurementType: "activeEnergy",
+                    measurementValues: measurementsString(idx%5 + 1),
+                    measurementsDeltaInMs: 300000
+                }];
+            }),
+            fromPairs,
+            fromJS
+        )(range(0, 310));
+
+        const filters = [
+            {
+                sensorId: "sensor_3",
+                source: "reading",
+                measurementType: "activeEnergy",
+                date: {
+                    rangeOne: {
+                        start: "",
+                        end: ""
+                    },
+                    range: "dateCompare",
+                    period: {label: "", key: ""}
+                }
+            },
+            {
+                sensorId: "sensor_3",
+                source: "reading",
+                measurementType: "activeEnergy",
+                date: {
+                    rangeTwo: {
+                        start: "",
+                        end: ""
+                    },
+                    range: "dateCompare",
+                    period: {label: "", key: ""}
                 }
             }
         ];

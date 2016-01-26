@@ -1,5 +1,4 @@
-import {equals, last, path, update} from "ramda";
-import moment from "moment";
+import {equals, last, update} from "ramda";
 
 import * as colors from "lib/colors";
 import {
@@ -33,7 +32,8 @@ export function chart (state = defaultChartState, {type, payload}) {
             alarms: undefined,
             fullPath: payload.fullPath,
             sensorId: payload.sensor,
-            site: payload.site
+            site: payload.site,
+            date: state[0].date.range === "dateFilter" ? state[0].date : {}
         }];
     case SELECT_ELECTRICAL_TYPE:
         /*
@@ -65,9 +65,7 @@ export function chart (state = defaultChartState, {type, payload}) {
             sensorId,
             site: payload.sites.length <= 1 ? payload.sites[0] : payload.sites[idx],
             measurementType,
-            date: state[0].date.range === "dateFilter" ?
-                state[0].date :
-                {}
+            date: state[0].date.range === "dateFilter" ? state[0].date : {}
         }));
     case SELECT_DATE_RANGES_COMPARE:
         return state.map(() => ({
@@ -92,9 +90,7 @@ export function chart (state = defaultChartState, {type, payload}) {
             site: state[0].site,
             fullPath: undefined,
             measurementType: payload.type[0],
-            date: path(["range"], state[0].date) === "dateFilter" ?
-                state[0].date :
-                {},
+            date: state[0].date.range === "dateFilter" ? state[0].date : {},
             source: defaultChartState[0].source
         };
         return [state[0]].concat([environmentalSensorState]);
