@@ -122,23 +122,12 @@ describe("`chart` actions", () => {
 
     describe("`selectMultipleElectricalSensor` function", () => {
 
-        it("should return the correct object if are passed two sites and two sensors", () => {
+        it("should return the correct object if are passed two sites", () => {
             const sites = ["siteId1", "siteId2"];
-            const sensors = ["sensorId1", "sensorId1"];
-            const ret = chart.selectMultipleElectricalSensor(sensors, sites);
+            const ret = chart.selectMultipleElectricalSensor(sites);
             expect(ret).to.deep.equal({
-                type: "SELECT_MULTIPLE_ELECTRICAL_SENSOR",
-                payload: {sites, sensors}
-            });
-        });
-
-        it("should return the correct object if are passed a sites and two sensors", () => {
-            const sites = ["siteId1"];
-            const sensors = ["sensorId1", "sensorId1"];
-            const ret = chart.selectMultipleElectricalSensor(sensors, sites);
-            expect(ret).to.deep.equal({
-                type: "SELECT_MULTIPLE_ELECTRICAL_SENSOR",
-                payload: {sites, sensors}
+                type: "SELECT_MULTIPLE_ELECTRICAL_SITE",
+                payload: sites
             });
         });
 

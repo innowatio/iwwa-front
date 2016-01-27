@@ -6,7 +6,7 @@ import {
     SELECT_ELECTRICAL_TYPE,
     SELECT_ENVIRONMENTAL_SENSOR,
     SELECT_SOURCE,
-    SELECT_MULTIPLE_ELECTRICAL_SENSOR,
+    SELECT_MULTIPLE_ELECTRICAL_SITE,
     SELECT_DATE_RANGES,
     SELECT_DATE_RANGES_COMPARE,
     REMOVE_ALL_COMPARE
@@ -52,18 +52,19 @@ export function chart (state = defaultChartState, {type, payload}) {
             alarms: undefined,
             measurementType: payload
         }, state);
-    case SELECT_MULTIPLE_ELECTRICAL_SENSOR:
+    case SELECT_MULTIPLE_ELECTRICAL_SITE:
         /*
         *   Update the state, with two different electrical sensor that can have
         *   also different site.
         *   The `measurementType` is the same.
         */
         const measurementType = state[0].measurementType;
-        return payload.sensors.map((sensorId, idx) => ({
+        return payload.map((sensorId, idx) => ({
             ...state[0],
             alarms: undefined,
-            sensorId,
-            site: payload.sites.length <= 1 ? payload.sites[0] : payload.sites[idx],
+            sensorId: null,
+            fullPath: [payload[idx], undefined],
+            site: payload[idx],
             measurementType,
             date: state[0].date.type === "dateFilter" ? state[0].date : {}
         }));

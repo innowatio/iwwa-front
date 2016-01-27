@@ -310,14 +310,14 @@ var Chart = React.createClass({
                         >
                             <components.Compare>
                                 <components.SitiCompare
-                                    allowedValues={sites}
                                     filter={CollectionUtils.sites.filter}
                                     getKey={CollectionUtils.sites.getKey}
                                     getSitoLabel={CollectionUtils.sites.getLabel}
                                     onChange={this.props.selectMultipleElectricalSensor}
                                     open={"undefined"}
+                                    sites={sites}
                                     style={selectStyles.selectCompare}
-                                    value={selectedSites}
+                                    value={selectedSitesId}
                                 />
                                 <components.DateCompare
                                     allowedValues={parameters.getDateCompare()}

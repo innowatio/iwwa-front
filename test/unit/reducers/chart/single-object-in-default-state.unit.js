@@ -81,27 +81,26 @@ describe("`chart` reducer [CASE: single object in default state array]", () => {
 
     });
 
-    describe("`SELECT_MULTIPLE_ELECTRICAL_SENSOR` type", () => {
+    describe("`SELECT_MULTIPLE_ELECTRICAL_SITE` type", () => {
 
         it("should return the correct object", () => {
             const valuePassedFromAction = {
-                type: "SELECT_MULTIPLE_ELECTRICAL_SENSOR",
-                payload: {
-                    sites: ["siteId1"],
-                    sensors: ["sensorId1", "sensorId2"]
-                }
+                type: "SELECT_MULTIPLE_ELECTRICAL_SITE",
+                payload: ["siteId1", "siteId2"]
             };
             const ret = chart(chartState, valuePassedFromAction);
             expect(ret).to.deep.equal([{
                 ...defaultChartStateObject,
                 alarms: undefined,
                 site: "siteId1",
-                sensorId: "sensorId1"
+                fullPath: ["siteId1", undefined],
+                sensorId: null
             }, {
                 ...defaultChartStateObject,
                 alarms: undefined,
-                site: "siteId1",
-                sensorId: "sensorId2"
+                fullPath: ["siteId2", undefined],
+                site: "siteId2",
+                sensorId: null
             }]);
         });
 

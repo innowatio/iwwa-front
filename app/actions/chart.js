@@ -6,7 +6,7 @@ export const SELECT_SINGLE_ELECTRICAL_SENSOR = "SELECT_SINGLE_ELECTRICAL_SENSOR"
 export const SELECT_ELECTRICAL_TYPE = "SELECT_ELECTRICAL_TYPE";
 export const SELECT_ENVIRONMENTAL_SENSOR = "SELECT_ENVIRONMENTAL_SENSOR";
 export const SELECT_SOURCE = "SELECT_SOURCE";
-export const SELECT_MULTIPLE_ELECTRICAL_SENSOR = "SELECT_MULTIPLE_ELECTRICAL_SENSOR";
+export const SELECT_MULTIPLE_ELECTRICAL_SITE = "SELECT_MULTIPLE_ELECTRICAL_SITE";
 export const SELECT_DATE_RANGES = "SELECT_DATE_RANGES";
 export const SELECT_DATE_RANGES_COMPARE = "SELECT_DATE_RANGES_COMPARE";
 export const REMOVE_ALL_COMPARE = "REMOVE_ALL_COMPARE";
@@ -57,17 +57,13 @@ export function selectElectricalType (electricalType) {
 *   @param {array} sites - id site of the two sites
 */
 const typeofSelectMultipleElectricalSensor = actionTypeValidator(
-    tuple([String, String]),
-    tuple([String, maybe(String)])
+    tuple([String, String])
 );
-export function selectMultipleElectricalSensor (sensors, sites) {
+export function selectMultipleElectricalSensor (sites) {
     typeofSelectMultipleElectricalSensor(...arguments);
     return {
-        type: SELECT_MULTIPLE_ELECTRICAL_SENSOR,
-        payload: {
-            sites,
-            sensors
-        }
+        type: SELECT_MULTIPLE_ELECTRICAL_SITE,
+        payload: sites
     };
 }
 
