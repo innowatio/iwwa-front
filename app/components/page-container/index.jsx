@@ -3,7 +3,6 @@ var React = require("react");
 
 var icons      = require("lib/icons_restyling");
 var styles     = require("lib/styles_restyling");
-var components = require("components");
 
 var PageContainer = React.createClass({
     propTypes: {
@@ -22,11 +21,7 @@ var PageContainer = React.createClass({
 
             return (
                 <div style={styles.titlePage}>
-                    <h2 style={{
-                        fontSize: "18px",
-                        marginBottom: "0px",
-                        paddingTop: "18px"
-                    }}>
+                    <h2 style={{fontSize: "18px", marginBottom: "0px", paddingTop: "18px"}}>
                         {"COIN BG · CORSIA 1 · 5-15 GIUGNO 2015"}
                     </h2>
                     <img className="pull-right" src={icons.iconSettings} style={{marginTop: "-20px"}}/>
