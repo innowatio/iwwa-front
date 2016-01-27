@@ -8,17 +8,16 @@ var icons      = require("lib/icons");
 
 var SitiCompare = React.createClass({
     propTypes: {
-        allowedValues: React.PropTypes.oneOfType([
-            React.PropTypes.array,
-            IPropTypes.iterable
-        ]).isRequired,
         closeModal: React.PropTypes.func,
         filter: React.PropTypes.func,
         getKey: React.PropTypes.func,
         getSitoLabel: React.PropTypes.func,
         onChange: React.PropTypes.func.isRequired,
         open: React.PropTypes.string,
-        resetParam: React.PropTypes.func,
+        sites: React.PropTypes.oneOfType([
+            React.PropTypes.array,
+            IPropTypes.iterable
+        ]).isRequired,
         style: React.PropTypes.object,
         value: React.PropTypes.array.isRequired
     },
@@ -68,9 +67,9 @@ var SitiCompare = React.createClass({
                 <img src={icons.iconDown} style={{float: "right", paddingTop: "5px", width: "16px"}}/>
             </span> :
             <span>
-                {this.props.getSitoLabel(this.props.allowedValues.get(this.state.valueFirst))}
+                {this.props.getSitoLabel(this.props.sites.get(this.state.valueFirst))}
                 <components.Spacer direction="h" size={30} />
-                {this.props.allowedValues.get(this.state.valueFirst).get("pod")}
+                {this.props.sites.get(this.state.valueFirst).get("pod")}
                 <img src={icons.iconDown} style={{float: "right", paddingTop: "5px", width: "16px"}}/>
             </span>;
     },
@@ -81,9 +80,9 @@ var SitiCompare = React.createClass({
                 <img src={icons.iconDown} style={{float: "right", paddingTop: "5px", width: "16px"}}/>
             </span> :
             <span>
-                {this.props.getSitoLabel(this.props.allowedValues.get(this.state.valueSecond))}
+                {this.props.getSitoLabel(this.props.sites.get(this.state.valueSecond))}
                 <components.Spacer direction="h" size={30} />
-                {this.props.allowedValues.get(this.state.valueSecond).get("pod")}
+                {this.props.sites.get(this.state.valueSecond).get("pod")}
                 <img src={icons.iconDown} style={{float: "right", paddingTop: "5px", width: "16px"}}/>
             </span>;
     },
@@ -96,13 +95,13 @@ var SitiCompare = React.createClass({
                     title={this.titleFirstSelect()}
                 >
                     <components.SelectTree
-                        allowedValues={this.props.allowedValues}
+                        allowedValues={this.props.sites}
                         buttonCloseDefault={true}
                         filter={this.props.filter}
                         getKey={this.props.getKey}
                         getLabel={this.props.getSitoLabel}
                         onChange={this.multi1}
-                        value={this.props.allowedValues.get(this.state.valueFirst)}
+                        value={this.props.sites.get(this.state.valueFirst)}
                     />
                 </components.Popover>
                 <components.Spacer direction="v" size={30} />
@@ -112,13 +111,13 @@ var SitiCompare = React.createClass({
                     title={this.titleSecondSelect()}
                 >
                     <components.SelectTree
-                        allowedValues={this.props.allowedValues}
+                        allowedValues={this.props.sites}
                         buttonCloseDefault={true}
                         filter={this.props.filter}
                         getKey={this.props.getKey}
                         getLabel={this.props.getSitoLabel}
                         onChange={this.multi2}
-                        value={this.props.allowedValues.get(this.state.valueSecond)}
+                        value={this.props.sites.get(this.state.valueSecond)}
                     />
                 </components.Popover>
                 <components.Button
