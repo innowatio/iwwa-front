@@ -95,7 +95,9 @@ var TemporalLineGraph = React.createClass({
                 return R.max(prev, elm[1][0]);
             }, 0, props.coordinates);
             if (maxYRange === 0.01) {
-                options.axes.y.valueRange = [0, 10]; // Tacconata
+                // FIXME: Fixare la parte sopra, prende il primo valore. Se il primo è < del secondo
+                // (caso della source) maxYRange viene 0.01.
+                options.axes.y.valueRange = [0, 50]; // Tacconata
             } else {
                 options.axes.y.valueRange = [0, maxYRange * 1.01];
             }
