@@ -6,7 +6,7 @@ var bootstrap  = require("react-bootstrap");
 var colors     = require("lib/colors");
 var components = require("components");
 var measures   = require("lib/measures");
-var icons   = require("lib/icons");
+var icons      = require("lib/icons");
 
 var ModalOptionList = React.createClass({
     propTypes: {
@@ -68,7 +68,7 @@ var ModalOptionList = React.createClass({
                         scopeSelector=".modal-dialog"
                     />
                     <bootstrap.Modal.Header
-                        closeButton
+                        closeButton={true}
                         style={{borderBottom: "none"}}
                     >
                         {this.props.header}
@@ -85,7 +85,8 @@ var ModalOptionList = React.createClass({
                                 background: colors.primary,
                                 color: colors.white,
                                 height: "45px"
-                            }}>
+                            }}
+                        >
                             {"CONFERMA"}
                         </components.Button>
                         <components.Button
@@ -94,7 +95,8 @@ var ModalOptionList = React.createClass({
                                 background: colors.greyBackground,
                                 color: colors.primary,
                                 height: "45px"
-                            }}>
+                            }}
+                        >
                             {"RESET"}
                         </components.Button>
                     </bootstrap.Modal.Footer>

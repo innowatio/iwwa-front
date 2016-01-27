@@ -153,7 +153,7 @@ var DatefilterModal = React.createClass({
         return (
             <div>
                 <span>
-                <h4 style={{marginLeft: "115px"}}>da <components.Spacer direction="h" size={360}/> a</h4>
+                    <h4 style={{marginLeft: "115px"}}>{"da "} <components.Spacer direction="h" size={360}/>{" a"}</h4>
                 </span>
                 <components.Spacer direction="v" size={10}/>
                 <div className="rw-calendar-modal">
@@ -221,7 +221,7 @@ var DatefilterModal = React.createClass({
                         scopeSelector=".modal-dialog"
                     />
                     <bootstrap.Modal.Header
-                        closeButton
+                        closeButton={true}
                         style={{borderBottom: "none"}}
                     >
                         <h3 className="text-center" style={{color: colors.primary}}>{"Seleziona periodo"}</h3>

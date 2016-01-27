@@ -1,6 +1,7 @@
+import React, {PropTypes} from "react";
+import IPropTypes from "react-immutable-proptypes";
 var R         = require("ramda");
 var Radium    = require("radium");
-var React     = require("react");
 var Loader    = require("halogen/PacmanLoader");
 var bootstrap = require("react-bootstrap");
 var moment    = require("moment");
@@ -22,24 +23,25 @@ const oneMonthInMilliseconds = moment.duration(1, "months").asMilliseconds();
 
 var TemporalLineGraph = React.createClass({
     propTypes: {
-        alarms: React.PropTypes.arrayOf(React.PropTypes.number),
-        colors: React.PropTypes.arrayOf(React.PropTypes.string),
-        coordinates: React.PropTypes.arrayOf(
+        alarms: PropTypes.arrayOf(PropTypes.number),
+        colors: PropTypes.arrayOf(PropTypes.string),
+        coordinates: PropTypes.arrayOf(
             AppPropTypes.DygraphCoordinate
         ).isRequired,
-        dateFilter: React.PropTypes.oneOfType([
-            React.PropTypes.object,
-            React.PropTypes.string
-        ]),
-        dateWindow: React.PropTypes.arrayOf(React.PropTypes.number),
-        labels: React.PropTypes.array,
-        lockInteraction: React.PropTypes.bool,
-        showRangeSelector: React.PropTypes.bool,
-        site: React.PropTypes.object,
-        xLabel: React.PropTypes.string,
-        xLegendFormatter: React.PropTypes.func,
-        xTicker: React.PropTypes.func,
-        yLabel: React.PropTypes.string
+        dateFilter: PropTypes.object,
+        // TODO: serve ancora?
+        dateWindow: PropTypes.arrayOf(PropTypes.number),
+        labels: PropTypes.array,
+        // TODO: serve ancora?
+        lockInteraction: PropTypes.bool,
+        showRangeSelector: PropTypes.bool,
+        site: IPropTypes.map,
+        xLabel: PropTypes.string,
+        xLegendFormatter: PropTypes.func,
+        // TODO: serve ancora?
+        xTicker: PropTypes.func,
+        y2Label: PropTypes.string,
+        yLabel: PropTypes.string
     },
     componentDidMount: function () {
         this.drawGraph();
@@ -61,6 +63,7 @@ var TemporalLineGraph = React.createClass({
     getOptionsFromProps: function (props) {
         var options = {
             series: {},
+            connectSeparatedPoints: true,
             drawPoints: true,
             errorBars: false,
             hideOverlayOnMouseOut: false,
@@ -72,7 +75,7 @@ var TemporalLineGraph = React.createClass({
             strokeWidth: 1.5,
             xlabel: props.xLabel,
             ylabel: props.yLabel,
-            y2label: props.y2label ? props.y2label : "",
+            y2label: props.y2Label ? props.y2Label : "",
             axes: {
                 x: {},
                 y: {},
@@ -80,7 +83,7 @@ var TemporalLineGraph = React.createClass({
             }
         };
         if (!R.isEmpty(props.coordinates)) {
-            if (props.coordinates[0].length === 3) {
+            if (props.y2Label) {
                 var maxY2Range = R.reduce(function (prev, elm) {
                     return R.max(prev, elm[2][0]);
                 }, 0, props.coordinates);
@@ -96,7 +99,7 @@ var TemporalLineGraph = React.createClass({
             } else {
                 options.axes.y.valueRange = [0, maxYRange * 1.01];
             }
-            options.series[externalLabel] = {axis: "y2"};
+            props.y2Label ? options.series[externalLabel] = {axis: "y2"} : null;
         }
         if (props.coordinates.length !== 0) {
             var lastDate;
@@ -310,7 +313,7 @@ var TemporalLineGraph = React.createClass({
                             }}
                             scopeSelector=".modal-container"
                         />
-                    <Loader color={colors.primary} style={{zIndex: 1010, position: "relative"}}/>
+                        <Loader color={colors.primary} style={{zIndex: 1010, position: "relative"}}/>
                     </bootstrap.Modal>
                 </div>
             );
@@ -319,7 +322,6 @@ var TemporalLineGraph = React.createClass({
     render: function () {
         return (
             <div className="container-graph">
-                {this.renderSpinner()}
                 <Radium.Style
                     rules={{
                         ".alarmPoint": {

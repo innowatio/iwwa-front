@@ -6,25 +6,11 @@ var React      = require("react");
 import {connect} from "react-redux";
 import {bindActionCreators} from "redux";
 
-var components      = require("components");
-var CollectionUtils = require("lib/collection-utils");
-var colors          = require("lib/colors");
-var icons           = require("lib/icons");
-var styles          = require("lib/styles");
+var components        = require("components");
+var readingsRealTime  = require("lib/readings-real-time-aggregates-to-realtime-view");
+var colors            = require("lib/colors");
+var styles            = require("lib/styles");
 import {selectRealTimeSite} from "actions/real-time";
-
-function mapStateToProps (state) {
-    return {
-        collections: state.collections,
-        realTime: state.realTime
-    };
-}
-
-function mapDispatchToProps (dispatch) {
-    return {
-        selectRealTimeSite: bindActionCreators(selectRealTimeSite, dispatch)
-    };
-}
 
 var RealTime = React.createClass({
     propTypes: {
@@ -35,13 +21,13 @@ var RealTime = React.createClass({
     },
     componentDidMount: function () {
         this.props.asteroid.subscribe("sites");
-        if (this.props.realTime.site) {
-            this.props.asteroid.subscribe("readingsRealTimeAggregatesBySite", this.props.realTime.site);
+        if (this.props.realTime.fullPath) {
+            this.props.asteroid.subscribe("readingsRealTimeAggregatesBySite", this.props.realTime.fullPath[0]);
         }
     },
     componentWillReceiveProps: function () {
-        if (this.props.realTime.site) {
-            this.props.asteroid.subscribe("readingsRealTimeAggregatesBySite", this.props.realTime.site);
+        if (this.props.realTime.fullPath) {
+            this.props.asteroid.subscribe("readingsRealTimeAggregatesBySite", this.props.realTime.fullPath[0]);
         }
     },
     drawGauge: function (params) {
@@ -127,20 +113,20 @@ var RealTime = React.createClass({
     setSelectedSite: function (selectedValues) {
         const siteId = selectedValues.site;
         this.props.asteroid.subscribe("readingsRealTimeAggregatesBySite", siteId);
-        this.props.selectRealTimeSite([siteId]);
+        this.props.selectRealTimeSite(selectedValues);
     },
     getSelectedSiteName: function () {
         return (
-            this.props.realTime.site &&
+            this.props.realTime.fullPath &&
             this.getSites().size > 0 &&
-            this.getSite(this.props.realTime.site) ?
-            this.getSite(this.props.realTime.site).get("name") :
+            this.getSite(this.props.realTime.fullPath) ?
+            this.getSite(this.props.realTime.fullPath[0]).get("name") :
             null
         );
     },
     getMeasuresBySite: function () {
-        var selectedSiteId = this.props.realTime.site ?
-            this.getSite(this.props.realTime.site).get("_id") :
+        var selectedSiteId = this.props.realTime.fullPath[0] ?
+            this.getSite(this.props.realTime.fullPath[0]).get("_id") :
             null;
         var selectSite = this.getMeasures().find(function (measure) {
             return measure.get("_id") === selectedSiteId;
@@ -155,15 +141,15 @@ var RealTime = React.createClass({
         );
     },
     findLatestMeasuresWithCriteria: function (criteria) {
-        var res = CollectionUtils.measures.decorators.filter(criteria);
-        if (this.props.realTime.site && this.getMeasures().size) {
-            var decoMeasurements = this.getSite(this.props.realTime.site).get("sensors")
+        var res = readingsRealTime.decorators.filter(criteria);
+        if (this.props.realTime.fullPath && this.getMeasures().size) {
+            var decoMeasurements = this.getSite(this.props.realTime.fullPath[0]).get("sensors")
                 .map(sensor => {
-                    return CollectionUtils.measures.decorateMeasure(sensor);
+                    return readingsRealTime.decorateMeasure(sensor);
                 });
             res = R.filter(
                 criteria,
-                CollectionUtils.measures.addValueToMeasures(
+                readingsRealTime.addValueToMeasures(
                     decoMeasurements.flatten(1),
                     this.getMeasuresBySite()
             ));
@@ -176,9 +162,9 @@ var RealTime = React.createClass({
         });
         return measures.map(pod => {
             var anzId = (pod.get("children") || Immutable.List()).map(anz => {
-                return CollectionUtils.measures.decorateMeasure(anz);
+                return readingsRealTime.decorateMeasure(anz);
             });
-            return pod.set("value", CollectionUtils.measures.addValueToMeasures(
+            return pod.set("value", readingsRealTime.addValueToMeasures(
                 anzId.flatten(1),
                 this.getMeasuresBySite()
             ).filter(decorator => {
@@ -200,7 +186,6 @@ var RealTime = React.createClass({
         });
     },
     render: function () {
-        const sites = this.props.collections.get("sites") || Immutable.Map();
         const selectedSiteName = this.getSelectedSiteName();
         return (
             <div style={styles.mainDivStyle}>
@@ -208,8 +193,8 @@ var RealTime = React.createClass({
                     <span className="pull-right">
                         <components.SiteNavigator
                             allowedValues={this.getSites()}
+                            defaultPath={this.props.realTime.fullPath || []}
                             onChange={this.setSelectedSite}
-                            selectedSite={this.getSitoById(this.props.realTime.site)}
                             title={"Quale punto di misurazione vuoi visualizzare?"}
                         />
                     </span>
@@ -236,4 +221,16 @@ var RealTime = React.createClass({
     }
 });
 
+function mapStateToProps (state) {
+    return {
+        collections: state.collections,
+        realTime: state.realTime
+    };
+}
+
+function mapDispatchToProps (dispatch) {
+    return {
+        selectRealTimeSite: bindActionCreators(selectRealTimeSite, dispatch)
+    };
+}
 module.exports = connect(mapStateToProps, mapDispatchToProps)(RealTime);

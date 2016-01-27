@@ -30,7 +30,7 @@ exports.getControllerViewMixin = function getControllerViewMixin () {
                     collections: self.collections
                 });
             }
-        }, 2),
+        }, 500),
         componentDidMount: function () {
             self.on("loggedIn", this.setUserId);
             self.on("loggedOut", this.setUserId);

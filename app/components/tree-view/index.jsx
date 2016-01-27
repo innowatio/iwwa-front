@@ -1,4 +1,3 @@
-var bootstrap  = require("react-bootstrap");
 var Immutable  = require("immutable");
 var IPropTypes = require("react-immutable-proptypes");
 var R          = require("ramda");
@@ -13,7 +12,7 @@ var TreeView = React.createClass({
         allowedValues: React.PropTypes.oneOfType([
             React.PropTypes.array,
             IPropTypes.list
-        ]),
+        ]).isRequired,
         filterCriteria: React.PropTypes.func,
         getKey: React.PropTypes.func,
         getLabel: React.PropTypes.func,
@@ -22,20 +21,7 @@ var TreeView = React.createClass({
         value: React.PropTypes.oneOfType([
             React.PropTypes.array,
             IPropTypes.list
-        ]),
-    },
-    getInitialState: function () {
-        return {
-            path: this.props.value || [undefined]
-        };
-    },
-    componentWillReceiveProps: function (props) {
-        return this.getStateFromProps(props);
-    },
-    getStateFromProps: function (props) {
-        this.setState({
-            path: props.value
-        });
+        ]).isRequired
     },
     applyFilters: function (values) {
         return this.props.filterCriteria ?
@@ -43,18 +29,16 @@ var TreeView = React.createClass({
             values;
     },
     onChange: function (value, position) {
-        const path = this.setPath(this.state.path, this.props.getKey(value[0]), position);
-        this.setState({path});
+        const path = this.setPath(this.props.value, this.props.getKey(value[0]), position);
         this.props.onChange(path);
     },
     setPath: function (path, newValue, position) {
-        return path.slice(0, position).concat(newValue, undefined);
+        return path.slice(0, position).concat(newValue);
     },
     renderLevel: function (value, position) {
-        const self = this;
-        const path = this.state.path.slice(0, position);
+        const path = this.props.value.slice(0, position);
         var {allowedValues} = path.reduce((acc, pathValue) => {
-            const node = acc.allowedValues.find(function (value) {
+            const node = acc.allowedValues && acc.allowedValues.find(function (value) {
                 return value.get("id") === pathValue;
             });
             const values = pathValue && acc.allowedValues.size > 0 ?
@@ -62,7 +46,7 @@ var TreeView = React.createClass({
                 [];
             return {
                 position: acc.position + 1,
-                allowedValues: values,
+                allowedValues: values
             };
         }, {position: 0, allowedValues: this.props.allowedValues});
 
@@ -86,7 +70,7 @@ var TreeView = React.createClass({
     render: function () {
         return (
             <div>
-                {this.state.path.map(this.renderLevel)}
+                {this.props.value.concat(undefined).map(this.renderLevel)}
             </div>
         );
     }

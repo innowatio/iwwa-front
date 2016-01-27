@@ -13,7 +13,6 @@ var icons      = require("lib/icons");
 var buttonBasicStyle = {
     background: colors.greyBackground + "!important",
     color: colors.primary + "!important",
-    borderRadius: "0px !important",
     fontSize: "13px" + "!important"
 };
 
@@ -40,14 +39,17 @@ var itemsStyleActive = {
 var SiteNavigator = React.createClass({
     propTypes: {
         allowedValues: IPropTypes.map.isRequired,
+        defaultPath: React.PropTypes.oneOfType([
+            React.PropTypes.array,
+            IPropTypes.list
+        ]),
         onChange: React.PropTypes.func.isRequired,
-        selectedSite: IPropTypes.map,
-        showModal: React.PropTypes.bool,
         title: React.PropTypes.string
     },
     getInitialState: function () {
         return {
-            siteNavigatorView: this.props.showModal || false,
+            showModal: false,
+            inputFilter: "",
             pathParent: [],
             pathChildren: []
         };
@@ -56,8 +58,16 @@ var SiteNavigator = React.createClass({
         return this.getStateFromProps(props);
     },
     getStateFromProps: function (props) {
+        const path = props.defaultPath;
+        var parent = [];
+        var children = [];
+        if (path.length > 0) {
+            parent = path[0];
+            children = path.slice(1, path.length);
+        }
         this.setState({
-            pathParent: props.selectedSite ? [props.selectedSite] : [] // FIXME
+            pathParent: parent,
+            pathChildren: children
         });
     },
     getKeyParent: function (value) {
@@ -72,9 +82,20 @@ var SiteNavigator = React.createClass({
     getLabelChildren: function (value) {
         return value.get("id");
     },
-    getFilterCriteria (values) {
+    getFilterCriteria: function (values) {
         return values.filter((value) => {
             return ["CO2", "THL"].indexOf(value.get("type").toUpperCase()) < 0;
+        });
+    },
+    getFilteredValues: function () {
+        var clause = this.state.inputFilter.toLowerCase();
+        return this.props.allowedValues.filter((value) => {
+            var pods = this.getFilterCriteria(value.get("sensors") || Immutable.Map())
+                .map(this.getLabelChildren);
+            return value.get("name").toLowerCase().includes(clause) ||
+                pods.map((pod) => {
+                    return pod.toLowerCase().includes(clause);
+                }).contains(true);
         });
     },
     onClickChildren: function (value) {
@@ -84,7 +105,7 @@ var SiteNavigator = React.createClass({
     },
     onClickParent: function (value) {
         this.setState({
-            pathParent: value,
+            pathParent: this.getKeyParent(value[0]),
             pathChildren: []
         });
     },
@@ -97,13 +118,14 @@ var SiteNavigator = React.createClass({
         this.setState({showModal: false});
     },
     getReturnValues: function () {
+        var site = this.state.pathParent;
+        var childrenPath = this.state.pathChildren.filter(function (value) {
+            return !R.isNil(value);
+        });
         return {
-            site: this.state.pathParent.length > 0 ?
-                this.getKeyParent(this.state.pathParent[0]) :
-                "",
-            sensor: R.last(this.state.pathChildren.filter(function (value) {
-                return !R.isNil(value);
-            }))
+            fullPath: [site].concat(childrenPath) || [],
+            site: site,
+            sensor: R.last(childrenPath)
         };
     },
     onClickConfirm: function () {
@@ -111,29 +133,34 @@ var SiteNavigator = React.createClass({
         this.props.onChange(this.getReturnValues());
     },
     renderSitesParent: function () {
+        var self = this;
         return (
             <components.ButtonGroupSelect
-                allowedValues={this.props.allowedValues.toArray()}
+                allowedValues={this.getFilteredValues().toArray()}
                 getKey={this.getKeyParent}
                 getLabel={this.getLabelParent}
                 multi={false}
                 onChange={this.onClickParent}
-                value={this.state.pathParent}
+                value={[this.props.allowedValues.find((value) => {
+                    return self.getKeyParent(value) === self.state.pathParent;
+                })].filter(function (value) {
+                    return !R.isNil(value);
+                })}
                 vertical={true}
             />
         );
     },
     renderSitesChildren: function () {
-        if (this.state.pathParent && this.state.pathParent.length > 0) {
+        if (this.state.pathParent) {
             return (
                 <components.TreeView
-                    allowedValues={this.props.allowedValues.getIn([this.state.pathParent[0].get("_id"), "sensors"])}
+                    allowedValues={this.getFilteredValues().getIn([this.state.pathParent, "sensors"]) || []}
                     filterCriteria={this.getFilterCriteria}
                     getKey={this.getKeyChildren}
                     getLabel={this.getLabelChildren}
                     multi={false}
                     onChange={this.onClickChildren}
-                    value={this.state.pathChildren.length > 1 ? this.state.pathChildren : [undefined]}
+                    value={this.state.pathChildren}
                     vertical={true}
                 />
             );
@@ -141,11 +168,21 @@ var SiteNavigator = React.createClass({
     },
     renderChild: function () {
         return (
-            <div style={{width: "100%"}}>
+            <div style={{padding: "0 20px 20px 20px"}}>
                 <div>
                     <h3 className="text-center" style={{color: colors.primary}}>{this.props.title}</h3>
                 </div>
-                <bootstrap.Col style={{height: "70vh", padding: "20px", overflow: "auto"}} xs={4}>
+                <bootstrap.Col style={{marginTop: "15px"}} xs={12}>
+                    <bootstrap.Input
+                        addonAfter={<img src={icons.iconSearch} style={{height: "21px"}}/>}
+                        className="input-search"
+                        onChange={(input) => this.setState({inputFilter: input.target.value})}
+                        placeholder="Ricerca"
+                        type="text"
+                        value={this.state.inputFilter}
+                    />
+                </bootstrap.Col>
+                <bootstrap.Col style={{overflow: "auto", marginTop: "10px", height: "calc(100vh - 350px)"}} xs={4}>
                     <div className="site-navigator-parent">
                         <Radium.Style
                             rules={{
@@ -162,8 +199,8 @@ var SiteNavigator = React.createClass({
                         {this.renderSitesParent()}
                     </div>
                 </bootstrap.Col>
-                <bootstrap.Col xs={8}>
-                    <div className="site-navigator-child" style={{height: "60vh", margin: "20px", border: "solid " + colors.primary}}>
+                <bootstrap.Col style={{height: "calc(100vh - 350px)"}} xs={8}>
+                    <div className="site-navigator-child" style={{border: "solid " + colors.primary, height: "100%", marginTop: "10px"}}>
                         <Radium.Style
                             rules={{
                                 ".btn-group-vertical": {
@@ -178,25 +215,28 @@ var SiteNavigator = React.createClass({
                         {this.renderSitesChildren()}
                     </div>
                 </bootstrap.Col>
-                <div style={{width: "100%", height: "100%", bottom: 0, textAlign: "center"}}>
-                    <bootstrap.Button
-                        onClick={this.onClickConfirm}
-                        style={R.merge(buttonBasicStyleActive, {
-                            width: "230px",
-                            height: "45px"
-                        })}
-                    >
-                        OK
-                    </bootstrap.Button>
-                    <components.Spacer direction="h" size={20} />
-                    <bootstrap.Button
-                        style={R.merge(buttonBasicStyle, {
-                            width: "230px",
-                            height: "45px"
-                        })}
-                    >
-                        RESET
-                    </bootstrap.Button>
+                <div style={{width: "100%", marginTop: "10px", padding: "20px", bottom: 0, position: "fixed"}}>
+                    <div style={{bottom: "15px", textAlign: "center", margin: "auto"}}>
+                        <bootstrap.Button
+                            onClick={this.onClickConfirm}
+                            style={R.merge(buttonBasicStyleActive, {
+                                width: "230px",
+                                height: "45px"
+                            })}
+                        >
+                            {"OK"}
+                        </bootstrap.Button>
+                        <components.Spacer direction="h" size={20} />
+                        <bootstrap.Button
+                            onClick={this.closeModal}
+                            style={R.merge(buttonBasicStyle, {
+                                width: "230px",
+                                height: "45px"
+                            })}
+                        >
+                            {"RESET"}
+                        </bootstrap.Button>
+                    </div>
                 </div>
             </div>
         );
@@ -212,7 +252,8 @@ var SiteNavigator = React.createClass({
                 </components.Button>
                 <components.FullscreenModal
                     childComponent={this.renderChild()}
-                    showModal={this.state.showModal}
+                    onHide={this.closeModal}
+                    show={this.state.showModal}
                 />
             </span>
         );

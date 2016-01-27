@@ -49,7 +49,8 @@ var Row = React.createClass({
         var value = this.props.item.get(column.key);
         return (
             <td key={index}
-                style={R.merge({verticalAlign: "middle"}, R.isNil(column.style) ? {} : column.style(value))}>
+                style={R.merge({verticalAlign: "middle"}, R.isNil(column.style) ? {} : column.style(value))}
+            >
                 {
                     column.valueFormatter ?
                     column.valueFormatter(value, this.props.item) :

@@ -34,13 +34,13 @@ export const gaugeStyle = {
         position: "absolute",
         zIndex: 2,
         WebkitTransformOrigin: "top center",
-          MsTransformOrigin: "top center",
-              transformOrigin: "top center",
+        MsTransformOrigin: "top center",
+        transformOrigin: "top center",
         WebkitTransform: "rotate(0deg)",
-          MsTransform: "rotate(0deg)",
-              transform: "rotate(0deg)",
+        MsTransform: "rotate(0deg)",
+        transform: "rotate(0deg)",
         WebkitTransition: "-webkit-transform 800ms ease",
-              transition: "transform 800ms ease",
+        transition: "transform 800ms ease",
         // WebkitTransform: "translateZ(0)",
         //       transform: "translateZ(0)",
         borderRadius: "0 0 200px 200px"
@@ -71,13 +71,13 @@ export const gaugeStyle = {
         bottom: "0px",
         left: "97px",
         WebkitTransform: "rotate(-90deg)",
-          MsTransform: "rotate(-90deg)",
-              transform: "rotate(-90deg)",
+        MsTransform: "rotate(-90deg)",
+        transform: "rotate(-90deg)",
         WebkitTransformOrigin: "center bottom",
-          MsTransformOrigin: "center bottom",
-              transformOrigin: "center bottom",
+        MsTransformOrigin: "center bottom",
+        transformOrigin: "center bottom",
         WebkitTransition: "-webkit-transform 800ms ease",
-              transition: "transform 800ms ease"
+        transition: "transform 800ms ease"
     },
 
     ".pointer-knob": {

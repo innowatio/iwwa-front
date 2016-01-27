@@ -97,20 +97,20 @@ var AlarmForm = React.createClass({
                         </components.Button>
                     </bootstrap.OverlayTrigger>
                 </h5>
-                    <components.Popover
-                        arrow="none"
-                        hideOnChange={true}
-                        title={this.renderTitleSelectSite()}
-                    >
-                        <components.SelectTree
-                            allowedValues={this.props.siti}
-                            buttonCloseDefault={true}
-                            filter={CollectionUtils.sites.filter}
-                            getKey={CollectionUtils.sites.getKey}
-                            getLabel={CollectionUtils.sites.getLabel}
-                            valueLink={this.linkState("sito")}
-                        />
-                    </components.Popover>
+                <components.Popover
+                    arrow="none"
+                    hideOnChange={true}
+                    title={this.renderTitleSelectSite()}
+                >
+                    <components.SelectTree
+                        allowedValues={this.props.siti}
+                        buttonCloseDefault={true}
+                        filter={CollectionUtils.sites.filter}
+                        getKey={CollectionUtils.sites.getKey}
+                        getLabel={CollectionUtils.sites.getLabel}
+                        valueLink={this.linkState("sito")}
+                    />
+                </components.Popover>
             </div>
         );
     },
@@ -124,7 +124,9 @@ var AlarmForm = React.createClass({
                         style={{
                             color: colors.primary,
                             marginTop: "8px"
-                        }}> {`Soglia (${this.state.threshold} kWh)`}
+                        }}
+                    >
+                        {`Soglia (${this.state.threshold} kWh)`}
                     </h4>
                     <components.Spacer direction="v" size={10} />
                     <bootstrap.Input
@@ -188,7 +190,8 @@ var AlarmForm = React.createClass({
             <components.Button
                 bsStyle="link"
                 disabled={this.props.alarmsReduxState.statePostAlarm}
-                onClick={this.reset}>
+                onClick={this.reset}
+            >
                 {<img src={icons.iconReset} style={{width: "75%"}}/>}
             </components.Button>
         );
@@ -203,7 +206,8 @@ var AlarmForm = React.createClass({
                     color: colors.white,
                     width: "230px",
                     height: "45px"
-                }}>
+                }}
+            >
                 {this.props.type === "update" ? "SALVA" : "CREA"}
             </components.Button>
         );
@@ -211,7 +215,7 @@ var AlarmForm = React.createClass({
     renderTitleSelectSite: function () {
         return this.state.sito.size === 0 ?
             <span>
-                Seleziona punto di misurazione
+                {"Seleziona punto di misurazione"}
                 <img src={icons.iconDown} style={{float: "right", paddingTop: "5px", width: "16px"}}/>
             </span> :
             <span>
@@ -237,65 +241,65 @@ var AlarmForm = React.createClass({
                         }}
                         scopeSelector=".alarm-form"
                     />
-                <div style={{height: "calc(100vh - 420px)"}}>
-                    <bootstrap.Col lg={6} md={6} xs={12}>
-                        <components.TutorialAnchor
-                            message={tutorialString.alarmForm.siti}
-                            order={1}
-                            position="right"
-                            ref="siti"
-                        >
-                            {this.renderAlarmSelectSite()}
-                        </components.TutorialAnchor>
-                    </bootstrap.Col>
-                    <bootstrap.Col lg={6} md={6} xs={12}>
-                        <components.TutorialAnchor
-                            message={tutorialString.alarmForm.threshold}
-                            order={2}
-                            position="left"
-                            ref="threshold"
-                        >
-                            {this.renderAlarmThreshold()}
-                        </components.TutorialAnchor>
-                    </bootstrap.Col>
-                    <bootstrap.Col lg={6} md={6} xs={12}>
-                        <components.TutorialAnchor
-                            message={tutorialString.alarmForm.name}
-                            order={3}
-                            position="right"
-                            ref="name"
-                        >
-                            {this.renderAlarmName()}
-                        </components.TutorialAnchor>
-                        <components.TutorialAnchor
-                            message={tutorialString.alarmForm.notification}
-                            order={5}
-                            position="right"
-                            ref="notification"
-                        >
-                            {this.renderAlarmNotification()}
-                        </components.TutorialAnchor>
-                    </bootstrap.Col>
-                    <bootstrap.Col lg={6} md={6} xs={12}>
-                            {this.renderAlarmActive()}
-                    </bootstrap.Col>
-                    <bootstrap.Col lg={6} md={6} xs={12}>
-                        <components.TutorialAnchor
-                            message={tutorialString.alarmForm.repetition}
-                            order={4}
-                            position="left"
-                            ref="repetition"
-                        >
-                            {this.renderAlarmRepetition()}
-                        </components.TutorialAnchor>
+                    <div style={{height: "calc(100vh - 420px)"}}>
+                        <bootstrap.Col lg={6} md={6} xs={12}>
+                            <components.TutorialAnchor
+                                message={tutorialString.alarmForm.siti}
+                                order={1}
+                                position="right"
+                                ref="siti"
+                            >
+                                {this.renderAlarmSelectSite()}
+                            </components.TutorialAnchor>
+                        </bootstrap.Col>
+                        <bootstrap.Col lg={6} md={6} xs={12}>
+                            <components.TutorialAnchor
+                                message={tutorialString.alarmForm.threshold}
+                                order={2}
+                                position="left"
+                                ref="threshold"
+                            >
+                                {this.renderAlarmThreshold()}
+                            </components.TutorialAnchor>
+                        </bootstrap.Col>
+                        <bootstrap.Col lg={6} md={6} xs={12}>
+                            <components.TutorialAnchor
+                                message={tutorialString.alarmForm.name}
+                                order={3}
+                                position="right"
+                                ref="name"
+                            >
+                                {this.renderAlarmName()}
+                            </components.TutorialAnchor>
+                            <components.TutorialAnchor
+                                message={tutorialString.alarmForm.notification}
+                                order={5}
+                                position="right"
+                                ref="notification"
+                            >
+                                {this.renderAlarmNotification()}
+                            </components.TutorialAnchor>
+                        </bootstrap.Col>
+                        <bootstrap.Col lg={6} md={6} xs={12}>
+                                {this.renderAlarmActive()}
+                        </bootstrap.Col>
+                        <bootstrap.Col lg={6} md={6} xs={12}>
+                            <components.TutorialAnchor
+                                message={tutorialString.alarmForm.repetition}
+                                order={4}
+                                position="left"
+                                ref="repetition"
+                            >
+                                {this.renderAlarmRepetition()}
+                            </components.TutorialAnchor>
+                        </bootstrap.Col>
+                    </div>
+                    <bootstrap.Col style={{paddingTop: "8vh", textAlign: "center"}} xs={12}>
+                        {this.renderSubmitButton()}
+                        {this.renderResetButton()}
                     </bootstrap.Col>
                 </div>
-                <bootstrap.Col style={{paddingTop: "8vh", textAlign: "center"}} xs={12}>
-                    {this.renderSubmitButton()}
-                    {this.renderResetButton()}
-                </bootstrap.Col>
             </div>
-        </div>
         );
     }
 });

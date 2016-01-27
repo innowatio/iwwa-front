@@ -43,7 +43,7 @@ var DatefilterMonthlyModal = React.createClass({
         return this.getStateFromProps(props);
     },
     getStateFromProps: function (props) {
-        if (props.value) {
+        if (!R.isEmpty(props.value)) {
             this.setState({
                 value: {
                     start: new Date(props.value.start),
@@ -66,7 +66,6 @@ var DatefilterMonthlyModal = React.createClass({
     confirmAndClose: function () {
         // Transform in UNIX timestamp for the redux-state.
         const date = {
-            range: "dateFilter",
             start: moment(this.state.value.start).valueOf(),
             end: moment(this.state.value.end).valueOf()
         };
@@ -161,7 +160,7 @@ var DatefilterMonthlyModal = React.createClass({
                         scopeSelector=".modal-dialog"
                     />
                     <bootstrap.Modal.Header
-                        closeButton
+                        closeButton={true}
                         style={{borderBottom: "none"}}
                     >
                         <h3 className="text-center" style={{color: colors.primary}}>{"Seleziona periodo"}</h3>

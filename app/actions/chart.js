@@ -1,11 +1,11 @@
-import {String, Number, tuple, struct, list} from "tcomb";
+import {String, Number, tuple, struct, maybe} from "tcomb";
 
 import actionTypeValidator from "../lib/action-type-validator";
 
 export const SELECT_SINGLE_ELECTRICAL_SENSOR = "SELECT_SINGLE_ELECTRICAL_SENSOR";
 export const SELECT_ELECTRICAL_TYPE = "SELECT_ELECTRICAL_TYPE";
 export const SELECT_ENVIRONMENTAL_SENSOR = "SELECT_ENVIRONMENTAL_SENSOR";
-export const SELECT_SOURCES = "SELECT_SOURCES";
+export const SELECT_SOURCE = "SELECT_SOURCE";
 export const SELECT_MULTIPLE_ELECTRICAL_SENSOR = "SELECT_MULTIPLE_ELECTRICAL_SENSOR";
 export const SELECT_DATE_RANGES = "SELECT_DATE_RANGES";
 export const SELECT_DATE_RANGES_COMPARE = "SELECT_DATE_RANGES_COMPARE";
@@ -17,18 +17,20 @@ export const REMOVE_ALL_COMPARE = "REMOVE_ALL_COMPARE";
 */
 const typeofSelectSingleElectricalSensor = actionTypeValidator(
     struct({
+        fullPath: Array,
         sensor: String,
         site: String
     })
 );
-export function selectSingleElectricalSensor ({sensor, site}) {
+export function selectSingleElectricalSensor ({fullPath, sensor, site}) {
     typeofSelectSingleElectricalSensor(...arguments);
     return {
         type: SELECT_SINGLE_ELECTRICAL_SENSOR,
         payload: {
+            fullPath,
             sensor,
             site
-        },
+        }
     };
 }
 
@@ -55,13 +57,17 @@ export function selectElectricalType (electricalType) {
 *   @param {array} sites - id site of the two sites
 */
 const typeofSelectMultipleElectricalSensor = actionTypeValidator(
-    tuple([String, String])
+    tuple([String, String]),
+    tuple([String, maybe(String)])
 );
-export function selectMultipleElectricalSensor (sitesId) {
+export function selectMultipleElectricalSensor (sensors, sites) {
     typeofSelectMultipleElectricalSensor(...arguments);
     return {
         type: SELECT_MULTIPLE_ELECTRICAL_SENSOR,
-        payload: sitesId
+        payload: {
+            sites,
+            sensors
+        }
     };
 }
 
@@ -72,19 +78,20 @@ export function selectMultipleElectricalSensor (sitesId) {
 *   Date value are in millisecond unix timestamp.
 */
 const typeofSelectedDateRangesCompare = actionTypeValidator(
+    Number,
     struct({
-        period: struct({
-            label: String,
-            key: String
-        }),
-        dateOne: Number
+        label: String,
+        key: String
     })
 );
-export function selectDateRangesCompare (dateRanges) {
+export function selectDateRangesCompare (dateOne, period) {
     typeofSelectedDateRangesCompare(...arguments);
     return {
         type: SELECT_DATE_RANGES_COMPARE,
-        payload: dateRanges
+        payload: {
+            period,
+            dateOne
+        }
     };
 }
 
@@ -95,13 +102,15 @@ export function selectDateRangesCompare (dateRanges) {
 */
 const typeofEnvironmentalSensor = actionTypeValidator(
     tuple([String]),
-    list(struct({
-        label: String,
-        key: String,
-        color: String,
-        icon: String,
-        selected: String
-    }))
+    tuple([
+        struct({
+            label: String,
+            key: String,
+            color: String,
+            icon: String,
+            selected: String
+        })
+    ])
 );
 export function selectEnvironmentalSensor (sensorId, type) {
     typeofEnvironmentalSensor(...arguments);
@@ -118,31 +127,24 @@ export function selectEnvironmentalSensor (sensorId, type) {
 *   A click on select source button
 *   @param {array} source - source of the data
 */
+const structureExpected = struct({
+    label: String,
+    color: String,
+    key: String
+});
 const typeofSelectSource = actionTypeValidator(
-    tuple([struct({
-        label: String,
-        color: String,
-        key: String
-    })])
+    tuple([
+        structureExpected,
+        maybe(structureExpected)
+    ])
 );
 export function selectSource (sources) {
     typeofSelectSource(...arguments);
     return {
-        type: SELECT_SOURCES,
+        type: SELECT_SOURCE,
         payload: sources
     };
 }
-
-/**
-*   A click on select source button
-*   @param {array} source - source of the data
-*/
-// export function selectSourceCompare (sources) {
-//     return {
-//         type: SELECT_SOURCES,
-//         payload: sources
-//     };
-// }
 
 /**
 *   A click on dateFilter modal

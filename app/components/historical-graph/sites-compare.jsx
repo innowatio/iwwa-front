@@ -6,7 +6,7 @@ var ReactPureRender = require("react-addons-pure-render-mixin");
 
 var colors      = require("lib/colors");
 var components  = require("components");
-var measuresUtils = require("lib/collection-utils").measures;
+var convertToGraph = require("lib/convert-collection-to-graph");
 
 var sitesCompare = React.createClass({
     propTypes: {
@@ -21,7 +21,7 @@ var sitesCompare = React.createClass({
         var sitesId = this.props.sites.map(function (sito) {
             return sito.get("siteId");
         });
-        return measuresUtils.convertBySitesAndVariable(this.props.misure, sitesId, this.props.tipologia.key);
+        return convertToGraph.convertBySitesAndVariable(this.props.misure, sitesId, this.props.tipologia.key);
     },
     getLabels: function () {
         var sitesLabels = this.props.sites.map(function (sito) {

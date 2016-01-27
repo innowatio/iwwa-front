@@ -163,7 +163,8 @@ var Alarms = React.createClass({
                         <img
                             onClick={R.partial(self.onClickAction, [value])}
                             src={icons.iconSettings}
-                            style={{float: "right", height: "28px", cursor: "pointer"}}/>
+                            style={{float: "right", height: "28px", cursor: "pointer"}}
+                        />
                     );
                 }
             },
@@ -265,7 +266,8 @@ var Alarms = React.createClass({
                                     )
                                 }
                                 src={icons.iconPNG}
-                                style={{float: "right", height: "28px"}}/>
+                                style={{float: "right", height: "28px"}}
+                            />
                         </Router.Link>
                     );
                 }
@@ -322,8 +324,9 @@ var Alarms = React.createClass({
                     textAlign: "center",
                     paddingTop: "0px",
                     paddingBottom: "0px"
-                }}>
-                    <h5>{label}</h5>
+                }}
+            >
+                <h5>{"label"}</h5>
             </bootstrap.ListGroupItem>
         );
     },
@@ -375,9 +378,10 @@ var Alarms = React.createClass({
                     title={
                         <span style={{display: "flex", height: "40px"}}>
                             <img src={icons.iconFilter} style={{width: "26px"}}/>
-                            <h4 style={{color: colors.primary}}>Filter</h4>
-                        </span>}
-                        >
+                            <h4 style={{color: colors.primary}}>{"Filter"}</h4>
+                        </span>
+                    }
+                >
                     {this.renderFilter()}
                 </components.Popover>
             </div>

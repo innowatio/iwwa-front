@@ -120,15 +120,17 @@ var Root = React.createClass({
                         title={titleView}
                     />
                 </div>
-                <div style={ENVIRONMENT === "cordova" ?
-                        styles.content :
-                        R.merge(styles.content, {width: `calc(100% - ${measures.sidebarShoulderWidth})`, float: "right"})} >
+                <div style={
+                    ENVIRONMENT === "cordova" ?
+                    styles.content :
+                    R.merge(styles.content, {width: `calc(100% - ${measures.sidebarShoulderWidth})`, float: "right"})}
+                >
                     <components.PageContainer
                         children={this.renderChildren()}
                     />
                 </div>
-                <div style={styles.footer} >
-                    Copyright 2015 - Innowatio
+                <div style={styles.footer}>
+                    {"Copyright 2015 - Innowatio"}
                 </div>
                 <components.LoginModal
                     asteroid={asteroid}

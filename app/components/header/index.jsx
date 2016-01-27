@@ -34,7 +34,8 @@ var styles = {
 var Header = React.createClass({
     propTypes: {
         asteroid: React.PropTypes.object.isRequired,
-        menuClickAction: React.PropTypes.func
+        menuClickAction: React.PropTypes.func,
+        title: React.PropTypes.string
     },
     logout: function () {
         this.props.asteroid.logout();
