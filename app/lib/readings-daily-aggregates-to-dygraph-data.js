@@ -40,7 +40,7 @@ export function groupByDate (filters) {
         const measurementsDeltaInMs = aggregate.get("measurementsDeltaInMs");
         const measurementValuesArray = aggregate.get("measurementValues").split(",");
         measurementValuesArray.forEach((value, offset) => {
-            const date = offsetDays + (offset * measurementsDeltaInMs) + moment().utcOffset();
+            const date = offsetDays + (offset * measurementsDeltaInMs) + (moment().utcOffset() * 60 * 1000);
             group[date] = group[date] || [new Date(date)].concat(defaultGroup);
             const numericValue = parseFloat(value);
             group[date][index + 1] = [
