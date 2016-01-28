@@ -92,12 +92,12 @@ var TemporalLineGraph = React.createClass({
             var labels = this.getLabelsFromProps(props);
             var externalLabel = labels[2];
             var maxYRange = R.reduce(function (prev, elm) {
-                return R.max(prev, elm[1][0]);
+                return elm.length === 2 ? // TACCONATA
+                R.max(prev, elm[1][0]) :
+                R.max(R.max(prev, elm[1][0]), R.max(prev, elm[2][0]));
             }, 0, props.coordinates);
             if (maxYRange === 0.01) {
-                // FIXME: Fixare la parte sopra, prende il primo valore. Se il primo è < del secondo
-                // (caso della source) maxYRange viene 0.01.
-                options.axes.y.valueRange = [0, 50]; // Tacconata
+                options.axes.y.valueRange = [0, 10]; // Tacconata
             } else {
                 options.axes.y.valueRange = [0, maxYRange * 1.01];
             }

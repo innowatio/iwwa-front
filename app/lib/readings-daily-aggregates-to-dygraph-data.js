@@ -29,7 +29,7 @@ function getOffsetDays (aggregate, filters, index) {
 }
 
 export function groupByDate (filters) {
-    const defaultGroup = filters.map(() => [EMPTY]);
+    const defaultGroup = filters.map(() => [ALMOST_ZERO]);
     const findAggregateFilterIndex = getFindAggregateFilterIndex(filters);
     return (group, aggregate) => {
         const index = findAggregateFilterIndex(aggregate);
@@ -50,6 +50,7 @@ export function groupByDate (filters) {
         });
         return group;
     };
+
 }
 
 function fillMissingData (dygraphData) {
@@ -68,7 +69,7 @@ function fillMissingData (dygraphData) {
 }
 
 export default memoize(function readingsDailyAggregatesToDygraphData (aggregates, filters) {
-    const group = aggregates.reduce(groupByDate(filters), {});
+    const group = aggregates.reduce(groupByDate(filters, last), {});
     const filledData = fillMissingData(
         sortBy(prop(0), values(group))
     );
