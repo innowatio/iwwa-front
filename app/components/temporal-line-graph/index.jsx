@@ -92,7 +92,7 @@ var TemporalLineGraph = React.createClass({
             var labels = this.getLabelsFromProps(props);
             var externalLabel = labels[2];
             var maxYRange = R.reduce(function (prev, elm) {
-                return elm.length === 2 ? // TACCONATA
+                return elm.length === 2 || props.y2Label ? // TACCONATA
                 R.max(prev, elm[1][0]) :
                 R.max(R.max(prev, elm[1][0]), R.max(prev, elm[2][0]));
             }, 0, props.coordinates);
