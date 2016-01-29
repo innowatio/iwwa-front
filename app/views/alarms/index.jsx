@@ -326,7 +326,7 @@ var Alarms = React.createClass({
                     paddingBottom: "0px"
                 }}
             >
-                <h5>{"label"}</h5>
+                <h5>{label}</h5>
             </bootstrap.ListGroupItem>
         );
     },
