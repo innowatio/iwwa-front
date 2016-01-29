@@ -5,6 +5,7 @@ import decimate from "./decimate-data-to-dygraph";
 
 export const EMPTY = Symbol("EMPTY");
 export const ALMOST_ZERO = 0.01;
+const ONE_MINUTE_IN_MILLISECOND = 60 * 1000;
 
 function getFilterFn (filter) {
     return memoize(aggregate => (
@@ -40,7 +41,7 @@ export function groupByDate (filters) {
         const measurementsDeltaInMs = aggregate.get("measurementsDeltaInMs");
         const measurementValuesArray = aggregate.get("measurementValues").split(",");
         measurementValuesArray.forEach((value, offset) => {
-            const date = offsetDays + (offset * measurementsDeltaInMs) + (moment().utcOffset() * 60 * 1000);
+            const date = offsetDays + (offset * measurementsDeltaInMs) + (moment().utcOffset() * ONE_MINUTE_IN_MILLISECOND);
             group[date] = group[date] || [new Date(date)].concat(defaultGroup);
             const numericValue = parseFloat(value);
             group[date][index + 1] = [
