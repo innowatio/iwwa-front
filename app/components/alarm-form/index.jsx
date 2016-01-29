@@ -281,8 +281,23 @@ var AlarmForm = React.createClass({
     renderAutomaticAlarmBanner: function () {
         return this.isAutomatic() ? (
             <bootstrap.Col xs={12}>
-                <bootstrap.Alert>
-                    {"Automatic alarm"}
+                <bootstrap.Alert
+                    style={{
+                        backgroundColor: colors.greyBackground,
+                        borderColor: colors.greyBorder,
+                        color: colors.titleColor
+                    }}
+                >
+                    <h4>
+                        {"Allarme automatico"}
+                    </h4>
+                    <p>
+                        {"L'allarme scatta quando il valore misurato supera le seguenti soglie:"}
+                    </p>
+                    <ul>
+                        <li>{"300% del valore previsionale dalle 22.00 alle 07.00"}</li>
+                        <li>{"200% del valore previsionale dalle 07.00 alle 22.00"}</li>
+                    </ul>
                 </bootstrap.Alert>
             </bootstrap.Col>
         ) : null;
