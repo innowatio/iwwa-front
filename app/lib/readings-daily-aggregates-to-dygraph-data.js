@@ -5,6 +5,7 @@ import decimate from "./decimate-data-to-dygraph";
 
 export const EMPTY = Symbol("EMPTY");
 export const ALMOST_ZERO = 0.01;
+const ONE_MINUTE_IN_MILLISECOND = 60 * 1000;
 
 function getFilterFn (filter) {
     return memoize(aggregate => (
@@ -29,7 +30,7 @@ function getOffsetDays (aggregate, filters, index) {
 }
 
 export function groupByDate (filters) {
-    const defaultGroup = filters.map(() => [EMPTY]);
+    const defaultGroup = filters.map(() => [ALMOST_ZERO]);
     const findAggregateFilterIndex = getFindAggregateFilterIndex(filters);
     return (group, aggregate) => {
         const index = findAggregateFilterIndex(aggregate);
@@ -40,7 +41,7 @@ export function groupByDate (filters) {
         const measurementsDeltaInMs = aggregate.get("measurementsDeltaInMs");
         const measurementValuesArray = aggregate.get("measurementValues").split(",");
         measurementValuesArray.forEach((value, offset) => {
-            const date = offsetDays + (offset * measurementsDeltaInMs) + moment().utcOffset();
+            const date = offsetDays + (offset * measurementsDeltaInMs) + (moment().utcOffset() * ONE_MINUTE_IN_MILLISECOND);
             group[date] = group[date] || [new Date(date)].concat(defaultGroup);
             const numericValue = parseFloat(value);
             group[date][index + 1] = [
@@ -50,6 +51,7 @@ export function groupByDate (filters) {
         });
         return group;
     };
+
 }
 
 function fillMissingData (dygraphData) {
@@ -68,7 +70,7 @@ function fillMissingData (dygraphData) {
 }
 
 export default memoize(function readingsDailyAggregatesToDygraphData (aggregates, filters) {
-    const group = aggregates.reduce(groupByDate(filters), {});
+    const group = aggregates.reduce(groupByDate(filters, last), {});
     const filledData = fillMissingData(
         sortBy(prop(0), values(group))
     );

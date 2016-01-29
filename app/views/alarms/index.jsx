@@ -144,14 +144,13 @@ var Alarms = React.createClass({
                         width: "40%"
                     };
                 },
-                valueFormatter: function (value, item) {
+                valueFormatter: function (value) {
                     var sito = self.getSiti().find(siti => {
                         return siti.get("pod") === value;
                     });
-                    var latest = R.last(self.getNotificationsList(item.get("notifications").sort()));
                     return (
                         <span>
-                            {CollectionUtils.sites.getLabel(sito) + " - " + moment(latest).format("DD/MM/YYYY HH:mm")}
+                            {CollectionUtils.sites.getLabel(sito)}
                         </span>
                     );
                 }
@@ -412,7 +411,14 @@ var Alarms = React.createClass({
                                 type={this.getType()}
                             />
                         </bootstrap.Tab>
-                        <bootstrap.Tab eventKey={2} title="Allarmi">
+                        <bootstrap.Tab
+                            eventKey={2}
+                            style={{
+                                height: "100%",
+                                overflow: "scroll"
+                            }}
+                            title="Allarmi"
+                        >
                             {this.renderFilterButton()}
                             <components.CollectionElementsTable
                                 collection={

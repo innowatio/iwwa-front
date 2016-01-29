@@ -1,4 +1,3 @@
-var Radium     = require("radium");
 var R          = require("ramda");
 var React      = require("react");
 var bootstrap  = require("react-bootstrap");
@@ -153,4 +152,4 @@ var CollectionElementsTable = React.createClass({
     }
 });
 
-module.exports = Radium(CollectionElementsTable);
+module.exports = CollectionElementsTable;
