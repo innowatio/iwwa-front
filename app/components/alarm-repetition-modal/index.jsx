@@ -59,7 +59,7 @@ var AlarmRepetitionModal = React.createClass({
     },
     labelParser: function () {
         var labels = [];
-        var repetitions = this.props.value.weekDays;
+        var repetitions = this.props.value.weekDays || [];
         this.getRepetitionOptions().map(function (record) {
             if (R.contains(record.key, repetitions)) {
                 labels.push(record.label);
@@ -197,7 +197,7 @@ var AlarmRepetitionModal = React.createClass({
                     allowedValues={this.getRepetitionOptions()}
                     getKey={R.prop("key")}
                     getLabel={R.prop("label")}
-                    header={<h4 style={{color: colors.primary}}>{"Seleziona tipo di notifica"} </h4>}
+                    header={<h4 style={{color: colors.primary}}>{"Seleziona tipo di notifica"}</h4>}
                     isModalOpen={this.state.isOpen}
                     onClickConfirm={this.onClickConfirm}
                     onClickReset={this.toggleModal}

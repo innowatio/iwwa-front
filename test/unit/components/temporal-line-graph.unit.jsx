@@ -6,7 +6,7 @@ describe("The TemporalLineGraph component", function () {
 
     var TemporalLineGraph = proxyquire("components/temporal-line-graph/", {
         "dygraphs/dygraphs-combined-dev.js": {
-        Dygraph: Dygraph
+            Dygraph: Dygraph
         }
     });
 

@@ -1,7 +1,5 @@
 require("unit-setup.js");
 
-var R = require("ramda");
-
 var TreeView = proxyquire("components/tree-view/", {});
 
 describe("The `TreeView` component ", function () {

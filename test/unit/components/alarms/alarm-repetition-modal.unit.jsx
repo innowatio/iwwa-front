@@ -1,6 +1,6 @@
 require("unit-setup.js");
 
-var AlarmRepetitionModal = proxyquire("components/alarm-repetition-modal/", {});
+import AlarmRepetitionModal from "components/alarm-repetition-modal/";
 
 describe("The `onClickConfirm` function of the `AlarmRepetitionModal` component ", function () {
 
@@ -22,7 +22,9 @@ describe("The `onClickConfirm` function of the `AlarmRepetitionModal` component 
             />
         );
         var componentNode = TestUtils.renderIntoDocument(repetitionComponent);
+        componentNode.toggleModal = sinon.spy();
         componentNode.onClickConfirm();
+        expect(componentNode.toggleModal).to.have.callCount(1);
         expect(updateParentStateSpy).to.have.been.calledWith(expectedValue);
     });
 });
