@@ -1,4 +1,4 @@
-import {equals, last, update} from "ramda";
+import {equals, head, last, update} from "ramda";
 import moment from "moment";
 
 import * as colors from "lib/colors";
@@ -32,7 +32,7 @@ export function chart (state = defaultChartState, {type, payload}) {
             ...state[0],
             alarms: undefined,
             fullPath: payload.fullPath,
-            sensorId: payload.sensor,
+            sensorId: payload.sensor || head(payload.fullPath),
             site: payload.site,
             date: state[0].date.type === "dateFilter" ? state[0].date : {}
         }];

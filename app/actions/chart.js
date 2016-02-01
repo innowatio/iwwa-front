@@ -18,7 +18,7 @@ export const REMOVE_ALL_COMPARE = "REMOVE_ALL_COMPARE";
 const typeofSelectSingleElectricalSensor = actionTypeValidator(
     struct({
         fullPath: Array,
-        sensor: String,
+        sensor: maybe(String),
         site: String
     })
 );
