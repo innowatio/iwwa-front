@@ -1,45 +1,40 @@
-var Immutable       = require("immutable");
-var IPropTypes      = require("react-immutable-proptypes");
-var Radium          = require("radium");
-var React           = require("react");
-var ReactPureRender = require("react-addons-pure-render-mixin");
+import {Map} from "immutable";
+import IPropTypes from "react-immutable-proptypes";
+import Radium from "radium";
+import React, {PropTypes} from "react";
+import ReactPureRender from "react-addons-pure-render-mixin";
 
-var colors      = require("lib/colors");
-var components  = require("components");
-var convertToGraph = require("lib/convert-collection-to-graph");
+import * as colors from "lib/colors";
+import components from "components";
+import readingsDailyAggregatesToDygraphData from "lib/readings-daily-aggregates-to-dygraph-data";
 
 var sitesCompare = React.createClass({
     propTypes: {
-        getYLabel: React.PropTypes.func,
+        chart: PropTypes.arrayOf(PropTypes.object),
+        getYLabel: PropTypes.func,
         misure: IPropTypes.map,
-        sites: React.PropTypes.arrayOf(IPropTypes.map),
-        tipologia: React.PropTypes.object,
-        valori: React.PropTypes.arrayOf(React.PropTypes.object)
+        sites: PropTypes.arrayOf(IPropTypes.map)
     },
     mixins: [ReactPureRender],
     getCoordinates: function () {
-        var sitesId = this.props.sites.map(function (sito) {
-            return sito.get("siteId");
-        });
-        return convertToGraph.convertBySitesAndVariable(this.props.misure, sitesId, this.props.tipologia.key);
+        return readingsDailyAggregatesToDygraphData(this.props.misure, this.props.chart);
     },
     getLabels: function () {
-        var sitesLabels = this.props.sites.map(function (sito) {
-            return sito.get("idCoin");
+        var sitesLabels = this.props.sites.map((sito = Map()) => {
+            return sito.get("name");
         });
         return ["Data"].concat(sitesLabels);
     },
     render: function () {
-        var valori = this.props.valori[0];
         return (
             <components.TemporalLineGraph
-                colors={[valori.color, colors.lineCompare]}
-                coordinates={this.getCoordinates()}
+                colors={[this.props.chart[0].source.color, colors.lineCompare]}
+                coordinates={this.getCoordinates() || []}
                 labels={this.getLabels()}
                 ref="temporalLineGraph"
-                site={this.props.sites[0] || Immutable.Map()}
+                site={this.props.sites[0] || Map()}
                 xLabel=""
-                yLabel={this.props.getYLabel(this.props.tipologia)}
+                yLabel={this.props.getYLabel(this.props.chart[0].measurementType)}
             />
         );
     }

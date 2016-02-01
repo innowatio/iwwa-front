@@ -37,6 +37,8 @@ var ValoriCompare = React.createClass({
         return colors;
     },
     render: function () {
+        console.log("AAA");
+        console.log(this.getCoordinates());
         const sources = uniq(this.props.chart.map(singleSelection => singleSelection.source));
         return (
             <components.TemporalLineGraph

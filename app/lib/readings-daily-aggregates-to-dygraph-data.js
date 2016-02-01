@@ -70,7 +70,7 @@ function fillMissingData (dygraphData) {
 }
 
 export default memoize(function readingsDailyAggregatesToDygraphData (aggregates, filters) {
-    const group = aggregates.reduce(groupByDate(filters, last), {});
+    const group = aggregates.reduce(groupByDate(filters), {});
     const filledData = fillMissingData(
         sortBy(prop(0), values(group))
     );

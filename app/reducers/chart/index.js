@@ -63,8 +63,8 @@ export function chart (state = defaultChartState, {type, payload}) {
         return payload.map((sensorId, idx) => ({
             ...state[0],
             alarms: undefined,
-            sensorId: null,
-            fullPath: [payload[idx], undefined],
+            sensorId: payload[idx],
+            fullPath: [payload[idx]],
             site: payload[idx],
             measurementType,
             date: state[0].date.type === "dateFilter" ? state[0].date : {}

@@ -158,15 +158,15 @@ describe("`chart` reducer [CASE: multiple object in default state array]", () =>
             expect(ret).to.deep.equal([{
                 ...defaultChartStateFirstObject,
                 alarms: undefined,
-                fullPath: ["siteId1", undefined],
+                fullPath: ["siteId1"],
                 site: "siteId1",
-                sensorId: null
+                sensorId: "siteId1"
             }, {
                 ...defaultChartStateFirstObject,
                 alarms: undefined,
-                fullPath: ["siteId2", undefined],
+                fullPath: ["siteId2"],
                 site: "siteId2",
-                sensorId: null
+                sensorId: "siteId2"
             }]);
         });
 

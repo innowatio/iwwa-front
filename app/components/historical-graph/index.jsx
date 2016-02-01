@@ -53,8 +53,11 @@ var HistoricalGraph = React.createClass({
                     this.renderSiteTitle(this.props.sites[idx]) :
                     this.renderSiteTitle(this.props.sites[0])
                 }
-                {" - "}
-                {this.renderSensorTitle(singleSelectionChart.sensorId)}
+                {singleSelectionChart.sensorId !== singleSelectionChart.site ? " - " : null}
+                {
+                    singleSelectionChart.sensorId !== singleSelectionChart.site ?
+                    this.renderSensorTitle(singleSelectionChart.sensorId) : null
+                }
                 {numberOfSelectionInGraph > idx + 1 ? " & " : null}
             </span>
         );

@@ -93,14 +93,14 @@ describe("`chart` reducer [CASE: single object in default state array]", () => {
                 ...defaultChartStateObject,
                 alarms: undefined,
                 site: "siteId1",
-                fullPath: ["siteId1", undefined],
-                sensorId: null
+                fullPath: ["siteId1"],
+                sensorId: "siteId1"
             }, {
                 ...defaultChartStateObject,
                 alarms: undefined,
-                fullPath: ["siteId2", undefined],
+                fullPath: ["siteId2"],
                 site: "siteId2",
-                sensorId: null
+                sensorId: "siteId2"
             }]);
         });
 
