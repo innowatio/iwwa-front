@@ -336,6 +336,34 @@ describe("`chart` reducer [CASE: multiple object in default state array]", () =>
 
     });
 
+    describe("`DISPLAY_ALARMS_ON_CHART` type", () => {
+
+        it("should return the correct object", () => {
+            const valuePassedFromAction = {
+                type: "DISPLAY_ALARMS_ON_CHART",
+                payload: {
+                    siteId: "site1",
+                    sensorId: "sensorId",
+                    alarms: [1498749876543, 1516543214890]
+                }
+            };
+            const ret = chart(chartState, valuePassedFromAction);
+            expect(ret).to.deep.equal([{
+                ...defaultChartStateFirstObject,
+                alarms: [1498749876543, 1516543214890],
+                site: "site1",
+                sensorId: "sensorId",
+                fullPath: ["site1"],
+                date: {
+                    start: 1514761200000,
+                    end: 1517439599999,
+                    type: "dateFilter"
+                }
+            }]);
+        });
+
+    });
+
     describe("`REMOVE_ALL_COMPARE` type", () => {
 
         it("should remove the comparation", () => {

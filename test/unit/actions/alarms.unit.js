@@ -7,31 +7,26 @@ describe("`alarms` actions", () => {
     describe("`displayAlarmsOnChart` function", () => {
 
         it("should return the correct object if are passed the correct parameters", () => {
-            const sensorId = ["sensorId"];
-            const alarmsDate = [1449157137862, 1449157157862];
-            const startDate = 1448924400000;
-            const endDate = 1451602799999;
-            const ret = alarms.displayAlarmsOnChart(
-                sensorId, alarmsDate, startDate, endDate
-            );
+            const siteId = "siteId";
+            const sensorId = "sensorId";
+            const arrayOfAlarms = [1449157137862, 1449157157862];
+            const ret = alarms.displayAlarmsOnChart(sensorId, siteId, arrayOfAlarms);
             expect(ret).to.deep.equal({
                 type: "DISPLAY_ALARMS_ON_CHART",
                 payload: {
+                    siteId,
                     sensorId,
-                    alarms: alarmsDate,
-                    startDate,
-                    endDate
+                    alarms: arrayOfAlarms
                 }
             });
         });
 
         it("should throw if aren't passed the correct parameter", () => {
-            const sensorId = ["sensorId"];
-            const alarmsDate = [1449157137862, "Thu Dec 03 2015 16:38:57 GMT+0100 (CET)"];
-            const startDate = 1448924400000;
-            const endDate = 1451602799999;
+            const siteId = "siteId";
+            const sensorId = "sensorId";
+            const arrayOfAlarms = [1449157137862, "Thu Dec 03 2015 16:38:57 GMT+0100 (CET)"];
             function troubleMaker () {
-                alarms.displayAlarmsOnChart(sensorId, alarmsDate, startDate, endDate);
+                alarms.displayAlarmsOnChart(sensorId, siteId, arrayOfAlarms);
             }
             expect(troubleMaker).to.throw();
         });

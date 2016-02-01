@@ -22,12 +22,8 @@ import {
     numberOfSelectedTabs
 } from "actions/alarms";
 
-var getKeyFromAlarm = function (alarm) {
-    return alarm.get("_id");
-};
-
-var getKeyFromNotification = function (alarm) {
-    return alarm.get("date");
+var getKeyFromCollection = function (collection) {
+    return collection.get("_id");
 };
 
 function mapStateToProps (state) {
@@ -88,15 +84,15 @@ var Alarms = React.createClass({
     getType: function () {
         return this.props.alarms.id ? "update" : "insert";
     },
-    getSitoByPod: function (pod) {
-        return this.getSiti().find(
-            sito => (
-                sito.get("pod") === pod
-            ));
+    getSitoBySensor: function (sensorId) {
+        return this.getSiti()
+            .find((site = Map()) =>
+                R.contains(sensorId, site.get("sensorsIds").toArray())
+            );
     },
     getNotificationsList: function (notifications) {
         var notificationDates = [];
-        notifications.forEach(function (notification) {
+        notifications.forEach(notification => {
             if (notification.get("date")) {
                 notificationDates.push(notification.get("date"));
             }
@@ -176,21 +172,16 @@ var Alarms = React.createClass({
                     // value is a list of maps
                     var notificationDates = self.getNotificationsList(value);
                     if (notificationDates.length > 0) {
-                        const startDate = moment(notificationDates[notificationDates.length - 1])
-                            .startOf("month").valueOf();
-                        const endDate = moment(notificationDates[notificationDates.length - 1])
-                            .endOf("month").valueOf();
                         const alarms = R.dropRepeats(notificationDates);
-                        const siteId = self.getSitoByPod(item.get("podId")) ?
-                            [self.getSitoByPod(item.get("podId")).get("_id")] :
-                            [];
+                        const sensorId = item.get("podId");
+                        const site = self.getSitoBySensor(sensorId).get("_id");
                         return (
                             <Router.Link to={"/chart/"}>
                                 <img
                                     onClick={
                                         R.partial(
                                             self.props.displayAlarmsOnChart,
-                                            [siteId, alarms, startDate, endDate]
+                                            [sensorId, site, alarms]
                                         )
                                     }
                                     src={icons.iconPNG}
@@ -249,19 +240,16 @@ var Alarms = React.createClass({
             {
                 key: "dateNotification",
                 valueFormatter: function (value, item) {
-                    var notificationDate = item.get("date");
-                    const startDate = moment(notificationDate).startOf("month").valueOf();
-                    const endDate = moment(notificationDate).endOf("month").valueOf();
-                    const siteId = self.getSitoByPod(item.get("podId")) ?
-                        [self.getSitoByPod(item.get("podId")).get("_id")] :
-                        [];
+                    var notificationDate = [item.get("date")];
+                    const sensorId = item.get("podId");
+                    const site = self.getSitoBySensor(sensorId).get("_id");
                     return (
                         <Router.Link to={"/chart/"}>
                             <img
                                 onClick={
                                     R.partial(
                                         self.props.displayAlarmsOnChart,
-                                        [siteId, [notificationDate], startDate, endDate]
+                                        [sensorId, site, notificationDate]
                                     )
                                 }
                                 src={icons.iconPNG}
@@ -426,7 +414,7 @@ var Alarms = React.createClass({
                                     Immutable.Map() :
                                     allowedValues.filter(this.filterAlarms)}
                                 columns={this.getColumnsAlarms()}
-                                getKey={getKeyFromAlarm}
+                                getKey={getKeyFromCollection}
                                 hover={true}
                                 width={"40%"}
                             />
@@ -444,7 +432,7 @@ var Alarms = React.createClass({
                             <components.CollectionElementsTable
                                 collection={this.getNotifications().sort(R.partialRight(this.sortByDate, [false]))}
                                 columns={this.getColumnsNotifications()}
-                                getKey={getKeyFromNotification}
+                                getKey={getKeyFromCollection}
                                 hover={true}
                                 width={"30%"}
                             />

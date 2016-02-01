@@ -6,7 +6,6 @@ import {
     String,
     list,
     struct,
-    tuple,
     maybe,
     union
 } from "tcomb";
@@ -145,20 +144,18 @@ export function numberOfSelectedTabs (selectedTab) {
 *       (in miliseconds unix timestamp)
 */
 const typeofDisplayAlarmsOnChart = actionTypeValidator(
-    tuple([String]),
-    list(Number),
-    Number,
-    Number
+    String,
+    String,
+    list(Number)
 );
-export function displayAlarmsOnChart (sensorId, alarms, startDate, endDate) {
+export function displayAlarmsOnChart (sensorId, siteId, alarms) {
     typeofDisplayAlarmsOnChart(...arguments);
     return {
         type: DISPLAY_ALARMS_ON_CHART,
         payload: {
             sensorId,
-            alarms,
-            startDate,
-            endDate
+            siteId,
+            alarms
         }
     };
 }

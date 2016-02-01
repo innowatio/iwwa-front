@@ -267,39 +267,30 @@ describe("`chart` reducer [CASE: single object in default state array]", () => {
 
     });
 
-    describe.skip("`DISPLAY_ALARMS_ON_CHART` type", () => {
+    describe("`DISPLAY_ALARMS_ON_CHART` type", () => {
 
         it("should return the correct object", () => {
             const valuePassedFromAction = {
                 type: "DISPLAY_ALARMS_ON_CHART",
                 payload: {
-                    siteId: ["site1"],
-                    alarms: [1498749876543, 1516543214890],
-                    startDate: 1449157137862,
-                    endDate: 1449157157862
+                    siteId: "site1",
+                    sensorId: "sensorId",
+                    alarms: [1498749876543, 1516543214890]
                 }
             };
             const ret = chart(chartState, valuePassedFromAction);
-            expect(ret).to.deep.equal({
+            expect(ret).to.deep.equal([{
+                ...defaultChartStateObject,
                 alarms: [1498749876543, 1516543214890],
-                sites: ["site1"],
-                types: [
-                    {
-                        label: "Attiva",
-                        key: "activeEnergy"
-                    },
-                    {}
-                ],
-                dateRanges: [{
-                    start: 1449157137862,
-                    end: 1449157157862
-                }],
-                sources: [{
-                    label: "labelSource",
-                    color: "color",
-                    key: "keySource"
-                }]
-            });
+                site: "site1",
+                sensorId: "sensorId",
+                fullPath: ["site1"],
+                date: {
+                    start: 1514761200000,
+                    end: 1517439599999,
+                    type: "dateFilter"
+                }
+            }]);
         });
 
     });

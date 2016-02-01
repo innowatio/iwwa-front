@@ -1,4 +1,5 @@
 import {equals, last, update} from "ramda";
+import moment from "moment";
 
 import * as colors from "lib/colors";
 import {
@@ -151,8 +152,19 @@ export function chart (state = defaultChartState, {type, payload}) {
             date: {}
         }];
     case DISPLAY_ALARMS_ON_CHART:
-        // TODO
-        return state;
+        const alarmDate = last(payload.alarms);
+        return [{
+            ...defaultChartState[0],
+            alarms: payload.alarms,
+            site: payload.siteId,
+            sensorId: payload.sensorId,
+            fullPath: [payload.siteId],
+            date: {
+                start: moment(alarmDate).startOf("month").valueOf(),
+                end: moment(alarmDate).endOf("month").valueOf(),
+                type: "dateFilter"
+            }
+        }];
     default:
         return state;
     }
