@@ -66,7 +66,6 @@ var Alarms = React.createClass({
     },
     componentDidMount: function () {
         this.props.asteroid.subscribe("alarms");
-        this.props.asteroid.subscribe("notifications");
         this.props.asteroid.subscribe("sites");
     },
     getAlarm: function () {
@@ -419,7 +418,7 @@ var Alarms = React.createClass({
                                 width={"40%"}
                             />
                         </bootstrap.Tab>
-                        <bootstrap.Tab eventKey={3} title="Storico allarmi">
+                        <bootstrap.Tab eventKey={3} style={{height: "100%", overflow: "scroll"}} title="Storico allarmi">
                             {/* <div style={{marginRight: "30px", height: "40px", paddingTop: "20px"}}>
                                 <div onClick={this.onClickFilter}
                                     style={{float: "right", display: "flex", cursor: "pointer"}}>
