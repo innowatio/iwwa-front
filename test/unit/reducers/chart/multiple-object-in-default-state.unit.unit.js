@@ -1,4 +1,5 @@
 require("unit-setup.js");
+import moment from "moment";
 
 import chartReducer, {chart} from "reducers/chart";
 
@@ -294,8 +295,8 @@ describe("`chart` reducer [CASE: multiple object in default state array]", () =>
                         label: "Mese",
                         key: "months"
                     },
-                    start: 1446678000000,
-                    end: 1449183599999
+                    start: moment(1449157137862).subtract(4, "weeks").startOf("day").valueOf(),
+                    end: moment(1449157137862).endOf("day").valueOf()
                 }
             }, {
                 ...defaultChartStateFirstObject,
@@ -305,8 +306,8 @@ describe("`chart` reducer [CASE: multiple object in default state array]", () =>
                         label: "Mese",
                         key: "months"
                     },
-                    start: 1444255200000,
-                    end: 1446764399999
+                    start: moment(1449157137862).subtract(8, "weeks").startOf("day").valueOf(),
+                    end: moment(1449157137862).subtract(4, "weeks").endOf("day").valueOf()
                 }
             }]);
         });
@@ -373,8 +374,8 @@ describe("`chart` reducer [CASE: multiple object in default state array]", () =>
                 sensorId: "sensorId",
                 fullPath: ["site1"],
                 date: {
-                    start: 1514761200000,
-                    end: 1517439599999,
+                    start: moment(1516543214890).startOf("month").valueOf(),
+                    end: moment(1516543214890).endOf("month").valueOf(),
                     type: "dateFilter"
                 }
             }]);

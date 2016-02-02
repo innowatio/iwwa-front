@@ -1,4 +1,5 @@
 require("unit-setup.js");
+import moment from "moment";
 
 import chartReducer, {chart} from "reducers/chart";
 
@@ -122,8 +123,8 @@ describe("`chart` reducer [CASE: single object in default state array]", () => {
                 type: "SELECT_DATE_RANGES_COMPARE",
                 payload: {
                     period: {
-                        label: "Mese",
-                        key: "months"
+                        label: "Years",
+                        key: "years"
                     },
                     dateOne: 1449157137862
                 }
@@ -134,22 +135,22 @@ describe("`chart` reducer [CASE: single object in default state array]", () => {
                 date: {
                     type: "dateCompare",
                     period: {
-                        label: "Mese",
-                        key: "months"
+                        label: "Years",
+                        key: "years"
                     },
-                    start: 1446678000000,
-                    end: 1449183599999
+                    start: moment(1449157137862).subtract(4, "weeks").startOf("day").valueOf(),
+                    end: moment(1449157137862).endOf("day").valueOf()
                 }
             }, {
                 ...defaultChartStateObject,
                 date: {
                     type: "dateCompare",
                     period: {
-                        label: "Mese",
-                        key: "months"
+                        label: "Years",
+                        key: "years"
                     },
-                    start: 1444255200000,
-                    end: 1446764399999
+                    start: moment(1449157137862).subtract(57, "weeks").startOf("day").valueOf(),
+                    end: moment(1449157137862).subtract(53, "weeks").endOf("day").valueOf()
                 }
             }]);
         });
@@ -295,8 +296,8 @@ describe("`chart` reducer [CASE: single object in default state array]", () => {
                 sensorId: "sensorId",
                 fullPath: ["site1"],
                 date: {
-                    start: 1514761200000,
-                    end: 1517439599999,
+                    start: moment(1516543214890).startOf("month").valueOf(),
+                    end: moment(1516543214890).endOf("month").valueOf(),
                     type: "dateFilter"
                 }
             }]);
