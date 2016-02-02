@@ -130,6 +130,8 @@ describe("`chart` reducer [CASE: single object in default state array]", () => {
                 }
             };
             const ret = chart(chartState, valuePassedFromAction);
+            const startOne = moment(1449157137862).startOf("month").day(1).valueOf();
+            const startTwo = moment(1449157137862).subtract({weeks: moment().weeksInYear()}).startOf("isoWeek").valueOf();
             expect(ret).to.deep.equal([{
                 ...defaultChartStateObject,
                 date: {
@@ -138,8 +140,8 @@ describe("`chart` reducer [CASE: single object in default state array]", () => {
                         label: "Years",
                         key: "years"
                     },
-                    start: moment(1449157137862).subtract(4, "weeks").startOf("day").valueOf(),
-                    end: moment(1449157137862).endOf("day").valueOf()
+                    start: startOne,
+                    end: moment(startOne).add({weeks: 5}).endOf("isoWeek").valueOf()
                 }
             }, {
                 ...defaultChartStateObject,
@@ -149,8 +151,8 @@ describe("`chart` reducer [CASE: single object in default state array]", () => {
                         label: "Years",
                         key: "years"
                     },
-                    start: moment(1449157137862).subtract(57, "weeks").startOf("day").valueOf(),
-                    end: moment(1449157137862).subtract(53, "weeks").endOf("day").valueOf()
+                    start: startTwo,
+                    end: moment(startTwo).add({weeks: 5}).endOf("isoWeek").valueOf()
                 }
             }]);
         });

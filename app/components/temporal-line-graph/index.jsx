@@ -29,16 +29,13 @@ var TemporalLineGraph = React.createClass({
             AppPropTypes.DygraphCoordinate
         ).isRequired,
         dateFilter: PropTypes.object,
-        // TODO: serve ancora?
         dateWindow: PropTypes.arrayOf(PropTypes.number),
         labels: PropTypes.array,
-        // TODO: serve ancora?
         lockInteraction: PropTypes.bool,
         showRangeSelector: PropTypes.bool,
         site: IPropTypes.map,
         xLabel: PropTypes.string,
         xLegendFormatter: PropTypes.func,
-        // TODO: serve ancora?
         xTicker: PropTypes.func,
         y2Label: PropTypes.string,
         yLabel: PropTypes.string
@@ -103,16 +100,17 @@ var TemporalLineGraph = React.createClass({
             }
             props.y2Label ? options.series[externalLabel] = {axis: "y2"} : null;
         }
-        if (props.coordinates.length !== 0) {
-            var lastDate;
+
+        if (props.coordinates.length !== 0 && !props.dateWindow) {
+            // var lastDate;
             options.underlayCallback = function (canvas, area, g) {
                 props.coordinates.map(value => {
                     var date = value[0];
                     if (
-                        moment(lastDate).format("D") !== moment(date).format("D") &&
+                        // moment(lastDate).format("DD-MM-YYYY") !== moment(date).format("DD-MM-YYYY") &&
                         R.equals(moment(date).format("YYYY-MM-DD"), moment(date).day(6).format("YYYY-MM-DD"))
                     ) {
-                        lastDate = date;
+                        // lastDate = date;
                         var bottomLeft = g.toDomCoords(moment(date).startOf("day"), -20);
                         var topRight = g.toDomCoords(moment(date).add(1, "days").endOf("day"), +20);
                         var left = bottomLeft[0];
@@ -123,6 +121,28 @@ var TemporalLineGraph = React.createClass({
                     }
                 });
             };
+        }
+        if (props.coordinates.length !== 0 && props.dateWindow) {
+            // var lastDate;
+            // TODO
+            // options.underlayCallback = function (canvas, area, g) {
+            //     props.coordinates.map(value => {
+            //         var date = value[0];
+            //         if (
+            //             // moment(lastDate).format("DD-MM-YYYY") !== moment(date).format("DD-MM-YYYY") &&
+            //             R.equals(moment(date).format("YYYY-MM-DD"), moment(date).day(6).format("YYYY-MM-DD"))
+            //         ) {
+            //             // lastDate = date;
+            //             var bottomLeft = g.toDomCoords(moment(date).startOf("day"), -20);
+            //             var topRight = g.toDomCoords(moment(date).add(1, "days").endOf("day"), +20);
+            //             var left = bottomLeft[0];
+            //             var right = topRight[0];
+            //
+            //             canvas.fillStyle = colors.greyBackground;
+            //             canvas.fillRect(left, area.y, right - left, area.h);
+            //         }
+            //     });
+            // };
         }
         if (props.colors) {
             options.colors = props.colors;
@@ -140,6 +160,9 @@ var TemporalLineGraph = React.createClass({
             if (delta >= oneMonthInMilliseconds) {
                 options.dateWindow = [max -  oneMonthInMilliseconds, max];
             }
+        }
+        if (props.dateWindow) {
+            options.dateWindow = props.dateWindow;
         }
         if (props.lockInteraction) {
             options.interactionModel = {};

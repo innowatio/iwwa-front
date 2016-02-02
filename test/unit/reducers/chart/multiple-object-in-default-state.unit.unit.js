@@ -287,6 +287,8 @@ describe("`chart` reducer [CASE: multiple object in default state array]", () =>
                 }
             };
             const ret = chart(chartState, valuePassedFromAction);
+            const startOne = moment(1449157137862).startOf("month").day(1).valueOf();
+            const startTwo = moment(1449157137862).subtract({weeks: 5}).startOf("isoWeek").valueOf();
             expect(ret).to.deep.equal([{
                 ...defaultChartStateFirstObject,
                 date: {
@@ -295,8 +297,8 @@ describe("`chart` reducer [CASE: multiple object in default state array]", () =>
                         label: "Mese",
                         key: "months"
                     },
-                    start: moment(1449157137862).subtract(4, "weeks").startOf("day").valueOf(),
-                    end: moment(1449157137862).endOf("day").valueOf()
+                    start: startOne,
+                    end: moment(startOne).add({weeks: 5}).endOf("isoWeek").valueOf()
                 }
             }, {
                 ...defaultChartStateFirstObject,
@@ -306,8 +308,8 @@ describe("`chart` reducer [CASE: multiple object in default state array]", () =>
                         label: "Mese",
                         key: "months"
                     },
-                    start: moment(1449157137862).subtract(8, "weeks").startOf("day").valueOf(),
-                    end: moment(1449157137862).subtract(4, "weeks").endOf("day").valueOf()
+                    start: startTwo,
+                    end: moment(startTwo).add({weeks: 5}).endOf("isoWeek").valueOf()
                 }
             }]);
         });
