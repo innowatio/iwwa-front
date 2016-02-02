@@ -265,6 +265,15 @@ describe("`chart` reducer [CASE: multiple object in default state array]", () =>
 
     describe("`SELECT_DATA_RANGES_COMPARE` type", () => {
 
+        var clock;
+        before(() => {
+            clock = sinon.useFakeTimers();
+        });
+
+        after(() => {
+            clock.restore();
+        });
+
         it("should return an array of two object with type `dateCompare`", () => {
             const valuePassedFromAction = {
                 type: "SELECT_DATE_RANGES_COMPARE",
@@ -337,6 +346,15 @@ describe("`chart` reducer [CASE: multiple object in default state array]", () =>
     });
 
     describe("`DISPLAY_ALARMS_ON_CHART` type", () => {
+
+        var clock;
+        before(() => {
+            clock = sinon.useFakeTimers();
+        });
+
+        after(() => {
+            clock.restore();
+        });
 
         it("should return the correct object", () => {
             const valuePassedFromAction = {

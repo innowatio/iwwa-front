@@ -108,6 +108,15 @@ describe("`chart` reducer [CASE: single object in default state array]", () => {
 
     describe("`SELECT_DATA_RANGES_COMPARE` type", () => {
 
+        var clock;
+        before(() => {
+            clock = sinon.useFakeTimers();
+        });
+
+        after(() => {
+            clock.restore();
+        });
+
         it("should return an array of two object with different dateRange", () => {
             const valuePassedFromAction = {
                 type: "SELECT_DATE_RANGES_COMPARE",
