@@ -129,7 +129,7 @@ gulp.task("build", proGulp.task("build"));
 proGulp.task("runUnitTests", function () {
     var targetDir = "./builds/_reports/unit-tests/";
     mkdirp.sync(targetDir);
-    return gulp.src("./test/unit/**/*unit*")
+    return gulp.src(["./test/unit/**/*.js", "./test/unit/**/*.jsx"])
         .pipe(gp.spawnMocha({
             compilers: "jsx:babel-core/register",
             reporter: "mochawesome",

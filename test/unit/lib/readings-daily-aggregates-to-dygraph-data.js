@@ -43,8 +43,8 @@ describe("readingsDailyAggregatesToDygraphData", () => {
                     key: "activeEnergy"
                 },
                 date: {
-                    start: moment("2015-02-01").valueOf(),
-                    end: moment("2015-02-28").valueOf(),
+                    start: moment.utc("2015-02-01").valueOf(),
+                    end: moment.utc("2015-02-28").valueOf(),
                     type: "dateFilter"
                 }
             },
@@ -57,8 +57,8 @@ describe("readingsDailyAggregatesToDygraphData", () => {
                     key: "activeEnergy"
                 },
                 date: {
-                    start: moment("2015-01-01").valueOf(),
-                    end: moment("2015-01-31").valueOf(),
+                    start: moment.utc("2015-01-01").valueOf(),
+                    end: moment.utc("2015-01-31").valueOf(),
                     type: "dateFilter"
                 }
             }
@@ -109,8 +109,8 @@ describe("readingsDailyAggregatesToDygraphData", () => {
                     key: "activeEnergy"
                 },
                 date: {
-                    start: moment("2015-03-28").subtract(4, "weeks").valueOf(),
-                    end: moment("2015-03-28").valueOf(),
+                    start: moment.utc("2015-03-28").subtract(4, "weeks").valueOf(),
+                    end: moment.utc("2015-03-28").valueOf(),
                     type: "dateCompare",
                     period: {label: "Mese", key: "months"}
                 }
@@ -124,8 +124,8 @@ describe("readingsDailyAggregatesToDygraphData", () => {
                     key: "activeEnergy"
                 },
                 date: {
-                    start: moment("2015-03-28").subtract(8, "weeks").valueOf(),
-                    end: moment("2015-03-28").subtract(4, "weeks").valueOf(),
+                    start: moment.utc("2015-03-28").subtract(8, "weeks").valueOf(),
+                    end: moment.utc("2015-03-28").subtract(4, "weeks").valueOf(),
                     type: "dateCompare",
                     period: {label: "Mese", key: "months"}
                 }

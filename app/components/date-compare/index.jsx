@@ -43,7 +43,7 @@ var DateCompare = React.createClass({
     },
     onClickButton: function () {
         this.props.closeModal();
-        this.props.onChange(moment().valueOf(), this.state.period, "dateCompare");
+        this.props.onChange(moment.utc().valueOf(), this.state.period, "dateCompare");
     },
     renderDataCompare: function (allowedValue) {
         return (

@@ -60,7 +60,7 @@ var Users = React.createClass({
                     };
                 },
                 valueFormatter: function (value) {
-                    var date = moment(value && value.get("$date")) || "";
+                    var date = moment.utc(value && value.get("$date")) || "";
                     return date.locale("it").format("LL");
                 }
             },

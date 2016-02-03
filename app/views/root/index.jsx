@@ -1,5 +1,6 @@
 var R         = require("ramda");
 var React     = require("react");
+import {StyleRoot} from "radium";
 import {connect} from "react-redux";
 
 var asteroid          = require("lib/asteroid");
@@ -100,7 +101,7 @@ var Root = React.createClass({
     render: function () {
         var titleView = this.props.children.props.route.titleView || "";
         return (
-            <div>
+            <StyleRoot>
                 <components.SideNav
                     items={this.getMenuItems()}
                     linkClickAction={this.closeSidebar}
@@ -134,7 +135,7 @@ var Root = React.createClass({
                     asteroid={asteroid}
                     isOpen={!this.state.userId}
                 />
-            </div>
+            </StyleRoot>
         );
     }
 });

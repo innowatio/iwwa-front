@@ -209,7 +209,7 @@ var Alarms = React.createClass({
                     };
                 },
                 valueFormatter: function (value) {
-                    var date = moment(value, "x");
+                    var date = moment.utc(value, "x");
                     return (
                         <span style={{marginLeft: "20px"}}>
                             {date.locale("it").format("LLL")}

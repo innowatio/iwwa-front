@@ -6,6 +6,7 @@ var ReactDOM       = require("react-dom");
 var ReactTestUtils = require("react-addons-test-utils");
 var sinon          = require("sinon");
 var sinonChai      = require("sinon-chai");
+var MockStorage    = require("mock-localstorage");
 
 // Setup fake DOM
 global.document = jsdom.jsdom();
@@ -34,4 +35,4 @@ global.Dygraph = {};
 // Avoid `ENVIRONMENT is not defined` when running tests
 global.ENVIRONMENT = "";
 // empty localStorage for tests
-global.localStorage = {};
+global.localStorage = new MockStorage();

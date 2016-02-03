@@ -24,8 +24,8 @@ export const NUMBER_OF_SELECTED_TABS = "NUMBER_OF_SELECTED_TABS";
 // TODO: test this function
 function less (time1, time2) {
     return (
-        moment(time1, "hh:mm").toDate() <
-        moment(time2, "hh:mm").toDate()
+        moment.utc(time1, "hh:mm").toDate() <
+        moment.utc(time2, "hh:mm").toDate()
     );
 }
 
@@ -47,15 +47,15 @@ function creationRuleAlarm ({repetition, threshold}) {
         });
     }
     if (repetition.day) {
-        const day = moment(repetition.day);
+        const day = moment.utc(repetition.day);
         rule.$and.push({
             "date.monthDay": day.date(),
             "date.month": day.month(),
             "date.year": day.year()
         });
     }
-    const timeStart = moment(repetition.timeStart, "hh:mm");
-    const timeEnd = moment(repetition.timeEnd, "hh:mm");
+    const timeStart = moment.utc(repetition.timeStart, "hh:mm");
+    const timeEnd = moment.utc(repetition.timeEnd, "hh:mm");
     if (!less(repetition.timeEnd, repetition.timeStart)) {
         rule.$and.push({
             "date.hour": {
