@@ -30,6 +30,7 @@ var sitesCompare = React.createClass({
             <components.TemporalLineGraph
                 colors={[this.props.chart[0].source.color, colors.lineCompare]}
                 coordinates={this.getCoordinates() || []}
+                dateFilter={this.props.chart[0].date}
                 labels={this.getLabels()}
                 ref="temporalLineGraph"
                 site={this.props.sites[0] || Map()}

@@ -1,4 +1,4 @@
-require("unit-setup.js");
+import "unit-setup.js";
 
 import AlarmRepetitionModal from "components/alarm-repetition-modal/";
 

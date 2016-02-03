@@ -136,6 +136,15 @@ export function chart (state = defaultChartState, {type, payload}) {
         /*
         *   Upgrade all the selection with the selected date range.
         */
+        if (state[0].date.type === "dateCompare") {
+            return [{
+                ...state[0],
+                date: {
+                    ...payload,
+                    type: "dateFilter"
+                }
+            }];
+        }
         return state.map(stateObj => ({
             ...stateObj,
             date: {
@@ -160,8 +169,8 @@ export function chart (state = defaultChartState, {type, payload}) {
             sensorId: payload.sensorId,
             fullPath: [payload.siteId],
             date: {
-                start: moment(alarmDate).startOf("month").valueOf(),
-                end: moment(alarmDate).endOf("month").valueOf(),
+                start: moment.utc(alarmDate).startOf("month").valueOf(),
+                end: moment.utc(alarmDate).endOf("month").valueOf(),
                 type: "dateFilter"
             }
         }];

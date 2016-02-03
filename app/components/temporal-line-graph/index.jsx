@@ -29,16 +29,13 @@ var TemporalLineGraph = React.createClass({
             AppPropTypes.DygraphCoordinate
         ).isRequired,
         dateFilter: PropTypes.object,
-        // TODO: serve ancora?
-        dateWindow: PropTypes.arrayOf(PropTypes.number),
+        dateWindow: PropTypes.object,
         labels: PropTypes.array,
-        // TODO: serve ancora?
         lockInteraction: PropTypes.bool,
         showRangeSelector: PropTypes.bool,
         site: IPropTypes.map,
         xLabel: PropTypes.string,
         xLegendFormatter: PropTypes.func,
-        // TODO: serve ancora?
         xTicker: PropTypes.func,
         y2Label: PropTypes.string,
         yLabel: PropTypes.string
@@ -59,6 +56,21 @@ var TemporalLineGraph = React.createClass({
             [[0]] :
             props.coordinates
         );
+    },
+    getUnderlayForWeekEnd: function (canvas, area, g, date, dayFrom0Unix) {
+        if (
+            R.equals(moment.utc(date).format("YYYY-MM-DD"), moment.utc(date).day(6).format("YYYY-MM-DD"))
+        ) {
+            const dayBottomLeft = moment.utc(dayFrom0Unix ? dayFrom0Unix : date).startOf("day");
+            const dayTopRight = moment.utc(dayFrom0Unix ? dayFrom0Unix : date).add({days: 1}).endOf("day");
+            var bottomLeft = g.toDomCoords(dayBottomLeft, -20);
+            var topRight = g.toDomCoords(dayTopRight, +20);
+            var left = bottomLeft[0];
+            var right = topRight[0];
+
+            canvas.fillStyle = colors.greyBackground;
+            canvas.fillRect(left, area.y, right - left, area.h);
+        }
     },
     getOptionsFromProps: function (props) {
         var options = {
@@ -92,6 +104,7 @@ var TemporalLineGraph = React.createClass({
             var labels = this.getLabelsFromProps(props);
             var externalLabel = labels[2];
             var maxYRange = R.reduce(function (prev, elm) {
+                // Y axis is at the height of the max of y or y2
                 return elm.length === 2 || props.y2Label ? // TACCONATA
                 R.max(prev, elm[1][0]) :
                 R.max(R.max(prev, elm[1][0]), R.max(prev, elm[2][0]));
@@ -103,32 +116,44 @@ var TemporalLineGraph = React.createClass({
             }
             props.y2Label ? options.series[externalLabel] = {axis: "y2"} : null;
         }
-        if (props.coordinates.length !== 0) {
-            var lastDate;
-            options.underlayCallback = function (canvas, area, g) {
-                props.coordinates.map(value => {
-                    var date = value[0];
-                    if (
-                        moment(lastDate).format("D") !== moment(date).format("D") &&
-                        R.equals(moment(date).format("YYYY-MM-DD"), moment(date).day(6).format("YYYY-MM-DD"))
-                    ) {
-                        lastDate = date;
-                        var bottomLeft = g.toDomCoords(moment(date).startOf("day"), -20);
-                        var topRight = g.toDomCoords(moment(date).add(1, "days").endOf("day"), +20);
-                        var left = bottomLeft[0];
-                        var right = topRight[0];
-
-                        canvas.fillStyle = colors.greyBackground;
-                        canvas.fillRect(left, area.y, right - left, area.h);
-                    }
-                });
+        if (props.coordinates.length !== 0 && !props.dateWindow && R.isEmpty(props.dateFilter)) {
+            const dateStart = props.coordinates[0][0];
+            const dateEnd = R.last(props.coordinates)[0];
+            options.underlayCallback = (canvas, area, g) => {
+                const numberOfDayInGraph = moment.utc(dateEnd).diff(dateStart, "days");
+                for (var i=0; i<=numberOfDayInGraph; i++) {
+                    const day = moment.utc(dateStart).add({days: i});
+                    this.getUnderlayForWeekEnd(canvas, area, g, day);
+                }
+            };
+        }
+        if (!R.isEmpty(props.dateFilter)) {
+            const date = props.dateFilter;
+            options.underlayCallback = (canvas, area, g) => {
+                const numberOfDayInGraph = moment.utc(date.end).diff(date.start, "days");
+                for (var i=0; i<=numberOfDayInGraph; i++) {
+                    const day = moment.utc(date.start).add({days: i});
+                    this.getUnderlayForWeekEnd(canvas, area, g, day);
+                }
+            };
+        }
+        if (props.dateWindow) {
+            const dateStart = props.dateWindow.start;
+            options.underlayCallback = (canvas, area, g) => {
+                for (var i=0; i<=props.dateWindow.dayToAdd; i++) {
+                    const day = moment.utc(dateStart).add({days: i});
+                    const dayFrom0Unix = moment.utc(0).add({days: i});
+                    this.getUnderlayForWeekEnd(canvas, area, g, day, dayFrom0Unix);
+                }
             };
         }
         if (props.colors) {
             options.colors = props.colors;
         }
-        if (R.contains("start", R.keys(props.dateFilter))) {
+        if (props.dateFilter && props.dateFilter.type === "dateFilter") {
             options.dateWindow = [props.dateFilter.start, props.dateFilter.end];
+        } else if (props.dateWindow) {
+            options.dateWindow = props.dateWindow.dateArray;
         } else {
             const {max, min} = props.coordinates.reduce((acc, coordinate) => {
                 return {

@@ -52,6 +52,12 @@ var DatefilterMonthlyModal = React.createClass({
             });
         }
     },
+    defaultStartDate: function () {
+        return moment().startOf("month").toDate();
+    },
+    defaultEndDate: function () {
+        return moment().endOf("month").toDate();
+    },
     getDefault: function (valueObject, key, defaultValue) {
         var defaultTo = R.defaultTo(defaultValue);
 
@@ -77,12 +83,6 @@ var DatefilterMonthlyModal = React.createClass({
             showModal: false
         });
     },
-    defaultStartDate: function () {
-        return moment().startOf("month")._d;
-    },
-    defaultEndDate: function () {
-        return moment().endOf("month")._d;
-    },
     open: function () {
         this.setState({
             custom: false,
@@ -102,8 +102,8 @@ var DatefilterMonthlyModal = React.createClass({
         });
     },
     setDate: function (dateValue) {
-        var startDate = moment(dateValue)._d;
-        var endDate = moment(dateValue).endOf("month")._d;
+        var startDate = moment(dateValue).toDate();
+        var endDate = moment(dateValue).endOf("month").toDate();
         this.setState({
             value: {
                 start: startDate,
