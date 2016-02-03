@@ -81,6 +81,9 @@ var LoginView = React.createClass({
                                 background: color(colors.darkBlack).alpha(0.1).rgbString(),
                                 color: colors.white
                             },
+                            ".form-control": {
+                                height: "60px"
+                            },
                             ".form-control:focus": {
                                 boxShadow: "none"
                             },
