@@ -9,17 +9,17 @@ var LoginView         = require("./login-view");
 var PasswordResetView = require("./password-reset-view");
 
 
-var backgroundKeyFrames = Radium.keyframes({
-    "0%": {
-        backgroundPosition: "0% 50%"
-    },
-    "50%": {
-        backgroundPosition: "100% 50"
-    },
-    "100%": {
-        backgroundPosition:"0% 50%"
-    }
-});
+// var backgroundKeyFrames = Radium.keyframes({
+//     "0%": {
+//         backgroundPosition: "0% 50%"
+//     },
+//     "50%": {
+//         backgroundPosition: "100% 50"
+//     },
+//     "100%": {
+//         backgroundPosition:"0% 50%"
+//     }
+// });
 
 /*
 
@@ -64,7 +64,7 @@ var backgroundKeyFrames = Radium.keyframes({
 var styles = {
     overlay: {
         animation: "x 13s ease infinite",
-        animationName: backgroundKeyFrames,
+        // animationName: backgroundKeyFrames,
         backgroundImage: `url(${assetsPathTo("restyling/images/logo_big.png")}), linear-gradient(235deg, #3e50b4, #ff3f80, #25c5d9, #8b9dff, #8b9dff)`,
         backgroundSize: "cover",
         position: "fixed",
@@ -160,13 +160,12 @@ var LoginModal = React.createClass({
         );
     },
     render: function () {
-        console.log(backgroundKeyFrames);
         return this.props.isOpen ? (
             <div style={R.merge(styles.overlay, {zIndex: 10000000000})}>
                 <div style={styles.body}>
                     <div style={styles.title.container}>
                         <div>
-                            <img src={assetsPathTo("images/logo_login.png")} style={styles.title.logo} />
+                            <img src={assetsPathTo("restyling/images/logo_login.png")} style={styles.title.logo} />
                         </div>
                         <div style={styles.title.firstLine}>{"e-coach"}</div>
                         <div style={styles.title.secondLine}>{"Innowatio"}</div>
