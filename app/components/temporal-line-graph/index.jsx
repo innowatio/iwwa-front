@@ -152,6 +152,8 @@ var TemporalLineGraph = React.createClass({
         }
         if (props.dateFilter && props.dateFilter.type === "dateFilter") {
             options.dateWindow = [props.dateFilter.start, props.dateFilter.end];
+        } else if (props.dateWindow) {
+            options.dateWindow = props.dateWindow.dateArray;
         } else {
             const {max, min} = props.coordinates.reduce((acc, coordinate) => {
                 return {
@@ -163,9 +165,6 @@ var TemporalLineGraph = React.createClass({
             if (delta >= oneMonthInMilliseconds) {
                 options.dateWindow = [max -  oneMonthInMilliseconds, max];
             }
-        }
-        if (props.dateWindow) {
-            options.dateWindow = props.dateWindow.dateArray;
         }
         if (props.lockInteraction) {
             options.interactionModel = {};

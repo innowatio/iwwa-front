@@ -66,8 +66,8 @@ var DatefilterMonthlyModal = React.createClass({
     confirmAndClose: function () {
         // Transform in UNIX timestamp for the redux-state.
         const date = {
-            start: moment.utc(this.state.value.start).valueOf(),
-            end: moment.utc(this.state.value.end).valueOf()
+            start: moment(this.state.value.start).valueOf(),
+            end: moment(this.state.value.end).valueOf()
         };
         this.props.onChange(date);
         this.close();
@@ -78,10 +78,10 @@ var DatefilterMonthlyModal = React.createClass({
         });
     },
     defaultStartDate: function () {
-        return moment.utc().startOf("month")._d;
+        return moment().startOf("month")._d;
     },
     defaultEndDate: function () {
-        return moment.utc().endOf("month")._d;
+        return moment().endOf("month")._d;
     },
     open: function () {
         this.setState({
@@ -102,8 +102,8 @@ var DatefilterMonthlyModal = React.createClass({
         });
     },
     setDate: function (dateValue) {
-        var startDate = moment.utc(dateValue)._d;
-        var endDate = moment.utc(dateValue).endOf("month")._d;
+        var startDate = moment(dateValue)._d;
+        var endDate = moment(dateValue).endOf("month")._d;
         this.setState({
             value: {
                 start: startDate,
