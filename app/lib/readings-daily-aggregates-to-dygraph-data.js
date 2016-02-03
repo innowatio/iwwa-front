@@ -5,7 +5,7 @@ import decimate from "./decimate-data-to-dygraph";
 
 export const EMPTY = Symbol("EMPTY");
 export const ALMOST_ZERO = 0.01;
-const ONE_MINUTE_IN_MILLISECOND = 60 * 1000;
+const ONE_MINUTE_IN_MS = 60 * 1000;
 
 function getFilterFn (filter) {
     return memoize(aggregate => (
@@ -26,7 +26,8 @@ function getOffsetDays (aggregate, filters, index) {
     const day = moment(aggregate.get("day")).valueOf();
     return filters[0].date.type === "dateCompare" ?
     moment(day).diff(moment(filters[index].date.start)) :
-    day;
+    // This add the offset from the local to the UTC time.
+    day + (moment().utcOffset() * ONE_MINUTE_IN_MS);
 }
 
 export function groupByDate (filters) {
@@ -41,7 +42,7 @@ export function groupByDate (filters) {
         const measurementsDeltaInMs = aggregate.get("measurementsDeltaInMs");
         const measurementValuesArray = aggregate.get("measurementValues").split(",");
         measurementValuesArray.forEach((value, offset) => {
-            const date = offsetDays + (offset * measurementsDeltaInMs) + (moment().utcOffset() * ONE_MINUTE_IN_MILLISECOND);
+            const date = offsetDays + (offset * measurementsDeltaInMs);
             group[date] = group[date] || [new Date(date)].concat(defaultGroup);
             const numericValue = parseFloat(value);
             group[date][index + 1] = [

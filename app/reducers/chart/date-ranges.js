@@ -18,8 +18,6 @@ export function getDateRangesCompare ({period, dateOne}) {
             moment(dateOne).subtract({weeks: 5}).startOf("isoWeek").valueOf();
         const numberOfWeek = numberOfWeeksToAdd(startOne, startTwo);
         const dateArray = [startOne, startTwo];
-        console.log(numberOfWeek);
-        console.log(dateArray);
         return map(dateStart => ({
             start: dateStart,
             end:  endDate(dateStart, numberOfWeek)

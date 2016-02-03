@@ -31,25 +31,32 @@ var DateCompare = React.createClass({
         ]);
     },
     getDateWindow: function () {
-        const {period} = this.props.chart[0].date;
+        const {period, start} = this.props.chart[0].date;
         if (period.key === "years" || period.key === "months") {
             // Get date window from 0 (1 Jan 1970) to 5 or 6 weeks later (this is
             // found from the function `weeksToAdd`).
-            return [0, moment(0).add(this.weeksToAdd(), "weeks").valueOf()];
+            return {
+                start,
+                dayToAdd: this.weeksToAdd() * 7,
+                dateArray: [0, moment(0).add({weeks: this.weeksToAdd()}).valueOf()]
+            };
         }
-        return [0, moment(0).add(1, period.key).valueOf()];
+        return {
+            start,
+            dayToAdd: this.weeksToAdd() * 7,
+            dateArray: [0, moment(0).add({[period.key]: 1}).valueOf()]
+        };
     },
     weeksToAdd: function () {
         const {start, end} = this.props.chart[0].date;
         return moment(end).diff(start, "weeks");
     },
     xLegendFormatter: function (value) {
-        var date = moment(value);
         return [
             "<b style='color:black;'>",
-            "Giorno " + date.format("DD"),
+            "Giorno " + moment(value).format("DD"),
             ", ",
-            "ore " + date.format("HH:mm"),
+            "ore " + moment(value).format("HH:mm"),
             "</b>"
         ].join("");
     },
@@ -95,7 +102,7 @@ var DateCompare = React.createClass({
         // }
         if (period.key === "months" || period.key === "years") {
             // Range of 5 or 6 weeks --> (5 || 6) * 7 days.
-            return range(0, this.weeksToAdd() * 7).map(function (n) {
+            return range(0, (this.weeksToAdd() * 7) + 1).map(n => {
                 const delta = moment(0).add(n, "days").valueOf();
                 var rangeOne = moment(dates[0].start).add(n, "days");
                 var rangeTwo = moment(dates[1].start).add(n, "days");
