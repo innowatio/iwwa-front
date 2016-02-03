@@ -344,8 +344,43 @@ describe("`chart` reducer [CASE: multiple object in default state array]", () =>
                     start: 1498749876543,
                     end: 1516543214890
                 }
-            }
-        ]);
+            }]);
+        });
+
+        it("should return the new filter of the date, with `{type: `dateFilter`}` [CASE: `dateCompare`]", () => {
+            const chartStateFirstObject = {
+                ...defaultChartStateFirstObject,
+                date: {
+                    start: 1498749876543,
+                    end: 1516543214890,
+                    type: "dateCompare"
+                }
+            };
+            const chartStateSecondObject = {
+                ...defaultChartStateFirstObject,
+                date: {
+                    start: 1488749876543,
+                    end: 1506543214890,
+                    type: "dateCompare"
+                }
+            };
+            const valuePassedFromAction = {
+                type: "SELECT_DATE_RANGES",
+                payload: {
+                    type: "dateFilter",
+                    start: 1468749876543,
+                    end: 1476543214890
+                }
+            };
+            const ret = chart([chartStateFirstObject, chartStateSecondObject], valuePassedFromAction);
+            expect(ret).to.deep.equal([{
+                ...defaultChartStateFirstObject,
+                date: {
+                    type: "dateFilter",
+                    start: 1468749876543,
+                    end: 1476543214890
+                }
+            }]);
         });
 
     });
