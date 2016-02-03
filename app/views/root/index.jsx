@@ -97,13 +97,6 @@ var Root = React.createClass({
             )
         });
     },
-    renderChildren: function () {
-        return React.cloneElement(this.props.children, {
-            asteroid: asteroid,
-            collections: this.state.collections,
-            localStorage: this.state.localStorage
-        });
-    },
     render: function () {
         var titleView = this.props.children.props.route.titleView || "";
         return (
@@ -127,7 +120,10 @@ var Root = React.createClass({
                     R.merge(styles.content, {width: `calc(100% - ${measures.sidebarShoulderWidth})`, float: "right"})}
                 >
                     <components.PageContainer
-                        children={this.renderChildren()}
+                        asteroid={asteroid}
+                        children={this.props.children}
+                        collections={this.state.collections}
+                        localStorage={this.state.localStorage}
                         reduxState={this.props.reduxState}
                     />
                 </div>

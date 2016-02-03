@@ -1,17 +1,25 @@
-var R     = require("ramda");
-var React = require("react");
+var IPropTypes = require("react-immutable-proptypes");
+var R          = require("ramda");
+var React      = require("react");
 
 var icons      = require("lib/icons_restyling");
 var styles     = require("lib/styles_restyling");
 
 var PageContainer = React.createClass({
     propTypes: {
+        asteroid: React.PropTypes.object,
         children: React.PropTypes.node,
+        collections: IPropTypes.map.isRequired,
+        localStorage: React.PropTypes.object,
         reduxState: React.PropTypes.object.isRequired,
         style: React.PropTypes.object
     },
     defaultProps: {
         style: {}
+    },
+    componentDidMount: function () {
+        this.props.asteroid.subscribe("sensors");
+        this.props.asteroid.subscribe("sites");
     },
     getTitleComponent: function (title) {
         return (
@@ -22,37 +30,48 @@ var PageContainer = React.createClass({
                 <img className="pull-right" src={icons.iconSettings} style={{marginTop: "-20px"}}/>
             </div>);
     },
-    getTitleForChartOrLive: function (chart) {
-        const path = chart.fullPath;
-        return path ?
-            [path[0], path.length > 1 ? R.last(path) : undefined]
-                .filter(value => !R.isNil(value))
-                .join(" · ") :
-            "";
+    getTitleForChartOrLive: function (reduxViewState) {
+        const path = reduxViewState.fullPath;
+        return path ?[
+            this.getSiteName(path[0]),
+            path.length > 1 ?
+                this.getSensorName(R.last(path)) :
+                undefined
+        ]
+        .filter(value => !R.isNil(value))
+        .join(" · ") :
+        "";
+    },
+    getSensorName: function (sensorId) {
+        return this.props.collections.getIn(["sensors", sensorId, "description"]);
+    },
+    getSiteName: function (siteId) {
+        return this.props.collections.getIn(["sites", siteId, "name"]);
+    },
+    renderChildren: function () {
+        return React.cloneElement(this.props.children, {
+            asteroid: this.props.asteroid,
+            collections: this.props.collections,
+            localStorage: this.props.localStorage
+        });
     },
     renderTitle: function () {
-        var locationName = R.path(["props", "route", "name"], this.props.children);
+        const locationName = R.path(["props", "route", "name"], this.props.children);
+        var locationLabel = "";
 
         if (locationName === "chart") {
             const reduxChart = this.props.reduxState.chart;
 
-            return this.getTitleComponent(
-                R.map(this.getTitleForChartOrLive, reduxChart).join(" - ")
-            );
+            locationLabel = R.map(this.getTitleForChartOrLive, reduxChart).join(" - ");
         } else if (locationName === "live") {
             const reduxRealTime = this.props.reduxState.realTime;
 
-            return this.getTitleComponent(
-                R.map(this.getTitleForChartOrLive, reduxRealTime).join(" - ")
-            );
-        } else {
-            return ;
+            locationLabel = this.getTitleForChartOrLive(reduxRealTime);
         }
+
+        return this.getTitleComponent(locationLabel);
     },
     render: function () {
-        console.log("this.props.reduxState");
-        console.log(this.props);
-        console.log(R.path(["props", "route"], this.props.children));
         const {style} = this.props;
         return (
             <div
@@ -61,7 +80,7 @@ var PageContainer = React.createClass({
             >
                 {this.renderTitle()}
                 <div>
-                    {this.props.children}
+                    {this.renderChildren()}
                 </div>
             </div>
         );
