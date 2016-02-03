@@ -1,6 +1,6 @@
 var color = require("color");
 
-var colors   = require("lib/colors");
+var colors   = require("lib/colors_restyling");
 var measures = require("lib/measures");
 
 exports.base = {
