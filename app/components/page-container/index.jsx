@@ -21,26 +21,16 @@ var PageContainer = React.createClass({
         this.props.asteroid.subscribe("sensors");
         this.props.asteroid.subscribe("sites");
     },
-    getTitleComponent: function (title) {
-        return (
-            <div style={styles.titlePage}>
-                <h2 style={{fontSize: "18px", marginBottom: "0px", paddingTop: "18px"}}>
-                    {title}
-                </h2>
-                <img className="pull-right" src={icons.iconSettings} style={{marginTop: "-20px"}}/>
-            </div>);
-    },
     getTitleForChartOrLive: function (reduxViewState) {
         const path = reduxViewState.fullPath;
-        return path ?[
+        return path ? [
             this.getSiteName(path[0]),
             path.length > 1 ?
                 this.getSensorName(R.last(path)) :
-                undefined
-        ]
-        .filter(value => !R.isNil(value))
-        .join(" · ") :
-        "";
+                undefined]
+            .filter(value => !R.isNil(value))
+            .join(" · ") :
+            "";
     },
     getSensorName: function (sensorId) {
         return this.props.collections.getIn(["sensors", sensorId, "description"]);
@@ -69,7 +59,7 @@ var PageContainer = React.createClass({
             locationLabel = this.getTitleForChartOrLive(reduxRealTime);
         }
 
-        return this.getTitleComponent(locationLabel);
+        return locationLabel;
     },
     render: function () {
         const {style} = this.props;
@@ -78,7 +68,12 @@ var PageContainer = React.createClass({
                 {...this.props}
                 style={{...style}}
             >
-                {this.renderTitle()}
+                <div style={styles.titlePage}>
+                    <h2 style={{fontSize: "18px", marginBottom: "0px", paddingTop: "18px"}}>
+                        {this.renderTitle()}
+                    </h2>
+                    <img className="pull-right" src={icons.iconSettings} style={{marginTop: "-20px"}}/>
+                </div>
                 <div>
                     {this.renderChildren()}
                 </div>
