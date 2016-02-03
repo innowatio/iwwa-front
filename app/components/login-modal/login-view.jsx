@@ -72,7 +72,7 @@ var LoginView = React.createClass({
                         rules={{
                             ".form-group": {
                                 marginBottom: "0px",
-                                border: "solid 1px " + color(colors.white).alpha(0.3).rgbString(),
+                                border: "solid 1px " + color(colors.white).alpha(0.3).rgbString()
                             },
                             ".form-group div, .form-group span, .form-group input": {
                                 border: "0px",
