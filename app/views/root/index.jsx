@@ -1,6 +1,6 @@
 var R         = require("ramda");
-var Radium    = require("radium");
 var React     = require("react");
+import {connect} from "react-redux";
 
 var asteroid          = require("lib/asteroid");
 var colors            = require("lib/colors_restyling");
@@ -47,7 +47,8 @@ var styles = {
 
 var Root = React.createClass({
     propTypes: {
-        children: React.PropTypes.node
+        children: React.PropTypes.node,
+        reduxState: React.PropTypes.object
     },
     mixins: [
         asteroid.getControllerViewMixin(),
@@ -127,6 +128,7 @@ var Root = React.createClass({
                 >
                     <components.PageContainer
                         children={this.renderChildren()}
+                        reduxState={this.props.reduxState}
                     />
                 </div>
                 <div style={styles.footer}>
@@ -141,4 +143,9 @@ var Root = React.createClass({
     }
 });
 
-module.exports = Radium(Root);
+function mapStateToProps (state) {
+    return {
+        reduxState: state
+    };
+}
+module.exports = connect(mapStateToProps)(Root);
