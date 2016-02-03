@@ -1,6 +1,5 @@
 var Radium = require("radium");
 var React  = require("react");
-var R      = require("ramda");
 
 var components        = require("components");
 var assetsPathTo      = require("lib/assets-path-to");
@@ -8,71 +7,41 @@ var colors            = require("lib/colors_restyling");
 var LoginView         = require("./login-view");
 var PasswordResetView = require("./password-reset-view");
 
-
-// var backgroundKeyFrames = Radium.keyframes({
-//     "0%": {
-//         backgroundPosition: "0% 50%"
-//     },
-//     "50%": {
-//         backgroundPosition: "100% 50"
-//     },
-//     "100%": {
-//         backgroundPosition:"0% 50%"
-//     }
-// });
-
-/*
-
-    TODO Fix animation
-
-    animation: "animation 13s ease infinite",
-    animationName: animationKeyFrames,
-
-
-    Original CSS
-
-    background: linear-gradient(235deg, #3e50b4, #ff3f80, #25c5d9, #8b9dff, #8b9dff);
-    background-size: 1000% 1000%;
-
-    -webkit-animation: AnimationName 0s ease infinite;
-    -moz-animation: AnimationName 0s ease infinite;
-    animation: AnimationName 0s ease infinite;
-
-    @-webkit-keyframes AnimationName {
-        0%{background-position:14% 0%}
-        50%{background-position:87% 100%}
-        100%{background-position:14% 0%}
+const backgroundKeyFrames = Radium.keyframes({
+    "0%": {
+        backgroundPosition: "0% 50%"
+    },
+    "50%": {
+        backgroundPosition: "100% 50%"
+    },
+    "100%": {
+        backgroundPosition: "0% 50%"
     }
-    @-moz-keyframes AnimationName {
-        0%{background-position:14% 0%}
-        50%{background-position:87% 100%}
-        100%{background-position:14% 0%}
-    }
-    @keyframes AnimationName {
-        0%{background-position:14% 0%}
-        50%{background-position:87% 100%}
-        100%{background-position:14% 0%}
-    }
-
-
-        animation: "x 13s ease infinite",
-        animationName: backgroundKeyFrames,
-        backgroundSize: "cover",
-
-*/
+});
 
 var styles = {
-    overlay: {
-        animation: "x 13s ease infinite",
-        // animationName: backgroundKeyFrames,
-        backgroundImage: `url(${assetsPathTo("restyling/images/logo_big.png")}), linear-gradient(235deg, #3e50b4, #ff3f80, #25c5d9, #8b9dff, #8b9dff)`,
-        backgroundSize: "cover",
+    backgroundImageOverlay: {
         position: "fixed",
         top: "0px",
         left: "0px",
         height: "100%",
         width: "100%",
-        zIndex: 10000,
+        zIndex: 100000000000,
+        overflowY: "scroll",
+        backgroundImage: `url(${assetsPathTo("restyling/images/logo_big.png")})`,
+        backgroundSize: "cover"
+    },
+    overlay: {
+        animation: `x 16s linear infinite`,
+        animationName: backgroundKeyFrames,
+        backgroundImage: "linear-gradient(235deg, #3e50b4, #8b9dff, #ff3f80, #25c5d9, #8b9dff)",
+        backgroundSize: "1000% 1000%",
+        position: "fixed",
+        top: "0px",
+        left: "0px",
+        height: "100%",
+        width: "100%",
+        zIndex: 10000000000,
         overflowY: "scroll"
     },
     body: {
@@ -161,24 +130,26 @@ var LoginModal = React.createClass({
     },
     render: function () {
         return this.props.isOpen ? (
-            <div style={R.merge(styles.overlay, {zIndex: 10000000000})}>
-                <div style={styles.body}>
-                    <div style={styles.title.container}>
-                        <div>
-                            <img src={assetsPathTo("restyling/images/logo_login.png")} style={styles.title.logo} />
+            <div style={styles.overlay}>
+                <div style={styles.backgroundImageOverlay}>
+                    <div style={styles.body}>
+                        <div style={styles.title.container}>
+                            <div>
+                                <img src={assetsPathTo("restyling/images/logo_login.png")} style={styles.title.logo} />
+                            </div>
+                            <div style={styles.title.firstLine}>{"e-coach"}</div>
+                            <div style={styles.title.secondLine}>{"Innowatio"}</div>
                         </div>
-                        <div style={styles.title.firstLine}>{"e-coach"}</div>
-                        <div style={styles.title.secondLine}>{"Innowatio"}</div>
+                        <components.Spacer direction="v" size={64} />
+                        <div style={styles.activeView}>
+                            {this.renderActiveView()}
+                        </div>
+                        <components.Spacer direction="v" size={16} />
+                        <div onClick={this.switchView} style={styles.viewSwitcher}>
+                            {this.renderViewSwitcherText()}
+                        </div>
+                        <components.Spacer direction="v" size={20} />
                     </div>
-                    <components.Spacer direction="v" size={64} />
-                    <div style={styles.activeView}>
-                        {this.renderActiveView()}
-                    </div>
-                    <components.Spacer direction="v" size={16} />
-                    <div onClick={this.switchView} style={styles.viewSwitcher}>
-                        {this.renderViewSwitcherText()}
-                    </div>
-                    <components.Spacer direction="v" size={20} />
                 </div>
             </div>
         ) : null;
