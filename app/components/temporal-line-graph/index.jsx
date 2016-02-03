@@ -59,10 +59,10 @@ var TemporalLineGraph = React.createClass({
     },
     getUnderlayForWeekEnd: function (canvas, area, g, date, dayFrom0Unix) {
         if (
-            R.equals(moment(date).format("YYYY-MM-DD"), moment(date).day(6).format("YYYY-MM-DD"))
+            R.equals(moment.utc(date).format("YYYY-MM-DD"), moment.utc(date).day(6).format("YYYY-MM-DD"))
         ) {
-            const dayBottomLeft = moment(dayFrom0Unix ? dayFrom0Unix : date).startOf("day");
-            const dayTopRight = moment(dayFrom0Unix ? dayFrom0Unix : date).add({days: 1}).endOf("day");
+            const dayBottomLeft = moment.utc(dayFrom0Unix ? dayFrom0Unix : date).startOf("day");
+            const dayTopRight = moment.utc(dayFrom0Unix ? dayFrom0Unix : date).add({days: 1}).endOf("day");
             var bottomLeft = g.toDomCoords(dayBottomLeft, -20);
             var topRight = g.toDomCoords(dayTopRight, +20);
             var left = bottomLeft[0];
@@ -120,9 +120,9 @@ var TemporalLineGraph = React.createClass({
             const dateStart = props.coordinates[0][0];
             const dateEnd = R.last(props.coordinates)[0];
             options.underlayCallback = (canvas, area, g) => {
-                const numberOfDayInGraph = moment(dateEnd).diff(dateStart, "days");
+                const numberOfDayInGraph = moment.utc(dateEnd).diff(dateStart, "days");
                 for (var i=0; i<=numberOfDayInGraph; i++) {
-                    const day = moment(dateStart).add({days: i});
+                    const day = moment.utc(dateStart).add({days: i});
                     this.getUnderlayForWeekEnd(canvas, area, g, day);
                 }
             };
@@ -130,9 +130,9 @@ var TemporalLineGraph = React.createClass({
         if (!R.isEmpty(props.dateFilter)) {
             const date = props.dateFilter;
             options.underlayCallback = (canvas, area, g) => {
-                const numberOfDayInGraph = moment(date.end).diff(date.start, "days");
+                const numberOfDayInGraph = moment.utc(date.end).diff(date.start, "days");
                 for (var i=0; i<=numberOfDayInGraph; i++) {
-                    const day = moment(date.start).add({days: i});
+                    const day = moment.utc(date.start).add({days: i});
                     this.getUnderlayForWeekEnd(canvas, area, g, day);
                 }
             };
@@ -141,8 +141,8 @@ var TemporalLineGraph = React.createClass({
             const dateStart = props.dateWindow.start;
             options.underlayCallback = (canvas, area, g) => {
                 for (var i=0; i<=props.dateWindow.dayToAdd; i++) {
-                    const day = moment(dateStart).add({days: i});
-                    const dayFrom0Unix = moment(0).add({days: i});
+                    const day = moment.utc(dateStart).add({days: i});
+                    const dayFrom0Unix = moment.utc(0).add({days: i});
                     this.getUnderlayForWeekEnd(canvas, area, g, day, dayFrom0Unix);
                 }
             };

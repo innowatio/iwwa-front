@@ -113,16 +113,22 @@ var Chart = React.createClass({
         // Query for date-compare
         if (dateFirstChartState.type === "dateCompare") {
             const dateSecondChartState = props.chart[1].date;
-            dateStart = [moment(dateFirstChartState.start).format("YYYY-MM-DD"), moment(dateSecondChartState.start).format("YYYY-MM-DD")];
-            dateEnd = [moment(dateFirstChartState.end).format("YYYY-MM-DD"), moment(dateSecondChartState.end).format("YYYY-MM-DD")];
+            dateStart = [
+                moment.utc(dateFirstChartState.start).format("YYYY-MM-DD"),
+                moment.utc(dateSecondChartState.start).format("YYYY-MM-DD")
+            ];
+            dateEnd = [
+                moment.utc(dateFirstChartState.end).format("YYYY-MM-DD"),
+                moment.utc(dateSecondChartState.end).format("YYYY-MM-DD")
+            ];
         // Query for date-filter
         } else if (dateFirstChartState.type === "dateFilter") {
-            dateStart = moment(dateFirstChartState.start).format("YYYY-MM-DD");
-            dateEnd = moment(dateFirstChartState.end).format("YYYY-MM-DD");
+            dateStart = moment.utc(dateFirstChartState.start).format("YYYY-MM-DD");
+            dateEnd = moment.utc(dateFirstChartState.end).format("YYYY-MM-DD");
         } else {
             // If no data is selected, is displayed the past month.
-            dateStart = moment().startOf("month").format("YYYY-MM-DD");
-            dateEnd = moment().endOf("month").format("YYYY-MM-DD");
+            dateStart = moment.utc().startOf("month").format("YYYY-MM-DD");
+            dateEnd = moment.utc().endOf("month").format("YYYY-MM-DD");
         }
         const sensors = props.chart.map(singleSelection => singleSelection.sensorId);
         const measurementTypes = props.chart.map(singleSelection => singleSelection.measurementType.key);

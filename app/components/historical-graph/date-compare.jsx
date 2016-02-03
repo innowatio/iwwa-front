@@ -26,8 +26,8 @@ var DateCompare = React.createClass({
     getLabels: function () {
         const dates = this.getDatesFromChartState();
         return ["Data"].concat([
-            moment(dates[0].start).format("MMM DD, YYYY"),
-            moment(dates[1].start).format("MMM DD, YYYY")
+            moment.utc(dates[0].start).format("MMM DD, YYYY"),
+            moment.utc(dates[1].start).format("MMM DD, YYYY")
         ]);
     },
     getDateWindow: function () {
@@ -38,25 +38,21 @@ var DateCompare = React.createClass({
             return {
                 start,
                 dayToAdd: this.weeksToAdd() * 7,
-                dateArray: [0, moment(0).add({weeks: this.weeksToAdd()}).valueOf()]
+                dateArray: [0, moment.utc(0).add({weeks: this.weeksToAdd()}).valueOf()]
             };
         }
-        return {
-            start,
-            dayToAdd: this.weeksToAdd() * 7,
-            dateArray: [0, moment(0).add({[period.key]: 1}).valueOf()]
-        };
+        return {};
     },
     weeksToAdd: function () {
         const {start, end} = this.props.chart[0].date;
-        return moment(end).diff(start, "weeks");
+        return moment.utc(end).diff(start, "weeks");
     },
     xLegendFormatter: function (value) {
         return [
             "<b style='color:black;'>",
-            "Giorno " + moment(value).format("DD"),
+            "Giorno " + moment.utc(value).format("DD"),
             ", ",
-            "ore " + moment(value).format("HH:mm"),
+            "ore " + moment.utc(value).format("HH:mm"),
             "</b>"
         ].join("");
     },
@@ -76,9 +72,9 @@ var DateCompare = React.createClass({
         // if (period.key === "days") {
         //     // Range of 24h.
         //     return range(0, 25).map(n => {
-        //         const delta = moment(0).add(n, "hours").valueOf();
-        //         var rangeOne = moment(dates[0].start).add(n, "hours");
-        //         var rangeTwo = moment(dates[1].start).add(n, "hours");
+        //         const delta = moment.utc(0).add(n, "hours").valueOf();
+        //         var rangeOne = moment.utc(dates[0].start).add(n, "hours");
+        //         var rangeTwo = moment.utc(dates[1].start).add(n, "hours");
         //         if (n === 0) {
         //             // In the first tick of the day, write day and month.
         //             rangeOne.format("DD MMM");
@@ -94,42 +90,42 @@ var DateCompare = React.createClass({
         // if (period.key === "weeks") {
         //     // Range of 1 week --> 7 days.
         //     return range(0, 8).map(function (n) {
-        //         const delta = moment(0).add(n, "days").valueOf();
-        //         const rangeOne = moment(dates[0].start).add(n, "days").format("DD MMM");
-        //         const rangeTwo = moment(dates[1].start).add(n, "days").format("DD MMM");
+        //         const delta = moment.utc(0).add(n, "days").valueOf();
+        //         const rangeOne = moment.utc(dates[0].start).add(n, "days").format("DD MMM");
+        //         const rangeTwo = moment.utc(dates[1].start).add(n, "days").format("DD MMM");
         //         return self.getXTickerLabel(delta, rangeOne, rangeTwo);
         //     });
         // }
         if (period.key === "months" || period.key === "years") {
             // Range of 5 or 6 weeks --> (5 || 6) * 7 days.
             return range(0, (this.weeksToAdd() * 7) + 1).map(n => {
-                const delta = moment(0).add(n, "days").valueOf();
-                var rangeOne = moment(dates[0].start).add(n, "days");
-                var rangeTwo = moment(dates[1].start).add(n, "days");
+                const delta = moment.utc(0).add(n, "days").valueOf();
+                var rangeOne = moment.utc(dates[0].start).add(n, "days");
+                var rangeTwo = moment.utc(dates[1].start).add(n, "days");
                 if (n === 0 && period.key === "months") {
                     // In the first tick of the month, write the day and the month.
-                    rangeOne = moment(rangeOne).format("DD MMM");
-                    rangeTwo = moment(rangeTwo).format("DD MMM");
+                    rangeOne = moment.utc(rangeOne).format("DD MMM");
+                    rangeTwo = moment.utc(rangeTwo).format("DD MMM");
                 } else if (n === 0 && period.key === "years") {
                     // In the first tick of the year, write the year.
-                    rangeOne = moment(rangeOne).format("YYYY");
-                    rangeTwo = moment(rangeTwo).format("YYYY");
+                    rangeOne = moment.utc(rangeOne).format("YYYY");
+                    rangeTwo = moment.utc(rangeTwo).format("YYYY");
                 } else if (n === 1 && period.key === "years") {
                     // In the second tick of the year, write the day and the month.
-                    rangeOne = moment(rangeOne).format("DD MMM");
-                    rangeTwo = moment(rangeTwo).format("DD MMM");
+                    rangeOne = moment.utc(rangeOne).format("DD MMM");
+                    rangeTwo = moment.utc(rangeTwo).format("DD MMM");
                 } else if (rangeOne.format("DD") === "01") {
                     // If is the first of the month, write also the month.
-                    rangeOne = moment(rangeOne).format("DD MMM");
-                    rangeTwo = moment(rangeTwo).format("DD");
+                    rangeOne = moment.utc(rangeOne).format("DD MMM");
+                    rangeTwo = moment.utc(rangeTwo).format("DD");
                 } else if (rangeTwo.format("DD") === "01") {
                     // If is the first of the month, write also the month.
-                    rangeOne = moment(rangeOne).format("DD");
-                    rangeTwo = moment(rangeTwo).format("DD MMM");
+                    rangeOne = moment.utc(rangeOne).format("DD");
+                    rangeTwo = moment.utc(rangeTwo).format("DD MMM");
                 } else {
                     // In the other cases, write only the day
-                    rangeOne = moment(rangeOne).format("DD");
-                    rangeTwo = moment(rangeTwo).format("DD");
+                    rangeOne = moment.utc(rangeOne).format("DD");
+                    rangeTwo = moment.utc(rangeTwo).format("DD");
                 }
                 return self.getXTickerLabel(delta, rangeOne, rangeTwo);
             });

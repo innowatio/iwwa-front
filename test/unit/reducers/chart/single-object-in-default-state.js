@@ -126,12 +126,14 @@ describe("`chart` reducer [CASE: single object in default state array]", () => {
                         label: "Years",
                         key: "years"
                     },
-                    dateOne: 1449157137862
+                    dateOne: new Date("Thu Dec 03 2015 16:38:57 GMT+0100 (CET)").getTime()
                 }
             };
             const ret = chart(chartState, valuePassedFromAction);
-            const startOne = moment(1449157137862).startOf("month").day(1).valueOf();
-            const startTwo = moment(1449157137862).subtract({weeks: moment().weeksInYear()}).startOf("isoWeek").valueOf();
+            const startOne = moment.utc(valuePassedFromAction.payload.dateOne)
+                .startOf("month").weekday(1).valueOf();
+            const startTwo = moment.utc(valuePassedFromAction.payload.dateOne)
+                .startOf("isoWeek").subtract({weeks: moment.utc().weeksInYear()}).valueOf();
             expect(ret).to.deep.equal([{
                 ...defaultChartStateObject,
                 date: {
@@ -141,7 +143,7 @@ describe("`chart` reducer [CASE: single object in default state array]", () => {
                         key: "years"
                     },
                     start: startOne,
-                    end: moment(startOne).add({weeks: 5}).endOf("isoWeek").valueOf()
+                    end: moment.utc(startOne).add({weeks: 5}).endOf("isoWeek").valueOf()
                 }
             }, {
                 ...defaultChartStateObject,
@@ -152,7 +154,7 @@ describe("`chart` reducer [CASE: single object in default state array]", () => {
                         key: "years"
                     },
                     start: startTwo,
-                    end: moment(startTwo).add({weeks: 5}).endOf("isoWeek").valueOf()
+                    end: moment.utc(startTwo).add({weeks: 5}).endOf("isoWeek").valueOf()
                 }
             }]);
         });
@@ -298,8 +300,8 @@ describe("`chart` reducer [CASE: single object in default state array]", () => {
                 sensorId: "sensorId",
                 fullPath: ["site1"],
                 date: {
-                    start: moment(1516543214890).startOf("month").valueOf(),
-                    end: moment(1516543214890).endOf("month").valueOf(),
+                    start: moment.utc(1516543214890).startOf("month").valueOf(),
+                    end: moment.utc(1516543214890).endOf("month").valueOf(),
                     type: "dateFilter"
                 }
             }]);
