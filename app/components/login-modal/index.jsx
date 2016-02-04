@@ -9,13 +9,13 @@ var PasswordResetView = require("./password-reset-view");
 
 const backgroundKeyFrames = Radium.keyframes({
     "0%": {
-        backgroundPosition: "0% 50%"
+        backgroundPosition: "100% 0%"
     },
     "50%": {
-        backgroundPosition: "100% 50%"
+        backgroundPosition: "0% 100%"
     },
     "100%": {
-        backgroundPosition: "0% 50%"
+        backgroundPosition: "100% 0%"
     }
 });
 
@@ -32,11 +32,13 @@ var styles = {
         backgroundSize: "cover"
     },
     overlay: {
-        animation: `x 16s linear infinite`,
+        animation: "x 30s ease infinite",
         animationName: backgroundKeyFrames,
-        backgroundImage: "linear-gradient(235deg, #3e50b4, #8b9dff, #ff3f80, #25c5d9, #8b9dff)",
-        backgroundSize: "1000% 1000%",
-        position: "fixed",
+        animationDirection: "normal",
+        backgroundImage: "linear-gradient(235deg, #8a95c8, #5b72b3, #4554a1, #624899, #984898, #eb437f, #d26faa, #b08abc)",
+        backgroundSize: "2000% 2000%",
+        position: "absolute",
+        display: "block",
         top: "0px",
         left: "0px",
         height: "100%",
