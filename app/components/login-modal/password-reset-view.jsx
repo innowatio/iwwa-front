@@ -1,13 +1,41 @@
-var color     = require("color");
-var Radium    = require("radium");
-var React     = require("react");
-var bootstrap = require("react-bootstrap");
+import color from "color";
+import Radium, {Style} from "radium";
+import React, {PropTypes} from "react";
+import * as bootstrap from "react-bootstrap";
 
-var components = require("components");
-var colors     = require("lib/colors_restyling");
-var icons      = require("lib/icons");
+import components from "components";
+import colors from "lib/colors_restyling";
+import icons from "lib/icons";
+import string from "lib/string-it";
 
 var styles = {
+    radiumStylePasswordReset: {
+        ".form-group": {
+            marginBottom: "0px"
+        },
+        ".form-group div, .form-group span, .form-group input": {
+            border: "0px",
+            borderRadius: "0px !important",
+            boxShadow: "none",
+            background: color(colors.darkBlack).alpha(0.1).rgbString(),
+            color: colors.white
+        },
+        ".form-control:focus": {
+            boxShadow: "none"
+        },
+        "::-webkit-input-placeholder": {
+            color: colors.white
+        },
+        ":-moz-placeholder": { /* Firefox 18- */
+            color: colors.white
+        },
+        "::-moz-placeholder": {  /* Firefox 19+ */
+            color: colors.white
+        },
+        ":-ms-input-placeholder": {
+            color: colors.white
+        }
+    },
     inputs: {
         borderRadius: "6px",
         overflow: "hidden",
@@ -26,7 +54,7 @@ var styles = {
 
 var PasswordResetView = React.createClass({
     propTypes: {
-        asteroid: React.PropTypes.object.isRequired
+        asteroid: PropTypes.object.isRequired
     },
     getInitialState: function () {
         return {
@@ -75,33 +103,7 @@ var PasswordResetView = React.createClass({
             <div>
                 <div className="ac-login-modal-inputs" style={styles.inputs}>
                     <Radium.Style
-                        rules={{
-                            ".form-group": {
-                                marginBottom: "0px"
-                            },
-                            ".form-group div, .form-group span, .form-group input": {
-                                border: "0px",
-                                borderRadius: "0px !important",
-                                boxShadow: "none",
-                                background: color(colors.darkBlack).alpha(0.1).rgbString(),
-                                color: colors.white
-                            },
-                            ".form-control:focus": {
-                                boxShadow: "none"
-                            },
-                            "::-webkit-input-placeholder": {
-                                color: colors.white
-                            },
-                            ":-moz-placeholder": { /* Firefox 18- */
-                                color: colors.white
-                            },
-                            "::-moz-placeholder": {  /* Firefox 19+ */
-                                color: colors.white
-                            },
-                            ":-ms-input-placeholder": {
-                                color: colors.white
-                            }
-                        }}
+                        rules={styles.radiumStylePasswordReset}
                         scopeSelector=".ac-login-modal-inputs"
                     />
                     <bootstrap.Input
@@ -119,7 +121,7 @@ var PasswordResetView = React.createClass({
                     onClick={this.passwordReset}
                     style={styles.button}
                 >
-                    {"INVIA MAIL DI RESET"}
+                    {string.sendMailResetPswButton}
                 </components.Button>
                 {this.renderError()}
             </div>

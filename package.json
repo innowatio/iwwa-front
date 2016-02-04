@@ -89,6 +89,7 @@
     "history": "^1.17.0",
     "immutable": "^3.7.6",
     "intro.js": "^1.1.1",
+    "jsx-chai": "^2.0.0",
     "lodash.debounce": "^4.0.0",
     "lodash.throttle": "^4.0.0",
     "moment": "^2.11.1",

@@ -1,11 +1,12 @@
-var Radium = require("radium");
-var React  = require("react");
+import Radium from "radium";
+import React, {PropTypes} from "react";
 
-var components        = require("components");
-var assetsPathTo      = require("lib/assets-path-to");
-var colors            = require("lib/colors_restyling");
-var LoginView         = require("./login-view");
-var PasswordResetView = require("./password-reset-view");
+import components from "components";
+import assetsPathTo from "lib/assets-path-to";
+import LoginView from "./login-view";
+import PasswordResetView from "./password-reset-view";
+import colors from "lib/colors_restyling";
+import string from "lib/string-it";
 
 const backgroundKeyFrames = Radium.keyframes({
     "0%": {
@@ -87,8 +88,8 @@ var styles = {
 
 var LoginModal = React.createClass({
     propTypes: {
-        asteroid: React.PropTypes.object.isRequired,
-        isOpen: React.PropTypes.bool.isRequired
+        asteroid: PropTypes.object.isRequired,
+        isOpen: PropTypes.bool.isRequired
     },
     getInitialState: function () {
         return {
@@ -126,8 +127,8 @@ var LoginModal = React.createClass({
     renderViewSwitcherText: function () {
         return (
             this.state.activeView === "login" ?
-            "Password dimenticata?" :
-            "Torna alla login"
+            string.forgetPassword :
+            string.returnToLogin
         );
     },
     render: function () {
@@ -139,8 +140,8 @@ var LoginModal = React.createClass({
                             <div>
                                 <img src={assetsPathTo("restyling/images/logo_login.png")} style={styles.title.logo} />
                             </div>
-                            <div style={styles.title.firstLine}>{"e-coach"}</div>
-                            <div style={styles.title.secondLine}>{"Innowatio"}</div>
+                            <div style={styles.title.firstLine}>{string.appName}</div>
+                            <div style={styles.title.secondLine}>{string.innowatio}</div>
                         </div>
                         <components.Spacer direction="v" size={64} />
                         <div style={styles.activeView}>

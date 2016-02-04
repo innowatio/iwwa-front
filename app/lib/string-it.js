@@ -9,7 +9,18 @@ exports.titleAlarmThreshold       = "Soglia allarme";
 exports.titleAlarmActive          = "Attivo";
 exports.titleAlarmRepeat          = "Ripetizione";
 
-// Users page string
+// Login-modal
+exports.appName                = "e-coach";
+exports.innowatio              = "Innowatio";
+exports.loginErrorAlert        = "Login non riuscito: email o password errate";
+exports.accessButton           = "ACCEDI";
+exports.email                  = "Email";
+exports.password               = "Password";
+exports.forgetPassword         = "passwordReset";
+exports.returnToLogin          = "Torna alla login";
+exports.sendMailResetPswButton = "INVIA MAIL DI RESET";
+
+// Users page
 exports.roleTab            = "Seleziona un ruolo per assegnarlo a questo utente. E' possibile assegnare più di un ruolo per ogni utente.";
 exports.automaticReset     = "Reset automatico della password";
 exports.automaticEmail     = "Manda una email per il reset della password a ";

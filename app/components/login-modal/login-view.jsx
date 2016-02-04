@@ -1,13 +1,45 @@
-var color     = require("color");
-var Radium    = require("radium");
-var React     = require("react");
-var bootstrap = require("react-bootstrap");
+import color from "color";
+import Radium, {Style} from "radium";
+import React, {PropTypes} from "react";
+import * as bootstrap from "react-bootstrap";
 
-var components = require("components");
-var colors     = require("lib/colors_restyling");
-var icons      = require("lib/icons_restyling");
+import components from "components";
+import colors from "lib/colors_restyling";
+import icons from "lib/icons_restyling";
+import string from "lib/string-it";
 
 var styles = {
+    radiumStyleInput: {
+        ".form-group": {
+            marginBottom: "0px",
+            border: "solid 1px " + color(colors.white).alpha(0.3).rgbString()
+        },
+        ".form-group div, .form-group span, .form-group input": {
+            border: "0px",
+            borderRadius: "0px !important",
+            boxShadow: "none",
+            background: color(colors.darkBlack).alpha(0.1).rgbString(),
+            color: colors.white
+        },
+        ".form-control": {
+            height: "60px"
+        },
+        ".form-control:focus": {
+            boxShadow: "none"
+        },
+        "::-webkit-input-placeholder": {
+            color: color(colors.white).alpha(0.7).rgbString()
+        },
+        ":-moz-placeholder": { /* Firefox 18- */
+            color: color(colors.white).alpha(0.7).rgbString()
+        },
+        "::-moz-placeholder": {  /* Firefox 19+ */
+            color: color(colors.white).alpha(0.7).rgbString()
+        },
+        ":-ms-input-placeholder": {
+            color: color(colors.white).alpha(0.7).rgbString()
+        }
+    },
     inputs: {
         borderRadius: "15px",
         overflow: "hidden",
@@ -34,7 +66,7 @@ var styles = {
 
 var LoginView = React.createClass({
     propTypes: {
-        asteroid: React.PropTypes.object.isRequired
+        asteroid: PropTypes.object.isRequired
     },
     getInitialState: function () {
         return {
@@ -60,7 +92,7 @@ var LoginView = React.createClass({
                 bsStyle="danger"
                 style={styles.errorAlert}
             >
-                {"Login non riuscito: email o password errate"}
+                {string.errorAlert}
             </bootstrap.Alert>
         ) : null;
     },
@@ -68,51 +100,21 @@ var LoginView = React.createClass({
         return (
             <div>
                 <div className="ac-login-modal-inputs" style={styles.inputs}>
-                    <Radium.Style
-                        rules={{
-                            ".form-group": {
-                                marginBottom: "0px",
-                                border: "solid 1px " + color(colors.white).alpha(0.3).rgbString()
-                            },
-                            ".form-group div, .form-group span, .form-group input": {
-                                border: "0px",
-                                borderRadius: "0px !important",
-                                boxShadow: "none",
-                                background: color(colors.darkBlack).alpha(0.1).rgbString(),
-                                color: colors.white
-                            },
-                            ".form-control": {
-                                height: "60px"
-                            },
-                            ".form-control:focus": {
-                                boxShadow: "none"
-                            },
-                            "::-webkit-input-placeholder": {
-                                color: color(colors.white).alpha(0.7).rgbString()
-                            },
-                            ":-moz-placeholder": { /* Firefox 18- */
-                                color: color(colors.white).alpha(0.7).rgbString()
-                            },
-                            "::-moz-placeholder": {  /* Firefox 19+ */
-                                color: color(colors.white).alpha(0.7).rgbString()
-                            },
-                            ":-ms-input-placeholder": {
-                                color: color(colors.white).alpha(0.7).rgbString()
-                            }
-                        }}
+                    <Style
+                        rules={styles.radiumStyleInput}
                         scopeSelector=".ac-login-modal-inputs"
                     />
                     <bootstrap.Input
                         addonBefore={<img src={icons.iconUser} style={{height: "40px"}}/>}
                         bsSize="large"
-                        placeholder="Email"
+                        placeholder={string.email}
                         ref="email"
                         type="email"
                     />
                     <bootstrap.Input
                         addonBefore={<img src={icons.iconLock} style={{height: "40px"}}/>}
                         bsSize="large"
-                        placeholder="Password"
+                        placeholder={string.password}
                         ref="password"
                         type="password"
                     />
@@ -124,7 +126,7 @@ var LoginView = React.createClass({
                     onClick={this.login}
                     style={styles.loginButton}
                 >
-                    {"ACCEDI"}
+                    {string.accessButton}
                 </components.Button>
                 {this.renderError()}
             </div>
