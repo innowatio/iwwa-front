@@ -34,8 +34,8 @@ exports.flexCentered = {
 };
 
 exports.mainDivStyle = {
-    width: "96%",
-    marginLeft: "2%",
+    width: "98%",
+    marginLeft: "1%",
     marginTop: "1%",
     borderRadius: "3px",
     overflow: "hidden",
