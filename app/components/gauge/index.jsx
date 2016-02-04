@@ -2,7 +2,7 @@ var R      = require("ramda");
 var Radium = require("radium");
 var React  = require("react");
 
-var colors = require("lib/colors");
+var colors = require("lib/colors_restyling");
 
 const styles = {
     container: {

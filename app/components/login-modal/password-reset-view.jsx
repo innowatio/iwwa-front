@@ -4,7 +4,7 @@ var React     = require("react");
 var bootstrap = require("react-bootstrap");
 
 var components = require("components");
-var colors     = require("lib/colors");
+var colors     = require("lib/colors_restyling");
 var icons      = require("lib/icons");
 
 var styles = {

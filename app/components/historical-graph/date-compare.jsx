@@ -5,7 +5,7 @@ import moment from "moment";
 import ReactPureRender from "react-addons-pure-render-mixin";
 import IPropTypes from "react-immutable-proptypes";
 
-import * as colors from "lib/colors";
+import * as colors from "lib/colors_restyling";
 import components from "components";
 import readingsDailyAggregatesToDygraphData from "lib/readings-daily-aggregates-to-dygraph-data";
 

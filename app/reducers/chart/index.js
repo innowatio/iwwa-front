@@ -1,7 +1,7 @@
 import {equals, head, last, update} from "ramda";
 import moment from "moment";
 
-import * as colors from "lib/colors";
+import * as colors from "lib/colors_restyling";
 import {
     SELECT_SINGLE_ELECTRICAL_SENSOR,
     SELECT_ELECTRICAL_TYPE,

@@ -9,8 +9,8 @@ var Router     = require("react-router");
 var CollectionUtils = require("lib/collection-utils");
 var components      = require("components");
 var icons           = require("lib/icons");
-var colors          = require("lib/colors");
-var styles          = require("lib/styles");
+var colors          = require("lib/colors_restyling");
+var styles          = require("lib/styles_restyling");
 var stringIt        = require("lib/string-it");
 
 var buttonStyle = {

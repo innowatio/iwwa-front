@@ -1,11 +1,10 @@
 import IPropTypes from "react-immutable-proptypes";
 import React, {PropTypes} from "react";
 import ReactPureRender from "react-addons-pure-render-mixin";
-import titleCase from "title-case";
 import {uniq} from "ramda";
 
 import icons from "lib/icons";
-import colors from "lib/colors";
+import colors from "lib/colors_restyling";
 import components from "components";
 import DateCompareGraph from "./date-compare";
 import SourcesAndSensorsCompare from "./sources-and-sensors-compare";
@@ -25,42 +24,6 @@ var HistoricalGraph = React.createClass({
     mixins: [ReactPureRender],
     exportPNG: function () {
         return this.refs.temporalLineGraph.exportPNG;
-    },
-    renderSiteTitle: function (site) {
-        return site ? (
-            <span>
-                <strong>
-                    {titleCase(site.get("name"))}
-                </strong>
-            </span>
-        ) : null;
-    },
-    renderSensorTitle: function (sensor) {
-        return sensor ? (
-            <span>
-                <strong>
-                    {sensor}
-                </strong>
-            </span>
-        ) : null;
-    },
-    renderTitle: function (singleSelectionChart, idx) {
-        const numberOfSelectionInGraph = this.props.chart.length;
-        return (
-            <span key={idx}>
-                {
-                    this.props.sites.length === 2 ?
-                    this.renderSiteTitle(this.props.sites[idx]) :
-                    this.renderSiteTitle(this.props.sites[0])
-                }
-                {singleSelectionChart.sensorId !== singleSelectionChart.site ? " - " : null}
-                {
-                    singleSelectionChart.sensorId !== singleSelectionChart.site ?
-                    this.renderSensorTitle(singleSelectionChart.sensorId) : null
-                }
-                {numberOfSelectionInGraph > idx + 1 ? " & " : null}
-            </span>
-        );
     },
     renderDateCompareGraph: function () {
         return <DateCompareGraph {...this.props} ref="compareGraph"/>;
@@ -84,9 +47,6 @@ var HistoricalGraph = React.createClass({
     render: function () {
         return (
             <div style={{width: "100%", height: "100%"}}>
-                <h3 className="text-center" style={{marginTop: "20px"}}>
-                    {this.props.chart.map(this.renderTitle)}
-                </h3>
                 <h4 className="text-center" style={{color: colors.greySubTitle}}>
                     {this.props.chart[0].measurementType.label}
                 </h4>

@@ -5,10 +5,10 @@ var React         = require("react");
 var bootstrap     = require("react-bootstrap");
 var TimePicker    = require("react-time-picker");
 
-var colors     = require("lib/colors");
+var colors     = require("lib/colors_restyling");
 var components = require("components");
 var stringIt   = require("lib/string-it");
-var styles     = require("lib/styles");
+var styles     = require("lib/styles_restyling");
 var icons      = require("lib/icons");
 
 var style = {

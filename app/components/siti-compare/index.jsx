@@ -2,7 +2,7 @@ var R          = require("ramda");
 var React      = require("react");
 var IPropTypes = require("react-immutable-proptypes");
 
-var colors     = require("lib/colors");
+var colors     = require("lib/colors_restyling");
 var components = require("components/");
 var icons      = require("lib/icons");
 

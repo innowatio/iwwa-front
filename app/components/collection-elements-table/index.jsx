@@ -3,7 +3,7 @@ var React      = require("react");
 var bootstrap  = require("react-bootstrap");
 var IPropTypes = require("react-immutable-proptypes");
 
-var colors = require("lib/colors");
+var colors = require("lib/colors_restyling");
 
 var columnType = React.PropTypes.oneOfType([
     React.PropTypes.string,

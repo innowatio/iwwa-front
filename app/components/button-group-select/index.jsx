@@ -5,9 +5,9 @@ var R               = require("ramda");
 var React           = require("react");
 var ReactPureRender = require("react-addons-pure-render-mixin");
 
-var colors     = require("lib/colors");
+var colors     = require("lib/colors_restyling");
 var components = require("components");
-var styles     = require("lib/styles");
+var styles     = require("lib/styles_restyling");
 
 var styleDropdown = R.merge(
     styles.buttonSelectValore,

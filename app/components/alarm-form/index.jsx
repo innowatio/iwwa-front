@@ -8,9 +8,9 @@ var ReactStateMixin = require("react-addons-linked-state-mixin");
 
 var components       = require("components");
 var CollectionUtils  = require("lib/collection-utils");
-var colors           = require("lib/colors");
+var colors           = require("lib/colors_restyling");
 var stringIt         = require("lib/string-it");
-var styles           = require("lib/styles");
+var styles           = require("lib/styles_restyling");
 var tutorialString   = require("assets/JSON/tutorial-string.json");
 var GetTutorialMixin = require("lib/get-tutorial-mixin");
 var icons            = require("lib/icons");
