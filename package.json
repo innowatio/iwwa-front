@@ -41,11 +41,11 @@
     "chai": "^3.4.1",
     "chalk": "^1.1.1",
     "dev-ip": "^1.0.1",
-    "escope": "3.3.0",
+    "escope": "3.4.0",
     "eslint": "^1.10.3",
     "eslint-html-reporter": "^0.4.14",
     "eslint-plugin-babel": "^3.0.0",
-    "eslint-plugin-react": "3.15.0",
+    "eslint-plugin-react": "3.16.1",
     "gulp": "^3.9.0",
     "gulp-concat": "^2.6.0",
     "gulp-cssnano": "^2.1.0",
@@ -57,7 +57,7 @@
     "gulp-rename": "^1.2.2",
     "gulp-spawn-mocha": "^2.2.2",
     "gulp-util": "^3.0.7",
-    "jsdom": "^7.2.2",
+    "jsdom": "^8.0.2",
     "json-loader": "^0.5.4",
     "minimist": "^1.2.0",
     "mkdirp": "^0.5.1",
@@ -110,7 +110,7 @@
     "redux": "^3.0.5",
     "redux-logger": "^2.3.1",
     "redux-router": "^1.0.0-beta7",
-    "redux-storage": "^1.4.3",
+    "redux-storage": "^2.0.1",
     "redux-thunk": "^1.0.3",
     "tcomb": "^2.5.2",
     "tcomb-validation": "^2.2.0",
@@ -129,7 +129,7 @@
     ]
   },
   "optionalDependencies": {
-    "cordova": "^5.4.1",
+    "cordova": "^6.0.0",
     "ios-sim": "^5.0.6"
   }
 }
