@@ -4,7 +4,6 @@ import ReactPureRender from "react-addons-pure-render-mixin";
 import {uniq} from "ramda";
 
 import icons from "lib/icons";
-import colors from "lib/colors_restyling";
 import components from "components";
 import DateCompareGraph from "./date-compare";
 import SourcesAndSensorsCompare from "./sources-and-sensors-compare";
@@ -47,9 +46,6 @@ var HistoricalGraph = React.createClass({
     render: function () {
         return (
             <div style={{width: "100%", height: "100%"}}>
-                <h4 className="text-center" style={{color: colors.greySubTitle}}>
-                    {this.props.chart[0].measurementType.label}
-                </h4>
                 <div
                     onClick={this.props.resetCompare}
                     style={{
