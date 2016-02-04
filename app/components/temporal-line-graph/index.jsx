@@ -9,7 +9,7 @@ var moment    = require("moment");
 var AppPropTypes     = require("lib/app-prop-types.js");
 var dygraphExport    = require("lib/dygraph-export.js");
 var DygraphCSVExport = require("lib/dygraph-export-csv.js");
-var colors           = require("lib/colors");
+var colors           = require("lib/colors_restyling");
 
 var styles = {
     graphContainer: {

@@ -8,11 +8,11 @@ import {connect} from "react-redux";
 import {bindActionCreators} from "redux";
 
 var CollectionUtils    = require("lib/collection-utils");
-var colors             = require("lib/colors");
+var colors             = require("lib/colors_restyling");
 var components         = require("components/");
 var icons              = require("lib/icons");
 var GetTutorialMixin   = require("lib/get-tutorial-mixin");
-var styles             = require("lib/styles");
+var styles             = require("lib/styles_restyling");
 import * as parameters from "./parameters";
 var tutorialString     = require("assets/JSON/tutorial-string.json").historicalGraph;
 import {

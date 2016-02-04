@@ -1,4 +1,4 @@
-import colors from "lib/colors";
+import colors from "lib/colors_restyling";
 import icons from "lib/icons";
 
 export function getMeasurementTypes () {

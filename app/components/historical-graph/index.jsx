@@ -4,7 +4,7 @@ import ReactPureRender from "react-addons-pure-render-mixin";
 import {uniq} from "ramda";
 
 import icons from "lib/icons";
-import colors from "lib/colors";
+import colors from "lib/colors_restyling";
 import components from "components";
 import DateCompareGraph from "./date-compare";
 import SourcesAndSensorsCompare from "./sources-and-sensors-compare";

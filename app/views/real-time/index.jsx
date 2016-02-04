@@ -8,8 +8,8 @@ import {bindActionCreators} from "redux";
 
 var components        = require("components");
 var readingsRealTime  = require("lib/readings-real-time-aggregates-to-realtime-view");
-var colors            = require("lib/colors");
-var styles            = require("lib/styles");
+var colors            = require("lib/colors_restyling");
+var styles            = require("lib/styles_restyling");
 import {selectRealTimeSite} from "actions/real-time";
 
 var RealTime = React.createClass({

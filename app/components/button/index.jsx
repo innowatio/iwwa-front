@@ -2,7 +2,7 @@ var R         = require("ramda");
 var React     = require("react");
 var bootstrap = require("react-bootstrap");
 
-var colors = require("lib/colors");
+var colors = require("lib/colors_restyling");
 
 var Button = React.createClass({
     propTypes: {

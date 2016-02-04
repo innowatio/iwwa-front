@@ -2,7 +2,7 @@ var bootstrap  = require("react-bootstrap");
 var Radium     = require("radium");
 var React      = require("react");
 
-var colors     = require("lib/colors");
+var colors     = require("lib/colors_restyling");
 
 var FullscreenModal = React.createClass({
     propTypes: {

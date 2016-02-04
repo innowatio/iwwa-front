@@ -6,7 +6,7 @@ var Calendar        = require("react-widgets").Calendar;
 var moment          = require("moment");
 var momentLocalizer = require("react-widgets/lib/localizers/moment");
 
-var colors     = require("lib/colors");
+var colors     = require("lib/colors_restyling");
 var components = require("components/");
 var measures   = require("lib/measures");
 

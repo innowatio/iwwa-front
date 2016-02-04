@@ -6,8 +6,8 @@ var moment     = require("moment");
 var R          = require("ramda");
 
 var components = require("components");
-var colors     = require("lib/colors");
-var styles     = require("lib/styles");
+var colors     = require("lib/colors_restyling");
+var styles     = require("lib/styles_restyling");
 var icons      = require("lib/icons");
 
 var icon = {

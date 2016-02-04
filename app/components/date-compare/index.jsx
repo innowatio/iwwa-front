@@ -2,7 +2,7 @@ import {equals, partial} from "ramda";
 import React, {PropTypes} from "react";
 import moment from "moment";
 
-import * as colors from "lib/colors";
+import * as colors from "lib/colors_restyling";
 import * as components from "components";
 
 var styles = {

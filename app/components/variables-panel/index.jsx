@@ -1,7 +1,7 @@
 var React     = require("react");
 
 var MeasureLabel = require("components/").MeasureLabel;
-var colors       = require("lib/colors");
+var colors       = require("lib/colors_restyling");
 
 var style = {
     box: {

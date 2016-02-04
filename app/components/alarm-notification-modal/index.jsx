@@ -2,10 +2,10 @@ var Radium     = require("radium");
 var R          = require("ramda");
 var React      = require("react");
 
-var colors     = require("lib/colors");
+var colors     = require("lib/colors_restyling");
 var components = require("components");
 var stringIt   = require("lib/string-it");
-var styles     = require("lib/styles");
+var styles     = require("lib/styles_restyling");
 var icons      = require("lib/icons");
 
 var AlarmNotificationModal = React.createClass({

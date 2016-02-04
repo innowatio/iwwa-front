@@ -8,7 +8,7 @@ var ReactPureRender = require("react-addons-pure-render-mixin");
 var Waypoint        = require("react-waypoint");
 
 var components = require("components");
-var colors     = require("lib/colors");
+var colors     = require("lib/colors_restyling");
 var icons      = require("lib/icons");
 
 var SelectTree = React.createClass({

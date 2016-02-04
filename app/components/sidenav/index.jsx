@@ -3,7 +3,7 @@ var React      = require("react");
 var Router     = require("react-router");
 var R          = require("ramda");
 
-var colors   = require("lib/colors");
+var colors   = require("lib/colors_restyling");
 
 var styles = {
     menu: {

@@ -11,8 +11,8 @@ import {bindActionCreators} from "redux";
 
 var CollectionUtils = require("lib/collection-utils");
 var components      = require("components");
-var styles          = require("lib/styles");
-var colors          = require("lib/colors");
+var styles          = require("lib/styles_restyling");
+var colors          = require("lib/colors_restyling");
 var icons           = require("lib/icons");
 import {
     displayAlarmsOnChart,
