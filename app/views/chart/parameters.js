@@ -20,7 +20,7 @@ export function getConsumptions () {
     return [
         {
             label: "Temperatura",
-            color: colors.consumption,
+            color: colors.temperature,
             key: "temperature",
             icon: icons.iconTemperature,
             selected: icons.iconTemperatureSelected
@@ -28,21 +28,21 @@ export function getConsumptions () {
         },
         {
             label: "Umidità",
-            color: colors.consumption,
+            color: colors.humidity,
             key: "humidity",
             icon: icons.iconHumidity,
             selected: icons.iconHumiditySelected
         },
         {
             label: "Lux",
-            color: colors.consumption,
+            color: colors.illuminance,
             key: "illuminance",
             icon: icons.iconIdea,
             selected: icons.iconIdeaSelected
         },
         {
             label: "CO2",
-            color: colors.consumption,
+            color: colors.co2,
             key: "co2",
             icon: icons.iconCO2,
             selected: icons.iconCO2Selected

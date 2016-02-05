@@ -20,3 +20,7 @@ exports.green            = "#a8e1d4";
 exports.red              = "#f71c50";
 exports.consumption      = "#F74F68";
 exports.transparent      = "rgba(0, 0, 0, 0)";
+exports.temperature      = "#26C6DA";
+exports.humidity         = "#FDD835";
+exports.illuminance      = "#1DE9B6";
+exports.co2              = "#CE93D8";
