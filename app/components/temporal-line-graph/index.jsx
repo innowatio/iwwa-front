@@ -14,7 +14,7 @@ var colors           = require("lib/colors_restyling");
 var styles = {
     graphContainer: {
         width: "100%",
-        height: "calc(100vh - 420px)",
+        height: "calc(100vh - 360px)",
         margin: "20px 20px 30px 0px"
     }
 };
