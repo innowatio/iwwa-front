@@ -5,7 +5,7 @@ import {USER_SETTING_FROM_DB} from "../actions/user-setting";
 const defalutTemplateState = {
     color: "dark"
 };
-function template (state = defalutTemplateState, {type, payload}) {
+function theme (state = defalutTemplateState, {type, payload}) {
     switch (type) {
     case USER_SETTING_FROM_DB:
         return {
@@ -18,5 +18,5 @@ function template (state = defalutTemplateState, {type, payload}) {
 }
 
 export const userSetting = combineReducers({
-    template
+    theme
 });

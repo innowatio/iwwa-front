@@ -72,7 +72,7 @@ var Root = React.createClass({
         asteroid.subscribe("users");
     },
     getTheme: function () {
-        const colorTheme = this.props.reduxState.userSetting.template.color || "dark";
+        const colorTheme = this.props.reduxState.userSetting.theme.color || "dark";
         return theme.getStyle(colorTheme) || defaultTheme;
     },
     getMenuItems: function () {
