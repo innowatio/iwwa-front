@@ -1,10 +1,11 @@
 import React, {PropTypes} from "react";
 import {Map, List} from "immutable";
 import {Link} from "react-router";
-import {merge} from "ramda";
+import {merge, prop} from "ramda";
 
 import icons from "lib/icons_restyling";
 import {defaultTheme} from "lib/theme";
+import components from "components";
 
 var stylesFunction = ({colors}) => ({
     base: {
@@ -34,7 +35,9 @@ var Header = React.createClass({
     propTypes: {
         asteroid: PropTypes.object.isRequired,
         menuClickAction: PropTypes.func,
-        title: PropTypes.string
+        selectThemeColor: PropTypes.func,
+        title: PropTypes.string,
+        userSetting: PropTypes.object
     },
     contextTypes: {
         theme: PropTypes.object
@@ -49,6 +52,35 @@ var Header = React.createClass({
         const users = this.props.asteroid.collections.get("users") || Map();
         const roles = users.getIn([this.props.asteroid.userId, "roles"]) || List();
         return roles.includes("admin");
+    },
+    getUserSettings: function () {
+        return [
+            {label: "Tema scuro", key: "dark"},
+            {label: "Tema chiaro", key: "light"}
+        ];
+    },
+    renderUserSetting: function () {
+        const userSetting = this.getUserSettings().find(userSetting => {
+            return this.props.userSetting.theme.color === userSetting.key;
+        });
+        return (
+            <components.Popover
+                hideOnChange={true}
+                title={<img src={icons.iconUserSettings} style={{width: "25px"}} />}
+                tooltipId="tooltipUserSetting"
+                tooltipMessage="Impostazioni dell'utente"
+                tooltipPosition="left"
+            >
+                <components.DropdownSelect
+                    allowedValues={this.getUserSettings()}
+                    getKey={prop("key")}
+                    getLabel={prop("label")}
+                    onChange={this.props.selectThemeColor}
+                    style={{float: "left"}}
+                    value={userSetting}
+                />
+            </components.Popover>
+        );
     },
     renderAdminPage: function () {
         return this.userIsAdmin() && ENVIRONMENT !== "cordova" ? (
@@ -72,6 +104,9 @@ var Header = React.createClass({
                 <div style={styles.viewTitle}>
                     {this.props.title.toUpperCase()}
                 </div>
+                <span style={{marginRight: "10px"}}>
+                    {this.renderUserSetting()}
+                </span>
                 {this.renderAdminPage()}
                 <span onClick={this.logout} style={styles.icon}>
                     <img className="pull-right" src={icons.iconLogout} style={{width: "85%"}}/>

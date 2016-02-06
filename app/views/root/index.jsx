@@ -2,6 +2,7 @@ import {merge} from "ramda";
 import React, {PropTypes} from "react";
 import {StyleRoot} from "radium";
 import {connect} from "react-redux";
+import {bindActionCreators} from "redux";
 
 var asteroid          = require("lib/asteroid");
 var components        = require("components");
@@ -9,6 +10,7 @@ var icons             = require("lib/icons_restyling");
 var LocalStorageMixin = require("lib/localstorage-mixin");
 var measures          = require("lib/measures");
 import {theme, defaultTheme} from "lib/theme";
+import {selectThemeColor} from "actions/user-setting";
 
 const stylesFunction = ({colors}) => ({
     header: {
@@ -49,7 +51,8 @@ const stylesFunction = ({colors}) => ({
 var Root = React.createClass({
     propTypes: {
         children: PropTypes.node,
-        reduxState: PropTypes.object
+        reduxState: PropTypes.object,
+        selectThemeColor: PropTypes.func
     },
     childContextTypes: {
         theme: PropTypes.object
@@ -118,7 +121,9 @@ var Root = React.createClass({
                     <components.Header
                         asteroid={asteroid}
                         menuClickAction={this.toggleSidebar}
+                        selectThemeColor={this.props.selectThemeColor}
                         title={titleView}
+                        userSetting={this.props.reduxState.userSetting}
                     />
                 </div>
                 <div style={
@@ -151,4 +156,9 @@ function mapStateToProps (state) {
         reduxState: state
     };
 }
-module.exports = connect(mapStateToProps)(Root);
+function mapDispatchToProps (dispatch) {
+    return {
+        selectThemeColor: bindActionCreators(selectThemeColor, dispatch)
+    };
+}
+module.exports = connect(mapStateToProps, mapDispatchToProps)(Root);

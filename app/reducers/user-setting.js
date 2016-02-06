@@ -1,16 +1,16 @@
 import {combineReducers} from "redux";
 
-import {USER_SETTING_FROM_DB} from "../actions/user-setting";
+import {SELECT_THEME_COLOR} from "../actions/user-setting";
 
 const defalutTemplateState = {
     color: "dark"
 };
 function theme (state = defalutTemplateState, {type, payload}) {
     switch (type) {
-    case USER_SETTING_FROM_DB:
+    case SELECT_THEME_COLOR:
         return {
             ...state,
-            color: payload.color
+            color: payload
         };
     default:
         return state;

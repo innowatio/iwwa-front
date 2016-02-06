@@ -2,19 +2,18 @@ import {String, struct} from "tcomb";
 
 import actionTypeValidator from "../lib/action-type-validator";
 
-export const USER_SETTING_FROM_DB = "USER_SETTING_FROM_DB";
+export const SELECT_THEME_COLOR = "SELECT_THEME_COLOR";
 
-const typeofGetUserSettingsFromDb = actionTypeValidator(
+const typeofselectThemeColor = actionTypeValidator(
     struct({
-        template: struct({
-            color: String
-        })
+        key: String,
+        label: String
     })
 );
-export function getUserSettingsFromDb (userProfile) {
-    typeofGetUserSettingsFromDb(...arguments);
+export function selectThemeColor (userProfile) {
+    typeofselectThemeColor(...arguments);
     return {
-        type: USER_SETTING_FROM_DB,
-        payload: userProfile
+        type: SELECT_THEME_COLOR,
+        payload: userProfile.key
     };
 }
