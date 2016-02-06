@@ -1,18 +1,22 @@
-var IPropTypes = require("react-immutable-proptypes");
-var R          = require("ramda");
-var React      = require("react");
+import IPropTypes from "react-immutable-proptypes";
+import R from "ramda";
+import React, {PropTypes} from "react";
 
-var icons      = require("lib/icons_restyling");
-var styles     = require("lib/styles_restyling");
+import icons from "lib/icons_restyling";
+import {styles} from "lib/styles_restyling";
+import {defaultTheme} from "lib/theme";
 
 var PageContainer = React.createClass({
     propTypes: {
-        asteroid: React.PropTypes.object,
-        children: React.PropTypes.node,
+        asteroid: PropTypes.object,
+        children: PropTypes.node,
         collections: IPropTypes.map.isRequired,
-        localStorage: React.PropTypes.object,
-        reduxState: React.PropTypes.object.isRequired,
-        style: React.PropTypes.object
+        localStorage: PropTypes.object,
+        reduxState: PropTypes.object.isRequired,
+        style: PropTypes.object
+    },
+    contextTypes: {
+        theme: PropTypes.object
     },
     defaultProps: {
         style: {}
@@ -20,6 +24,9 @@ var PageContainer = React.createClass({
     componentDidMount: function () {
         this.props.asteroid.subscribe("sensors");
         this.props.asteroid.subscribe("sites");
+    },
+    getTheme: function () {
+        return this.context.theme || defaultTheme;
     },
     getTitleForChartOrLive: function (reduxViewState) {
         const path = reduxViewState.fullPath;
@@ -68,7 +75,7 @@ var PageContainer = React.createClass({
                 {...this.props}
                 style={{...style}}
             >
-                <div style={styles.titlePage}>
+                <div style={styles(this.getTheme()).titlePage}>
                     <h2 style={{fontSize: "18px", marginBottom: "0px", paddingTop: "18px"}}>
                         {this.renderTitle()}
                     </h2>

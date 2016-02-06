@@ -2,18 +2,18 @@ var R      = require("ramda");
 var Radium = require("radium");
 var React  = require("react");
 
-var colors = require("lib/colors_restyling");
+import {defaultTheme} from "lib/theme";
 
-var styleLabelValue = {
+var styleLabelValue = ({colors}) => ({
     color: colors.primary,
     fontSize: "32px"
-};
+});
 
-var styleLabelUnit = {
+var styleLabelUnit = ({colors}) => ({
     color: colors.primary,
     fontSize: "20px",
     display: "inline-block"
-};
+});
 
 var styleTextDiv = {
     display: "flex"
@@ -27,16 +27,39 @@ var MeasureLabel = React.createClass({
         unit: React.PropTypes.string.isRequired,
         value: React.PropTypes.number
     },
+    contextTypes: {
+        theme: React.PropTypes.object
+    },
+    getTheme: function () {
+        return this.context.theme || defaultTheme;
+    },
     render: function () {
+        const theme = this.getTheme();
         return (
             <div id="text">
                 <b>
                     <div style={R.merge(styleTextDiv, this.props.style || {})}>
-                        <div className="labelValue" style={R.merge(styleLabelValue, this.props.styleText || {})}>
+                        <div
+                            className="labelValue"
+                            style={
+                                R.merge(
+                                    styleLabelValue(theme),
+                                    this.props.styleText || {}
+                                )
+                            }
+                        >
                             {this.props.value}
                         </div>
                         <div>
-                            <div className="labelUnit" style={R.merge(styleLabelUnit, this.props.styleText || {})}>
+                            <div
+                                className="labelUnit"
+                                style={
+                                    R.merge(
+                                        styleLabelUnit(theme),
+                                        this.props.styleText || {}
+                                    )
+                                }
+                            >
                                 {this.props.unit}
                             </div>
                             <div className="subject" style={{fontSize: "9px"}}>

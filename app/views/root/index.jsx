@@ -1,16 +1,16 @@
-var R         = require("ramda");
-var React     = require("react");
+import {merge} from "ramda";
+import React, {PropTypes} from "react";
 import {StyleRoot} from "radium";
 import {connect} from "react-redux";
 
 var asteroid          = require("lib/asteroid");
-var colors            = require("lib/colors_restyling");
 var components        = require("components");
 var icons             = require("lib/icons_restyling");
 var LocalStorageMixin = require("lib/localstorage-mixin");
 var measures          = require("lib/measures");
+import {theme, defaultTheme} from "lib/theme";
 
-var styles = {
+const stylesFunction = ({colors}) => ({
     header: {
         width: "100%",
         height: measures.headerHeight,
@@ -44,12 +44,15 @@ var styles = {
         textAlign: "center",
         zIndex: 1042
     }
-};
+});
 
 var Root = React.createClass({
     propTypes: {
-        children: React.PropTypes.node,
-        reduxState: React.PropTypes.object
+        children: PropTypes.node,
+        reduxState: PropTypes.object
+    },
+    childContextTypes: {
+        theme: PropTypes.object
     },
     mixins: [
         asteroid.getControllerViewMixin(),
@@ -60,8 +63,17 @@ var Root = React.createClass({
             sidebarOpen: false
         };
     },
+    getChildContext: function () {
+        return {
+            theme: this.getTheme()
+        };
+    },
     componentDidMount: function () {
         asteroid.subscribe("users");
+    },
+    getTheme: function () {
+        const colorTheme = this.props.reduxState.userSetting.template.color || "dark";
+        return theme.getStyle(colorTheme) || defaultTheme;
     },
     getMenuItems: function () {
         return [
@@ -82,15 +94,8 @@ var Root = React.createClass({
             sidebarOpen: false
         });
     },
-    getHeaderStyle: function () {
-        return R.merge(styles.header, {
-            left: (
-                measures.sidebarShoulderWidth
-            )
-        });
-    },
-    getSidebarStyle: function () {
-        return R.merge(styles.sidebar, {
+    getSidebarStyle: function (styles) {
+        return merge(styles.sidebar, {
             left: (
                 this.state.sidebarOpen ?
                 "0px" :
@@ -99,14 +104,15 @@ var Root = React.createClass({
         });
     },
     render: function () {
-        var titleView = this.props.children.props.route.titleView || "";
+        const styles = stylesFunction(this.getTheme());
+        const titleView = this.props.children.props.route.titleView || "";
         return (
             <StyleRoot>
                 <components.SideNav
                     items={this.getMenuItems()}
                     linkClickAction={this.closeSidebar}
                     sidebarOpen={this.state.sidebarOpen}
-                    style={this.getSidebarStyle()}
+                    style={this.getSidebarStyle(styles)}
                 />
                 <div style={styles.header}>
                     <components.Header
@@ -118,7 +124,7 @@ var Root = React.createClass({
                 <div style={
                     ENVIRONMENT === "cordova" ?
                     styles.content :
-                    R.merge(styles.content, {width: `calc(100% - ${measures.sidebarShoulderWidth})`, float: "right"})}
+                    merge(styles.content, {width: `calc(100% - ${measures.sidebarShoulderWidth})`, float: "right"})}
                 >
                     <components.PageContainer
                         asteroid={asteroid}

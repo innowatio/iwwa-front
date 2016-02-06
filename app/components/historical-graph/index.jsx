@@ -4,11 +4,11 @@ import ReactPureRender from "react-addons-pure-render-mixin";
 import {uniq} from "ramda";
 
 import icons from "lib/icons";
-import colors from "lib/colors_restyling";
 import components from "components";
 import DateCompareGraph from "./date-compare";
 import SourcesAndSensorsCompare from "./sources-and-sensors-compare";
 import SitesCompareGraph from "./sites-compare";
+import {defaultTheme} from "lib/theme";
 
 var HistoricalGraph = React.createClass({
     propTypes: {
@@ -21,7 +21,13 @@ var HistoricalGraph = React.createClass({
         resetCompare: PropTypes.func.isRequired,
         sites: PropTypes.arrayOf(IPropTypes.map).isRequired
     },
+    contextTypes: {
+        theme: PropTypes.object
+    },
     mixins: [ReactPureRender],
+    getTheme: function () {
+        return this.context.theme || defaultTheme;
+    },
     exportPNG: function () {
         return this.refs.temporalLineGraph.exportPNG;
     },
@@ -45,6 +51,7 @@ var HistoricalGraph = React.createClass({
         return this.renderValoriCompareGraph();
     },
     render: function () {
+        const {colors} = this.getTheme();
         return (
             <div style={{width: "100%", height: "100%"}}>
                 <h4 className="text-center" style={{color: colors.greySubTitle}}>

@@ -11,7 +11,6 @@ var Popover = React.createClass({
         children: React.PropTypes.element,
         hideOnChange: React.PropTypes.bool,
         notClosePopoverOnClick: React.PropTypes.bool,
-        style: React.PropTypes.string,
         title: React.PropTypes.oneOfType([
             React.PropTypes.element,
             React.PropTypes.string

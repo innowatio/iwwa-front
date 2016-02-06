@@ -8,13 +8,11 @@ import {connect} from "react-redux";
 import {bindActionCreators} from "redux";
 
 var CollectionUtils    = require("lib/collection-utils");
-var colors             = require("lib/colors_restyling");
 var components         = require("components/");
 var icons              = require("lib/icons");
 var GetTutorialMixin   = require("lib/get-tutorial-mixin");
-var styles             = require("lib/styles_restyling");
-import * as parameters from "./parameters";
 var tutorialString     = require("assets/JSON/tutorial-string.json").historicalGraph;
+import * as parameters from "./parameters";
 import {
     selectSingleElectricalSensor,
     selectElectricalType,
@@ -25,8 +23,10 @@ import {
     selectDateRangesCompare,
     removeAllCompare
 } from "actions/chart";
+import {styles} from "lib/styles_restyling";
+import {defaultTheme} from "lib/theme";
 
-var selectStyles = {
+const selectStyles = {
     selectCompare: {
         width: "450px",
         height: "35px",
@@ -34,18 +34,18 @@ var selectStyles = {
     }
 };
 
-var consumptionButtonStyle = {
+const consumptionButtonStyle = ({colors}) => ({
     color: colors.greySubTitle,
     width: ENVIRONMENT === "cordova" ? "23%" : "180px",
     textAlign: "left",
     marginRight: "15px !important",
     borderRadius: "0px"
-};
+});
 
-var consumptionButtonSelectedStyle = {
+const consumptionButtonSelectedStyle = ({colors}) => ({
     color: colors.white,
     backgroundColor: colors.consumption
-};
+});
 
 var Chart = React.createClass({
     propTypes: {
@@ -62,6 +62,9 @@ var Chart = React.createClass({
         selectMultipleElectricalSensor: React.PropTypes.func.isRequired,
         selectSingleElectricalSensor: React.PropTypes.func.isRequired,
         selectSource: React.PropTypes.func.isRequired
+    },
+    contextTypes: {
+        theme: React.PropTypes.object
     },
     mixins: [
         GetTutorialMixin("historicalGraph",
@@ -86,6 +89,9 @@ var Chart = React.createClass({
     },
     componentDidUpdate: function () {
         this.updateFirstSiteToChart();
+    },
+    getTheme: function () {
+        return this.context.theme || defaultTheme;
     },
     updateFirstSiteToChart: function () {
         var sites = this.props.collections.get("sites") || Immutable.Map();
@@ -145,9 +151,10 @@ var Chart = React.createClass({
         });
     },
     getValoreActiveStyle: function (valore) {
+        const theme = this.getTheme();
         return R.merge(
-            styles.buttonSelectValore,
-            {background: valore.color, color: colors.white}
+            styles(theme).buttonSelectValore,
+            {background: valore.color, color: theme.colors.white}
         );
     },
     getSitoById: function (sitoId) {
@@ -235,8 +242,8 @@ var Chart = React.createClass({
             null;
         const valoriMulti = (!this.isDateCompare() && selectedSitesId.length < 2 && !selectedConsumptionType);
         return (
-            <div style={styles.mainDivStyle}>
-                <bootstrap.Col sm={12} style={styles.colVerticalPadding}>
+            <div style={styles(this.getTheme()).mainDivStyle}>
+                <bootstrap.Col sm={12} style={styles(this.getTheme()).colVerticalPadding}>
                     <span className="pull-left" style={{display: "flex"}}>
                         <components.TutorialAnchor
                             message={tutorialString.valori}
@@ -245,7 +252,7 @@ var Chart = React.createClass({
                             ref="valori"
                         >
                             <components.ButtonGroupSelect
-                                allowedValues={parameters.getSources()}
+                                allowedValues={parameters.getSources(this.getTheme())}
                                 getActiveStyle={this.getValoreActiveStyle}
                                 getKey={R.prop("key")}
                                 getLabel={R.prop("label")}
@@ -341,12 +348,12 @@ var Chart = React.createClass({
                 </bootstrap.Col>
                 <bootstrap.Col sm={12}>
                     <components.ConsumptionButtons
-                        allowedValues={parameters.getConsumptions()}
+                        allowedValues={parameters.getConsumptions(this.getTheme())}
                         onChange={consumptionTypes => this.onChangeConsumption(null, consumptionTypes)}
                         selectedValue={selectedConsumptionType}
                         style={{width: "100%"}}
-                        styleButton={consumptionButtonStyle}
-                        styleButtonSelected={consumptionButtonSelectedStyle}
+                        styleButton={consumptionButtonStyle(this.getTheme())}
+                        styleButtonSelected={consumptionButtonSelectedStyle(this.getTheme())}
                         styleIcon={{height: "25px", marginRight: "10px", borderRadius: "0px"}}
                     />
                 </bootstrap.Col>

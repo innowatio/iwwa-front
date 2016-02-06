@@ -6,7 +6,6 @@ var Calendar        = require("react-widgets").Calendar;
 var moment          = require("moment");
 var momentLocalizer = require("react-widgets/lib/localizers/moment");
 
-var colors     = require("lib/colors_restyling");
 var components = require("components/");
 var measures   = require("lib/measures");
 
@@ -150,6 +149,7 @@ var DatefilterModal = React.createClass({
         );
     },
     renderCustomButton: function () {
+        const {colors} = this.getTheme();
         return (
             <div>
                 <span>
@@ -199,6 +199,7 @@ var DatefilterModal = React.createClass({
         );
     },
     render: function () {
+        const {colors} = this.getTheme();
         return (
             <span>
                 <components.Button

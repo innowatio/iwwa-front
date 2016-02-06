@@ -3,10 +3,10 @@ var R                   = require("ramda");
 var Radium              = require("radium");
 var React               = require("react");
 
-var colors     = require("lib/colors_restyling");
 var components = require("components/");
 var icons      = require("lib/icons");
 var measures   = require("lib/measures");
+import {defaultTheme} from "lib/theme";
 
 var Compare = React.createClass({
     propTypes: {
@@ -17,12 +17,18 @@ var Compare = React.createClass({
         style: React.PropTypes.object,
         value: React.PropTypes.array
     },
+    contextTypes: {
+        theme: React.PropTypes.object
+    },
     getInitialState: function () {
         return {
             showModal: false,
             active: "activeSiteCompare",
             compare: " "
         };
+    },
+    getTheme: function () {
+        return this.context.theme || defaultTheme;
     },
     addCloseModalToChild: function (child) {
         var closeAction = this.close;
@@ -71,6 +77,7 @@ var Compare = React.createClass({
         this.renderDataCompare();
     },
     renderSitiTitle: function () {
+        const {colors} = this.getTheme();
         return (
             <div>
                 <bootstrap.Modal.Title className="text-center" style={{color: colors.primary}}>
@@ -81,6 +88,7 @@ var Compare = React.createClass({
         );
     },
     renderDataTitle: function () {
+        const {colors} = this.getTheme();
         return (
             <div>
                 <bootstrap.Modal.Title className="text-center" style={{color: colors.primary}}>

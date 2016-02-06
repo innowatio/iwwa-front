@@ -6,33 +6,40 @@ var moment     = require("moment");
 var R          = require("ramda");
 
 var components = require("components");
-var colors     = require("lib/colors_restyling");
-var styles     = require("lib/styles_restyling");
 var icons      = require("lib/icons");
+import {styles} from "lib/styles_restyling";
+import {defaultTheme} from "lib/theme";
 
-var icon = {
+var iconStyle = ({colors}) => ({
     color: colors.primary,
     paddingRight: "10px",
     float: "right",
     width: "30px"
-};
+});
 
 var Users = React.createClass({
     propTypes: {
         asteroid: React.PropTypes.object,
         collections: IPropTypes.map
     },
+    contextTypes: {
+        theme: React.PropTypes.object
+    },
     componentDidMount: function () {
         this.props.asteroid.subscribe("users");
     },
+    getTheme: function () {
+        return this.context.theme || defaultTheme;
+    },
     getColumnsUsers: function () {
+        const theme = this.getTheme();
         return [
             {
                 key: "emails",
                 style: function () {
                     return {
                         width: "25%",
-                        color: colors.greySubTitle
+                        color: theme.colors.greySubTitle
                     };
                 },
                 valueFormatter: function (value) {
@@ -44,7 +51,7 @@ var Users = React.createClass({
                 style: function () {
                     return {
                         width: "15%",
-                        color: colors.greySubTitle
+                        color: theme.colors.greySubTitle
                     };
                 },
                 valueFormatter: function (value) {
@@ -56,7 +63,7 @@ var Users = React.createClass({
                 style: function () {
                     return {
                         width: "20%",
-                        color: colors.greySubTitle
+                        color: theme.colors.greySubTitle
                     };
                 },
                 valueFormatter: function (value) {
@@ -69,7 +76,7 @@ var Users = React.createClass({
                 style: function () {
                     return {
                         width: "30%",
-                        color: colors.greySubTitle
+                        color: theme.colors.greySubTitle
                     };
                 },
                 valueFormatter: function (value) {
@@ -86,7 +93,7 @@ var Users = React.createClass({
                 valueFormatter: function (value) {
                     return (
                         <Router.Link to={`/users/${value}`}>
-                            <img src={icons.iconEdit} style={icon}/>
+                            <img src={icons.iconEdit} style={iconStyle(theme)}/>
                         </Router.Link>
                     );
                 }
@@ -97,11 +104,12 @@ var Users = React.createClass({
         return value.get("emails").getIn(["0", "address"]);
     },
     render: function () {
+        const theme = this.getTheme();
         return (
             <div>
                 <h2
                     className="text-center"
-                    style={R.merge(styles.titlePage, {fontSize: "14pt", paddingTop: "4px"})}
+                    style={R.merge(styles(theme).titlePage, {fontSize: "14pt", paddingTop: "4px"})}
                 >
                     <components.Spacer direction="v" size={5} />
                     {"Amministra utenti"}
@@ -111,7 +119,11 @@ var Users = React.createClass({
                         collection={this.props.collections.get("users") || Immutable.Map()}
                         columns={this.getColumnsUsers()}
                         headColumn={["Email", "Email verificata", "Data di creazione", "Ruolo", ""]}
-                        headStyle={{color: colors.titleColor, fontSize: "13pt", backgroundColor: colors.greyBackground}}
+                        headStyle={{
+                            color: theme.colors.titleColor,
+                            fontSize: "13pt",
+                            backgroundColor: theme.colors.greyBackground
+                        }}
                         hover={true}
                         style={{height: "calc(100vh - 100px)", paddingBottom: "10px"}}
                     />

@@ -9,7 +9,7 @@ var moment    = require("moment");
 var AppPropTypes     = require("lib/app-prop-types.js");
 var dygraphExport    = require("lib/dygraph-export.js");
 var DygraphCSVExport = require("lib/dygraph-export-csv.js");
-var colors           = require("lib/colors_restyling");
+import {defaultTheme} from "lib/theme";
 
 var styles = {
     graphContainer: {
@@ -40,6 +40,9 @@ var TemporalLineGraph = React.createClass({
         y2Label: PropTypes.string,
         yLabel: PropTypes.string
     },
+    contextTypes: {
+        theme: PropTypes.object
+    },
     componentDidMount: function () {
         this.drawGraph();
     },
@@ -49,6 +52,9 @@ var TemporalLineGraph = React.createClass({
             file: this.getCoordinatesFromProps(nextProps)
         }));
         this.drawAnnotations();
+    },
+    getTheme: function () {
+        return this.context.theme || defaultTheme;
     },
     getCoordinatesFromProps: function (props) {
         return (
@@ -68,6 +74,7 @@ var TemporalLineGraph = React.createClass({
             var left = bottomLeft[0];
             var right = topRight[0];
 
+            const {colors} = this.getTheme();
             canvas.fillStyle = colors.greyBackground;
             canvas.fillRect(left, area.y, right - left, area.h);
         }
@@ -294,6 +301,7 @@ var TemporalLineGraph = React.createClass({
     },
     renderSpinner: function () {
         // TODO Set a timeout.
+        const {colors} = this.getTheme();
         if (!R.isNil(this.props.site) && this.props.site.size > 0 && this.props.coordinates.length === 0) {
             return (
                 <div className="modal-spinner">
@@ -347,6 +355,7 @@ var TemporalLineGraph = React.createClass({
         }
     },
     render: function () {
+        const {colors} = this.getTheme();
         return (
             <div className="container-graph">
                 <Radium.Style

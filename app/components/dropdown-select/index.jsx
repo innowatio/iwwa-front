@@ -3,7 +3,7 @@ var React      = require("react");
 var bootstrap  = require("react-bootstrap");
 var IPropTypes = require("react-immutable-proptypes");
 
-var colors     = require("lib/colors_restyling");
+import {defaultTheme} from "lib/theme";
 
 var DropdownSelect = React.createClass({
     propTypes: {
@@ -16,6 +16,9 @@ var DropdownSelect = React.createClass({
         onChange: React.PropTypes.func.isRequired,
         value: React.PropTypes.object
     },
+    contextTypes: {
+        theme: React.PropTypes.object
+    },
     getDefaultProps: function () {
         var defaultGetter = function (allowedValue) {
             return allowedValue.toString();
@@ -26,6 +29,7 @@ var DropdownSelect = React.createClass({
         };
     },
     shouldComponentUpdate: function (nextProps) {
+        // TODO: control component update in update theme.
         return !(
             this.props.allowedValues === nextProps.allowedValues &&
             this.props.getKey === nextProps.getKey &&
@@ -33,8 +37,12 @@ var DropdownSelect = React.createClass({
             this.props.value === nextProps.value
         );
     },
+    getTheme: function () {
+        return this.context.theme || defaultTheme;
+    },
     renderButtonOption: function (allowedValue, index) {
-        var active = R.equals(this.props.value, allowedValue);
+        const {colors} = this.getTheme();
+        const active = R.equals(this.props.value, allowedValue);
         return (
             <bootstrap.ListGroupItem
                 key={this.props.getKey(allowedValue)}

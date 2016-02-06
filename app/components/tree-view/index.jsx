@@ -6,7 +6,6 @@ var React      = require("react");
 
 var components = require("components");
 
-
 var TreeView = React.createClass({
     propTypes: {
         allowedValues: React.PropTypes.oneOfType([

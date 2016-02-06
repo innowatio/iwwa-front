@@ -3,10 +3,10 @@ var R          = require("ramda");
 var React      = require("react");
 var bootstrap  = require("react-bootstrap");
 
-var colors     = require("lib/colors_restyling");
 var components = require("components");
 var measures   = require("lib/measures");
 var icons      = require("lib/icons");
+import {defaultTheme} from "lib/theme";
 
 var ModalOptionList = React.createClass({
     propTypes: {
@@ -24,13 +24,20 @@ var ModalOptionList = React.createClass({
             React.PropTypes.array,
             React.PropTypes.object])
     },
+    contextTypes: {
+        theme: React.PropTypes.object
+    },
     getInitialState: function () {
         return {
             value: this.props.value ? this.props.value : []
         };
     },
+    getTheme: function () {
+        return this.context.theme || defaultTheme;
+    },
     renderGroupItems: function (value) {
-        var active = R.contains(this.props.getKey(value), this.props.value);
+        const {colors} = this.getTheme();
+        const active = R.contains(this.props.getKey(value), this.props.value);
         if (React.isValidElement(value)) {
             return value;
         } else {
@@ -50,6 +57,7 @@ var ModalOptionList = React.createClass({
         }
     },
     render: function () {
+        const {colors} = this.getTheme();
         var repetitionItems = this.props.allowedValues.map(this.renderGroupItems);
         return (
             <div>

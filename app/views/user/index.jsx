@@ -9,22 +9,25 @@ var Router     = require("react-router");
 var CollectionUtils = require("lib/collection-utils");
 var components      = require("components");
 var icons           = require("lib/icons");
-var colors          = require("lib/colors_restyling");
-var styles          = require("lib/styles_restyling");
 var stringIt        = require("lib/string-it");
+import {styles} from "lib/styles_restyling";
+import {defaultTheme} from "lib/theme";
 
-var buttonStyle = {
+const buttonStyle = ({colors}) => ({
     width: "200px",
     height: "40px",
     backgroundColor: colors.primary,
     color: colors.white
-};
+});
 
 var User = React.createClass({
     propTypes: {
         asteroid: React.PropTypes.object,
         collections: IPropTypes.map,
         user: IPropTypes.map
+    },
+    contextTypes: {
+        theme: React.PropTypes.object
     },
     getInitialState: function () {
         return {
@@ -36,6 +39,9 @@ var User = React.createClass({
     componentDidMount: function () {
         this.props.asteroid.subscribe("sites");
         this.props.asteroid.subscribe("users");
+    },
+    getTheme: function () {
+        return this.context.theme || defaultTheme;
     },
     getUser: function () {
         var userId = R.path(["params", "id"], this.props);
@@ -122,7 +128,6 @@ var User = React.createClass({
                 arrow="none"
                 hideOnChange={true}
                 notClosePopoverOnClick={true}
-                style="inherit"
                 title={this.renderTitleSelectSite()}
             >
                 <components.SelectTree
@@ -137,6 +142,7 @@ var User = React.createClass({
         );
     },
     renderTableSitiToUser: function (sito) {
+        const {colors} = this.getTheme();
         return (
             <tr key={sito}>
                 <td style={{textAlign: "left", color: colors.greySubTitle}}>
@@ -151,6 +157,7 @@ var User = React.createClass({
         );
     },
     renderRolesButtons: function () {
+        const {colors} = this.getTheme();
         var userRoles = this.getUser().get("roles") || Immutable.List();
         return this.getRoles().map(role => {
             const userHasRole = userRoles.includes(role.get("name"));
@@ -178,25 +185,26 @@ var User = React.createClass({
         );
     },
     renderPasswordTab: function () {
+        const theme = this.getTheme();
         return (
             <bootstrap.Tab eventKey={2} title="Password" >
                 {/* Automatic change of the password */}
                 <bootstrap.Col style={{height: "calc(100vh - 200px)", paddingRight: "0px"}} xs={6} >
                     <div style={{
-                        borderRight: `1px solid ${colors.greyBorder}`,
+                        borderRight: `1px solid ${theme.colors.greyBorder}`,
                         marginTop: "40px",
                         height: "calc(100vh - 260px)"
                     }}
                     >
-                        <h4 style={styles.titleTab}>{stringIt.automaticReset}</h4>
+                        <h4 style={styles(theme).titleTab}>{stringIt.automaticReset}</h4>
                         <components.Spacer direction="v" size={20} />
                         <span>{stringIt.automaticEmail}</span>
-                        <span style={{fontSize: "12pt", color: colors.titleColor}}>
+                        <span style={{fontSize: "12pt", color: theme.colors.titleColor}}>
                             {this.getUserEmail()}
                         </span>
                         <components.Spacer direction="v" size={60} />
                         <div style={{position: "absolute", left: "36%", bottom: "20%"}}>
-                            <bootstrap.Button onClick={this.sendResetEmail} style={buttonStyle}>
+                            <bootstrap.Button onClick={this.sendResetEmail} style={buttonStyle(theme)}>
                                 {stringIt.send}
                             </bootstrap.Button>
                         </div>
@@ -205,23 +213,23 @@ var User = React.createClass({
                 {/* Manual change of the password */}
                 <bootstrap.Col style={{height: "calc(100vh - 200px)"}} xs={6}>
                     <div style={{marginTop: "40px", height: "calc(100vh - 260px)"}} >
-                        <h4 style={styles.titleTab}>{stringIt.manualReset}</h4>
+                        <h4 style={styles(theme).titleTab}>{stringIt.manualReset}</h4>
                         <components.Spacer direction="v" size={20} />
                         <span>{stringIt.manualEmail}</span>
-                        <span style={{fontSize: "12pt", color: colors.titleColor}}>
+                        <span style={{fontSize: "12pt", color: theme.colors.titleColor}}>
                             {this.getUserEmail()}
                         </span>
-                        <h4 style={{color: colors.primary}}>{stringIt.newPassword}</h4>
+                        <h4 style={{color: theme.colors.primary}}>{stringIt.newPassword}</h4>
                         <div style={{textAlign: "center"}}>
                             <bootstrap.Input
                                 onChange={(input) => this.setState({inputPassword: input.target.value})}
-                                style={R.merge(styles.inputLine, {width: "95%", display: "inline"})}
+                                style={R.merge(styles(theme).inputLine, {width: "95%", display: "inline"})}
                                 type="text"
                             />
                             <components.Spacer direction="v" size={40} />
                         </div>
                         <div style={{position: "absolute", left: "36%", bottom: "20%"}}>
-                            <components.Button onClick={this.setNewPassword} style={buttonStyle}>
+                            <components.Button onClick={this.setNewPassword} style={buttonStyle(theme)}>
                                 {stringIt.confirm}
                             </components.Button>
                         </div>
@@ -232,12 +240,13 @@ var User = React.createClass({
         );
     },
     renderUserSitiTab: function () {
-        var getSitiOfUser = this.getSiti()
+        const theme = this.getTheme();
+        const getSitiOfUser = this.getSiti()
             .filter(value => CollectionUtils.sites.filter(value, this.state.inputFilter))
             .map(this.renderTableSitiToUser);
         return (
             <bootstrap.Tab eventKey={3} style={{marginLeft: "15px"}} title="Siti">
-                <h4 style={R.merge(styles.titleTab, {marginTop: "0px", paddingTop: "30px"})} >
+                <h4 style={R.merge(styles(theme).titleTab, {marginTop: "0px", paddingTop: "30px"})} >
                     {stringIt.setSitiOfUser}
                 </h4>
                 <span>{stringIt.setUserSite}</span>
@@ -245,11 +254,11 @@ var User = React.createClass({
                 {this.renderSelectUserSite()}
                 <components.Button
                     onClick={this.selectAllSiteToUser}
-                    style={R.merge(buttonStyle, {marginLeft: "20px", height: "34px"})}
+                    style={R.merge(buttonStyle(theme), {marginLeft: "20px", height: "34px"})}
                 >
                     {stringIt.addAllSites}
                 </components.Button>
-                <h4 style={R.merge(styles.titleTab, {fontSize: "14pt", marginTop: "20px", marginBottom: "20px"})} >
+                <h4 style={R.merge(styles(theme).titleTab, {fontSize: "14pt", marginTop: "20px", marginBottom: "20px"})} >
                     {stringIt.getSitiOfUser}
                 </h4>
                 <div style={{display: "flex"}}>
@@ -276,9 +285,9 @@ var User = React.createClass({
                                 icon="minus"
                                 onClick={this.removeAllSiteFromUser}
                                 style={{
-                                    color: colors.primary,
+                                    color: theme.colors.primary,
                                     padding: "8px",
-                                    border: `1px solid ${colors.greyBorder}`,
+                                    border: `1px solid ${theme.colors.greyBorder}`,
                                     height: "30px"
                                 }}
                             />
@@ -296,10 +305,11 @@ var User = React.createClass({
         );
     },
     render: function () {
+        const theme = this.getTheme();
         return (
             <div className="users-admin">
                 <Radium.Style
-                    rules={R.merge(styles.tabForm, {
+                    rules={R.merge(styles(theme).tabForm, {
                         ".panel-body": {
                             display: "inline-block"
                         },
@@ -307,16 +317,16 @@ var User = React.createClass({
                             marginBottom: "0px"
                         },
                         ".form-control:focus": {
-                            borderColor: colors.greyBorder
+                            borderColor: theme.colors.greyBorder
                         },
                         ".input-group-addon": {
-                            backgroundColor: colors.white
+                            backgroundColor: theme.colors.white
                         },
                         ".table > tbody > tr > td": {
                             borderTop: "0px"
                         },
                         "span": {
-                            color: colors.greySubTitle
+                            color: theme.colors.greySubTitle
                         }
                     })}
                     scopeSelector=".users-admin"
@@ -327,11 +337,11 @@ var User = React.createClass({
                             <img src={icons.iconArrowLeft} style={{height: "30px", float: "left"}} />
                         </bootstrap.Button>
                     </Router.Link>
-                    <h4 style={{color: colors.titleColor}}>
+                    <h4 style={{color: theme.colors.titleColor}}>
                         {`Modifica utente: ${this.getUserEmail()}`}
                     </h4>
                 </div>
-                <div className="tabbed-area" style={R.merge(styles.tabbedArea, {marginTop: "0px"})}>
+                <div className="tabbed-area" style={R.merge(styles(theme).tabbedArea, {marginTop: "0px"})}>
                     <bootstrap.Tabs
                         activeKey={this.state.key}
                         animation={false}

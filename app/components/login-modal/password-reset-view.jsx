@@ -4,11 +4,11 @@ import React, {PropTypes} from "react";
 import * as bootstrap from "react-bootstrap";
 
 import components from "components";
-import colors from "lib/colors_restyling";
 import icons from "lib/icons";
 import string from "lib/string-it";
+import {dafaultTheme} from "lib/theme";
 
-var styles = {
+const stylesFunction = ({colors}) => ({
     radiumStylePasswordReset: {
         ".form-group": {
             marginBottom: "0px"
@@ -50,17 +50,23 @@ var styles = {
         marginTop: "16px",
         textAlign: "center"
     }
-};
+});
 
 var PasswordResetView = React.createClass({
     propTypes: {
         asteroid: PropTypes.object.isRequired
+    },
+    contextTypes: {
+        theme: PropTypes.object
     },
     getInitialState: function () {
         return {
             emailSent: false,
             error: null
         };
+    },
+    getTheme: function () {
+        return this.context.theme || dafaultTheme;
     },
     setEmailSent: function () {
         this.setState({
@@ -81,7 +87,7 @@ var PasswordResetView = React.createClass({
             .then(this.setEmailSent)
             .catch(this.setError);
     },
-    renderError: function () {
+    renderError: function (styles) {
         return this.state.error ? (
             <bootstrap.Alert
                 bsStyle="danger"
@@ -98,7 +104,7 @@ var PasswordResetView = React.createClass({
             </h4>
         );
     },
-    renderResetForm: function () {
+    renderResetForm: function (styles) {
         return (
             <div>
                 <div className="ac-login-modal-inputs" style={styles.inputs}>
@@ -128,10 +134,11 @@ var PasswordResetView = React.createClass({
         );
     },
     render: function () {
+        const styles = stylesFunction(this.getTheme());
         return (
             this.state.emailSent ?
-            this.renderInfoMessage() :
-            this.renderResetForm()
+            this.renderInfoMessage(styles) :
+            this.renderResetForm(styles)
         );
     }
 });

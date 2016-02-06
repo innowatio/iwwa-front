@@ -5,9 +5,9 @@ import moment from "moment";
 import ReactPureRender from "react-addons-pure-render-mixin";
 import IPropTypes from "react-immutable-proptypes";
 
-import * as colors from "lib/colors_restyling";
 import components from "components";
 import readingsDailyAggregatesToDygraphData from "lib/readings-daily-aggregates-to-dygraph-data";
+import {defaultTheme} from "lib/theme";
 
 var DateCompare = React.createClass({
     propTypes: {
@@ -16,7 +16,13 @@ var DateCompare = React.createClass({
         misure: IPropTypes.map,
         sites: React.PropTypes.arrayOf(IPropTypes.map)
     },
+    contextTypes: {
+        theme: PropTypes.object
+    },
     mixins: [ReactPureRender],
+    getTheme: function () {
+        return this.context.theme || defaultTheme;
+    },
     getDatesFromChartState: function () {
         return this.props.chart.map(singleSelection => singleSelection.date);
     },
@@ -134,6 +140,7 @@ var DateCompare = React.createClass({
     },
     render: function () {
         const source = this.props.chart[0].source;
+        const {colors} = this.getTheme();
         /*
         *   `y2label` is empty. It's a workaround to prevent this dygraph
         *    bug: https://github.com/danvk/dygraphs/issues/629

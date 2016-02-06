@@ -2,14 +2,21 @@ var R         = require("ramda");
 var React     = require("react");
 var bootstrap = require("react-bootstrap");
 
-var colors = require("lib/colors_restyling");
+import {defaultTheme} from "lib/theme";
 
 var Button = React.createClass({
     propTypes: {
         active: React.PropTypes.bool,
         style: React.PropTypes.object
     },
+    contextTypes: {
+        theme: React.PropTypes.object
+    },
+    getTheme: function () {
+        return this.context.theme || defaultTheme;
+    },
     render: function () {
+        const {colors} = this.getTheme();
         var button = (
             <bootstrap.Button {...this.props} />
         );
