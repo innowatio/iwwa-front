@@ -20,7 +20,8 @@ describe("The TemporalLineGraph component", function () {
             },
             drawAnnotations: function () {},
             getOptionsFromProps: sinon.spy(),
-            getCoordinatesFromProps: sinon.spy()
+            getCoordinatesFromProps: sinon.spy(),
+            getTheme: sinon.stub().returns({})
         };
         var newPropsWithChangedCoordinates = {
             coordinates: [1, 2]

@@ -22,7 +22,7 @@ const stylesFunction = ({colors}) => ({
         width: "100%",
         top: measures.headerHeight,
         backgroundColor: colors.background,
-        height: "100%",
+        height: "100vh",
         transition: "left 0.3s ease"
     },
     sidebar: {
@@ -112,41 +112,43 @@ var Root = React.createClass({
         const titleView = this.props.children.props.route.titleView || "";
         return (
             <StyleRoot>
-                <components.SideNav
-                    items={this.getMenuItems()}
-                    linkClickAction={this.closeSidebar}
-                    sidebarOpen={this.state.sidebarOpen}
-                    style={this.getSidebarStyle(styles)}
-                />
-                <div style={styles.header}>
-                    <components.Header
+                <div style={{backgroundColor: this.getTheme().background}}>
+                    <components.SideNav
+                        items={this.getMenuItems()}
+                        linkClickAction={this.closeSidebar}
+                        sidebarOpen={this.state.sidebarOpen}
+                        style={this.getSidebarStyle(styles)}
+                    />
+                    <div style={styles.header}>
+                        <components.Header
+                            asteroid={asteroid}
+                            menuClickAction={this.toggleSidebar}
+                            selectThemeColor={this.props.selectThemeColor}
+                            title={titleView}
+                            userSetting={this.props.reduxState.userSetting}
+                        />
+                    </div>
+                    <div style={
+                        ENVIRONMENT === "cordova" ?
+                        styles.content :
+                        merge(styles.content, {width: `calc(100% - ${measures.sidebarShoulderWidth})`, float: "right"})}
+                    >
+                        <components.PageContainer
+                            asteroid={asteroid}
+                            children={this.props.children}
+                            collections={this.state.collections}
+                            localStorage={this.state.localStorage}
+                            reduxState={this.props.reduxState}
+                        />
+                    </div>
+                    <div style={styles.footer}>
+                        {"Copyright 2015 - Innowatio"}
+                    </div>
+                    <components.LoginModal
                         asteroid={asteroid}
-                        menuClickAction={this.toggleSidebar}
-                        selectThemeColor={this.props.selectThemeColor}
-                        title={titleView}
-                        userSetting={this.props.reduxState.userSetting}
+                        isOpen={!this.state.userId}
                     />
                 </div>
-                <div style={
-                    ENVIRONMENT === "cordova" ?
-                    styles.content :
-                    merge(styles.content, {width: `calc(100% - ${measures.sidebarShoulderWidth})`, float: "right"})}
-                >
-                    <components.PageContainer
-                        asteroid={asteroid}
-                        children={this.props.children}
-                        collections={this.state.collections}
-                        localStorage={this.state.localStorage}
-                        reduxState={this.props.reduxState}
-                    />
-                </div>
-                <div style={styles.footer}>
-                    {"Copyright 2015 - Innowatio"}
-                </div>
-                <components.LoginModal
-                    asteroid={asteroid}
-                    isOpen={!this.state.userId}
-                />
             </StyleRoot>
         );
     }

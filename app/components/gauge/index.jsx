@@ -104,10 +104,10 @@ var Gauge = React.createClass({
                         />
                     </g>
                     <rect
-                        fill={theme.colors.white}
+                        fill={theme.colors.greyLight}
                         height="5"
                         style={{zIndex: 4}}
-                        width="200"
+                        width="198"
                         x="0"
                         y="100"
                     />

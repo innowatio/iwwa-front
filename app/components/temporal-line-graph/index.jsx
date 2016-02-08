@@ -47,7 +47,7 @@ var TemporalLineGraph = React.createClass({
         this.drawGraph();
     },
     componentWillReceiveProps: function (nextProps, nextContext) {
-        const theme = nextContext ? nextContext.theme : defaultTheme;
+        const theme = nextContext ? nextContext.theme : this.getTheme();
         var options = this.getOptionsFromProps(nextProps, theme);
         this.graph.updateOptions(R.merge(options, {
             file: this.getCoordinatesFromProps(nextProps)
@@ -211,7 +211,7 @@ var TemporalLineGraph = React.createClass({
     drawGraph: function () {
         var container = this.refs.graphContainer;
         var coordinates = this.getCoordinatesFromProps(this.props);
-        var options = this.getOptionsFromProps(this.props);
+        var options = this.getOptionsFromProps(this.props, this.getTheme());
         /*
         *   Instantiating the graph automatically renders it to the page
         */
