@@ -36,15 +36,23 @@ const selectStyles = {
 
 const consumptionButtonStyle = ({colors}) => ({
     color: colors.greySubTitle,
-    width: ENVIRONMENT === "cordova" ? "23%" : "180px",
-    textAlign: "left",
+    textAlign: "center",
     marginRight: "15px !important",
-    borderRadius: "0px"
+    borderRadius: "22px",
+    width: "45px",
+    height: "45px",
+    transition: "width 0.4s ease-in-out",
+    border: "none"
 });
 
 const consumptionButtonSelectedStyle = ({colors}) => ({
     color: colors.white,
-    backgroundColor: colors.consumption
+    backgroundColor: colors.consumption,
+    textAlign: "left",
+    borderRadius: "22px",
+    width: ENVIRONMENT === "cordova" ? "23%" : "160px",
+    height: "45px",
+    transition: "width 0.4s ease-in-out"
 });
 
 var Chart = React.createClass({
@@ -346,17 +354,6 @@ var Chart = React.createClass({
                         </components.TutorialAnchor>
                     </span>
                 </bootstrap.Col>
-                <bootstrap.Col sm={12}>
-                    <components.ConsumptionButtons
-                        allowedValues={parameters.getConsumptions(this.getTheme())}
-                        onChange={consumptionTypes => this.onChangeConsumption(null, consumptionTypes)}
-                        selectedValue={selectedConsumptionType}
-                        style={{width: "100%"}}
-                        styleButton={consumptionButtonStyle(this.getTheme())}
-                        styleButtonSelected={consumptionButtonSelectedStyle(this.getTheme())}
-                        styleIcon={{height: "25px", marginRight: "10px", borderRadius: "0px"}}
-                    />
-                </bootstrap.Col>
                 <bootstrap.Col className="modal-container" sm={12}>
                     <components.TutorialAnchor
                         message={ENVIRONMENT === "cordova" ? tutorialString.appGraph : tutorialString.webGraph}
@@ -376,6 +373,17 @@ var Chart = React.createClass({
                             sites={selectedSites}
                         />
                     </components.TutorialAnchor>
+                </bootstrap.Col>
+                <bootstrap.Col sm={12}>
+                    <components.ConsumptionButtons
+                        allowedValues={parameters.getConsumptions(this.getTheme())}
+                        onChange={consumptionTypes => this.onChangeConsumption(null, consumptionTypes)}
+                        selectedValue={selectedConsumptionType}
+                        style={{width: "100%"}}
+                        styleButton={consumptionButtonStyle(this.getTheme())}
+                        styleButtonSelected={consumptionButtonSelectedStyle(this.getTheme())}
+                        styleIcon={{position: "absolute", left: "2px", top: "2px", height: "90%"}}
+                    />
                 </bootstrap.Col>
             </div>
         );

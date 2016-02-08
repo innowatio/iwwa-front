@@ -21,5 +21,9 @@ export const colorsLightTheme = {
     consumption: "#F74F68",
     transparent: "rgba(0,0,0,0)",
     backgroundLogin: "linear-gradient(235deg,#8a95c8,#7483be,#5b72b3,#4e64a1,#4554a1,#624899,#984898,#eb437f,#d26faa,#b08abc)",
-    backgroundTheme: "#ffffff"
+    backgroundTheme: "#ffffff",
+    temperature: "#26C6DA",
+    humidity: "#FDD835",
+    illuminance: "#1DE9B6",
+    co2: "#CE93D8"
 };

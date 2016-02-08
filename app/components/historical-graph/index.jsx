@@ -54,9 +54,6 @@ var HistoricalGraph = React.createClass({
         const {colors} = this.getTheme();
         return (
             <div style={{width: "100%", height: "100%"}}>
-                <h4 className="text-center" style={{color: colors.greySubTitle}}>
-                    {this.props.chart[0].measurementType.label}
-                </h4>
                 <div
                     onClick={this.props.resetCompare}
                     style={{

@@ -3,6 +3,8 @@ var R          = require("ramda");
 var Radium     = require("radium");
 var React      = require("react");
 
+var components = require("components");
+
 var ConsumptionButtons = React.createClass({
     propTypes: {
         allowedValues: React.PropTypes.array.isRequired,
@@ -15,15 +17,18 @@ var ConsumptionButtons = React.createClass({
     },
     renderConsumptionButton: function (consumption) {
         var isSelected = R.equals(consumption, this.props.selectedValue);
+        const consumptionButtonColor = {
+            backgroundColor: consumption.color
+        };
         return (
-            <bootstrap.Button
+            <components.Button
                 key={consumption.key}
                 onClick={R.partial(this.props.onChange, [consumption])}
-                style={R.merge(this.props.styleButton, isSelected ? this.props.styleButtonSelected : {})}
+                style={R.merge(R.merge(this.props.styleButton, isSelected ? this.props.styleButtonSelected : {}), consumptionButtonColor)}
             >
-                {consumption.icon ? <img src={isSelected && consumption.selected ? consumption.selected : consumption.icon} style={this.props.styleIcon} /> : ""}
-                {consumption.label}
-            </bootstrap.Button>);
+                <img src={consumption.selected} style={this.props.styleIcon} />
+                <div style={{textAlign: "center", transition: "width 0.5s ease-in-out", overflow: "hidden"}}>{isSelected ? consumption.label : ""}</div>
+            </components.Button>);
     },
     render: function () {
         return (
