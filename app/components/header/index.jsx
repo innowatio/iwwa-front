@@ -104,9 +104,7 @@ var Header = React.createClass({
                 <div style={styles.viewTitle}>
                     {this.props.title.toUpperCase()}
                 </div>
-                <span style={{marginRight: "10px"}}>
-                    {this.renderUserSetting()}
-                </span>
+                {this.renderUserSetting()}
                 {this.renderAdminPage()}
                 <span onClick={this.logout} style={styles.icon}>
                     <img className="pull-right" src={icons.iconLogout} style={{width: "85%"}}/>

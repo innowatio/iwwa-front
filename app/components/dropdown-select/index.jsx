@@ -30,6 +30,8 @@ var DropdownSelect = React.createClass({
     },
     shouldComponentUpdate: function (nextProps) {
         // TODO: control component update in update theme.
+        // FIXME: Check why this component don't change color with context.
+        // See react issue: https://github.com/facebook/react/issues/2517
         return !(
             this.props.allowedValues === nextProps.allowedValues &&
             this.props.getKey === nextProps.getKey &&
