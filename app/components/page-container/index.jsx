@@ -73,7 +73,7 @@ var PageContainer = React.createClass({
         return (
             <div
                 {...this.props}
-                style={{...style}}
+                style={style}
             >
                 <div style={styles(this.getTheme()).titlePage}>
                     <h2 style={{fontSize: "18px", marginBottom: "0px", paddingTop: "18px"}}>

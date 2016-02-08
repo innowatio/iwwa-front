@@ -46,8 +46,9 @@ var TemporalLineGraph = React.createClass({
     componentDidMount: function () {
         this.drawGraph();
     },
-    componentWillReceiveProps: function (nextProps) {
-        var options = this.getOptionsFromProps(nextProps);
+    componentWillReceiveProps: function (nextProps, nextContext) {
+        const theme = nextContext ? nextContext.theme : defaultTheme;
+        var options = this.getOptionsFromProps(nextProps, theme);
         this.graph.updateOptions(R.merge(options, {
             file: this.getCoordinatesFromProps(nextProps)
         }));
@@ -63,7 +64,7 @@ var TemporalLineGraph = React.createClass({
             props.coordinates
         );
     },
-    getUnderlayForWeekEnd: function (canvas, area, g, date, dayFrom0Unix) {
+    getUnderlayForWeekEnd: function (canvas, area, g, date, dayFrom0Unix, theme) {
         if (
             R.equals(moment.utc(date).format("YYYY-MM-DD"), moment.utc(date).day(6).format("YYYY-MM-DD"))
         ) {
@@ -73,13 +74,11 @@ var TemporalLineGraph = React.createClass({
             var topRight = g.toDomCoords(dayTopRight, +20);
             var left = bottomLeft[0];
             var right = topRight[0];
-
-            const {colors} = this.getTheme();
-            canvas.fillStyle = colors.greyBackground;
+            canvas.fillStyle = theme.colors.graphUnderlay;
             canvas.fillRect(left, area.y, right - left, area.h);
         }
     },
-    getOptionsFromProps: function (props) {
+    getOptionsFromProps: function (props, theme) {
         var options = {
             series: {},
             connectSeparatedPoints: true,
@@ -89,7 +88,7 @@ var TemporalLineGraph = React.createClass({
             includeZero: true,
             labels: this.getLabelsFromProps(props),
             labelsSeparateLines: true,
-            legend: "always",
+            legend: "never",
             sigma: 2,
             strokeWidth: 1.5,
             xlabel: props.xLabel,
@@ -130,7 +129,7 @@ var TemporalLineGraph = React.createClass({
                 const numberOfDayInGraph = moment.utc(dateEnd).diff(dateStart, "days");
                 for (var i=0; i<=numberOfDayInGraph; i++) {
                     const day = moment.utc(dateStart).add({days: i});
-                    this.getUnderlayForWeekEnd(canvas, area, g, day);
+                    this.getUnderlayForWeekEnd(canvas, area, g, day, null, theme);
                 }
             };
         }
@@ -140,7 +139,7 @@ var TemporalLineGraph = React.createClass({
                 const numberOfDayInGraph = moment.utc(date.end).diff(date.start, "days");
                 for (var i=0; i<=numberOfDayInGraph; i++) {
                     const day = moment.utc(date.start).add({days: i});
-                    this.getUnderlayForWeekEnd(canvas, area, g, day);
+                    this.getUnderlayForWeekEnd(canvas, area, g, day, null, theme);
                 }
             };
         }
@@ -150,7 +149,7 @@ var TemporalLineGraph = React.createClass({
                 for (var i=0; i<=props.dateWindow.dayToAdd; i++) {
                     const day = moment.utc(dateStart).add({days: i});
                     const dayFrom0Unix = moment.utc(0).add({days: i});
-                    this.getUnderlayForWeekEnd(canvas, area, g, day, dayFrom0Unix);
+                    this.getUnderlayForWeekEnd(canvas, area, g, day, dayFrom0Unix, theme);
                 }
             };
         }
@@ -364,9 +363,12 @@ var TemporalLineGraph = React.createClass({
                             border: `4px solid ${colors.red} !important`,
                             borderRadius: "50%"
                         },
+                        ".dygraph-axis-label": {
+                            color: colors.axisLabel
+                        },
                         ".dygraph-y2label": {
-                            backgroundColor: colors.white,
-                            height: "56px"
+                            backgroundColor: colors.background,
+                            height: "58px"
                         },
                         ".dygraph-legend": {
                             display: ENVIRONMENT === "cordova" ? "none" : "initial",

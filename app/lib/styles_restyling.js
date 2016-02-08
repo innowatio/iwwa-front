@@ -35,7 +35,7 @@ export const styles = (theme) => ({
         borderRadius: "3px",
         overflow: "hidden",
         padding: "10px",
-        boxShadow: "2px 2px 5px " + theme.colors.greySubTitle,
+        boxShadow: "2px 2px 5px " + theme.colors.mainDivShadow,
         height: measures.mainComponentHeight
     },
     tabbedArea: {
@@ -48,8 +48,8 @@ export const styles = (theme) => ({
     },
     titlePage: {
         width: "100%",
-        color: theme.colors.titleColor,
-        backgroundColor: theme.colors.greyBackground,
+        color: theme.colors.white,
+        backgroundColor: theme.colors.titlePage,
         paddingLeft: "10px",
         paddingRight: "10px",
         marginTop: "-20px",

@@ -21,7 +21,7 @@ const stylesFunction = ({colors}) => ({
     content: {
         width: "100%",
         top: measures.headerHeight,
-        backgroundColor: colors.backgroundTheme,
+        backgroundColor: colors.background,
         height: "100%",
         transition: "left 0.3s ease"
     },

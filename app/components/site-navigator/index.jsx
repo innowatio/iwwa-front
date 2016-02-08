@@ -262,6 +262,7 @@ var SiteNavigator = React.createClass({
                 <components.Button
                     bsStyle="link"
                     onClick={this.onClickSiteNavigatorButton}
+                    style={{backgroundColor: this.getTheme().colors.background}}
                 >
                     <img src={icons.iconSiti} style={{width: "75%"}} />
                 </components.Button>

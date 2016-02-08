@@ -124,6 +124,7 @@ var DatefilterMonthlyModal = React.createClass({
                 <components.Button
                     bsStyle="link"
                     onClick={this.open}
+                    style={{backgroundColor: colors.background}}
                 >
                     {this.props.title}
                 </components.Button>
