@@ -2,7 +2,7 @@ import IPropTypes from "react-immutable-proptypes";
 import R from "ramda";
 import React, {PropTypes} from "react";
 
-import icons from "lib/icons_restyling";
+import icons from "lib/icons";
 import {styles} from "lib/styles_restyling";
 import {defaultTheme} from "lib/theme";
 
@@ -79,7 +79,7 @@ var PageContainer = React.createClass({
                     <h2 style={{fontSize: "18px", marginBottom: "0px", paddingTop: "18px"}}>
                         {this.renderTitle()}
                     </h2>
-                    <img className="pull-right" src={icons.iconSettings} style={{marginTop: "-20px"}}/>
+                    <img className="pull-right" src={icons.iconUserSettings} style={{marginTop: "-20px", width: "25px"}}/>
                 </div>
                 <div>
                     {this.renderChildren()}

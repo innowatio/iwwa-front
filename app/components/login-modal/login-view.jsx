@@ -4,7 +4,7 @@ import React, {PropTypes} from "react";
 import * as bootstrap from "react-bootstrap";
 
 import components from "components";
-import icons from "lib/icons_restyling";
+import icons from "lib/icons";
 import string from "lib/string-it";
 import {defaultTheme} from "lib/theme";
 

@@ -6,7 +6,7 @@ import {bindActionCreators} from "redux";
 
 var asteroid          = require("lib/asteroid");
 var components        = require("components");
-var icons             = require("lib/icons_restyling");
+var icons             = require("lib/icons");
 var LocalStorageMixin = require("lib/localstorage-mixin");
 var measures          = require("lib/measures");
 import {theme, defaultTheme} from "lib/theme";

@@ -3,7 +3,7 @@ import {Map, List} from "immutable";
 import {Link} from "react-router";
 import {merge, prop} from "ramda";
 
-import icons from "lib/icons_restyling";
+import icons from "lib/icons";
 import {defaultTheme} from "lib/theme";
 import components from "components";
 
