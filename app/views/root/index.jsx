@@ -22,7 +22,7 @@ const stylesFunction = ({colors}) => ({
         width: "100%",
         top: measures.headerHeight,
         backgroundColor: colors.background,
-        height: "100vh",
+        height: `calc(100vh - ${measures.headerHeight})`,
         transition: "left 0.3s ease"
     },
     sidebar: {
@@ -107,6 +107,13 @@ var Root = React.createClass({
             )
         });
     },
+    renderFooter: function (styles) {
+        return ENVIRONMENT !== "cordova" ? (
+            <div style={styles.footer}>
+                {"Copyright 2015 - Innowatio"}
+            </div>
+        ) : null;
+    },
     render: function () {
         const styles = stylesFunction(this.getTheme());
         const titleView = this.props.children.props.route.titleView || "";
@@ -141,9 +148,7 @@ var Root = React.createClass({
                             reduxState={this.props.reduxState}
                         />
                     </div>
-                    <div style={styles.footer}>
-                        {"Copyright 2015 - Innowatio"}
-                    </div>
+                    {this.renderFooter(styles)}
                     <components.LoginModal
                         asteroid={asteroid}
                         isOpen={!this.state.userId}

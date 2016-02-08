@@ -77,7 +77,6 @@
     "asteroid": "mondora/asteroid#1.0.0-rewrite",
     "asteroid-immutable-collections-mixin": "^1.0.1",
     "axios": "^0.9.0",
-    "babel": "^6.3.26",
     "bootstrap": "^3.3.6",
     "color": "^0.11.1",
     "compression": "^1.6.0",
