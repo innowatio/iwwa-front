@@ -17,7 +17,7 @@ function getFilterFn (filter) {
     ));
 }
 
-const reducerIndexed = addIndex(reduce);
+const indexedReduce = addIndex(reduce);
 
 function getFindAggregateFilterIndex (filters) {
     const filterFns = filters.map(getFilterFn);
@@ -25,7 +25,7 @@ function getFindAggregateFilterIndex (filters) {
         (
             filters[0].date.type !== "dateCompare" ?
             findIndex(filterFn => filterFn(aggregate), filterFns) :
-            reducerIndexed((acc, filterFn, index) => {
+            indexedReduce((acc, filterFn, index) => {
                 filterFn(aggregate) ? acc.push(index) : acc;
                 return acc;
             }, [], filterFns)
