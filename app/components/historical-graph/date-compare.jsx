@@ -41,10 +41,12 @@ var DateCompare = React.createClass({
         if (period.key === "years" || period.key === "months") {
             // Get date window from 0 (1 Jan 1970) to 5 or 6 weeks later (this is
             // found from the function `weeksToAdd`).
+            const endDate = moment.utc(start).add({weeks: this.weeksToAdd()}).endOf("isoWeek");
+            const numberToEndDate = moment(endDate).diff(start, "days");
             return {
                 start,
                 dayToAdd: this.weeksToAdd() * 7,
-                dateArray: [0, moment.utc(0).add({weeks: this.weeksToAdd()}).valueOf()]
+                dateArray: [moment.utc(0).valueOf(), moment.utc(0).add({days: numberToEndDate + 1}).valueOf()]
             };
         }
         return {};
@@ -104,7 +106,7 @@ var DateCompare = React.createClass({
         // }
         if (period.key === "months" || period.key === "years") {
             // Range of 5 or 6 weeks --> (5 || 6) * 7 days.
-            return range(0, (this.weeksToAdd() * 7) + 1).map(n => {
+            return range(0, (this.weeksToAdd() * 8) + 2).map(n => {
                 const delta = moment.utc(0).add(n, "days").valueOf();
                 var rangeOne = moment.utc(dates[0].start).add(n, "days");
                 var rangeTwo = moment.utc(dates[1].start).add(n, "days");
@@ -151,7 +153,7 @@ var DateCompare = React.createClass({
                 coordinates={this.getCoordinates()}
                 dateWindow={this.getDateWindow()}
                 labels={this.getLabels()}
-                lockInteraction={true}
+                lockInteraction={false}
                 ref="temporalLineGraph"
                 site={this.props.sites[0] || Map()}
                 xLegendFormatter={this.xLegendFormatter}
