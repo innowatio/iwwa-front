@@ -58,7 +58,7 @@ var DateCompare = React.createClass({
     xLegendFormatter: function (value) {
         return [
             "<b style='color:black;'>",
-            "Giorno " + moment.utc(value).format("DD"),
+            "Giorno " + moment.utc(value).diff(0, "days"),
             ", ",
             "ore " + moment.utc(value).format("HH:mm"),
             "</b>"
@@ -153,7 +153,7 @@ var DateCompare = React.createClass({
                 coordinates={this.getCoordinates()}
                 dateWindow={this.getDateWindow()}
                 labels={this.getLabels()}
-                lockInteraction={false}
+                lockInteraction={true}
                 ref="temporalLineGraph"
                 site={this.props.sites[0] || Map()}
                 xLegendFormatter={this.xLegendFormatter}

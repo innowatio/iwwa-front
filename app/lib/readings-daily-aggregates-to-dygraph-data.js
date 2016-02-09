@@ -1,4 +1,4 @@
-import {findIndex, last, memoize, prop, reduce, sortBy, values} from "ramda";
+import {addIndex, findIndex, is, isEmpty, last, memoize, prop, reduce, sortBy, values} from "ramda";
 import moment from "moment";
 
 import decimate from "./decimate-data-to-dygraph";
@@ -17,9 +17,19 @@ function getFilterFn (filter) {
     ));
 }
 
+const reducerIndexed = addIndex(reduce);
+
 function getFindAggregateFilterIndex (filters) {
     const filterFns = filters.map(getFilterFn);
-    return aggregate => findIndex(filterFn => filterFn(aggregate), filterFns);
+    return aggregate =>
+        (
+            filters[0].date.type !== "dateCompare" ?
+            findIndex(filterFn => filterFn(aggregate), filterFns) :
+            reducerIndexed((acc, filterFn, index) => {
+                filterFn(aggregate) ? acc.push(index) : acc;
+                return acc;
+            }, [], filterFns)
+        );
 }
 
 function getOffsetDays (aggregate, filters, index) {
@@ -33,22 +43,26 @@ export function groupByDate (filters) {
     const defaultGroup = filters.map(() => [ALMOST_ZERO]);
     const findAggregateFilterIndex = getFindAggregateFilterIndex(filters);
     return (group, aggregate) => {
-        const index = findAggregateFilterIndex(aggregate);
-        if (index === -1) {
+        var indexes = findAggregateFilterIndex(aggregate);
+        if (indexes === -1 || isEmpty(indexes)) {
             return group;
         }
-        const offsetDays = getOffsetDays(aggregate, filters, index);
-        const measurementsDeltaInMs = aggregate.get("measurementsDeltaInMs");
-        const measurementValuesArray = aggregate.get("measurementValues").split(",");
-        measurementValuesArray.forEach((value, offset) => {
-            // This add the offset from the local to the UTC time.
-            const date = offsetDays + (offset * measurementsDeltaInMs);
-            group[date] = group[date] || [new Date(date)].concat(defaultGroup);
-            const numericValue = parseFloat(value);
-            group[date][index + 1] = [
-                numericValue ||
-                (numericValue === 0 ? ALMOST_ZERO : EMPTY)
-            ];
+        indexes = is(Number, indexes) ? [indexes] : indexes;
+        indexes.forEach(index => {
+            const offsetDays = getOffsetDays(aggregate, filters, index);
+            const measurementsDeltaInMs = aggregate.get("measurementsDeltaInMs");
+            const measurementValuesArray = aggregate.get("measurementValues").split(",");
+            measurementValuesArray.forEach((value, offset) => {
+                // This add the offset from the local to the UTC time.
+                const date = offsetDays + (offset * measurementsDeltaInMs);
+                group[date] = group[date] || [new Date(date)].concat(defaultGroup);
+                const numericValue = parseFloat(value);
+                group[date][index + 1] = [
+                    numericValue ||
+                    (numericValue === 0 ? ALMOST_ZERO : EMPTY)
+                ];
+            });
+            return group;
         });
         return group;
     };

@@ -51,11 +51,13 @@ var HistoricalGraph = React.createClass({
         return this.renderValoriCompareGraph();
     },
     render: function () {
+        const {colors} = this.getTheme();
         return (
             <div style={{width: "100%", height: "100%"}}>
                 <div
                     onClick={this.props.resetCompare}
                     style={{
+                        color: colors.resetCompare,
                         display: this.props.isComparationActive ? "flex" : "none",
                         positeson: "relative",
                         marginLeft: "50px",

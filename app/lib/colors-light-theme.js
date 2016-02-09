@@ -25,6 +25,7 @@ export const colorsLightTheme = {
     mainDivShadow: "#8c8c8d",
     primary: "#3e50b4",
     red: "#f71c50",
+    resetCompare: "#000000",
     temperature: "#26C6DA",
     titleColor: "#3e50b4",
     titlePage: "#536DFE",
