@@ -14,8 +14,8 @@ export function getDateRangesCompare ({period, dateOne}) {
     if (period.key === "years" || period.key === "months") {
         const startOne = moment.utc(dateOne).startOf("month").subtract({days: 2}).weekday(1).valueOf();
         const startTwo = period.key === "years" ?
-            moment.utc(dateOne).subtract({weeks: moment.utc().weeksInYear()}).startOf("isoWeek").valueOf() :
-            moment.utc(dateOne).subtract({weeks: 5}).startOf("isoWeek").valueOf();
+            moment.utc(dateOne).subtract({weeks: moment.utc().weeksInYear() + 1}).weekday(1).valueOf() :
+            moment.utc(dateOne).subtract({weeks: 6}).weekday(1).valueOf();
         const numberOfWeek = numberOfWeeksToAdd(startOne, startTwo);
         const dateArray = [startOne, startTwo];
         return map(dateStart => ({

@@ -131,9 +131,9 @@ describe("`chart` reducer [CASE: single object in default state array]", () => {
             };
             const ret = chart(chartState, valuePassedFromAction);
             const startOne = moment.utc(valuePassedFromAction.payload.dateOne)
-                .startOf("month").weekday(1).valueOf();
+                .startOf("month").subtract({days: 2}).weekday(1).valueOf();
             const startTwo = moment.utc(valuePassedFromAction.payload.dateOne)
-                .startOf("isoWeek").subtract({weeks: moment.utc().weeksInYear()}).valueOf();
+                .subtract({weeks: moment.utc().weeksInYear() + 1}).weekday(1).valueOf();
             expect(ret).to.deep.equal([{
                 ...defaultChartStateObject,
                 date: {
