@@ -289,7 +289,7 @@ describe("`chart` reducer [CASE: multiple object in default state array]", () =>
             const ret = chart(chartState, valuePassedFromAction);
             const startOne = moment.utc(valuePassedFromAction.payload.dateOne)
                 .startOf("month").subtract({days: 2}).weekday(1).valueOf();
-            const startTwo = moment.utc(valuePassedFromAction.payload.dateOne)
+            const startTwo = moment.utc(valuePassedFromAction.payload.dateOne).startOf("day")
                 .subtract({weeks: 6}).weekday(1).valueOf();
             expect(ret).to.deep.equal([{
                 ...defaultChartStateFirstObject,

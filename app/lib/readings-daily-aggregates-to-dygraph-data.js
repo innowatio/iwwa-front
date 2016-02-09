@@ -25,7 +25,7 @@ function getFindAggregateFilterIndex (filters) {
 function getOffsetDays (aggregate, filters, index) {
     const day = moment.utc(aggregate.get("day")).valueOf();
     return filters[0].date.type === "dateCompare" ?
-    (moment.utc(day).diff(moment.utc(filters[index].date.start)) + (moment().utcOffset() * ONE_MINUTE_IN_MS)) :
+    (moment(day).diff(filters[index].date.start) + (moment().utcOffset() * ONE_MINUTE_IN_MS)) :
     day;
 }
 
@@ -71,7 +71,7 @@ function fillMissingData (dygraphData) {
 }
 
 export default memoize(function readingsDailyAggregatesToDygraphData (aggregates, filters) {
-    const group = aggregates.reduce(groupByDate(filters), {});
+    const group = aggregates.sortBy(a => a.get("day")).reduce(groupByDate(filters), {});
     const filledData = fillMissingData(
         sortBy(prop(0), values(group))
     );
