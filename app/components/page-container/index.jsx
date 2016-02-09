@@ -1,4 +1,5 @@
 import IPropTypes from "react-immutable-proptypes";
+import moment from "moment";
 import R from "ramda";
 import React, {PropTypes} from "react";
 
@@ -28,19 +29,59 @@ var PageContainer = React.createClass({
     getTheme: function () {
         return this.context.theme || defaultTheme;
     },
-    getTitleForChartOrLive: function (reduxViewState) {
+    getTitleForSingleSensor: function (reduxViewState) {
         const path = reduxViewState.fullPath;
-        return path ? [
-            this.getSiteName(path[0]),
-            path.length > 1 ?
-                this.getSensorName(R.last(path)) :
-                undefined]
-            .filter(value => !R.isNil(value))
-            .join(" · ") :
-            "";
+        var res = [this.getSiteName(path[0])];
+        if (path.length > 1) {
+            if (this.getSensorName(R.last(path))) {
+                res.push(this.getSensorName(R.last(path)));
+            } else {
+                res.push(R.last(path));
+            }
+        }
+        return res.join(" · ");
+    },
+    getStringPeriod: function (period) {
+        const momentStart = moment(period.start);
+        const momentEnd = moment(period.end);
+
+        if (momentStart.month() === momentEnd.month() && momentStart.year() === momentEnd.year()) {
+            return `${momentStart.format("MMMM YYYY")}`;
+        } else {
+            return `${momentStart.format("DD MMMM")} - ${momentEnd.format("DD MMMM YYYY")}`;
+        }
+    },
+    getTitleForChart: function (chartState) {
+        /*
+            Selezione sito-pod-sensor:
+            NameSito (· NamePod/Sensor )· Period
+
+            Comparazione siti:
+            NameSito1 & NameSito2
+
+            Comparazione per data (su sito pod o sensor):
+            NameSito (· NamePod/Sensor )· Period1 & Period2
+
+            Compara energia con variabile:
+            NameSito (· NamePod/Sensor )· measureType & variableType
+
+        */
+        if (chartState.length === 1) {
+            return `${this.getTitleForSingleSensor(chartState[0])} · ${this.getStringPeriod(chartState[0].date)}`;
+        } else if (chartState.length > 1) {
+            // periods compare
+            if (!R.isEmpty(chartState[0].date.period) && chartState[0].date != chartState[1].date && chartState[0].fullPath === chartState[1].fullPath) {
+                return `${this.getTitleForSingleSensor(chartState[0])} · ${chartState.map(chart => this.getStringPeriod(chart.date)).join(" & ")}`;
+            } else if (chartState[0].site === chartState[1].site) {
+                return `${this.getTitleForSingleSensor(chartState[0])} & ${this.getSensorName(chartState[1].sensorId)}`;
+            // sites compare
+            } else if (chartState[0].fullPath !== chartState[1].fullPath) {
+                return `${this.getTitleForSingleSensor(chartState[0])} & ${this.getTitleForSingleSensor(chartState[1])}`;
+            }
+        }
     },
     getSensorName: function (sensorId) {
-        return this.props.collections.getIn(["sensors", sensorId, "description"]);
+        return this.props.collections.getIn(["sensors", sensorId, "description"]) || sensorId;
     },
     getSiteName: function (siteId) {
         return this.props.collections.getIn(["sites", siteId, "name"]);
@@ -59,11 +100,11 @@ var PageContainer = React.createClass({
         if (locationName === "chart") {
             const reduxChart = this.props.reduxState.chart;
 
-            locationLabel = R.map(this.getTitleForChartOrLive, reduxChart).join(" - ");
+            locationLabel = this.getTitleForChart(reduxChart);
         } else if (locationName === "live") {
             const reduxRealTime = this.props.reduxState.realTime;
 
-            locationLabel = this.getTitleForChartOrLive(reduxRealTime);
+            locationLabel = this.getTitleForSingleSensor(reduxRealTime);
         }
 
         return locationLabel;
