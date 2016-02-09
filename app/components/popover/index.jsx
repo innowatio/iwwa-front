@@ -3,15 +3,12 @@ var R                   = require("ramda");
 var Radium              = require("radium");
 var React               = require("react");
 
-var components = require("components/");
-
 var Popover = React.createClass({
     propTypes: {
         arrow: React.PropTypes.string,
         children: React.PropTypes.element,
         hideOnChange: React.PropTypes.bool,
         notClosePopoverOnClick: React.PropTypes.bool,
-        style: React.PropTypes.string,
         title: React.PropTypes.oneOfType([
             React.PropTypes.element,
             React.PropTypes.string
@@ -53,12 +50,27 @@ var Popover = React.createClass({
     },
     getButton: function () {
         return this.props.arrow === "none" ?
-            <components.Button style={{width: "430px", whiteSpace: "normal"}} >
+            <bootstrap.Button
+                style={{
+                    width: "430px",
+                    whiteSpace: "normal",
+                    outline: "0px",
+                    outlineStyle: "none",
+                    outlineWidth: "0px"
+                }}
+            >
                 {this.props.title}
-            </components.Button> :
-            <components.Button bsStyle="link">
+            </bootstrap.Button> :
+            <bootstrap.Button
+                bsStyle="link"
+                style={{
+                    outline: "0px",
+                    outlineStyle: "none",
+                    outlineWidth: "0px"
+                }}
+            >
                 {this.props.title}
-            </components.Button>;
+            </bootstrap.Button>;
     },
     getTooltipAndButton: function () {
         var button = this.getButton();

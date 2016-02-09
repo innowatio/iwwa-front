@@ -6,9 +6,9 @@ var Calendar        = require("react-widgets").Calendar;
 var moment          = require("moment");
 var momentLocalizer = require("react-widgets/lib/localizers/moment");
 
-var colors     = require("lib/colors_restyling");
 var components = require("components/");
 var measures   = require("lib/measures");
+import {defaultTheme} from "lib/theme";
 
 momentLocalizer(moment);
 
@@ -27,6 +27,9 @@ var DatefilterMonthlyModal = React.createClass({
             start: React.PropTypes.date,
             end: React.PropTypes.date
         })
+    },
+    contextTypes: {
+        theme: React.PropTypes.object
     },
     getInitialState: function () {
         return {
@@ -51,6 +54,9 @@ var DatefilterMonthlyModal = React.createClass({
                 }
             });
         }
+    },
+    getTheme: function () {
+        return this.context.theme || defaultTheme;
     },
     defaultStartDate: function () {
         return moment().startOf("month").toDate();
@@ -112,11 +118,13 @@ var DatefilterMonthlyModal = React.createClass({
         });
     },
     render: function () {
+        const {colors} = this.getTheme();
         return (
             <span>
                 <components.Button
                     bsStyle="link"
                     onClick={this.open}
+                    style={{backgroundColor: colors.background}}
                 >
                     {this.props.title}
                 </components.Button>

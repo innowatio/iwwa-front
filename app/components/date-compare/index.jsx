@@ -2,10 +2,10 @@ import {equals, partial} from "ramda";
 import React, {PropTypes} from "react";
 import moment from "moment";
 
-import * as colors from "lib/colors_restyling";
-import * as components from "components";
+import components from "components";
+import {defaultTheme} from "lib/theme";
 
-var styles = {
+const styles = {
     buttonCompare: {
         width: "200px",
         height: "40px",
@@ -23,6 +23,9 @@ var DateCompare = React.createClass({
         onChange: PropTypes.func,
         period: PropTypes.object
     },
+    contextTypes: {
+        theme: PropTypes.object
+    },
     getInitialState: function () {
         return {
             period: this.props.period || this.props.allowedValues[0]
@@ -33,8 +36,11 @@ var DateCompare = React.createClass({
     },
     getStateFromProps: function (props) {
         this.setState({
-            period: props.period || this.props.allowedValues[0]
+            period: props.period || props.allowedValues[0]
         });
+    },
+    getTheme: function () {
+        return this.context.theme || defaultTheme;
     },
     selectedCheckboxDate: function (allowedValue) {
         this.setState({
@@ -59,6 +65,7 @@ var DateCompare = React.createClass({
         );
     },
     render: function () {
+        const {colors} = this.getTheme();
         return (
             <div>
                 {this.props.allowedValues.map(this.renderDataCompare)}

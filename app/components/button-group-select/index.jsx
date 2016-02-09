@@ -5,15 +5,15 @@ var R               = require("ramda");
 var React           = require("react");
 var ReactPureRender = require("react-addons-pure-render-mixin");
 
-var colors     = require("lib/colors_restyling");
 var components = require("components");
-var styles     = require("lib/styles_restyling");
+import {styles} from "lib/styles_restyling";
+import {defaultTheme} from "lib/theme";
 
-var styleDropdown = R.merge(
-    styles.buttonSelectValore,
+const styleDropdown = (theme) => R.merge(
+    styles(theme).buttonSelectValore,
     {
-        color: colors.greySubTitle,
-        backgroundColor: colors.greyBackground
+        color: theme.colors.greySubTitle,
+        backgroundColor: theme.colors.greyBackground
     }
 );
 
@@ -37,6 +37,9 @@ var ButtonGroupSelect = React.createClass({
         ]),
         vertical: React.PropTypes.bool
     },
+    contextTypes: {
+        theme: React.PropTypes.object
+    },
     mixins: [ReactPureRender],
     getDefaultProps: function () {
         var defaultGetter = function (allowedValue) {
@@ -49,6 +52,9 @@ var ButtonGroupSelect = React.createClass({
             multi: false,
             vertical: false
         };
+    },
+    getTheme: function () {
+        return this.context.theme || defaultTheme;
     },
     isActiveMulti: function (allowedValue) {
         var keys = this.props.value.map(this.props.getKey);
@@ -88,7 +94,7 @@ var ButtonGroupSelect = React.createClass({
                 disabled={allowedValue.isDisabled || false}
                 key={this.props.getKey(allowedValue)}
                 onClick={R.partial(this.onChange, [allowedValue])}
-                style={active ? this.props.getActiveStyle(allowedValue) : styleDropdown}
+                style={active ? this.props.getActiveStyle(allowedValue) : styleDropdown(this.getTheme())}
             >
                 {this.props.getLabel(allowedValue)}
             </components.Button>

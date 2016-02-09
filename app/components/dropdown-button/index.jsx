@@ -3,8 +3,6 @@ var React      = require("react");
 var bootstrap  = require("react-bootstrap");
 var IPropTypes = require("react-immutable-proptypes");
 
-// var colors = require("lib/colors_restyling");
-
 var DropdownButton = React.createClass({
     propTypes: {
         allowedValues: React.PropTypes.oneOfType([

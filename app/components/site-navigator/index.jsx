@@ -5,36 +5,36 @@ var R          = require("ramda");
 var Radium     = require("radium");
 var React      = require("react");
 
-var colors     = require("lib/colors_restyling");
 var components = require("components");
 var icons      = require("lib/icons");
+import {defaultTheme} from "lib/theme";
 
 // TODO remove importants
-var buttonBasicStyle = {
+const buttonBasicStyle = ({colors}) => ({
     background: colors.greyBackground + "!important",
     color: colors.primary + "!important",
     fontSize: "13px" + "!important"
-};
+});
 
-var buttonBasicStyleActive = {
+const buttonBasicStyleActive = ({colors}) => ({
     background: colors.primary + "!important",
     color: colors.white + "!important",
     fontSize: "13px" + "!important"
-};
+});
 
-var itemsStyle = R.merge(buttonBasicStyle, {
-    background: `${colors.white} !important`,
-    border: "1px solid " + colors.greySubTitle + " !important",
+const itemsStyle = (theme) => (R.merge(buttonBasicStyle(theme), {
+    background: `${theme.colors.white} !important`,
+    border: "1px solid " + theme.colors.greySubTitle + " !important",
     marginTop: "5px !important",
     width: "100%",
     padding: "10px"
-});
+}));
 
-var itemsStyleActive = {
+const itemsStyleActive = ({colors}) => ({
     background: colors.primary + "!important",
     color: colors.white + "!important",
     fontSize: "13px" + "!important"
-};
+});
 
 var SiteNavigator = React.createClass({
     propTypes: {
@@ -45,6 +45,9 @@ var SiteNavigator = React.createClass({
         ]),
         onChange: React.PropTypes.func.isRequired,
         title: React.PropTypes.string
+    },
+    contextTypes: {
+        theme: React.PropTypes.object
     },
     getInitialState: function () {
         return {
@@ -69,6 +72,9 @@ var SiteNavigator = React.createClass({
             pathParent: parent,
             pathChildren: children
         });
+    },
+    getTheme: function () {
+        return this.context.theme || defaultTheme;
     },
     getKeyParent: function (value) {
         return value.get("_id");
@@ -168,10 +174,11 @@ var SiteNavigator = React.createClass({
         }
     },
     renderChild: function () {
+        const theme = this.getTheme();
         return (
             <div style={{padding: "0 20px 20px 20px"}}>
                 <div>
-                    <h3 className="text-center" style={{color: colors.primary}}>{this.props.title}</h3>
+                    <h3 className="text-center" style={{color: theme.colors.primary}}>{this.props.title}</h3>
                 </div>
                 <bootstrap.Col style={{marginTop: "15px"}} xs={12}>
                     <bootstrap.Input
@@ -192,8 +199,8 @@ var SiteNavigator = React.createClass({
                                     padding: "12px",
                                     overflow: "auto"
                                 },
-                                "button.btn": itemsStyle,
-                                "button.btn.active": itemsStyleActive
+                                "button.btn": itemsStyle(theme),
+                                "button.btn.active": itemsStyleActive(theme)
                             }}
                             scopeSelector=".site-navigator-parent"
                         />
@@ -201,15 +208,22 @@ var SiteNavigator = React.createClass({
                     </div>
                 </bootstrap.Col>
                 <bootstrap.Col style={{height: "calc(100vh - 350px)"}} xs={8}>
-                    <div className="site-navigator-child" style={{border: "solid " + colors.primary, height: "100%", marginTop: "10px"}}>
+                    <div
+                        className="site-navigator-child"
+                        style={{
+                            border: "solid " + theme.colors.primary,
+                            height: "100%",
+                            marginTop: "10px"
+                        }}
+                    >
                         <Radium.Style
                             rules={{
                                 ".btn-group-vertical": {
                                     width: "30%",
                                     padding: "12px"
                                 },
-                                "button.btn": itemsStyle,
-                                "button.btn.active": itemsStyleActive
+                                "button.btn": itemsStyle(theme),
+                                "button.btn.active": itemsStyleActive(theme)
                             }}
                             scopeSelector=".site-navigator-child"
                         />
@@ -220,7 +234,7 @@ var SiteNavigator = React.createClass({
                     <div style={{bottom: "15px", textAlign: "center", margin: "auto"}}>
                         <bootstrap.Button
                             onClick={this.onClickConfirm}
-                            style={R.merge(buttonBasicStyleActive, {
+                            style={R.merge(buttonBasicStyleActive(theme), {
                                 width: "230px",
                                 height: "45px"
                             })}
@@ -230,7 +244,7 @@ var SiteNavigator = React.createClass({
                         <components.Spacer direction="h" size={20} />
                         <bootstrap.Button
                             onClick={this.closeModal}
-                            style={R.merge(buttonBasicStyle, {
+                            style={R.merge(buttonBasicStyle(theme), {
                                 width: "230px",
                                 height: "45px"
                             })}
@@ -248,6 +262,7 @@ var SiteNavigator = React.createClass({
                 <components.Button
                     bsStyle="link"
                     onClick={this.onClickSiteNavigatorButton}
+                    style={{backgroundColor: this.getTheme().colors.background}}
                 >
                     <img src={icons.iconSiti} style={{width: "75%"}} />
                 </components.Button>

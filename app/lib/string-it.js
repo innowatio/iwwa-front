@@ -16,7 +16,7 @@ exports.loginErrorAlert        = "Login non riuscito: email o password errate";
 exports.accessButton           = "ACCEDI";
 exports.email                  = "Email";
 exports.password               = "Password";
-exports.forgetPassword         = "passwordReset";
+exports.forgetPassword         = "Password dimenticata?";
 exports.returnToLogin          = "Torna alla login";
 exports.sendMailResetPswButton = "INVIA MAIL DI RESET";
 

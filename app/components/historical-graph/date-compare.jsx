@@ -5,9 +5,9 @@ import moment from "moment";
 import ReactPureRender from "react-addons-pure-render-mixin";
 import IPropTypes from "react-immutable-proptypes";
 
-import * as colors from "lib/colors_restyling";
 import components from "components";
 import readingsDailyAggregatesToDygraphData from "lib/readings-daily-aggregates-to-dygraph-data";
+import {defaultTheme} from "lib/theme";
 
 var DateCompare = React.createClass({
     propTypes: {
@@ -16,7 +16,13 @@ var DateCompare = React.createClass({
         misure: IPropTypes.map,
         sites: React.PropTypes.arrayOf(IPropTypes.map)
     },
+    contextTypes: {
+        theme: PropTypes.object
+    },
     mixins: [ReactPureRender],
+    getTheme: function () {
+        return this.context.theme || defaultTheme;
+    },
     getDatesFromChartState: function () {
         return this.props.chart.map(singleSelection => singleSelection.date);
     },
@@ -35,10 +41,12 @@ var DateCompare = React.createClass({
         if (period.key === "years" || period.key === "months") {
             // Get date window from 0 (1 Jan 1970) to 5 or 6 weeks later (this is
             // found from the function `weeksToAdd`).
+            const endDate = moment.utc(start).add({weeks: this.weeksToAdd()}).endOf("isoWeek");
+            const numberToEndDate = moment(endDate).diff(start, "days");
             return {
                 start,
                 dayToAdd: this.weeksToAdd() * 7,
-                dateArray: [0, moment.utc(0).add({weeks: this.weeksToAdd()}).valueOf()]
+                dateArray: [moment.utc(0).valueOf(), moment.utc(0).add({days: numberToEndDate + 1}).valueOf()]
             };
         }
         return {};
@@ -98,7 +106,7 @@ var DateCompare = React.createClass({
         // }
         if (period.key === "months" || period.key === "years") {
             // Range of 5 or 6 weeks --> (5 || 6) * 7 days.
-            return range(0, (this.weeksToAdd() * 7) + 1).map(n => {
+            return range(0, (this.weeksToAdd() * 8) + 2).map(n => {
                 const delta = moment.utc(0).add(n, "days").valueOf();
                 var rangeOne = moment.utc(dates[0].start).add(n, "days");
                 var rangeTwo = moment.utc(dates[1].start).add(n, "days");
@@ -134,6 +142,7 @@ var DateCompare = React.createClass({
     },
     render: function () {
         const source = this.props.chart[0].source;
+        const {colors} = this.getTheme();
         /*
         *   `y2label` is empty. It's a workaround to prevent this dygraph
         *    bug: https://github.com/danvk/dygraphs/issues/629
@@ -144,7 +153,7 @@ var DateCompare = React.createClass({
                 coordinates={this.getCoordinates()}
                 dateWindow={this.getDateWindow()}
                 labels={this.getLabels()}
-                lockInteraction={true}
+                lockInteraction={false}
                 ref="temporalLineGraph"
                 site={this.props.sites[0] || Map()}
                 xLegendFormatter={this.xLegendFormatter}

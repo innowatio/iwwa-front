@@ -5,8 +5,8 @@ import components from "components";
 import assetsPathTo from "lib/assets-path-to";
 import LoginView from "./login-view";
 import PasswordResetView from "./password-reset-view";
-import colors from "lib/colors_restyling";
 import string from "lib/string-it";
+import {defaultTheme} from "lib/theme";
 
 const backgroundKeyFrames = Radium.keyframes({
     "0%": {
@@ -20,7 +20,7 @@ const backgroundKeyFrames = Radium.keyframes({
     }
 });
 
-var styles = {
+const stylesFunction = ({colors}) => ({
     backgroundImageOverlay: {
         position: "fixed",
         top: "0px",
@@ -36,7 +36,7 @@ var styles = {
         animation: "x 30s ease infinite",
         animationName: backgroundKeyFrames,
         animationDirection: "normal",
-        backgroundImage: "linear-gradient(235deg, #8a95c8, #7483be, #5b72b3, #4e64a1, #4554a1, #624899, #984898, #eb437f, #d26faa, #b08abc)",
+        backgroundImage: colors.backgroundLogin,
         backgroundSize: "4000% 4000%",
         position: "absolute",
         display: "block",
@@ -84,12 +84,15 @@ var styles = {
             textDecoration: "underline"
         }
     }
-};
+});
 
 var LoginModal = React.createClass({
     propTypes: {
         asteroid: PropTypes.object.isRequired,
         isOpen: PropTypes.bool.isRequired
+    },
+    contextTypes: {
+        theme: PropTypes.object
     },
     getInitialState: function () {
         return {
@@ -101,6 +104,9 @@ var LoginModal = React.createClass({
     },
     componentWillReceiveProps: function (props) {
         this.attachModalOpenClass(props);
+    },
+    getTheme: function () {
+        return this.context.theme || defaultTheme;
     },
     attachModalOpenClass: function (props) {
         if (props.isOpen) {
@@ -132,6 +138,7 @@ var LoginModal = React.createClass({
         );
     },
     render: function () {
+        const styles = stylesFunction(this.getTheme());
         return this.props.isOpen ? (
             <div style={styles.overlay}>
                 <div style={styles.backgroundImageOverlay}>

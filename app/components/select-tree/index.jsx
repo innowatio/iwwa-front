@@ -8,8 +8,8 @@ var ReactPureRender = require("react-addons-pure-render-mixin");
 var Waypoint        = require("react-waypoint");
 
 var components = require("components");
-var colors     = require("lib/colors_restyling");
 var icons      = require("lib/icons");
+import {defaultTheme} from "lib/theme";
 
 var SelectTree = React.createClass({
     propTypes: {
@@ -29,6 +29,9 @@ var SelectTree = React.createClass({
         ]),
         valueLink: ReactLink.PropTypes.link()
     },
+    contextTypes: {
+        theme: React.PropTypes.object
+    },
     mixins: [ReactPureRender],
     getDefaultProps: function () {
         return {
@@ -45,6 +48,9 @@ var SelectTree = React.createClass({
             activeKey: "",
             subMenu: false
         };
+    },
+    getTheme: function () {
+        return this.context.theme || defaultTheme;
     },
     getValue: function () {
         return (
@@ -84,6 +90,7 @@ var SelectTree = React.createClass({
         return this.props.filter(allowedValue, this.state.inputFilter);
     },
     renderHeader: function (allowedValue) {
+        const {colors} = this.getTheme();
         return (
             <span>
                 <components.Button
@@ -109,6 +116,7 @@ var SelectTree = React.createClass({
         );
     },
     renderButtonSubMenu: function (allowedValue) {
+        const {colors} = this.getTheme();
         return this.state.subMenu ?
             <components.Button
                 bsStyle="link"
@@ -143,6 +151,7 @@ var SelectTree = React.createClass({
         );
     },
     render: function () {
+        const {colors} = this.getTheme();
         var panelOfSite = this.props.allowedValues
             .filter(this.filter)
             .slice(0, this.state.numberOfValues)

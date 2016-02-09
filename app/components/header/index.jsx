@@ -1,13 +1,13 @@
-var Immutable = require("immutable");
-var Router    = require("react-router");
-var Radium    = require("radium");
-var React     = require("react");
-var R         = require("ramda");
+import React, {PropTypes} from "react";
+import {Map, List} from "immutable";
+import {Link} from "react-router";
+import {merge, prop} from "ramda";
 
-var colors = require("lib/colors_restyling");
-var icons  = require("lib/icons_restyling");
+import icons from "lib/icons";
+import {defaultTheme} from "lib/theme";
+import components from "components";
 
-var styles = {
+var stylesFunction = ({colors}) => ({
     base: {
         display: "flex",
         alignItems: "center",
@@ -29,43 +29,82 @@ var styles = {
         fontSize: "20px",
         borderBottom: `3px solid ${colors.buttonPrimary}`
     }
-};
+});
 
 var Header = React.createClass({
     propTypes: {
-        asteroid: React.PropTypes.object.isRequired,
-        menuClickAction: React.PropTypes.func,
-        title: React.PropTypes.string
+        asteroid: PropTypes.object.isRequired,
+        menuClickAction: PropTypes.func,
+        selectThemeColor: PropTypes.func,
+        title: PropTypes.string,
+        userSetting: PropTypes.object
+    },
+    contextTypes: {
+        theme: PropTypes.object
+    },
+    getTheme: function () {
+        return this.context.theme || defaultTheme;
     },
     logout: function () {
         this.props.asteroid.logout();
     },
     userIsAdmin: function () {
-        const users = this.props.asteroid.collections.get("users") || Immutable.Map();
-        const roles = users.getIn([this.props.asteroid.userId, "roles"]) || Immutable.List();
+        const users = this.props.asteroid.collections.get("users") || Map();
+        const roles = users.getIn([this.props.asteroid.userId, "roles"]) || List();
         return roles.includes("admin");
+    },
+    getUserSettings: function () {
+        return [
+            {label: "Tema scuro", key: "dark"},
+            {label: "Tema chiaro", key: "light"}
+        ];
+    },
+    renderUserSetting: function () {
+        const userSetting = this.getUserSettings().find(userSetting => {
+            return this.props.userSetting.theme.color === userSetting.key;
+        });
+        return (
+            <components.Popover
+                hideOnChange={true}
+                title={<img src={icons.iconUserSettings} style={{width: "25px"}} />}
+                tooltipId="tooltipUserSetting"
+                tooltipMessage="Impostazioni dell'utente"
+                tooltipPosition="left"
+            >
+                <components.DropdownSelect
+                    allowedValues={this.getUserSettings()}
+                    getKey={prop("key")}
+                    getLabel={prop("label")}
+                    onChange={this.props.selectThemeColor}
+                    style={{float: "left"}}
+                    value={userSetting}
+                />
+            </components.Popover>
+        );
     },
     renderAdminPage: function () {
         return this.userIsAdmin() && ENVIRONMENT !== "cordova" ? (
             <span style={{marginRight: "10px"}}>
-                <Router.Link to="/users/" >
+                <Link to="/users/" >
                     <img className="pull-right" src={icons.iconUser} style={{width: "25px"}} />
-                </Router.Link>
+                </Link>
             </span>
         ) : null;
     },
     render: function () {
+        const styles = stylesFunction(this.getTheme());
         return (
             <div style={styles.base}>
                 <img onClick={this.props.menuClickAction} src={icons.iconMenu}  style={styles.hamburger}/>
-                <span style={R.merge(styles.base, {marginLeft: "15px"})}>
-                    <Router.Link to="/dashboard/" >
+                <span style={merge(styles.base, {marginLeft: "15px"})}>
+                    <Link to="/dashboard/" >
                         <img src={icons.iconLogo} />
-                    </Router.Link>
+                    </Link>
                 </span>
                 <div style={styles.viewTitle}>
                     {this.props.title.toUpperCase()}
                 </div>
+                {this.renderUserSetting()}
                 {this.renderAdminPage()}
                 <span onClick={this.logout} style={styles.icon}>
                     <img className="pull-right" src={icons.iconLogout} style={{width: "85%"}}/>
@@ -75,4 +114,4 @@ var Header = React.createClass({
     }
 });
 
-module.exports = Radium(Header);
+module.exports = Header;

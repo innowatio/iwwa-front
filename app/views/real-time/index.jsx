@@ -8,9 +8,9 @@ import {bindActionCreators} from "redux";
 
 var components        = require("components");
 var readingsRealTime  = require("lib/readings-real-time-aggregates-to-realtime-view");
-var colors            = require("lib/colors_restyling");
-var styles            = require("lib/styles_restyling");
+import {styles} from "lib/styles_restyling";
 import {selectRealTimeSite} from "actions/real-time";
+import {defaultTheme} from "lib/theme";
 
 var RealTime = React.createClass({
     propTypes: {
@@ -18,6 +18,9 @@ var RealTime = React.createClass({
         collections: IPropTypes.map,
         realTime: React.PropTypes.object.isRequired,
         selectRealTimeSite: React.PropTypes.func.isRequired
+    },
+    contextTypes: {
+        theme: React.PropTypes.object
     },
     componentDidMount: function () {
         this.props.asteroid.subscribe("sites");
@@ -29,6 +32,9 @@ var RealTime = React.createClass({
         if (this.props.realTime.fullPath) {
             this.props.asteroid.subscribe("readingsRealTimeAggregatesBySite", this.props.realTime.fullPath[0]);
         }
+    },
+    getTheme: function () {
+        return this.context.theme || defaultTheme;
     },
     drawGauge: function (params) {
         return (
@@ -49,6 +55,7 @@ var RealTime = React.createClass({
         );
     },
     drawGauges: function () {
+        const {colors} = this.getTheme();
         if (this.findLatestMeasuresForEnergy().size > 0) {
             var sizeValues = this.findLatestMeasuresForEnergy().size;
             return this.findLatestMeasuresForEnergy().map((measure) => {
@@ -78,6 +85,7 @@ var RealTime = React.createClass({
         }
     },
     drawGaugeTotal: function () {
+        const {colors} = this.getTheme();
         if (this.findLatestMeasuresForEnergy().size > 0) {
             const {value, unit} = this.findLatestMeasuresForEnergy().reduce((acc, measure) => {
                 return {
@@ -186,9 +194,10 @@ var RealTime = React.createClass({
         });
     },
     render: function () {
+        const theme = this.getTheme();
         const selectedSiteName = this.getSelectedSiteName();
         return (
-            <div style={styles.mainDivStyle}>
+            <div style={styles(theme).mainDivStyle}>
                 <bootstrap.Col sm={12}>
                     <span className="pull-right">
                         <components.SiteNavigator
@@ -199,13 +208,13 @@ var RealTime = React.createClass({
                         />
                     </span>
                 </bootstrap.Col>
-                <h3 className="text-center" style={{color: colors.primary}}>
+                <h3 className="text-center" style={{color: theme.colors.primary}}>
                     {`${selectedSiteName ? selectedSiteName + " - " : ""}Rilevazioni ambientali`}
                 </h3>
                 <components.VariablesPanel
                     values={this.findLatestMeasuresForVariables()}
                 />
-                <h3 className="text-center" style={{color: colors.primary}}>
+                <h3 className="text-center" style={{color: theme.colors.primary}}>
                     {`${selectedSiteName ? selectedSiteName + " - " : ""}Pods`}
                 </h3>
                 <div style={{overflow: "scroll"}}>
@@ -227,7 +236,6 @@ function mapStateToProps (state) {
         realTime: state.realTime
     };
 }
-
 function mapDispatchToProps (dispatch) {
     return {
         selectRealTimeSite: bindActionCreators(selectRealTimeSite, dispatch)

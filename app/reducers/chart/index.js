@@ -1,7 +1,6 @@
 import {equals, head, last, update} from "ramda";
 import moment from "moment";
 
-import * as colors from "lib/colors_restyling";
 import {
     SELECT_SINGLE_ELECTRICAL_SENSOR,
     SELECT_ELECTRICAL_TYPE,
@@ -12,6 +11,7 @@ import {
     SELECT_DATE_RANGES_COMPARE,
     REMOVE_ALL_COMPARE
 } from "actions/chart";
+import {defaultTheme} from "lib/theme";
 import {DISPLAY_ALARMS_ON_CHART} from "actions/alarms";
 import {getDateRangesCompare} from "./date-ranges";
 
@@ -22,7 +22,7 @@ const defaultChartState = [{
     date: {},
     measurementType: {label: "Attiva", key: "activeEnergy"},
     site: null,
-    source: {label: "Reale", color: colors.lineReale, key: "reading"}
+    source: {label: "Reale", color: defaultTheme.colors.lineReale, key: "reading"}
 }];
 
 export function chart (state = defaultChartState, {type, payload}) {

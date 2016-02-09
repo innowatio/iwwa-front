@@ -8,12 +8,12 @@ var ReactStateMixin = require("react-addons-linked-state-mixin");
 
 var components       = require("components");
 var CollectionUtils  = require("lib/collection-utils");
-var colors           = require("lib/colors_restyling");
 var stringIt         = require("lib/string-it");
-var styles           = require("lib/styles_restyling");
 var tutorialString   = require("assets/JSON/tutorial-string.json");
 var GetTutorialMixin = require("lib/get-tutorial-mixin");
 var icons            = require("lib/icons");
+import {styles} from "lib/styles_restyling";
+import {defaultTheme} from "lib/theme";
 
 var AlarmForm = React.createClass({
     propTypes: {
@@ -24,6 +24,9 @@ var AlarmForm = React.createClass({
         submit: React.PropTypes.func.isRequired,
         type: React.PropTypes.oneOf(["insert", "update"]).isRequired
     },
+    contextTypes: {
+        theme: React.PropTypes.object
+    },
     mixins: [ReactStateMixin, GetTutorialMixin(
         "alarm-form", ["siti", "threshold", "name", "notification", "repetition"])],
     getInitialState: function () {
@@ -31,6 +34,9 @@ var AlarmForm = React.createClass({
     },
     componentWillReceiveProps: function (props) {
         this.setState(this.getStateFromProps(props));
+    },
+    getTheme: function () {
+        return this.context.theme || defaultTheme;
     },
     getSitoFromProps: function (props) {
         var pod = props.alarm.get("podId");
@@ -84,6 +90,7 @@ var AlarmForm = React.createClass({
         return this.state.notification;
     },
     renderAlarmSelectSite: function () {
+        const {colors} = this.getTheme();
         return !this.isAutomatic() ? (
             <bootstrap.Col lg={6} md={6} xs={12}>
                 <components.TutorialAnchor
@@ -127,6 +134,7 @@ var AlarmForm = React.createClass({
         ) : null;
     },
     renderAlarmThreshold: function () {
+        const theme = this.getTheme();
         return !this.isAutomatic() ? (
             <bootstrap.Col lg={6} md={6} xs={12}>
                 <components.TutorialAnchor
@@ -136,12 +144,12 @@ var AlarmForm = React.createClass({
                     ref="threshold"
                 >
                     <div>
-                        <h4 style={{color: colors.primary}}>{stringIt.titleAlarmThreshold}</h4>
-                        <div style={{backgroundColor: colors.greyBackground, textAlign: "center"}}>
+                        <h4 style={{color: theme.colors.primary}}>{stringIt.titleAlarmThreshold}</h4>
+                        <div style={{backgroundColor: theme.colors.greyBackground, textAlign: "center"}}>
                             <components.Spacer direction="v" size={3} />
                             <h4
                                 style={{
-                                    color: colors.primary,
+                                    color: theme.colors.primary,
                                     marginTop: "8px"
                                 }}
                             >
@@ -152,7 +160,7 @@ var AlarmForm = React.createClass({
                                 max={600}
                                 min={0}
                                 step={5}
-                                style={styles.inputRange}
+                                style={styles(theme).inputRange}
                                 type="range"
                                 valueLink={this.linkState("threshold")}
                             />
@@ -163,6 +171,7 @@ var AlarmForm = React.createClass({
         ) : null;
     },
     renderAlarmName: function () {
+        const theme = this.getTheme();
         return (
             <bootstrap.Col lg={6} md={6} xs={12}>
                 <components.TutorialAnchor
@@ -172,11 +181,11 @@ var AlarmForm = React.createClass({
                     ref="name"
                 >
                     <div>
-                        <h4 style={{color: colors.primary}}>{stringIt.titleAlarmName}</h4>
+                        <h4 style={{color: theme.colors.primary}}>{stringIt.titleAlarmName}</h4>
                         {this.isAutomatic() ?
                             <h5>{this.props.alarm.get("name")}</h5> :
                             <bootstrap.Input
-                                style={styles.inputLine}
+                                style={styles(theme).inputLine}
                                 type="text"
                                 valueLink={this.linkState("name")}
                             />
@@ -204,6 +213,7 @@ var AlarmForm = React.createClass({
         );
     },
     renderAlarmActive: function () {
+        const {colors} = this.getTheme();
         return (
             <bootstrap.Col lg={6} md={6} xs={12}>
                 <div style={{display: this.props.type === "update" ? "block" : "none"}}>
@@ -250,6 +260,7 @@ var AlarmForm = React.createClass({
         );
     },
     renderSubmitButton: function () {
+        const {colors} = this.getTheme();
         return (
             <components.Button
                 disabled={this.props.alarmsReduxState.statePostAlarm}
@@ -279,6 +290,7 @@ var AlarmForm = React.createClass({
             </span>;
     },
     renderAutomaticAlarmBanner: function () {
+        const {colors} = this.getTheme();
         return this.isAutomatic() ? (
             <bootstrap.Col xs={12}>
                 <bootstrap.Alert
@@ -303,13 +315,14 @@ var AlarmForm = React.createClass({
         ) : null;
     },
     render: function () {
+        const theme = this.getTheme();
         return (
             <div className="alarm-form" style={{height: "100%"}}>
-                <div style={R.merge(styles.colVerticalPadding, {height: "100%", overflow: "auto"})}>
+                <div style={R.merge(styles(theme).colVerticalPadding, {height: "100%", overflow: "auto"})}>
                     <Radium.Style
                         rules={{
                             ".input-group-addon": {
-                                backgroundColor: colors.white,
+                                backgroundColor: theme.colors.white,
                                 borderTop: "0",
                                 borderRight: "0",
                                 borderBottomRightRadius: "0",

@@ -8,6 +8,7 @@ import components from "components";
 import DateCompareGraph from "./date-compare";
 import SourcesAndSensorsCompare from "./sources-and-sensors-compare";
 import SitesCompareGraph from "./sites-compare";
+import {defaultTheme} from "lib/theme";
 
 var HistoricalGraph = React.createClass({
     propTypes: {
@@ -20,7 +21,13 @@ var HistoricalGraph = React.createClass({
         resetCompare: PropTypes.func.isRequired,
         sites: PropTypes.arrayOf(IPropTypes.map).isRequired
     },
+    contextTypes: {
+        theme: PropTypes.object
+    },
     mixins: [ReactPureRender],
+    getTheme: function () {
+        return this.context.theme || defaultTheme;
+    },
     exportPNG: function () {
         return this.refs.temporalLineGraph.exportPNG;
     },

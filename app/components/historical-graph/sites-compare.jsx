@@ -4,9 +4,9 @@ import Radium from "radium";
 import React, {PropTypes} from "react";
 import ReactPureRender from "react-addons-pure-render-mixin";
 
-import * as colors from "lib/colors_restyling";
 import components from "components";
 import readingsDailyAggregatesToDygraphData from "lib/readings-daily-aggregates-to-dygraph-data";
+import {defaultTheme} from "lib/theme";
 
 var sitesCompare = React.createClass({
     propTypes: {
@@ -15,7 +15,13 @@ var sitesCompare = React.createClass({
         misure: IPropTypes.map,
         sites: PropTypes.arrayOf(IPropTypes.map)
     },
+    contextTypes: {
+        theme: PropTypes.object
+    },
     mixins: [ReactPureRender],
+    getTheme: function () {
+        return this.context.theme || defaultTheme;
+    },
     getCoordinates: function () {
         return readingsDailyAggregatesToDygraphData(this.props.misure, this.props.chart);
     },
@@ -26,6 +32,7 @@ var sitesCompare = React.createClass({
         return ["Data"].concat(sitesLabels);
     },
     render: function () {
+        const {colors} = this.getTheme();
         return (
             <components.TemporalLineGraph
                 colors={[this.props.chart[0].source.color, colors.lineCompare]}

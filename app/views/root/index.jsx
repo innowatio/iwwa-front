@@ -1,16 +1,18 @@
-var R         = require("ramda");
-var React     = require("react");
+import {merge} from "ramda";
+import React, {PropTypes} from "react";
 import {StyleRoot} from "radium";
 import {connect} from "react-redux";
+import {bindActionCreators} from "redux";
 
 var asteroid          = require("lib/asteroid");
-var colors            = require("lib/colors_restyling");
 var components        = require("components");
-var icons             = require("lib/icons_restyling");
+var icons             = require("lib/icons");
 var LocalStorageMixin = require("lib/localstorage-mixin");
 var measures          = require("lib/measures");
+import {theme, defaultTheme} from "lib/theme";
+import {selectThemeColor} from "actions/user-setting";
 
-var styles = {
+const stylesFunction = ({colors}) => ({
     header: {
         width: "100%",
         height: measures.headerHeight,
@@ -19,7 +21,8 @@ var styles = {
     content: {
         width: "100%",
         top: measures.headerHeight,
-        height: "100%",
+        backgroundColor: colors.background,
+        height: `calc(100vh - ${measures.headerHeight})`,
         transition: "left 0.3s ease"
     },
     sidebar: {
@@ -44,12 +47,16 @@ var styles = {
         textAlign: "center",
         zIndex: 1042
     }
-};
+});
 
 var Root = React.createClass({
     propTypes: {
-        children: React.PropTypes.node,
-        reduxState: React.PropTypes.object
+        children: PropTypes.node,
+        reduxState: PropTypes.object,
+        selectThemeColor: PropTypes.func
+    },
+    childContextTypes: {
+        theme: PropTypes.object
     },
     mixins: [
         asteroid.getControllerViewMixin(),
@@ -60,8 +67,17 @@ var Root = React.createClass({
             sidebarOpen: false
         };
     },
+    getChildContext: function () {
+        return {
+            theme: this.getTheme()
+        };
+    },
     componentDidMount: function () {
         asteroid.subscribe("users");
+    },
+    getTheme: function () {
+        const colorTheme = this.props.reduxState.userSetting.theme.color || "dark";
+        return theme.getStyle(colorTheme) || defaultTheme;
     },
     getMenuItems: function () {
         return [
@@ -82,15 +98,8 @@ var Root = React.createClass({
             sidebarOpen: false
         });
     },
-    getHeaderStyle: function () {
-        return R.merge(styles.header, {
-            left: (
-                measures.sidebarShoulderWidth
-            )
-        });
-    },
-    getSidebarStyle: function () {
-        return R.merge(styles.sidebar, {
+    getSidebarStyle: function (styles) {
+        return merge(styles.sidebar, {
             left: (
                 this.state.sidebarOpen ?
                 "0px" :
@@ -98,43 +107,53 @@ var Root = React.createClass({
             )
         });
     },
+    renderFooter: function (styles) {
+        return ENVIRONMENT !== "cordova" ? (
+            <div style={styles.footer}>
+                {"Copyright 2015 - Innowatio"}
+            </div>
+        ) : null;
+    },
     render: function () {
-        var titleView = this.props.children.props.route.titleView || "";
+        const styles = stylesFunction(this.getTheme());
+        const titleView = this.props.children.props.route.titleView || "";
         return (
             <StyleRoot>
-                <components.SideNav
-                    items={this.getMenuItems()}
-                    linkClickAction={this.closeSidebar}
-                    sidebarOpen={this.state.sidebarOpen}
-                    style={this.getSidebarStyle()}
-                />
-                <div style={styles.header}>
-                    <components.Header
+                <div style={{backgroundColor: this.getTheme().background}}>
+                    <components.SideNav
+                        items={this.getMenuItems()}
+                        linkClickAction={this.closeSidebar}
+                        sidebarOpen={this.state.sidebarOpen}
+                        style={this.getSidebarStyle(styles)}
+                    />
+                    <div style={styles.header}>
+                        <components.Header
+                            asteroid={asteroid}
+                            menuClickAction={this.toggleSidebar}
+                            selectThemeColor={this.props.selectThemeColor}
+                            title={titleView}
+                            userSetting={this.props.reduxState.userSetting}
+                        />
+                    </div>
+                    <div style={
+                        ENVIRONMENT === "cordova" ?
+                        styles.content :
+                        merge(styles.content, {width: `calc(100% - ${measures.sidebarShoulderWidth})`, float: "right"})}
+                    >
+                        <components.PageContainer
+                            asteroid={asteroid}
+                            children={this.props.children}
+                            collections={this.state.collections}
+                            localStorage={this.state.localStorage}
+                            reduxState={this.props.reduxState}
+                        />
+                    </div>
+                    {this.renderFooter(styles)}
+                    <components.LoginModal
                         asteroid={asteroid}
-                        menuClickAction={this.toggleSidebar}
-                        title={titleView}
+                        isOpen={!this.state.userId}
                     />
                 </div>
-                <div style={
-                    ENVIRONMENT === "cordova" ?
-                    styles.content :
-                    R.merge(styles.content, {width: `calc(100% - ${measures.sidebarShoulderWidth})`, float: "right"})}
-                >
-                    <components.PageContainer
-                        asteroid={asteroid}
-                        children={this.props.children}
-                        collections={this.state.collections}
-                        localStorage={this.state.localStorage}
-                        reduxState={this.props.reduxState}
-                    />
-                </div>
-                <div style={styles.footer}>
-                    {"Copyright 2015 - Innowatio"}
-                </div>
-                <components.LoginModal
-                    asteroid={asteroid}
-                    isOpen={!this.state.userId}
-                />
             </StyleRoot>
         );
     }
@@ -145,4 +164,9 @@ function mapStateToProps (state) {
         reduxState: state
     };
 }
-module.exports = connect(mapStateToProps)(Root);
+function mapDispatchToProps (dispatch) {
+    return {
+        selectThemeColor: bindActionCreators(selectThemeColor, dispatch)
+    };
+}
+module.exports = connect(mapStateToProps, mapDispatchToProps)(Root);

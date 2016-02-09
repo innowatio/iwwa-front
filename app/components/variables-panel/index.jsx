@@ -1,9 +1,9 @@
 var React     = require("react");
 
 var MeasureLabel = require("components/").MeasureLabel;
-var colors       = require("lib/colors_restyling");
+import {defaultTheme} from "lib/theme";
 
-var style = {
+var style = ({colors}) => ({
     box: {
         border: "1px solid " + colors.greyBorder,
         borderRadius: "2px",
@@ -11,7 +11,7 @@ var style = {
         margin: "5%",
         padding: "1%"
     }
-};
+});
 
 var VariablesPanel = React.createClass({
     propTypes: {
@@ -20,11 +20,18 @@ var VariablesPanel = React.createClass({
             React.PropTypes.object
         ]).isRequired
     },
+    contextTypes: {
+        theme: React.PropTypes.object
+    },
+    getTheme: function () {
+        return this.context.theme || defaultTheme;
+    },
     renderVariableBox: function () {
+        const theme = this.getTheme();
         return this.props.values.map((variable) => {
             return (
                 <div  key={variable.get("key")} style={{width: "25%", flex: "1 0 auto"}}>
-                    <div style={style.box} styleName="variableContainer">
+                    <div style={style(theme).box} styleName="variableContainer">
                         <img src={variable.get("icon")} style={{height: "50px"}}/>
                         <MeasureLabel
                             id={variable.get("id")}

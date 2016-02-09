@@ -2,9 +2,9 @@ var R          = require("ramda");
 var React      = require("react");
 var IPropTypes = require("react-immutable-proptypes");
 
-var colors     = require("lib/colors_restyling");
 var components = require("components/");
 var icons      = require("lib/icons");
+import {defaultTheme} from "lib/theme";
 
 var SitiCompare = React.createClass({
     propTypes: {
@@ -21,6 +21,9 @@ var SitiCompare = React.createClass({
         style: React.PropTypes.object,
         value: React.PropTypes.array.isRequired
     },
+    contextTypes: {
+        theme: React.PropTypes.object
+    },
     getInitialState: function () {
         return {
             valueFirst: this.props.value[0],
@@ -35,6 +38,9 @@ var SitiCompare = React.createClass({
             valueFirst: props.value[0],
             valueSecond: props.value[1]
         });
+    },
+    getTheme: function () {
+        return this.context.theme || defaultTheme;
     },
     multi1: function (propsValue) {
         this.setState({
@@ -87,6 +93,7 @@ var SitiCompare = React.createClass({
             </span>;
     },
     render: function () {
+        const {colors} = this.getTheme();
         return (
             <div className="select-popover">
                 <components.Popover

@@ -3,7 +3,7 @@ var React      = require("react");
 var bootstrap  = require("react-bootstrap");
 var IPropTypes = require("react-immutable-proptypes");
 
-var colors = require("lib/colors_restyling");
+import {defaultTheme} from "lib/theme";
 
 var columnType = React.PropTypes.oneOfType([
     React.PropTypes.string,
@@ -103,6 +103,12 @@ var CollectionElementsTable = React.createClass({
         style: React.PropTypes.object,
         width: React.PropTypes.string
     },
+    contextTypes: {
+        theme: React.PropTypes.object
+    },
+    getTheme: function () {
+        return this.context.theme || defaultTheme;
+    },
     renderHead: function () {
         return !R.isNil(this.props.headColumn) ? (
             <thead>
@@ -135,6 +141,7 @@ var CollectionElementsTable = React.createClass({
         );
     },
     render: function () {
+        const {colors} = this.getTheme();
         return (
             <div style={[this.props.style, {overflow: "auto", paddingTop: "10px", width: "100%"}]}>
                 <bootstrap.Table

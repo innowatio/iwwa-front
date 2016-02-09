@@ -1,7 +1,7 @@
 var Radium = require("radium");
 var React  = require("react");
 
-var colors = require("lib/colors_restyling");
+import {defaultTheme} from "lib/theme";
 
 var TutorialAnchor = React.createClass({
     propTypes: {
@@ -9,6 +9,12 @@ var TutorialAnchor = React.createClass({
         message: React.PropTypes.string,
         order: React.PropTypes.number,
         position: React.PropTypes.oneOf(["right", "left", "top", "bottom"])
+    },
+    contextTypes: {
+        theme: React.PropTypes.object
+    },
+    getTheme: function () {
+        return this.context.theme || defaultTheme;
     },
     getOptions: function () {
         return {
@@ -19,6 +25,7 @@ var TutorialAnchor = React.createClass({
         };
     },
     render: function () {
+        const {colors} = this.getTheme();
         return (
             <div className="tutorial" ref="div">
                 <Radium.Style

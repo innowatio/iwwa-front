@@ -2,7 +2,7 @@ var bootstrap  = require("react-bootstrap");
 var Radium     = require("radium");
 var React      = require("react");
 
-var colors     = require("lib/colors_restyling");
+import {defaultTheme} from "lib/theme";
 
 var FullscreenModal = React.createClass({
     propTypes: {
@@ -10,7 +10,14 @@ var FullscreenModal = React.createClass({
         onHide: React.PropTypes.func,
         showModal: React.PropTypes.bool
     },
+    contextTypes: {
+        theme: React.PropTypes.object
+    },
+    getTheme: function () {
+        return this.context.theme || defaultTheme;
+    },
     render: function () {
+        const {colors} = this.getTheme();
         return (
             <bootstrap.Modal
                 className="fullscreen-modal-selector"

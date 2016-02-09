@@ -4,11 +4,11 @@ import React, {PropTypes} from "react";
 import * as bootstrap from "react-bootstrap";
 
 import components from "components";
-import colors from "lib/colors_restyling";
-import icons from "lib/icons_restyling";
+import icons from "lib/icons";
 import string from "lib/string-it";
+import {defaultTheme} from "lib/theme";
 
-var styles = {
+const stylesFunction = ({colors}) => ({
     radiumStyleInput: {
         ".form-group": {
             marginBottom: "0px",
@@ -62,16 +62,22 @@ var styles = {
         marginTop: "16px",
         textAlign: "center"
     }
-};
+});
 
 var LoginView = React.createClass({
     propTypes: {
         asteroid: PropTypes.object.isRequired
     },
+    contextTypes: {
+        theme: PropTypes.object
+    },
     getInitialState: function () {
         return {
             loginError: null
         };
+    },
+    getTheme: function () {
+        return this.context.theme || defaultTheme;
     },
     setLoginError: function (error) {
         this.setState({
@@ -86,17 +92,18 @@ var LoginView = React.createClass({
         this.setLoginError(null);
         this.props.asteroid.loginWithPassword(credentials).catch(this.setLoginError);
     },
-    renderError: function () {
+    renderError: function (styles) {
         return this.state.loginError ? (
             <bootstrap.Alert
                 bsStyle="danger"
                 style={styles.errorAlert}
             >
-                {string.errorAlert}
+                {string.loginErrorAlert}
             </bootstrap.Alert>
         ) : null;
     },
     render: function () {
+        const styles = stylesFunction(this.getTheme());
         return (
             <div>
                 <div className="ac-login-modal-inputs" style={styles.inputs}>
@@ -128,7 +135,7 @@ var LoginView = React.createClass({
                 >
                     {string.accessButton}
                 </components.Button>
-                {this.renderError()}
+                {this.renderError(styles)}
             </div>
         );
     }

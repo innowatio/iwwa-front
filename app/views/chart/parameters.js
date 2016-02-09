@@ -1,4 +1,3 @@
-import colors from "lib/colors_restyling";
 import icons from "lib/icons";
 
 export function getMeasurementTypes () {
@@ -9,18 +8,18 @@ export function getMeasurementTypes () {
     ];
 }
 
-export function getSources () {
+export function getSources (theme) {
     return [
-        {label: "Reale", color: colors.lineReale, key: "reading"},
-        {label: "Previsionale", color: colors.linePrevisionale, key: "forecast"}
+        {label: "Reale", color: theme.colors.lineReale, key: "reading"},
+        {label: "Previsionale", color: theme.colors.linePrevisionale, key: "forecast"}
     ];
 }
 
-export function getConsumptions () {
+export function getConsumptions (theme) {
     return [
         {
             label: "Temperatura",
-            color: colors.temperature,
+            color: theme.colors.temperature,
             key: "temperature",
             icon: icons.iconTemperature,
             selected: icons.iconTemperatureSelected
@@ -28,21 +27,21 @@ export function getConsumptions () {
         },
         {
             label: "Umidità",
-            color: colors.humidity,
+            color: theme.colors.humidity,
             key: "humidity",
             icon: icons.iconHumidity,
             selected: icons.iconHumiditySelected
         },
         {
             label: "Lux",
-            color: colors.illuminance,
+            color: theme.colors.illuminance,
             key: "illuminance",
             icon: icons.iconIdea,
             selected: icons.iconIdeaSelected
         },
         {
             label: "CO2",
-            color: colors.co2,
+            color: theme.colors.co2,
             key: "co2",
             icon: icons.iconCO2,
             selected: icons.iconCO2Selected

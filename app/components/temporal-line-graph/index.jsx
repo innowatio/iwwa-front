@@ -9,7 +9,7 @@ var moment    = require("moment");
 var AppPropTypes     = require("lib/app-prop-types.js");
 var dygraphExport    = require("lib/dygraph-export.js");
 var DygraphCSVExport = require("lib/dygraph-export-csv.js");
-var colors           = require("lib/colors_restyling");
+import {defaultTheme} from "lib/theme";
 
 var styles = {
     graphContainer: {
@@ -40,15 +40,22 @@ var TemporalLineGraph = React.createClass({
         y2Label: PropTypes.string,
         yLabel: PropTypes.string
     },
+    contextTypes: {
+        theme: PropTypes.object
+    },
     componentDidMount: function () {
         this.drawGraph();
     },
-    componentWillReceiveProps: function (nextProps) {
-        var options = this.getOptionsFromProps(nextProps);
+    componentWillReceiveProps: function (nextProps, nextContext) {
+        const theme = nextContext ? nextContext.theme : this.getTheme();
+        var options = this.getOptionsFromProps(nextProps, theme);
         this.graph.updateOptions(R.merge(options, {
             file: this.getCoordinatesFromProps(nextProps)
         }));
         this.drawAnnotations();
+    },
+    getTheme: function () {
+        return this.context.theme || defaultTheme;
     },
     getCoordinatesFromProps: function (props) {
         return (
@@ -57,7 +64,7 @@ var TemporalLineGraph = React.createClass({
             props.coordinates
         );
     },
-    getUnderlayForWeekEnd: function (canvas, area, g, date, dayFrom0Unix) {
+    getUnderlayForWeekEnd: function (canvas, area, g, date, dayFrom0Unix, theme) {
         if (
             R.equals(moment.utc(date).format("YYYY-MM-DD"), moment.utc(date).day(6).format("YYYY-MM-DD"))
         ) {
@@ -67,12 +74,11 @@ var TemporalLineGraph = React.createClass({
             var topRight = g.toDomCoords(dayTopRight, +20);
             var left = bottomLeft[0];
             var right = topRight[0];
-
-            canvas.fillStyle = colors.greyBackground;
+            canvas.fillStyle = theme.colors.graphUnderlay;
             canvas.fillRect(left, area.y, right - left, area.h);
         }
     },
-    getOptionsFromProps: function (props) {
+    getOptionsFromProps: function (props, theme) {
         var options = {
             series: {},
             connectSeparatedPoints: true,
@@ -82,7 +88,7 @@ var TemporalLineGraph = React.createClass({
             includeZero: true,
             labels: this.getLabelsFromProps(props),
             labelsSeparateLines: true,
-            legend: "always",
+            legend: "follow",
             sigma: 2,
             strokeWidth: 1.5,
             xlabel: props.xLabel,
@@ -123,7 +129,7 @@ var TemporalLineGraph = React.createClass({
                 const numberOfDayInGraph = moment.utc(dateEnd).diff(dateStart, "days");
                 for (var i=0; i<=numberOfDayInGraph; i++) {
                     const day = moment.utc(dateStart).add({days: i});
-                    this.getUnderlayForWeekEnd(canvas, area, g, day);
+                    this.getUnderlayForWeekEnd(canvas, area, g, day, null, theme);
                 }
             };
         }
@@ -133,7 +139,7 @@ var TemporalLineGraph = React.createClass({
                 const numberOfDayInGraph = moment.utc(date.end).diff(date.start, "days");
                 for (var i=0; i<=numberOfDayInGraph; i++) {
                     const day = moment.utc(date.start).add({days: i});
-                    this.getUnderlayForWeekEnd(canvas, area, g, day);
+                    this.getUnderlayForWeekEnd(canvas, area, g, day, null, theme);
                 }
             };
         }
@@ -143,7 +149,7 @@ var TemporalLineGraph = React.createClass({
                 for (var i=0; i<=props.dateWindow.dayToAdd; i++) {
                     const day = moment.utc(dateStart).add({days: i});
                     const dayFrom0Unix = moment.utc(0).add({days: i});
-                    this.getUnderlayForWeekEnd(canvas, area, g, day, dayFrom0Unix);
+                    this.getUnderlayForWeekEnd(canvas, area, g, day, dayFrom0Unix, theme);
                 }
             };
         }
@@ -205,7 +211,7 @@ var TemporalLineGraph = React.createClass({
     drawGraph: function () {
         var container = this.refs.graphContainer;
         var coordinates = this.getCoordinatesFromProps(this.props);
-        var options = this.getOptionsFromProps(this.props);
+        var options = this.getOptionsFromProps(this.props, this.getTheme());
         /*
         *   Instantiating the graph automatically renders it to the page
         */
@@ -294,6 +300,7 @@ var TemporalLineGraph = React.createClass({
     },
     renderSpinner: function () {
         // TODO Set a timeout.
+        const {colors} = this.getTheme();
         if (!R.isNil(this.props.site) && this.props.site.size > 0 && this.props.coordinates.length === 0) {
             return (
                 <div className="modal-spinner">
@@ -347,6 +354,7 @@ var TemporalLineGraph = React.createClass({
         }
     },
     render: function () {
+        const {colors} = this.getTheme();
         return (
             <div className="container-graph">
                 <Radium.Style
@@ -355,9 +363,12 @@ var TemporalLineGraph = React.createClass({
                             border: `4px solid ${colors.red} !important`,
                             borderRadius: "50%"
                         },
+                        ".dygraph-axis-label": {
+                            color: colors.axisLabel
+                        },
                         ".dygraph-y2label": {
-                            backgroundColor: colors.white,
-                            height: "56px"
+                            backgroundColor: colors.background,
+                            height: "58px"
                         },
                         ".dygraph-legend": {
                             display: ENVIRONMENT === "cordova" ? "none" : "initial",

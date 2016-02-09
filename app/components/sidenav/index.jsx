@@ -1,11 +1,11 @@
-var bootstrap  = require("react-bootstrap");
-var React      = require("react");
-var Router     = require("react-router");
-var R          = require("ramda");
+import {Nav} from "react-bootstrap";
+import React, {PropTypes} from "react";
+import {Link} from "react-router";
+import {partial} from "ramda";
 
-var colors   = require("lib/colors_restyling");
+import {defaultTheme} from "lib/theme";
 
-var styles = {
+const stylesFunction = ({colors}) => ({
     menu: {
         position: "absolute",
         width: "100%"
@@ -21,21 +21,27 @@ var styles = {
         verticalAlign: "middle",
         height: "100%"
     }
-};
+});
 
 var SideNav = React.createClass({
     propTypes: {
-        items: React.PropTypes.arrayOf(
-            React.PropTypes.object
+        items: PropTypes.arrayOf(
+            PropTypes.object
         ),
-        linkClickAction: React.PropTypes.func,
-        sidebarOpen: React.PropTypes.bool,
-        style: React.PropTypes.object
+        linkClickAction: PropTypes.func,
+        sidebarOpen: PropTypes.bool,
+        style: PropTypes.object
+    },
+    contextTypes: {
+        theme: PropTypes.object
     },
     getInitialState: function () {
         return {
             visible: false
         };
+    },
+    getTheme: function () {
+        return this.context.theme || defaultTheme;
     },
     resetTutorial: function () {
         localStorage[`hideTutorialOnPage_historicalGraph`] = false;
@@ -43,17 +49,17 @@ var SideNav = React.createClass({
         this.props.linkClickAction();
         location.reload();
     },
-    renderIconSideBar: function (menuItem) {
-        return !R.isNil(menuItem.url) ? (
+    renderIconSideBar: function (styles, menuItem) {
+        return menuItem.url ? (
             <li key={menuItem.iconPath} style={{height: "55px"}}>
-                <Router.Link
+                <Link
                     activeStyle={styles.activeLink}
                     onClick={this.props.linkClickAction}
                     style={{height: "55px"}}
                     to={menuItem.url}
                 >
                     <img src={menuItem.iconPath} style={{float: "right", width: "30px"}} />
-                </Router.Link>
+                </Link>
             </li>
         ) : (
             <li key={menuItem.iconPath} onClick={this.resetTutorial} style={{height: "55px", cursor: "pointer"}}>
@@ -63,10 +69,10 @@ var SideNav = React.createClass({
             </li>
         );
     },
-    renderNavItem: function (menuItem) {
-        return !R.isNil(menuItem.url) ? (
+    renderNavItem: function (styles, menuItem) {
+        return menuItem.url ? (
             <li key={menuItem.iconPath}>
-                <Router.Link
+                <Link
                     activeStyle={styles.activeLink}
                     onClick={this.props.linkClickAction}
                     style={{height: "55px"}}
@@ -76,7 +82,7 @@ var SideNav = React.createClass({
                     <span style={styles.sideLabel}>
                         {menuItem.label}
                     </span>
-                </Router.Link>
+                </Link>
             </li>
         ) : (
             <li key={menuItem.iconPath} onClick={this.resetTutorial} style={{cursor: "pointer"}}>
@@ -90,20 +96,29 @@ var SideNav = React.createClass({
         );
     },
     render: function () {
+        const styles = stylesFunction(this.getTheme());
         return ENVIRONMENT === "cordova" || this.props.sidebarOpen ? (
             <div style={this.props.style}>
                 <div id="menu" style={styles.menu}>
-                    <bootstrap.Nav bsStyle="pills" stacked={true} >
-                        {this.props.items.map(this.renderNavItem)}
-                    </bootstrap.Nav>
+                    <Nav bsStyle="pills" stacked={true} >
+                        {
+                            this.props.items.map(
+                                partial(this.renderNavItem, [styles])
+                            )
+                        }
+                    </Nav>
                 </div>
             </div>
         ) : (
             <div style={this.props.style}>
                 <div id="menu" style={styles.menu}>
-                    <bootstrap.Nav bsStyle="pills" stacked={true} >
-                        {this.props.items.map(this.renderIconSideBar)}
-                    </bootstrap.Nav>
+                    <Nav bsStyle="pills" stacked={true} >
+                        {
+                            this.props.items.map(
+                                partial(this.renderIconSideBar, [styles])
+                            )
+                        }
+                    </Nav>
                 </div>
             </div>
         );
