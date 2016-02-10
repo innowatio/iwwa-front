@@ -10,10 +10,14 @@ export const styles = (theme) => ({
         width: "100%",
         height: "100%"
     },
-    buttonSelectValore: {
+    buttonSelectChart: {
+        background: theme.colors.backgroundSelectButton,
+        color: theme.colors.selectButton,
+        marginRight: "9px",
         marginTop: "6px",
-        fontSize: "13px",
-        border: "1px " + theme.colors.greyBorder
+        fontSize: "12px",
+        border: "0px none",
+        borderRadius: "30px"
     },
     colVerticalPadding: {
         paddingTop: "10px",
@@ -101,9 +105,9 @@ export const styles = (theme) => ({
         },
         ".tab-content": {
             height: "82%",
-            borderBottom: "solid 1px " + color(theme.colors.darkBlack).alpha(0.1).rgbString(),
-            borderRight: "solid 1px " + color(theme.colors.darkBlack).alpha(0.1).rgbString(),
-            borderLeft: "solid 1px " + color(theme.colors.darkBlack).alpha(0.1).rgbString(),
+            borderBottom: "solid 1px " + color(theme.colors.black).alpha(0.1).rgbString(),
+            borderRight: "solid 1px " + color(theme.colors.black).alpha(0.1).rgbString(),
+            borderLeft: "solid 1px " + color(theme.colors.black).alpha(0.1).rgbString(),
             borderTop: "0px",
             boxShadow: "2px 2px 5px " + theme.colors.greySubTitle
         }

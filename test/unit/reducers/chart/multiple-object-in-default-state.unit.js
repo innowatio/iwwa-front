@@ -101,10 +101,10 @@ describe("`chart` reducer [CASE: multiple object in default state array]", () =>
         it("should return the new measurementType passed by action [CASE: two different `measurementType` in state]", () => {
             const valuePassedFromAction = {
                 type: "SELECT_ELECTRICAL_TYPE",
-                payload: {
+                payload: [{
                     label: "labelTypeModify",
                     key: "keyTypeModify"
-                }
+                }]
             };
             const ret = chart(chartState, valuePassedFromAction);
             expect(ret).to.deep.equal([{
@@ -123,10 +123,10 @@ describe("`chart` reducer [CASE: multiple object in default state array]", () =>
 
             const valuePassedFromAction = {
                 type: "SELECT_ELECTRICAL_TYPE",
-                payload: {
+                payload: [{
                     label: "labelTypeModify",
                     key: "keyTypeModify"
-                }
+                }]
             };
             const ret = chart(chartStateWithEqualMeasurementType, valuePassedFromAction);
             expect(ret).to.deep.equal([{

@@ -6,16 +6,7 @@ var React           = require("react");
 var ReactPureRender = require("react-addons-pure-render-mixin");
 
 var components = require("components");
-import {styles} from "lib/styles_restyling";
 import {defaultTheme} from "lib/theme";
-
-const styleDropdown = (theme) => R.merge(
-    styles(theme).buttonSelectValore,
-    {
-        color: theme.colors.greySubTitle,
-        backgroundColor: theme.colors.greyBackground
-    }
-);
 
 var ButtonGroupSelect = React.createClass({
     propTypes: {
@@ -23,14 +14,14 @@ var ButtonGroupSelect = React.createClass({
             React.PropTypes.array,
             IPropTypes.list
         ]).isRequired,
-        filter: React.PropTypes.bool,
-        getActiveStyle: React.PropTypes.func,
         getKey: React.PropTypes.func,
         getLabel: React.PropTypes.func,
         // This parameter is for check if the sources are two (real and previsional)
         multi: React.PropTypes.bool,
         onChange: React.PropTypes.func.isRequired,
         onChangeMulti: React.PropTypes.func,
+        style: React.PropTypes.object,
+        styleToMergeWhenActiveState: React.PropTypes.object,
         value: React.PropTypes.oneOfType([
             React.PropTypes.array,
             IPropTypes.list
@@ -86,15 +77,20 @@ var ButtonGroupSelect = React.createClass({
             this.props.onChangeMulti(this.props.value, allowedValue) :
             this.props.onChange([allowedValue]);
     },
+    getActiveStyle: function () {
+        return R.merge(
+            this.props.style || {},
+            this.props.styleToMergeWhenActiveState || {}
+        );
+    },
     renderButtonOption: function (allowedValue) {
-        var active = this.isActive(allowedValue);
+        const active = this.isActive(allowedValue);
         return (
             <components.Button
-                active={active}
                 disabled={allowedValue.isDisabled || false}
                 key={this.props.getKey(allowedValue)}
                 onClick={R.partial(this.onChange, [allowedValue])}
-                style={active ? this.props.getActiveStyle(allowedValue) : styleDropdown(this.getTheme())}
+                style={active ? this.getActiveStyle() : this.props.style}
             >
                 {this.props.getLabel(allowedValue)}
             </components.Button>

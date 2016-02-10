@@ -9,31 +9,30 @@ var components = require("components");
 var icons      = require("lib/icons");
 import {defaultTheme} from "lib/theme";
 
-// TODO remove importants
 const buttonBasicStyle = ({colors}) => ({
-    background: colors.greyBackground + "!important",
-    color: colors.primary + "!important",
-    fontSize: "13px" + "!important"
+    background: colors.greyBackground,
+    color: colors.primary,
+    fontSize: "13px"
 });
 
 const buttonBasicStyleActive = ({colors}) => ({
-    background: colors.primary + "!important",
-    color: colors.white + "!important",
-    fontSize: "13px" + "!important"
+    background: colors.primary,
+    color: colors.white,
+    fontSize: "13px"
 });
 
 const itemsStyle = (theme) => (R.merge(buttonBasicStyle(theme), {
-    background: `${theme.colors.white} !important`,
-    border: "1px solid " + theme.colors.greySubTitle + " !important",
-    marginTop: "5px !important",
+    background: theme.colors.white,
+    border: `1px solid ${theme.colors.greySubTitle}`,
+    marginTop: "5px",
     width: "100%",
     padding: "10px"
 }));
 
 const itemsStyleActive = ({colors}) => ({
-    background: colors.primary + "!important",
-    color: colors.white + "!important",
-    fontSize: "13px" + "!important"
+    background: colors.primary,
+    color: colors.white,
+    fontSize: "13px"
 });
 
 var SiteNavigator = React.createClass({
@@ -139,8 +138,13 @@ var SiteNavigator = React.createClass({
         this.closeModal();
         this.props.onChange(this.getReturnValues());
     },
+    getValue: function () {
+        const self = this;
+        return [this.props.allowedValues
+            .find(value => self.getKeyParent(value) === self.state.pathParent)
+        ].filter(value => !R.isNil(value));
+    },
     renderSitesParent: function () {
-        var self = this;
         return (
             <components.ButtonGroupSelect
                 allowedValues={this.getFilteredValues().toArray()}
@@ -148,11 +152,9 @@ var SiteNavigator = React.createClass({
                 getLabel={this.getLabelParent}
                 multi={false}
                 onChange={this.onClickParent}
-                value={[this.props.allowedValues.find((value) => {
-                    return self.getKeyParent(value) === self.state.pathParent;
-                })].filter(function (value) {
-                    return !R.isNil(value);
-                })}
+                style={itemsStyle(this.getTheme())}
+                styleToMergeWhenActiveState={itemsStyleActive(this.getTheme())}
+                value={this.getValue()}
                 vertical={true}
             />
         );
@@ -167,6 +169,8 @@ var SiteNavigator = React.createClass({
                     getLabel={this.getLabelChildren}
                     multi={false}
                     onChange={this.onClickChildren}
+                    style={itemsStyle(this.getTheme())}
+                    styleToMergeWhenActiveState={itemsStyleActive(this.getTheme())}
                     value={this.state.pathChildren}
                     vertical={true}
                 />
@@ -198,9 +202,7 @@ var SiteNavigator = React.createClass({
                                     width: "100%",
                                     padding: "12px",
                                     overflow: "auto"
-                                },
-                                "button.btn": itemsStyle(theme),
-                                "button.btn.active": itemsStyleActive(theme)
+                                }
                             }}
                             scopeSelector=".site-navigator-parent"
                         />

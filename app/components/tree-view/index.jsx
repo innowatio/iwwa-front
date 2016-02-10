@@ -16,6 +16,8 @@ var TreeView = React.createClass({
         getKey: React.PropTypes.func,
         getLabel: React.PropTypes.func,
         onChange: React.PropTypes.func.isRequired,
+        style: React.PropTypes.object,
+        styleToMergeWhenActiveState: React.PropTypes.object,
         title: React.PropTypes.string,
         value: React.PropTypes.oneOfType([
             React.PropTypes.array,
@@ -61,6 +63,8 @@ var TreeView = React.createClass({
                 key={"level" + position}
                 multi={false}
                 onChange={R.partialRight(this.onChange, [position])}
+                style={this.props.style}
+                styleToMergeWhenActiveState={this.props.styleToMergeWhenActiveState}
                 value={selectedValue}
                 vertical={true}
             />

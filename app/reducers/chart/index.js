@@ -47,11 +47,11 @@ export function chart (state = defaultChartState, {type, payload}) {
         return twoElectricalSensor ? state.map(stateObj => ({
             ...stateObj,
             alarms: undefined,
-            measurementType: payload
+            measurementType: payload[0]
         })) : update(0, {
             ...state[0],
             alarms: undefined,
-            measurementType: payload
+            measurementType: payload[0]
         }, state);
     case SELECT_MULTIPLE_ELECTRICAL_SITE:
         /*

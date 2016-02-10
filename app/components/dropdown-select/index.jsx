@@ -51,7 +51,7 @@ var DropdownSelect = React.createClass({
                 onClick={R.partial(this.props.onChange, [allowedValue])}
                 style={{
                     background: (active ? colors.primary : ""),
-                    color: (active ? colors.white : colors.darkBlack),
+                    color: (active ? colors.white : colors.black),
                     borderLeft: "0px",
                     borderRight: "0px",
                     borderTop: (index === 0 ? "0px" : undefined),

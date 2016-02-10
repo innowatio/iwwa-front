@@ -40,7 +40,7 @@ var styleGaugeBar = ({colors}) => ({
 });
 
 var stylePointer = ({colors}) => ({
-    fill: colors.darkBlack,
+    fill: colors.black,
     WebkitTransition: "-webkit-transform 800ms ease",
     transition: "transform 800ms ease",
     zIndex: 5

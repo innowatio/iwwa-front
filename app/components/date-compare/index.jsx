@@ -1,4 +1,4 @@
-import {equals, partial} from "ramda";
+import {equals, partial, merge} from "ramda";
 import React, {PropTypes} from "react";
 import moment from "moment";
 
@@ -52,12 +52,18 @@ var DateCompare = React.createClass({
         this.props.onChange(moment.utc().valueOf(), this.state.period, "dateCompare");
     },
     renderDataCompare: function (allowedValue) {
+        const active = equals(allowedValue, this.state.period);
+        const theme = this.getTheme();
         return (
             <components.Button
-                active={equals(allowedValue, this.state.period)}
                 key={this.props.getKey(allowedValue)}
                 onClick={partial(this.selectedCheckboxDate, [allowedValue])}
-                style={styles.buttonCompare}
+                style={merge(
+                    styles.buttonCompare,
+                    {
+                        color: active ? theme.colors.white : theme.colors.black,
+                        backgroundColor: active ? theme.colors.lineReale : theme.colors.greyBackground
+                    })}
                 value={allowedValue}
             >
                 {this.props.getLabel(allowedValue)}

@@ -39,10 +39,12 @@ export function selectSingleElectricalSensor ({fullPath, sensor, site}) {
 *   @param {object} type - data type
 */
 const typeofSelectElectricalType = actionTypeValidator(
-    struct({
-        label: String,
-        key: String
-    })
+    tuple([
+        struct({
+            label: String,
+            key: String
+        })
+    ])
 );
 export function selectElectricalType (electricalType) {
     typeofSelectElectricalType(...arguments);

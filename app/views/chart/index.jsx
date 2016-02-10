@@ -34,6 +34,17 @@ const selectStyles = {
     }
 };
 
+const measurementTypeButtonStyle = (theme) => R.merge(styles(theme).buttonSelectChart, {
+    width: "132px",
+    height: "45px",
+    fontSize: "15px"
+});
+
+const sourceButtonStyle = (theme) => R.merge(styles(theme).buttonSelectChart, {
+    width: "85px",
+    height: "30px"
+});
+
 const consumptionButtonStyle = ({colors}) => ({
     color: colors.greySubTitle,
     textAlign: "center",
@@ -159,13 +170,6 @@ var Chart = React.createClass({
             );
         });
     },
-    getValoreActiveStyle: function (valore) {
-        const theme = this.getTheme();
-        return R.merge(
-            styles(theme).buttonSelectValore,
-            {background: valore.color, color: theme.colors.white}
-        );
-    },
     getSitoById: function (sitoId) {
         const sites = this.props.collections.get("sites") || Immutable.Map();
         return sites.find(site => {
@@ -283,41 +287,19 @@ var Chart = React.createClass({
                         >
                             <components.ButtonGroupSelect
                                 allowedValues={parameters.getSources(this.getTheme())}
-                                getActiveStyle={this.getValoreActiveStyle}
                                 getKey={R.prop("key")}
                                 getLabel={R.prop("label")}
                                 multi={valoriMulti}
                                 onChange={this.props.selectSource}
                                 onChangeMulti={this.onChangeMultiSources}
+                                style={sourceButtonStyle(this.getTheme())}
+                                styleToMergeWhenActiveState={{background: this.getTheme().colors.buttonPrimary}}
                                 value={selectedSources}
                             />
                         </components.TutorialAnchor>
                     {ENVIRONMENT === "cordova" ? null : this.renderExportButton()}
                     </span>
                     <span className="pull-right" style={{display: "flex"}}>
-                        <components.TutorialAnchor
-                            message={tutorialString.tipologie}
-                            order={3}
-                            position="left"
-                            ref="tipologie"
-                        >
-                            <components.Popover
-                                hideOnChange={true}
-                                title={<img src={icons.iconPower} style={{width: "75%"}} />}
-                                tooltipId="tooltipInterest"
-                                tooltipMessage="Quantità d'interesse"
-                                tooltipPosition="left"
-                            >
-                                <components.DropdownSelect
-                                    allowedValues={parameters.getMeasurementTypes()}
-                                    getKey={R.prop("key")}
-                                    getLabel={R.prop("label")}
-                                    onChange={this.props.selectElectricalType}
-                                    style={{float: "left"}}
-                                    value={this.props.chart[0].measurementType}
-                                />
-                            </components.Popover>
-                        </components.TutorialAnchor>
                         <components.TutorialAnchor
                             message={tutorialString.siti}
                             order={4}
@@ -397,15 +379,35 @@ var Chart = React.createClass({
                     </components.TutorialAnchor>
                 </bootstrap.Col>
                 <bootstrap.Col sm={12}>
-                    <components.ConsumptionButtons
-                        allowedValues={variables}
-                        onChange={consumptionTypes => this.onChangeConsumption(null, consumptionTypes)}
-                        selectedValue={selectedConsumptionType}
-                        style={{width: "100%"}}
-                        styleButton={consumptionButtonStyle(this.getTheme())}
-                        styleButtonSelected={consumptionButtonSelectedStyle(this.getTheme())}
-                        styleIcon={{position: "absolute", left: "2px", top: "2px", height: "90%"}}
-                    />
+                    <span className="pull-left" style={{display: "flex"}}>
+                        <components.ConsumptionButtons
+                            allowedValues={variables}
+                            onChange={consumptionTypes => this.onChangeConsumption(null, consumptionTypes)}
+                            selectedValue={selectedConsumptionType}
+                            style={{width: "100%"}}
+                            styleButton={consumptionButtonStyle(this.getTheme())}
+                            styleButtonSelected={consumptionButtonSelectedStyle(this.getTheme())}
+                            styleIcon={{position: "absolute", left: "2px", top: "2px", height: "90%"}}
+                        />
+                    </span>
+                    <span className="pull-right" style={{display: "flex"}}>
+                        <components.TutorialAnchor
+                            message={tutorialString.tipologie}
+                            order={3}
+                            position="left"
+                            ref="tipologie"
+                        >
+                            <components.ButtonGroupSelect
+                                allowedValues={parameters.getMeasurementTypes()}
+                                getKey={R.prop("key")}
+                                getLabel={R.prop("label")}
+                                onChange={this.props.selectElectricalType}
+                                style={measurementTypeButtonStyle(this.getTheme())}
+                                styleToMergeWhenActiveState={{background: this.getTheme().colors.buttonPrimary}}
+                                value={[this.props.chart[0].measurementType]}
+                            />
+                        </components.TutorialAnchor>
+                    </span>
                 </bootstrap.Col>
             </div>
         );
