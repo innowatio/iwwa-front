@@ -10,7 +10,6 @@ export const colorsDarkTheme = {
     buttonPrimary: "#ec4882",
     co2: "#CE93D8",
     consumption: "#F74F68",
-    black: "#000000",
     graphUnderlay: "#4E4D4F",
     green: "#a8e1d4",
     grey: "#999999",

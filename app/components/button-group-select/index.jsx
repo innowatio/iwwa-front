@@ -85,7 +85,7 @@ var ButtonGroupSelect = React.createClass({
             this.props.onChange([allowedValue]);
     },
     renderButtonOption: function (allowedValue) {
-        var active = this.isActive(allowedValue);
+        const active = this.isActive(allowedValue);
         const theme = this.getTheme();
         return (
             <components.Button
