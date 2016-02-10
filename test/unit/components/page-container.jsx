@@ -3,11 +3,7 @@ require("unit-setup.js");
 import Immutable from "immutable";
 
 
-var PageContainer = proxyquire("components/page-container/", {
-    render: function () {
-        return ;
-    }
-});
+var PageContainer = proxyquire("components/page-container/", {});
 
 describe("The `PageContainer` component ", function () {
 
@@ -44,7 +40,7 @@ describe("The `PageContainer` component ", function () {
             );
 
             const expected1 = "Sito 1";
-            expect(expected1).to.be.equals(pageContainerElement.getTitleForSingleSensor(chart1));
+            expect(pageContainerElement.getTitleForSingleSensor(chart1)).to.be.equals(expected1);
 
             // NameSito · NamePod/Sensor
             const chart2 = {
@@ -52,7 +48,7 @@ describe("The `PageContainer` component ", function () {
             };
 
             const expected2 = "Sito 1 · Sensor 2";
-            expect(expected2).to.be.equals(pageContainerElement.getTitleForSingleSensor(chart2));
+            expect(pageContainerElement.getTitleForSingleSensor(chart2)).to.be.equals(expected2);
 
             // NameSito · NamePod/Sensor
             const chart3 = {
@@ -60,7 +56,7 @@ describe("The `PageContainer` component ", function () {
             };
 
             const expected3 = "Sito 1 · sensor3";
-            expect(expected3).to.be.equals(pageContainerElement.getTitleForSingleSensor(chart3));
+            expect(pageContainerElement.getTitleForSingleSensor(chart3)).to.be.equals(expected3);
         });
     });
 });
