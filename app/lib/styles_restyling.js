@@ -56,8 +56,8 @@ export const styles = (theme) => ({
         backgroundColor: theme.colors.titlePage,
         paddingLeft: "10px",
         paddingRight: "10px",
-        marginTop: "-20px",
-        height: "56px"
+        height: "56px",
+        display: "flex"
     },
     inputLine: {
         borderTop: "0px",

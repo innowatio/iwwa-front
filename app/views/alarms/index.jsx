@@ -370,67 +370,74 @@ var Alarms = React.createClass({
     render: function () {
         var allowedValues = this.props.collections.get("alarms") || Immutable.Map();
         return (
-            <div className="alarm-tab" style={{paddingBottom: "15px"}}>
-                <Radium.Style
-                    rules={styles(this.getTheme()).tabForm}
-                    scopeSelector=".alarm-tab"
-                />
-                <div className="tabbed-area" style={styles(this.getTheme()).tabbedArea}>
-                    <bootstrap.Tabs
-                        activeKey={this.props.alarms.selectedTab}
-                        animation={false}
-                        bsStyle={"tabs"}
-                        onSelect={this.activeKey}
-                    >
-                        <bootstrap.Tab eventKey={1} title="Impostazione">
-                            <components.AlarmForm
-                                alarm={this.getAlarm()}
-                                alarmsReduxState={this.props.alarms}
-                                reset={this.props.resetAlarmFormView}
-                                siti={this.getSiti()}
-                                submit={this.props.submitAlarmCreationOrChange}
-                                type={this.getType()}
-                            />
-                        </bootstrap.Tab>
-                        <bootstrap.Tab
-                            eventKey={2}
-                            style={{
-                                height: "100%",
-                                overflow: "scroll"
-                            }}
-                            title="Allarmi"
+            <div>
+                <div style={styles(this.getTheme()).titlePage}>
+                    <div style={{fontSize: "18px", marginBottom: "0px", paddingTop: "18px", width: "100%"}}>
+                        {""}
+                    </div>
+                </div>
+                <div className="alarm-tab" style={{paddingBottom: "15px"}}>
+                    <Radium.Style
+                        rules={styles(this.getTheme()).tabForm}
+                        scopeSelector=".alarm-tab"
+                    />
+                    <div className="tabbed-area" style={styles(this.getTheme()).tabbedArea}>
+                        <bootstrap.Tabs
+                            activeKey={this.props.alarms.selectedTab}
+                            animation={false}
+                            bsStyle={"tabs"}
+                            onSelect={this.activeKey}
                         >
-                            {this.renderFilterButton()}
-                            <components.CollectionElementsTable
-                                collection={
-                                    R.isNil(allowedValues) ?
-                                    Immutable.Map() :
-                                    allowedValues.filter(this.filterAlarms)}
-                                columns={this.getColumnsAlarms()}
-                                getKey={getKeyFromCollection}
-                                hover={true}
-                                width={"40%"}
-                            />
-                        </bootstrap.Tab>
-                        <bootstrap.Tab eventKey={3} style={{height: "100%", overflow: "scroll"}} title="Storico allarmi">
-                            {/* <div style={{marginRight: "30px", height: "40px", paddingTop: "20px"}}>
-                                <div onClick={this.onClickFilter}
-                                    style={{float: "right", display: "flex", cursor: "pointer"}}>
-                                    <components.Icon icon="filter" style={{paddingTop: "13px"}}/>
-                                    <components.Spacer direction="h" size={10} />
-                                    <h4 style={{color: colors.primary}}>Filter</h4>
-                                </div>
-                            </div> */}
-                            <components.Spacer direction="v" size={30}/>
-                            <components.CollectionElementsTable
-                                collection={this.getNotifications().sort(R.partialRight(this.sortByDate, [false]))}
-                                columns={this.getColumnsNotifications()}
-                                getKey={getKeyFromCollection}
-                                hover={true}
-                                width={"30%"}
-                            />
-                        </bootstrap.Tab>
-                    </bootstrap.Tabs>
+                            <bootstrap.Tab eventKey={1} title="Impostazione">
+                                <components.AlarmForm
+                                    alarm={this.getAlarm()}
+                                    alarmsReduxState={this.props.alarms}
+                                    reset={this.props.resetAlarmFormView}
+                                    siti={this.getSiti()}
+                                    submit={this.props.submitAlarmCreationOrChange}
+                                    type={this.getType()}
+                                />
+                            </bootstrap.Tab>
+                            <bootstrap.Tab
+                                eventKey={2}
+                                style={{
+                                    height: "100%",
+                                    overflow: "scroll"
+                                }}
+                                title="Allarmi"
+                            >
+                                {this.renderFilterButton()}
+                                <components.CollectionElementsTable
+                                    collection={
+                                        R.isNil(allowedValues) ?
+                                        Immutable.Map() :
+                                        allowedValues.filter(this.filterAlarms)}
+                                    columns={this.getColumnsAlarms()}
+                                    getKey={getKeyFromCollection}
+                                    hover={true}
+                                    width={"40%"}
+                                />
+                            </bootstrap.Tab>
+                            <bootstrap.Tab eventKey={3} style={{height: "100%", overflow: "scroll"}} title="Storico allarmi">
+                                {/* <div style={{marginRight: "30px", height: "40px", paddingTop: "20px"}}>
+                                    <div onClick={this.onClickFilter}
+                                        style={{float: "right", display: "flex", cursor: "pointer"}}>
+                                        <components.Icon icon="filter" style={{paddingTop: "13px"}}/>
+                                        <components.Spacer direction="h" size={10} />
+                                        <h4 style={{color: colors.primary}}>Filter</h4>
+                                    </div>
+                                </div> */}
+                                <components.Spacer direction="v" size={30}/>
+                                <components.CollectionElementsTable
+                                    collection={this.getNotifications().sort(R.partialRight(this.sortByDate, [false]))}
+                                    columns={this.getColumnsNotifications()}
+                                    getKey={getKeyFromCollection}
+                                    hover={true}
+                                    width={"30%"}
+                                />
+                            </bootstrap.Tab>
+                        </bootstrap.Tabs>
+                    </div>
                 </div>
             </div>
         );

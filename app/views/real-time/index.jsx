@@ -11,6 +11,7 @@ var readingsRealTime  = require("lib/readings-real-time-aggregates-to-realtime-v
 import {styles} from "lib/styles_restyling";
 import {selectRealTimeSite} from "actions/real-time";
 import {defaultTheme} from "lib/theme";
+import {getTitleForSingleSensor} from "lib/page-header-utils";
 
 var RealTime = React.createClass({
     propTypes: {
@@ -197,33 +198,40 @@ var RealTime = React.createClass({
         const theme = this.getTheme();
         const selectedSiteName = this.getSelectedSiteName();
         return (
-            <div style={styles(theme).mainDivStyle}>
-                <bootstrap.Col sm={12}>
-                    <span className="pull-right">
-                        <components.SiteNavigator
-                            allowedValues={this.getSites()}
-                            defaultPath={this.props.realTime.fullPath || []}
-                            onChange={this.setSelectedSite}
-                            title={"Quale punto di misurazione vuoi visualizzare?"}
-                        />
-                    </span>
-                </bootstrap.Col>
-                <h3 className="text-center" style={{color: theme.colors.primary}}>
-                    {`${selectedSiteName ? selectedSiteName + " - " : ""}Rilevazioni ambientali`}
-                </h3>
-                <components.VariablesPanel
-                    values={this.findLatestMeasuresForVariables()}
-                />
-                <h3 className="text-center" style={{color: theme.colors.primary}}>
-                    {`${selectedSiteName ? selectedSiteName + " - " : ""}Pods`}
-                </h3>
-                <div style={{overflow: "scroll"}}>
-                    <bootstrap.Col className="text-center" sm={4} style={{padding: "20px"}}>
-                        {this.drawGaugeTotal()}
+            <div>
+                <div style={styles(this.getTheme()).titlePage}>
+                    <div style={{fontSize: "18px", marginBottom: "0px", paddingTop: "18px", width: "100%"}}>
+                        {getTitleForSingleSensor(this.props.realTime, this.props.collections)}
+                    </div>
+                </div>
+                <div style={styles(theme).mainDivStyle}>
+                    <bootstrap.Col sm={12}>
+                        <span className="pull-right">
+                            <components.SiteNavigator
+                                allowedValues={this.getSites()}
+                                defaultPath={this.props.realTime.fullPath || []}
+                                onChange={this.setSelectedSite}
+                                title={"Quale punto di misurazione vuoi visualizzare?"}
+                            />
+                        </span>
                     </bootstrap.Col>
-                    <bootstrap.Col sm={8}>
-                        {this.drawGauges()}
-                    </bootstrap.Col>
+                    <h3 className="text-center" style={{color: theme.colors.primary}}>
+                        {`${selectedSiteName ? selectedSiteName + " - " : ""}Rilevazioni ambientali`}
+                    </h3>
+                    <components.VariablesPanel
+                        values={this.findLatestMeasuresForVariables()}
+                    />
+                    <h3 className="text-center" style={{color: theme.colors.primary}}>
+                        {`${selectedSiteName ? selectedSiteName + " - " : ""}Pods`}
+                    </h3>
+                    <div style={{overflow: "scroll"}}>
+                        <bootstrap.Col className="text-center" sm={4} style={{padding: "20px"}}>
+                            {this.drawGaugeTotal()}
+                        </bootstrap.Col>
+                        <bootstrap.Col sm={8}>
+                            {this.drawGauges()}
+                        </bootstrap.Col>
+                    </div>
                 </div>
             </div>
         );

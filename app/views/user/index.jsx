@@ -308,6 +308,23 @@ var User = React.createClass({
         const theme = this.getTheme();
         return (
             <div className="users-admin">
+                <div style={styles(this.getTheme()).titlePage}>
+                    <Router.Link style={{float: "left", paddingTop: "6px"}} to="/users/">
+                        <bootstrap.Button bsStyle="link" style={{height: "40px", outline: "0px"}}>
+                            <img src={icons.iconArrowLeft} style={{height: "30px", float: "left"}} />
+                        </bootstrap.Button>
+                    </Router.Link>
+                    <div style={{
+                        fontSize: "18px",
+                        marginBottom: "0px",
+                        paddingTop: "18px",
+                        width: "100%",
+                        textAlign: "center"
+                    }}
+                    >
+                        {`Modifica utente: ${this.getUserEmail()}`}
+                    </div>
+                </div>
                 <Radium.Style
                     rules={R.merge(styles(theme).tabForm, {
                         ".panel-body": {
@@ -331,17 +348,7 @@ var User = React.createClass({
                     })}
                     scopeSelector=".users-admin"
                 />
-                <div style={{display: "inline-block", textAlign: "center", width: "100%"}}>
-                    <Router.Link style={{float: "left"}} to="/users/">
-                        <bootstrap.Button bsStyle="link" style={{height: "40px", outline: "0px"}}>
-                            <img src={icons.iconArrowLeft} style={{height: "30px", float: "left"}} />
-                        </bootstrap.Button>
-                    </Router.Link>
-                    <h4 style={{color: theme.colors.titleColor}}>
-                        {`Modifica utente: ${this.getUserEmail()}`}
-                    </h4>
-                </div>
-                <div className="tabbed-area" style={R.merge(styles(theme).tabbedArea, {marginTop: "0px"})}>
+                <div className="tabbed-area" style={R.merge(styles(theme).tabbedArea, {marginTop: "25px"})}>
                     <bootstrap.Tabs
                         activeKey={this.state.key}
                         animation={false}
