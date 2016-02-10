@@ -43,10 +43,10 @@ describe("`chart` actions", () => {
     describe("`selectElectricalType` function", () => {
 
         it("should return the correct object if is passed an object with `label` and `key` keys", () => {
-            const type = {
+            const type = [{
                 label: "label",
                 key: "key"
-            };
+            }];
             const ret = chart.selectElectricalType(type);
             expect(ret).to.deep.equal({
                 type: "SELECT_ELECTRICAL_TYPE",

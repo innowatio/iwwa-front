@@ -1,3 +1,4 @@
+import {unnest} from "ramda";
 import {String, Number, tuple, struct, maybe} from "tcomb";
 
 import actionTypeValidator from "../lib/action-type-validator";
@@ -39,10 +40,12 @@ export function selectSingleElectricalSensor ({fullPath, sensor, site}) {
 *   @param {object} type - data type
 */
 const typeofSelectElectricalType = actionTypeValidator(
-    struct({
-        label: String,
-        key: String
-    })
+    tuple([
+        struct({
+            label: String,
+            key: String
+        })
+    ])
 );
 export function selectElectricalType (electricalType) {
     typeofSelectElectricalType(...arguments);

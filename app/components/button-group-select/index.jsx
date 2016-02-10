@@ -6,15 +6,7 @@ var React           = require("react");
 var ReactPureRender = require("react-addons-pure-render-mixin");
 
 var components = require("components");
-import {styles} from "lib/styles_restyling";
 import {defaultTheme} from "lib/theme";
-
-const styleActiveDropdown = (theme) => R.merge(
-    styles(theme).buttonSelectValore,
-    {
-        background: theme.colors.buttonPrimary
-    }
-);
 
 var ButtonGroupSelect = React.createClass({
     propTypes: {
@@ -22,13 +14,14 @@ var ButtonGroupSelect = React.createClass({
             React.PropTypes.array,
             IPropTypes.list
         ]).isRequired,
-        filter: React.PropTypes.bool,
         getKey: React.PropTypes.func,
         getLabel: React.PropTypes.func,
         // This parameter is for check if the sources are two (real and previsional)
         multi: React.PropTypes.bool,
         onChange: React.PropTypes.func.isRequired,
         onChangeMulti: React.PropTypes.func,
+        style: React.PropTypes.object,
+        styleToMergeWhenActiveState: React.PropTypes.object,
         value: React.PropTypes.oneOfType([
             React.PropTypes.array,
             IPropTypes.list
@@ -84,15 +77,20 @@ var ButtonGroupSelect = React.createClass({
             this.props.onChangeMulti(this.props.value, allowedValue) :
             this.props.onChange([allowedValue]);
     },
+    getActiveStyle: function () {
+        return R.merge(
+            this.props.style || {},
+            this.props.styleToMergeWhenActiveState || {}
+        );
+    },
     renderButtonOption: function (allowedValue) {
         const active = this.isActive(allowedValue);
-        const theme = this.getTheme();
         return (
             <components.Button
                 disabled={allowedValue.isDisabled || false}
                 key={this.props.getKey(allowedValue)}
                 onClick={R.partial(this.onChange, [allowedValue])}
-                style={active ? styleActiveDropdown(theme) : styles(theme).buttonSelectValore}
+                style={active ? this.getActiveStyle() : this.props.style}
             >
                 {this.props.getLabel(allowedValue)}
             </components.Button>
