@@ -9,11 +9,10 @@ var components = require("components");
 import {styles} from "lib/styles_restyling";
 import {defaultTheme} from "lib/theme";
 
-const styleDropdown = (theme) => R.merge(
+const styleActiveDropdown = (theme) => R.merge(
     styles(theme).buttonSelectValore,
     {
-        color: theme.colors.greySubTitle,
-        backgroundColor: theme.colors.greyBackground
+        background: theme.colors.buttonPrimary
     }
 );
 
@@ -24,7 +23,6 @@ var ButtonGroupSelect = React.createClass({
             IPropTypes.list
         ]).isRequired,
         filter: React.PropTypes.bool,
-        getActiveStyle: React.PropTypes.func,
         getKey: React.PropTypes.func,
         getLabel: React.PropTypes.func,
         // This parameter is for check if the sources are two (real and previsional)
@@ -88,13 +86,13 @@ var ButtonGroupSelect = React.createClass({
     },
     renderButtonOption: function (allowedValue) {
         var active = this.isActive(allowedValue);
+        const theme = this.getTheme();
         return (
             <components.Button
-                active={active}
                 disabled={allowedValue.isDisabled || false}
                 key={this.props.getKey(allowedValue)}
                 onClick={R.partial(this.onChange, [allowedValue])}
-                style={active ? this.props.getActiveStyle(allowedValue) : styleDropdown(this.getTheme())}
+                style={active ? styleActiveDropdown(theme) : styles(theme).buttonSelectValore}
             >
                 {this.props.getLabel(allowedValue)}
             </components.Button>

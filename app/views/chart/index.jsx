@@ -158,13 +158,6 @@ var Chart = React.createClass({
             );
         });
     },
-    getValoreActiveStyle: function (valore) {
-        const theme = this.getTheme();
-        return R.merge(
-            styles(theme).buttonSelectValore,
-            {background: valore.color, color: theme.colors.white}
-        );
-    },
     getSitoById: function (sitoId) {
         const sites = this.props.collections.get("sites") || Immutable.Map();
         return sites.find(site => {
@@ -261,7 +254,6 @@ var Chart = React.createClass({
                         >
                             <components.ButtonGroupSelect
                                 allowedValues={parameters.getSources(this.getTheme())}
-                                getActiveStyle={this.getValoreActiveStyle}
                                 getKey={R.prop("key")}
                                 getLabel={R.prop("label")}
                                 multi={valoriMulti}

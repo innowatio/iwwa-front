@@ -18,7 +18,7 @@ const stylesFunction = ({colors}) => ({
             border: "0px",
             borderRadius: "0px !important",
             boxShadow: "none",
-            background: color(colors.darkBlack).alpha(0.1).rgbString(),
+            background: color(colors.black).alpha(0.1).rgbString(),
             color: colors.white
         },
         ".form-control": {

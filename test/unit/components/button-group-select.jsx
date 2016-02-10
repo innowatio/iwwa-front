@@ -35,7 +35,6 @@ describe("The `ButtonGroupSelect` component ", function () {
         const selectNode = TestUtils.renderIntoDocument(
             <ButtonGroupSelect
                 allowedValues={allowedValues}
-                getActiveStyle={R.identity}
                 getLabel={getLabelSpy}
                 onChange={R.identity}
                 value={allowedValues.slice(0, 1)}
@@ -56,7 +55,6 @@ describe("The `ButtonGroupSelect` component ", function () {
         const selectNode = TestUtils.renderIntoDocument(
             <ButtonGroupSelect
                 allowedValues={allowedValues}
-                getActiveStyle={R.identity}
                 getKey={getKeySpy}
                 isDisabled={false}
                 onChange={R.identity}
@@ -75,7 +73,6 @@ describe("The `ButtonGroupSelect` component ", function () {
         const selectElement = (
             <ButtonGroupSelect
                 allowedValues={allowedValues}
-                getActiveStyle={R.identity}
                 onChange={R.identity}
                 value={allowedValues.slice(0, 1)}
             />
@@ -93,7 +90,6 @@ describe("The `ButtonGroupSelect` component ", function () {
             const selectElement = (
                 <ButtonGroupSelect
                     allowedValues={allowedValues}
-                    getActiveStyle={R.identity}
                     getKey={R.prop("id")}
                     getLabel={R.prop("id")}
                     multi={false}
@@ -102,9 +98,8 @@ describe("The `ButtonGroupSelect` component ", function () {
                 />
             );
             const selectNode = TestUtils.renderIntoDocument(selectElement);
-            const buttonNodes = TestUtils.scryRenderedComponentsWithType(selectNode, Button);
-            const actualStates = buttonNodes.map(function (buttonNode) {
-                return !R.isNil(buttonNode.props.style.id);
+            const actualStates = allowedValues.map(allowedValue => {
+                return selectNode.isActive(allowedValue);
             });
             const expectedStates = allowedValues.map(function (allowedValue, index) {
                 return index === selectedIndex;
@@ -118,7 +113,6 @@ describe("The `ButtonGroupSelect` component ", function () {
             const selectElement = (
                 <ButtonGroupSelect
                     allowedValues={allowedValues}
-                    getActiveStyle={R.identity}
                     getKey={R.prop("id")}
                     getLabel={R.prop("id")}
                     onChange={changeSpy}
@@ -145,7 +139,6 @@ describe("The `ButtonGroupSelect` component ", function () {
             const selectElement = (
                 <ButtonGroupSelect
                     allowedValues={allowedValues}
-                    getActiveStyle={R.identity}
                     getKey={R.prop("id")}
                     getLabel={R.prop("id")}
                     multi={true}
@@ -155,9 +148,8 @@ describe("The `ButtonGroupSelect` component ", function () {
                 />
             );
             const selectNode = TestUtils.renderIntoDocument(selectElement);
-            const buttonNodes = TestUtils.scryRenderedComponentsWithType(selectNode, Button);
-            const actualStates = buttonNodes.map(function (buttonNode) {
-                return !R.isNil(buttonNode.props.style.id);
+            const actualStates = allowedValues.map(allowedValue => {
+                return selectNode.isActive(allowedValue);
             });
             const expectedStates = allowedValues.map(function (allowedValue) {
                 return R.contains(allowedValue, selectedValues);
@@ -172,7 +164,6 @@ describe("The `ButtonGroupSelect` component ", function () {
             const selectElement = (
                 <ButtonGroupSelect
                     allowedValues={allowedValues}
-                    getActiveStyle={R.identity}
                     getKey={R.prop("id")}
                     getLabel={R.prop("id")}
                     multi={true}

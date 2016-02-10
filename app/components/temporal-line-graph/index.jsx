@@ -88,7 +88,7 @@ var TemporalLineGraph = React.createClass({
             includeZero: true,
             labels: this.getLabelsFromProps(props),
             labelsSeparateLines: true,
-            legend: "follow",
+            legend: "never",
             sigma: 2,
             strokeWidth: 1.5,
             xlabel: props.xLabel,
