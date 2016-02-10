@@ -27,9 +27,6 @@ describe("The `PageContainer` component ", function () {
                     }
                 }
             });
-            const chart1 = {
-                fullPath: ["site1"]
-            };
 
             var pageContainerElement = TestUtils.renderIntoDocument(
                 <PageContainer
@@ -39,24 +36,39 @@ describe("The `PageContainer` component ", function () {
                 />
             );
 
-            const expected1 = "Sito 1";
+            // ""
+            const chart1 = {
+                fullPath: []
+            };
+            const expected1 = "";
             expect(pageContainerElement.getTitleForSingleSensor(chart1)).to.be.equals(expected1);
 
-            // NameSito · NamePod/Sensor
             const chart2 = {
-                fullPath: ["site1", "pod1", "sensor2"]
+                fullPath: undefined
             };
-
-            const expected2 = "Sito 1 · Sensor 2";
+            const expected2 = "";
             expect(pageContainerElement.getTitleForSingleSensor(chart2)).to.be.equals(expected2);
 
-            // NameSito · NamePod/Sensor
+            // NameSito
             const chart3 = {
+                fullPath: ["site1"]
+            };
+            const expected3 = "Sito 1";
+            expect(pageContainerElement.getTitleForSingleSensor(chart3)).to.be.equals(expected3);
+
+            // NameSito · NamePod/Sensor
+            const chart4 = {
+                fullPath: ["site1", "pod1", "sensor2"]
+            };
+            const expected4 = "Sito 1 · Sensor 2";
+            expect(pageContainerElement.getTitleForSingleSensor(chart4)).to.be.equals(expected4);
+
+            // NameSito · NamePod/Sensor
+            const chart5 = {
                 fullPath: ["site1", "pod1", "sensor3"]
             };
-
-            const expected3 = "Sito 1 · sensor3";
-            expect(pageContainerElement.getTitleForSingleSensor(chart3)).to.be.equals(expected3);
+            const expected5 = "Sito 1 · sensor3";
+            expect(pageContainerElement.getTitleForSingleSensor(chart5)).to.be.equals(expected5);
         });
     });
 });

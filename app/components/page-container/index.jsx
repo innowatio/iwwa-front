@@ -31,6 +31,9 @@ var PageContainer = React.createClass({
     },
     getTitleForSingleSensor: function (reduxViewState) {
         const path = reduxViewState.fullPath;
+        if (R.isNil(path) || R.isEmpty(path)) {
+            return "";
+        }
         var res = [this.getSiteName(path[0])];
         if (path.length > 1) {
             if (this.getSensorName(R.last(path))) {
@@ -102,6 +105,7 @@ var PageContainer = React.createClass({
         } else if (locationName === "live") {
             const reduxRealTime = this.props.reduxState.realTime;
 
+            console.log(reduxRealTime);
             locationLabel = this.getTitleForSingleSensor(reduxRealTime);
         }
 
