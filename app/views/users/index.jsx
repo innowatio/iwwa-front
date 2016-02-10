@@ -107,13 +107,11 @@ var Users = React.createClass({
         const theme = this.getTheme();
         return (
             <div>
-                <h2
-                    className="text-center"
-                    style={R.merge(styles(theme).titlePage, {fontSize: "14pt", paddingTop: "4px"})}
-                >
-                    <components.Spacer direction="v" size={5} />
-                    {"Amministra utenti"}
-                </h2>
+                <div style={styles(this.getTheme()).titlePage}>
+                    <div style={{fontSize: "18px", marginBottom: "0px", paddingTop: "18px", width: "100%"}}>
+                        {""}
+                    </div>
+                </div>
                 <div style={{width: "98%", position: "relative", left: "1%", marginTop: "20px"}}>
                     <components.CollectionElementsTable
                         collection={this.props.collections.get("users") || Immutable.Map()}

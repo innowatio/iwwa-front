@@ -61,12 +61,6 @@ var DropdownButton = React.createClass({
                     borderTopRightRadius: (index === 0 ? "4px" : undefined),
                     borderBottom: (index === 2 ? "0px" : undefined),
                     fontSize: "12px"
-                    // background: (this.state.hover && this.state.allowedValue === allowedValue) ?
-                    //     colors.primary :
-                    //     colors.greyBackground,
-                    // color: (this.state.hover && this.state.allowedValue === allowedValue) ?
-                    //     colors.white :
-                    //     colors.greySubTitle
                 }}
             >
                 {this.imageItem(allowedValue)}

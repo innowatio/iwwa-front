@@ -25,6 +25,7 @@ import {
 } from "actions/chart";
 import {styles} from "lib/styles_restyling";
 import {defaultTheme} from "lib/theme";
+import {getTitleForSingleSensor, getStringPeriod, getSensorName} from "lib/page-header-utils";
 
 const selectStyles = {
     selectCompare: {
@@ -35,13 +36,13 @@ const selectStyles = {
 };
 
 const measurementTypeButtonStyle = (theme) => R.merge(styles(theme).buttonSelectChart, {
-    width: "132px",
+    minWidth: "132px",
     height: "45px",
     fontSize: "15px"
 });
 
 const sourceButtonStyle = (theme) => R.merge(styles(theme).buttonSelectChart, {
-    width: "85px",
+    minWidth: "85px",
     height: "30px"
 });
 
@@ -183,16 +184,17 @@ var Chart = React.createClass({
         if (R.isArrayLike(fullPath) && fullPath.length > 0) {
             // All sensors under a site
             const site = this.getSitoById(fullPath[0]);
-            const sensorsType = site.get("sensorsIds").map(sensorId => {
-                const sensorObject = this.getSensorById(sensorId);
-                if (sensorObject) {
-                    return sensorObject.get("type");
-                }
-                return undefined;
-            });
-            return parameters.getConsumptions(this.getTheme()).filter(consumption => {
-                return R.contains(consumption.key, sensorsType);
-            });
+            if (site) {
+                const sensorsType = site.get("sensorsIds").map(sensorId => {
+                    const sensorObject = this.getSensorById(sensorId);
+                    if (sensorObject) {
+                        return sensorObject.get("type");
+                    }
+                });
+                return parameters.getConsumptions(this.getTheme()).filter(consumption => {
+                    return R.contains(consumption.key, sensorsType);
+                });
+            }
         }
         return [];
     },
@@ -233,6 +235,50 @@ var Chart = React.createClass({
     },
     isDateCompare: function () {
         return this.props.chart[0].date.type === "dateCompare";
+    },
+    renderTitleForChart: function () {
+        /*
+            Selezione sito-pod-sensor:
+            NameSito (· NamePod/Sensor )· Period
+
+            Comparazione siti:
+            NameSito1 & NameSito2
+
+            Comparazione per data (su sito pod o sensor):
+            NameSito (· NamePod/Sensor )· Period1 & Period2
+
+            Compara energia con variabile:
+            NameSito (· NamePod/Sensor )· measureType & variableType
+        */
+        if (this.props.chart.length === 1) {
+            return [
+                getTitleForSingleSensor(this.props.chart[0], this.props.collections),
+                getStringPeriod(this.props.chart[0].date)
+            ].join(" · ");
+        } else if (this.props.chart.length > 1) {
+            // periods compare
+            if (
+                !R.isEmpty(this.props.chart[0].date.period) &&
+                this.props.chart[0].date !== this.props.chart[1].date &&
+                R.equals(this.props.chart[0].fullPath, this.props.chart[1].fullPath)
+            ) {
+                return [
+                    getTitleForSingleSensor(this.props.chart[0], this.props.collections),
+                    getStringPeriod(this.props.chart[0].date)
+                ].join(" · ");
+            } else if (this.props.chart[0].site === this.props.chart[1].site) {
+                return [
+                    getTitleForSingleSensor(this.props.chart[0], this.props.collections),
+                    getSensorName(this.props.chart[1].sensorId, this.props.collections)
+                ].join(" & ");
+            // sites compare
+            } else if (this.props.chart[0].fullPath !== this.props.chart[1].fullPath) {
+                return [
+                    getTitleForSingleSensor(this.props.chart[0], this.props.collections),
+                    getTitleForSingleSensor(this.props.chart[1], this.props.collections)
+                ].join(" & ");
+            }
+        }
     },
     renderExportButton: function () {
         return (
@@ -276,139 +322,159 @@ var Chart = React.createClass({
         const valoriMulti = (!this.isDateCompare() && selectedSitesId.length < 2 && !selectedConsumptionType);
         const variables = this.getConsumptionVariablesFromFullPath(this.props.chart[0].fullPath);
         return (
-            <div style={styles(this.getTheme()).mainDivStyle}>
-                <bootstrap.Col sm={12} style={styles(this.getTheme()).colVerticalPadding}>
-                    <span className="pull-left" style={{display: "flex"}}>
-                        <components.TutorialAnchor
-                            message={tutorialString.valori}
-                            order={1}
-                            position="right"
-                            ref="valori"
-                        >
-                            <components.ButtonGroupSelect
-                                allowedValues={parameters.getSources(this.getTheme())}
-                                getKey={R.prop("key")}
-                                getLabel={R.prop("label")}
-                                multi={valoriMulti}
-                                onChange={this.props.selectSource}
-                                onChangeMulti={this.onChangeMultiSources}
-                                style={sourceButtonStyle(this.getTheme())}
-                                styleToMergeWhenActiveState={{background: this.getTheme().colors.buttonPrimary}}
-                                value={selectedSources}
-                            />
-                        </components.TutorialAnchor>
-                    {ENVIRONMENT === "cordova" ? null : this.renderExportButton()}
-                    </span>
-                    <span className="pull-right" style={{display: "flex"}}>
-                        <components.TutorialAnchor
-                            message={tutorialString.siti}
-                            order={4}
-                            position="left"
-                            ref="siti"
-                        >
-                            <components.SiteNavigator
-                                allowedValues={sites.sortBy(site => site.get("name"))}
-                                defaultPath={this.props.chart[0].fullPath || []}
-                                onChange={this.props.selectSingleElectricalSensor}
-                                title={"Quale punto di misurazione vuoi visualizzare?"}
-                            />
-                        </components.TutorialAnchor>
-                        <components.TutorialAnchor
-                            message={tutorialString.dateFilter}
-                            order={5}
-                            position="left"
-                            ref="dateFilter"
-                        >
-                            <components.DatefilterMonthlyModal
-                                getKey={R.prop("key")}
-                                getLabel={R.prop("label")}
-                                onChange={this.props.selectDateRanges}
-                                title={<img src={icons.iconCalendar} style={{width: "75%"}} />}
-                                value={
-                                    this.props.chart[0].date.type === "dateFilter" ?
-                                    this.props.chart[0].date : {}
-                                }
-                            />
-                        </components.TutorialAnchor>
-                        <components.TutorialAnchor
-                            message={tutorialString.compare}
-                            order={6}
-                            position="left"
-                            ref="compare"
-                        >
-                            <components.Compare>
-                                <components.SitiCompare
-                                    filter={CollectionUtils.sites.filter}
-                                    getKey={CollectionUtils.sites.getKey}
-                                    getSitoLabel={CollectionUtils.sites.getLabel}
-                                    onChange={this.props.selectMultipleElectricalSensor}
-                                    open={"undefined"}
-                                    sites={sites}
-                                    style={selectStyles.selectCompare}
-                                    value={selectedSitesId}
+            <div>
+                <div style={styles(this.getTheme()).titlePage}>
+                    <div style={{fontSize: "18px", marginBottom: "0px", paddingTop: "18px", width: "100%"}}>
+                        {this.renderTitleForChart()}
+                    </div>
+                    <components.Popover
+                        className="pull-right"
+                        hideOnChange={true}
+                        title={<img src={icons.iconUserSettings} style={{width: "26px"}} />}
+                    >
+                        <components.DropdownButton
+                            allowedValues={parameters.getChartSetting()}
+                            getIcon={R.prop("icon")}
+                            getKey={R.prop("key")}
+                            getLabel={R.prop("label")}
+                            onChange={R.identity}
+                        />
+                    </components.Popover>
+                </div>
+                <div style={styles(this.getTheme()).mainDivStyle}>
+                    <bootstrap.Col sm={12} style={styles(this.getTheme()).colVerticalPadding}>
+                        <span className="pull-left" style={{display: "flex"}}>
+                            {ENVIRONMENT === "cordova" ? null : this.renderExportButton()}
+                            <components.TutorialAnchor
+                                message={tutorialString.siti}
+                                order={4}
+                                position="left"
+                                ref="siti"
+                            >
+                                <components.SiteNavigator
+                                    allowedValues={sites.sortBy(site => site.get("name"))}
+                                    defaultPath={this.props.chart[0].fullPath || []}
+                                    onChange={this.props.selectSingleElectricalSensor}
+                                    title={"Quale punto di misurazione vuoi visualizzare?"}
                                 />
-                                <components.DateCompare
-                                    allowedValues={parameters.getDateCompare()}
+                            </components.TutorialAnchor>
+                            <components.TutorialAnchor
+                                message={tutorialString.dateFilter}
+                                order={5}
+                                position="left"
+                                ref="dateFilter"
+                            >
+                                <components.DatefilterMonthlyModal
                                     getKey={R.prop("key")}
                                     getLabel={R.prop("label")}
-                                    onChange={this.props.selectDateRangesCompare}
-                                    period={this.props.chart[0].date.period}
+                                    onChange={this.props.selectDateRanges}
+                                    title={<img src={icons.iconCalendar} style={{width: "75%"}} />}
+                                    value={
+                                        this.props.chart[0].date.type === "dateFilter" ?
+                                        this.props.chart[0].date : {}
+                                    }
                                 />
-                            </components.Compare>
-                        </components.TutorialAnchor>
-                    </span>
-                </bootstrap.Col>
-                <bootstrap.Col className="modal-container" sm={12}>
-                    <components.TutorialAnchor
-                        message={ENVIRONMENT === "cordova" ? tutorialString.appGraph : tutorialString.webGraph}
-                        order={7}
-                        position="top"
-                        ref="graph"
-                    >
-                        <components.HistoricalGraph
-                            chart={this.props.chart}
-                            getY2Label={CollectionUtils.labelGraph.getY2Label}
-                            getYLabel={CollectionUtils.labelGraph.getYLabel}
-                            isComparationActive={this.isDateCompare() || selectedSitesId.length > 1}
-                            isDateCompareActive={this.isDateCompare()}
-                            misure={this.props.collections.get("readings-daily-aggregates") || Immutable.Map()}
-                            ref="historicalGraph"
-                            resetCompare={this.props.removeAllCompare}
-                            sites={selectedSites}
-                        />
-                    </components.TutorialAnchor>
-                </bootstrap.Col>
-                <bootstrap.Col sm={12}>
-                    <span className="pull-left" style={{display: "flex"}}>
-                        <components.ConsumptionButtons
-                            allowedValues={variables}
-                            onChange={consumptionTypes => this.onChangeConsumption(null, consumptionTypes)}
-                            selectedValue={selectedConsumptionType}
-                            style={{width: "100%"}}
-                            styleButton={consumptionButtonStyle(this.getTheme())}
-                            styleButtonSelected={consumptionButtonSelectedStyle(this.getTheme())}
-                            styleIcon={{position: "absolute", left: "2px", top: "2px", height: "90%"}}
-                        />
-                    </span>
-                    <span className="pull-right" style={{display: "flex"}}>
+                            </components.TutorialAnchor>
+                            <components.TutorialAnchor
+                                message={tutorialString.compare}
+                                order={6}
+                                position="left"
+                                ref="compare"
+                            >
+                                <components.Compare>
+                                    <components.SitiCompare
+                                        filter={CollectionUtils.sites.filter}
+                                        getKey={CollectionUtils.sites.getKey}
+                                        getSitoLabel={CollectionUtils.sites.getLabel}
+                                        onChange={this.props.selectMultipleElectricalSensor}
+                                        open={"undefined"}
+                                        sites={sites}
+                                        style={selectStyles.selectCompare}
+                                        value={selectedSitesId}
+                                    />
+                                    <components.DateCompare
+                                        allowedValues={parameters.getDateCompare()}
+                                        getKey={R.prop("key")}
+                                        getLabel={R.prop("label")}
+                                        onChange={this.props.selectDateRangesCompare}
+                                        period={this.props.chart[0].date.period}
+                                    />
+                                </components.Compare>
+                            </components.TutorialAnchor>
+                        </span>
+                        <span className="pull-right" style={{display: "flex"}}>
+                            <components.TutorialAnchor
+                                message={tutorialString.valori}
+                                order={1}
+                                position="right"
+                                ref="valori"
+                            >
+                                <components.ButtonGroupSelect
+                                    allowedValues={parameters.getSources(this.getTheme())}
+                                    getKey={R.prop("key")}
+                                    getLabel={R.prop("label")}
+                                    multi={valoriMulti}
+                                    onChange={this.props.selectSource}
+                                    onChangeMulti={this.onChangeMultiSources}
+                                    style={sourceButtonStyle(this.getTheme())}
+                                    styleToMergeWhenActiveState={{background: this.getTheme().colors.buttonPrimary}}
+                                    value={selectedSources}
+                                />
+                            </components.TutorialAnchor>
+                        </span>
+                    </bootstrap.Col>
+                    <bootstrap.Col className="modal-container" sm={12}>
                         <components.TutorialAnchor
-                            message={tutorialString.tipologie}
-                            order={3}
-                            position="left"
-                            ref="tipologie"
+                            message={ENVIRONMENT === "cordova" ? tutorialString.appGraph : tutorialString.webGraph}
+                            order={7}
+                            position="top"
+                            ref="graph"
                         >
-                            <components.ButtonGroupSelect
-                                allowedValues={parameters.getMeasurementTypes()}
-                                getKey={R.prop("key")}
-                                getLabel={R.prop("label")}
-                                onChange={this.props.selectElectricalType}
-                                style={measurementTypeButtonStyle(this.getTheme())}
-                                styleToMergeWhenActiveState={{background: this.getTheme().colors.buttonPrimary}}
-                                value={[this.props.chart[0].measurementType]}
+                            <components.HistoricalGraph
+                                chart={this.props.chart}
+                                getY2Label={CollectionUtils.labelGraph.getY2Label}
+                                getYLabel={CollectionUtils.labelGraph.getYLabel}
+                                isComparationActive={this.isDateCompare() || selectedSitesId.length > 1}
+                                isDateCompareActive={this.isDateCompare()}
+                                misure={this.props.collections.get("readings-daily-aggregates") || Immutable.Map()}
+                                ref="historicalGraph"
+                                resetCompare={this.props.removeAllCompare}
+                                sites={selectedSites}
                             />
                         </components.TutorialAnchor>
-                    </span>
-                </bootstrap.Col>
+                    </bootstrap.Col>
+                    <bootstrap.Col sm={12}>
+                        <span className="pull-left" style={{display: "flex"}}>
+                            <components.ConsumptionButtons
+                                allowedValues={variables}
+                                onChange={consumptionTypes => this.onChangeConsumption(null, consumptionTypes)}
+                                selectedValue={selectedConsumptionType}
+                                style={{width: "100%"}}
+                                styleButton={consumptionButtonStyle(this.getTheme())}
+                                styleButtonSelected={consumptionButtonSelectedStyle(this.getTheme())}
+                                styleIcon={{position: "absolute", left: "2px", top: "2px", height: "90%"}}
+                            />
+                        </span>
+                        <span className="pull-right" style={{display: "flex"}}>
+                            <components.TutorialAnchor
+                                message={tutorialString.tipologie}
+                                order={3}
+                                position="left"
+                                ref="tipologie"
+                            >
+                                <components.ButtonGroupSelect
+                                    allowedValues={parameters.getMeasurementTypes()}
+                                    getKey={R.prop("key")}
+                                    getLabel={R.prop("label")}
+                                    onChange={this.props.selectElectricalType}
+                                    style={measurementTypeButtonStyle(this.getTheme())}
+                                    styleToMergeWhenActiveState={{background: this.getTheme().colors.buttonPrimary}}
+                                    value={[this.props.chart[0].measurementType]}
+                                />
+                            </components.TutorialAnchor>
+                        </span>
+                    </bootstrap.Col>
+                </div>
             </div>
         );
     }

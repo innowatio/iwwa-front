@@ -1,10 +1,19 @@
 import icons from "lib/icons";
 
+export function getChartSetting () {
+    return [
+        {label: "Punti di misurazione", key: "siteNavigator", icon: icons.iconSiti},
+        {label: "Periodo", key: "datefilterMonthlyModal", icon: icons.iconCalendar},
+        {label: "Confronto", key: "compare", icon: icons.iconCompare},
+        {label: "Esporta", key: "export", icon: icons.iconExport}
+    ];
+}
+
 export function getMeasurementTypes () {
     return [
-        {label: "Attiva", key: "activeEnergy"},
-        {label: "Potenza Max", key: "maxPower"},
-        {label: "Reattiva", key: "reactiveEnergy"}
+        {label: "Energia attiva", key: "activeEnergy"},
+        {label: "Potenza massima", key: "maxPower"},
+        {label: "Energia reattiva", key: "reactiveEnergy"}
     ];
 }
 
