@@ -31,6 +31,9 @@ var PageContainer = React.createClass({
     },
     getTitleForSingleSensor: function (reduxViewState) {
         const path = reduxViewState.fullPath;
+        if (R.isNil(path) || R.isEmpty(path)) {
+            return "";
+        }
         var res = [this.getSiteName(path[0])];
         if (path.length > 1) {
             if (this.getSensorName(R.last(path))) {
@@ -42,13 +45,11 @@ var PageContainer = React.createClass({
         return res.join(" · ");
     },
     getStringPeriod: function (period) {
-        const momentStart = moment(period.start);
-        const momentEnd = moment(period.end);
-
-        if (momentStart.month() === momentEnd.month() && momentStart.year() === momentEnd.year()) {
-            return `${momentStart.format("MMMM YYYY")}`;
+        if (period.type === "dateCompare") {
+            const momentNow = moment.utc();
+            return `${momentNow.format("MMM YYYY")} & ${momentNow.subtract(1, period.period.key).format("MMM YYYY")}`;
         } else {
-            return `${momentStart.format("DD MMMM")} - ${momentEnd.format("DD MMMM YYYY")}`;
+            return `${moment(period.end).format("MMM YYYY")}`;
         }
     },
     getTitleForChart: function (chartState) {
@@ -70,8 +71,8 @@ var PageContainer = React.createClass({
             return `${this.getTitleForSingleSensor(chartState[0])} · ${this.getStringPeriod(chartState[0].date)}`;
         } else if (chartState.length > 1) {
             // periods compare
-            if (!R.isEmpty(chartState[0].date.period) && chartState[0].date != chartState[1].date && chartState[0].fullPath === chartState[1].fullPath) {
-                return `${this.getTitleForSingleSensor(chartState[0])} · ${chartState.map(chart => this.getStringPeriod(chart.date)).join(" & ")}`;
+            if (!R.isEmpty(chartState[0].date.period) && chartState[0].date != chartState[1].date && R.equals(chartState[0].fullPath, chartState[1].fullPath)) {
+                return `${this.getTitleForSingleSensor(chartState[0])} · ${this.getStringPeriod(chartState[0].date)}`;
             } else if (chartState[0].site === chartState[1].site) {
                 return `${this.getTitleForSingleSensor(chartState[0])} & ${this.getSensorName(chartState[1].sensorId)}`;
             // sites compare
@@ -104,6 +105,7 @@ var PageContainer = React.createClass({
         } else if (locationName === "live") {
             const reduxRealTime = this.props.reduxState.realTime;
 
+            console.log(reduxRealTime);
             locationLabel = this.getTitleForSingleSensor(reduxRealTime);
         }
 
