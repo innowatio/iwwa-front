@@ -86,6 +86,7 @@ var Chart = React.createClass({
     },
     componentDidMount: function () {
         this.props.asteroid.subscribe("sites");
+        this.props.asteroid.subscribe("sensors");
         if (this.props.chart[0].alarms) {
             this.props.asteroid.subscribe("alarms");
         }
@@ -171,6 +172,26 @@ var Chart = React.createClass({
             return site.get("_id") === sitoId;
         });
     },
+    getSensorById: function (sensorId) {
+        return this.props.collections.getIn(["sensors", sensorId]);
+    },
+    getConsumptionVariablesFromFullPath: function (fullPath) {
+        if (R.isArrayLike(fullPath) && fullPath.length > 0) {
+            // All sensors under a site
+            const site = this.getSitoById(fullPath[0]);
+            const sensorsType = site.get("sensorsIds").map(sensorId => {
+                const sensorObject = this.getSensorById(sensorId);
+                if (sensorObject) {
+                    return sensorObject.get("type");
+                }
+                return undefined;
+            });
+            return parameters.getConsumptions(this.getTheme()).filter(consumption => {
+                return R.contains(consumption.key, sensorsType);
+            });
+        }
+        return [];
+    },
     firstSensorOfConsumptionInTheSite: function (consumptionTypes) {
         const site = this.getSitoById(this.props.chart[0].site);
         var typeOfSensorId;
@@ -249,6 +270,7 @@ var Chart = React.createClass({
             this.props.chart[1].measurementType :
             null;
         const valoriMulti = (!this.isDateCompare() && selectedSitesId.length < 2 && !selectedConsumptionType);
+        const variables = this.getConsumptionVariablesFromFullPath(this.props.chart[0].fullPath);
         return (
             <div style={styles(this.getTheme()).mainDivStyle}>
                 <bootstrap.Col sm={12} style={styles(this.getTheme()).colVerticalPadding}>
@@ -376,7 +398,7 @@ var Chart = React.createClass({
                 </bootstrap.Col>
                 <bootstrap.Col sm={12}>
                     <components.ConsumptionButtons
-                        allowedValues={parameters.getConsumptions(this.getTheme())}
+                        allowedValues={variables}
                         onChange={consumptionTypes => this.onChangeConsumption(null, consumptionTypes)}
                         selectedValue={selectedConsumptionType}
                         style={{width: "100%"}}
