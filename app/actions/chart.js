@@ -1,4 +1,3 @@
-import {unnest} from "ramda";
 import {String, Number, tuple, struct, maybe} from "tcomb";
 
 import actionTypeValidator from "../lib/action-type-validator";
