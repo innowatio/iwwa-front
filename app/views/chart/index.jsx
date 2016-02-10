@@ -192,7 +192,7 @@ var Chart = React.createClass({
                     }
                 });
                 return parameters.getConsumptions(this.getTheme()).filter(consumption => {
-                    return R.contains(consumption.key, sensorsType);
+                    return R.contains(consumption.type, sensorsType);
                 });
             }
         }

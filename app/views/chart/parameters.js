@@ -30,6 +30,7 @@ export function getConsumptions (theme) {
             label: "Temperatura",
             color: theme.colors.temperature,
             key: "temperature",
+            type: "thl",
             icon: icons.iconTemperature,
             selected: icons.iconTemperatureSelected
 
@@ -38,6 +39,7 @@ export function getConsumptions (theme) {
             label: "Umidità",
             color: theme.colors.humidity,
             key: "humidity",
+            type: "thl",
             icon: icons.iconHumidity,
             selected: icons.iconHumiditySelected
         },
@@ -45,6 +47,7 @@ export function getConsumptions (theme) {
             label: "Lux",
             color: theme.colors.illuminance,
             key: "illuminance",
+            type: "thl",
             icon: icons.iconIdea,
             selected: icons.iconIdeaSelected
         },
@@ -52,6 +55,7 @@ export function getConsumptions (theme) {
             label: "CO2",
             color: theme.colors.co2,
             key: "co2",
+            type: "co2",
             icon: icons.iconCO2,
             selected: icons.iconCO2Selected
         }
