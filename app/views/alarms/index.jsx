@@ -162,7 +162,8 @@ var Alarms = React.createClass({
                     if (notificationDates.length > 0) {
                         const alarms = R.dropRepeats(notificationDates);
                         const sensorId = item.get("podId");
-                        const site = self.getSitoBySensor(sensorId).get("_id");
+                        const site = self.getSitoBySensor(sensorId) ?
+                            self.getSitoBySensor(sensorId).get("_id") : null;
                         return (
                             <Router.Link to={"/chart/"}>
                                 <img
@@ -230,7 +231,8 @@ var Alarms = React.createClass({
                 valueFormatter: function (value, item) {
                     var notificationDate = [item.get("date")];
                     const sensorId = item.get("podId");
-                    const site = self.getSitoBySensor(sensorId).get("_id");
+                    const site = self.getSitoBySensor(sensorId) ?
+                        self.getSitoBySensor(sensorId).get("_id") : null;
                     return (
                         <Router.Link to={"/chart/"}>
                             <img
