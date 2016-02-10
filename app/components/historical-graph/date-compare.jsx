@@ -45,7 +45,7 @@ var DateCompare = React.createClass({
             const numberToEndDate = moment(endDate).diff(start, "days");
             return {
                 start,
-                dayToAdd: this.weeksToAdd() * 7,
+                dayToAdd: this.weeksToAdd() * 8,
                 dateArray: [moment.utc(0).valueOf(), moment.utc(0).add({days: numberToEndDate + 1}).valueOf()]
             };
         }
