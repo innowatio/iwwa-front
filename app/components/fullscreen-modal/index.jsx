@@ -40,7 +40,7 @@ var FullscreenModal = React.createClass({
                             width: "100%"
                         },
                         ".modal-content": {
-                            backgroundColor: colors.white,
+                            backgroundColor: colors.backgroundFullScreenModal,
                             border: "none",
                             borderRadius: "0",
                             height: "100%",

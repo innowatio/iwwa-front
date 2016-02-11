@@ -1,6 +1,7 @@
 export const colorsLightTheme = {
     axisLabel: "#000000",
     background: "#ffffff",
+    backgroundFullScreenModal: "#ffffff",
     backgroundLogin: "linear-gradient(235deg,#8a95c8,#7483be,#5b72b3,#4e64a1,#4554a1,#624899,#984898,#eb437f,#d26faa,#b08abc)",
     backgroundSelectButton: "#f3f3f4",
     black: "#333333",
