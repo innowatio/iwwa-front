@@ -50,7 +50,6 @@ var SiteNavigator = React.createClass({
     },
     getInitialState: function () {
         return {
-            showModal: false,
             inputFilter: "",
             pathParent: [],
             pathChildren: []
@@ -115,14 +114,6 @@ var SiteNavigator = React.createClass({
             pathChildren: []
         });
     },
-    onClickSiteNavigatorButton: function () {
-        this.setState({
-            showModal: true
-        });
-    },
-    closeModal: function () {
-        this.setState({showModal: false});
-    },
     getReturnValues: function () {
         var site = this.state.pathParent;
         var childrenPath = this.state.pathChildren.filter(function (value) {
@@ -177,7 +168,7 @@ var SiteNavigator = React.createClass({
             );
         }
     },
-    renderChild: function () {
+    render: function () {
         const theme = this.getTheme();
         return (
             <div style={{padding: "0 20px 20px 20px"}}>
@@ -256,24 +247,6 @@ var SiteNavigator = React.createClass({
                     </div>
                 </div>
             </div>
-        );
-    },
-    render: function () {
-        return (
-            <span>
-                <components.Button
-                    bsStyle="link"
-                    onClick={this.onClickSiteNavigatorButton}
-                    style={{backgroundColor: this.getTheme().colors.background}}
-                >
-                    <img src={icons.iconSiti} style={{width: "75%"}} />
-                </components.Button>
-                <components.FullscreenModal
-                    childComponent={this.renderChild()}
-                    onHide={this.closeModal}
-                    show={this.state.showModal}
-                />
-            </span>
         );
     }
 });

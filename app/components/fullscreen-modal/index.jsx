@@ -8,7 +8,7 @@ var FullscreenModal = React.createClass({
     propTypes: {
         childComponent: React.PropTypes.element,
         onHide: React.PropTypes.func,
-        showModal: React.PropTypes.bool
+        show: React.PropTypes.bool
     },
     contextTypes: {
         theme: React.PropTypes.object

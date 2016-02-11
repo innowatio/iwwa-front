@@ -10,7 +10,7 @@ import {bindActionCreators} from "redux";
 var CollectionUtils    = require("lib/collection-utils");
 var components         = require("components/");
 var icons              = require("lib/icons");
-var GetTutorialMixin   = require("lib/get-tutorial-mixin");
+// var GetTutorialMixin   = require("lib/get-tutorial-mixin");
 var tutorialString     = require("assets/JSON/tutorial-string.json").historicalGraph;
 import * as parameters from "./parameters";
 import {
@@ -87,13 +87,14 @@ var Chart = React.createClass({
         theme: React.PropTypes.object
     },
     mixins: [
-        GetTutorialMixin("historicalGraph",
-            ["valori", "export", "tipologie", "siti", "dateFilter", "compare", "graph"]
-        )
+        // GetTutorialMixin("historicalGraph",
+        //     ["valori", "export", "tipologie", "siti", "dateFilter", "compare", "graph"]
+        // )
     ],
     getInitialState: function () {
         return {
-            siteNavigatorView: false
+            showFullscreenModal: false,
+            selectedWidget: null
         };
     },
     componentDidMount: function () {
@@ -113,6 +114,12 @@ var Chart = React.createClass({
     },
     getTheme: function () {
         return this.context.theme || defaultTheme;
+    },
+    closeModal: function () {
+        this.setState({
+            showFullscreenModal: false,
+            selectedWidget: null
+        });
     },
     updateFirstSiteToChart: function () {
         var sites = this.props.collections.get("sites") || Immutable.Map();
@@ -236,27 +243,17 @@ var Chart = React.createClass({
     isDateCompare: function () {
         return this.props.chart[0].date.type === "dateCompare";
     },
-    renderTitleForChart: function () {
-        /*
-            Selezione sito-pod-sensor:
-            NameSito (· NamePod/Sensor )· Period
-
-            Comparazione siti:
-            NameSito1 & NameSito2
-
-            Comparazione per data (su sito pod o sensor):
-            NameSito (· NamePod/Sensor )· Period1 & Period2
-
-            Compara energia con variabile:
-            NameSito (· NamePod/Sensor )· measureType & variableType
-        */
+    getTitleForChart: function () {
         if (this.props.chart.length === 1) {
+            // Selezione sito-pod-sensor:
+            // NameSito (· NamePod/Sensor )· Period
             return [
                 getTitleForSingleSensor(this.props.chart[0], this.props.collections),
                 getStringPeriod(this.props.chart[0].date)
             ].join(" · ");
         } else if (this.props.chart.length > 1) {
-            // periods compare
+            // Comparazione per data (su sito pod o sensor):
+            // NameSito (· NamePod/Sensor )· Period1 & Period2
             if (
                 !R.isEmpty(this.props.chart[0].date.period) &&
                 this.props.chart[0].date !== this.props.chart[1].date &&
@@ -267,11 +264,14 @@ var Chart = React.createClass({
                     getStringPeriod(this.props.chart[0].date)
                 ].join(" · ");
             } else if (this.props.chart[0].site === this.props.chart[1].site) {
+                // Compara energia con variabile:
+                // NameSito (· NamePod/Sensor )· measureType & variableType
                 return [
                     getTitleForSingleSensor(this.props.chart[0], this.props.collections),
                     getSensorName(this.props.chart[1].sensorId, this.props.collections)
                 ].join(" & ");
-            // sites compare
+            // Comparazione siti:
+            // NameSito1 & NameSito2
             } else if (this.props.chart[0].fullPath !== this.props.chart[1].fullPath) {
                 return [
                     getTitleForSingleSensor(this.props.chart[0], this.props.collections),
@@ -279,6 +279,29 @@ var Chart = React.createClass({
                 ].join(" & ");
             }
         }
+    },
+    onChangeWidget: function ({key}) {
+        this.setState({
+            showFullscreenModal: true,
+            selectedWidget: key
+        });
+    },
+    renderChildComponent: function () {
+        switch (this.state.selectedWidget) {
+        case "siteNavigator":
+            return this.renderSiteNavigator();
+        }
+    },
+    renderSiteNavigator: function () {
+        const sites = this.props.collections.get("sites") || Immutable.Map();
+        return (
+            <components.SiteNavigator
+                allowedValues={sites.sortBy(site => site.get("name"))}
+                defaultPath={this.props.chart[0].fullPath || []}
+                onChange={this.props.selectSingleElectricalSensor}
+                title={"Quale punto di misurazione vuoi visualizzare?"}
+            />
+        );
     },
     renderExportButton: function () {
         return (
@@ -325,7 +348,7 @@ var Chart = React.createClass({
             <div>
                 <div style={styles(this.getTheme()).titlePage}>
                     <div style={{fontSize: "18px", marginBottom: "0px", paddingTop: "18px", width: "100%"}}>
-                        {this.renderTitleForChart()}
+                        {this.getTitleForChart()}
                     </div>
                     <components.Popover
                         className="pull-right"
@@ -337,27 +360,19 @@ var Chart = React.createClass({
                             getIcon={R.prop("icon")}
                             getKey={R.prop("key")}
                             getLabel={R.prop("label")}
-                            onChange={R.identity}
+                            onChange={this.onChangeWidget}
                         />
                     </components.Popover>
                 </div>
                 <div style={styles(this.getTheme()).mainDivStyle}>
                     <bootstrap.Col sm={12} style={styles(this.getTheme()).colVerticalPadding}>
+                        <components.FullscreenModal
+                            childComponent={this.renderChildComponent()}
+                            onHide={this.closeModal}
+                            show={this.state.showFullscreenModal}
+                        />
                         <span className="pull-left" style={{display: "flex"}}>
                             {ENVIRONMENT === "cordova" ? null : this.renderExportButton()}
-                            <components.TutorialAnchor
-                                message={tutorialString.siti}
-                                order={4}
-                                position="left"
-                                ref="siti"
-                            >
-                                <components.SiteNavigator
-                                    allowedValues={sites.sortBy(site => site.get("name"))}
-                                    defaultPath={this.props.chart[0].fullPath || []}
-                                    onChange={this.props.selectSingleElectricalSensor}
-                                    title={"Quale punto di misurazione vuoi visualizzare?"}
-                                />
-                            </components.TutorialAnchor>
                             <components.TutorialAnchor
                                 message={tutorialString.dateFilter}
                                 order={5}
