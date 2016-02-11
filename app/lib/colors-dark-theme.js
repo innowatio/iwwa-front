@@ -26,6 +26,7 @@ export const colorsDarkTheme = {
     lineReale: "#8595f9",
     mainDivShadow: "#303232",
     primary: "#3e50b4",
+    secondary: "#536DFE",
     red: "#f71c50",
     resetCompare: "#ffffff",
     selectButton: "#ffffff",
