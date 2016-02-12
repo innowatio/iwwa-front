@@ -34,128 +34,68 @@ momentLocalizer(moment);
 
 var DateFilter = React.createClass({
     propTypes: {
-        children: React.PropTypes.oneOfType([
-            React.PropTypes.array,
-            React.PropTypes.object
-        ]),
         getKey: React.PropTypes.func,
         getLabel: React.PropTypes.func,
         onChange: React.PropTypes.func.isRequired,
-        style: React.PropTypes.object,
         title: React.PropTypes.node,
         value: React.PropTypes.shape({
-            start: React.PropTypes.date,
-            end: React.PropTypes.date
+            start: React.PropTypes.number,
+            end: React.PropTypes.number,
+            valueType: React.PropTypes.oneOfType([React.PropTypes.string, React.PropTypes.object])
         })
     },
     contextTypes: {
         theme: React.PropTypes.object
     },
-    getInitialState: function () {
+    getDefaultProps: function () {
         return {
-            showModal: false,
-            start: this.defaultStartDate(),
-            end: this.defaultEndDate(),
-            type: "calendar"
+            value: {
+                start: moment().startOf("month").valueOf(),
+                end: moment().endOf("month").valueOf(),
+                valueType: {label: "calendario", key: "calendar"}
+            }
         };
-    },
-    componentWillReceiveProps: function (props) {
-        return this.getStateFromProps(props);
-    },
-    getStateFromProps: function (props) {
-        if (!R.isEmpty(props.value)) {
-            this.setState({
-                start: new Date(props.value.start),
-                end: new Date(props.value.end)
-            });
-        }
     },
     getTheme: function () {
         return this.context.theme || defaultTheme;
     },
-    defaultStartDate: function () {
-        return moment().startOf("month").toDate();
-    },
-    defaultEndDate: function () {
-        return moment().endOf("month").toDate();
-    },
-    getDefault: function (valueObject, key, defaultValue) {
-        var defaultTo = R.defaultTo(defaultValue);
-
-        var result = defaultValue;
-        var hasKey = R.has(key);
-        if (!R.isNil(valueObject) && hasKey(valueObject)) {
-            return defaultTo(new Date(valueObject[key]));
-        }
-
-        return result;
-    },
-    // confirmAndClose: function () {
-    //     // Transform in UNIX timestamp for the redux-state.
-    //     const date = {
-    //         start: moment(this.state.start).valueOf(),
-    //         end: moment(this.state.end).valueOf()
-    //     };
-    //     this.props.onChange(date);
-    //     this.close();
-    // },
-    // close: function () {
-    //     this.setState({
-    //         showModal: false
-    //     });
-    // },
-    // open: function () {
-    //     this.setState({
-    //         showModal: true
-    //     });
-    // },
-    // closeSuccess: function () {
-    //     this.close();
-    // },
-    // reset: function () {
-    //     this.setState({
-    //         start: this.defaultStartDate(),
-    //         end: this.defaultEndDate(),
-    //         type: "calendar"
-    //     });
-    // },
     setMonthlyDate: function (dateValue) {
-        var startDate = moment(dateValue).toDate();
-        var endDate = moment(dateValue).endOf("month").toDate();
-        this.setState({
+        var startDate = moment(dateValue).valueOf();
+        var endDate = moment(dateValue).endOf("month").valueOf();
+        this.props.onChange({
             start: startDate,
             end: endDate,
-            type: "calendar"
+            valueType: {label: "calendario", key: "calendar"}
         });
     },
     setTimeInterval: function ([temporalFilter]) {
         switch (temporalFilter.key) {
         case "yesterday":
-            this.setState({
-                start: moment.utc().subtract({day: 1}).startOf("day"),
-                end: moment.utc().subtract({day: 1}).endOf("day"),
-                type: temporalFilter
+            this.props.onChange({
+                start: moment.utc().subtract({day: 1}).startOf("day").valueOf(),
+                end: moment.utc().subtract({day: 1}).endOf("day").valueOf(),
+                valueType: temporalFilter
             });
             break;
         case "today":
-            this.setState({
-                start: moment.utc().startOf("day"),
-                end: moment.utc().endOf("day"),
-                type: temporalFilter
+            this.props.onChange({
+                start: moment.utc().startOf("day").valueOf(),
+                end: moment.utc().endOf("day").valueOf(),
+                valueType: temporalFilter
             });
             break;
         case "lastWeek":
-            this.setState({
-                start: moment.utc().subtract({week: 1}).startOf("isoWeek"),
-                end: moment.utc().subtract({week: 1}).endOf("isoWeek"),
-                type: temporalFilter
+            this.props.onChange({
+                start: moment.utc().subtract({week: 1}).startOf("isoWeek").valueOf(),
+                end: moment.utc().subtract({week: 1}).endOf("isoWeek").valueOf(),
+                valueType: temporalFilter
             });
             break;
         case "currentWeek":
-            this.setState({
-                start: moment.utc().startOf("isoWeek"),
-                end: moment.utc().endOf("isoWeek"),
-                type: temporalFilter
+            this.props.onChange({
+                start: moment.utc().startOf("isoWeek").valueOf(),
+                end: moment.utc().endOf("isoWeek").valueOf(),
+                valueType: temporalFilter
             });
         }
     },
@@ -292,7 +232,7 @@ var DateFilter = React.createClass({
                         monthFormat="MMMM"
                         onChange={this.setMonthlyDate}
                         style={styleCalendar(this.getTheme())}
-                        value={this.state.type === "calendar" ? this.state.start : undefined}
+                        value={this.props.value.valueType.key === "calendar" ? new Date(this.props.value.start) : null}
                     />
                     <div style={{borderTop: `1px solid ${colors.white}`}} />
                     <div style={{marginTop: "4%", display: "flex", justifyContent: "center"}}>
@@ -312,8 +252,8 @@ var DateFilter = React.createClass({
                                     fontSize: "14px"
                                 }
                             )}
-                            styleToMergeWhenActiveState={{background: this.getTheme().colors.buttonPrimary}}
-                            value={[this.state.type]}
+                            styleToMergeWhenActiveState={{background: this.getTheme().colors.buttonPrimary, border: "none"}}
+                            value={[this.props.value.valueType]}
                         />
                     </div>
                 </div>

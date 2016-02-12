@@ -10,8 +10,10 @@ import icons from "lib/icons";
 
 var FullscreenModal = React.createClass({
     propTypes: {
-        childComponent: PropTypes.element,
+        children: PropTypes.element,
+        onConfirm: PropTypes.func,
         onHide: PropTypes.func,
+        onReset: PropTypes.func,
         show: PropTypes.bool
     },
     contextTypes: {
@@ -75,12 +77,12 @@ var FullscreenModal = React.createClass({
                 />
                 <bootstrap.Modal.Header closeButton={true} />
                 <bootstrap.Modal.Body>
-                    {this.props.childComponent}
+                    {this.props.children}
                 </bootstrap.Modal.Body>
                 <bootstrap.Modal.Footer>
                     <div style={{bottom: "15px", textAlign: "center", margin: "auto", height: "41px"}}>
                         <components.Button
-                            onClick={this.onClickConfirm}
+                            onClick={this.props.onConfirm}
                             style={merge(styles(this.getTheme()).buttonSelectChart, {
                                 width: "275px",
                                 height: "41px",
@@ -91,7 +93,7 @@ var FullscreenModal = React.createClass({
                         >
                             {"OK"}
                         </components.Button>
-                        <components.Button bsStyle={"link"} onClick={this.closeModal}>
+                        <components.Button bsStyle={"link"} onClick={this.props.onReset}>
                             <img src={icons.iconReset} style={{width: "25px"}} />
                         </components.Button>
                     </div>

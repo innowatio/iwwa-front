@@ -20,6 +20,7 @@ var Button = React.createClass({
             <bootstrap.Button {...this.props} />
         );
         return React.cloneElement(button, {
+            // If you set color of the background, use background and not backgroundColor
             style: R.merge({
                 outline: "0px",
                 outlineStyle: "none",

@@ -16,7 +16,7 @@ export const styles = (theme) => ({
         height: "100%"
     },
     buttonSelectChart: {
-        backgroundColor: theme.colors.backgroundSelectButton,
+        background: theme.colors.backgroundSelectButton,
         color: theme.colors.selectButton,
         marginRight: "9px",
         marginTop: "6px",

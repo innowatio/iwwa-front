@@ -94,7 +94,8 @@ var Chart = React.createClass({
     getInitialState: function () {
         return {
             showFullscreenModal: false,
-            selectedWidget: null
+            selectedWidget: null,
+            value: undefined
         };
     },
     componentDidMount: function () {
@@ -118,7 +119,8 @@ var Chart = React.createClass({
     closeModal: function () {
         this.setState({
             showFullscreenModal: false,
-            selectedWidget: null
+            selectedWidget: null,
+            value: undefined
         });
     },
     updateFirstSiteToChart: function () {
@@ -286,6 +288,19 @@ var Chart = React.createClass({
             selectedWidget: key
         });
     },
+    onConfirmFullscreenModal: function () {
+        switch (this.state.selectedWidget) {
+        case "siteNavigator":
+            return this.renderSiteNavigator;
+        case "dateFilter":
+            this.props.selectDateRanges(this.state.value);
+            break;
+        }
+        return this.closeModal();
+    },
+    onChangeWidgetValue: function (value) {
+        this.setState({value});
+    },
     renderChildComponent: function () {
         switch (this.state.selectedWidget) {
         case "siteNavigator":
@@ -299,12 +314,12 @@ var Chart = React.createClass({
             <components.DateFilter
                 getKey={R.prop("key")}
                 getLabel={R.prop("label")}
-                onChange={this.props.selectDateRanges}
+                onChange={this.onChangeWidgetValue}
                 title={"SELEZIONA IL PERIODO DA VISUALIZZARE"}
                 value={
-                    this.props.chart[0].date.type === "dateFilter" ?
-                    this.props.chart[0].date : {}
-                }
+                    this.state.value && this.state.selectedWidget === "dateFilter" ? this.state.value : (
+                    this.props.chart[0].date.type === "dateFilter" ? this.props.chart[0].date : undefined
+                )}
             />
         );
     },
@@ -383,10 +398,13 @@ var Chart = React.createClass({
                 <div style={styles(this.getTheme()).mainDivStyle}>
                     <bootstrap.Col sm={12} style={styles(this.getTheme()).colVerticalPadding}>
                         <components.FullscreenModal
-                            childComponent={this.renderChildComponent()}
+                            onConfirm={this.onConfirmFullscreenModal}
                             onHide={this.closeModal}
+                            onReset={this.onResetFullscreenModal}
                             show={this.state.showFullscreenModal}
-                        />
+                        >
+                            {this.renderChildComponent()}
+                        </components.FullscreenModal>
                         <span className="pull-left" style={{display: "flex"}}>
                             {ENVIRONMENT === "cordova" ? null : this.renderExportButton()}
                             <components.TutorialAnchor

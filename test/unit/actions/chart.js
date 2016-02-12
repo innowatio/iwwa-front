@@ -146,7 +146,11 @@ describe("`chart` actions", () => {
         it("should return the correct object if is passed an array with the correct object", () => {
             const dateRanges = {
                 start: 1449157137862,
-                end: 1449158137862
+                end: 1449158137862,
+                valueType: {
+                    label: "label",
+                    key: "key"
+                }
             };
             const ret = chart.selectDateRanges(dateRanges);
             expect(ret).to.deep.equal({
