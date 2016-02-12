@@ -68,7 +68,7 @@ const consumptionButtonSelectedStyle = ({colors}) => ({
 });
 
 const dateButtonStyle = ({colors}) => ({
-    backgroundColor: colors.primary,
+    background: colors.primary,
     border: "0px none",
     height: "30px",
     width: "30px",
@@ -77,7 +77,7 @@ const dateButtonStyle = ({colors}) => ({
 });
 
 const alarmButtonStyle = ({colors}) => ({
-    backgroundColor: colors.titleColor,
+    background: colors.titleColor,
     border: "0px none",
     borderRadius: "100%",
     height: "50px",
@@ -368,9 +368,9 @@ var Chart = React.createClass({
                     <div style={{fontSize: "18px", marginBottom: "0px", paddingTop: "18px", width: "100%"}}>
                         {this.getTitleForChart().toUpperCase()}
                     </div>
-                    <bootstrap.Button style={alarmButtonStyle(this.getTheme())}>
+                    <components.Button style={alarmButtonStyle(this.getTheme())}>
                         <img src={icons.iconActiveAlarm} style={{width: "22px", margin: "auto"}} />
-                    </bootstrap.Button>
+                    </components.Button>
                     <components.Popover
                         className="pull-right"
                         hideOnChange={true}
@@ -385,9 +385,9 @@ var Chart = React.createClass({
                         />
                     </components.Popover>
                 </div>
-                <bootstrap.Button style={R.merge(dateButtonStyle(this.getTheme()), {borderRadius: "0 15px 15px 0", left: "0px"})}>
+                <components.Button style={R.merge(dateButtonStyle(this.getTheme()), {borderRadius: "0 15px 15px 0", left: "0px"})}>
                     <img src={icons.iconArrowLeft} style={{height: "15px"}}/>
-                </bootstrap.Button>
+                </components.Button>
                 <div style={styles(this.getTheme()).mainDivStyle}>
                     <bootstrap.Col sm={12} style={styles(this.getTheme()).colVerticalPadding}>
                         <components.FullscreenModal
@@ -514,9 +514,9 @@ var Chart = React.createClass({
                         </span>
                     </bootstrap.Col>
                 </div>
-                <bootstrap.Button style={R.merge(dateButtonStyle(this.getTheme()), {borderRadius: "15px 0 0 15px", right: "0px"})}>
+                <components.Button style={R.merge(dateButtonStyle(this.getTheme()), {borderRadius: "15px 0 0 15px", right: "0px"})}>
                     <img src={icons.iconArrowLeft} style={{height: "15px"}}/>
-                </bootstrap.Button>
+                </components.Button>
             </div>
         );
     }
