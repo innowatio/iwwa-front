@@ -348,7 +348,7 @@ var Chart = React.createClass({
             <div>
                 <div style={styles(this.getTheme()).titlePage}>
                     <div style={{fontSize: "18px", marginBottom: "0px", paddingTop: "18px", width: "100%"}}>
-                        {this.getTitleForChart()}
+                        {this.getTitleForChart().toUpperCase()}
                     </div>
                     <components.Popover
                         className="pull-right"
@@ -432,7 +432,7 @@ var Chart = React.createClass({
                                     onChange={this.props.selectSource}
                                     onChangeMulti={this.onChangeMultiSources}
                                     style={sourceButtonStyle(this.getTheme())}
-                                    styleToMergeWhenActiveState={{background: this.getTheme().colors.buttonPrimary}}
+                                    styleToMergeWhenActiveState={{background: this.getTheme().colors.buttonPrimary, border: "0px none"}}
                                     value={selectedSources}
                                 />
                             </components.TutorialAnchor>
@@ -483,7 +483,7 @@ var Chart = React.createClass({
                                     getLabel={R.prop("label")}
                                     onChange={this.props.selectElectricalType}
                                     style={measurementTypeButtonStyle(this.getTheme())}
-                                    styleToMergeWhenActiveState={{background: this.getTheme().colors.buttonPrimary}}
+                                    styleToMergeWhenActiveState={{background: this.getTheme().colors.buttonPrimary, border: "0px none"}}
                                     value={[this.props.chart[0].measurementType]}
                                 />
                             </components.TutorialAnchor>

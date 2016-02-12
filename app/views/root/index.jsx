@@ -29,6 +29,7 @@ const stylesFunction = ({colors}) => ({
         position: "absolute",
         top: measures.headerHeight,
         width: measures.sidebarWidth,
+        left: `-${measures.sidebarWidth}px`,
         height: "calc(100vh - 55px)",
         transition: "left 0.3s ease",
         zIndex: 1040,
@@ -39,7 +40,7 @@ const stylesFunction = ({colors}) => ({
     },
     footer: {
         position: "fixed",
-        backgroundColor: colors.greyBackground,
+        backgroundColor: colors.darkBlack,
         color: colors.greySubTitle,
         height: measures.footerHeight,
         width: "100%",
@@ -103,7 +104,7 @@ var Root = React.createClass({
             left: (
                 this.state.sidebarOpen ?
                 "0px" :
-                ("-" + parseInt(ENVIRONMENT === "cordova" ? measures.sidebarWidth : measures.iconsBarWidth)) + "px"
+                `-${measures.sidebarWidth}px`
             )
         });
     },
@@ -135,11 +136,7 @@ var Root = React.createClass({
                             userSetting={this.props.reduxState.userSetting}
                         />
                     </div>
-                    <div style={
-                        ENVIRONMENT === "cordova" ?
-                        styles.content :
-                        merge(styles.content, {width: `calc(100% - ${measures.sidebarShoulderWidth})`, float: "right"})}
-                    >
+                    <div style={styles.content}>
                         <components.PageContainer
                             asteroid={asteroid}
                             children={this.props.children}

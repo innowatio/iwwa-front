@@ -3,7 +3,7 @@ export const colorsDarkTheme = {
     background: "#303232",
     backgroundFullScreenModal: "rgba(2, 2, 2, 0.8)",
     backgroundLogin: "linear-gradient(235deg,#8a95c8,#7483be,#5b72b3,#4e64a1,#4554a1,#624899,#984898,#eb437f,#d26faa,#b08abc)",
-    backgroundSelectButton: "#231F20",
+    backgroundSelectButton: "rgba(35, 31, 32, 0.5)",
     black: "#333333",
     blueBorder: "#66afe9",
     borderColor: "rgba(0,0,0,0.0980392)",
@@ -33,5 +33,6 @@ export const colorsDarkTheme = {
     titleColor: "#3e50b4",
     titlePage: "#536DFE",
     transparent: "rgba(0,0,0,0)",
-    white: "#ffffff"
+    white: "#ffffff",
+    darkBlack: "#000000"
 };

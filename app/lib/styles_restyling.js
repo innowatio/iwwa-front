@@ -16,7 +16,7 @@ export const styles = (theme) => ({
         marginRight: "9px",
         marginTop: "6px",
         fontSize: "12px",
-        border: "0px none",
+        border: "1px solid rgba(255, 255, 255, 0.5)",
         borderRadius: "30px"
     },
     colVerticalPadding: {
