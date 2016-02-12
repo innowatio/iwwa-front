@@ -104,7 +104,7 @@ var Root = React.createClass({
             left: (
                 this.state.sidebarOpen ?
                 "0px" :
-                `-${measures.sidebarWidth}px`
+                `-${parseInt(measures.sidebarWidth)}px`
             )
         });
     },

@@ -1,9 +1,10 @@
 import {Nav} from "react-bootstrap";
 import React, {PropTypes} from "react";
 import {Link} from "react-router";
-import {partial} from "ramda";
+import {merge, partial} from "ramda";
 
 import {defaultTheme} from "lib/theme";
+import * as measures from "lib/measures";
 
 const stylesFunction = ({colors}) => ({
     menu: {
@@ -96,26 +97,18 @@ var SideNav = React.createClass({
         );
     },
     render: function () {
-        const styles = stylesFunction(this.getTheme());
-        return ENVIRONMENT === "cordova" || this.props.sidebarOpen ? (
+        const styles = merge(stylesFunction(this.getTheme()), {
+            left: (this.state.sidebarOpen ?
+            "0px" :
+            `-${measures.sidebarWidth}px`)
+        });
+        return (
             <div style={this.props.style}>
                 <div id="menu" style={styles.menu}>
                     <Nav bsStyle="pills" stacked={true} >
                         {
                             this.props.items.map(
                                 partial(this.renderNavItem, [styles])
-                            )
-                        }
-                    </Nav>
-                </div>
-            </div>
-        ) : (
-            <div style={this.props.style}>
-                <div id="menu" style={styles.menu}>
-                    <Nav bsStyle="pills" stacked={true} >
-                        {
-                            this.props.items.map(
-                                partial(this.renderIconSideBar, [styles])
                             )
                         }
                     </Nav>
