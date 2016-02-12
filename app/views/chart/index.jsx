@@ -304,6 +304,10 @@ var Chart = React.createClass({
             selectedWidget: key
         });
     },
+    updateStateAndCloseModal: function (a) {
+        this.props.selectSingleElectricalSensor(a);
+        this.closeModal();
+    },
     renderChildComponent: function () {
         switch (this.state.selectedWidget) {
         case "siteNavigator":
@@ -316,7 +320,7 @@ var Chart = React.createClass({
             <components.SiteNavigator
                 allowedValues={sites.sortBy(site => site.get("name"))}
                 defaultPath={this.props.chart[0].fullPath || []}
-                onChange={this.props.selectSingleElectricalSensor}
+                onChange={this.updateStateAndCloseModal}
                 title={"Quale punto di misurazione vuoi visualizzare?"}
             />
         );

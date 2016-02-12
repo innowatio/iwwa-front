@@ -8,10 +8,25 @@ import {bindActionCreators} from "redux";
 
 var components        = require("components");
 var readingsRealTime  = require("lib/readings-real-time-aggregates-to-realtime-view");
+import * as icons from "lib/icons";
 import {styles} from "lib/styles_restyling";
 import {selectRealTimeSite} from "actions/real-time";
 import {defaultTheme} from "lib/theme";
 import {getTitleForSingleSensor} from "lib/page-header-utils";
+
+const styleSiteButton = ({colors}) => ({
+    width: "50px",
+    height: "50px",
+    padding: "0",
+    border: "0",
+    borderRadius: "100%",
+    margin: "13px",
+    backgroundColor: colors.secondary
+});
+const styleSiteButtonIcon = {
+    width: "38px",
+    textAlign: "center"
+};
 
 var RealTime = React.createClass({
     propTypes: {
@@ -22,6 +37,11 @@ var RealTime = React.createClass({
     },
     contextTypes: {
         theme: React.PropTypes.object
+    },
+    getInitialState: function () {
+        return {
+            showModal: false
+        };
     },
     componentDidMount: function () {
         this.props.asteroid.subscribe("sites");
@@ -123,6 +143,12 @@ var RealTime = React.createClass({
         const siteId = selectedValues.site;
         this.props.asteroid.subscribe("readingsRealTimeAggregatesBySite", siteId);
         this.props.selectRealTimeSite(selectedValues);
+        this.closeModal();
+    },
+    closeModal: function () {
+        this.setState({
+            showModal: false
+        });
     },
     getSelectedSiteName: function () {
         return (
@@ -194,6 +220,33 @@ var RealTime = React.createClass({
             return site.get("_id") === sitoId;
         });
     },
+    openModal: function () {
+        this.setState({showModal:true});
+    },
+    renderModalButton: function () {
+        const theme = this.getTheme();
+        return (
+            <div>
+                <components.Button className="pull-right" onClick={this.openModal} style={styleSiteButton(theme)} >
+                    <img src={icons.iconSiti} style={styleSiteButtonIcon} />
+                </components.Button>
+                <components.FullscreenModal
+                    childComponent={this.renderModalBody()}
+                    show={this.state.showModal}
+                />
+            </div>
+        );
+    },
+    renderModalBody: function () {
+        return (
+            <components.SiteNavigator
+                allowedValues={this.getSites()}
+                defaultPath={this.props.realTime.fullPath || []}
+                onChange={this.setSelectedSite}
+                title={"Quale punto di misurazione vuoi visualizzare?"}
+            />
+        );
+    },
     render: function () {
         const theme = this.getTheme();
         const selectedSiteName = this.getSelectedSiteName();
@@ -207,12 +260,7 @@ var RealTime = React.createClass({
                 <div style={styles(theme).mainDivStyle}>
                     <bootstrap.Col sm={12}>
                         <span className="pull-right">
-                            <components.SiteNavigator
-                                allowedValues={this.getSites()}
-                                defaultPath={this.props.realTime.fullPath || []}
-                                onChange={this.setSelectedSite}
-                                title={"Quale punto di misurazione vuoi visualizzare?"}
-                            />
+                            {this.renderModalButton()}
                         </span>
                     </bootstrap.Col>
                     <h3 className="text-center" style={{color: theme.colors.primary}}>
