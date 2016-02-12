@@ -57,7 +57,8 @@ export const styles = (theme) => ({
         paddingLeft: "10px",
         paddingRight: "10px",
         height: "56px",
-        display: "flex"
+        display: "flex",
+        position: "relative"
     },
     inputLine: {
         borderTop: "0px",

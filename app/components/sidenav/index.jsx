@@ -71,7 +71,7 @@ var SideNav = React.createClass({
         );
     },
     renderNavItem: function (styles, menuItem) {
-        // images with paddingTop: 13px to remove when the icons will be fonts
+        // images with paddingTop: 13px to remove when the icons will become fonts
 
         return menuItem.url ? (
             <li key={menuItem.iconPath}>
