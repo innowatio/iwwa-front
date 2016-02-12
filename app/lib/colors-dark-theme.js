@@ -28,6 +28,7 @@ export const colorsDarkTheme = {
     mainDivShadow: "#303232",
     mainFontColor: "#ffffff",
     primary: "#3e50b4",
+    secondary: "#536DFE",
     red: "#f71c50",
     resetCompare: "#ffffff",
     selectButton: "#ffffff",
