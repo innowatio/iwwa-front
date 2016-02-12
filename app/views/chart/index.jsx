@@ -25,7 +25,6 @@ import {
 } from "actions/chart";
 import {styles} from "lib/styles_restyling";
 import {defaultTheme} from "lib/theme";
-import {theme} from "lib/theme";
 import {getTitleForSingleSensor, getStringPeriod, getSensorName} from "lib/page-header-utils";
 
 const selectStyles = {
