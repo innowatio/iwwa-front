@@ -31,12 +31,10 @@ const stylesFunction = ({colors}) => ({
         width: measures.sidebarWidth,
         left: `-${measures.sidebarWidth}px`,
         height: "calc(100vh - 55px)",
+        fontSize: "15px",
         transition: "left 0.3s ease",
         zIndex: 1040,
-        borderRightWidth: "1px",
-        borderRightStyle: "solid",
-        borderRightColor: colors.primary,
-        backgroundColor: colors.white
+        backgroundColor: colors.darkBlack
     },
     footer: {
         position: "fixed",
@@ -82,11 +80,11 @@ var Root = React.createClass({
     },
     getMenuItems: function () {
         return [
-            {key: "dashboard", label: "Dashboard", url: "/dashboard/", iconPath: icons.iconDashboard},
-            {key: "chart", label: "Consumi storici", url: "/chart/", iconPath: icons.iconHistConsum},
-            {key: "live", label: "Consumi in tempo reale", url: "/live/", iconPath: icons.iconLiveConsum},
-            {key: "alarms", label: "Allarmi", url: "/alarms/", iconPath: icons.iconAlarm},
-            {key: "help", label: "Aiuto", onClick: "resetTutorial", iconPath: icons.iconHelp}
+            {key: "dashboard", label: "DASHBOARD", url: "/dashboard/", iconPath: icons.iconDashboard},
+            {key: "chart", label: "CONSUMI STORICI", url: "/chart/", iconPath: icons.iconHistConsum},
+            {key: "live", label: "CONSUMI LIVE", url: "/live/", iconPath: icons.iconLiveConsum},
+            {key: "alarms", label: "ALLARMI", url: "/alarms/", iconPath: icons.iconAlarm},
+            {key: "help", label: "AIUTO", onClick: "resetTutorial", iconPath: icons.iconHelp}
         ];
     },
     toggleSidebar: function () {

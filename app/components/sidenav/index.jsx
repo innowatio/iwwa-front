@@ -12,15 +12,15 @@ const stylesFunction = ({colors}) => ({
         width: "100%"
     },
     activeLink: {
-        borderLeft: "4px solid " + colors.primary,
         borderRadius: "0px",
-        backgroundColor: colors.greyLight
+        backgroundColor: colors.navBackgroundSelected
     },
     sideLabel: {
-        color: colors.primary,
+        color: colors.white,
         marginLeft: "10px",
         verticalAlign: "middle",
-        height: "100%"
+        height: "56px",
+        paddingTop: "0px"
     }
 });
 
@@ -52,34 +52,36 @@ var SideNav = React.createClass({
     },
     renderIconSideBar: function (styles, menuItem) {
         return menuItem.url ? (
-            <li key={menuItem.iconPath} style={{height: "55px"}}>
+            <li key={menuItem.iconPath} style={{height: "56px"}}>
                 <Link
                     activeStyle={styles.activeLink}
                     onClick={this.props.linkClickAction}
-                    style={{height: "55px"}}
+                    style={{height: "56px", lineHeight: "56px", padding: "0px 15px"}}
                     to={menuItem.url}
                 >
                     <img src={menuItem.iconPath} style={{float: "right", width: "30px"}} />
                 </Link>
             </li>
         ) : (
-            <li key={menuItem.iconPath} onClick={this.resetTutorial} style={{height: "55px", cursor: "pointer"}}>
-                <a style={{height: "55px"}}>
+            <li key={menuItem.iconPath} onClick={this.resetTutorial} style={{height: "56px", cursor: "pointer"}}>
+                <a style={{height: "56px", lineHeight: "56px", padding: "0px 15px"}}>
                     <img src={menuItem.iconPath} style={{float: "right", width: "30px"}} />
                 </a>
             </li>
         );
     },
     renderNavItem: function (styles, menuItem) {
+        // images with paddingTop: 13px to remove when the icons will be fonts
+
         return menuItem.url ? (
             <li key={menuItem.iconPath}>
                 <Link
                     activeStyle={styles.activeLink}
                     onClick={this.props.linkClickAction}
-                    style={{height: "55px"}}
+                    style={{height: "56px", lineHeight: "56px", padding: "0px 15px"}}
                     to={menuItem.url}
                 >
-                    <img src={menuItem.iconPath} style={{float: "left", width: "30px"}} />
+                    <img src={menuItem.iconPath} style={{float: "left", width: "30px", paddingTop: "13px"}} />
                     <span style={styles.sideLabel}>
                         {menuItem.label}
                     </span>
@@ -87,8 +89,8 @@ var SideNav = React.createClass({
             </li>
         ) : (
             <li key={menuItem.iconPath} onClick={this.resetTutorial} style={{cursor: "pointer"}}>
-                <a style={{height: "55px"}}>
-                    <img src={menuItem.iconPath} style={{float: "left", width: "30px"}} />
+                <a style={{height: "56px", lineHeight: "56px", padding: "0px 15px"}}>
+                    <img src={menuItem.iconPath} style={{float: "left", width: "30px", paddingTop: "13px"}} />
                     <span style={styles.sideLabel}>
                         {menuItem.label}
                     </span>

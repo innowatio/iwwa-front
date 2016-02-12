@@ -11,6 +11,7 @@ export const colorsDarkTheme = {
     buttonPrimary: "#ec4882",
     co2: "#CE93D8",
     consumption: "#F74F68",
+    darkBlack: "#212121",
     graphUnderlay: "#4E4D4F",
     green: "#a8e1d4",
     grey: "#999999",
@@ -25,6 +26,7 @@ export const colorsDarkTheme = {
     linePrevisionale: "#a8e1d4",
     lineReale: "#8595f9",
     mainDivShadow: "#303232",
+    mainFontColor: "#ffffff",
     primary: "#3e50b4",
     red: "#f71c50",
     resetCompare: "#ffffff",
@@ -34,5 +36,6 @@ export const colorsDarkTheme = {
     titlePage: "#536DFE",
     transparent: "rgba(0,0,0,0)",
     white: "#ffffff",
-    darkBlack: "#000000"
+    navBackground: "#303232",
+    navBackgroundSelected: "rgba(255,255,255,0.1)"
 };
