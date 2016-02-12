@@ -6,6 +6,7 @@ import {defaultTheme} from "lib/theme";
 
 var Button = React.createClass({
     propTypes: {
+        bsStyle: React.PropTypes.string,
         style: React.PropTypes.object
     },
     contextTypes: {

@@ -3,6 +3,11 @@ import color from "color";
 import measures from "lib/measures";
 
 export const styles = (theme) => ({
+    titleFullScreenModal: {
+        color: theme.colors.white,
+        marginTop: "0px",
+        marginBottom: "50px"
+    },
     base: {
         display: "flex",
         justifyContent: "space-between",
@@ -11,7 +16,7 @@ export const styles = (theme) => ({
         height: "100%"
     },
     buttonSelectChart: {
-        background: theme.colors.backgroundSelectButton,
+        backgroundColor: theme.colors.backgroundSelectButton,
         color: theme.colors.selectButton,
         marginRight: "9px",
         marginTop: "6px",

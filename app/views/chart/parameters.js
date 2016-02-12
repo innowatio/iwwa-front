@@ -3,7 +3,7 @@ import icons from "lib/icons";
 export function getChartSetting () {
     return [
         {label: "Punti di misurazione", key: "siteNavigator", icon: icons.iconSiti},
-        {label: "Periodo", key: "datefilterMonthlyModal", icon: icons.iconCalendar},
+        {label: "Periodo", key: "dateFilter", icon: icons.iconCalendar},
         {label: "Confronto", key: "compare", icon: icons.iconCompare},
         {label: "Esporta", key: "export", icon: icons.iconExport}
     ];

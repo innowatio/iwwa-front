@@ -290,7 +290,23 @@ var Chart = React.createClass({
         switch (this.state.selectedWidget) {
         case "siteNavigator":
             return this.renderSiteNavigator();
+        case "dateFilter":
+            return this.renderDateFilter();
         }
+    },
+    renderDateFilter: function () {
+        return (
+            <components.DateFilter
+                getKey={R.prop("key")}
+                getLabel={R.prop("label")}
+                onChange={this.props.selectDateRanges}
+                title={"SELEZIONA IL PERIODO DA VISUALIZZARE"}
+                value={
+                    this.props.chart[0].date.type === "dateFilter" ?
+                    this.props.chart[0].date : {}
+                }
+            />
+        );
     },
     renderSiteNavigator: function () {
         const sites = this.props.collections.get("sites") || Immutable.Map();
@@ -299,7 +315,7 @@ var Chart = React.createClass({
                 allowedValues={sites.sortBy(site => site.get("name"))}
                 defaultPath={this.props.chart[0].fullPath || []}
                 onChange={this.props.selectSingleElectricalSensor}
-                title={"Quale punto di misurazione vuoi visualizzare?"}
+                title={"QUALE PUNTO DI MISURAZIONE VUOI VISUALIZZARE?"}
             />
         );
     },
@@ -373,23 +389,6 @@ var Chart = React.createClass({
                         />
                         <span className="pull-left" style={{display: "flex"}}>
                             {ENVIRONMENT === "cordova" ? null : this.renderExportButton()}
-                            <components.TutorialAnchor
-                                message={tutorialString.dateFilter}
-                                order={5}
-                                position="left"
-                                ref="dateFilter"
-                            >
-                                <components.DatefilterMonthlyModal
-                                    getKey={R.prop("key")}
-                                    getLabel={R.prop("label")}
-                                    onChange={this.props.selectDateRanges}
-                                    title={<img src={icons.iconCalendar} style={{width: "75%"}} />}
-                                    value={
-                                        this.props.chart[0].date.type === "dateFilter" ?
-                                        this.props.chart[0].date : {}
-                                    }
-                                />
-                            </components.TutorialAnchor>
                             <components.TutorialAnchor
                                 message={tutorialString.compare}
                                 order={6}

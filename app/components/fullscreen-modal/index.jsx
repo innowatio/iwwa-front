@@ -1,14 +1,18 @@
-var bootstrap  = require("react-bootstrap");
-var Radium     = require("radium");
-var React      = require("react");
+import * as bootstrap from "react-bootstrap";
+import Radium from "radium";
+import React, {PropTypes} from "react";
+import {merge} from "ramda";
 
+import {styles} from "lib/styles_restyling";
 import {defaultTheme} from "lib/theme";
+import components from "components";
+import icons from "lib/icons";
 
 var FullscreenModal = React.createClass({
     propTypes: {
-        childComponent: React.PropTypes.element,
-        onHide: React.PropTypes.func,
-        show: React.PropTypes.bool
+        childComponent: PropTypes.element,
+        onHide: PropTypes.func,
+        show: PropTypes.bool
     },
     contextTypes: {
         theme: React.PropTypes.object
@@ -44,17 +48,27 @@ var FullscreenModal = React.createClass({
                             border: "none",
                             borderRadius: "0",
                             height: "100%",
-                            width: "100%"
+                            width: "100%",
+                            overflow: "auto"
                         },
                         ".modal-header": {
-                            borderBottom: "none"
+                            borderBottom: "none",
+                            padding: "10px"
+                        },
+                        ".modal-footer": {
+                            borderTop: "none"
                         },
                         "button.close": {
-                            fontSize: "72px",
-                            fontWeight: "100",
-                            color: colors.primary,
+                            height: "40px",
+                            width: "40px",
+                            backgroundImage: `url(${icons.iconClose})`,
+                            backgroundSize: "100% 100%",
+                            backgroundRepeat: "no-repeat",
                             opacity: 1,
-                            marginTop: "-10px"
+                            outline: "none"
+                        },
+                        "button.close > span": {
+                            display: "none"
                         }
                     }}
                     scopeSelector=".fullscreen-modal-selector"
@@ -63,6 +77,25 @@ var FullscreenModal = React.createClass({
                 <bootstrap.Modal.Body>
                     {this.props.childComponent}
                 </bootstrap.Modal.Body>
+                <bootstrap.Modal.Footer>
+                    <div style={{bottom: "15px", textAlign: "center", margin: "auto", height: "41px"}}>
+                        <components.Button
+                            onClick={this.onClickConfirm}
+                            style={merge(styles(this.getTheme()).buttonSelectChart, {
+                                width: "275px",
+                                height: "41px",
+                                marginTop: "none",
+                                marginRight: "none",
+                                backgroundColor: colors.buttonPrimary
+                            })}
+                        >
+                            {"OK"}
+                        </components.Button>
+                        <components.Button bsStyle={"link"} onClick={this.closeModal}>
+                            <img src={icons.iconReset} style={{width: "25px"}} />
+                        </components.Button>
+                    </div>
+                </bootstrap.Modal.Footer>
             </bootstrap.Modal>
         );
     }

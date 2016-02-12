@@ -8,20 +8,9 @@ var React      = require("react");
 var components = require("components");
 var icons      = require("lib/icons");
 import {defaultTheme} from "lib/theme";
+import {styles} from "lib/styles_restyling";
 
-const buttonBasicStyle = ({colors}) => ({
-    background: colors.greyBackground,
-    color: colors.primary,
-    fontSize: "13px"
-});
-
-const buttonBasicStyleActive = ({colors}) => ({
-    background: colors.primary,
-    color: colors.white,
-    fontSize: "13px"
-});
-
-const itemsStyle = (theme) => (R.merge(buttonBasicStyle(theme), {
+const itemsStyle = (theme) => (R.merge(styles(theme).buttonBasicStyle, {
     background: theme.colors.white,
     border: `1px solid ${theme.colors.greySubTitle}`,
     marginTop: "5px",
@@ -173,7 +162,7 @@ var SiteNavigator = React.createClass({
         return (
             <div style={{padding: "0 20px 20px 20px"}}>
                 <div>
-                    <h3 className="text-center" style={{color: theme.colors.primary}}>{this.props.title}</h3>
+                    <h3 className="text-center" style={{color: theme.colors.white}}>{this.props.title}</h3>
                 </div>
                 <bootstrap.Col style={{marginTop: "15px"}} xs={12}>
                     <bootstrap.Input
@@ -227,7 +216,7 @@ var SiteNavigator = React.createClass({
                     <div style={{bottom: "15px", textAlign: "center", margin: "auto"}}>
                         <bootstrap.Button
                             onClick={this.onClickConfirm}
-                            style={R.merge(buttonBasicStyleActive(theme), {
+                            style={R.merge(styles(theme).buttonBasicStyleActive, {
                                 width: "230px",
                                 height: "45px"
                             })}
@@ -237,7 +226,7 @@ var SiteNavigator = React.createClass({
                         <components.Spacer direction="h" size={20} />
                         <bootstrap.Button
                             onClick={this.closeModal}
-                            style={R.merge(buttonBasicStyle(theme), {
+                            style={R.merge(styles(theme).buttonBasicStyle, {
                                 width: "230px",
                                 height: "45px"
                             })}
