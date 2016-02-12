@@ -218,6 +218,10 @@ var DateFilter = React.createClass({
                         },
                         ".rw-calendar-grid": {
                             outline: "none"
+                        },
+                        "button.btn.btn-default:hover": {
+                            background: `${colors.buttonPrimary} !important`,
+                            border: "none !important"
                         }
                     }}
                     scopeSelector=".date-filter"
@@ -243,7 +247,7 @@ var DateFilter = React.createClass({
                             onChange={this.setTimeInterval}
                             style={R.merge(
                                 styles(this.getTheme()).buttonSelectChart, {
-                                    background: "none",
+                                    background: colors.transparent,
                                     border: `1px solid ${colors.white}`,
                                     width: "17%",
                                     minWidth: "200px",
@@ -252,7 +256,7 @@ var DateFilter = React.createClass({
                                     fontSize: "14px"
                                 }
                             )}
-                            styleToMergeWhenActiveState={{background: this.getTheme().colors.buttonPrimary, border: "none"}}
+                            styleToMergeWhenActiveState={{background: colors.buttonPrimary, border: "none"}}
                             value={[this.props.value.valueType]}
                         />
                     </div>
