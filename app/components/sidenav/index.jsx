@@ -2,6 +2,7 @@ import {Nav} from "react-bootstrap";
 import React, {PropTypes} from "react";
 import {Link} from "react-router";
 import {merge, partial} from "ramda";
+import {Style} from "Radium";
 
 import {defaultTheme} from "lib/theme";
 import * as measures from "lib/measures";
@@ -50,29 +51,8 @@ var SideNav = React.createClass({
         this.props.linkClickAction();
         location.reload();
     },
-    renderIconSideBar: function (styles, menuItem) {
-        return menuItem.url ? (
-            <li key={menuItem.iconPath} style={{height: "56px"}}>
-                <Link
-                    activeStyle={styles.activeLink}
-                    onClick={this.props.linkClickAction}
-                    style={{height: "56px", lineHeight: "56px", padding: "0px 15px"}}
-                    to={menuItem.url}
-                >
-                    <img src={menuItem.iconPath} style={{float: "right", width: "30px"}} />
-                </Link>
-            </li>
-        ) : (
-            <li key={menuItem.iconPath} onClick={this.resetTutorial} style={{height: "56px", cursor: "pointer"}}>
-                <a style={{height: "56px", lineHeight: "56px", padding: "0px 15px"}}>
-                    <img src={menuItem.iconPath} style={{float: "right", width: "30px"}} />
-                </a>
-            </li>
-        );
-    },
     renderNavItem: function (styles, menuItem) {
         // images with paddingTop: 13px to remove when the icons will become fonts
-
         return menuItem.url ? (
             <li key={menuItem.iconPath}>
                 <Link
@@ -88,7 +68,7 @@ var SideNav = React.createClass({
                 </Link>
             </li>
         ) : (
-            <li key={menuItem.iconPath} onClick={this.resetTutorial} style={{cursor: "pointer"}}>
+            <li className={"navigationItem"} key={menuItem.iconPath} onClick={this.resetTutorial} style={{cursor: "pointer"}}>
                 <a style={{height: "56px", lineHeight: "56px", padding: "0px 15px"}}>
                     <img src={menuItem.iconPath} style={{float: "left", width: "30px", paddingTop: "13px"}} />
                     <span style={styles.sideLabel}>
@@ -107,6 +87,9 @@ var SideNav = React.createClass({
         return (
             <div style={this.props.style}>
                 <div id="menu" style={styles.menu}>
+                    <Style
+                        rules={{".nav > li > a:hover": styles.activeLink}}
+                    />
                     <Nav bsStyle="pills" stacked={true} >
                         {
                             this.props.items.map(
