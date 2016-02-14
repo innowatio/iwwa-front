@@ -2,7 +2,7 @@ import {Nav} from "react-bootstrap";
 import React, {PropTypes} from "react";
 import {Link} from "react-router";
 import {merge, partial} from "ramda";
-import {Style} from "Radium";
+import {Style} from "radium";
 
 import {defaultTheme} from "lib/theme";
 import * as measures from "lib/measures";
