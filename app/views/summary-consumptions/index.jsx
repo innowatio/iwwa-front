@@ -7,7 +7,11 @@ var React      = require("react");
 
 var components   = require("components");
 
+import {connect} from "react-redux";
+import {bindActionCreators} from "redux";
 import {defaultTheme} from "lib/theme";
+import {selectSite} from "actions/consumptions";
+
 
 var styleLeftPane  = {
     width: "70%",
@@ -81,11 +85,13 @@ var styleSiteButtonIcon = {
 var SummaryConsumptions = React.createClass({
     propTypes: {
         asteroid: React.PropTypes.object,
-        collections: IPropTypes.map.isRequired
+        collections: IPropTypes.map.isRequired,
+        consumptions: React.PropTypes.object.isRequired
     },
     getInitialState: function () {
         return {
-            showModal: false
+            showModal: false,
+            path: []
         };
     },
     componentDidMount: function () {
@@ -109,18 +115,13 @@ var SummaryConsumptions = React.createClass({
         return (
             <components.SiteNavigator
                 allowedValues={sites.sortBy(site => site.get("name"))}
-                defaultPath={[]}
-                onChange={
-                    function (a) {
-                        console.log(a);
-                    }
-                }
+                defaultPath={this.state.path}
+                onChange={this.props.consumptions.fullPath || []}
                 title={"Quale punto di misurazione vuoi visualizzare?"}
             />
         );
     },
     renderSingleTab: function (siteName, theme, tabParameters) {
-        console.log(tabParameters);
         return (
             <bootstrap.Tab className="style-single-tab" eventKey={tabParameters.key} title={tabParameters.title}>
                 {this.renderTabContent(siteName, theme, tabParameters)}
@@ -219,4 +220,15 @@ var SummaryConsumptions = React.createClass({
     }
 });
 
-module.exports = Radium(SummaryConsumptions);
+function mapStateToProps (state) {
+    return {
+        collections: state.collections,
+        consumptions: state.consumptions
+    };
+}
+function mapDispatchToProps (dispatch) {
+    return {
+        selectSite: bindActionCreators(selectSite, dispatch)
+    };
+}
+module.exports = connect(mapStateToProps, mapDispatchToProps)(SummaryConsumptions);
