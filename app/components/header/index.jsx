@@ -3,7 +3,6 @@ import {Map, List} from "immutable";
 import {Link} from "react-router";
 import {merge, prop} from "ramda";
 
-import icons from "lib/icons";
 import {defaultTheme} from "lib/theme";
 import components from "components";
 
@@ -66,7 +65,7 @@ var Header = React.createClass({
         return (
             <components.Popover
                 hideOnChange={true}
-                title={<img src={icons.iconUserSettings} style={{width: "25px"}} />}
+                title={<components.Icon color={this.getTheme().colors.iconHeader} icon={"settings"} size={"30px"} style={{lineHeight: "20px"}} />}
                 tooltipId="tooltipUserSetting"
                 tooltipMessage="Impostazioni dell'utente"
                 tooltipPosition="left"
@@ -86,7 +85,7 @@ var Header = React.createClass({
         return this.userIsAdmin() && ENVIRONMENT !== "cordova" ? (
             <span style={{marginRight: "10px"}}>
                 <Link to="/users/" >
-                    <img className="pull-right" src={icons.iconUser} style={{width: "25px"}} />
+                    <components.Icon color={this.getTheme().colors.iconHeader} icon={"user"} size={"30px"} style={{lineHeight: "20px"}} />
                 </Link>
             </span>
         ) : null;
@@ -95,10 +94,21 @@ var Header = React.createClass({
         const styles = stylesFunction(this.getTheme());
         return (
             <div style={styles.base}>
-                <img onClick={this.props.menuClickAction} src={icons.iconMenu}  style={styles.hamburger}/>
+                <components.Icon
+                    color={this.getTheme().colors.white}
+                    icon={"menu"}
+                    onClick={this.props.menuClickAction}
+                    size={"46px"}
+                    style={{lineHeight: "20px"}}
+                />
                 <span style={merge(styles.base, {marginLeft: "15px"})}>
                     <Link to="/dashboard/" >
-                        <img src={icons.iconLogo} />
+                        <components.Icon
+                            color={this.getTheme().colors.iconHeader}
+                            icon={"innowatio-logo"}
+                            size={"40px"}
+                            style={{lineHeight: "20px"}}
+                        />
                     </Link>
                 </span>
                 <div style={styles.viewTitle}>
@@ -107,7 +117,7 @@ var Header = React.createClass({
                 {this.renderUserSetting()}
                 {this.renderAdminPage()}
                 <span onClick={this.logout} style={styles.icon}>
-                    <img className="pull-right" src={icons.iconLogout} style={{width: "85%"}}/>
+                    <components.Icon color={this.getTheme().colors.iconHeader} icon={"logout"} size={"30px"} style={{lineHeight: "20px"}} />
                 </span>
             </div>
         );

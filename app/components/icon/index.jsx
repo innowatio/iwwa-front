@@ -8,7 +8,6 @@ var Icon = React.createClass({
         icon: React.PropTypes.string.isRequired,
         onClick: React.PropTypes.func,
         size: React.PropTypes.string,
-        spin: React.PropTypes.bool,
         style: React.PropTypes.object
     },
     getDefaultProps: function () {
@@ -22,10 +21,8 @@ var Icon = React.createClass({
     },
     getClassName: function () {
         return [
-            // Fontawesome icon class
-            ("fa fa-" + this.props.icon),
-            // Fontawesome spin class
-            (this.props.spin ? "fa-spin" : ""),
+            // IWWA font icon class
+            ("icon icon-iw-" + this.props.icon),
             this.props.className || ""
         ].join(" ");
     },

@@ -34,5 +34,6 @@ export const colorsLightTheme = {
     titleColor: "#3e50b4",
     titlePage: "#536DFE",
     transparent: "rgba(0,0,0,0)",
-    white: "#ffffff"
+    white: "#ffffff",
+    iconHeader: "#ffffff"
 };
