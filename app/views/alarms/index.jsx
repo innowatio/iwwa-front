@@ -73,7 +73,7 @@ var Alarms = React.createClass({
     },
     getSitoBySensor: function (sensorId) {
         return this.getSiti()
-            .find((site = Map()) =>
+            .find((site = Immutable.Map()) =>
                 R.contains(sensorId, site.get("sensorsIds").toArray())
             );
     },
@@ -446,7 +446,6 @@ var Alarms = React.createClass({
 
 function mapStateToProps (state) {
     return {
-        location: state.router.location,
         collections: state.collections,
         alarms: state.alarms
     };

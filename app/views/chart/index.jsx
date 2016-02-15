@@ -400,7 +400,7 @@ var Chart = React.createClass({
                         <components.FullscreenModal
                             onConfirm={this.onConfirmFullscreenModal}
                             onHide={this.closeModal}
-                            onReset={this.onResetFullscreenModal}
+                            onReset={this.closeModal}
                             show={this.state.showFullscreenModal}
                         >
                             {this.renderChildComponent()}
@@ -514,7 +514,6 @@ var Chart = React.createClass({
 
 function mapStateToProps (state) {
     return {
-        location: state.router.location,
         collections: state.collections,
         chart: state.chart
     };

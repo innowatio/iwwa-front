@@ -5,7 +5,7 @@ var Calendar        = require("react-widgets").Calendar;
 var moment          = require("moment");
 var momentLocalizer = require("react-widgets/lib/localizers/moment");
 
-import components from "components";
+import {ButtonGroupSelect} from "components";
 import {defaultTheme} from "lib/theme";
 import {styles} from "lib/styles_restyling";
 import icons from "lib/icons";
@@ -41,7 +41,10 @@ var DateFilter = React.createClass({
         value: React.PropTypes.shape({
             start: React.PropTypes.number,
             end: React.PropTypes.number,
-            valueType: React.PropTypes.oneOfType([React.PropTypes.string, React.PropTypes.object])
+            valueType: React.PropTypes.oneOfType([
+                React.PropTypes.string,
+                React.PropTypes.object
+            ])
         })
     },
     contextTypes: {
@@ -111,11 +114,9 @@ var DateFilter = React.createClass({
         const {colors} = this.getTheme();
         return (
             <div className="date-filter">
-                <div>
-                    <h3 className="text-center" style={styles(this.getTheme()).titleFullScreenModal}>
-                        {this.props.title}
-                    </h3>
-                </div>
+                <h3 className="text-center" style={styles(this.getTheme()).titleFullScreenModal}>
+                    {this.props.title}
+                </h3>
                 <Radium.Style
                     rules={{
                         // Calendar CSS
@@ -240,7 +241,7 @@ var DateFilter = React.createClass({
                     />
                     <div style={{borderTop: `1px solid ${colors.white}`}} />
                     <div style={{marginTop: "4%", display: "flex", justifyContent: "center"}}>
-                        <components.ButtonGroupSelect
+                        <ButtonGroupSelect
                             allowedValues={this.getTemporalFilter()}
                             getKey={R.prop("key")}
                             getLabel={R.prop("label")}
