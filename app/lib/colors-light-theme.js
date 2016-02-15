@@ -11,6 +11,7 @@ export const colorsLightTheme = {
     buttonPrimary: "#ec4882",
     co2: "#CE93D8",
     consumption: "#F74F68",
+    darkBlack: "#000000",
     green: "#a8e1d4",
     graphUnderlay: "#f3f3f4",
     grey: "#999999",

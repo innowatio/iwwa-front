@@ -126,7 +126,6 @@ var SiteNavigator = React.createClass({
         };
     },
     onClickConfirm: function () {
-        this.closeModal();
         this.props.onChange(this.getReturnValues());
     },
     getValue: function () {
