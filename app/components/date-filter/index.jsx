@@ -30,6 +30,18 @@ const styleCalendar = ({colors}) => ({
     marginLeft: "4.5%"
 });
 
+const styleButtonGroupSelect = (theme) => R.merge(
+    styles(theme).buttonSelectChart, {
+        background: theme.colors.transparent,
+        border: `1px solid ${theme.colors.white}`,
+        width: "17%",
+        minWidth: "200px",
+        height: "41px",
+        marginRight: "8px",
+        fontSize: "14px"
+    }
+);
+
 momentLocalizer(moment);
 
 var DateFilter = React.createClass({
@@ -53,8 +65,8 @@ var DateFilter = React.createClass({
     getDefaultProps: function () {
         return {
             value: {
-                start: moment().startOf("month").valueOf(),
-                end: moment().endOf("month").valueOf(),
+                start: moment.utc().startOf("month").valueOf(),
+                end: moment.utc().endOf("month").valueOf(),
                 valueType: {label: "calendario", key: "calendar"}
             }
         };
@@ -63,8 +75,9 @@ var DateFilter = React.createClass({
         return this.context.theme || defaultTheme;
     },
     setMonthlyDate: function (dateValue) {
-        var startDate = moment(dateValue).valueOf();
-        var endDate = moment(dateValue).endOf("month").valueOf();
+        const startDate = moment.utc(dateValue).valueOf();
+        // Add one day to avoid to go in the past month.
+        const endDate = moment.utc(dateValue).add({day: 1}).endOf("month").valueOf();
         this.props.onChange({
             start: startDate,
             end: endDate,
@@ -106,8 +119,8 @@ var DateFilter = React.createClass({
         return [
             {label: "IERI", key: "yesterday"},
             {label: "OGGI", key: "today"},
-            {label: "SETTIMANA CORRENTE", key: "lastWeek"},
-            {label: "SETTIMANA SCORSA", key: "currentWeek"}
+            {label: "SETTIMANA CORRENTE", key: "currentWeek"},
+            {label: "SETTIMANA SCORSA", key: "lastWeek"}
         ];
     },
     render: function () {
@@ -246,17 +259,7 @@ var DateFilter = React.createClass({
                             getKey={R.prop("key")}
                             getLabel={R.prop("label")}
                             onChange={this.setTimeInterval}
-                            style={R.merge(
-                                styles(this.getTheme()).buttonSelectChart, {
-                                    background: colors.transparent,
-                                    border: `1px solid ${colors.white}`,
-                                    width: "17%",
-                                    minWidth: "200px",
-                                    height: "41px",
-                                    marginRight: "8px",
-                                    fontSize: "14px"
-                                }
-                            )}
+                            style={styleButtonGroupSelect(this.getTheme())}
                             styleToMergeWhenActiveState={{background: colors.buttonPrimary, border: "none"}}
                             value={[this.props.value.valueType]}
                         />

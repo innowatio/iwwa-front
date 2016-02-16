@@ -293,7 +293,13 @@ var Chart = React.createClass({
         case "siteNavigator":
             return this.renderSiteNavigator;
         case "dateFilter":
-            this.props.selectDateRanges(this.state.value);
+            this.props.selectDateRanges(
+                this.state.value || {
+                    start: moment().startOf("month").valueOf(),
+                    end: moment().endOf("month").valueOf(),
+                    valueType: {label: "calendario", key: "calendar"}
+                }
+            );
             break;
         }
         return this.closeModal();
