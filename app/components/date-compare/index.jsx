@@ -60,12 +60,11 @@ var DateCompare = React.createClass({
                 onClick={partial(this.selectedCheckboxDate, [allowedValue])}
                 style={
                     merge(styles.buttonCompare,
-                        {
-                            color: active ? theme.colors.white : theme.colors.black,
-                            backgroundColor: active ? theme.colors.lineReale : theme.colors.greyBackground
-                        }
-                    )
-                }
+                    {
+                        color: active ? theme.colors.white : theme.colors.black,
+                        backgroundColor: active ? theme.colors.lineReale : theme.colors.greyBackground
+                    }
+                )}
                 value={allowedValue}
             >
                 {this.props.getLabel(allowedValue)}
