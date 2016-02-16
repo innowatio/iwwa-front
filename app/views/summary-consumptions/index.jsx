@@ -10,7 +10,7 @@ var components   = require("components");
 import {connect} from "react-redux";
 import {bindActionCreators} from "redux";
 import {defaultTheme} from "lib/theme";
-import {selectSite} from "actions/consumptions";
+import {selectSite, selectPeriod} from "actions/consumptions";
 import {getSumBySiteAndPeriod, getTimeRangeByPeriod, tabParameters} from "lib/consumptions-utils";
 
 
@@ -88,6 +88,7 @@ var SummaryConsumptions = React.createClass({
         asteroid: React.PropTypes.object,
         collections: IPropTypes.map.isRequired,
         consumptions: React.PropTypes.object.isRequired,
+        selectPeriod: React.PropTypes.func.isRequired,
         selectSite: React.PropTypes.func.isRequired
     },
     getInitialState: function () {
@@ -124,8 +125,8 @@ var SummaryConsumptions = React.createClass({
     openModal: function () {
         this.setState ({showModal:true});
     },
-    selectSite: function (fullPath) {
-        this.props.selectSite(fullPath);
+    selectSite: function (siteSelectorValue) {
+        this.props.selectSite(siteSelectorValue.fullPath);
         this.closeModal();
     },
     renderModalBody: function () {
@@ -152,7 +153,12 @@ var SummaryConsumptions = React.createClass({
         var self = this;
         const {colors} = this.getTheme();
         return (
-            <bootstrap.Tabs className="style-tab" defaultActiveKey={tabParameters()[0].key}>
+            <bootstrap.Tabs
+                activeKey={this.props.consumptions.period}
+                className="style-tab"
+                defaultActiveKey={tabParameters()[0].key}
+                onSelect={this.props.selectPeriod}
+            >
                 <Radium.Style
                     rules={{
                         "ul": {
@@ -258,7 +264,8 @@ function mapStateToProps (state) {
 }
 function mapDispatchToProps (dispatch) {
     return {
-        selectSite: bindActionCreators(selectSite, dispatch)
+        selectSite: bindActionCreators(selectSite, dispatch),
+        selectPeriod: bindActionCreators(selectPeriod, dispatch)
     };
 }
 module.exports = connect(mapStateToProps, mapDispatchToProps)(SummaryConsumptions);

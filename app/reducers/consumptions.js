@@ -1,6 +1,6 @@
 import {combineReducers} from "redux";
 
-import {SELECT_CONSUMPTIONS_SITE} from "../actions/consumptions";
+import {SELECT_CONSUMPTIONS_SITE, SELECT_CONSUMPTIONS_PERIOD} from "../actions/consumptions";
 
 /**
 *   A click to select a siteId
@@ -16,6 +16,17 @@ function fullPath (state = null, {type, payload}) {
     }
 }
 
+function period (state = null, {type, payload}) {
+    switch (type) {
+    case SELECT_CONSUMPTIONS_PERIOD:
+        return payload.period;
+    default:
+        return state;
+    }
+}
+
+
 export const consumptions = combineReducers({
-    fullPath
+    fullPath,
+    period
 });
