@@ -359,7 +359,7 @@ var Chart = React.createClass({
             <components.SiteNavigator
                 allowedValues={sites.sortBy(site => site.get("name"))}
                 onChange={this.onChangeWidgetValue}
-                path={(this.state.value && this.state.value.fullPath) || this.props.chart[0].fullPath}
+                path={(this.state.value && this.state.value.fullPath) || this.props.chart[0].fullPath || []}
                 title={"QUALE PUNTO DI MISURAZIONE VUOI VISUALIZZARE?"}
             />
         );

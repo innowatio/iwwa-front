@@ -94,7 +94,7 @@ var SummaryConsumptions = React.createClass({
     getInitialState: function () {
         return {
             showModal: false,
-            path: []
+            value: null
         };
     },
     componentDidMount: function () {
@@ -120,22 +120,28 @@ var SummaryConsumptions = React.createClass({
         return Immutable.Map({name: ""});
     },
     closeModal: function () {
-        this.setState ({showModal:false});
+        this.setState ({
+            showModal: false,
+            value: null
+        });
     },
     openModal: function () {
         this.setState ({showModal:true});
     },
-    selectSite: function (siteSelectorValue) {
-        this.props.selectSite(siteSelectorValue.fullPath);
+    onConfirmFullscreenModal: function () {
+        this.props.selectSite(this.state.value.fullPath);
         this.closeModal();
+    },
+    onChangeWidgetValue: function (value) {
+        this.setState({value});
     },
     renderModalBody: function () {
         const sites = this.props.collections.get("sites") || Immutable.Map({});
         return (
             <components.SiteNavigator
                 allowedValues={sites.sortBy(site => site.get("name"))}
-                defaultPath={this.props.consumptions.fullPath || []}
-                onChange={this.selectSite}
+                onChange={this.onChangeWidgetValue}
+                path={(this.state.value && this.state.value.fullPath) || this.props.consumptions.fullPath || []}
                 title={"Quale punto di misurazione vuoi visualizzare?"}
             />
         );
@@ -246,10 +252,13 @@ var SummaryConsumptions = React.createClass({
                         <img src={icons.iconSiti} style={styleSiteButtonIcon} />
                     </bootstrap.Button>
                     <components.FullscreenModal
-                        childComponent={this.renderModalBody()}
+                        onConfirm={this.onConfirmFullscreenModal}
                         onHide={this.closeModal}
+                        onReset={this.closeModal}
                         show={this.state.showModal}
-                    />
+                    >
+                        {this.renderModalBody()}
+                    </components.FullscreenModal>
                 </div>
             </div>
         );

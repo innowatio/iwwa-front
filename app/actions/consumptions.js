@@ -1,4 +1,4 @@
-import {Array, String} from "tcomb";
+import {list, String} from "tcomb";
 
 import actionTypeValidator from "../lib/action-type-validator";
 
@@ -6,7 +6,7 @@ export const SELECT_CONSUMPTIONS_SITE = "SELECT_CONSUMPTIONS_SITE";
 export const SELECT_CONSUMPTIONS_PERIOD = "SELECT_CONSUMPTIONS_PERIOD";
 
 const typeofSelectSite = actionTypeValidator(
-    Array
+    list(String)
 );
 export function selectSite (fullPath) {
     typeofSelectSite(...arguments);
