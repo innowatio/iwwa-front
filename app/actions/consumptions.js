@@ -14,7 +14,7 @@ export function selectSite (fullPath) {
     const ret = {
         type: SELECT_CONSUMPTIONS_SITE,
         payload: {
-            fullPath
+            ...fullPath
         }
     };
     return ret;

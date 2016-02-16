@@ -11,6 +11,7 @@ import {connect} from "react-redux";
 import {bindActionCreators} from "redux";
 import {defaultTheme} from "lib/theme";
 import {selectSite} from "actions/consumptions";
+import {getSumBySiteAndPeriod, getTimeRangeByPeriod, tabParameters} from "lib/consumptions-utils";
 
 
 var styleLeftPane  = {
@@ -86,7 +87,8 @@ var SummaryConsumptions = React.createClass({
     propTypes: {
         asteroid: React.PropTypes.object,
         collections: IPropTypes.map.isRequired,
-        consumptions: React.PropTypes.object.isRequired
+        consumptions: React.PropTypes.object.isRequired,
+        selectSite: React.PropTypes.func.isRequired
     },
     getInitialState: function () {
         return {
@@ -97,12 +99,24 @@ var SummaryConsumptions = React.createClass({
     componentDidMount: function () {
         this.props.asteroid.subscribe("sites");
     },
+    subscribeToMeasuresByPerdiod: function (period) {
+        this.props.asteroid.subscribe(
+            "dailyMeasuresBySensor",
+            this.props.consumptions.fullPath[0],
+            period.start,
+            period.end,
+            "reading",
+            "activeEnergy"
+        );
+    },
     getTheme: function () {
         return this.context.theme || defaultTheme;
     },
-    getTabParameters: function () {
-        return [{periodMessage: "OGGI HAI UTILIZZATO", measureValue: "48", measureUnit: "kWh", period: "5 FEBBRAIO 2016", title: "OGGI", key: 1},
-        {periodMessage: "OGGI HAI UTILIZZATO", measureValue: "48", measureUnit: "kWh", period: "5 FEBBRAIO 2016", title: "SETTIMANA CORRENTE", key: 2}];
+    getSelectedSite: function () {
+        if (this.props.consumptions.fullPath && this.props.consumptions.fullPath[0]) {
+            return this.props.collections.getIn(["sites", this.props.consumptions.fullPath[0]]);
+        }
+        return Immutable.Map({name: ""});
     },
     closeModal: function () {
         this.setState ({showModal:false});
@@ -110,31 +124,35 @@ var SummaryConsumptions = React.createClass({
     openModal: function () {
         this.setState ({showModal:true});
     },
+    selectSite: function (fullPath) {
+        this.props.selectSite(fullPath);
+        this.closeModal();
+    },
     renderModalBody: function () {
         const sites = this.props.collections.get("sites") || Immutable.Map({});
         return (
             <components.SiteNavigator
                 allowedValues={sites.sortBy(site => site.get("name"))}
-                defaultPath={this.state.path}
-                onChange={this.props.consumptions.fullPath || []}
+                defaultPath={this.props.consumptions.fullPath || []}
+                onChange={this.selectSite}
                 title={"Quale punto di misurazione vuoi visualizzare?"}
             />
         );
     },
     renderSingleTab: function (siteName, theme, tabParameters) {
         return (
-            <bootstrap.Tab className="style-single-tab" eventKey={tabParameters.key} title={tabParameters.title}>
+            <bootstrap.Tab className="style-single-tab" eventKey={tabParameters.key} key={tabParameters.key} title={tabParameters.title}>
                 {this.renderTabContent(siteName, theme, tabParameters)}
             </bootstrap.Tab>
         );
     },
     renderTabs: function (theme) {
-        var siteName = "sites";
+        var site = this.getSelectedSite();
+        var siteName = site ? site.get("name") : "";
         var self = this;
-        // siteName, theme, this.renderSingleTab
         const {colors} = this.getTheme();
         return (
-            <bootstrap.Tabs className="style-tab" defaultActiveKey={1}>
+            <bootstrap.Tabs className="style-tab" defaultActiveKey={tabParameters()[0].key}>
                 <Radium.Style
                     rules={{
                         "ul": {
@@ -170,13 +188,16 @@ var SummaryConsumptions = React.createClass({
                             border: "0px",
                             borderRadius: "0px",
                             backgroundColor: colors.secondary,
-                            borderBottom: "3px solid" + colors.buttonPrimary
+                            borderBottom: "3px solid" + colors.buttonPrimary,
+                            outline: "0px",
+                            outlineStyle: "none",
+                            outlineWidth: "0px"
                         }
                     }}
                     scopeSelector=".style-tab"
                 />
                 {
-                    this.getTabParameters().map(function (parameter) {
+                    tabParameters().map(function (parameter) {
                         return self.renderSingleTab (siteName, theme, parameter);
                     })
                 }
@@ -184,15 +205,24 @@ var SummaryConsumptions = React.createClass({
         );
     },
     renderTabContent: function (siteName, theme, tabParameters) {
+        var sum = 0;
+        if (this.props.consumptions.fullPath) {
+            this.subscribeToMeasuresByPerdiod(getTimeRangeByPeriod(tabParameters.period));
+
+            sum = getSumBySiteAndPeriod(
+                getTimeRangeByPeriod(tabParameters.period),
+                this.props.consumptions.fullPath[0],
+                this.props.collections.get("readings-daily-aggregates") || Immutable.Map());
+        }
         return (
             <div style={styleContent(theme)}>
                 <h2 style={styleH2(theme)}>{siteName}</h2>
-                <h3 style={styleH3(theme)}>{tabParameters.periodMessage}</h3>
+                <h3 style={styleH3(theme)}>{tabParameters.periodTitle}</h3>
                 <div style={styleRoundedDiv(theme)}>
-                    <p style={styleMeasure(theme)}>{tabParameters.measureValue}</p>
+                    <p style={styleMeasure(theme)}>{Math.trunc(sum)}</p>
                     <span style={styleUnit(theme)}>{tabParameters.measureUnit}</span>
                 </div>
-                <p style={styleH2(theme)}>{tabParameters.period}</p>
+                <p style={styleH2(theme)}>{tabParameters.periodSubtitle}</p>
             </div>
         );
     },
