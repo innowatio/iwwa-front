@@ -38,5 +38,6 @@ export const colorsDarkTheme = {
     transparent: "rgba(0,0,0,0)",
     white: "#ffffff",
     navBackground: "#303232",
-    navBackgroundSelected: "rgba(255,255,255,0.1)"
+    navBackgroundSelected: "rgba(255,255,255,0.1)",
+    iconHeader: "#ffffff"
 };

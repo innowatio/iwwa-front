@@ -19,7 +19,6 @@ const buttonStyle = ({colors}) => ({
     backgroundColor: colors.primary,
     color: colors.white
 });
-
 var User = React.createClass({
     propTypes: {
         asteroid: React.PropTypes.object,
@@ -151,7 +150,16 @@ var User = React.createClass({
                 <td onClick={R.partial(this.removeSiteFromUser, [sito])}
                     style={{width: "36px", textAlign: "center", cursor: "pointer", paddingRight: "20px"}}
                 >
-                    <components.Icon icon="minus" style={{color: colors.primary}} />
+                    <p style={{
+                        color: colors.primary,
+                        textAlign: "center",
+                        fontSize: "30px",
+                        fontWeight: "900",
+                        lineHeight: "12px"
+                    }}
+                    >
+                        {"–"}
+                    </p>
                 </td>
             </tr>
         );
@@ -281,16 +289,20 @@ var User = React.createClass({
                         </span>
                         <components.Spacer direction="h" size={15} />
                         <div onClick={this.removeAllSiteFromUser}>
-                            <components.Icon
-                                icon="minus"
-                                onClick={this.removeAllSiteFromUser}
-                                style={{
-                                    color: theme.colors.primary,
-                                    padding: "8px",
-                                    border: `1px solid ${theme.colors.greyBorder}`,
-                                    height: "30px"
-                                }}
-                            />
+                            <p onClick={this.removeAllSiteFromUser} style={{
+                                cursor: "pointer",
+                                color: theme.colors.primary,
+                                textAlign: "center",
+                                width: "34px",
+                                height: "34px",
+                                border: `1px solid ${theme.colors.greyBorder}`,
+                                fontSize: "28px",
+                                fontWeight: "900",
+                                lineHeight: "28px"
+                            }}
+                            >
+                                {"–"}
+                            </p>
                         </div>
                     </div>
                 </div>
@@ -308,10 +320,10 @@ var User = React.createClass({
         const theme = this.getTheme();
         return (
             <div className="users-admin">
-                <div style={styles(this.getTheme()).titlePage}>
+                <div style={styles(theme).titlePage}>
                     <Router.Link style={{float: "left", paddingTop: "6px"}} to="/users/">
                         <bootstrap.Button bsStyle="link" style={{height: "40px", outline: "0px"}}>
-                            <img src={icons.iconArrowLeft} style={{height: "30px", float: "left"}} />
+                            <components.Icon color={theme.colors.iconHeader} icon={"arrow-left"} size={"32px"} />
                         </bootstrap.Button>
                     </Router.Link>
                     <div style={{
