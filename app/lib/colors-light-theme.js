@@ -36,5 +36,9 @@ export const colorsLightTheme = {
     titlePage: "#536DFE",
     transparent: "rgba(0,0,0,0)",
     white: "#ffffff",
-    iconHeader: "#ffffff"
+    iconHeader: "#ffffff",
+    consumptionprogressBarBackground: "#37474f",
+    consumptionprogressBarInfo: "#536dfe",
+    consumptionprogressBarAlert: "#eb2953",
+    consumptionsText: "#ffffff"
 };

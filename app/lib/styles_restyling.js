@@ -112,5 +112,35 @@ export const styles = (theme) => ({
             borderTop: "0px",
             boxShadow: "2px 2px 5px " + theme.colors.greySubTitle
         }
+    },
+    consumptionsProgressBar: {
+        ".progress": {
+            fontSize: "10px",
+            lineHeight: "0",
+            height: "12px",
+            borderRadius: "6px",
+            backgroundColor: theme.colors.consumptionprogressBarBackground
+        },
+        ".progress-bar": {
+            fontSize: "10px",
+            lineHeight: "10px",
+            backgroundColor: theme.colors.consumptionprogressBarBackground,
+            height: "12px",
+            borderRadius: "6px"
+        },
+        ".progress-bar-danger": {
+            backgroundColor: theme.colors.consumptionprogressBarAlert
+        },
+        ".progress-bar-info": {
+            backgroundColor: theme.colors.consumptionprogressBarInfo
+        },
+        ".progress-title": {
+            fontSize: "18px",
+            color: theme.colors.consumptionsText
+        },
+        ".progress-max": {
+            fontSize: "16px",
+            color: theme.colors.consumptionsText
+        }
     }
 });
