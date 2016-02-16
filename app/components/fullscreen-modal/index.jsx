@@ -58,7 +58,8 @@ var FullscreenModal = React.createClass({
                             padding: "10px"
                         },
                         ".modal-footer": {
-                            borderTop: "none"
+                            borderTop: "none",
+                            display: "initial"
                         },
                         "button.close": {
                             height: "40px",
@@ -80,7 +81,7 @@ var FullscreenModal = React.createClass({
                     {this.props.children}
                 </bootstrap.Modal.Body>
                 <bootstrap.Modal.Footer>
-                    <div style={{bottom: "15px", textAlign: "center", margin: "auto", height: "41px"}}>
+                    <div style={{bottom: "15px", textAlign: "center", margin: "3% auto auto auto", height: "41px"}}>
                         <components.Button
                             onClick={this.props.onConfirm}
                             style={merge(styles(this.getTheme()).buttonSelectChart, {

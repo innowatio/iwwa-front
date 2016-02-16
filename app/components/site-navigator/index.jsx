@@ -27,11 +27,11 @@ const itemsStyleActive = ({colors}) => ({
 var SiteNavigator = React.createClass({
     propTypes: {
         allowedValues: IPropTypes.map.isRequired,
-        defaultPath: React.PropTypes.oneOfType([
+        onChange: React.PropTypes.func.isRequired,
+        path: React.PropTypes.oneOfType([
             React.PropTypes.array,
             IPropTypes.list
         ]),
-        onChange: React.PropTypes.func.isRequired,
         title: React.PropTypes.string
     },
     contextTypes: {
@@ -39,26 +39,8 @@ var SiteNavigator = React.createClass({
     },
     getInitialState: function () {
         return {
-            inputFilter: "",
-            pathParent: [],
-            pathChildren: []
+            inputFilter: ""
         };
-    },
-    componentWillReceiveProps: function (props) {
-        return this.getStateFromProps(props);
-    },
-    getStateFromProps: function (props) {
-        const path = props.defaultPath;
-        var parent = [];
-        var children = [];
-        if (path.length > 0) {
-            parent = path[0];
-            children = path.slice(1, path.length);
-        }
-        this.setState({
-            pathParent: parent,
-            pathChildren: children
-        });
     },
     getTheme: function () {
         return this.context.theme || defaultTheme;
@@ -93,34 +75,27 @@ var SiteNavigator = React.createClass({
         });
     },
     onClickChildren: function (value) {
-        this.setState({
-            pathChildren: value
+        const childrenPath = value.filter(value => {
+            return !R.isNil(value);
+        });
+        this.props.onChange({
+            fullPath: [this.props.path[0]].concat(childrenPath) || [],
+            site: this.props.path[0],
+            sensor: R.last(childrenPath)
         });
     },
     onClickParent: function (value) {
-        this.setState({
-            pathParent: this.getKeyParent(value[0]),
-            pathChildren: []
+        const site = this.getKeyParent(value[0]);
+        this.props.onChange({
+            fullPath: [site],
+            site,
+            sensor: null
         });
-    },
-    getReturnValues: function () {
-        var site = this.state.pathParent;
-        var childrenPath = this.state.pathChildren.filter(function (value) {
-            return !R.isNil(value);
-        });
-        return {
-            fullPath: [site].concat(childrenPath) || [],
-            site: site,
-            sensor: R.last(childrenPath)
-        };
-    },
-    onClickConfirm: function () {
-        this.props.onChange(this.getReturnValues());
     },
     getValue: function () {
         const self = this;
         return [this.props.allowedValues
-            .find(value => self.getKeyParent(value) === self.state.pathParent)
+            .find(value => self.getKeyParent(value) === self.props.path[0])
         ].filter(value => !R.isNil(value));
     },
     renderSitesParent: function () {
@@ -139,10 +114,10 @@ var SiteNavigator = React.createClass({
         );
     },
     renderSitesChildren: function () {
-        if (this.state.pathParent) {
+        if (this.props.path[0]) {
             return (
                 <components.TreeView
-                    allowedValues={this.getFilteredValues().getIn([this.state.pathParent, "sensors"]) || []}
+                    allowedValues={this.getFilteredValues().getIn([this.props.path[0], "sensors"]) || []}
                     filterCriteria={this.getFilterCriteria}
                     getKey={this.getKeyChildren}
                     getLabel={this.getLabelChildren}
@@ -150,7 +125,7 @@ var SiteNavigator = React.createClass({
                     onChange={this.onClickChildren}
                     style={itemsStyle(this.getTheme())}
                     styleToMergeWhenActiveState={itemsStyleActive(this.getTheme())}
-                    value={this.state.pathChildren}
+                    value={this.props.path.slice(1, this.props.path.length)}
                     vertical={true}
                 />
             );
@@ -159,10 +134,8 @@ var SiteNavigator = React.createClass({
     render: function () {
         const theme = this.getTheme();
         return (
-            <div style={{padding: "0 20px 20px 20px"}}>
-                <div>
-                    <h3 className="text-center" style={{color: theme.colors.white}}>{this.props.title}</h3>
-                </div>
+            <div>
+                <h3 className="text-center" style={{color: theme.colors.white}}>{this.props.title}</h3>
                 <bootstrap.Col style={{marginTop: "15px"}} xs={12}>
                     <bootstrap.Input
                         addonAfter={<img src={icons.iconSearch} style={{height: "21px"}}/>}
@@ -173,7 +146,7 @@ var SiteNavigator = React.createClass({
                         value={this.state.inputFilter}
                     />
                 </bootstrap.Col>
-                <bootstrap.Col style={{overflow: "auto", marginTop: "10px", height: "calc(100vh - 350px)"}} xs={4}>
+                <bootstrap.Col style={{overflow: "auto", marginTop: "10px", height: "calc(100vh - 350px)", minHeight: "300px"}} xs={4}>
                     <div className="site-navigator-parent">
                         <Radium.Style
                             rules={{
@@ -188,7 +161,7 @@ var SiteNavigator = React.createClass({
                         {this.renderSitesParent()}
                     </div>
                 </bootstrap.Col>
-                <bootstrap.Col style={{height: "calc(100vh - 350px)"}} xs={8}>
+                <bootstrap.Col style={{height: "calc(100vh - 350px)", minHeight: "300px"}} xs={8}>
                     <div
                         className="site-navigator-child"
                         style={{
@@ -211,29 +184,6 @@ var SiteNavigator = React.createClass({
                         {this.renderSitesChildren()}
                     </div>
                 </bootstrap.Col>
-                <div style={{width: "100%", marginTop: "10px", padding: "20px", bottom: 0, position: "fixed"}}>
-                    <div style={{bottom: "15px", textAlign: "center", margin: "auto"}}>
-                        <bootstrap.Button
-                            onClick={this.onClickConfirm}
-                            style={R.merge(styles(theme).buttonBasicStyleActive, {
-                                width: "230px",
-                                height: "45px"
-                            })}
-                        >
-                            {"OK"}
-                        </bootstrap.Button>
-                        <components.Spacer direction="h" size={20} />
-                        <bootstrap.Button
-                            onClick={this.closeModal}
-                            style={R.merge(styles(theme).buttonBasicStyle, {
-                                width: "230px",
-                                height: "45px"
-                            })}
-                        >
-                            {"RESET"}
-                        </bootstrap.Button>
-                    </div>
-                </div>
             </div>
         );
     }

@@ -307,12 +307,18 @@ var Chart = React.createClass({
         });
     },
     onConfirmFullscreenModal: function () {
+        const {chart} = this.props;
         switch (this.state.selectedWidget) {
         case "siteNavigator":
-            return this.renderSiteNavigator;
+            this.props.selectSingleElectricalSensor(this.state.value || {
+                fullPath: chart[0].fullPath,
+                site: chart[0].site,
+                sensor: chart[0].sensor
+            });
+            break;
         case "dateFilter":
             this.props.selectDateRanges(
-                this.state.value || {
+                this.state.value || (chart[0].date.type === "dateFilter" && chart[0].date) || {
                     start: moment().startOf("month").valueOf(),
                     end: moment().endOf("month").valueOf(),
                     valueType: {label: "calendario", key: "calendar"}
@@ -324,10 +330,6 @@ var Chart = React.createClass({
     },
     onChangeWidgetValue: function (value) {
         this.setState({value});
-    },
-    updateStateAndCloseModal: function (a) {
-        this.props.selectSingleElectricalSensor(a);
-        this.closeModal();
     },
     renderChildComponent: function () {
         switch (this.state.selectedWidget) {
@@ -356,8 +358,8 @@ var Chart = React.createClass({
         return (
             <components.SiteNavigator
                 allowedValues={sites.sortBy(site => site.get("name"))}
-                defaultPath={this.props.chart[0].fullPath || []}
-                onChange={this.updateStateAndCloseModal}
+                onChange={this.onChangeWidgetValue}
+                path={(this.state.value && this.state.value.fullPath) || this.props.chart[0].fullPath}
                 title={"QUALE PUNTO DI MISURAZIONE VUOI VISUALIZZARE?"}
             />
         );
