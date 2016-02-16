@@ -4,13 +4,13 @@
 <svg version="1.1" id="Livello_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
 	 width="40px" height="40px" viewBox="0 0 40 40" enable-background="new 0 0 40 40" xml:space="preserve">
 <g>
-	<path fill="none" stroke="#7275A0" stroke-miterlimit="10" d="M16.828,2.817c0-0.872-0.713-1.587-1.586-1.587H2.554
+	<path fill="none" stroke="#ffffff" stroke-miterlimit="10" d="M16.828,2.817c0-0.872-0.713-1.587-1.586-1.587H2.554
 		c-0.874,0-1.586,0.715-1.586,1.587v12.687c0,0.87,0.713,1.591,1.586,1.591h12.687c0.874,0,1.586-0.721,1.586-1.591V2.817z"/>
-	<path fill="none" stroke="#7275A0" stroke-miterlimit="10" d="M39.032,2.817c0-0.872-0.714-1.587-1.583-1.587h-12.69
+	<path fill="none" stroke="#ffffff" stroke-miterlimit="10" d="M39.032,2.817c0-0.872-0.714-1.587-1.583-1.587h-12.69
 		c-0.873,0-1.586,0.715-1.586,1.587v12.687c0,0.87,0.713,1.591,1.586,1.591h12.69c0.869,0,1.583-0.721,1.583-1.591V2.817z"/>
-	<path fill="none" stroke="#7275A0" stroke-miterlimit="10" d="M16.828,24.493c0-0.873-0.713-1.588-1.586-1.588H2.554
+	<path fill="none" stroke="#ffffff" stroke-miterlimit="10" d="M16.828,24.493c0-0.873-0.713-1.588-1.586-1.588H2.554
 		c-0.874,0-1.586,0.715-1.586,1.588v12.689c0,0.872,0.713,1.587,1.586,1.587h12.687c0.874,0,1.586-0.715,1.586-1.587V24.493z"/>
-	<path fill="none" stroke="#7275A0" stroke-miterlimit="10" d="M39.032,24.493c0-0.873-0.714-1.588-1.583-1.588h-12.69
+	<path fill="none" stroke="#ffffff" stroke-miterlimit="10" d="M39.032,24.493c0-0.873-0.714-1.588-1.583-1.588h-12.69
 		c-0.873,0-1.586,0.715-1.586,1.588v12.689c0,0.872,0.713,1.587,1.586,1.587h12.69c0.869,0,1.583-0.715,1.583-1.587V24.493z"/>
 </g>
 </svg>

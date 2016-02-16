@@ -11,6 +11,7 @@ export const colorsLightTheme = {
     buttonPrimary: "#ec4882",
     co2: "#CE93D8",
     consumption: "#F74F68",
+    darkBlack: "#000000",
     green: "#a8e1d4",
     graphUnderlay: "#f3f3f4",
     grey: "#999999",
@@ -26,6 +27,7 @@ export const colorsLightTheme = {
     lineReale: "#8595f9",
     mainDivShadow: "#8c8c8d",
     primary: "#3e50b4",
+    secondary: "#536DFE",
     red: "#f71c50",
     resetCompare: "#000000",
     selectButton: "#000000",
@@ -33,5 +35,6 @@ export const colorsLightTheme = {
     titleColor: "#3e50b4",
     titlePage: "#536DFE",
     transparent: "rgba(0,0,0,0)",
-    white: "#ffffff"
+    white: "#ffffff",
+    iconHeader: "#ffffff"
 };

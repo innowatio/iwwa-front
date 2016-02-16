@@ -67,6 +67,24 @@ const consumptionButtonSelectedStyle = ({colors}) => ({
     transition: "width 0.4s ease-in-out"
 });
 
+const dateButtonStyle = ({colors}) => ({
+    background: colors.primary,
+    border: "0px none",
+    height: "30px",
+    width: "30px",
+    position: "absolute",
+    top: "50%"
+});
+
+const alarmButtonStyle = ({colors}) => ({
+    background: colors.titleColor,
+    border: "0px none",
+    borderRadius: "100%",
+    height: "50px",
+    margin: "auto",
+    width: "50px"
+});
+
 var Chart = React.createClass({
     propTypes: {
         asteroid: React.PropTypes.object,
@@ -271,14 +289,14 @@ var Chart = React.createClass({
                 return [
                     getTitleForSingleSensor(this.props.chart[0], this.props.collections),
                     getSensorName(this.props.chart[1].sensorId, this.props.collections)
-                ].join(" & ");
+                ].join(" & ") + ` · ${getStringPeriod(this.props.chart[0].date)}`;
             // Comparazione siti:
             // NameSito1 & NameSito2
             } else if (this.props.chart[0].fullPath !== this.props.chart[1].fullPath) {
                 return [
                     getTitleForSingleSensor(this.props.chart[0], this.props.collections),
                     getTitleForSingleSensor(this.props.chart[1], this.props.collections)
-                ].join(" & ");
+                ].join(" & ") + ` · ${getStringPeriod(this.props.chart[0].date)}`;
             }
         }
     },
@@ -306,6 +324,10 @@ var Chart = React.createClass({
     },
     onChangeWidgetValue: function (value) {
         this.setState({value});
+    },
+    updateStateAndCloseModal: function (a) {
+        this.props.selectSingleElectricalSensor(a);
+        this.closeModal();
     },
     renderChildComponent: function () {
         switch (this.state.selectedWidget) {
@@ -335,7 +357,7 @@ var Chart = React.createClass({
             <components.SiteNavigator
                 allowedValues={sites.sortBy(site => site.get("name"))}
                 defaultPath={this.props.chart[0].fullPath || []}
-                onChange={this.props.selectSingleElectricalSensor}
+                onChange={this.updateStateAndCloseModal}
                 title={"QUALE PUNTO DI MISURAZIONE VUOI VISUALIZZARE?"}
             />
         );
@@ -385,8 +407,11 @@ var Chart = React.createClass({
             <div>
                 <div style={styles(this.getTheme()).titlePage}>
                     <div style={{fontSize: "18px", marginBottom: "0px", paddingTop: "18px", width: "100%"}}>
-                        {this.getTitleForChart()}
+                        {this.getTitleForChart().toUpperCase()}
                     </div>
+                    <components.Button style={alarmButtonStyle(this.getTheme())}>
+                        <img src={icons.iconActiveAlarm} style={{width: "22px", margin: "auto"}} />
+                    </components.Button>
                     <components.Popover
                         className="pull-right"
                         hideOnChange={true}
@@ -401,6 +426,9 @@ var Chart = React.createClass({
                         />
                     </components.Popover>
                 </div>
+                <components.Button style={R.merge(dateButtonStyle(this.getTheme()), {borderRadius: "0 15px 15px 0", left: "0px"})}>
+                    <img src={icons.iconArrowLeft} style={{height: "15px"}}/>
+                </components.Button>
                 <div style={styles(this.getTheme()).mainDivStyle}>
                     <bootstrap.Col sm={12} style={styles(this.getTheme()).colVerticalPadding}>
                         <components.FullscreenModal
@@ -455,7 +483,7 @@ var Chart = React.createClass({
                                     onChange={this.props.selectSource}
                                     onChangeMulti={this.onChangeMultiSources}
                                     style={sourceButtonStyle(this.getTheme())}
-                                    styleToMergeWhenActiveState={{background: this.getTheme().colors.buttonPrimary}}
+                                    styleToMergeWhenActiveState={{background: this.getTheme().colors.buttonPrimary, border: "0px none"}}
                                     value={selectedSources}
                                 />
                             </components.TutorialAnchor>
@@ -506,13 +534,16 @@ var Chart = React.createClass({
                                     getLabel={R.prop("label")}
                                     onChange={this.props.selectElectricalType}
                                     style={measurementTypeButtonStyle(this.getTheme())}
-                                    styleToMergeWhenActiveState={{background: this.getTheme().colors.buttonPrimary}}
+                                    styleToMergeWhenActiveState={{background: this.getTheme().colors.buttonPrimary, border: "0px none"}}
                                     value={[this.props.chart[0].measurementType]}
                                 />
                             </components.TutorialAnchor>
                         </span>
                     </bootstrap.Col>
                 </div>
+                <components.Button style={R.merge(dateButtonStyle(this.getTheme()), {borderRadius: "15px 0 0 15px", right: "0px"})}>
+                    <img src={icons.iconArrowLeft} style={{height: "15px"}}/>
+                </components.Button>
             </div>
         );
     }

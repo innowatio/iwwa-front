@@ -21,7 +21,7 @@ export const styles = (theme) => ({
         marginRight: "9px",
         marginTop: "6px",
         fontSize: "12px",
-        border: "0px none",
+        border: "1px solid rgba(255, 255, 255, 0.5)",
         borderRadius: "30px"
     },
     colVerticalPadding: {
@@ -62,7 +62,8 @@ export const styles = (theme) => ({
         paddingLeft: "10px",
         paddingRight: "10px",
         height: "56px",
-        display: "flex"
+        display: "flex",
+        position: "relative"
     },
     inputLine: {
         borderTop: "0px",

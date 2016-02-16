@@ -13,6 +13,7 @@ const logger = createLogger({
 
 const storageEngine = filter(createEngine("iwwaApp"), [
     "chart",
+    "consumptions",
     "realTime",
     "userSetting"
 ]);

@@ -29,17 +29,16 @@ const stylesFunction = ({colors}) => ({
         position: "absolute",
         top: measures.headerHeight,
         width: measures.sidebarWidth,
+        left: `-${measures.sidebarWidth}px`,
         height: "calc(100vh - 55px)",
+        fontSize: "15px",
         transition: "left 0.3s ease",
         zIndex: 1040,
-        borderRightWidth: "1px",
-        borderRightStyle: "solid",
-        borderRightColor: colors.primary,
-        backgroundColor: colors.white
+        backgroundColor: colors.darkBlack
     },
     footer: {
         position: "fixed",
-        backgroundColor: colors.greyBackground,
+        backgroundColor: colors.darkBlack,
         color: colors.greySubTitle,
         height: measures.footerHeight,
         width: "100%",
@@ -81,11 +80,12 @@ var Root = React.createClass({
     },
     getMenuItems: function () {
         return [
-            {key: "dashboard", label: "Dashboard", url: "/dashboard/", iconPath: icons.iconDashboard},
-            {key: "chart", label: "Consumi storici", url: "/chart/", iconPath: icons.iconHistConsum},
-            {key: "live", label: "Consumi in tempo reale", url: "/live/", iconPath: icons.iconLiveConsum},
-            {key: "alarms", label: "Allarmi", url: "/alarms/", iconPath: icons.iconAlarm},
-            {key: "help", label: "Aiuto", onClick: "resetTutorial", iconPath: icons.iconHelp}
+            {key: "dashboard", label: "DASHBOARD", url: "/dashboard/", iconPath: icons.iconDashboard},
+            {key: "chart", label: "CONSUMI STORICI", url: "/chart/", iconPath: icons.iconHistConsum},
+            {key: "consumptions", label: "RIEPILOGO CONSUMI", url: "/consumptions/", iconPath: icons.iconSearch},
+            {key: "live", label: "CONSUMI LIVE", url: "/live/", iconPath: icons.iconLiveConsum},
+            {key: "alarms", label: "ALLARMI", url: "/alarms/", iconPath: icons.iconAlarm},
+            {key: "help", label: "AIUTO", onClick: "resetTutorial", iconPath: icons.iconHelp}
         ];
     },
     toggleSidebar: function () {
@@ -103,7 +103,7 @@ var Root = React.createClass({
             left: (
                 this.state.sidebarOpen ?
                 "0px" :
-                ("-" + parseInt(ENVIRONMENT === "cordova" ? measures.sidebarWidth : measures.iconsBarWidth)) + "px"
+                `-${parseInt(measures.sidebarWidth)}px`
             )
         });
     },
@@ -135,11 +135,7 @@ var Root = React.createClass({
                             userSetting={this.props.reduxState.userSetting}
                         />
                     </div>
-                    <div style={
-                        ENVIRONMENT === "cordova" ?
-                        styles.content :
-                        merge(styles.content, {width: `calc(100% - ${measures.sidebarShoulderWidth})`, float: "right"})}
-                    >
+                    <div style={styles.content}>
                         <components.PageContainer
                             asteroid={asteroid}
                             children={this.props.children}

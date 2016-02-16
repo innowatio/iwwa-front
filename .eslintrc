@@ -17,6 +17,7 @@
         "React": true,
         "ReactDOM": true,
         "sinon": true,
+        "Symbol": true,
         "TestUtils": true,
         "$": true
     },

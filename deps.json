@@ -3,11 +3,13 @@
         "node_modules/bootstrap/dist/css/bootstrap.css",
         "node_modules/font-awesome/css/font-awesome.css",
         "node_modules/react-widgets/dist/css/react-widgets.css",
-        "node_modules/intro.js/introjs.css"
+        "node_modules/intro.js/introjs.css",
+        "node_modules/iwwa-icons/css/styles.css"
     ],
     "fonts": [
         "node_modules/font-awesome/fonts/*",
-        "node_modules/react-widgets/dev/fonts/*"
+        "node_modules/react-widgets/dev/fonts/*",
+        "node_modules/iwwa-icons/fonts/*"
     ],
     "js": [
         "asteroid",
