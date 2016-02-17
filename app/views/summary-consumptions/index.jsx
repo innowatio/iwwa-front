@@ -155,9 +155,8 @@ var SummaryConsumptions = React.createClass({
         const {colors} = this.getTheme();
         return (
             <bootstrap.Tabs
-                activeKey={this.props.consumptions.period}
+                activeKey={this.props.consumptions.period || tabParameters()[0].key}
                 className="style-tab"
-                defaultActiveKey={tabParameters()[0].key}
                 onSelect={this.props.selectPeriod}
             >
                 <Radium.Style
@@ -205,7 +204,7 @@ var SummaryConsumptions = React.createClass({
                     scopeSelector=".style-tab"
                 />
                 {
-                    tabParameters().map(function (parameter) {
+                    tabParameters().map(parameter => {
                         return self.renderSingleTab (siteName, theme, parameter);
                     })
                 }
