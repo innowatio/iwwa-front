@@ -1,11 +1,13 @@
 import React from "react";
-import {Route} from "react-router";
-import {ReduxRouter} from "redux-router";
+import {Router, Route, hashHistory, browserHistory} from "react-router";
+
 
 import * as views from "views";
 
+const history = (ENVIRONMENT === "cordova" ? hashHistory : browserHistory);
+
 module.exports = (
-    <ReduxRouter>
+    <Router history={history}>
         <Route component={views.Root} name="root">
             <Route component={views.Alarms} name="alarms" path="/alarms/" titleView="Allarmi" />
             <Route component={views.Alarms} name="alarm" path="/alarms/:id" titleView="Allarmi" />
@@ -17,5 +19,5 @@ module.exports = (
             <Route component={views.RealTime} name="live" path="/live/" titleView="Consumi live" />
             <Route component={views.Dashboard} name="home" path="/" />
         </Route>
-    </ReduxRouter>
+    </Router>
 );

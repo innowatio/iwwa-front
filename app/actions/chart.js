@@ -152,7 +152,11 @@ export function selectSource (sources) {
 const typeofSelectDateRanges = actionTypeValidator(
     struct({
         start: Number,
-        end: Number
+        end: Number,
+        valueType: struct({
+            label: String,
+            key: String
+        })
     })
 );
 export function selectDateRanges (dateRanges) {

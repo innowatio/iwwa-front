@@ -3,6 +3,11 @@ import color from "color";
 import measures from "lib/measures";
 
 export const styles = (theme) => ({
+    titleFullScreenModal: {
+        color: theme.colors.white,
+        marginTop: "0px",
+        marginBottom: "50px"
+    },
     base: {
         display: "flex",
         justifyContent: "space-between",
@@ -111,6 +116,36 @@ export const styles = (theme) => ({
             borderLeft: "solid 1px " + color(theme.colors.black).alpha(0.1).rgbString(),
             borderTop: "0px",
             boxShadow: "2px 2px 5px " + theme.colors.greySubTitle
+        }
+    },
+    consumptionsProgressBar: {
+        ".progress": {
+            fontSize: "10px",
+            lineHeight: "0",
+            height: "12px",
+            borderRadius: "6px",
+            backgroundColor: theme.colors.consumptionprogressBarBackground
+        },
+        ".progress-bar": {
+            fontSize: "10px",
+            lineHeight: "10px",
+            backgroundColor: theme.colors.consumptionprogressBarBackground,
+            height: "12px",
+            borderRadius: "6px"
+        },
+        ".progress-bar-danger": {
+            backgroundColor: theme.colors.consumptionprogressBarAlert
+        },
+        ".progress-bar-info": {
+            backgroundColor: theme.colors.consumptionprogressBarInfo
+        },
+        ".progress-title": {
+            fontSize: "18px",
+            color: theme.colors.consumptionsText
+        },
+        ".progress-max": {
+            fontSize: "16px",
+            color: theme.colors.consumptionsText
         }
     }
 });

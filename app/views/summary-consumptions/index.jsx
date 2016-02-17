@@ -6,7 +6,12 @@ var React      = require("react");
 
 var components   = require("components");
 
+import {connect} from "react-redux";
+import {bindActionCreators} from "redux";
 import {defaultTheme} from "lib/theme";
+import {selectSite, selectPeriod} from "actions/consumptions";
+import {getSumBySiteAndPeriod, getTimeRangeByPeriod, tabParameters} from "lib/consumptions-utils";
+
 
 var styleLeftPane  = {
     width: "70%",
@@ -76,59 +81,85 @@ var styleSiteButton = ({colors}) => ({
 var SummaryConsumptions = React.createClass({
     propTypes: {
         asteroid: React.PropTypes.object,
-        collections: IPropTypes.map.isRequired
+        collections: IPropTypes.map.isRequired,
+        consumptions: React.PropTypes.object.isRequired,
+        selectPeriod: React.PropTypes.func.isRequired,
+        selectSite: React.PropTypes.func.isRequired
     },
     getInitialState: function () {
         return {
-            showModal: false
+            showModal: false,
+            value: null
         };
     },
     componentDidMount: function () {
         this.props.asteroid.subscribe("sites");
     },
+    subscribeToMeasuresByPerdiod: function (period) {
+        this.props.asteroid.subscribe(
+            "dailyMeasuresBySensor",
+            this.props.consumptions.fullPath[0],
+            period.start,
+            period.end,
+            "reading",
+            "activeEnergy"
+        );
+    },
     getTheme: function () {
         return this.context.theme || defaultTheme;
     },
-    getTabParameters: function () {
-        return [{periodMessage: "OGGI HAI UTILIZZATO", measureValue: "31482", measureUnit: "kWh", period: "5 FEBBRAIO 2016", title: "OGGI", key: 1},
-        {periodMessage: "OGGI HAI UTILIZZATO", measureValue: "31485", measureUnit: "kWh", period: "5 FEBBRAIO 2016", title: "SETTIMANA CORRENTE", key: 2}];
+    getSelectedSite: function () {
+        if (this.props.consumptions.fullPath && this.props.consumptions.fullPath[0]) {
+            return this.props.collections.getIn(["sites", this.props.consumptions.fullPath[0]]);
+        }
+        return Immutable.Map({name: ""});
     },
     closeModal: function () {
-        this.setState ({showModal:false});
+        this.setState ({
+            showModal: false,
+            value: null
+        });
     },
     openModal: function () {
         this.setState ({showModal:true});
+    },
+    onConfirmFullscreenModal: function () {
+        this.props.selectSite(this.state.value.fullPath);
+        this.closeModal();
+    },
+    onChangeWidgetValue: function (value) {
+        this.setState({value});
     },
     renderModalBody: function () {
         const sites = this.props.collections.get("sites") || Immutable.Map({});
         return (
             <components.SiteNavigator
                 allowedValues={sites.sortBy(site => site.get("name"))}
-                defaultPath={[]}
-                onChange={
-                    function (a) {
-                        console.log(a);
-                    }
-                }
+                onChange={this.onChangeWidgetValue}
+                path={(this.state.value && this.state.value.fullPath) || this.props.consumptions.fullPath || []}
                 title={"Quale punto di misurazione vuoi visualizzare?"}
             />
         );
     },
     renderSingleTab: function (siteName, theme, tabParameters) {
-        console.log(tabParameters);
         return (
-            <bootstrap.Tab className="style-single-tab" eventKey={tabParameters.key} title={tabParameters.title}>
+            <bootstrap.Tab className="style-single-tab" eventKey={tabParameters.key} key={tabParameters.key} title={tabParameters.title}>
                 {this.renderTabContent(siteName, theme, tabParameters)}
             </bootstrap.Tab>
         );
     },
     renderTabs: function (theme) {
-        var siteName = "sites";
+        var site = this.getSelectedSite();
+        var siteName = site ? site.get("name") : "";
         var self = this;
-        // siteName, theme, this.renderSingleTab
         const {colors} = this.getTheme();
         return (
-            <bootstrap.Tabs className="style-tab" defaultActiveKey={1}>
+            <bootstrap.Tabs
+                activeKey={this.props.consumptions.period}
+                className="style-tab"
+                defaultActiveKey={tabParameters()[0].key}
+                onSelect={this.props.selectPeriod}
+            >
                 <Radium.Style
                     rules={{
                         "ul": {
@@ -166,13 +197,15 @@ var SummaryConsumptions = React.createClass({
                             borderRadius: "0px",
                             outline: "none",
                             backgroundColor: colors.secondary,
-                            borderBottom: "3px solid" + colors.buttonPrimary
+                            borderBottom: "3px solid" + colors.buttonPrimary,
+                            outlineStyle: "none",
+                            outlineWidth: "0px"
                         }
                     }}
                     scopeSelector=".style-tab"
                 />
                 {
-                    this.getTabParameters().map(function (parameter) {
+                    tabParameters().map(function (parameter) {
                         return self.renderSingleTab (siteName, theme, parameter);
                     })
                 }
@@ -180,15 +213,24 @@ var SummaryConsumptions = React.createClass({
         );
     },
     renderTabContent: function (siteName, theme, tabParameters) {
+        var sum = 0;
+        if (this.props.consumptions.fullPath) {
+            this.subscribeToMeasuresByPerdiod(getTimeRangeByPeriod(tabParameters.period));
+
+            sum = getSumBySiteAndPeriod(
+                getTimeRangeByPeriod(tabParameters.period),
+                this.props.consumptions.fullPath[0],
+                this.props.collections.get("readings-daily-aggregates") || Immutable.Map());
+        }
         return (
             <div style={styleContent(theme)}>
                 <h2 style={styleH2(theme)}>{siteName}</h2>
-                <h3 style={styleH3(theme)}>{tabParameters.periodMessage}</h3>
+                <h3 style={styleH3(theme)}>{tabParameters.periodTitle}</h3>
                 <div style={styleRoundedDiv(theme)}>
-                    <p style={styleMeasure(theme)}>{tabParameters.measureValue}</p>
+                    <p style={styleMeasure(theme)}>{Math.trunc(sum)}</p>
                     <span style={styleUnit(theme)}>{tabParameters.measureUnit}</span>
                 </div>
-                <p style={styleH2(theme)}>{tabParameters.period}</p>
+                <p style={styleH2(theme)}>{tabParameters.periodSubtitle}</p>
             </div>
         );
     },
@@ -215,14 +257,29 @@ var SummaryConsumptions = React.createClass({
                         />
                     </bootstrap.Button>
                     <components.FullscreenModal
-                        childComponent={this.renderModalBody()}
+                        onConfirm={this.onConfirmFullscreenModal}
                         onHide={this.closeModal}
+                        onReset={this.closeModal}
                         show={this.state.showModal}
-                    />
+                    >
+                        {this.renderModalBody()}
+                    </components.FullscreenModal>
                 </div>
             </div>
         );
     }
 });
 
-module.exports = Radium(SummaryConsumptions);
+function mapStateToProps (state) {
+    return {
+        collections: state.collections,
+        consumptions: state.consumptions
+    };
+}
+function mapDispatchToProps (dispatch) {
+    return {
+        selectSite: bindActionCreators(selectSite, dispatch),
+        selectPeriod: bindActionCreators(selectPeriod, dispatch)
+    };
+}
+module.exports = connect(mapStateToProps, mapDispatchToProps)(SummaryConsumptions);

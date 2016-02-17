@@ -35,7 +35,8 @@ var RealTime = React.createClass({
     },
     getInitialState: function () {
         return {
-            showModal: false
+            showModal: false,
+            value: null
         };
     },
     componentDidMount: function () {
@@ -134,15 +135,10 @@ var RealTime = React.createClass({
     getMeasures: function () {
         return this.props.collections.get("readings-real-time-aggregates") || Immutable.Map();
     },
-    setSelectedSite: function (selectedValues) {
-        const siteId = selectedValues.site;
-        this.props.asteroid.subscribe("readingsRealTimeAggregatesBySite", siteId);
-        this.props.selectRealTimeSite(selectedValues);
-        this.closeModal();
-    },
     closeModal: function () {
         this.setState({
-            showModal: false
+            showModal: false,
+            value: null
         });
     },
     getSelectedSiteName: function () {
@@ -218,6 +214,15 @@ var RealTime = React.createClass({
     openModal: function () {
         this.setState({showModal:true});
     },
+    onChangeWidgetValue: function (value) {
+        this.setState({value});
+    },
+    onConfirmFullscreenModal: function () {
+        const siteId = this.state.value.site;
+        this.props.asteroid.subscribe("readingsRealTimeAggregatesBySite", siteId);
+        this.props.selectRealTimeSite(this.state.value);
+        this.closeModal();
+    },
     renderModalButton: function () {
         const theme = this.getTheme();
         return (
@@ -235,9 +240,13 @@ var RealTime = React.createClass({
                     />
                 </components.Button>
                 <components.FullscreenModal
-                    childComponent={this.renderModalBody()}
+                    onConfirm={this.onConfirmFullscreenModal}
+                    onHide={this.closeModal}
+                    onReset={this.closeModal}
                     show={this.state.showModal}
-                />
+                >
+                    {this.renderModalBody()}
+                </components.FullscreenModal>
             </div>
         );
     },
@@ -245,8 +254,8 @@ var RealTime = React.createClass({
         return (
             <components.SiteNavigator
                 allowedValues={this.getSites()}
-                defaultPath={this.props.realTime.fullPath || []}
-                onChange={this.setSelectedSite}
+                onChange={this.onChangeWidgetValue}
+                path={(this.state.value && this.state.value.fullPath) || this.props.realTime.fullPath || []}
                 title={"Quale punto di misurazione vuoi visualizzare?"}
             />
         );

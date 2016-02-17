@@ -46,8 +46,8 @@ var SideNav = React.createClass({
         return this.context.theme || defaultTheme;
     },
     resetTutorial: function () {
-        localStorage[`hideTutorialOnPage_historicalGraph`] = false;
-        localStorage[`hideTutorialOnPage_alarm-form`] = false;
+        localStorage["hideTutorialOnPage_historicalGraph"] = false;
+        localStorage["hideTutorialOnPage_alarm-form"] = false;
         this.props.linkClickAction();
         location.reload();
     },

@@ -81,6 +81,7 @@ var Root = React.createClass({
         return [
             {key: "dashboard", label: "DASHBOARD", url: "/dashboard/", iconClassName: "dashboard"},
             {key: "chart", label: "CONSUMI STORICI", url: "/chart/", iconClassName: "history"},
+            {key: "consumptions", label: "RIEPILOGO CONSUMI", url: "/consumptions/", iconClassName: "search"},
             {key: "live", label: "CONSUMI LIVE", url: "/live/", iconClassName: "gauge"},
             {key: "alarms", label: "ALLARMI", url: "/alarms/", iconClassName: "alarms"},
             {key: "help", label: "AIUTO", onClick: "resetTutorial", iconClassName: "help"}

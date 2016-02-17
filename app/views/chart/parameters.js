@@ -1,30 +1,28 @@
 export function getChartSetting ({colors}) {
-    return [
-        {
-            label: "Punti di misurazione",
-            key: "siteNavigator",
-            iconClass: "gauge",
-            color: colors.iconDropdown
-        },
-        {
-            label: "Periodo",
-            key: "datefilterMonthlyModal",
-            iconClass: "calendar",
-            color: colors.iconDropdown
-        },
-        {
-            label: "Confronto",
-            key: "compare",
-            iconClass: "confront",
-            color: colors.iconDropdown
-        },
-        {
-            label: "Esporta",
-            key: "export",
-            iconClass: "export",
-            color: colors.iconDropdown
-        }
-    ];
+    return [{
+        label: "Punti di misurazione",
+        key: "siteNavigator",
+        iconClass: "gauge",
+        color: colors.iconDropdown
+    },
+    {
+        label: "Periodo",
+        key: "dateFilter",
+        iconClass: "calendar",
+        color: colors.iconDropdown
+    },
+    {
+        label: "Confronto",
+        key: "compare",
+        iconClass: "confront",
+        color: colors.iconDropdown
+    },
+    {
+        label: "Esporta",
+        key: "export",
+        iconClass: "export",
+        color: colors.iconDropdown
+    }];
 }
 
 export function getMeasurementTypes () {

@@ -17,7 +17,9 @@
         "React": true,
         "ReactDOM": true,
         "sinon": true,
-        "TestUtils": true
+        "Symbol": true,
+        "TestUtils": true,
+        "$": true
     },
     "plugins": [
         "react",
@@ -80,7 +82,7 @@
         }],
         "react/wrap-multilines": [2],
         "semi": [2, "always"],
-        "space-after-keywords": [2, "always"],
+        "keyword-spacing": [2],
         "space-before-blocks": [2, "always"],
         "space-before-function-paren": [2, "always"],
         "space-in-parens": [2, "never"],

@@ -1,6 +1,7 @@
 export const colorsDarkTheme = {
     axisLabel: "#ffffff",
     background: "#303232",
+    backgroundCalendar: "#231F20",
     backgroundFullScreenModal: "rgba(2, 2, 2, 0.8)",
     backgroundLogin: "linear-gradient(235deg,#8a95c8,#7483be,#5b72b3,#4e64a1,#4554a1,#624899,#984898,#eb437f,#d26faa,#b08abc)",
     backgroundSelectButton: "rgba(35, 31, 32, 0.5)",
@@ -59,5 +60,9 @@ export const colorsDarkTheme = {
     iconSiteButton: "#ffffff",
     iconCompare: "#ffffff",
     iconFlag: "#ffffff",
-    iconLogout: "#ffffff"
+    iconLogout: "#ffffff",
+    consumptionprogressBarBackground: "#37474f",
+    consumptionprogressBarInfo: "#536dfe",
+    consumptionprogressBarAlert: "#eb2953",
+    consumptionsText: "#ffffff"
 };

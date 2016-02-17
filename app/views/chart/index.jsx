@@ -114,7 +114,8 @@ var Chart = React.createClass({
     getInitialState: function () {
         return {
             showFullscreenModal: false,
-            selectedWidget: null
+            selectedWidget: null,
+            value: undefined
         };
     },
     componentDidMount: function () {
@@ -138,7 +139,8 @@ var Chart = React.createClass({
     closeModal: function () {
         this.setState({
             showFullscreenModal: false,
-            selectedWidget: null
+            selectedWidget: null,
+            value: undefined
         });
     },
     updateFirstSiteToChart: function () {
@@ -306,24 +308,61 @@ var Chart = React.createClass({
             selectedWidget: key
         });
     },
-    updateStateAndCloseModal: function (a) {
-        this.props.selectSingleElectricalSensor(a);
-        this.closeModal();
+    onConfirmFullscreenModal: function () {
+        const {chart} = this.props;
+        switch (this.state.selectedWidget) {
+        case "siteNavigator":
+            this.props.selectSingleElectricalSensor(this.state.value || {
+                fullPath: chart[0].fullPath,
+                site: chart[0].site,
+                sensor: chart[0].sensor
+            });
+            break;
+        case "dateFilter":
+            this.props.selectDateRanges(
+                this.state.value || (chart[0].date.type === "dateFilter" && chart[0].date) || {
+                    start: moment().startOf("month").valueOf(),
+                    end: moment().endOf("month").valueOf(),
+                    valueType: {label: "calendario", key: "calendar"}
+                }
+            );
+            break;
+        }
+        return this.closeModal();
+    },
+    onChangeWidgetValue: function (value) {
+        this.setState({value});
     },
     renderChildComponent: function () {
         switch (this.state.selectedWidget) {
         case "siteNavigator":
             return this.renderSiteNavigator();
+        case "dateFilter":
+            return this.renderDateFilter();
         }
+    },
+    renderDateFilter: function () {
+        return (
+            <components.DateFilter
+                getKey={R.prop("key")}
+                getLabel={R.prop("label")}
+                onChange={this.onChangeWidgetValue}
+                title={"SELEZIONA IL PERIODO DA VISUALIZZARE"}
+                value={
+                    this.state.value && this.state.selectedWidget === "dateFilter" ? this.state.value : (
+                    this.props.chart[0].date.type === "dateFilter" ? this.props.chart[0].date : undefined
+                )}
+            />
+        );
     },
     renderSiteNavigator: function () {
         const sites = this.props.collections.get("sites") || Immutable.Map();
         return (
             <components.SiteNavigator
                 allowedValues={sites.sortBy(site => site.get("name"))}
-                defaultPath={this.props.chart[0].fullPath || []}
-                onChange={this.updateStateAndCloseModal}
-                title={"Quale punto di misurazione vuoi visualizzare?"}
+                onChange={this.onChangeWidgetValue}
+                path={(this.state.value && this.state.value.fullPath) || this.props.chart[0].fullPath || []}
+                title={"QUALE PUNTO DI MISURAZIONE VUOI VISUALIZZARE?"}
             />
         );
     },
@@ -424,39 +463,15 @@ var Chart = React.createClass({
                 <div style={styles(this.getTheme()).mainDivStyle}>
                     <bootstrap.Col sm={12} style={styles(this.getTheme()).colVerticalPadding}>
                         <components.FullscreenModal
-                            childComponent={this.renderChildComponent()}
+                            onConfirm={this.onConfirmFullscreenModal}
                             onHide={this.closeModal}
+                            onReset={this.closeModal}
                             show={this.state.showFullscreenModal}
-                        />
+                        >
+                            {this.renderChildComponent()}
+                        </components.FullscreenModal>
                         <span className="pull-left" style={{display: "flex"}}>
                             {ENVIRONMENT === "cordova" ? null : this.renderExportButton()}
-                            <components.TutorialAnchor
-                                message={tutorialString.dateFilter}
-                                order={5}
-                                position="left"
-                                ref="dateFilter"
-                            >
-                                <components.DatefilterMonthlyModal
-                                    getKey={R.prop("key")}
-                                    getLabel={R.prop("label")}
-                                    onChange={this.props.selectDateRanges}
-                                    title={
-                                        <components.Icon
-                                            color={this.getTheme().colors.iconDropdown}
-                                            icon={"calendar"}
-                                            size={"34px"}
-                                            style={{
-                                                float: "right",
-                                                verticalAlign: "middle",
-                                                lineHeight: "20px"}}
-                                        />
-                                    }
-                                    value={
-                                        this.props.chart[0].date.type === "dateFilter" ?
-                                        this.props.chart[0].date : {}
-                                    }
-                                />
-                            </components.TutorialAnchor>
                             <components.TutorialAnchor
                                 message={tutorialString.compare}
                                 order={6}
@@ -572,7 +587,6 @@ var Chart = React.createClass({
 
 function mapStateToProps (state) {
     return {
-        location: state.router.location,
         collections: state.collections,
         chart: state.chart
     };

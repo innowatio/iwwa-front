@@ -3,28 +3,27 @@ import "unit-setup.js";
 import R from "ramda";
 
 import Button from "components/button";
+import components from "components";
 
 describe("The `ButtonGroupSelect` component ", function () {
 
-    const ButtonGroupSelect = proxyquire("components/button-group-select/", {});
-
     it("should have a default prop `getLabel` which stringifies `allowedValues`", function () {
-        expect(ButtonGroupSelect.defaultProps.getLabel).to.be.a("function");
+        expect(components.ButtonGroupSelect.defaultProps.getLabel).to.be.a("function");
         const allowedValue = {
             a: 1,
             b: 2
         };
-        const stringifiedValue = ButtonGroupSelect.defaultProps.getLabel(allowedValue);
+        const stringifiedValue = components.ButtonGroupSelect.defaultProps.getLabel(allowedValue);
         expect(stringifiedValue).to.be.a("string");
     });
 
     it("should have a default prop `getKey` which stringifies `allowedValues`", function () {
-        expect(ButtonGroupSelect.defaultProps.getKey).to.be.a("function");
+        expect(components.ButtonGroupSelect.defaultProps.getKey).to.be.a("function");
         const allowedValue = {
             a: 1,
             b: 2
         };
-        const stringifiedValue = ButtonGroupSelect.defaultProps.getKey(allowedValue);
+        const stringifiedValue = components.ButtonGroupSelect.defaultProps.getKey(allowedValue);
         expect(stringifiedValue).to.be.a("string");
     });
 
@@ -33,7 +32,7 @@ describe("The `ButtonGroupSelect` component ", function () {
         const getLabel = R.add(5);
         const getLabelSpy = sinon.spy(getLabel);
         const selectNode = TestUtils.renderIntoDocument(
-            <ButtonGroupSelect
+            <components.ButtonGroupSelect
                 allowedValues={allowedValues}
                 getLabel={getLabelSpy}
                 onChange={R.identity}
@@ -53,7 +52,7 @@ describe("The `ButtonGroupSelect` component ", function () {
         const allowedValues = [1, 2, 3, 4];
         const getKeySpy = sinon.spy();
         const selectNode = TestUtils.renderIntoDocument(
-            <ButtonGroupSelect
+            <components.ButtonGroupSelect
                 allowedValues={allowedValues}
                 getKey={getKeySpy}
                 isDisabled={false}
@@ -71,7 +70,7 @@ describe("The `ButtonGroupSelect` component ", function () {
     it("should render a button in the button group for each of the `allowedValues` passed as props", function () {
         const allowedValues = [1, 2, 3, 4];
         const selectElement = (
-            <ButtonGroupSelect
+            <components.ButtonGroupSelect
                 allowedValues={allowedValues}
                 onChange={R.identity}
                 value={allowedValues.slice(0, 1)}
@@ -88,7 +87,7 @@ describe("The `ButtonGroupSelect` component ", function () {
             const allowedValues = [{id: 1}, {id: 2}, {id: 3}];
             const selectedIndex = 0;
             const selectElement = (
-                <ButtonGroupSelect
+                <components.ButtonGroupSelect
                     allowedValues={allowedValues}
                     getKey={R.prop("id")}
                     getLabel={R.prop("id")}
@@ -111,7 +110,7 @@ describe("The `ButtonGroupSelect` component ", function () {
             const allowedValues = [{id: 1}, {id: 2}, {id: 3}];
             const changeSpy = sinon.spy();
             const selectElement = (
-                <ButtonGroupSelect
+                <components.ButtonGroupSelect
                     allowedValues={allowedValues}
                     getKey={R.prop("id")}
                     getLabel={R.prop("id")}
@@ -137,7 +136,7 @@ describe("The `ButtonGroupSelect` component ", function () {
             const allowedValues = [{id: 1}, {id: 2}, {id: 3}];
             const selectedValues = allowedValues.slice(1);
             const selectElement = (
-                <ButtonGroupSelect
+                <components.ButtonGroupSelect
                     allowedValues={allowedValues}
                     getKey={R.prop("id")}
                     getLabel={R.prop("id")}
@@ -162,7 +161,7 @@ describe("The `ButtonGroupSelect` component ", function () {
             const onChangeSpy = sinon.spy();
             const onChangeMultiSpy = sinon.spy();
             const selectElement = (
-                <ButtonGroupSelect
+                <components.ButtonGroupSelect
                     allowedValues={allowedValues}
                     getKey={R.prop("id")}
                     getLabel={R.prop("id")}

@@ -58,5 +58,9 @@ export const colorsLightTheme = {
     iconSiteButton: "#ffffff",
     iconCompare: "#ffffff",
     iconFlag: "#ffffff",
-    iconLogout: "#ffffff"
+    iconLogout: "#ffffff",
+    consumptionprogressBarBackground: "#37474f",
+    consumptionprogressBarInfo: "#536dfe",
+    consumptionprogressBarAlert: "#eb2953",
+    consumptionsText: "#ffffff"
 };
