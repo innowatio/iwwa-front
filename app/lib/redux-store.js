@@ -1,7 +1,7 @@
 import {compose, createStore, applyMiddleware} from "redux";
 import createLogger from "redux-logger";
 import thunk from "redux-thunk";
-import createEngine from "redux-storage-engine-localStorage";
+import createEngine from "redux-storage-engine-localstorage";
 import filter from "redux-storage-decorator-filter";
 import storage from "redux-storage";
 
