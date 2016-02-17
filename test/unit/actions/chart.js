@@ -72,7 +72,8 @@ describe("`chart` actions", () => {
                 label: "label",
                 key: "key",
                 color: "color",
-                icon: "icon",
+                iconClass: "icon",
+                iconColor: "icon-color",
                 selected: "selected"
             }];
             const ret = chart.selectEnvironmentalSensor(sensorId, type);

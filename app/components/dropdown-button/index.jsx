@@ -2,6 +2,7 @@ var R          = require("ramda");
 var React      = require("react");
 var bootstrap  = require("react-bootstrap");
 var IPropTypes = require("react-immutable-proptypes");
+var components = require("components/");
 
 var DropdownButton = React.createClass({
     propTypes: {
@@ -9,6 +10,7 @@ var DropdownButton = React.createClass({
             React.PropTypes.array,
             IPropTypes.iterable
         ]).isRequired,
+        getColor: React.PropTypes.func,
         getIcon: React.PropTypes.func,
         getKey: React.PropTypes.func,
         getLabel: React.PropTypes.func,
@@ -20,6 +22,7 @@ var DropdownButton = React.createClass({
             return allowedItem.toString();
         };
         return {
+            getColor: defaultGetter,
             getKey: defaultGetter,
             getLabel: defaultGetter,
             getIcon: defaultGetter
@@ -34,9 +37,11 @@ var DropdownButton = React.createClass({
     imageItem: function (allowedValue) {
         if (R.keys(allowedValue).length > 2) {
             return (
-                <img
-                    src={this.props.getIcon(allowedValue)}
-                    style={{width: "25px", marginRight: "20px"}}
+                <components.Icon
+                    color={this.props.getColor(allowedValue)}
+                    icon={this.props.getIcon(allowedValue)}
+                    size={"30px"}
+                    style={{lineHeight: "20px", verticalAlign: "middle", marginRight: "20px"}}
                 />
             );
         }

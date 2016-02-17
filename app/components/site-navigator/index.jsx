@@ -6,7 +6,6 @@ var Radium     = require("radium");
 var React      = require("react");
 
 var components = require("components");
-var icons      = require("lib/icons");
 import {defaultTheme} from "lib/theme";
 
 const buttonBasicStyle = ({colors}) => ({
@@ -176,7 +175,14 @@ var SiteNavigator = React.createClass({
                 </div>
                 <bootstrap.Col style={{marginTop: "15px"}} xs={12}>
                     <bootstrap.Input
-                        addonAfter={<img src={icons.iconSearch} style={{height: "21px"}}/>}
+                        addonAfter={
+                            <components.Icon
+                                color={this.getTheme().colors.iconInputSearch}
+                                icon={"search"}
+                                size={"20px"}
+                                style={{lineHeight: "10px", verticalAlign: "middle", padding: "0", margin: "0"}}
+                            />
+                        }
                         className="input-search"
                         onChange={(input) => this.setState({inputFilter: input.target.value})}
                         placeholder="Ricerca"

@@ -5,7 +5,6 @@ var bootstrap  = require("react-bootstrap");
 
 var components = require("components");
 var measures   = require("lib/measures");
-var icons      = require("lib/icons");
 import {defaultTheme} from "lib/theme";
 
 var ModalOptionList = React.createClass({
@@ -51,7 +50,12 @@ var ModalOptionList = React.createClass({
                     }}
                 >
                     {this.props.getLabel(value)}
-                    <img src={icons.iconFlagColor} style={{float: "right", visibility: active ? "visible" : "hidden"}}/>
+                    <components.Icon
+                        color={this.getTheme().colors.iconFlag}
+                        icon={"flag"}
+                        size={"28px"}
+                        style={{lineHeight: "20px", float: "right", visibility: active ? "visible" : "hidden"}}
+                    />
                 </bootstrap.ListGroupItem>
             );
         }

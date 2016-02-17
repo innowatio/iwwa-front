@@ -60,15 +60,15 @@ const stylesFunction = ({colors}) => ({
             textAlign: "center"
         },
         logo: {
-            width: "250px"
+            width: "220px"
         },
         firstLine: {
-            fontSize: "48px"
+            fontSize: "48px",
+            fontWeight: "400"
         },
         secondLine: {
-            fontSize: "24px",
-            fontWeight: "200",
-            lineHeight: "18px"
+            fontSize: "26px",
+            lineHeight: "24px"
         }
     },
     activeView: {
@@ -80,6 +80,7 @@ const stylesFunction = ({colors}) => ({
     viewSwitcher: {
         cursor: "pointer",
         textAlign: "center",
+        fontSize: "20px",
         ":hover": {
             textDecoration: "underline"
         }
@@ -145,7 +146,17 @@ var LoginModal = React.createClass({
                     <div style={styles.body}>
                         <div style={styles.title.container}>
                             <div>
-                                <img src={assetsPathTo("restyling/images/logo_login.png")} style={styles.title.logo} />
+                                <components.Icon
+                                    color={this.getTheme().colors.iconDropdown}
+                                    icon={"innowatio-logo"}
+                                    size={"180px"}
+                                    style={{
+                                        display: "inline-block",
+                                        height: "170px",
+                                        margin: "0 0 0 20px",
+                                        verticalAlign: "middle"
+                                    }}
+                                />
                             </div>
                             <div style={styles.title.firstLine}>{string.appName}</div>
                             <div style={styles.title.secondLine}>{string.innowatio}</div>

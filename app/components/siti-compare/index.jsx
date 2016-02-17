@@ -3,7 +3,6 @@ var React      = require("react");
 var IPropTypes = require("react-immutable-proptypes");
 
 var components = require("components/");
-var icons      = require("lib/icons");
 import {defaultTheme} from "lib/theme";
 
 var SitiCompare = React.createClass({
@@ -70,26 +69,58 @@ var SitiCompare = React.createClass({
         return R.isNil(this.state.valueFirst) ?
             <span>
                 {"Seleziona punto 1"}
-                <img src={icons.iconDown} style={{float: "right", paddingTop: "5px", width: "16px"}}/>
+                <components.Icon
+                    color={this.getTheme().colors.iconInputSelect}
+                    icon={"arrow-down"}
+                    size={"20px"}
+                    style={{
+                        float: "right",
+                        verticalAlign: "middle"
+                    }}
+                />
             </span> :
             <span>
                 {this.props.getSitoLabel(this.props.sites.get(this.state.valueFirst))}
                 <components.Spacer direction="h" size={30} />
                 {this.props.sites.get(this.state.valueFirst).get("pod")}
-                <img src={icons.iconDown} style={{float: "right", paddingTop: "5px", width: "16px"}}/>
+                <components.Icon
+                    color={this.getTheme().colors.iconInputSelect}
+                    icon={"arrow-down"}
+                    size={"20px"}
+                    style={{
+                        float: "right",
+                        verticalAlign: "middle"
+                    }}
+                />
             </span>;
     },
     titleSecondSelect: function () {
         return R.isNil(this.state.valueSecond) ?
             <span>
                 {"Seleziona punto 2"}
-                <img src={icons.iconDown} style={{float: "right", paddingTop: "5px", width: "16px"}}/>
+                <components.Icon
+                    color={this.getTheme().colors.iconInputSelect}
+                    icon={"arrow-down"}
+                    size={"20px"}
+                    style={{
+                        float: "right",
+                        verticalAlign: "middle"
+                    }}
+                />
             </span> :
             <span>
                 {this.props.getSitoLabel(this.props.sites.get(this.state.valueSecond))}
                 <components.Spacer direction="h" size={30} />
                 {this.props.sites.get(this.state.valueSecond).get("pod")}
-                <img src={icons.iconDown} style={{float: "right", paddingTop: "5px", width: "16px"}}/>
+                <components.Icon
+                    color={this.getTheme().colors.iconInputSelect}
+                    icon={"arrow-down"}
+                    size={"20px"}
+                    style={{
+                        float: "right",
+                        verticalAlign: "middle"
+                    }}
+                />
             </span>;
     },
     render: function () {

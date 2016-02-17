@@ -1,5 +1,4 @@
 var bootstrap  = require("react-bootstrap");
-var icons      = require("lib/icons");
 var Immutable  = require("immutable");
 var IPropTypes = require("react-immutable-proptypes");
 var Radium     = require("radium");
@@ -41,15 +40,15 @@ var styleH3 = ({colors}) => ({
 var styleRoundedDiv = ({colors}) => ({
     borderRadius: "100%",
     margin: "30px auto",
-    width: "265px",
-    height: "265px",
-    padding: "30px",
+    width: "300px",
+    height: "300px",
+    padding: "70px 10px 0 10px",
     backgroundColor: colors.secondary
 });
 var styleMeasure  = ({colors}) => ({
-    fontSize: "120px",
-    fontWeight: "700",
-    lineHeight: "130px",
+    fontSize: "90px",
+    fontWeight: "600",
+    lineHeight: "110px",
     color: colors.white
 });
 var styleUnit  = ({colors}) => ({
@@ -74,10 +73,6 @@ var styleSiteButton = ({colors}) => ({
     margin: "13px",
     backgroundColor: colors.secondary
 });
-var styleSiteButtonIcon = {
-    width: "38px",
-    textAlign: "center"
-};
 var SummaryConsumptions = React.createClass({
     propTypes: {
         asteroid: React.PropTypes.object,
@@ -95,8 +90,8 @@ var SummaryConsumptions = React.createClass({
         return this.context.theme || defaultTheme;
     },
     getTabParameters: function () {
-        return [{periodMessage: "OGGI HAI UTILIZZATO", measureValue: "48", measureUnit: "kWh", period: "5 FEBBRAIO 2016", title: "OGGI", key: 1},
-        {periodMessage: "OGGI HAI UTILIZZATO", measureValue: "48", measureUnit: "kWh", period: "5 FEBBRAIO 2016", title: "SETTIMANA CORRENTE", key: 2}];
+        return [{periodMessage: "OGGI HAI UTILIZZATO", measureValue: "31482", measureUnit: "kWh", period: "5 FEBBRAIO 2016", title: "OGGI", key: 1},
+        {periodMessage: "OGGI HAI UTILIZZATO", measureValue: "31485", measureUnit: "kWh", period: "5 FEBBRAIO 2016", title: "SETTIMANA CORRENTE", key: 2}];
     },
     closeModal: function () {
         this.setState ({showModal:false});
@@ -142,20 +137,21 @@ var SummaryConsumptions = React.createClass({
                             backgroundColor: colors.secondary
                         },
                         "ul li": {
-                            color: colors.white
+                            color: colors.white,
+                            margin: "0 1.5%"
                         },
                         "ul li a": {
                             height: "55px",
                             lineHeight: "55px",
-                            fontSize: "18px",
+                            fontSize: "17px",
                             textTransform: "uppercase",
-                            margin: "0px 20px",
-                            padding: "0px 5px"
+                            padding: "0px 4px"
                         },
                         ".nav-tabs > li > a": {
                             height: "44px",
                             color: colors.white,
                             border: "0",
+                            outline: "none",
                             borderBottom: "3px solid" + colors.secondary
                         },
                         ".nav-tabs > li:hover > a:hover": {
@@ -163,11 +159,12 @@ var SummaryConsumptions = React.createClass({
                         },
                         ".nav-tabs > li.active > a, .nav-tabs > li > a:hover, .nav-tabs > li.active > a:hover, .nav-tabs > li.active > a:focus": {
                             height: "44px",
-                            fontSize: "18px",
-                            fontWeight: "600",
+                            fontSize: "17px",
+                            fontWeight: "500",
                             color: colors.white,
                             border: "0px",
                             borderRadius: "0px",
+                            outline: "none",
                             backgroundColor: colors.secondary,
                             borderBottom: "3px solid" + colors.buttonPrimary
                         }
@@ -206,7 +203,16 @@ var SummaryConsumptions = React.createClass({
                 </div>
                 <div style={styleRightPane(theme)}>
                     <bootstrap.Button className="pull-right" onClick={this.openModal} style={styleSiteButton(theme)} >
-                        <img src={icons.iconSiti} style={styleSiteButtonIcon} />
+                        <components.Icon
+                            color={this.getTheme().colors.iconSiteButton}
+                            icon={"map"}
+                            size={"38px"}
+                            style={{
+                                textAlign: "center",
+                                verticalAlign: "middle",
+                                lineHeight: "20px"
+                            }}
+                        />
                     </bootstrap.Button>
                     <components.FullscreenModal
                         childComponent={this.renderModalBody()}

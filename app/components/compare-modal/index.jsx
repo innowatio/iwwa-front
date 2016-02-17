@@ -4,7 +4,6 @@ var Radium              = require("radium");
 var React               = require("react");
 
 var components = require("components/");
-var icons      = require("lib/icons");
 var measures   = require("lib/measures");
 import {defaultTheme} from "lib/theme";
 
@@ -116,7 +115,18 @@ var Compare = React.createClass({
                 <bootstrap.ButtonGroup>
                     <components.Popover
                         hideOnChange={true}
-                        title={<img src={icons.iconCompare} style={{width: "75%"}} />}
+                        title={
+                            <components.Icon
+                                color={this.getTheme().colors.iconCompare}
+                                icon={"confront"}
+                                size={"34px"}
+                                style={{
+                                    float: "right",
+                                    verticalAlign: "middle",
+                                    lineHeight: "20px"
+                                }}
+                            />
+                        }
                         tooltipId="tooltipCompare"
                         tooltipMessage={"Comparazione"}
                         tooltipPosition="top"

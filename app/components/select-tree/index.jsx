@@ -8,7 +8,6 @@ var ReactPureRender = require("react-addons-pure-render-mixin");
 var Waypoint        = require("react-waypoint");
 
 var components = require("components");
-var icons      = require("lib/icons");
 import {defaultTheme} from "lib/theme";
 
 var SelectTree = React.createClass({
@@ -128,7 +127,12 @@ var SelectTree = React.createClass({
                     color: allowedValue === this.state.value ? colors.white : colors.black
                 }}
             >
-                <img src={icons.iconDown}/>
+                <components.Icon
+                    color={this.getTheme().colors.iconInputSelect}
+                    icon={"arrow-down"}
+                    size={"28px"}
+                    style={{lineHeight: "20px"}}
+                />
             </components.Button> : null;
     },
     renderPanel: function (allowedValue) {
@@ -215,7 +219,14 @@ var SelectTree = React.createClass({
                     scopeSelector=".site-selector"
                 />
                 <bootstrap.Input
-                    addonAfter={<img src={icons.iconSearch} style={{height: "21px"}}/>}
+                    addonAfter={
+                        <components.Icon
+                            color={this.getTheme().colors.iconInputSearch}
+                            icon={"search"}
+                            size={"28px"}
+                            style={{lineHeight: "20px"}}
+                        />
+                    }
                     className="input-search"
                     onChange={(input) => this.setState({inputFilter: input.target.value})}
                     placeholder="Ricerca"

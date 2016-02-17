@@ -6,7 +6,6 @@ import {bindActionCreators} from "redux";
 
 var asteroid          = require("lib/asteroid");
 var components        = require("components");
-var icons             = require("lib/icons");
 var LocalStorageMixin = require("lib/localstorage-mixin");
 var measures          = require("lib/measures");
 import {theme, defaultTheme} from "lib/theme";
@@ -34,7 +33,7 @@ const stylesFunction = ({colors}) => ({
         fontSize: "15px",
         transition: "left 0.3s ease",
         zIndex: 1040,
-        backgroundColor: colors.darkBlack
+        backgroundColor: colors.navBackground
     },
     footer: {
         position: "fixed",
@@ -80,11 +79,11 @@ var Root = React.createClass({
     },
     getMenuItems: function () {
         return [
-            {key: "dashboard", label: "DASHBOARD", url: "/dashboard/", iconPath: icons.iconDashboard},
-            {key: "chart", label: "CONSUMI STORICI", url: "/chart/", iconPath: icons.iconHistConsum},
-            {key: "live", label: "CONSUMI LIVE", url: "/live/", iconPath: icons.iconLiveConsum},
-            {key: "alarms", label: "ALLARMI", url: "/alarms/", iconPath: icons.iconAlarm},
-            {key: "help", label: "AIUTO", onClick: "resetTutorial", iconPath: icons.iconHelp}
+            {key: "dashboard", label: "DASHBOARD", url: "/dashboard/", iconClassName: "dashboard"},
+            {key: "chart", label: "CONSUMI STORICI", url: "/chart/", iconClassName: "history"},
+            {key: "live", label: "CONSUMI LIVE", url: "/live/", iconClassName: "gauge"},
+            {key: "alarms", label: "ALLARMI", url: "/alarms/", iconClassName: "alarms"},
+            {key: "help", label: "AIUTO", onClick: "resetTutorial", iconClassName: "help"}
         ];
     },
     toggleSidebar: function () {

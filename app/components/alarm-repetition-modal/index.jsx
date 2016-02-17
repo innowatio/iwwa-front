@@ -7,7 +7,6 @@ var TimePicker    = require("react-time-picker");
 
 var components = require("components");
 var stringIt   = require("lib/string-it");
-var icons      = require("lib/icons");
 import {styles} from "lib/styles_restyling";
 import {defaultTheme} from "lib/theme";
 
@@ -122,7 +121,15 @@ var AlarmRepetitionModal = React.createClass({
                     style={style(theme).option}
                 >
                     {"Solo il giorno"}
-                    <img src={icons.iconCalendar} style={{height: "18px", marginLeft: "50px"}}/>
+                    <components.Icon
+                        color={this.getTheme().colors.iconCalendar}
+                        icon={"calendar"}
+                        size={"34px"}
+                        style={{
+                            verticalAlign: "middle",
+                            lineHeight: "20px"
+                        }}
+                    />
                 </bootstrap.ListGroupItem>
                 <bootstrap.ListGroupItem style={{display: this.state.isDatepickerVisible ? "" : "none"}}>
                     <Calendar
@@ -200,7 +207,16 @@ var AlarmRepetitionModal = React.createClass({
                 <h4 style={{color: theme.colors.primary}}>{stringIt.titleAlarmNotify}</h4>
                 <div onClick={this.toggleModal} style={styles(theme).divAlarmOpenModal}>
                     {this.labelParser()}
-                    <img src={icons.iconArrowRight} style={{float: "right", width: "33px"}} />
+                    <components.Icon
+                        color={this.getTheme().colors.iconArrow}
+                        icon={"arrow-right"}
+                        size={"34px"}
+                        style={{
+                            float: "right",
+                            verticalAlign: "middle",
+                            lineHeight: "20px"
+                        }}
+                    />
                 </div>
                 <components.ModalOptionList
                     allowedValues={this.getRepetitionOptions()}

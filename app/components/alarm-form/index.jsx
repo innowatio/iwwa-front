@@ -11,7 +11,6 @@ var CollectionUtils  = require("lib/collection-utils");
 var stringIt         = require("lib/string-it");
 var tutorialString   = require("assets/JSON/tutorial-string.json");
 var GetTutorialMixin = require("lib/get-tutorial-mixin");
-var icons            = require("lib/icons");
 import {styles} from "lib/styles_restyling";
 import {defaultTheme} from "lib/theme";
 
@@ -110,7 +109,16 @@ var AlarmForm = React.createClass({
                                 trigger="click"
                             >
                                 <components.Button  bsStyle="link">
-                                    <img src={icons.iconInfo} style={{width: "75%"}}/>
+                                    <components.Icon
+                                        color={this.getTheme().colors.iconInfo}
+                                        icon={"info"}
+                                        size={"20px"}
+                                        style={{
+                                            float: "right",
+                                            verticalAlign: "middle",
+                                            lineHeight: "20px"
+                                        }}
+                                    />
                                 </components.Button>
                             </bootstrap.OverlayTrigger>
                         </h5>
@@ -255,7 +263,18 @@ var AlarmForm = React.createClass({
                 disabled={this.props.alarmsReduxState.statePostAlarm}
                 onClick={this.reset}
             >
-                {<img src={icons.iconReset} style={{width: "75%"}}/>}
+                {
+                    <components.Icon
+                        color={this.getTheme().colors.iconArrow}
+                        icon={"reset"}
+                        size={"35px"}
+                        style={{
+                            float: "right",
+                            verticalAlign: "middle",
+                            lineHeight: "20px"
+                        }}
+                    />
+                }
             </components.Button>
         );
     },
@@ -280,13 +299,29 @@ var AlarmForm = React.createClass({
         return this.state.sito.size === 0 ?
             <span>
                 {"Seleziona punto di misurazione"}
-                <img src={icons.iconDown} style={{float: "right", paddingTop: "5px", width: "16px"}}/>
+                <components.Icon
+                    color={this.getTheme().colors.iconInputSelect}
+                    icon={"arrow-down"}
+                    size={"20px"}
+                    style={{
+                        float: "right",
+                        verticalAlign: "middle"
+                    }}
+                />
             </span> :
             <span>
                 {CollectionUtils.sites.getLabel(this.state.sito)}
                 <components.Spacer direction="h" size={30} />
                 {this.state.sito.get("pod")}
-                <img src={icons.iconDown} style={{float: "right", paddingTop: "5px", width: "16px"}}/>
+                <components.Icon
+                    color={this.getTheme().colors.iconInputSelect}
+                    icon={"arrow-down"}
+                    size={"20px"}
+                    style={{
+                        float: "right",
+                        verticalAlign: "middle"
+                    }}
+                />
             </span>;
     },
     renderAutomaticAlarmBanner: function () {

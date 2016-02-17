@@ -1,30 +1,28 @@
 import {Map, List} from "immutable";
 import {filter, isNil} from "ramda";
 
-import icons from "lib/icons";
-
 export const decorators = [
     Map({
         key: "co2",
-        icon: icons.iconCO2,
+        icon: "co2",
         type: "co2",
         unit: "ppm"
     }),
     Map({
         key: "humidity",
-        icon: icons.iconHumidity,
+        icon: "humidity",
         type: "thl",
         unit: "g/m3"
     }),
     Map({
         key: "illuminance",
-        icon: icons.iconIdea,
+        icon: "lightbulb",
         type: "thl",
         unit: "lx"
     }),
     Map({
         key: "temperature",
-        icon: icons.iconTemperature,
+        icon: "thermometer",
         type: "thl",
         unit: "°C"
     }),

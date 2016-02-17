@@ -8,7 +8,6 @@ import {bindActionCreators} from "redux";
 
 var components        = require("components");
 var readingsRealTime  = require("lib/readings-real-time-aggregates-to-realtime-view");
-import * as icons from "lib/icons";
 import {styles} from "lib/styles_restyling";
 import {selectRealTimeSite} from "actions/real-time";
 import {defaultTheme} from "lib/theme";
@@ -23,10 +22,6 @@ const styleSiteButton = ({colors}) => ({
     margin: "13px",
     backgroundColor: colors.secondary
 });
-const styleSiteButtonIcon = {
-    width: "38px",
-    textAlign: "center"
-};
 
 var RealTime = React.createClass({
     propTypes: {
@@ -228,7 +223,16 @@ var RealTime = React.createClass({
         return (
             <div>
                 <components.Button className="pull-right" onClick={this.openModal} style={styleSiteButton(theme)} >
-                    <img src={icons.iconSiti} style={styleSiteButtonIcon} />
+                    <components.Icon
+                        color={this.getTheme().colors.iconSiteButton}
+                        icon={"map"}
+                        size={"38px"}
+                        style={{
+                            textAlign: "center",
+                            verticalAlign: "middle",
+                            lineHeight: "20px"
+                        }}
+                    />
                 </components.Button>
                 <components.FullscreenModal
                     childComponent={this.renderModalBody()}

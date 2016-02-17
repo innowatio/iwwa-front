@@ -4,7 +4,6 @@ import React, {PropTypes} from "react";
 import * as bootstrap from "react-bootstrap";
 
 import components from "components";
-import icons from "lib/icons";
 import string from "lib/string-it";
 import {dafaultTheme} from "lib/theme";
 
@@ -113,7 +112,14 @@ var PasswordResetView = React.createClass({
                         scopeSelector=".ac-login-modal-inputs"
                     />
                     <bootstrap.Input
-                        addonBefore={<img src={icons.iconUser} style={{width: "20px"}}/>}
+                        addonBefore={
+                            <components.Icon
+                                color={this.getTheme().colors.iconLogin}
+                                icon={"user"}
+                                size={"28px"}
+                                style={{lineHeight: "20px"}}
+                            />
+                        }
                         bsSize="large"
                         placeholder="Email"
                         ref="email"

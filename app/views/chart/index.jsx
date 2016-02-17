@@ -9,7 +9,6 @@ import {bindActionCreators} from "redux";
 
 var CollectionUtils    = require("lib/collection-utils");
 var components         = require("components/");
-var icons              = require("lib/icons");
 // var GetTutorialMixin   = require("lib/get-tutorial-mixin");
 var tutorialString     = require("assets/JSON/tutorial-string.json").historicalGraph;
 import * as parameters from "./parameters";
@@ -50,6 +49,8 @@ const consumptionButtonStyle = ({colors}) => ({
     color: colors.greySubTitle,
     textAlign: "center",
     marginRight: "15px !important",
+    padding: "0",
+    verticalAlign: "middle",
     borderRadius: "22px",
     width: "45px",
     height: "45px",
@@ -62,6 +63,7 @@ const consumptionButtonSelectedStyle = ({colors}) => ({
     backgroundColor: colors.consumption,
     textAlign: "left",
     borderRadius: "22px",
+    verticalAlign: "middle",
     width: ENVIRONMENT === "cordova" ? "23%" : "160px",
     height: "45px",
     transition: "width 0.4s ease-in-out"
@@ -70,8 +72,8 @@ const consumptionButtonSelectedStyle = ({colors}) => ({
 const dateButtonStyle = ({colors}) => ({
     background: colors.primary,
     border: "0px none",
-    height: "30px",
-    width: "30px",
+    height: "35px",
+    width: "auto",
     position: "absolute",
     top: "50%"
 });
@@ -336,13 +338,21 @@ var Chart = React.createClass({
                 >
                     <components.Popover
                         hideOnChange={true}
-                        title={<img src={icons.iconExport} style={{width: "50%"}} />}
+                        title={
+                            <components.Icon
+                                color={this.getTheme().colors.iconDropdown}
+                                icon={"export"}
+                                size={"28px"}
+                                style={{lineHeight: "20px"}}
+                            />
+                        }
                         tooltipId="tooltipExport"
                         tooltipMessage="Esporta"
                         tooltipPosition="right"
                     >
                         <components.DropdownButton
                             allowedValues={parameters.getExportType()}
+                            getColor={R.prop("color")}
                             getIcon={R.prop("icon")}
                             getKey={R.prop("key")}
                             getLabel={R.prop("label")}
@@ -373,24 +383,43 @@ var Chart = React.createClass({
                         {this.getTitleForChart().toUpperCase()}
                     </div>
                     <components.Button style={alarmButtonStyle(this.getTheme())}>
-                        <img src={icons.iconActiveAlarm} style={{width: "22px", margin: "auto"}} />
+                        <components.Icon
+                            color={this.getTheme().colors.iconHeader}
+                            icon={"danger"}
+                            size={"28px"}
+                            style={{lineHeight: "20px", margin: "auto"}}
+                        />
                     </components.Button>
+
                     <components.Popover
                         className="pull-right"
                         hideOnChange={true}
-                        title={<img src={icons.iconUserSettings} style={{width: "26px"}} />}
+                        title={
+                            <components.Icon
+                                color={this.getTheme().colors.iconHeader}
+                                icon={"settings"}
+                                size={"32px"}
+                                style={{lineHeight: "20px", verticalAlign: "middle"}}
+                            />
+                        }
                     >
                         <components.DropdownButton
-                            allowedValues={parameters.getChartSetting()}
-                            getIcon={R.prop("icon")}
+                            allowedValues={parameters.getChartSetting(this.getTheme())}
+                            getColor={R.prop("color")}
+                            getIcon={R.prop("iconClass")}
                             getKey={R.prop("key")}
                             getLabel={R.prop("label")}
                             onChange={this.onChangeWidget}
                         />
                     </components.Popover>
                 </div>
-                <components.Button style={R.merge(dateButtonStyle(this.getTheme()), {borderRadius: "0 15px 15px 0", left: "0px"})}>
-                    <img src={icons.iconArrowLeft} style={{height: "15px"}}/>
+                <components.Button style={R.merge(dateButtonStyle(this.getTheme()), {borderRadius: "0 20px 20px 0", left: "0px", padding: "0"})}>
+                    <components.Icon
+                        color={this.getTheme().colors.iconArrowSwitch}
+                        icon={"arrow-left"}
+                        size={"34px"}
+                        style={{float:"left", lineHeight: "20px"}}
+                    />
                 </components.Button>
                 <div style={styles(this.getTheme()).mainDivStyle}>
                     <bootstrap.Col sm={12} style={styles(this.getTheme()).colVerticalPadding}>
@@ -411,7 +440,17 @@ var Chart = React.createClass({
                                     getKey={R.prop("key")}
                                     getLabel={R.prop("label")}
                                     onChange={this.props.selectDateRanges}
-                                    title={<img src={icons.iconCalendar} style={{width: "75%"}} />}
+                                    title={
+                                        <components.Icon
+                                            color={this.getTheme().colors.iconDropdown}
+                                            icon={"calendar"}
+                                            size={"34px"}
+                                            style={{
+                                                float: "right",
+                                                verticalAlign: "middle",
+                                                lineHeight: "20px"}}
+                                        />
+                                    }
                                     value={
                                         this.props.chart[0].date.type === "dateFilter" ?
                                         this.props.chart[0].date : {}
@@ -518,8 +557,13 @@ var Chart = React.createClass({
                         </span>
                     </bootstrap.Col>
                 </div>
-                <components.Button style={R.merge(dateButtonStyle(this.getTheme()), {borderRadius: "15px 0 0 15px", right: "0px"})}>
-                    <img src={icons.iconArrowLeft} style={{height: "15px"}}/>
+                <components.Button style={R.merge(dateButtonStyle(this.getTheme()), {borderRadius: "20px 0 0 20px", right: "0px", padding: "0"})}>
+                    <components.Icon
+                        color={this.getTheme().colors.iconArrowSwitch}
+                        icon={"arrow-right"}
+                        size={"34px"}
+                        style={{textAlign: "left", lineHeight: "20px"}}
+                    />
                 </components.Button>
             </div>
         );

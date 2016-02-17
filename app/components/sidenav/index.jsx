@@ -3,6 +3,7 @@ import React, {PropTypes} from "react";
 import {Link} from "react-router";
 import {merge, partial} from "ramda";
 import {Style} from "radium";
+import * as components from "components";
 
 import {defaultTheme} from "lib/theme";
 import * as measures from "lib/measures";
@@ -17,11 +18,10 @@ const stylesFunction = ({colors}) => ({
         backgroundColor: colors.navBackgroundSelected
     },
     sideLabel: {
-        color: colors.white,
-        marginLeft: "10px",
-        verticalAlign: "middle",
-        height: "56px",
-        paddingTop: "0px"
+        color: colors.navText,
+        margin: "0 0 0 10px",
+        height: "30px",
+        padding: "10px auto"
     }
 });
 
@@ -52,25 +52,34 @@ var SideNav = React.createClass({
         location.reload();
     },
     renderNavItem: function (styles, menuItem) {
-        // images with paddingTop: 13px to remove when the icons will become fonts
         return menuItem.url ? (
-            <li key={menuItem.iconPath}>
+            <li key={menuItem.key}>
                 <Link
                     activeStyle={styles.activeLink}
                     onClick={this.props.linkClickAction}
-                    style={{height: "56px", lineHeight: "56px", padding: "0px 15px"}}
+                    style={{cursor: "pointer", padding: "15px 10px"}}
                     to={menuItem.url}
                 >
-                    <img src={menuItem.iconPath} style={{float: "left", width: "30px", paddingTop: "13px"}} />
+                    <components.Icon
+                        color={this.getTheme().colors.iconSidenav}
+                        icon={menuItem.iconClassName}
+                        size={"30px"}
+                        style={{verticalAlign: "middle", lineHeight: "30px"}}
+                    />
                     <span style={styles.sideLabel}>
                         {menuItem.label}
                     </span>
                 </Link>
             </li>
         ) : (
-            <li className={"navigationItem"} key={menuItem.iconPath} onClick={this.resetTutorial} style={{cursor: "pointer"}}>
-                <a style={{height: "56px", lineHeight: "56px", padding: "0px 15px"}}>
-                    <img src={menuItem.iconPath} style={{float: "left", width: "30px", paddingTop: "13px"}} />
+            <li className={"navigationItem"} key={menuItem.key} onClick={this.resetTutorial} style={{cursor: "pointer", padding: "5px 0px"}}>
+                <a style={{cursor: "pointer", padding: "15px 10px"}}>
+                    <components.Icon
+                        color={this.getTheme().colors.iconSidenav}
+                        icon={menuItem.iconClassName}
+                        size={"30px"}
+                        style={{verticalAlign: "middle", lineHeight: "30px"}}
+                    />
                     <span style={styles.sideLabel}>
                         {menuItem.label}
                     </span>

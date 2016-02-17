@@ -3,7 +3,6 @@ import React, {PropTypes} from "react";
 import ReactPureRender from "react-addons-pure-render-mixin";
 import {uniq} from "ramda";
 
-import icons from "lib/icons";
 import components from "components";
 import DateCompareGraph from "./date-compare";
 import SourcesAndSensorsCompare from "./sources-and-sensors-compare";
@@ -64,7 +63,12 @@ var HistoricalGraph = React.createClass({
                         cursor: "pointer"
                     }}
                 >
-                    <img src={icons.iconLogoutColor} style={{width: "30px", height: "20px"}}/>
+                    <components.Icon
+                        color={this.getTheme().colors.iconLogout}
+                        icon={"logout"}
+                        size={"28px"}
+                        style={{lineHeight: "20px"}}
+                    />
                     <components.Spacer direction="h" size={5} />
                     {"Esci dal confronto"}
                 </div>

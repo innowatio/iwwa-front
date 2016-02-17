@@ -1,11 +1,29 @@
-import icons from "lib/icons";
-
-export function getChartSetting () {
+export function getChartSetting ({colors}) {
     return [
-        {label: "Punti di misurazione", key: "siteNavigator", icon: icons.iconSiti},
-        {label: "Periodo", key: "datefilterMonthlyModal", icon: icons.iconCalendar},
-        {label: "Confronto", key: "compare", icon: icons.iconCompare},
-        {label: "Esporta", key: "export", icon: icons.iconExport}
+        {
+            label: "Punti di misurazione",
+            key: "siteNavigator",
+            iconClass: "gauge",
+            color: colors.iconDropdown
+        },
+        {
+            label: "Periodo",
+            key: "datefilterMonthlyModal",
+            iconClass: "calendar",
+            color: colors.iconDropdown
+        },
+        {
+            label: "Confronto",
+            key: "compare",
+            iconClass: "confront",
+            color: colors.iconDropdown
+        },
+        {
+            label: "Esporta",
+            key: "export",
+            iconClass: "export",
+            color: colors.iconDropdown
+        }
     ];
 }
 
@@ -24,49 +42,48 @@ export function getSources (theme) {
     ];
 }
 
-export function getConsumptions (theme) {
+export function getConsumptions ({colors}) {
     return [
         {
             label: "Temperatura",
-            color: theme.colors.temperature,
+            iconColor: colors.iconSensors,
+            color: colors.temperature,
             key: "temperature",
             type: "thl",
-            icon: icons.iconTemperature,
-            selected: icons.iconTemperatureSelected
-
+            iconClass: "thermometer"
         },
         {
             label: "Umidità",
-            color: theme.colors.humidity,
+            iconColor: colors.iconSensors,
+            color: colors.humidity,
             key: "humidity",
             type: "thl",
-            icon: icons.iconHumidity,
-            selected: icons.iconHumiditySelected
+            iconClass: "humidity"
         },
         {
             label: "Lux",
-            color: theme.colors.illuminance,
+            iconColor: colors.iconSensors,
+            color: colors.illuminance,
             key: "illuminance",
             type: "thl",
-            icon: icons.iconIdea,
-            selected: icons.iconIdeaSelected
+            iconClass: "lightbulb"
         },
         {
             label: "CO2",
-            color: theme.colors.co2,
+            iconColor: colors.iconSensors,
+            color: colors.co2,
             key: "co2",
             type: "co2",
-            icon: icons.iconCO2,
-            selected: icons.iconCO2Selected
+            iconClass: "co2"
         }
-        // {label: "Allarmi", key: "allarms", icon: icons.iconAlarm}
+        // {label: "Allarmi", key: "allarms", iconClass: "danger" }
     ];
 }
 
 export function getExportType () {
     return [
-        {label: "Png", key: "png", icon: icons.iconPNG},
-        {label: "Csv", key: "csv", icon: icons.iconCSV}
+        {label: "Png", key: "png", iconClass: "png"},
+        {label: "Csv", key: "csv", iconClass: "csv"}
     ];
 }
 

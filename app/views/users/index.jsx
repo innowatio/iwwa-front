@@ -6,16 +6,15 @@ var moment     = require("moment");
 var R          = require("ramda");
 
 var components = require("components");
-var icons      = require("lib/icons");
 import {styles} from "lib/styles_restyling";
 import {defaultTheme} from "lib/theme";
 
-var iconStyle = ({colors}) => ({
-    color: colors.primary,
-    paddingRight: "10px",
-    float: "right",
-    width: "30px"
-});
+// var iconStyle = ({colors}) => ({
+//     color: colors.primary,
+//     paddingRight: "10px",
+//     float: "right",
+//     width: "30px"
+// });
 
 var Users = React.createClass({
     propTypes: {
@@ -93,7 +92,12 @@ var Users = React.createClass({
                 valueFormatter: function (value) {
                     return (
                         <Router.Link to={`/users/${value}`}>
-                            <img src={icons.iconEdit} style={iconStyle(theme)}/>
+                            <components.Icon
+                                color={theme.colors.iconEditUser}
+                                icon={"edit"}
+                                size={"24px"}
+                                style={{float:"right", paddingTop:"5px"}} 
+                            />
                         </Router.Link>
                     );
                 }

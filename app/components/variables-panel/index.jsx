@@ -1,4 +1,5 @@
 var React     = require("react");
+var components = require("components");
 
 var MeasureLabel = require("components/").MeasureLabel;
 import {defaultTheme} from "lib/theme";
@@ -6,10 +7,10 @@ import {defaultTheme} from "lib/theme";
 var style = ({colors}) => ({
     box: {
         border: "1px solid " + colors.greyBorder,
-        borderRadius: "2px",
+        borderRadius: "40px",
         display: "flex",
         margin: "5%",
-        padding: "1%"
+        padding: "2% 1%"
     }
 });
 
@@ -32,9 +33,15 @@ var VariablesPanel = React.createClass({
             return (
                 <div  key={variable.get("key")} style={{width: "25%", flex: "1 0 auto"}}>
                     <div style={style(theme).box} styleName="variableContainer">
-                        <img src={variable.get("icon")} style={{height: "50px"}}/>
+                        <components.Icon
+                            color={this.getTheme().colors.iconVariable}
+                            icon={variable.get("icon")}
+                            size={"40px"}
+                            style={{lineHeight: "20px", width: "45px"}}
+                        />
                         <MeasureLabel
                             id={variable.get("id")}
+                            style={{paddingLeft: "10px", lineHeight: "40px"}}
                             unit={variable.get("unit")}
                             value={variable.get("value")}
                         />

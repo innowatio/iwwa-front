@@ -3,7 +3,6 @@ import React, {PropTypes} from "react";
 
 import components from "components";
 import stringIt from "lib/string-it";
-import icons from "lib/icons";
 import {styles} from "lib/styles_restyling";
 import {defaultTheme} from "lib/theme";
 
@@ -75,7 +74,17 @@ var AlarmNotificationModal = React.createClass({
                 <h4 style={{color: colors.primary}}>{stringIt.titleAlarmNotify}</h4>
                 <div onClick={this.toggleModal} style={styles(this.getTheme()).divAlarmOpenModal}>
                     {this.labelParser()}
-                    <img src={icons.iconArrowRight} style={{float: "right", width: "33px"}} />
+                    <components.Icon
+                        color={this.getTheme().colors.iconArrow}
+                        icon={"arrow-right"}
+                        size={"34px"}
+                        style={{
+                            float: "right",
+                            verticalAlign: "middle",
+                            lineHeight: "20px"
+                        }}
+                    />
+
                 </div>
                 <components.ModalOptionList
                     allowedValues={this.getNotificationOptions()}

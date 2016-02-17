@@ -104,9 +104,9 @@ const typeofEnvironmentalSensor = actionTypeValidator(
         struct({
             label: String,
             key: String,
+            iconColor: String,
             color: String,
-            icon: String,
-            selected: String
+            iconClass: String
         })
     ])
 );

@@ -65,13 +65,19 @@ var Header = React.createClass({
         return (
             <components.Popover
                 hideOnChange={true}
-                title={<components.Icon color={this.getTheme().colors.iconHeader} icon={"settings"} size={"30px"} style={{lineHeight: "20px"}} />}
+                title={
+                    <components.Icon
+                        color={this.getTheme().colors.iconHeader}
+                        icon={"settings"} size={"30px"}
+                        style={{lineHeight: "20px"}}
+                    />}
                 tooltipId="tooltipUserSetting"
                 tooltipMessage="Impostazioni dell'utente"
                 tooltipPosition="left"
             >
                 <components.DropdownSelect
                     allowedValues={this.getUserSettings()}
+                    getColor={prop("color")}
                     getKey={prop("key")}
                     getLabel={prop("label")}
                     onChange={this.props.selectThemeColor}
@@ -85,7 +91,11 @@ var Header = React.createClass({
         return this.userIsAdmin() && ENVIRONMENT !== "cordova" ? (
             <span style={{marginRight: "10px"}}>
                 <Link to="/users/" >
-                    <components.Icon color={this.getTheme().colors.iconHeader} icon={"user"} size={"30px"} style={{lineHeight: "20px"}} />
+                    <components.Icon
+                        color={this.getTheme().colors.iconHeader}
+                        icon={"user"} size={"30px"}
+                        style={{lineHeight: "20px"}}
+                    />
                 </Link>
             </span>
         ) : null;
@@ -117,7 +127,12 @@ var Header = React.createClass({
                 {this.renderUserSetting()}
                 {this.renderAdminPage()}
                 <span onClick={this.logout} style={styles.icon}>
-                    <components.Icon color={this.getTheme().colors.iconHeader} icon={"logout"} size={"30px"} style={{lineHeight: "20px"}} />
+                    <components.Icon
+                        color={this.getTheme().colors.iconHeader}
+                        icon={"logout"}
+                        size={"30px"}
+                        style={{lineHeight: "20px"}}
+                    />
                 </span>
             </div>
         );

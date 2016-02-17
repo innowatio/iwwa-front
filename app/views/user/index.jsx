@@ -8,7 +8,6 @@ var Router     = require("react-router");
 
 var CollectionUtils = require("lib/collection-utils");
 var components      = require("components");
-var icons           = require("lib/icons");
 var stringIt        = require("lib/string-it");
 import {styles} from "lib/styles_restyling";
 import {defaultTheme} from "lib/theme";
@@ -112,7 +111,15 @@ var User = React.createClass({
         return (
             <span>
                 {"Seleziona uno o più siti siti"}
-                <img src={icons.iconDown} style={{float: "right", paddingTop: "5px", width: "16px"}}/>
+                <components.Icon
+                    color={this.getTheme().colors.iconInputSelect}
+                    icon={"arrow-down"}
+                    size={"20px"}
+                    style={{
+                        float: "right",
+                        verticalAlign: "middle"
+                    }}
+                />
             </span>
         );
     },
@@ -271,7 +278,14 @@ var User = React.createClass({
                 </h4>
                 <div style={{display: "flex"}}>
                     <bootstrap.Input
-                        addonBefore={<img src={icons.iconSearch} style={{height: "20px"}} />}
+                        addonBefore={
+                            <components.Icon
+                                color={this.getTheme().colors.iconSearchUser}
+                                icon={"search"}
+                                size={"18px"}
+                                style={{lineHeight: "14px"}}
+                            />
+                        }
                         onChange={(input) => this.setState({inputFilter: input.target.value})}
                         placeholder={stringIt.filterUserSite}
                         style={{
@@ -322,8 +336,13 @@ var User = React.createClass({
             <div className="users-admin">
                 <div style={styles(theme).titlePage}>
                     <Router.Link style={{float: "left", paddingTop: "6px"}} to="/users/">
-                        <bootstrap.Button bsStyle="link" style={{height: "40px", outline: "0px"}}>
-                            <components.Icon color={theme.colors.iconHeader} icon={"arrow-left"} size={"32px"} />
+                        <bootstrap.Button bsStyle="link" style={{height: "40px", outline: "0px", padding: "0"}}>
+                            <components.Icon
+                                color={theme.colors.iconHeader}
+                                icon={"arrow-left"}
+                                size={"40px"}
+                                style={{lineHeight: "30px"}}
+                            />
                         </bootstrap.Button>
                     </Router.Link>
                     <div style={{

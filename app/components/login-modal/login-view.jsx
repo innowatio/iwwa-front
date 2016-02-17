@@ -4,9 +4,9 @@ import React, {PropTypes} from "react";
 import * as bootstrap from "react-bootstrap";
 
 import components from "components";
-import icons from "lib/icons";
 import string from "lib/string-it";
 import {defaultTheme} from "lib/theme";
+
 
 const stylesFunction = ({colors}) => ({
     radiumStyleInput: {
@@ -18,7 +18,7 @@ const stylesFunction = ({colors}) => ({
             border: "0px",
             borderRadius: "0px !important",
             boxShadow: "none",
-            background: color(colors.black).alpha(0.1).rgbString(),
+            background: color(colors.black).alpha(0.05).rgbString(),
             color: colors.white
         },
         ".form-control": {
@@ -38,25 +38,35 @@ const stylesFunction = ({colors}) => ({
         },
         ":-ms-input-placeholder": {
             color: color(colors.white).alpha(0.7).rgbString()
+        },
+        "input:-webkit-autofill, textarea:-webkit-autofill, select:-webkit-autofill": { /* Chrome */
+            boxShadow: "0 0 0px 1000px white inset"
+            // opacity: "0 !important"
         }
     },
-    inputs: {
-        borderRadius: "15px",
+    inputsWrapper: {
+        height: "180px",
+        borderRadius: "20px",
+        margin: "0 0 10px 0",
         overflow: "hidden",
-        borderWidth: "1px",
-        borderColor: color(colors.white).alpha(0.3).rgbString(),
-        borderStyle: "solid",
-        color: colors.white
+        border: "1px solid" + color(colors.white).alpha(0.8).rgbString(),
+        color: colors.white,
+        backgroundColor: color(colors.black).alpha(0.05).rgbString()
+    },
+    inputs: {
+        height: "88px",
+        fontSize: "24px",
+        borderBottom: "1px solid" + color(colors.white).alpha(0.6).rgbString()
     },
     loginButton: {
         background: colors.buttonPrimary,
         color: colors.white,
-        height: "68px",
-        width: "80%",
+        height: "78px",
+        width: "70%",
         margin: "auto",
         borderRadius: "30px",
         border: "0px none",
-        fontSize: "22px"
+        fontSize: "28px"
     },
     errorAlert: {
         marginTop: "16px",
@@ -106,23 +116,39 @@ var LoginView = React.createClass({
         const styles = stylesFunction(this.getTheme());
         return (
             <div>
-                <div className="ac-login-modal-inputs" style={styles.inputs}>
+                <div className="ac-login-modal-inputs" style={styles.inputsWrapper}>
                     <Style
                         rules={styles.radiumStyleInput}
                         scopeSelector=".ac-login-modal-inputs"
                     />
                     <bootstrap.Input
-                        addonBefore={<img src={icons.iconUser} style={{height: "40px"}}/>}
+                        addonBefore={
+                            <components.Icon
+                                color={this.getTheme().colors.iconLogin}
+                                icon={"user"}
+                                size={"44px"}
+                                style={{lineHeight: "20px", verticalAlign: "middle"}}
+                            />
+                        }
                         bsSize="large"
                         placeholder={string.email}
                         ref="email"
+                        style={styles.inputs}
                         type="email"
                     />
                     <bootstrap.Input
-                        addonBefore={<img src={icons.iconLock} style={{height: "40px"}}/>}
+                        addonBefore={
+                            <components.Icon
+                                color={this.getTheme().colors.iconLogin}
+                                icon={"lock"}
+                                size={"44px"}
+                                style={{lineHeight: "20px", verticalAlign: "middle"}}
+                            />
+                        }
                         bsSize="large"
                         placeholder={string.password}
                         ref="password"
+                        style={styles.inputs}
                         type="password"
                     />
                 </div>

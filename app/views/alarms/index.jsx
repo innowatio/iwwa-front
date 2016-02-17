@@ -11,7 +11,6 @@ import {bindActionCreators} from "redux";
 
 var CollectionUtils = require("lib/collection-utils");
 var components      = require("components");
-var icons           = require("lib/icons");
 import {
     displayAlarmsOnChart,
     modifyExistentAlarm,
@@ -114,8 +113,10 @@ var Alarms = React.createClass({
                 },
                 valueFormatter: function (value) {
                     return (
-                        <img
-                            src={value ? icons.iconFlag : icons.iconPause}
+                        <components.Icon
+                            color={this.getTheme().colors.iconAlarmAction}
+                            icon={value ? "flag" : "pause"}
+                            size={"20px"}
                         />
                     );
                 }
@@ -143,10 +144,16 @@ var Alarms = React.createClass({
                 key: "_id",
                 valueFormatter: function (value) {
                     return (
-                        <img
+                        <components.Icon
+                            color={this.getTheme().colors.iconAlarmAction}
+                            icon={"settings"}
                             onClick={R.partial(self.onClickAction, [value])}
-                            src={icons.iconSettings}
-                            style={{float: "right", height: "28px", cursor: "pointer"}}
+                            size={"30px"}
+                            style={{
+                                float: "right",
+                                cursor: "pointer",
+                                verticalAlign: "middle"
+                            }}
                         />
                     );
                 }
@@ -166,15 +173,21 @@ var Alarms = React.createClass({
                             self.getSitoBySensor(sensorId).get("_id") : null;
                         return (
                             <Router.Link to={"/chart/"}>
-                                <img
+                                <components.Icon
+                                    color={this.getTheme().colors.iconPng}
+                                    icon={"png"}
                                     onClick={
                                         R.partial(
                                             self.props.displayAlarmsOnChart,
                                             [sensorId, site, alarms]
                                         )
                                     }
-                                    src={icons.iconPNG}
-                                    style={{float: "right", height: "28px"}}
+                                    size={"30px"}
+                                    style={{
+                                        float: "right",
+                                        cursor: "pointer",
+                                        verticalAlign: "middle"
+                                    }}
                                 />
                             </Router.Link>
                         );
@@ -235,15 +248,21 @@ var Alarms = React.createClass({
                         self.getSitoBySensor(sensorId).get("_id") : null;
                     return (
                         <Router.Link to={"/chart/"}>
-                            <img
+                            <components.Icon
+                                color={this.getTheme().colors.iconPng}
+                                icon={"png"}
                                 onClick={
                                     R.partial(
                                         self.props.displayAlarmsOnChart,
                                         [sensorId, site, notificationDate]
                                     )
                                 }
-                                src={icons.iconPNG}
-                                style={{float: "right", height: "28px"}}
+                                size={"30px"}
+                                style={{
+                                    float: "right",
+                                    cursor: "pointer",
+                                    verticalAlign: "middle"
+                                }}
                             />
                         </Router.Link>
                     );
@@ -313,7 +332,7 @@ var Alarms = React.createClass({
         return (
             <div key={value.title}>
                 <h5 style={{color: colors.primary, width: "250px", paddingLeft: "10px"}}>
-                        {value.title}
+                    {value.title}
                 </h5>
                 <bootstrap.ListGroup>
                     {
@@ -357,7 +376,14 @@ var Alarms = React.createClass({
                 <components.Popover
                     title={
                         <span style={{display: "flex", height: "40px"}}>
-                            <img src={icons.iconFilter} style={{width: "26px"}}/>
+                            <components.Icon
+                                color={this.getTheme().colors.iconFilter}
+                                icon={"filter"}
+                                size={"30px"}
+                                style={{
+                                    verticalAlign: "middle"
+                                }}
+                            />
                             <h4 style={{color: colors.primary}}>{"Filter"}</h4>
                         </span>
                     }
