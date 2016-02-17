@@ -147,7 +147,7 @@ var LoginModal = React.createClass({
                         <div style={styles.title.container}>
                             <div>
                                 <components.Icon
-                                    color={this.getTheme().colors.iconDropdown}
+                                    color={this.getTheme().colors.iconLogoInnowatio}
                                     icon={"innowatio-logo"}
                                     size={"180px"}
                                     style={{
