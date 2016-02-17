@@ -41,6 +41,7 @@ export const colorsDarkTheme = {
     navBackground: "#212121",
     navBackgroundSelected: "rgba(255,255,255,0.1)",
     navText: "#ffffff",
+    iconLogoInnowatio: "#ffffff",
     iconLogin: "#ffffff",
     iconHeader: "#ffffff",
     iconSidenav: "#ffffff",

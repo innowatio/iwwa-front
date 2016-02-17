@@ -95,7 +95,16 @@ var FullscreenModal = React.createClass({
                             {"OK"}
                         </components.Button>
                         <components.Button bsStyle={"link"} onClick={this.props.onReset}>
-                            <img src={icons.iconReset} style={{width: "25px"}} />
+                            <components.Icon
+                                color={this.getTheme().colors.iconArrow}
+                                icon={"reset"}
+                                size={"35px"}
+                                style={{
+                                    float: "right",
+                                    verticalAlign: "middle",
+                                    lineHeight: "20px"
+                                }}
+                            />
                         </components.Button>
                     </div>
                 </bootstrap.Modal.Footer>

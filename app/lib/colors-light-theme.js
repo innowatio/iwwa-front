@@ -39,6 +39,7 @@ export const colorsLightTheme = {
     navBackground: "#ffffff",
     navBackgroundSelected: "#eeeeee",
     navText: "#3e50b4",
+    iconLogoInnowatio: "#ffffff",
     iconLogin: "#ffffff",
     iconHeader: "#ffffff",
     iconSidenav: "#3e50b4",
