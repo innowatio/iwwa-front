@@ -107,8 +107,7 @@ var Popover = React.createClass({
                             padding: "0px",
                             cursor: "pointer",
                             display: "flex",
-                            height: "100%",
-                            backgroundColor: "red"
+                            height: "100%"
                         },
                         ".rw-widget": {
                             border: "0px"
