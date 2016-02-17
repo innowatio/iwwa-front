@@ -2,7 +2,7 @@ export function getChartSetting ({colors}) {
     return [{
         label: "Punti di misurazione",
         key: "siteNavigator",
-        iconClass: "gauge",
+        iconClass: "map",
         color: colors.iconDropdown
     },
     {
