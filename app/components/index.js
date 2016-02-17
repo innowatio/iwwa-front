@@ -20,6 +20,7 @@ exports.MeasureLabel            = require("./measure-label/");
 exports.ModalOptionList         = require("./modal-option-list/");
 exports.PageContainer           = require("./page-container/");
 exports.Popover                 = require("./popover/");
+exports.ProgressBar             = require("./progress-bar/");
 exports.SelectTree              = require("./select-tree/");
 exports.SideNav                 = require("./sidenav/");
 exports.SiteNavigator           = require("./site-navigator/");
