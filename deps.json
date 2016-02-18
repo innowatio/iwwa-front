@@ -15,7 +15,6 @@
         "asteroid",
         "asteroid-immutable-collections-mixin",
         "axios",
-        "bootstrap",
         "bootstrap-table-react",
         "color",
         "halogen",
