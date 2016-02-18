@@ -4,6 +4,8 @@ var bootstrap  = require("react-bootstrap");
 var IPropTypes = require("react-immutable-proptypes");
 var components = require("components/");
 
+import {defaultTheme} from "lib/theme";
+
 var DropdownButton = React.createClass({
     propTypes: {
         allowedValues: React.PropTypes.oneOfType([
@@ -15,7 +17,11 @@ var DropdownButton = React.createClass({
         getKey: React.PropTypes.func,
         getLabel: React.PropTypes.func,
         onChange: React.PropTypes.func,
+        style: React.PropTypes.object,
         value: React.PropTypes.any
+    },
+    contextTypes: {
+        theme: React.PropTypes.object
     },
     getDefaultProps: function () {
         var defaultGetter = function (allowedItem) {
@@ -30,9 +36,11 @@ var DropdownButton = React.createClass({
     },
     getInitialState: function () {
         return {
-            hover: "false",
             allowedValue: {}
         };
+    },
+    getTheme: function () {
+        return this.context.theme || defaultTheme;
     },
     imageItem: function (allowedValue) {
         if (R.keys(allowedValue).length > 2) {
@@ -41,32 +49,42 @@ var DropdownButton = React.createClass({
                     color={this.props.getColor(allowedValue)}
                     icon={this.props.getIcon(allowedValue)}
                     size={"30px"}
-                    style={{lineHeight: "20px", verticalAlign: "middle", marginRight: "20px"}}
+                    style={{lineHeight: "20px",
+                        verticalAlign: "middle",
+                        marginRight: "20px"
+                    }}
                 />
             );
         }
     },
     mouseOver: function (item) {
         this.setState({
-            hover: true,
             allowedValue: item
         });
+    },
+    mouseLeave: function () {
+        this.setState({allowedValue: {}});
     },
     renderButtonOption: function (allowedValue, index) {
         return (
             <bootstrap.ListGroupItem
                 key={this.props.getKey(allowedValue)}
                 onClick={R.partial(this.props.onChange, [allowedValue])}
+                onMouseLeave={this.mouseLeave}
                 onMouseOver={R.partial(this.mouseOver, [allowedValue])}
-                style={{
+                style={R.merge({
                     borderLeft: "0px",
                     borderRight: "0px",
                     borderTop: (index === 0 ? "0px" : undefined),
                     borderTopLeftRadius: (index === 0 ? "4px" : undefined),
                     borderTopRightRadius: (index === 0 ? "4px" : undefined),
                     borderBottom: (index === 2 ? "0px" : undefined),
-                    fontSize: "12px"
-                }}
+                    fontSize: "12px",
+                    // This should overwrite the style over that position.
+                    ...this.props.style
+                }, {
+                    backgroundColor: R.equals(this.state.allowedValue, allowedValue) ? this.getTheme().colors.buttonPrimary : "transparent"
+                })}
             >
                 {this.imageItem(allowedValue)}
                 {this.props.getLabel(allowedValue)}

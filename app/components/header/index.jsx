@@ -68,8 +68,9 @@ var Header = React.createClass({
                 title={
                     <components.Icon
                         color={this.getTheme().colors.iconHeader}
-                        icon={"settings"} size={"30px"}
-                        style={{lineHeight: "20px"}}
+                        icon={"settings"}
+                        size={"30px"}
+                        style={{lineHeight: "20px", verticalAlign: "middle"}}
                     />}
                 tooltipId="tooltipUserSetting"
                 tooltipMessage="Impostazioni dell'utente"
@@ -93,12 +94,41 @@ var Header = React.createClass({
                 <Link to="/users/" >
                     <components.Icon
                         color={this.getTheme().colors.iconHeader}
-                        icon={"user"} size={"30px"}
-                        style={{lineHeight: "20px"}}
+                        icon={"user"}
+                        size={"30px"}
+                        style={{lineHeight: "20px", verticalAlign: "top"}}
                     />
                 </Link>
             </span>
         ) : null;
+    },
+    renderInboxPage: function () {
+        return (
+            <div style={{marginRight: "10px"}}>
+                <Link to="/" >
+                    <components.Icon
+                        color={this.getTheme().colors.iconHeader}
+                        icon={"box"}
+                        size={"30px"}
+                        style={{lineHeight: "20px", verticalAlign: "middle"}}
+                    />
+                </Link>
+            </div>
+        );
+    },
+    renderAllarmPage: function () {
+        return (
+            <div style={{marginRight: "10px"}}>
+                <Link to="/" >
+                    <components.Icon
+                        color={this.getTheme().colors.iconHeader}
+                        icon={"danger"}
+                        size={"28px"}
+                        style={{lineHeight: "20px", verticalAlign: "top"}}
+                    />
+                </Link>
+            </div>
+        );
     },
     render: function () {
         const styles = stylesFunction(this.getTheme());
@@ -126,12 +156,14 @@ var Header = React.createClass({
                 </div>
                 {this.renderUserSetting()}
                 {this.renderAdminPage()}
+                {this.renderInboxPage()}
+                {this.renderAllarmPage()}
                 <span onClick={this.logout} style={styles.icon}>
                     <components.Icon
                         color={this.getTheme().colors.iconHeader}
                         icon={"logout"}
                         size={"30px"}
-                        style={{lineHeight: "20px"}}
+                        style={{lineHeight: "20px", verticalAlign: "middle"}}
                     />
                 </span>
             </div>

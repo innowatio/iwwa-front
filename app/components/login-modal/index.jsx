@@ -80,7 +80,8 @@ const stylesFunction = ({colors}) => ({
     viewSwitcher: {
         cursor: "pointer",
         textAlign: "center",
-        fontSize: "20px",
+        fontSize: "24px",
+        fontWeight: "300",
         ":hover": {
             textDecoration: "underline"
         }

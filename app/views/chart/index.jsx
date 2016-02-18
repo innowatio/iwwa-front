@@ -37,7 +37,9 @@ const selectStyles = {
 const measurementTypeButtonStyle = (theme) => R.merge(styles(theme).buttonSelectChart, {
     minWidth: "132px",
     height: "45px",
-    fontSize: "15px"
+    fontSize: "15px",
+    margin: "0  0 0 10px",
+    padding: "0"
 });
 
 const sourceButtonStyle = (theme) => R.merge(styles(theme).buttonSelectChart, {
@@ -48,7 +50,7 @@ const sourceButtonStyle = (theme) => R.merge(styles(theme).buttonSelectChart, {
 const consumptionButtonStyle = ({colors}) => ({
     color: colors.greySubTitle,
     textAlign: "center",
-    marginRight: "15px !important",
+    marginRight: "10px !important",
     padding: "0",
     verticalAlign: "middle",
     borderRadius: "22px",
@@ -61,10 +63,9 @@ const consumptionButtonStyle = ({colors}) => ({
 const consumptionButtonSelectedStyle = ({colors}) => ({
     color: colors.white,
     backgroundColor: colors.consumption,
-    textAlign: "left",
     borderRadius: "22px",
     verticalAlign: "middle",
-    width: ENVIRONMENT === "cordova" ? "23%" : "160px",
+    width: "160px",
     height: "45px",
     transition: "width 0.4s ease-in-out"
 });
@@ -418,7 +419,7 @@ var Chart = React.createClass({
         return (
             <div>
                 <div style={styles(this.getTheme()).titlePage}>
-                    <div style={{fontSize: "18px", marginBottom: "0px", paddingTop: "18px", width: "100%"}}>
+                    <div style={{fontSize: "18px", marginBottom: "0px", paddingTop: "16px", width: "100%"}}>
                         {this.getTitleForChart().toUpperCase()}
                     </div>
                     <components.Button style={alarmButtonStyle(this.getTheme())}>
@@ -433,6 +434,7 @@ var Chart = React.createClass({
                     <components.Popover
                         className="pull-right"
                         hideOnChange={true}
+                        style={styles(this.getTheme()).chartPopover}
                         title={
                             <components.Icon
                                 color={this.getTheme().colors.iconHeader}
@@ -449,6 +451,7 @@ var Chart = React.createClass({
                             getKey={R.prop("key")}
                             getLabel={R.prop("label")}
                             onChange={this.onChangeWidget}
+                            style={styles(this.getTheme()).chartDropdownButton}
                         />
                     </components.Popover>
                 </div>
@@ -457,7 +460,7 @@ var Chart = React.createClass({
                         color={this.getTheme().colors.iconArrowSwitch}
                         icon={"arrow-left"}
                         size={"34px"}
-                        style={{float:"left", lineHeight: "20px"}}
+                        style={{lineHeight: "20px"}}
                     />
                 </components.Button>
                 <div style={styles(this.getTheme()).mainDivStyle}>
@@ -541,12 +544,11 @@ var Chart = React.createClass({
                         </components.TutorialAnchor>
                     </bootstrap.Col>
                     <bootstrap.Col sm={12}>
-                        <span className="pull-left" style={{display: "flex"}}>
+                        <span className="pull-left" style={{display: "flex", width: "auto"}}>
                             <components.ConsumptionButtons
                                 allowedValues={variables}
                                 onChange={consumptionTypes => this.onChangeConsumption(null, consumptionTypes)}
                                 selectedValue={selectedConsumptionType}
-                                style={{width: "100%"}}
                                 styleButton={consumptionButtonStyle(this.getTheme())}
                                 styleButtonSelected={consumptionButtonSelectedStyle(this.getTheme())}
                                 styleIcon={{position: "absolute", left: "2px", top: "2px", height: "90%"}}
@@ -577,7 +579,7 @@ var Chart = React.createClass({
                         color={this.getTheme().colors.iconArrowSwitch}
                         icon={"arrow-right"}
                         size={"34px"}
-                        style={{textAlign: "left", lineHeight: "20px"}}
+                        style={{lineHeight: "20px"}}
                     />
                 </components.Button>
             </div>

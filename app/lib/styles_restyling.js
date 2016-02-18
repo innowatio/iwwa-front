@@ -15,13 +15,23 @@ export const styles = (theme) => ({
         width: "100%",
         height: "100%"
     },
+    chartDropdownButton: {
+        border: "1px solid",
+        borderColor: theme.colors.borderDropdown,
+        backgroundColor: theme.colors.backgroundDropdown,
+        color: theme.colors.white,
+        outline: "none"
+    },
+    chartPopover:{
+        background: theme.colors.backgroundDropdown
+    },
     buttonSelectChart: {
         background: theme.colors.backgroundSelectButton,
         color: theme.colors.selectButton,
         marginRight: "9px",
         marginTop: "6px",
         fontSize: "12px",
-        border: "1px solid rgba(255, 255, 255, 0.5)",
+        border: "1px solid rgba(255, 255, 255, 0.7)",
         borderRadius: "30px"
     },
     colVerticalPadding: {
