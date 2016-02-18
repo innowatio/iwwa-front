@@ -35,7 +35,7 @@ function getTitleAndSubtitle (period) {
             measureUnit: "kWh",
             period: period,
             periodTitle: "OGGI HAI UTILIZZATO",
-            periodSubtitle: `${moment(periodDates.start).format("DD MMMM YYYY")}`.toUpperCase(),
+            periodSubtitle: `${moment(periodDates.start).locale("it").format("DD MMMM YYYY")}`.toUpperCase(),
             title: "OGGI"
         };
     case 1:
@@ -44,7 +44,7 @@ function getTitleAndSubtitle (period) {
             measureUnit: "kWh",
             period: period,
             periodTitle: "QUESTA SETTIMANA HAI UTILIZZATO",
-            periodSubtitle: `${moment(periodDates.start).format("DD")} - ${moment(periodDates.end).format("DD MMMM YYYY")}`.toUpperCase(),
+            periodSubtitle: `${moment(periodDates.start).format("DD")} - ${moment(periodDates.end).locale("it").format("DD MMMM YYYY")}`.toUpperCase(),
             title: "SETTIMANA CORRENTE"
         };
     case 2:
@@ -52,7 +52,7 @@ function getTitleAndSubtitle (period) {
             key: period,
             measureUnit: "kWh",
             period: period,
-            periodTitle: `NEL MESE DI ${moment(periodDates.start).format("MMMM")} HAI UTILIZZATO`.toUpperCase(),
+            periodTitle: `NEL MESE DI ${moment(periodDates.start).locale("it").format("MMMM")} HAI UTILIZZATO`.toUpperCase(),
             periodSubtitle: `${moment(periodDates.start).format("YYYY")}`,
             title: "MESE CORRENTE"
         };
