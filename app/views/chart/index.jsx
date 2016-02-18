@@ -377,6 +377,7 @@ var Chart = React.createClass({
                     ref="export"
                 >
                     <components.Popover
+                        arrowColor={this.getTheme().colors.white}
                         hideOnChange={true}
                         title={
                             <components.Icon

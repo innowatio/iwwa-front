@@ -121,11 +121,12 @@ var Popover = React.createClass({
                             height: "100%"
                         },
                         ".arrow": {
-                            display: this.props.arrow === "none" ? "none" : ""
+                            display: this.props.arrow === "none" ? "none" : "",
+                            top: "-10px !important",
+                            zIndex: "1000"
                         },
                         ".arrow, .arrow:after": {
-                            borderBottomColor: colors.borderPopover + "!important",
-                            top: "-11px"
+                            borderBottomColor: colors.borderPopover + "!important"
                         },
                         ".arrow:after": {
                             borderBottomColor: this.props.arrowColor ?
