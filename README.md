@@ -8,3 +8,5 @@
 
 After cloning the repository, run `npm install` to install all dependencies, and
 `npm run dev` to start the development server.
+
+**N.B.** Frontend application need backend service ([`iwwa-back`](https://github.com/innowatio/iwwa-back)) running on local 3000 port.
