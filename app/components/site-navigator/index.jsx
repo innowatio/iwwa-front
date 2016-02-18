@@ -77,19 +77,11 @@ var SiteNavigator = React.createClass({
         const childrenPath = value.filter(value => {
             return !R.isNil(value);
         });
-        this.props.onChange({
-            fullPath: [this.props.path[0]].concat(childrenPath) || [],
-            site: this.props.path[0],
-            sensor: R.last(childrenPath)
-        });
+        this.props.onChange([this.props.path[0]].concat(childrenPath) || []);
     },
     onClickParent: function (value) {
         const site = this.getKeyParent(value[0]);
-        this.props.onChange({
-            fullPath: [site],
-            site,
-            sensor: null
-        });
+        this.props.onChange([site]);
     },
     getValue: function () {
         const self = this;

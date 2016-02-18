@@ -127,7 +127,7 @@ describe("`consumptions-utils`", () => {
                 key: "year",
                 measureUnit: "kWh",
                 period: "year",
-                periodTitle: `NEL 2016 HAI UTILIZZATO`,
+                periodTitle: "NEL 2016 HAI UTILIZZATO",
                 periodSubtitle: "2016",
                 title: "ANNO CORRENTE"
             }];

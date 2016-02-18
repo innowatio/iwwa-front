@@ -4,36 +4,21 @@ import * as chart from "actions/chart";
 
 describe("`chart` actions", () => {
 
-    describe("`selectSingleSensor` function", () => {
+    describe("`selectSingleElectricalSensor` function", () => {
 
-        it("should return the correct object if is passed an array with one string as parameter", () => {
-            const selectedSensor = {
-                fullPath: ["siteId", "podId", "sensorId"],
-                sensor: "sensorId",
-                site: "siteId"};
-            const ret = chart.selectSingleElectricalSensor(selectedSensor);
+        it("should return the correct object if is passed an array with string as parameter", () => {
+            const fullPath = ["siteId", "podId", "sensorId"];
+            const ret = chart.selectSingleElectricalSensor(fullPath);
             expect(ret).to.deep.equal({
-                type: "SELECT_SINGLE_ELECTRICAL_SENSOR",
-                payload: {
-                    fullPath: ["siteId", "podId", "sensorId"],
-                    sensor: "sensorId",
-                    site: "siteId"
-                }
+                type: "SELECT_SINGLE_ELECTRICAL_SENSOR_CHART",
+                payload: ["siteId", "podId", "sensorId"]
             });
         });
 
-        it("should throw if isn't passed `siteId` parameter", () => {
+        it("should throw if isn't passed `fullPath` parameter", () => {
             const sensor = {sensor: "sensorId"};
             function troubleMaker () {
                 chart.selectSingleElectricalSensor(sensor);
-            }
-            expect(troubleMaker).to.throw();
-        });
-
-        it("should throw if isn't passed `sensorId` parameter", () => {
-            const site = {site: "sitesId"};
-            function troubleMaker () {
-                chart.selectSingleElectricalSensor(site);
             }
             expect(troubleMaker).to.throw();
         });
@@ -42,7 +27,7 @@ describe("`chart` actions", () => {
 
     describe("`selectElectricalType` function", () => {
 
-        it("should return the correct object if is passed an object with `label` and `key` keys", () => {
+        it("should return the correct object if is passed an array of object with `label` and `key` keys", () => {
             const type = [{
                 label: "label",
                 key: "key"

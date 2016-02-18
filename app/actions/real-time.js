@@ -1,23 +1,14 @@
-import {String, struct} from "tcomb";
+import {String, list} from "tcomb";
 
 import actionTypeValidator from "../lib/action-type-validator";
 
-export const SELECT_REAL_TIME_SITE = "SELECT_REAL_TIME_SITE";
+export const SELECT_SINGLE_ELECTRICAL_SENSOR_REAL_TIME = "SELECT_SINGLE_ELECTRICAL_SENSOR_REAL_TIME";
 
-const typeofSelectRealTimeSite = actionTypeValidator(
-    struct({
-        fullPath: Array,
-        site: String
-    })
-);
-export function selectRealTimeSite ({fullPath, site}) {
+const typeofSelectRealTimeSite = actionTypeValidator(list(String));
+export function selectRealTimeSite (fullPath) {
     typeofSelectRealTimeSite(...arguments);
-    const ret = {
-        type: SELECT_REAL_TIME_SITE,
-        payload: {
-            fullPath,
-            site
-        }
+    return {
+        type: SELECT_SINGLE_ELECTRICAL_SENSOR_REAL_TIME,
+        payload: fullPath
     };
-    return ret;
 }

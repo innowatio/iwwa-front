@@ -124,7 +124,7 @@ var SummaryConsumptions = React.createClass({
         this.setState ({showModal:true});
     },
     onConfirmFullscreenModal: function () {
-        this.props.selectSite(this.state.value.fullPath);
+        this.props.selectSite(this.state.value);
         this.closeModal();
     },
     onChangeWidgetValue: function (value) {
@@ -136,7 +136,7 @@ var SummaryConsumptions = React.createClass({
             <components.SiteNavigator
                 allowedValues={sites.sortBy(site => site.get("name"))}
                 onChange={this.onChangeWidgetValue}
-                path={(this.state.value && this.state.value.fullPath) || this.props.consumptions.fullPath || []}
+                path={this.state.value || this.props.consumptions.fullPath || []}
                 title={"Quale punto di misurazione vuoi visualizzare?"}
             />
         );
@@ -155,7 +155,7 @@ var SummaryConsumptions = React.createClass({
         const {colors} = this.getTheme();
         return (
             <bootstrap.Tabs
-                activeKey={this.props.consumptions.period}
+                activeKey={this.props.consumptions.period || tabParameters()[0].key}
                 className="style-tab"
                 defaultActiveKey={this.props.consumptions.period || tabParameters()[0].key}
                 onSelect={this.props.selectPeriod}

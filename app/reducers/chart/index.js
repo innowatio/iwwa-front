@@ -2,7 +2,7 @@ import {equals, head, last, update} from "ramda";
 import moment from "moment";
 
 import {
-    SELECT_SINGLE_ELECTRICAL_SENSOR,
+    SELECT_SINGLE_ELECTRICAL_SENSOR_CHART,
     SELECT_ELECTRICAL_TYPE,
     SELECT_ENVIRONMENTAL_SENSOR,
     SELECT_SOURCE,
@@ -13,6 +13,8 @@ import {
 } from "actions/chart";
 import {defaultTheme} from "lib/theme";
 import {DISPLAY_ALARMS_ON_CHART} from "actions/alarms";
+import {SELECT_SINGLE_ELECTRICAL_SENSOR_CONSUMPTION} from "actions/consumptions";
+import {SELECT_SINGLE_ELECTRICAL_SENSOR_REAL_TIME} from "actions/real-time";
 import {getDateRangesCompare} from "./date-ranges";
 
 const defaultChartState = [{
@@ -27,16 +29,18 @@ const defaultChartState = [{
 
 export function chart (state = defaultChartState, {type, payload}) {
     switch (type) {
-    case SELECT_SINGLE_ELECTRICAL_SENSOR:
+    case SELECT_SINGLE_ELECTRICAL_SENSOR_CHART:
+    case SELECT_SINGLE_ELECTRICAL_SENSOR_CONSUMPTION:
+    case SELECT_SINGLE_ELECTRICAL_SENSOR_REAL_TIME:
         return [{
             ...state[0],
             alarms: undefined,
-            fullPath: payload.fullPath,
-            sensorId: payload.sensor || head(payload.fullPath),
-            site: payload.site,
+            fullPath: payload,
+            sensorId: last(payload),
+            site: head(payload),
             date: state[0].date.type === "dateFilter" ? state[0].date : {}
         }];
-    case SELECT_ELECTRICAL_TYPE:
+    case SELECT_ELECTRICAL_TYPE: {
         /*
         *   Update the state with electrical type. If there are all electrical sensors,
         *   update all the measurementType, if there is an electrical sensor and a
@@ -53,7 +57,8 @@ export function chart (state = defaultChartState, {type, payload}) {
             alarms: undefined,
             measurementType: payload[0]
         }, state);
-    case SELECT_MULTIPLE_ELECTRICAL_SITE:
+    }
+    case SELECT_MULTIPLE_ELECTRICAL_SITE: {
         /*
         *   Update the state, with two different electrical sensor that can have
         *   also different site.
@@ -69,7 +74,8 @@ export function chart (state = defaultChartState, {type, payload}) {
             measurementType,
             date: state[0].date.type === "dateFilter" ? state[0].date : {}
         }));
-    case SELECT_DATE_RANGES_COMPARE:
+    }
+    case SELECT_DATE_RANGES_COMPARE: {
         const dateRanges = getDateRangesCompare(payload);
         return dateRanges.map(dateRange => ({
             ...state[0],
@@ -80,7 +86,8 @@ export function chart (state = defaultChartState, {type, payload}) {
                 end: dateRange.end
             }
         }));
-    case SELECT_ENVIRONMENTAL_SENSOR:
+    }
+    case SELECT_ENVIRONMENTAL_SENSOR: {
         /*
         *   When click on consumption button, this can have a toggle functionality.
         */
@@ -106,7 +113,8 @@ export function chart (state = defaultChartState, {type, payload}) {
             ...state[0],
             date
         }].concat([environmentalSensorState]);
-    case SELECT_SOURCE:
+    }
+    case SELECT_SOURCE: {
         /*
         *   The source can be `reading` and/or `forecast`.
         *   Forecast is only for electrical sensor.
@@ -132,7 +140,8 @@ export function chart (state = defaultChartState, {type, payload}) {
             alarms: undefined,
             source: payload[0]
         }));
-    case SELECT_DATE_RANGES:
+    }
+    case SELECT_DATE_RANGES: {
         /*
         *   Upgrade all the selection with the selected date range.
         */
@@ -152,7 +161,8 @@ export function chart (state = defaultChartState, {type, payload}) {
                 type: "dateFilter"
             }
         }));
-    case REMOVE_ALL_COMPARE:
+    }
+    case REMOVE_ALL_COMPARE: {
         /*
         *   Remove all the comparation.
         */
@@ -160,7 +170,8 @@ export function chart (state = defaultChartState, {type, payload}) {
             ...state[0],
             date: {}
         }];
-    case DISPLAY_ALARMS_ON_CHART:
+    }
+    case DISPLAY_ALARMS_ON_CHART: {
         const alarmDate = last(payload.alarms);
         return [{
             ...defaultChartState[0],
@@ -174,6 +185,7 @@ export function chart (state = defaultChartState, {type, payload}) {
                 type: "dateFilter"
             }
         }];
+    }
     default:
         return state;
     }
