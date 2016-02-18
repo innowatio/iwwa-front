@@ -244,7 +244,7 @@ var SummaryConsumptions = React.createClass({
                     </div>
                 </div>
                 <div style={styleRightPane(theme)}>
-                    <bootstrap.Button className="pull-right" onClick={this.openModal} style={styleSiteButton(theme)} >
+                    <components.Button className="pull-right" onClick={this.openModal} style={styleSiteButton(theme)} >
                         <components.Icon
                             color={this.getTheme().colors.iconSiteButton}
                             icon={"map"}
@@ -255,7 +255,7 @@ var SummaryConsumptions = React.createClass({
                                 lineHeight: "20px"
                             }}
                         />
-                    </bootstrap.Button>
+                    </components.Button>
                     <components.FullscreenModal
                         onConfirm={this.onConfirmFullscreenModal}
                         onHide={this.closeModal}
