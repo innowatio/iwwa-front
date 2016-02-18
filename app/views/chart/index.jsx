@@ -393,7 +393,7 @@ var Chart = React.createClass({
                         <components.DropdownButton
                             allowedValues={parameters.getExportType()}
                             getColor={R.prop("color")}
-                            getIcon={R.prop("icon")}
+                            getIcon={R.prop("iconClass")}
                             getKey={R.prop("key")}
                             getLabel={R.prop("label")}
                             onChange={this.onChangeExport}

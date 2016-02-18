@@ -64,6 +64,7 @@ var Header = React.createClass({
         });
         return (
             <components.Popover
+                arrowColor={this.getTheme().colors.white}
                 hideOnChange={true}
                 title={
                     <components.Icon
@@ -90,7 +91,7 @@ var Header = React.createClass({
     },
     renderAdminPage: function () {
         return this.userIsAdmin() && ENVIRONMENT !== "cordova" ? (
-            <span style={{marginRight: "10px"}}>
+            <span style={{marginRight: "15px"}}>
                 <Link to="/users/" >
                     <components.Icon
                         color={this.getTheme().colors.iconHeader}
@@ -104,7 +105,7 @@ var Header = React.createClass({
     },
     renderInboxPage: function () {
         return (
-            <div style={{marginRight: "10px"}}>
+            <div style={{marginRight: "15px"}}>
                 <Link to="/" >
                     <components.Icon
                         color={this.getTheme().colors.iconHeader}
@@ -118,7 +119,7 @@ var Header = React.createClass({
     },
     renderAllarmPage: function () {
         return (
-            <div style={{marginRight: "10px"}}>
+            <div style={{marginRight: "15px"}}>
                 <Link to="/" >
                     <components.Icon
                         color={this.getTheme().colors.iconHeader}

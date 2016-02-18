@@ -83,7 +83,10 @@ var DropdownButton = React.createClass({
                     // This should overwrite the style over that position.
                     ...this.props.style
                 }, {
-                    backgroundColor: R.equals(this.state.allowedValue, allowedValue) ? this.getTheme().colors.buttonPrimary : "transparent"
+                    backgroundColor: R.equals(
+                        this.state.allowedValue, allowedValue) ?
+                        this.getTheme().colors.buttonPrimary :
+                        this.getTheme().colors.transparent
                 })}
             >
                 {this.imageItem(allowedValue)}

@@ -7,6 +7,7 @@ import {defaulTheme} from "lib/theme";
 var Popover = React.createClass({
     propTypes: {
         arrow: React.PropTypes.string,
+        arrowColor: React.PropTypes.string,
         children: React.PropTypes.element,
         hideOnChange: React.PropTypes.bool,
         notClosePopoverOnClick: React.PropTypes.bool,
@@ -120,14 +121,16 @@ var Popover = React.createClass({
                             height: "100%"
                         },
                         ".arrow": {
-                            // display: this.props.arrow === "none" ? "none" : ""
+                            display: this.props.arrow === "none" ? "none" : ""
                         },
                         ".arrow, .arrow:after": {
-                            borderBottomColor: colors.borderDropdown + "!important",
+                            borderBottomColor: colors.borderPopover + "!important",
                             top: "-11px"
                         },
                         ".arrow:after": {
-                            borderBottomColor: colors.black + "!important"
+                            borderBottomColor: this.props.arrowColor ?
+                            `${this.props.arrowColor} !important` :
+                            `${colors.backgroundArrowPopover} !important`
                         },
                         ".rw-widget": {
                             border: "0px",
