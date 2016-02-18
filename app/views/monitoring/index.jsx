@@ -62,7 +62,7 @@ var Monitoring = React.createClass({
             {
                 key: "name",
                 valueFormatter: (value, item) => (
-                    <Link to={"/sensor/" + item.id}>
+                    <Link to={"/monitoring/sensor/" + item.id}>
                         {item.fields.name}
                     </Link>
                 )
@@ -91,7 +91,7 @@ var Monitoring = React.createClass({
     render: function () {
         return(
             <div>
-                <Button bsStyle="primary" href="#/sensor/">Add sensor</Button>
+                <Button bsStyle="primary" href="/monitoring/sensor/">Add sensor</Button>
                 <Button onClick={this.props.combineSensor} disabled={!(this.props.selected.length > 1)} >
                     Combine sensors
                 </Button>
@@ -108,4 +108,4 @@ var Monitoring = React.createClass({
     }
 });
 
-export default connect(mapStateToProps, mapDispatchToProps)(Monitoring);
+module.exports = connect(mapStateToProps, mapDispatchToProps)(Monitoring);

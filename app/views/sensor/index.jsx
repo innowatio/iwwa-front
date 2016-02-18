@@ -51,4 +51,4 @@ var Sensor = React.createClass({
     }
 });
 
-export default connect(mapStateToProps, mapDispatchToProps)(Sensor);
+module.exports = connect(mapStateToProps, mapDispatchToProps)(Sensor);

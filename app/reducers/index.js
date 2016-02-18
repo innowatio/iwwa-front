@@ -17,10 +17,10 @@ const rootReducer = storage.reducer(combineReducers({
     consumptions,
     alarms,
     realTime,
-    userSetting
-    //form,
-    //routing,
-    //sensors
+    userSetting,
+    form,
+    routing,
+    sensors
 }));
 
 export default rootReducer;
