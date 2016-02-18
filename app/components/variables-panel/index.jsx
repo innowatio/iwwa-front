@@ -9,6 +9,7 @@ var style = ({colors}) => ({
         border: "1px solid " + colors.greyBorder,
         borderRadius: "40px",
         display: "flex",
+        height: "55px",
         margin: "5%",
         padding: "2% 1%"
     }

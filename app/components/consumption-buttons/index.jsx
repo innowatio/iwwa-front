@@ -24,13 +24,26 @@ var ConsumptionButtons = React.createClass({
             <components.Button
                 key={consumption.key}
                 onClick={R.partial(this.props.onChange, [consumption])}
-                style={R.merge(R.merge(this.props.styleButton, isSelected ? this.props.styleButtonSelected : {}), consumptionButtonColor)}
+                style={R.merge(
+                    R.merge(
+                        this.props.styleButton,
+                        isSelected ? this.props.styleButtonSelected : {}
+                    ),
+                    consumptionButtonColor
+                )}
             >
                 <components.Icon
                     color={consumption.iconColor}
                     icon={consumption.iconClass}
                     size={"40px"}
-                    style={{float:"left", width: "45px", textAlign: "center", margin: "0", padding: "0", verticalAlign: "middle"}}
+                    style={{
+                        float:"left",
+                        width: "45px",
+                        textAlign: "center",
+                        margin: "0",
+                        padding: "0",
+                        verticalAlign: "middle"
+                    }}
                 />
                 <div style={{
                     textAlign: "center",
