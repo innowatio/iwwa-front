@@ -1,4 +1,4 @@
-import React, {Component, PropTypes} from 'react';
+import React, {Component, PropTypes} from "react";
 
 /**
  * Serializes and deserializes complex values to and from JSON
@@ -17,7 +17,7 @@ class ObjectSelect extends Component {
         value: PropTypes.any // array or individual value
     };
 
-    render() {
+    render () {
         const {multiple, onBlur, onChange, options, value, ...rest} = this.props;
         const parse = event => {
             if (multiple) {
@@ -36,7 +36,8 @@ class ObjectSelect extends Component {
                 onBlur={event => onBlur(parse(event))}
                 onChange={event => onChange(parse(event))}
                 value={multiple ? value.map(JSON.stringify) : JSON.stringify(value)}
-                {...rest}>
+                {...rest}
+            >
                 {options.map(option =>
                     <option key={option.id} value={JSON.stringify(option)}>{option.label}</option>)}
             </select>

@@ -1,5 +1,5 @@
 import {combineReducers} from "redux";
-import {reducer as form} from 'redux-form';
+import {reducer as form} from "redux-form";
 import storage from "redux-storage";
 import {routeReducer as routing} from "react-router-redux";
 

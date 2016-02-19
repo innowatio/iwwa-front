@@ -33,7 +33,7 @@
         "brace-style": [2, "1tbs"],
         "comma-spacing": [2, {"before": false, "after": true}],
         "computed-property-spacing": [2, "never"],
-        "indent": [2, 4],
+        "indent": [2, 4, {"SwitchCase": 1}],
         "jsx-quotes": [2, "prefer-double"],
         "linebreak-style": [2, "unix"],
         "new-cap": [2, {"capIsNew": false}],
@@ -54,7 +54,7 @@
         "react/jsx-no-literals": [2],
         "react/jsx-no-undef": [2],
         "react/jsx-sort-prop-types": [2],
-        "react/jsx-sort-props": [2],
+//        "react/jsx-sort-props": [2], TODO sarebbe bello ripristinarla con l'eccezione <input>
         "react/jsx-uses-react": [2],
         "react/jsx-uses-vars": [2],
         "react/no-danger": [2],
@@ -86,7 +86,6 @@
         "space-before-blocks": [2, "always"],
         "space-before-function-paren": [2, "always"],
         "space-in-parens": [2, "never"],
-        "spaced-comment": [2, "always"],
         "strict": [2, "never"]
     }
 }

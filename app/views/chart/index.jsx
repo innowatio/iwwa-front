@@ -308,18 +308,18 @@ var Chart = React.createClass({
     onConfirmFullscreenModal: function () {
         const {chart} = this.props;
         switch (this.state.selectedWidget) {
-        case "siteNavigator":
-            this.props.selectSingleElectricalSensor(this.state.value || chart[0].fullPath);
-            break;
-        case "dateFilter":
-            this.props.selectDateRanges(
-                this.state.value || (chart[0].date.type === "dateFilter" && chart[0].date) || {
-                    start: moment().startOf("month").valueOf(),
-                    end: moment().endOf("month").valueOf(),
-                    valueType: {label: "calendario", key: "calendar"}
-                }
-            );
-            break;
+            case "siteNavigator":
+                this.props.selectSingleElectricalSensor(this.state.value || chart[0].fullPath);
+                break;
+            case "dateFilter":
+                this.props.selectDateRanges(
+                    this.state.value || (chart[0].date.type === "dateFilter" && chart[0].date) || {
+                        start: moment().startOf("month").valueOf(),
+                        end: moment().endOf("month").valueOf(),
+                        valueType: {label: "calendario", key: "calendar"}
+                    }
+                );
+                break;
         }
         return this.closeModal();
     },
@@ -328,10 +328,10 @@ var Chart = React.createClass({
     },
     renderChildComponent: function () {
         switch (this.state.selectedWidget) {
-        case "siteNavigator":
-            return this.renderSiteNavigator();
-        case "dateFilter":
-            return this.renderDateFilter();
+            case "siteNavigator":
+                return this.renderSiteNavigator();
+            case "dateFilter":
+                return this.renderDateFilter();
         }
     },
     renderDateFilter: function () {
