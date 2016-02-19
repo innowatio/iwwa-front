@@ -10,10 +10,8 @@ describe("`consumptions` actions", () => {
             const fullPath = ["siteId", "podId", "sensorId"];
             const ret = realTime.selectSite(fullPath);
             expect(ret).to.deep.equal({
-                type: "SELECT_CONSUMPTIONS_SITE",
-                payload: {
-                    fullPath: ["siteId", "podId", "sensorId"]
-                }
+                type: "SELECT_SINGLE_ELECTRICAL_SENSOR_CONSUMPTION",
+                payload: ["siteId", "podId", "sensorId"]
             });
         });
 
@@ -33,9 +31,7 @@ describe("`consumptions` actions", () => {
             const ret = realTime.selectPeriod(period);
             expect(ret).to.deep.equal({
                 type: "SELECT_CONSUMPTIONS_PERIOD",
-                payload: {
-                    period: "imAperiod"
-                }
+                payload: "imAperiod"
             });
         });
 

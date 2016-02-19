@@ -1,34 +1,24 @@
 import {list, String} from "tcomb";
 
-import actionTypeValidator from "../lib/action-type-validator";
+import actionTypeValidator from "lib/action-type-validator";
 
-export const SELECT_CONSUMPTIONS_SITE = "SELECT_CONSUMPTIONS_SITE";
+export const SELECT_SINGLE_ELECTRICAL_SENSOR_CONSUMPTION = "SELECT_SINGLE_ELECTRICAL_SENSOR_CONSUMPTION";
 export const SELECT_CONSUMPTIONS_PERIOD = "SELECT_CONSUMPTIONS_PERIOD";
 
-const typeofSelectSite = actionTypeValidator(
-    list(String)
-);
+const typeofSelectSite = actionTypeValidator(list(String));
 export function selectSite (fullPath) {
     typeofSelectSite(...arguments);
-    const ret = {
-        type: SELECT_CONSUMPTIONS_SITE,
-        payload: {
-            fullPath
-        }
+    return {
+        type: SELECT_SINGLE_ELECTRICAL_SENSOR_CONSUMPTION,
+        payload: fullPath
     };
-    return ret;
 }
 
-const typeofSelectPeriod = actionTypeValidator(
-    String
-);
+const typeofSelectPeriod = actionTypeValidator(String);
 export function selectPeriod (period) {
     typeofSelectPeriod(...arguments);
-    const ret = {
+    return {
         type: SELECT_CONSUMPTIONS_PERIOD,
-        payload: {
-            period
-        }
+        payload: period
     };
-    return ret;
 }

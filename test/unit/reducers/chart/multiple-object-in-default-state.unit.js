@@ -63,16 +63,50 @@ describe("`chart` reducer [CASE: multiple object in default state array]", () =>
         chartReducer.__ResetDependency__("defaultChartState", chartState);
     });
 
-    describe("`SELECT_SINGLE_ELECTRICAL_SENSOR` type", () => {
+    describe("`SELECT_SINGLE_ELECTRICAL_SENSOR_CHART` type", () => {
 
-        it("should return the correct array with an object that contain the new sensorId and siteId", () => {
+        it("should return the correct array with an object that contain the new sensor, site and the path of the sensor", () => {
             const valuePassedFromAction = {
-                type: "SELECT_SINGLE_ELECTRICAL_SENSOR",
-                payload: {
-                    site: "newSiteId",
-                    fullPath: ["newSiteId", "newSensorId"],
-                    sensor: "newSensorId"
-                }
+                type: "SELECT_SINGLE_ELECTRICAL_SENSOR_CHART",
+                payload: ["newSiteId", "newSensorId"]
+            };
+            const ret = chart(chartState, valuePassedFromAction);
+            expect(ret).to.deep.equal([{
+                ...defaultChartStateFirstObject,
+                alarms: undefined,
+                site: "newSiteId",
+                sensorId: "newSensorId",
+                fullPath: ["newSiteId", "newSensorId"]
+            }]);
+        });
+
+    });
+
+    describe("`SELECT_SINGLE_ELECTRICAL_SENSOR_CONSUMPTION` type", () => {
+
+        it("should return the correct array with an object that contain the new sensor, site and the path of the sensor", () => {
+            const valuePassedFromAction = {
+                type: "SELECT_SINGLE_ELECTRICAL_SENSOR_CONSUMPTION",
+                payload: ["newSiteId", "newSensorId"]
+            };
+            const ret = chart(chartState, valuePassedFromAction);
+            expect(ret).to.deep.equal([{
+                ...defaultChartStateFirstObject,
+                alarms: undefined,
+                site: "newSiteId",
+                sensorId: "newSensorId",
+                fullPath: ["newSiteId", "newSensorId"]
+            }]);
+        });
+
+    });
+
+    describe("`SELECT_SINGLE_ELECTRICAL_SENSOR_REAL_TIME` type", () => {
+
+        it("should return the correct array with an object that contain the new sensor, site and the path of the sensor", () => {
+            const valuePassedFromAction = {
+                type: "SELECT_SINGLE_ELECTRICAL_SENSOR_REAL_TIME",
+                payload: ["newSiteId", "newSensorId"]
             };
             const ret = chart(chartState, valuePassedFromAction);
             expect(ret).to.deep.equal([{

@@ -107,33 +107,33 @@ describe("`consumptions-utils`", () => {
                 measureUnit: "kWh",
                 period: "day",
                 periodTitle: "OGGI HAI UTILIZZATO",
-                periodSubtitle: "06 JANUARY 2016",
+                periodSubtitle: "06 GENNAIO 2016",
                 title: "OGGI"
             }, {
                 key: "week",
                 measureUnit: "kWh",
                 period: "week",
                 periodTitle: "QUESTA SETTIMANA HAI UTILIZZATO",
-                periodSubtitle: "03 - 10 JANUARY 2016",
+                periodSubtitle: "03 - 10 GENNAIO 2016",
                 title: "SETTIMANA CORRENTE"
             }, {
                 key: "month",
                 measureUnit: "kWh",
                 period: "month",
-                periodTitle: "NEL MESE DI JANUARY HAI UTILIZZATO",
+                periodTitle: "NEL MESE DI GENNAIO HAI UTILIZZATO",
                 periodSubtitle: "2016",
                 title: "MESE CORRENTE"
             }, {
                 key: "year",
                 measureUnit: "kWh",
                 period: "year",
-                periodTitle: `NEL 2016 HAI UTILIZZATO`,
+                periodTitle: "NEL 2016 HAI UTILIZZATO",
                 periodSubtitle: "2016",
                 title: "ANNO CORRENTE"
             }];
 
             const ret = tabParameters();
-            expect(ret).to.eql(expected);
+            expect(ret).to.deep.equal(expected);
         });
 
     });

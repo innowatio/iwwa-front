@@ -6,18 +6,12 @@ describe("`realTime` actions", () => {
 
     describe("`selectRealTimeSite` function", () => {
 
-        it("should return the correct object if is passed an object with site and fullPath values", () => {
-            const siteId = {
-                site: "siteId",
-                fullPath: ["siteId", "podId", "sensorId"]
-            };
-            const ret = realTime.selectRealTimeSite(siteId);
+        it("should return the correct object if is passed an array of string as fullPath", () => {
+            const fullPath = ["siteId", "podId", "sensorId"];
+            const ret = realTime.selectRealTimeSite(fullPath);
             expect(ret).to.deep.equal({
-                type: "SELECT_REAL_TIME_SITE",
-                payload: {
-                    site: "siteId",
-                    fullPath: ["siteId", "podId", "sensorId"]
-                }
+                type: "SELECT_SINGLE_ELECTRICAL_SENSOR_REAL_TIME",
+                payload: ["siteId", "podId", "sensorId"]
             });
         });
 

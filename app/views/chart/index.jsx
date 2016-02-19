@@ -148,11 +148,7 @@ var Chart = React.createClass({
         var sites = this.props.collections.get("sites") || Immutable.Map();
         if (sites.size > 0 && !this.props.chart[0].sensorId) {
             const firstSite = sites.first();
-            this.props.selectSingleElectricalSensor({
-                sensor: firstSite.get("sensorsIds").first(),
-                site: firstSite.get("_id"),
-                fullPath: [firstSite.get("_id")]
-            });
+            this.props.selectSingleElectricalSensor([firstSite.get("_id")]);
         }
     },
     onChangeExport: function (valueChanged) {
@@ -313,11 +309,7 @@ var Chart = React.createClass({
         const {chart} = this.props;
         switch (this.state.selectedWidget) {
         case "siteNavigator":
-            this.props.selectSingleElectricalSensor(this.state.value || {
-                fullPath: chart[0].fullPath,
-                site: chart[0].site,
-                sensor: chart[0].sensor
-            });
+            this.props.selectSingleElectricalSensor(this.state.value || chart[0].fullPath);
             break;
         case "dateFilter":
             this.props.selectDateRanges(
@@ -362,7 +354,7 @@ var Chart = React.createClass({
             <components.SiteNavigator
                 allowedValues={sites.sortBy(site => site.get("name"))}
                 onChange={this.onChangeWidgetValue}
-                path={(this.state.value && this.state.value.fullPath) || this.props.chart[0].fullPath || []}
+                path={this.state.value || this.props.chart[0].fullPath || []}
                 title={"QUALE PUNTO DI MISURAZIONE VUOI VISUALIZZARE?"}
             />
         );
@@ -456,7 +448,15 @@ var Chart = React.createClass({
                         />
                     </components.Popover>
                 </div>
-                <components.Button style={R.merge(dateButtonStyle(this.getTheme()), {borderRadius: "0 20px 20px 0", left: "0px", padding: "0"})}>
+                <components.Button
+                    style={R.merge(dateButtonStyle(
+                        this.getTheme()), {
+                            borderRadius: "0 20px 20px 0",
+                            left: "0px",
+                            padding: "0"
+                        })
+                    }
+                >
                     <components.Icon
                         color={this.getTheme().colors.iconArrowSwitch}
                         icon={"arrow-left"}

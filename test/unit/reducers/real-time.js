@@ -4,23 +4,42 @@ import * as realTimeReducer from "reducers/real-time";
 
 describe("`real-time` reducer", () => {
 
-    describe("`site` reducer", () => {
+    describe("`site` and `fullPath` reducer", () => {
 
         const siteReducer = realTimeReducer.__get__("site");
         const pathReducer = realTimeReducer.__get__("fullPath");
 
-        it("should return the correct object with `id` parameter if is passed `SELECT_REAL_TIME_SITE` type", () => {
+        it("should return the correct object [CASE: type SELECT_SINGLE_ELECTRICAL_SENSOR_CHART]", () => {
             const valuePassedFromAction = {
-                type: "SELECT_REAL_TIME_SITE",
-                payload: {
-                    site: "siteId",
-                    fullPath: ["siteId", "podId", "sensorId"]
-                }
+                type: "SELECT_SINGLE_ELECTRICAL_SENSOR_CHART",
+                payload: ["siteId", "podId", "sensorId"]
             };
             const ret = siteReducer(null, valuePassedFromAction);
             const ret2 = pathReducer(null, valuePassedFromAction);
             expect(ret).to.equal("siteId");
-            expect(ret2).to.eql(["siteId", "podId", "sensorId"]);
+            expect(ret2).to.deep.equal(["siteId", "podId", "sensorId"]);
+        });
+
+        it("should return the correct object [CASE: type SELECT_SINGLE_ELECTRICAL_SENSOR_REAL_TIME]", () => {
+            const valuePassedFromAction = {
+                type: "SELECT_SINGLE_ELECTRICAL_SENSOR_REAL_TIME",
+                payload: ["siteId", "podId", "sensorId"]
+            };
+            const ret = siteReducer(null, valuePassedFromAction);
+            const ret2 = pathReducer(null, valuePassedFromAction);
+            expect(ret).to.equal("siteId");
+            expect(ret2).to.deep.equal(["siteId", "podId", "sensorId"]);
+        });
+
+        it("should return the correct object [CASE: type SELECT_SINGLE_ELECTRICAL_SENSOR_CONSUMPTION]", () => {
+            const valuePassedFromAction = {
+                type: "SELECT_SINGLE_ELECTRICAL_SENSOR_CONSUMPTION",
+                payload: ["siteId", "podId", "sensorId"]
+            };
+            const ret = siteReducer(null, valuePassedFromAction);
+            const ret2 = pathReducer(null, valuePassedFromAction);
+            expect(ret).to.equal("siteId");
+            expect(ret2).to.deep.equal(["siteId", "podId", "sensorId"]);
         });
 
         it("should return the previous state if any correct `type` is checked", () => {
@@ -32,7 +51,9 @@ describe("`real-time` reducer", () => {
                 fullPath: ["siteId", "podId", "sensorId"]
             };
             const ret = siteReducer(previousState, valuePassedFromAction);
+            const ret2 = pathReducer(previousState, valuePassedFromAction);
             expect(ret).to.deep.equal(previousState);
+            expect(ret2).to.deep.equal(previousState);
         });
 
     });
