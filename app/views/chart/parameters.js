@@ -80,8 +80,16 @@ export function getConsumptions ({colors}) {
 
 export function getExportType () {
     return [
-        {label: "Png", key: "png", iconClass: "png"},
-        {label: "Csv", key: "csv", iconClass: "csv"}
+        {
+            label: "Png",
+            key: "png",
+            iconClass: "png"
+        },
+        {
+            label: "Csv",
+            key: "csv",
+            iconClass: "csv"
+        }
     ];
 }
 

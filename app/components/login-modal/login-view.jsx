@@ -12,14 +12,15 @@ const stylesFunction = ({colors}) => ({
     radiumStyleInput: {
         ".form-group": {
             marginBottom: "0px",
-            border: "solid 1px " + color(colors.white).alpha(0.3).rgbString()
+            fontWeight: "400"
         },
         ".form-group div, .form-group span, .form-group input": {
-            border: "0px",
-            borderRadius: "0px !important",
+            border: "0px !important",
             boxShadow: "none",
-            background: color(colors.black).alpha(0.05).rgbString(),
-            color: colors.white
+            borderRadius: "0px",
+            background: color(colors.black).alpha(0).rgbString(),
+            color: colors.white,
+            fontWeight: "400"
         },
         ".form-control": {
             height: "60px"
@@ -41,7 +42,21 @@ const stylesFunction = ({colors}) => ({
         },
         "input:-webkit-autofill, textarea:-webkit-autofill, select:-webkit-autofill": { /* Chrome */
             boxShadow: "0 0 0px 1000px white inset"
-            // opacity: "0 !important"
+        },
+        ".input-usr": {
+            borderTopLeftRadius: "20px",
+            borderTopRightRadius: "20px",
+            backgroundColor: color(colors.black).alpha(0.15).rgbString(),
+            border: "1px solid",
+            borderColor: color(colors.white).alpha(0.4).rgbString()
+        },
+        ".input-psw": {
+            borderBottomLeftRadius: "20px",
+            borderBottomRightRadius: "20px",
+            backgroundColor: color(colors.black).alpha(0.15).rgbString(),
+            border: "1px solid",
+            borderColor: color(colors.white).alpha(0.4).rgbString(),
+            borderTop: "0px"
         }
     },
     inputsWrapper: {
@@ -49,14 +64,15 @@ const stylesFunction = ({colors}) => ({
         borderRadius: "20px",
         margin: "0 0 10px 0",
         overflow: "hidden",
-        border: "1px solid" + color(colors.white).alpha(0.8).rgbString(),
-        color: colors.white,
-        backgroundColor: color(colors.black).alpha(0.05).rgbString()
+        color: colors.white
     },
     inputs: {
         height: "88px",
-        fontSize: "24px",
-        borderBottom: "1px solid" + color(colors.white).alpha(0.6).rgbString()
+        fontSize: "26px",
+        backgroundColor: "trasparent",
+        borderRadius: "0px",
+        border: "0px",
+        fontWeight: "300"
     },
     loginButton: {
         background: colors.buttonPrimary,
@@ -66,7 +82,7 @@ const stylesFunction = ({colors}) => ({
         margin: "auto",
         borderRadius: "30px",
         border: "0px none",
-        fontSize: "28px"
+        fontSize: "30px"
     },
     errorAlert: {
         marginTop: "16px",
@@ -121,36 +137,40 @@ var LoginView = React.createClass({
                         rules={styles.radiumStyleInput}
                         scopeSelector=".ac-login-modal-inputs"
                     />
-                    <bootstrap.Input
-                        addonBefore={
-                            <components.Icon
-                                color={this.getTheme().colors.iconLogin}
-                                icon={"user"}
-                                size={"44px"}
-                                style={{lineHeight: "20px", verticalAlign: "middle"}}
-                            />
-                        }
-                        bsSize="large"
-                        placeholder={string.email}
-                        ref="email"
-                        style={styles.inputs}
-                        type="email"
-                    />
-                    <bootstrap.Input
-                        addonBefore={
-                            <components.Icon
-                                color={this.getTheme().colors.iconLogin}
-                                icon={"lock"}
-                                size={"44px"}
-                                style={{lineHeight: "20px", verticalAlign: "middle"}}
-                            />
-                        }
-                        bsSize="large"
-                        placeholder={string.password}
-                        ref="password"
-                        style={styles.inputs}
-                        type="password"
-                    />
+                    <div className="input-usr">
+                        <bootstrap.Input
+                            addonBefore={
+                                <components.Icon
+                                    color={this.getTheme().colors.iconLogin}
+                                    icon={"user"}
+                                    size={"45px"}
+                                    style={{lineHeight: "20px", verticalAlign: "middle"}}
+                                />
+                            }
+                            bsSize="large"
+                            placeholder={string.email}
+                            ref="email"
+                            style={styles.inputs}
+                            type="email"
+                        />
+                    </div>
+                    <div className="input-psw">
+                        <bootstrap.Input
+                            addonBefore={
+                                <components.Icon
+                                    color={this.getTheme().colors.iconLogin}
+                                    icon={"lock"}
+                                    size={"45px"}
+                                    style={{lineHeight: "20px", verticalAlign: "middle"}}
+                                />
+                            }
+                            bsSize="large"
+                            placeholder={string.password}
+                            ref="password"
+                            style={styles.inputs}
+                            type="password"
+                        />
+                    </div>
                 </div>
                 <components.Spacer direction="v" size={16} />
                 <components.Button

@@ -63,5 +63,9 @@ export const colorsLightTheme = {
     consumptionprogressBarBackground: "#37474f",
     consumptionprogressBarInfo: "#536dfe",
     consumptionprogressBarAlert: "#eb2953",
-    consumptionsText: "#ffffff"
+    consumptionsText: "#ffffff",
+    borderDropdown: "rgba(56,56,57,0.7)",
+    backgroundDropdown: "rgba(255,255,255,0.7)",
+    borderPopover: "rgba(255,255,255,0.7)",
+    backgroundArrowPopover: "rgb(56,56,57)"
 };

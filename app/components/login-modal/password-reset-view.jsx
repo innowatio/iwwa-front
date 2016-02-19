@@ -14,9 +14,11 @@ const stylesFunction = ({colors}) => ({
         },
         ".form-group div, .form-group span, .form-group input": {
             border: "0px",
-            borderRadius: "0px !important",
+            height: "88px",
+            fontSize: "26px",
+            borderTopLeftRadius: "20px !important",
             boxShadow: "none",
-            background: color(colors.black).alpha(0.1).rgbString(),
+            background: color(colors.black).alpha(0).rgbString(),
             color: colors.white
         },
         ".form-control:focus": {
@@ -36,14 +38,25 @@ const stylesFunction = ({colors}) => ({
         }
     },
     inputs: {
-        borderRadius: "6px",
+        height: "88px",
+        fontSize: "26px",
+        borderRadius: "20px",
+        fontWeight: "300",
         overflow: "hidden",
-        border: "solid 1px " + color(colors.white).alpha(0.3).rgbString(),
-        color: colors.white
+        border: "solid 1px",
+        borderColor: color(colors.white).alpha(0.3).rgbString(),
+        color: colors.white,
+        backgroundColor: color(colors.black).alpha(0.15).rgbString()
     },
     button: {
-        background: colors.primary,
-        color: colors.white
+        background: colors.buttonPrimary,
+        color: colors.white,
+        height: "78px",
+        width: "70%",
+        margin: "auto",
+        borderRadius: "30px",
+        border: "0px none",
+        fontSize: "30px"
     },
     errorAlert: {
         marginTop: "16px",
@@ -116,8 +129,8 @@ var PasswordResetView = React.createClass({
                             <components.Icon
                                 color={this.getTheme().colors.iconLogin}
                                 icon={"user"}
-                                size={"28px"}
-                                style={{lineHeight: "20px"}}
+                                size={"45px"}
+                                style={{lineHeight: "20px", verticalAlign: "middle"}}
                             />
                         }
                         bsSize="large"

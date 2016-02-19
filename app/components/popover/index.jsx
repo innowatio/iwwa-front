@@ -2,13 +2,16 @@ var bootstrap           = require("react-bootstrap");
 var R                   = require("ramda");
 var Radium              = require("radium");
 var React               = require("react");
+import {defaulTheme} from "lib/theme";
 
 var Popover = React.createClass({
     propTypes: {
         arrow: React.PropTypes.string,
+        arrowColor: React.PropTypes.string,
         children: React.PropTypes.element,
         hideOnChange: React.PropTypes.bool,
         notClosePopoverOnClick: React.PropTypes.bool,
+        style: React.PropTypes.object,
         title: React.PropTypes.oneOfType([
             React.PropTypes.element,
             React.PropTypes.string
@@ -17,10 +20,16 @@ var Popover = React.createClass({
         tooltipMessage: React.PropTypes.string,
         tooltipPosition: React.PropTypes.string
     },
+    contextTypes: {
+        theme: React.PropTypes.object
+    },
     getDefaultProps: function () {
         return {
             tooltipPosition: "right"
         };
+    },
+    getTheme: function () {
+        return this.context.theme || defaulTheme;
     },
     addOnClickCloseToChild: function (child) {
         var self = this;
@@ -89,11 +98,13 @@ var Popover = React.createClass({
         return button;
     },
     renderOverlay: function () {
+        const {colors} = this.getTheme();
         return (
             <bootstrap.Popover
                 animation={false}
                 className="multiselect-popover"
                 id={this.props.tooltipId + "-popover"}
+                style={this.props.style}
             >
                 <Radium.Style
                     rules={{
@@ -109,14 +120,25 @@ var Popover = React.createClass({
                             display: "flex",
                             height: "100%"
                         },
+                        ".arrow": {
+                            display: this.props.arrow === "none" ? "none" : "",
+                            top: "-10px !important",
+                            zIndex: "1000"
+                        },
+                        ".arrow, .arrow:after": {
+                            borderBottomColor: colors.borderPopover + "!important"
+                        },
+                        ".arrow:after": {
+                            borderBottomColor: this.props.arrowColor ?
+                            `${this.props.arrowColor} !important` :
+                            `${colors.backgroundArrowPopover} !important`
+                        },
                         ".rw-widget": {
-                            border: "0px"
+                            border: "0px",
+                            outline: "none"
                         },
                         ".rw-popup": {
                             padding: "0px"
-                        },
-                        ".arrow": {
-                            display: this.props.arrow === "none" ? "none" : ""
                         }
                     }}
                     scopeSelector=".multiselect-popover"

@@ -1,8 +1,8 @@
-import {String, Number, tuple, struct, maybe} from "tcomb";
+import {String, Number, tuple, struct, maybe, list} from "tcomb";
 
 import actionTypeValidator from "../lib/action-type-validator";
 
-export const SELECT_SINGLE_ELECTRICAL_SENSOR = "SELECT_SINGLE_ELECTRICAL_SENSOR";
+export const SELECT_SINGLE_ELECTRICAL_SENSOR_CHART = "SELECT_SINGLE_ELECTRICAL_SENSOR_CHART";
 export const SELECT_ELECTRICAL_TYPE = "SELECT_ELECTRICAL_TYPE";
 export const SELECT_ENVIRONMENTAL_SENSOR = "SELECT_ENVIRONMENTAL_SENSOR";
 export const SELECT_SOURCE = "SELECT_SOURCE";
@@ -13,24 +13,14 @@ export const REMOVE_ALL_COMPARE = "REMOVE_ALL_COMPARE";
 
 /**
 *   A click on select-tree component for the choice of site
-*   @param {array} site - id site of the site
+*   @param {array} path - path in site of the selected sensor
 */
-const typeofSelectSingleElectricalSensor = actionTypeValidator(
-    struct({
-        fullPath: Array,
-        sensor: maybe(String),
-        site: String
-    })
-);
-export function selectSingleElectricalSensor ({fullPath, sensor, site}) {
+const typeofSelectSingleElectricalSensor = actionTypeValidator(list(String));
+export function selectSingleElectricalSensor (fullPath) {
     typeofSelectSingleElectricalSensor(...arguments);
     return {
-        type: SELECT_SINGLE_ELECTRICAL_SENSOR,
-        payload: {
-            fullPath,
-            sensor,
-            site
-        }
+        type: SELECT_SINGLE_ELECTRICAL_SENSOR_CHART,
+        payload: fullPath
     };
 }
 

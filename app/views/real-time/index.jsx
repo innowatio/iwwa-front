@@ -41,13 +41,13 @@ var RealTime = React.createClass({
     },
     componentDidMount: function () {
         this.props.asteroid.subscribe("sites");
-        if (this.props.realTime.fullPath) {
-            this.props.asteroid.subscribe("readingsRealTimeAggregatesBySite", this.props.realTime.fullPath[0]);
+        if (this.props.realTime.site) {
+            this.props.asteroid.subscribe("readingsRealTimeAggregatesBySite", this.props.realTime.site);
         }
     },
     componentWillReceiveProps: function () {
-        if (this.props.realTime.fullPath) {
-            this.props.asteroid.subscribe("readingsRealTimeAggregatesBySite", this.props.realTime.fullPath[0]);
+        if (this.props.realTime.site) {
+            this.props.asteroid.subscribe("readingsRealTimeAggregatesBySite", this.props.realTime.site);
         }
     },
     getTheme: function () {
@@ -145,13 +145,13 @@ var RealTime = React.createClass({
         return (
             this.props.realTime.fullPath &&
             this.getSites().size > 0 &&
-            this.getSite(this.props.realTime.fullPath) ?
-            this.getSite(this.props.realTime.fullPath[0]).get("name") :
+            this.getSite(this.props.realTime.site) ?
+            this.getSite(this.props.realTime.site).get("name") :
             null
         );
     },
     getMeasuresBySite: function () {
-        var selectedSiteId = this.props.realTime.fullPath[0] ?
+        var selectedSiteId = this.props.realTime.site ?
             this.getSite(this.props.realTime.fullPath[0]).get("_id") :
             null;
         var selectSite = this.getMeasures().find(function (measure) {
@@ -218,7 +218,7 @@ var RealTime = React.createClass({
         this.setState({value});
     },
     onConfirmFullscreenModal: function () {
-        const siteId = this.state.value.site;
+        const siteId = this.state.value[0];
         this.props.asteroid.subscribe("readingsRealTimeAggregatesBySite", siteId);
         this.props.selectRealTimeSite(this.state.value);
         this.closeModal();
@@ -255,7 +255,7 @@ var RealTime = React.createClass({
             <components.SiteNavigator
                 allowedValues={this.getSites()}
                 onChange={this.onChangeWidgetValue}
-                path={(this.state.value && this.state.value.fullPath) || this.props.realTime.fullPath || []}
+                path={this.state.value || this.props.realTime.fullPath || []}
                 title={"Quale punto di misurazione vuoi visualizzare?"}
             />
         );
