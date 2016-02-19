@@ -63,6 +63,7 @@ var TreeView = React.createClass({
                 key={"level" + position}
                 multi={false}
                 onChange={R.partialRight(this.onChange, [position])}
+                showArrowActive={true}
                 style={this.props.style}
                 styleToMergeWhenActiveState={this.props.styleToMergeWhenActiveState}
                 value={selectedValue}

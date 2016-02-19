@@ -20,7 +20,9 @@ export const styles = (theme) => ({
         borderColor: theme.colors.borderDropdown,
         backgroundColor: theme.colors.backgroundDropdown,
         color: theme.colors.white,
-        outline: "none"
+        outline: "none",
+        fontSize: "15px",
+        fontWeight: "300"
     },
     chartPopover:{
         background: theme.colors.backgroundDropdown

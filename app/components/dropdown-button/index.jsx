@@ -49,7 +49,8 @@ var DropdownButton = React.createClass({
                     color={this.props.getColor(allowedValue)}
                     icon={this.props.getIcon(allowedValue)}
                     size={"30px"}
-                    style={{lineHeight: "20px",
+                    style={{
+                        lineHeight: "20px",
                         verticalAlign: "middle",
                         marginRight: "20px"
                     }}

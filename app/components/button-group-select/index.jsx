@@ -20,6 +20,7 @@ var ButtonGroupSelect = React.createClass({
         multi: React.PropTypes.bool,
         onChange: React.PropTypes.func.isRequired,
         onChangeMulti: React.PropTypes.func,
+        showArrowActive: React.PropTypes.bool,
         style: React.PropTypes.object,
         styleToMergeWhenActiveState: React.PropTypes.object,
         value: React.PropTypes.oneOfType([
@@ -83,17 +84,37 @@ var ButtonGroupSelect = React.createClass({
             this.props.styleToMergeWhenActiveState || {}
         );
     },
+    renderButtonArrow: function () {
+        return (
+            <div style={{
+                content: "",
+                display: "block",
+                position: "absolute",
+                zIndex: "100",
+                left: "100%",
+                top: "50%",
+                width: "0px",
+                height: "0px",
+                borderStyle: "solid",
+                borderWidth: "10px 0 10px 10px",
+                borderColor: "transparent transparent transparent white"}}
+            ></div>
+        );
+    },
     renderButtonOption: function (allowedValue) {
         const active = this.isActive(allowedValue);
         return (
-            <components.Button
-                disabled={allowedValue.isDisabled || false}
-                key={this.props.getKey(allowedValue)}
-                onClick={R.partial(this.onChange, [allowedValue])}
-                style={active ? this.getActiveStyle() : this.props.style}
-            >
-                {this.props.getLabel(allowedValue)}
-            </components.Button>
+            <div>
+                <components.Button
+                    disabled={allowedValue.isDisabled || false}
+                    key={this.props.getKey(allowedValue)}
+                    onClick={R.partial(this.onChange, [allowedValue])}
+                    style={active ? this.getActiveStyle() : this.props.style}
+                >
+                    {this.props.getLabel(allowedValue)}
+                </components.Button>
+                {active && this.props.showArrowActive ? this.renderButtonArrow() : undefined}
+            </div>
         );
     },
     render: function () {

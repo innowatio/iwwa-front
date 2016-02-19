@@ -1,7 +1,6 @@
 import * as bootstrap from "react-bootstrap";
 import Radium from "radium";
 import React, {PropTypes} from "react";
-import {merge} from "ramda";
 
 import {styles} from "lib/styles_restyling";
 import {defaultTheme} from "lib/theme";
@@ -84,13 +83,18 @@ var FullscreenModal = React.createClass({
                     <div style={{bottom: "15px", textAlign: "center", margin: "3% auto auto auto", height: "41px"}}>
                         <components.Button
                             onClick={this.props.onConfirm}
-                            style={merge(styles(this.getTheme()).buttonSelectChart, {
+                            style={{
+                                ...styles(this.getTheme()).buttonSelectChart,
                                 width: "275px",
-                                height: "41px",
+                                height: "45px",
+                                lineHeight: "45px",
+                                padding: "0",
                                 marginTop: "none",
+                                fontSize: "20px",
                                 marginRight: "none",
+                                border: "0px",
                                 backgroundColor: colors.buttonPrimary
-                            })}
+                            }}
                         >
                             {"OK"}
                         </components.Button>
