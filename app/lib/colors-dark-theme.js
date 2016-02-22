@@ -47,6 +47,7 @@ export const colorsDarkTheme = {
     iconLogin: "#ffffff",
     iconHeader: "#ffffff",
     iconSidenav: "#ffffff",
+    iconSidenavActive: "#536DFE",
     iconDropdown: "#ffffff",
     iconArrow: "#ffffff",
     iconArrowSwitch: "#ffffff",

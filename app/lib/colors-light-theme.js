@@ -47,6 +47,7 @@ export const colorsLightTheme = {
     iconLogin: "#ffffff",
     iconHeader: "#ffffff",
     iconSidenav: "#3e50b4",
+    iconSidenavActive: "#536DFE",
     iconDropdown: "#3e50b4",
     iconArrow: "#3e50b4",
     iconArrowSwitch: "#ffffff",

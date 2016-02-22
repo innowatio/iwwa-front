@@ -407,7 +407,7 @@ var Chart = React.createClass({
                                 color={this.getTheme().colors.iconDropdown}
                                 icon={"export"}
                                 size={"28px"}
-                                style={{lineHeight: "20px"}}
+                                style={{lineHeight: "20px", verticalAlign: "middle"}}
                             />
                         }
                         tooltipId="tooltipExport"
@@ -451,7 +451,7 @@ var Chart = React.createClass({
                             color={this.getTheme().colors.iconHeader}
                             icon={"danger"}
                             size={"28px"}
-                            style={{lineHeight: "20px", margin: "auto"}}
+                            style={{lineHeight: "20px"}}
                         />
                     </components.Button>
 
