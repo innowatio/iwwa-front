@@ -188,7 +188,7 @@ var RealTime = React.createClass({
         });
         return measures.map(pod => {
             var anzId = (pod.get("children") || Immutable.List()).map(anz => {
-                return readingsRealTime.decorateMeasure(anz);
+                return readingsRealTime.decorateMeasure(anz, this.getTheme());
             });
             return pod.set("value", readingsRealTime.addValueToMeasures(
                 anzId.flatten(1),

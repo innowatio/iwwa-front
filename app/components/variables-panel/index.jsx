@@ -6,7 +6,7 @@ import {defaultTheme} from "lib/theme";
 
 var style = (variableColor) => ({
     box: {
-        borderRadius: "30px",
+        borderRadius: "28px",
         display: "flex",
         height: "65px",
         margin: "5%",
@@ -36,7 +36,7 @@ var VariablesPanel = React.createClass({
                         <components.Icon
                             color={this.getTheme().colors.iconVariable}
                             icon={variable.get("icon")}
-                            size={"55px"}
+                            size={"60px"}
                             style={{lineHeight: "20px", width: "45px"}}
                         />
                         <MeasureLabel
@@ -52,8 +52,8 @@ var VariablesPanel = React.createClass({
     },
     render: function () {
         return (
-            <div style={{display: "flex", overflow: "auto"}}>
-                {this.renderVariableBox()}
+            <div style={{width: "100%", height: "110px", overflow: "hidden"}}>
+                <div style={{display: "flex", height: "130px", overflow: "auto"}}>{this.renderVariableBox()}</div>
             </div>
         );
     }
