@@ -392,7 +392,7 @@ var Chart = React.createClass({
     },
     renderExportButton: function () {
         return (
-            <div style={{marginTop: "3px"}}>
+            <div>
                 <components.TutorialAnchor
                     message={tutorialString.export}
                     order={2}
@@ -412,7 +412,7 @@ var Chart = React.createClass({
                         }
                         tooltipId="tooltipExport"
                         tooltipMessage="Esporta"
-                        tooltipPosition="right"
+                        tooltipPosition="left"
                     >
                         <components.DropdownButton
                             allowedValues={parameters.getExportType()}

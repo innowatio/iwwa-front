@@ -56,8 +56,10 @@ var HistoricalGraph = React.createClass({
                     style={{
                         color: colors.resetCompare,
                         display: this.props.isComparationActive ? "flex" : "none",
-                        positeson: "relative",
+                        position: "relative",
                         marginLeft: "50px",
+                        verticalAlign: "middle",
+                        lineHeight: "28px",
                         cursor: "pointer"
                     }}
                 >
@@ -65,7 +67,7 @@ var HistoricalGraph = React.createClass({
                         color={this.getTheme().colors.iconLogout}
                         icon={"logout"}
                         size={"28px"}
-                        style={{lineHeight: "20px"}}
+                        style={{lineHeight: "20px", paddingRight: "5px"}}
                     />
                     <components.Spacer direction="h" size={5} />
                     {"Esci dal confronto"}
