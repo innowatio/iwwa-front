@@ -106,7 +106,7 @@ var Header = React.createClass({
     renderInboxPage: function () {
         return (
             <div style={{marginRight: "15px"}}>
-                <Link to="/" >
+                <Link to="" >
                     <components.Icon
                         color={this.getTheme().colors.iconHeader}
                         icon={"box"}
@@ -120,7 +120,7 @@ var Header = React.createClass({
     renderAllarmPage: function () {
         return (
             <div style={{marginRight: "15px"}}>
-                <Link to="/" >
+                <Link to="" >
                     <components.Icon
                         color={this.getTheme().colors.iconHeader}
                         icon={"danger"}

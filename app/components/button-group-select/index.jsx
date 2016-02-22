@@ -20,6 +20,7 @@ var ButtonGroupSelect = React.createClass({
         multi: React.PropTypes.bool,
         onChange: React.PropTypes.func.isRequired,
         onChangeMulti: React.PropTypes.func,
+        showArrowActive: React.PropTypes.bool,
         style: React.PropTypes.object,
         styleToMergeWhenActiveState: React.PropTypes.object,
         value: React.PropTypes.oneOfType([
@@ -83,6 +84,24 @@ var ButtonGroupSelect = React.createClass({
             this.props.styleToMergeWhenActiveState || {}
         );
     },
+    renderButtonArrow: function () {
+        return (
+            <div style={{
+                content: "",
+                display: "block",
+                position: "absolute",
+                zIndex: "100",
+                left: "100%",
+                top: "20px",
+                width: "0px",
+                height: "0px",
+                marginLeft: "-1px",
+                borderStyle: "solid",
+                borderWidth: "8px 0 8px 18px",
+                borderColor: "transparent transparent transparent " + this.getTheme().colors.buttonPrimary}}
+            ></div>
+        );
+    },
     renderButtonOption: function (allowedValue) {
         const active = this.isActive(allowedValue);
         return (
@@ -93,14 +112,13 @@ var ButtonGroupSelect = React.createClass({
                 style={active ? this.getActiveStyle() : this.props.style}
             >
                 {this.props.getLabel(allowedValue)}
+                {active && this.props.showArrowActive ? this.renderButtonArrow() : undefined}
             </components.Button>
         );
     },
     render: function () {
         return (
-            <bootstrap.ButtonGroup
-                vertical={this.props.vertical}
-            >
+            <bootstrap.ButtonGroup vertical={this.props.vertical}>
                 {this.props.allowedValues.map(this.renderButtonOption)}
             </bootstrap.ButtonGroup>
         );

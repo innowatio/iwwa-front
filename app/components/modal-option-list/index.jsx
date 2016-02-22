@@ -54,7 +54,11 @@ var ModalOptionList = React.createClass({
                         color={this.getTheme().colors.iconFlag}
                         icon={"flag"}
                         size={"28px"}
-                        style={{lineHeight: "20px", float: "right", visibility: active ? "visible" : "hidden"}}
+                        style={{
+                            lineHeight: "20px",
+                            float: "right",
+                            visibility: active ? "visible" : "hidden"
+                        }}
                     />
                 </bootstrap.ListGroupItem>
             );

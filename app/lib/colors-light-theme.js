@@ -1,9 +1,12 @@
 export const colorsLightTheme = {
     axisLabel: "#000000",
     background: "#ffffff",
+    backgroundCalendar: "#231F20",
     backgroundFullScreenModal: "#ffffff",
+    backgroundSiteNavChildrenModal: "rgba(35, 31, 32, 0.5)",
     backgroundLogin: "linear-gradient(235deg,#8a95c8,#7483be,#5b72b3,#4e64a1,#4554a1,#624899,#984898,#eb437f,#d26faa,#b08abc)",
     backgroundSelectButton: "#f3f3f4",
+    borderSelectButton: "rgba(0,0,0,0.2)",
     black: "#333333",
     blueBorder: "#66afe9",
     borderColor: "rgba(0,0,0,0.0980392)",
@@ -26,6 +29,7 @@ export const colorsLightTheme = {
     linePrevisionale: "#a8e1d4",
     lineReale: "#8595f9",
     mainDivShadow: "#8c8c8d",
+    mainFontColor: "#000000",
     primary: "#3e50b4",
     secondary: "#536DFE",
     red: "#f71c50",
@@ -67,5 +71,7 @@ export const colorsLightTheme = {
     borderDropdown: "rgba(56,56,57,0.7)",
     backgroundDropdown: "rgba(255,255,255,0.7)",
     borderPopover: "rgba(255,255,255,0.7)",
-    backgroundArrowPopover: "rgb(56,56,57)"
+    backgroundArrowPopover: "rgb(56,56,57)",
+    backgroundInputSearch: "#ffffff",
+    borderInputSearch: "#000000"
 };

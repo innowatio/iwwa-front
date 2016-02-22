@@ -38,7 +38,7 @@ const measurementTypeButtonStyle = (theme) => R.merge(styles(theme).buttonSelect
     minWidth: "132px",
     height: "45px",
     fontSize: "15px",
-    margin: "0  0 0 10px",
+    margin: "0 0 0 10px",
     padding: "0"
 });
 
@@ -583,7 +583,6 @@ var Chart = React.createClass({
                                 selectedValue={selectedConsumptionType}
                                 styleButton={consumptionButtonStyle(this.getTheme())}
                                 styleButtonSelected={consumptionButtonSelectedStyle(this.getTheme())}
-                                styleIcon={{position: "absolute", left: "2px", top: "2px", height: "90%"}}
                             />
                         </span>
                         <span className="pull-right" style={{display: "flex"}}>
