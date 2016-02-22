@@ -320,11 +320,25 @@ var Chart = React.createClass({
                 }
             );
             break;
+        case "siteCompare":
+            this.props.selectMultipleElectricalSensor(this.state.value);
+            break;
         }
         return this.closeModal();
     },
     onChangeWidgetValue: function (value) {
         this.setState({value});
+    },
+    isComparationActive: function (selectedSitesId, selectedSources) {
+        return (
+            this.isDateCompare() ||
+            selectedSitesId.length > 1 ||
+            (
+                this.props.chart.length >= 2 &&
+                !R.allUniq(this.props.chart.map(singleSelection => singleSelection.measurementType)) &&
+                R.uniq(selectedSources).length === 1
+            )
+        );
     },
     renderChildComponent: function () {
         switch (this.state.selectedWidget) {
@@ -332,7 +346,24 @@ var Chart = React.createClass({
             return this.renderSiteNavigator();
         case "dateFilter":
             return this.renderDateFilter();
+        case "siteCompare":
+            return this.renderSiteCompare();
         }
+    },
+    renderSiteCompare: function () {
+        const sites = this.props.collections.get("sites") || Immutable.Map();
+        return (
+            <components.SiteNavigator
+                allowedValues={sites.sortBy(site => site.get("name"))}
+                onChange={this.onChangeWidgetValue}
+                path={this.state.value || (this.props.chart[1] && this.props.chart[1].fullPath) || []}
+                title={
+                    " QUALE PUNTO DI MISURAZIONE VUOI COMPARARE CON " +
+                    getTitleForSingleSensor(this.props.chart[0], this.props.collections).toUpperCase() +
+                    " ? "
+                }
+            />
+        );
     },
     renderDateFilter: function () {
         return (
@@ -535,7 +566,7 @@ var Chart = React.createClass({
                                 chart={this.props.chart}
                                 getY2Label={CollectionUtils.labelGraph.getY2Label}
                                 getYLabel={CollectionUtils.labelGraph.getYLabel}
-                                isComparationActive={this.isDateCompare() || selectedSitesId.length > 1}
+                                isComparationActive={this.isComparationActive(selectedSitesId, selectedSources)}
                                 isDateCompareActive={this.isDateCompare()}
                                 misure={this.props.collections.get("readings-daily-aggregates") || Immutable.Map()}
                                 ref="historicalGraph"

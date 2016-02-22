@@ -40,11 +40,10 @@ var HistoricalGraph = React.createClass({
         return <SourcesAndSensorsCompare {...this.props} ref="compareGraph"/>;
     },
     renderGraph: function () {
-        const sites = uniq(this.props.chart.map(singleSelection => singleSelection.site));
         if (this.props.isDateCompareActive) {
             return this.renderDateCompareGraph();
         }
-        if (sites.length > 1) {
+        if (this.props.isComparationActive) {
             return this.renderSitesCompareGraph();
         }
         return this.renderValoriCompareGraph();

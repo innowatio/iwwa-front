@@ -65,15 +65,18 @@ export function chart (state = defaultChartState, {type, payload}) {
         *   The `measurementType` is the same.
         */
         const measurementType = state[0].measurementType;
-        return payload.map((sensorId, idx) => ({
+        return [{
+            ...state[0],
+            alarms: undefined
+        }, {
             ...state[0],
             alarms: undefined,
-            sensorId: payload[idx],
-            fullPath: [payload[idx]],
-            site: payload[idx],
+            sensorId: last(payload),
+            fullPath: payload,
+            site: payload[0],
             measurementType,
             date: state[0].date.type === "dateFilter" ? state[0].date : {}
-        }));
+        }];
     }
     case SELECT_DATE_RANGES_COMPARE: {
         const dateRanges = getDateRangesCompare(payload);
