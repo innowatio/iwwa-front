@@ -1,4 +1,4 @@
-import * as bootstrap from "react-bootstrap";
+import {Modal} from "react-bootstrap";
 import Radium from "radium";
 import React, {PropTypes} from "react";
 
@@ -24,7 +24,7 @@ var FullscreenModal = React.createClass({
     render: function () {
         const {colors} = this.getTheme();
         return (
-            <bootstrap.Modal
+            <Modal
                 className="fullscreen-modal-selector"
                 {...this.props}
             >
@@ -75,11 +75,11 @@ var FullscreenModal = React.createClass({
                     }}
                     scopeSelector=".fullscreen-modal-selector"
                 />
-                <bootstrap.Modal.Header closeButton={true} />
-                <bootstrap.Modal.Body>
+                <Modal.Header closeButton={true} />
+                <Modal.Body>
                     {this.props.children}
-                </bootstrap.Modal.Body>
-                <bootstrap.Modal.Footer>
+                </Modal.Body>
+                <Modal.Footer>
                     <div style={{bottom: "15px", textAlign: "center", margin: "3% auto auto auto", height: "41px"}}>
                         <components.Button
                             onClick={this.props.onConfirm}
@@ -111,8 +111,8 @@ var FullscreenModal = React.createClass({
                             />
                         </components.Button>
                     </div>
-                </bootstrap.Modal.Footer>
-            </bootstrap.Modal>
+                </Modal.Footer>
+            </Modal>
         );
     }
 });

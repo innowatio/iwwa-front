@@ -2,6 +2,7 @@ var bootstrap           = require("react-bootstrap");
 var R                   = require("ramda");
 var Radium              = require("radium");
 var React               = require("react");
+var Modal               = bootstrap.Modal;
 
 var components = require("components/");
 var measures   = require("lib/measures");
@@ -79,9 +80,9 @@ var Compare = React.createClass({
         const {colors} = this.getTheme();
         return (
             <div>
-                <bootstrap.Modal.Title className="text-center" style={{color: colors.primary}}>
+                <Modal.Title className="text-center" style={{color: colors.primary}}>
                     {"Voglio confrontare questi punti di misurazione"}
-                </bootstrap.Modal.Title>
+                </Modal.Title>
                 <h5 className="text-center">{"Seleziona due punti"}</h5>
             </div>
         );
@@ -90,9 +91,9 @@ var Compare = React.createClass({
         const {colors} = this.getTheme();
         return (
             <div>
-                <bootstrap.Modal.Title className="text-center" style={{color: colors.primary}}>
+                <Modal.Title className="text-center" style={{color: colors.primary}}>
                     {"Voglio confrontare i dati attuali con"}
-                </bootstrap.Modal.Title>
+                </Modal.Title>
                 <h5 className="text-center">{"Seleziona una delle seguenti opzioni"}</h5>
             </div>
         );
@@ -154,15 +155,15 @@ var Compare = React.createClass({
                         }}
                         scopeSelector=".modal-dialog"
                     />
-                    <bootstrap.Modal.Header
+                    <Modal.Header
                         closeButton={true}
                         style={{borderBottom: "none"}}
                     >
                         {this.headerTitleCompare()}
-                    </bootstrap.Modal.Header>
-                    <bootstrap.Modal.Body style={{textAlign: "center"}}>
+                    </Modal.Header>
+                    <Modal.Body style={{textAlign: "center"}}>
                         {this.modalCompare()}
-                    </bootstrap.Modal.Body>
+                    </Modal.Body>
                 </bootstrap.Modal>
             </span>
         );

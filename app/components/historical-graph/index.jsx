@@ -1,7 +1,6 @@
 import IPropTypes from "react-immutable-proptypes";
 import React, {PropTypes} from "react";
 import ReactPureRender from "react-addons-pure-render-mixin";
-import {uniq} from "ramda";
 
 import components from "components";
 import DateCompareGraph from "./date-compare";

@@ -2,6 +2,7 @@ var Radium     = require("radium");
 var R          = require("ramda");
 var React      = require("react");
 var bootstrap  = require("react-bootstrap");
+var Modal = bootstrap.Modal;
 
 var components = require("components");
 var measures   = require("lib/measures");
@@ -69,7 +70,7 @@ var ModalOptionList = React.createClass({
         var repetitionItems = this.props.allowedValues.map(this.renderGroupItems);
         return (
             <div>
-                <bootstrap.Modal
+                <Modal
                     container={this}
                     onHide={this.props.toggleModal}
                     show={this.props.isModalOpen}
@@ -83,18 +84,18 @@ var ModalOptionList = React.createClass({
                         }}
                         scopeSelector=".modal-dialog"
                     />
-                    <bootstrap.Modal.Header
+                    <Modal.Header
                         closeButton={true}
                         style={{borderBottom: "none"}}
                     >
                         {this.props.header}
-                    </bootstrap.Modal.Header>
-                    <bootstrap.Modal.Body style={{textAlign: "center"}}>
+                    </Modal.Header>
+                    <Modal.Body style={{textAlign: "center"}}>
                         <bootstrap.ListGroup>
                             {repetitionItems.toArray ? repetitionItems.toArray() : repetitionItems}
                         </bootstrap.ListGroup>
-                    </bootstrap.Modal.Body>
-                    <bootstrap.Modal.Footer style={{textAlign: "center"}}>
+                    </Modal.Body>
+                    <Modal.Footer style={{textAlign: "center"}}>
                         <components.Button
                             onClick={this.props.onClickConfirm}
                             style={{
@@ -115,8 +116,8 @@ var ModalOptionList = React.createClass({
                         >
                             {"RESET"}
                         </components.Button>
-                    </bootstrap.Modal.Footer>
-                </bootstrap.Modal>
+                    </Modal.Footer>
+                </Modal>
             </div>
         );
     }
