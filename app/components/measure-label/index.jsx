@@ -5,18 +5,24 @@ var React  = require("react");
 import {defaultTheme} from "lib/theme";
 
 var styleLabelValue = ({colors}) => ({
-    color: colors.primary,
-    fontSize: "32px"
+    color: colors.white,
+    fontSize: "46px",
+    fontWeight: "500",
+    lineHeight: "56px",
+    paddingRight: "10px"
 });
 
 var styleLabelUnit = ({colors}) => ({
-    color: colors.primary,
-    fontSize: "20px",
-    display: "inline-block"
+    color: colors.white,
+    fontSize: "26px",
+    display: "inline-block",
+    verticalAlign: "text-bottom",
+    fontWeight: "500"
 });
 
 var styleTextDiv = {
-    display: "flex"
+    display: "flex",
+    overflowY: "none"
 };
 
 var MeasureLabel = React.createClass({
@@ -62,7 +68,14 @@ var MeasureLabel = React.createClass({
                             >
                                 {this.props.unit}
                             </div>
-                            <div className="subject" style={{fontSize: "9px"}}>
+                            <div
+                                className="subject"
+                                style={{
+                                    fontSize: "12px",
+                                    lineHeight: "10px",
+                                    color: theme.colors.white
+                                }}
+                            >
                                 {this.props.id}
                             </div>
                         </div>

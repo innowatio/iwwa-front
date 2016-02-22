@@ -4,14 +4,14 @@ var components = require("components");
 var MeasureLabel = require("components/").MeasureLabel;
 import {defaultTheme} from "lib/theme";
 
-var style = ({colors}) => ({
+var style = (variableColor) => ({
     box: {
-        border: "1px solid " + colors.greyBorder,
-        borderRadius: "40px",
+        borderRadius: "30px",
         display: "flex",
-        height: "55px",
+        height: "65px",
         margin: "5%",
-        padding: "2% 1%"
+        padding: "1% 5%",
+        background: variableColor
     }
 });
 
@@ -29,20 +29,19 @@ var VariablesPanel = React.createClass({
         return this.context.theme || defaultTheme;
     },
     renderVariableBox: function () {
-        const theme = this.getTheme();
         return this.props.values.map((variable) => {
             return (
-                <div  key={variable.get("key")} style={{width: "25%", flex: "1 0 auto"}}>
-                    <div style={style(theme).box} styleName="variableContainer">
+                <div key={variable.get("key")} style={{width: "25%", flex: "1 0 auto"}}>
+                    <div style={style(variable.get("buttonBgColor")).box} styleName="variableContainer">
                         <components.Icon
                             color={this.getTheme().colors.iconVariable}
                             icon={variable.get("icon")}
-                            size={"40px"}
+                            size={"55px"}
                             style={{lineHeight: "20px", width: "45px"}}
                         />
                         <MeasureLabel
                             id={variable.get("id")}
-                            style={{paddingLeft: "10px", lineHeight: "40px"}}
+                            style={{paddingLeft: "10px", verticalAlign: "text-top"}}
                             unit={variable.get("unit")}
                             value={variable.get("value")}
                         />

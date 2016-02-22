@@ -1,26 +1,30 @@
 import {Map, List} from "immutable";
 import {filter, isNil} from "ramda";
 
-export const decorators = [
+export const decorators = ({colors}) => [
     Map({
+        buttonBgColor: colors.co2,
         key: "co2",
         icon: "co2",
         type: "co2",
         unit: "ppm"
     }),
     Map({
+        buttonBgColor: colors.humidity,
         key: "humidity",
         icon: "humidity",
         type: "thl",
         unit: "g/m3"
     }),
     Map({
+        buttonBgColor: colors.illuminance,
         key: "illuminance",
         icon: "lightbulb",
         type: "thl",
         unit: "lx"
     }),
     Map({
+        buttonBgColor: colors.temperature,
         key: "temperature",
         icon: "thermometer",
         type: "thl",
@@ -58,13 +62,13 @@ export const decorators = [
     })
 ];
 
-export function decorateMeasure (sensor) {
+export function decorateMeasure (sensor, theme) {
     // return an Immutable list for avoid subsequent `.flatten` mismatch
     return List(filter(
         function (value) {
             return !isNil(value);
         },
-        decorators.map(decorator => {
+        decorators(theme).map(decorator => {
             if (decorator.get("type") === sensor.get("type")) {
                 return decorator.merge(
                     sensor
