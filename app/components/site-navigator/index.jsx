@@ -15,7 +15,7 @@ const itemsStyle = (theme) => (R.merge(styles(theme).buttonBasicStyle, {
     fontSize: "22px",
     border: "0",
     marginTop: "10px",
-    width: "100%",
+    width: "95%",
     height: "55px",
     lineHeight: "20px",
     padding: "14px",
@@ -199,9 +199,8 @@ var SiteNavigator = React.createClass({
                             height: "100%",
                             marginTop: "10px",
                             borderRadius: "20px",
-                            border: "1px solid",
+                            border: `1px solid ${theme.colors.white}`,
                             padding: "16px",
-                            borderColor: theme.colors.white,
                             backgroundColor: theme.colors.backgroundSiteNavChildrenModal
                         }}
                     >

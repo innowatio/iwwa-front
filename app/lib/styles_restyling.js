@@ -28,12 +28,14 @@ export const styles = (theme) => ({
         background: theme.colors.backgroundDropdown
     },
     buttonSelectChart: {
+        position: "relative",
         background: theme.colors.backgroundSelectButton,
         color: theme.colors.selectButton,
         marginRight: "9px",
         marginTop: "6px",
         fontSize: "12px",
-        border: "1px solid rgba(255, 255, 255, 0.7)",
+        border: "1px solid",
+        borderColor: theme.colors.borderSelectButton,
         borderRadius: "30px"
     },
     colVerticalPadding: {

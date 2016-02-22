@@ -92,36 +92,33 @@ var ButtonGroupSelect = React.createClass({
                 position: "absolute",
                 zIndex: "100",
                 left: "100%",
-                top: "50%",
+                top: "20px",
                 width: "0px",
                 height: "0px",
+                marginLeft: "-1px",
                 borderStyle: "solid",
-                borderWidth: "10px 0 10px 10px",
-                borderColor: "transparent transparent transparent white"}}
+                borderWidth: "8px 0 8px 18px",
+                borderColor: "transparent transparent transparent " + this.getTheme().colors.buttonPrimary}}
             ></div>
         );
     },
     renderButtonOption: function (allowedValue) {
         const active = this.isActive(allowedValue);
         return (
-            <div>
-                <components.Button
-                    disabled={allowedValue.isDisabled || false}
-                    key={this.props.getKey(allowedValue)}
-                    onClick={R.partial(this.onChange, [allowedValue])}
-                    style={active ? this.getActiveStyle() : this.props.style}
-                >
-                    {this.props.getLabel(allowedValue)}
-                </components.Button>
+            <components.Button
+                disabled={allowedValue.isDisabled || false}
+                key={this.props.getKey(allowedValue)}
+                onClick={R.partial(this.onChange, [allowedValue])}
+                style={active ? this.getActiveStyle() : this.props.style}
+            >
+                {this.props.getLabel(allowedValue)}
                 {active && this.props.showArrowActive ? this.renderButtonArrow() : undefined}
-            </div>
+            </components.Button>
         );
     },
     render: function () {
         return (
-            <bootstrap.ButtonGroup
-                vertical={this.props.vertical}
-            >
+            <bootstrap.ButtonGroup vertical={this.props.vertical}>
                 {this.props.allowedValues.map(this.renderButtonOption)}
             </bootstrap.ButtonGroup>
         );
