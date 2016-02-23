@@ -54,7 +54,7 @@ var FullscreenModal = React.createClass({
                         },
                         ".modal-header": {
                             borderBottom: "none",
-                            padding: "10px"
+                            padding: "8px"
                         },
                         ".modal-footer": {
                             borderTop: "none",
@@ -80,7 +80,7 @@ var FullscreenModal = React.createClass({
                     {this.props.children}
                 </Modal.Body>
                 <Modal.Footer>
-                    <div style={{bottom: "15px", textAlign: "center", margin: "3% auto auto auto", height: "41px"}}>
+                    <div style={{bottom: "15px", textAlign: "center", margin: "2% auto auto auto", height: "45px"}}>
                         <components.Button
                             onClick={this.props.onConfirm}
                             style={{

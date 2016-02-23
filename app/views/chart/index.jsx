@@ -375,6 +375,7 @@ var Chart = React.createClass({
                     this.props.chart[0].date.period ||
                     parameters.getDateCompare()[0]
                 }
+                title={"SELEZIONA IL PERIODO DA CONFRONTARE CON LA SELEZIONE ATTIVA"}
             />
         );
     },

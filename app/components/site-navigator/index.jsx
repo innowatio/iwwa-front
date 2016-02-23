@@ -144,7 +144,8 @@ var SiteNavigator = React.createClass({
                                     borderTopLeftRadius: "20px",
                                     borderBottomLeftRadius: "20px",
                                     backgroundColor: theme.colors.backgroundInputSearch,
-                                    outline: "none !important"
+                                    outline: "none !important",
+                                    color: theme.colors.white
                                 },
                                 ".input-group-addon:last-child": {
                                     backgroundColor: theme.colors.backgroundInputSearch,
@@ -197,9 +198,9 @@ var SiteNavigator = React.createClass({
                             height: "100%",
                             marginTop: "10px",
                             borderRadius: "20px",
-                            border: `1px solid ${theme.colors.white}`,
+                            border: `1px solid ${theme.colors.borderContentModal}`,
                             padding: "16px",
-                            backgroundColor: theme.colors.backgroundSiteNavChildrenModal
+                            backgroundColor: theme.colors.backgroundContentModal
                         }}
                     >
                         <Radium.Style
