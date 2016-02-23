@@ -12,8 +12,14 @@ export function getChartSetting ({colors}) {
         color: colors.iconDropdown
     },
     {
-        label: "Confronto",
-        key: "compare",
+        label: "Confronto tra sensori",
+        key: "siteCompare",
+        iconClass: "confront",
+        color: colors.iconDropdown
+    },
+    {
+        label: "Confronto tra periodi",
+        key: "dateCompare",
         iconClass: "confront",
         color: colors.iconDropdown
     },

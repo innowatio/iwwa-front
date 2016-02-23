@@ -1,7 +1,6 @@
 import IPropTypes from "react-immutable-proptypes";
 import React, {PropTypes} from "react";
 import ReactPureRender from "react-addons-pure-render-mixin";
-import {uniq} from "ramda";
 
 import components from "components";
 import DateCompareGraph from "./date-compare";
@@ -40,11 +39,10 @@ var HistoricalGraph = React.createClass({
         return <SourcesAndSensorsCompare {...this.props} ref="compareGraph"/>;
     },
     renderGraph: function () {
-        const sites = uniq(this.props.chart.map(singleSelection => singleSelection.site));
         if (this.props.isDateCompareActive) {
             return this.renderDateCompareGraph();
         }
-        if (sites.length > 1) {
+        if (this.props.isComparationActive) {
             return this.renderSitesCompareGraph();
         }
         return this.renderValoriCompareGraph();
@@ -58,8 +56,10 @@ var HistoricalGraph = React.createClass({
                     style={{
                         color: colors.resetCompare,
                         display: this.props.isComparationActive ? "flex" : "none",
-                        positeson: "relative",
+                        position: "relative",
                         marginLeft: "50px",
+                        verticalAlign: "middle",
+                        lineHeight: "28px",
                         cursor: "pointer"
                     }}
                 >
@@ -67,7 +67,7 @@ var HistoricalGraph = React.createClass({
                         color={this.getTheme().colors.iconLogout}
                         icon={"logout"}
                         size={"28px"}
-                        style={{lineHeight: "20px"}}
+                        style={{lineHeight: "20px", paddingRight: "5px"}}
                     />
                     <components.Spacer direction="h" size={5} />
                     {"Esci dal confronto"}

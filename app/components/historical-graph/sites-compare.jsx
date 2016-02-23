@@ -26,10 +26,7 @@ var sitesCompare = React.createClass({
         return readingsDailyAggregatesToDygraphData(this.props.misure, this.props.chart);
     },
     getLabels: function () {
-        var sitesLabels = this.props.sites.map((sito = Map()) => {
-            return sito.get("name");
-        });
-        return ["Data"].concat(sitesLabels);
+        return ["Data"].concat([this.props.chart[0].sensorId, this.props.chart[1].sensorId]);
     },
     render: function () {
         const {colors} = this.getTheme();

@@ -1,7 +1,6 @@
-import * as bootstrap from "react-bootstrap";
+import {Modal} from "react-bootstrap";
 import Radium from "radium";
 import React, {PropTypes} from "react";
-import {merge} from "ramda";
 
 import {styles} from "lib/styles_restyling";
 import {defaultTheme} from "lib/theme";
@@ -25,7 +24,7 @@ var FullscreenModal = React.createClass({
     render: function () {
         const {colors} = this.getTheme();
         return (
-            <bootstrap.Modal
+            <Modal
                 className="fullscreen-modal-selector"
                 {...this.props}
             >
@@ -76,21 +75,26 @@ var FullscreenModal = React.createClass({
                     }}
                     scopeSelector=".fullscreen-modal-selector"
                 />
-                <bootstrap.Modal.Header closeButton={true} />
-                <bootstrap.Modal.Body>
+                <Modal.Header closeButton={true} />
+                <Modal.Body>
                     {this.props.children}
-                </bootstrap.Modal.Body>
-                <bootstrap.Modal.Footer>
+                </Modal.Body>
+                <Modal.Footer>
                     <div style={{bottom: "15px", textAlign: "center", margin: "3% auto auto auto", height: "41px"}}>
                         <components.Button
                             onClick={this.props.onConfirm}
-                            style={merge(styles(this.getTheme()).buttonSelectChart, {
+                            style={{
+                                ...styles(this.getTheme()).buttonSelectChart,
                                 width: "275px",
-                                height: "41px",
+                                height: "45px",
+                                lineHeight: "45px",
+                                padding: "0",
                                 marginTop: "none",
+                                fontSize: "20px",
                                 marginRight: "none",
+                                border: "0px",
                                 backgroundColor: colors.buttonPrimary
-                            })}
+                            }}
                         >
                             {"OK"}
                         </components.Button>
@@ -107,8 +111,8 @@ var FullscreenModal = React.createClass({
                             />
                         </components.Button>
                     </div>
-                </bootstrap.Modal.Footer>
-            </bootstrap.Modal>
+                </Modal.Footer>
+            </Modal>
         );
     }
 });

@@ -167,11 +167,11 @@ var RealTime = React.createClass({
         );
     },
     findLatestMeasuresWithCriteria: function (criteria) {
-        var res = readingsRealTime.decorators.filter(criteria);
+        var res = readingsRealTime.decorators(this.getTheme()).filter(criteria);
         if (this.props.realTime.fullPath && this.getMeasures().size) {
             var decoMeasurements = this.getSite(this.props.realTime.fullPath[0]).get("sensors")
                 .map(sensor => {
-                    return readingsRealTime.decorateMeasure(sensor);
+                    return readingsRealTime.decorateMeasure(sensor, this.getTheme());
                 });
             res = R.filter(
                 criteria,
@@ -188,7 +188,7 @@ var RealTime = React.createClass({
         });
         return measures.map(pod => {
             var anzId = (pod.get("children") || Immutable.List()).map(anz => {
-                return readingsRealTime.decorateMeasure(anz);
+                return readingsRealTime.decorateMeasure(anz, this.getTheme());
             });
             return pod.set("value", readingsRealTime.addValueToMeasures(
                 anzId.flatten(1),

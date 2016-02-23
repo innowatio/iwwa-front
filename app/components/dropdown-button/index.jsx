@@ -48,10 +48,11 @@ var DropdownButton = React.createClass({
                 <components.Icon
                     color={this.props.getColor(allowedValue)}
                     icon={this.props.getIcon(allowedValue)}
-                    size={"30px"}
-                    style={{lineHeight: "20px",
-                        verticalAlign: "middle",
-                        marginRight: "20px"
+                    size={"35px"}
+                    style={{
+                        lineHeight: "28px",
+                        verticalAlign: "text-top",
+                        marginRight: "10px"
                     }}
                 />
             );
@@ -80,6 +81,9 @@ var DropdownButton = React.createClass({
                     borderTopRightRadius: (index === 0 ? "4px" : undefined),
                     borderBottom: (index === 2 ? "0px" : undefined),
                     fontSize: "12px",
+                    lineHeight: "45px",
+                    padding: "2px 20px 2px 10px !important",
+                    verticalAlign: "middle",
                     // This should overwrite the style over that position.
                     ...this.props.style
                 }, {

@@ -40,11 +40,16 @@ describe("The `ButtonGroupSelect` component ", function () {
             />
         );
         const buttonNodes = TestUtils.scryRenderedComponentsWithType(selectNode, Button);
-        const expectedLabels = R.map(getLabel, allowedValues);
+        const expectedLabels = R.map(allowedValue => {
+            return getLabel(allowedValue);
+        }, allowedValues);
         const actualLabels = R.map(function (buttonNode) {
             return buttonNode.props.children;
         }, buttonNodes);
-        expect(expectedLabels).to.eql(actualLabels);
+        actualLabels.map((actualLabel, index) => {
+            expect(actualLabel[0].props.children).to.deep.equal(expectedLabels[index]);
+            expect(actualLabel[1]).to.deep.equal(undefined);
+        });
         expect(getLabelSpy.callCount).to.equal(allowedValues.length);
     });
 

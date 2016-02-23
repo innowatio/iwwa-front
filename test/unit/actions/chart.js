@@ -108,17 +108,17 @@ describe("`chart` actions", () => {
 
     describe("`selectMultipleElectricalSensor` function", () => {
 
-        it("should return the correct object if are passed two sites", () => {
-            const sites = ["siteId1", "siteId2"];
-            const ret = chart.selectMultipleElectricalSensor(sites);
+        it("should return the correct object if are passed a fullPath", () => {
+            const fullPath = ["siteId1", "pod1", "sensorId1"];
+            const ret = chart.selectMultipleElectricalSensor(fullPath);
             expect(ret).to.deep.equal({
                 type: "SELECT_MULTIPLE_ELECTRICAL_SITE",
-                payload: sites
+                payload: fullPath
             });
         });
 
         it("should throw if aren't passed the correct object", () => {
-            const source = ["site"];
+            const source = "site";
             function troubleMaker () {
                 chart.selectMultipleElectricalSensor(source);
             }

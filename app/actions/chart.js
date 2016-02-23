@@ -48,9 +48,7 @@ export function selectElectricalType (electricalType) {
 *   A click on site-compare-modal
 *   @param {array} sites - id site of the two sites
 */
-const typeofSelectMultipleElectricalSensor = actionTypeValidator(
-    tuple([String, String])
-);
+const typeofSelectMultipleElectricalSensor = actionTypeValidator(list(String));
 export function selectMultipleElectricalSensor (sites) {
     typeofSelectMultipleElectricalSensor(...arguments);
     return {

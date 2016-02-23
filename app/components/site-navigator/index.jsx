@@ -10,17 +10,22 @@ import {defaultTheme} from "lib/theme";
 import {styles} from "lib/styles_restyling";
 
 const itemsStyle = (theme) => (R.merge(styles(theme).buttonBasicStyle, {
-    background: theme.colors.white,
-    border: `1px solid ${theme.colors.greySubTitle}`,
-    marginTop: "5px",
-    width: "100%",
-    padding: "10px"
+    background: theme.colors.primary,
+    color: theme.colors.white,
+    fontSize: "22px",
+    border: "0",
+    marginTop: "10px",
+    width: "98%",
+    padding: "14px",
+    borderRadius: "20px"
 }));
 
 const itemsStyleActive = ({colors}) => ({
-    background: colors.primary,
+    background: colors.buttonPrimary,
     color: colors.white,
-    fontSize: "13px"
+    borderRadius: "20px",
+    display: "inline-block",
+    position: "relative"
 });
 
 var SiteNavigator = React.createClass({
@@ -97,6 +102,7 @@ var SiteNavigator = React.createClass({
                 getLabel={this.getLabelParent}
                 multi={false}
                 onChange={this.onClickParent}
+                showArrowActive={true}
                 style={itemsStyle(this.getTheme())}
                 styleToMergeWhenActiveState={itemsStyleActive(this.getTheme())}
                 value={this.getValue()}
@@ -126,23 +132,48 @@ var SiteNavigator = React.createClass({
         const theme = this.getTheme();
         return (
             <div>
-                <h3 className="text-center" style={{color: theme.colors.white}}>{this.props.title}</h3>
-                <bootstrap.Col style={{marginTop: "15px"}} xs={12}>
-                    <bootstrap.Input
-                        addonAfter={
-                            <components.Icon
-                                color={this.getTheme().colors.iconInputSearch}
-                                icon={"search"}
-                                size={"20px"}
-                                style={{lineHeight: "10px", verticalAlign: "middle", padding: "0", margin: "0"}}
-                            />
-                        }
-                        className="input-search"
-                        onChange={(input) => this.setState({inputFilter: input.target.value})}
-                        placeholder="Ricerca"
-                        type="text"
-                        value={this.state.inputFilter}
-                    />
+                <h3 className="text-center" style={{color: theme.colors.mainFontColor}}>{this.props.title}</h3>
+                <bootstrap.Col style={{marginTop: "20px"}} xs={12}>
+                    <div className="search-container">
+                        <Radium.Style
+                            rules={{
+                                ".input-search": {
+                                    height: "60px",
+                                    fontSize: "20px",
+                                    borderRight: "0px",
+                                    borderTopLeftRadius: "20px",
+                                    borderBottomLeftRadius: "20px",
+                                    backgroundColor: theme.colors.backgroundInputSearch,
+                                    outline: "none !important"
+                                },
+                                ".input-group-addon:last-child": {
+                                    backgroundColor: theme.colors.backgroundInputSearch,
+                                    borderTopRightRadius: "20px",
+                                    borderBottomRightRadius: "20px",
+                                    cursor: "pointer"
+                                }
+                            }}
+                            scopeSelector=".search-container"
+                        />
+                        <bootstrap.Input
+                            addonAfter={
+                                <components.Icon
+                                    color={theme.colors.iconInputSearch}
+                                    icon={"search"}
+                                    size={"34px"}
+                                    style={{
+                                        lineHeight: "10px",
+                                        verticalAlign: "middle"
+                                    }}
+                                />
+                            }
+                            className="input-search"
+                            onChange={(input) => this.setState({inputFilter: input.target.value})}
+                            placeholder="Ricerca"
+                            type="text"
+                            value={this.state.inputFilter}
+                        />
+                    </div>
                 </bootstrap.Col>
                 <bootstrap.Col style={{overflow: "auto", marginTop: "10px", height: "calc(100vh - 350px)", minHeight: "300px"}} xs={4}>
                     <div className="site-navigator-parent">
@@ -163,9 +194,12 @@ var SiteNavigator = React.createClass({
                     <div
                         className="site-navigator-child"
                         style={{
-                            border: "solid " + theme.colors.primary,
                             height: "100%",
-                            marginTop: "10px"
+                            marginTop: "10px",
+                            borderRadius: "20px",
+                            border: `1px solid ${theme.colors.white}`,
+                            padding: "16px",
+                            backgroundColor: theme.colors.backgroundSiteNavChildrenModal
                         }}
                     >
                         <Radium.Style
@@ -175,7 +209,7 @@ var SiteNavigator = React.createClass({
                                     padding: "12px"
                                 },
                                 "button.btn": itemsStyle(theme),
-                                "button.btn.active": itemsStyleActive(theme)
+                                "button.btn.active": itemsStyleActive
                             }}
                             scopeSelector=".site-navigator-child"
                         />

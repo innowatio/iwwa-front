@@ -121,21 +121,18 @@ describe("`chart` reducer [CASE: single object in default state array]", () => {
         it("should return the correct object", () => {
             const valuePassedFromAction = {
                 type: "SELECT_MULTIPLE_ELECTRICAL_SITE",
-                payload: ["siteId1", "siteId2"]
+                payload: ["site", "pod", "sensorId1", "sensorId2"]
             };
             const ret = chart(chartState, valuePassedFromAction);
             expect(ret).to.deep.equal([{
                 ...defaultChartStateObject,
-                alarms: undefined,
-                site: "siteId1",
-                fullPath: ["siteId1"],
-                sensorId: "siteId1"
+                alarms: undefined
             }, {
                 ...defaultChartStateObject,
                 alarms: undefined,
-                fullPath: ["siteId2"],
-                site: "siteId2",
-                sensorId: "siteId2"
+                fullPath: ["site", "pod", "sensorId1", "sensorId2"],
+                site: "site",
+                sensorId: "sensorId2"
             }]);
         });
 
