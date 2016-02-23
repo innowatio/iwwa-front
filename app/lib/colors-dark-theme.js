@@ -1,5 +1,5 @@
 export const colorsDarkTheme = {
-    axisLabel: "#ffffff",
+    axisLabel: "#8D8D8E",
     background: "#303232",
     backgroundCalendar: "#231F20",
     backgroundFullScreenModal: "rgba(2, 2, 2, 0.8)",
@@ -15,8 +15,8 @@ export const colorsDarkTheme = {
     co2: "#CE93D8",
     consumption: "#F74F68",
     darkBlack: "#212121",
-    graphUnderlay: "#4E4D4F",
     green: "#a8e1d4",
+    graphUnderlay: "#4E4D4F",
     grey: "#999999",
     greyBackground: "#f3f3f4",
     greyBorder: "#cccccc",
