@@ -84,7 +84,8 @@ var Root = React.createClass({
             {key: "live", label: "CONSUMI LIVE", url: "/live/", iconClassName: "gauge"},
             {key: "consumptions", label: "RIEPILOGO CONSUMI", url: "/consumptions/", iconClassName: "percentage"},
             {key: "alarms", label: "ALLARMI", url: "/alarms/", iconClassName: "alarms"},
-            {key: "help", label: "AIUTO", onClick: "resetTutorial", iconClassName: "help"}
+            {key: "help", label: "AIUTO", onClick: "resetTutorial", iconClassName: "help"},
+            {key: "monitoring", label: "MONITORING", url: "/monitoring/", iconClassName: "gauge"}
         ];
     },
     toggleSidebar: function () {

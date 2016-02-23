@@ -7,13 +7,13 @@ const defalutTemplateState = {
 };
 function theme (state = defalutTemplateState, {type, payload}) {
     switch (type) {
-    case SELECT_THEME_COLOR:
-        return {
-            ...state,
-            color: payload
-        };
-    default:
-        return state;
+        case SELECT_THEME_COLOR:
+            return {
+                ...state,
+                color: payload
+            };
+        default:
+            return state;
     }
 }
 

@@ -12,23 +12,23 @@ import {SELECT_SINGLE_ELECTRICAL_SENSOR_CONSUMPTION} from "actions/consumptions"
 */
 function site (state = null, {type, payload}) {
     switch (type) {
-    case SELECT_SINGLE_ELECTRICAL_SENSOR_CHART:
-    case SELECT_SINGLE_ELECTRICAL_SENSOR_CONSUMPTION:
-    case SELECT_SINGLE_ELECTRICAL_SENSOR_REAL_TIME:
-        return head(payload);
-    default:
-        return state;
+        case SELECT_SINGLE_ELECTRICAL_SENSOR_CHART:
+        case SELECT_SINGLE_ELECTRICAL_SENSOR_CONSUMPTION:
+        case SELECT_SINGLE_ELECTRICAL_SENSOR_REAL_TIME:
+            return head(payload);
+        default:
+            return state;
     }
 }
 
 function fullPath (state = null, {type, payload}) {
     switch (type) {
-    case SELECT_SINGLE_ELECTRICAL_SENSOR_CHART:
-    case SELECT_SINGLE_ELECTRICAL_SENSOR_CONSUMPTION:
-    case SELECT_SINGLE_ELECTRICAL_SENSOR_REAL_TIME:
-        return payload;
-    default:
-        return state;
+        case SELECT_SINGLE_ELECTRICAL_SENSOR_CHART:
+        case SELECT_SINGLE_ELECTRICAL_SENSOR_CONSUMPTION:
+        case SELECT_SINGLE_ELECTRICAL_SENSOR_REAL_TIME:
+            return payload;
+        default:
+            return state;
     }
 }
 
