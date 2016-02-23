@@ -334,7 +334,11 @@ var Chart = React.createClass({
             break;
         case "dateCompare":
             this.props.selectDateRangesCompare(
-                this.state.value || {
+                this.state.value ||
+                (this.props.chart[0].date.type === "dateCompare" &&  {
+                    period: this.props.chart[0].date.period,
+                    dateOne: moment.utc().valueOf()
+                }) || {
                     // Set the default value to pass.
                     period: parameters.getDateCompare()[0],
                     dateOne: moment.utc().valueOf()

@@ -29,7 +29,6 @@ var DateCompare = React.createClass({
         return this.context.theme || defaultTheme;
     },
     selectedCheckboxDate: function (allowedValue) {
-        console.log(allowedValue);
         this.props.onChange({
             dateOne: moment.utc().valueOf(),
             // Set the default period
