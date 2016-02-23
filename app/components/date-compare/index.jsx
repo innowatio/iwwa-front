@@ -5,8 +5,9 @@ import moment from "moment";
 
 import components from "components";
 import {defaultTheme} from "lib/theme";
+import {styles} from "lib/styles_restyling";
 
-const styles = (theme) => ({
+const stylesFunction = (theme) => ({
     buttonsWrap: {
         width: "80%",
         margin: "50px auto",
@@ -54,7 +55,7 @@ var DateCompare = React.createClass({
             <bootstrap.Col key={this.props.getKey(allowedValue)} lg={3} md={4} xs={12}>
                 <components.Button
                     onClick={partial(this.selectedCheckboxDate, [allowedValue])}
-                    style={merge(styles(theme).buttonCompare,
+                    style={merge(stylesFunction(theme).buttonCompare,
                         {
                             color: active ? theme.colors.mainFontColor : theme.colors.mainFontColor,
                             backgroundColor: active ? theme.colors.buttonPrimary : theme.colors.backgroundSelectButton,
@@ -72,8 +73,10 @@ var DateCompare = React.createClass({
         const theme = this.getTheme();
         return (
             <div>
-                <h3 className="text-center" style={{color: theme.colors.mainFontColor}}>{this.props.title}</h3>
-                <div style={styles(theme).buttonsWrap}>
+                <h3 className="text-center" style={styles(theme).titleFullScreenModal}>
+                    {this.props.title}
+                </h3>
+                <div style={stylesFunction(theme).buttonsWrap}>
                     {this.props.allowedValues.map(this.renderDataCompare)}
                 </div>
             </div>

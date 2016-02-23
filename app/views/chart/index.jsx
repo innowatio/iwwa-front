@@ -361,6 +361,8 @@ var Chart = React.createClass({
                 return this.renderSiteCompare();
             case "dateCompare":
                 return this.renderDateCompare();
+            case "export":
+                return this.renderExport();
         }
     },
     renderDateCompare: function () {
@@ -419,7 +421,15 @@ var Chart = React.createClass({
             />
         );
     },
+    renderExport: function () {
+        return (
+            <components.Export
+                title={"INVIA I DATI VISUALIZZATI VIA EMAIL"}
+            />
+        );
+    },
     renderExportButton: function () {
+        const theme = this.getTheme();
         return (
             <div>
                 <components.TutorialAnchor
@@ -429,11 +439,11 @@ var Chart = React.createClass({
                     ref="export"
                 >
                     <components.Popover
-                        arrowColor={this.getTheme().colors.white}
+                        arrowColor={theme.colors.white}
                         hideOnChange={true}
                         title={
                             <components.Icon
-                                color={this.getTheme().colors.iconDropdown}
+                                color={theme.colors.iconDropdown}
                                 icon={"export"}
                                 size={"28px"}
                                 style={{lineHeight: "20px", verticalAlign: "middle"}}
@@ -457,6 +467,7 @@ var Chart = React.createClass({
         );
     },
     render: function () {
+        const theme = this.getTheme();
         const selectedSitesId = R.uniq(this.props.chart.map(singleSelection => singleSelection.site));
         const selectedSites = selectedSitesId.map(siteId => this.getSitoById(siteId));
         const selectedSources = this.props.chart.map(singleSelection => singleSelection.source);
@@ -476,7 +487,7 @@ var Chart = React.createClass({
                     </div>
                     <components.Button style={alarmButtonStyle(this.getTheme())}>
                         <components.Icon
-                            color={this.getTheme().colors.iconHeader}
+                            color={theme.colors.iconHeader}
                             icon={"danger"}
                             size={"28px"}
                             style={{lineHeight: "20px"}}
@@ -486,10 +497,10 @@ var Chart = React.createClass({
                     <components.Popover
                         className="pull-right"
                         hideOnChange={true}
-                        style={styles(this.getTheme()).chartPopover}
+                        style={styles(theme).chartPopover}
                         title={
                             <components.Icon
-                                color={this.getTheme().colors.iconHeader}
+                                color={theme.colors.iconHeader}
                                 icon={"settings"}
                                 size={"32px"}
                                 style={{lineHeight: "20px", verticalAlign: "middle"}}
@@ -503,7 +514,7 @@ var Chart = React.createClass({
                             getKey={R.prop("key")}
                             getLabel={R.prop("label")}
                             onChange={this.onChangeWidget}
-                            style={styles(this.getTheme()).chartDropdownButton}
+                            style={styles(theme).chartDropdownButton}
                         />
                     </components.Popover>
                 </div>
@@ -517,18 +528,20 @@ var Chart = React.createClass({
                     }
                 >
                     <components.Icon
-                        color={this.getTheme().colors.iconArrowSwitch}
+                        color={theme.colors.iconArrowSwitch}
                         icon={"arrow-left"}
                         size={"34px"}
                         style={{lineHeight: "20px"}}
                     />
                 </components.Button>
-                <div style={styles(this.getTheme()).mainDivStyle}>
-                    <bootstrap.Col sm={12} style={styles(this.getTheme()).colVerticalPadding}>
+                <div style={styles(theme).mainDivStyle}>
+                    <bootstrap.Col sm={12} style={styles(theme).colVerticalPadding}>
                         <components.FullscreenModal
+                            backgroundColor={this.state.selectedWidget !== "export" ? undefined : theme.colors.backgroundModalExport}
                             onConfirm={this.onConfirmFullscreenModal}
                             onHide={this.closeModal}
                             onReset={this.closeModal}
+                            renderConfirmButton={this.state.selectedWidget !== "export" && !R.isNil(this.state.selectedWidget)}
                             show={this.state.showFullscreenModal}
                         >
                             {this.renderChildComponent()}
@@ -604,7 +617,7 @@ var Chart = React.createClass({
                                     onChange={this.props.selectElectricalType}
                                     style={measurementTypeButtonStyle(this.getTheme())}
                                     styleToMergeWhenActiveState={{
-                                        background: this.getTheme().colors.buttonPrimary,
+                                        background: theme.colors.buttonPrimary,
                                         border: "0px none"
                                     }}
                                     value={[this.props.chart[0].measurementType]}
@@ -620,7 +633,7 @@ var Chart = React.createClass({
                     }
                 >
                     <components.Icon
-                        color={this.getTheme().colors.iconArrowSwitch}
+                        color={theme.colors.iconArrowSwitch}
                         icon={"arrow-right"}
                         size={"34px"}
                         style={{lineHeight: "20px"}}

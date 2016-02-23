@@ -4,9 +4,11 @@ import measures from "lib/measures";
 
 export const styles = (theme) => ({
     titleFullScreenModal: {
-        color: theme.colors.white,
+        color: theme.colors.mainFontColor,
         marginTop: "0px",
-        marginBottom: "50px"
+        marginBottom: "50px",
+        fontWeight: "400",
+        fontSize: "28px"
     },
     base: {
         display: "flex",
