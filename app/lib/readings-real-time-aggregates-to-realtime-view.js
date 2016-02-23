@@ -14,7 +14,7 @@ export const decorators = ({colors}) => [
         key: "humidity",
         icon: "humidity",
         type: "thl",
-        unit: "g/m3"
+        unit: "%"
     }),
     Map({
         buttonBgColor: colors.illuminance,
