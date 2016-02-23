@@ -86,33 +86,33 @@ var DateFilter = React.createClass({
     },
     setTimeInterval: function ([temporalFilter]) {
         switch (temporalFilter.key) {
-        case "yesterday":
-            this.props.onChange({
-                start: moment.utc().subtract({day: 1}).startOf("day").valueOf(),
-                end: moment.utc().subtract({day: 1}).endOf("day").valueOf(),
-                valueType: temporalFilter
-            });
-            break;
-        case "today":
-            this.props.onChange({
-                start: moment.utc().startOf("day").valueOf(),
-                end: moment.utc().endOf("day").valueOf(),
-                valueType: temporalFilter
-            });
-            break;
-        case "lastWeek":
-            this.props.onChange({
-                start: moment.utc().subtract({week: 1}).startOf("isoWeek").valueOf(),
-                end: moment.utc().subtract({week: 1}).endOf("isoWeek").valueOf(),
-                valueType: temporalFilter
-            });
-            break;
-        case "currentWeek":
-            this.props.onChange({
-                start: moment.utc().startOf("isoWeek").valueOf(),
-                end: moment.utc().endOf("isoWeek").valueOf(),
-                valueType: temporalFilter
-            });
+            case "yesterday":
+                this.props.onChange({
+                    start: moment.utc().subtract({day: 1}).startOf("day").valueOf(),
+                    end: moment.utc().subtract({day: 1}).endOf("day").valueOf(),
+                    valueType: temporalFilter
+                });
+                break;
+            case "today":
+                this.props.onChange({
+                    start: moment.utc().startOf("day").valueOf(),
+                    end: moment.utc().endOf("day").valueOf(),
+                    valueType: temporalFilter
+                });
+                break;
+            case "lastWeek":
+                this.props.onChange({
+                    start: moment.utc().subtract({week: 1}).startOf("isoWeek").valueOf(),
+                    end: moment.utc().subtract({week: 1}).endOf("isoWeek").valueOf(),
+                    valueType: temporalFilter
+                });
+                break;
+            case "currentWeek":
+                this.props.onChange({
+                    start: moment.utc().startOf("isoWeek").valueOf(),
+                    end: moment.utc().endOf("isoWeek").valueOf(),
+                    valueType: temporalFilter
+                });
         }
     },
     getTemporalFilter: function () {

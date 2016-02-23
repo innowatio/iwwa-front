@@ -29,50 +29,50 @@ export function tabParameters () {
 function getTitleAndSubtitle (period) {
     const periodDates = getTimeRangeByPeriod(period);
     switch (PERIODS.indexOf(period)) {
-    case 0:
-        return {
-            key: period,
-            measureUnit: "kWh",
-            period: period,
-            periodTitle: "OGGI HAI UTILIZZATO",
-            periodSubtitle: `${moment(periodDates.start).locale("it").format("DD MMMM YYYY")}`.toUpperCase(),
-            title: "OGGI"
-        };
-    case 1:
-        return {
-            key: period,
-            measureUnit: "kWh",
-            period: period,
-            periodTitle: "QUESTA SETTIMANA HAI UTILIZZATO",
-            periodSubtitle: `${moment(periodDates.start).format("DD")} - ${moment(periodDates.end).locale("it").format("DD MMMM YYYY")}`.toUpperCase(),
-            title: "SETTIMANA CORRENTE"
-        };
-    case 2:
-        return {
-            key: period,
-            measureUnit: "kWh",
-            period: period,
-            periodTitle: `NEL MESE DI ${moment(periodDates.start).locale("it").format("MMMM")} HAI UTILIZZATO`.toUpperCase(),
-            periodSubtitle: `${moment(periodDates.start).format("YYYY")}`,
-            title: "MESE CORRENTE"
-        };
-    case 3:
-        return {
-            key: period,
-            measureUnit: "kWh",
-            period: period,
-            periodTitle: `NEL ${moment(periodDates.start).format("YYYY")} HAI UTILIZZATO`,
-            periodSubtitle: `${moment(periodDates.start).format("YYYY")}`.toUpperCase(),
-            title: "ANNO CORRENTE"
-        };
-    default:
-        return {
-            key: period,
-            measureUnit: "kWh",
-            period: period,
-            periodTitle: "",
-            periodSubtitle: "",
-            title: ""
-        };
+        case 0:
+            return {
+                key: period,
+                measureUnit: "kWh",
+                period: period,
+                periodTitle: "OGGI HAI UTILIZZATO",
+                periodSubtitle: `${moment(periodDates.start).locale("it").format("DD MMMM YYYY")}`.toUpperCase(),
+                title: "OGGI"
+            };
+        case 1:
+            return {
+                key: period,
+                measureUnit: "kWh",
+                period: period,
+                periodTitle: "QUESTA SETTIMANA HAI UTILIZZATO",
+                periodSubtitle: `${moment(periodDates.start).format("DD")} - ${moment(periodDates.end).locale("it").format("DD MMMM YYYY")}`.toUpperCase(),
+                title: "SETTIMANA CORRENTE"
+            };
+        case 2:
+            return {
+                key: period,
+                measureUnit: "kWh",
+                period: period,
+                periodTitle: `NEL MESE DI ${moment(periodDates.start).locale("it").format("MMMM")} HAI UTILIZZATO`.toUpperCase(),
+                periodSubtitle: `${moment(periodDates.start).format("YYYY")}`,
+                title: "MESE CORRENTE"
+            };
+        case 3:
+            return {
+                key: period,
+                measureUnit: "kWh",
+                period: period,
+                periodTitle: `NEL ${moment(periodDates.start).format("YYYY")} HAI UTILIZZATO`,
+                periodSubtitle: `${moment(periodDates.start).format("YYYY")}`.toUpperCase(),
+                title: "ANNO CORRENTE"
+            };
+        default:
+            return {
+                key: period,
+                measureUnit: "kWh",
+                period: period,
+                periodTitle: "",
+                periodSubtitle: "",
+                title: ""
+            };
     }
 }

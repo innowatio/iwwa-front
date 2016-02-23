@@ -311,40 +311,40 @@ var Chart = React.createClass({
     onConfirmFullscreenModal: function () {
         const {chart} = this.props;
         switch (this.state.selectedWidget) {
-        case "siteNavigator":
-            // Set the default value to pass.
-            this.props.selectSingleElectricalSensor(this.state.value || chart[0].fullPath);
-            break;
-        case "dateFilter":
-            this.props.selectDateRanges(
+            case "siteNavigator":
                 // Set the default value to pass.
-                this.state.value || (chart[0].date.type === "dateFilter" && chart[0].date) || {
-                    start: moment().startOf("month").valueOf(),
-                    end: moment().endOf("month").valueOf(),
-                    valueType: {label: "calendario", key: "calendar"}
-                }
-            );
-            break;
-        case "siteCompare":
-            this.props.selectMultipleElectricalSensor(
-                this.state.value ||
-                // Set the default value to pass.
-                (this.props.chart[1] && this.props.chart[1].fullPath)
-            );
-            break;
-        case "dateCompare":
-            this.props.selectDateRangesCompare(
-                this.state.value ||
-                (this.props.chart[0].date.type === "dateCompare" &&  {
-                    period: this.props.chart[0].date.period,
-                    dateOne: moment.utc().valueOf()
-                }) || {
+                this.props.selectSingleElectricalSensor(this.state.value || chart[0].fullPath);
+                break;
+            case "dateFilter":
+                this.props.selectDateRanges(
                     // Set the default value to pass.
-                    period: parameters.getDateCompare()[0],
-                    dateOne: moment.utc().valueOf()
-                }
-            );
-            break;
+                    this.state.value || (chart[0].date.type === "dateFilter" && chart[0].date) || {
+                        start: moment().startOf("month").valueOf(),
+                        end: moment().endOf("month").valueOf(),
+                        valueType: {label: "calendario", key: "calendar"}
+                    }
+                );
+                break;
+            case "siteCompare":
+                this.props.selectMultipleElectricalSensor(
+                    this.state.value ||
+                    // Set the default value to pass.
+                    (this.props.chart[1] && this.props.chart[1].fullPath)
+                );
+                break;
+            case "dateCompare":
+                this.props.selectDateRangesCompare(
+                    this.state.value ||
+                    (this.props.chart[0].date.type === "dateCompare" &&  {
+                        period: this.props.chart[0].date.period,
+                        dateOne: moment.utc().valueOf()
+                    }) || {
+                        // Set the default value to pass.
+                        period: parameters.getDateCompare()[0],
+                        dateOne: moment.utc().valueOf()
+                    }
+                );
+                break;
         }
         return this.closeModal();
     },
@@ -353,14 +353,14 @@ var Chart = React.createClass({
     },
     renderChildComponent: function () {
         switch (this.state.selectedWidget) {
-        case "siteNavigator":
-            return this.renderSiteNavigator();
-        case "dateFilter":
-            return this.renderDateFilter();
-        case "siteCompare":
-            return this.renderSiteCompare();
-        case "dateCompare":
-            return this.renderDateCompare();
+            case "siteNavigator":
+                return this.renderSiteNavigator();
+            case "dateFilter":
+                return this.renderDateFilter();
+            case "siteCompare":
+                return this.renderSiteCompare();
+            case "dateCompare":
+                return this.renderDateCompare();
         }
     },
     renderDateCompare: function () {

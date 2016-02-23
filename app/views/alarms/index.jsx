@@ -114,7 +114,7 @@ var Alarms = React.createClass({
                 valueFormatter: function (value) {
                     return (
                         <components.Icon
-                            color={this.getTheme().colors.iconAlarmAction}
+                            color={colors.iconAlarmAction}
                             icon={value ? "flag" : "pause"}
                             size={"20px"}
                         />
@@ -145,7 +145,7 @@ var Alarms = React.createClass({
                 valueFormatter: function (value) {
                     return (
                         <components.Icon
-                            color={this.getTheme().colors.iconAlarmAction}
+                            color={colors.iconAlarmAction}
                             icon={"settings"}
                             onClick={R.partial(self.onClickAction, [value])}
                             size={"30px"}
@@ -174,7 +174,7 @@ var Alarms = React.createClass({
                         return (
                             <Router.Link to={"/chart/"}>
                                 <components.Icon
-                                    color={this.getTheme().colors.iconPng}
+                                    color={colors.iconPng}
                                     icon={"png"}
                                     onClick={
                                         R.partial(
@@ -202,6 +202,7 @@ var Alarms = React.createClass({
         ];
     },
     getColumnsNotifications: function () {
+        const {colors} = this.getTheme();
         var self = this;
         return [
             {
@@ -249,7 +250,7 @@ var Alarms = React.createClass({
                     return (
                         <Router.Link to={"/chart/"}>
                             <components.Icon
-                                color={this.getTheme().colors.iconPng}
+                                color={colors.iconPng}
                                 icon={"png"}
                                 onClick={
                                     R.partial(
