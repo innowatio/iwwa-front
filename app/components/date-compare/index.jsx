@@ -51,9 +51,8 @@ var DateCompare = React.createClass({
         const active = equals(allowedValue, this.props.period);
         const theme = this.getTheme();
         return (
-            <bootstrap.Col lg={3} md={4} xs={12}>
+            <bootstrap.Col key={this.props.getKey(allowedValue)} lg={3} md={4} xs={12}>
                 <components.Button
-                    key={this.props.getKey(allowedValue)}
                     onClick={partial(this.selectedCheckboxDate, [allowedValue])}
                     style={merge(styles(theme).buttonCompare,
                         {
