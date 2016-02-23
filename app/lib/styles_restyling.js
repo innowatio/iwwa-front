@@ -34,8 +34,7 @@ export const styles = (theme) => ({
         marginRight: "9px",
         marginTop: "6px",
         fontSize: "12px",
-        border: "1px solid",
-        borderColor: theme.colors.borderSelectButton,
+        border: `1px solid ${theme.colors.borderSelectButton}`,
         borderRadius: "30px"
     },
     colVerticalPadding: {

@@ -11,13 +11,13 @@ var dygraphExport    = require("lib/dygraph-export.js");
 var DygraphCSVExport = require("lib/dygraph-export-csv.js");
 import {defaultTheme} from "lib/theme";
 
-var styles = {
+var styles = ({colors}) => ({
     graphContainer: {
-        width: "100%",
         height: "calc(100vh - 360px)",
-        margin: "20px 20px 30px 0px"
+        margin: "20px 20px 30px 0px",
+        color: colors.axisLabel
     }
-};
+});
 
 const oneMonthInMilliseconds = moment.duration(1, "months").asMilliseconds();
 
@@ -364,7 +364,9 @@ var TemporalLineGraph = React.createClass({
                             borderRadius: "50%"
                         },
                         ".dygraph-axis-label": {
-                            color: colors.axisLabel
+                            color: colors.axisLabel,
+                            fontSize: "11px",
+                            margin: "0px 10px"
                         },
                         ".dygraph-y2label": {
                             backgroundColor: colors.background,
@@ -378,7 +380,7 @@ var TemporalLineGraph = React.createClass({
                     }}
                     scopeSelector=".container-graph"
                 />
-                <div ref="graphContainer" style={styles.graphContainer}/>
+                <div ref="graphContainer" style={styles(this.getTheme()).graphContainer}/>
             </div>
         );
     }

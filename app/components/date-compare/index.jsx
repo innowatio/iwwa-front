@@ -17,7 +17,6 @@ const styles = {
 var DateCompare = React.createClass({
     propTypes: {
         allowedValues: PropTypes.array.isRequired,
-        closeModal: PropTypes.func,
         getKey: PropTypes.func,
         getLabel: PropTypes.func,
         onChange: PropTypes.func,
@@ -26,33 +25,18 @@ var DateCompare = React.createClass({
     contextTypes: {
         theme: PropTypes.object
     },
-    getInitialState: function () {
-        return {
-            period: this.props.period || this.props.allowedValues[0]
-        };
-    },
-    componentWillReceiveProps: function (props) {
-        return this.getStateFromProps(props);
-    },
-    getStateFromProps: function (props) {
-        this.setState({
-            period: props.period || props.allowedValues[0]
-        });
-    },
     getTheme: function () {
         return this.context.theme || defaultTheme;
     },
     selectedCheckboxDate: function (allowedValue) {
-        this.setState({
+        this.props.onChange({
+            dateOne: moment.utc().valueOf(),
+            // Set the default period
             period: allowedValue
         });
     },
-    onClickButton: function () {
-        this.props.closeModal();
-        this.props.onChange(moment.utc().valueOf(), this.state.period, "dateCompare");
-    },
     renderDataCompare: function (allowedValue) {
-        const active = equals(allowedValue, this.state.period);
+        const active = equals(allowedValue, this.props.period);
         const theme = this.getTheme();
         return (
             <components.Button
@@ -71,22 +55,9 @@ var DateCompare = React.createClass({
         );
     },
     render: function () {
-        const {colors} = this.getTheme();
         return (
             <div>
                 {this.props.allowedValues.map(this.renderDataCompare)}
-                <components.Button
-                    onClick={this.onClickButton}
-                    style={{
-                        background: colors.primary,
-                        marginTop: "60px",
-                        color: colors.white,
-                        width: "230px",
-                        height: "45px"
-                    }}
-                >
-                    {"CONFERMA"}
-                </components.Button>
             </div>
         );
     }

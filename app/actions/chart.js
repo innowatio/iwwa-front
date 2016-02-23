@@ -59,25 +59,25 @@ export function selectMultipleElectricalSensor (sites) {
 
 /**
 *   A click on date-compare-modal modal
-*   @param {object} dateRanges - beginning date for the two temporal range and
-*       temporal period to visualize.
+*   @param {object} value -
+*       key: - {Number} dateOne: date,
+*            - {object} period: period selected
 *   Date value are in millisecond unix timestamp.
 */
 const typeofSelectedDateRangesCompare = actionTypeValidator(
-    Number,
     struct({
-        label: String,
-        key: String
+        dateOne: Number,
+        period: struct({
+            label: String,
+            key: String
+        })
     })
 );
-export function selectDateRangesCompare (dateOne, period) {
+export function selectDateRangesCompare (value) {
     typeofSelectedDateRangesCompare(...arguments);
     return {
         type: SELECT_DATE_RANGES_COMPARE,
-        payload: {
-            period,
-            dateOne
-        }
+        payload: value
     };
 }
 

@@ -26,14 +26,6 @@ import {styles} from "lib/styles_restyling";
 import {defaultTheme} from "lib/theme";
 import {getTitleForSingleSensor, getStringPeriod, getSensorName} from "lib/page-header-utils";
 
-const selectStyles = {
-    selectCompare: {
-        width: "450px",
-        height: "35px",
-        display: "inline-block"
-    }
-};
-
 const measurementTypeButtonStyle = (theme) => R.merge(styles(theme).buttonSelectChart, {
     minWidth: "132px",
     height: "45px",
@@ -50,7 +42,7 @@ const sourceButtonStyle = (theme) => R.merge(styles(theme).buttonSelectChart, {
 const consumptionButtonStyle = ({colors}) => ({
     color: colors.greySubTitle,
     textAlign: "center",
-    marginRight: "10px !important",
+    marginRight: "15px !important",
     padding: "0",
     verticalAlign: "middle",
     borderRadius: "22px",
@@ -262,6 +254,17 @@ var Chart = React.createClass({
     isDateCompare: function () {
         return this.props.chart[0].date.type === "dateCompare";
     },
+    isComparationActive: function (selectedSitesId, selectedSources) {
+        return (
+            this.isDateCompare() ||
+            selectedSitesId.length > 1 ||
+            (
+                this.props.chart.length >= 2 &&
+                !R.allUniq(this.props.chart.map(singleSelection => singleSelection.measurementType)) &&
+                R.uniq(selectedSources).length === 1
+            )
+        );
+    },
     getTitleForChart: function () {
         if (this.props.chart.length === 1) {
             // Selezione sito-pod-sensor:
@@ -309,10 +312,12 @@ var Chart = React.createClass({
         const {chart} = this.props;
         switch (this.state.selectedWidget) {
             case "siteNavigator":
+                // Set the default value to pass.
                 this.props.selectSingleElectricalSensor(this.state.value || chart[0].fullPath);
                 break;
             case "dateFilter":
                 this.props.selectDateRanges(
+                    // Set the default value to pass.
                     this.state.value || (chart[0].date.type === "dateFilter" && chart[0].date) || {
                         start: moment().startOf("month").valueOf(),
                         end: moment().endOf("month").valueOf(),
@@ -321,24 +326,30 @@ var Chart = React.createClass({
                 );
                 break;
             case "siteCompare":
-                this.props.selectMultipleElectricalSensor(this.state.value);
+                this.props.selectMultipleElectricalSensor(
+                    this.state.value ||
+                    // Set the default value to pass.
+                    (this.props.chart[1] && this.props.chart[1].fullPath)
+                );
+                break;
+            case "dateCompare":
+                this.props.selectDateRangesCompare(
+                    this.state.value ||
+                    (this.props.chart[0].date.type === "dateCompare" &&  {
+                        period: this.props.chart[0].date.period,
+                        dateOne: moment.utc().valueOf()
+                    }) || {
+                        // Set the default value to pass.
+                        period: parameters.getDateCompare()[0],
+                        dateOne: moment.utc().valueOf()
+                    }
+                );
                 break;
         }
         return this.closeModal();
     },
     onChangeWidgetValue: function (value) {
         this.setState({value});
-    },
-    isComparationActive: function (selectedSitesId, selectedSources) {
-        return (
-            this.isDateCompare() ||
-            selectedSitesId.length > 1 ||
-            (
-                this.props.chart.length >= 2 &&
-                !R.allUniq(this.props.chart.map(singleSelection => singleSelection.measurementType)) &&
-                R.uniq(selectedSources).length === 1
-            )
-        );
     },
     renderChildComponent: function () {
         switch (this.state.selectedWidget) {
@@ -348,7 +359,24 @@ var Chart = React.createClass({
                 return this.renderDateFilter();
             case "siteCompare":
                 return this.renderSiteCompare();
+            case "dateCompare":
+                return this.renderDateCompare();
         }
+    },
+    renderDateCompare: function () {
+        return (
+            <components.DateCompare
+                allowedValues={parameters.getDateCompare()}
+                getKey={R.prop("key")}
+                getLabel={R.prop("label")}
+                onChange={this.onChangeWidgetValue}
+                period={
+                    (this.state.value && this.state.value.period) ||
+                    this.props.chart[0].date.period ||
+                    parameters.getDateCompare()[0]
+                }
+            />
+        );
     },
     renderSiteCompare: function () {
         const sites = this.props.collections.get("sites") || Immutable.Map();
@@ -428,7 +456,6 @@ var Chart = React.createClass({
         );
     },
     render: function () {
-        const sites = this.props.collections.get("sites") || Immutable.Map();
         const selectedSitesId = R.uniq(this.props.chart.map(singleSelection => singleSelection.site));
         const selectedSites = selectedSitesId.map(siteId => this.getSitoById(siteId));
         const selectedSources = this.props.chart.map(singleSelection => singleSelection.source);
@@ -507,32 +534,6 @@ var Chart = React.createClass({
                         </components.FullscreenModal>
                         <span className="pull-left" style={{display: "flex"}}>
                             {ENVIRONMENT === "cordova" ? null : this.renderExportButton()}
-                            <components.TutorialAnchor
-                                message={tutorialString.compare}
-                                order={6}
-                                position="left"
-                                ref="compare"
-                            >
-                                <components.Compare>
-                                    <components.SitiCompare
-                                        filter={CollectionUtils.sites.filter}
-                                        getKey={CollectionUtils.sites.getKey}
-                                        getSitoLabel={CollectionUtils.sites.getLabel}
-                                        onChange={this.props.selectMultipleElectricalSensor}
-                                        open={"undefined"}
-                                        sites={sites}
-                                        style={selectStyles.selectCompare}
-                                        value={selectedSitesId}
-                                    />
-                                    <components.DateCompare
-                                        allowedValues={parameters.getDateCompare()}
-                                        getKey={R.prop("key")}
-                                        getLabel={R.prop("label")}
-                                        onChange={this.props.selectDateRangesCompare}
-                                        period={this.props.chart[0].date.period}
-                                    />
-                                </components.Compare>
-                            </components.TutorialAnchor>
                         </span>
                         <span className="pull-right" style={{display: "flex"}}>
                             <components.TutorialAnchor
@@ -549,7 +550,10 @@ var Chart = React.createClass({
                                     onChange={this.props.selectSource}
                                     onChangeMulti={this.onChangeMultiSources}
                                     style={sourceButtonStyle(this.getTheme())}
-                                    styleToMergeWhenActiveState={{background: this.getTheme().colors.buttonPrimary, border: "0px none"}}
+                                    styleToMergeWhenActiveState={{
+                                        background: this.getTheme().colors.buttonPrimary,
+                                        border: "0px none"
+                                    }}
                                     value={selectedSources}
                                 />
                             </components.TutorialAnchor>
@@ -598,14 +602,22 @@ var Chart = React.createClass({
                                     getLabel={R.prop("label")}
                                     onChange={this.props.selectElectricalType}
                                     style={measurementTypeButtonStyle(this.getTheme())}
-                                    styleToMergeWhenActiveState={{background: this.getTheme().colors.buttonPrimary, border: "0px none"}}
+                                    styleToMergeWhenActiveState={{
+                                        background: this.getTheme().colors.buttonPrimary,
+                                        border: "0px none"
+                                    }}
                                     value={[this.props.chart[0].measurementType]}
                                 />
                             </components.TutorialAnchor>
                         </span>
                     </bootstrap.Col>
                 </div>
-                <components.Button style={R.merge(dateButtonStyle(this.getTheme()), {borderRadius: "20px 0 0 20px", right: "0px", padding: "0"})}>
+                <components.Button
+                    style={
+                        R.merge(dateButtonStyle(this.getTheme()),
+                        {borderRadius: "20px 0 0 20px", right: "0px", padding: "0"})
+                    }
+                >
                     <components.Icon
                         color={this.getTheme().colors.iconArrowSwitch}
                         icon={"arrow-right"}

@@ -42,14 +42,28 @@ var DateCompare = React.createClass({
             // Get date window from 0 (1 Jan 1970) to 5 or 6 weeks later (this is
             // found from the function `weeksToAdd`).
             const endDate = moment.utc(start).add({weeks: this.weeksToAdd()}).endOf("isoWeek");
-            const numberToEndDate = moment(endDate).diff(start, "days");
+            const numberOfDayToEndDate = moment(endDate).diff(start, "days");
             return {
                 start,
                 dayToAdd: this.weeksToAdd() * 8,
-                dateArray: [moment.utc(0).valueOf(), moment.utc(0).add({days: numberToEndDate + 1}).valueOf()]
+                dateArray: [moment.utc(0).valueOf(), moment.utc(0).add({days: numberOfDayToEndDate + 1}).valueOf()]
             };
         }
-        return {};
+        if (period.key === "7 days before") {
+            return {
+                start,
+                dayToAdd: 1,
+                dateArray: [moment.utc(0).valueOf(), moment.utc(0).add({day: 1}).valueOf()]
+            };
+        }
+        const endDate = moment.utc(start).add(1, period.key).endOf("day");
+        // We add a day to count the last day, that end at the 23:59:59.
+        const numberOfDayToEndDate = moment(endDate).diff(start, "days");
+        return {
+            start,
+            dayToAdd: numberOfDayToEndDate,
+            dateArray: [moment.utc(0).valueOf(), moment.utc(0).add({days: numberOfDayToEndDate}).valueOf()]
+        };
     },
     weeksToAdd: function () {
         const {start, end} = this.props.chart[0].date;
@@ -77,33 +91,33 @@ var DateCompare = React.createClass({
         const self = this;
         const {period} = self.props.chart[0].date;
         const dates = this.getDatesFromChartState();
-        // if (period.key === "days") {
-        //     // Range of 24h.
-        //     return range(0, 25).map(n => {
-        //         const delta = moment.utc(0).add(n, "hours").valueOf();
-        //         var rangeOne = moment.utc(dates[0].start).add(n, "hours");
-        //         var rangeTwo = moment.utc(dates[1].start).add(n, "hours");
-        //         if (n === 0) {
-        //             // In the first tick of the day, write day and month.
-        //             rangeOne.format("DD MMM");
-        //             rangeTwo.format("DD MMM");
-        //         } else {
-        //             // In the other tick, write hour and minutes.
-        //             rangeOne.format("HH:mm");
-        //             rangeTwo.format("HH:mm");
-        //         }
-        //         return self.getXTickerLabel(delta, rangeOne, rangeTwo);
-        //     });
-        // }
-        // if (period.key === "weeks") {
-        //     // Range of 1 week --> 7 days.
-        //     return range(0, 8).map(function (n) {
-        //         const delta = moment.utc(0).add(n, "days").valueOf();
-        //         const rangeOne = moment.utc(dates[0].start).add(n, "days").format("DD MMM");
-        //         const rangeTwo = moment.utc(dates[1].start).add(n, "days").format("DD MMM");
-        //         return self.getXTickerLabel(delta, rangeOne, rangeTwo);
-        //     });
-        // }
+        if (period.key === "days" || period.key === "7 days before") {
+            // Range of 24h.
+            return range(0, 25).map(n => {
+                const delta = moment.utc(0).add(n, "hours").valueOf();
+                var rangeOne = moment.utc(dates[0].start).add(n, "hours");
+                var rangeTwo = moment.utc(dates[1].start).add(n, "hours");
+                if (n === 0) {
+                    // In the first tick of the day, write day and month.
+                    rangeOne = moment.utc(rangeOne).format("DD MMM");
+                    rangeTwo = moment.utc(rangeTwo).format("DD MMM");
+                } else {
+                    // In the other tick, write hour and minutes.
+                    rangeOne = moment.utc(rangeOne).format("HH:mm");
+                    rangeTwo = moment.utc(rangeTwo).format("HH:mm");
+                }
+                return self.getXTickerLabel(delta, rangeOne, rangeTwo);
+            });
+        }
+        if (period.key === "week") {
+            // Range of 1 week --> 7 days.
+            return range(0, 8).map(function (n) {
+                const delta = moment.utc(0).add(n, "days").valueOf();
+                const rangeOne = moment.utc(dates[0].start).add(n, "days").format("DD MMM");
+                const rangeTwo = moment.utc(dates[1].start).add(n, "days").format("DD MMM");
+                return self.getXTickerLabel(delta, rangeOne, rangeTwo);
+            });
+        }
         if (period.key === "months" || period.key === "years") {
             // Range of 5 or 6 weeks --> (5 || 6) * 7 days.
             return range(0, (this.weeksToAdd() * 8) + 2).map(n => {

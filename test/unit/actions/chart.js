@@ -161,18 +161,17 @@ describe("`chart` actions", () => {
     describe("`selectDateRangesCompare` function", () => {
 
         it("should return the correct object if is passed the correct object", () => {
-            const period = {
-                label: "label",
-                key: "key"
+            const value = {
+                period: {
+                    label: "label",
+                    key: "key"
+                },
+                dateOne: Date.now()
             };
-            const dateOne = Date.now();
-            const ret = chart.selectDateRangesCompare(dateOne, period);
+            const ret = chart.selectDateRangesCompare(value);
             expect(ret).to.deep.equal({
                 type: "SELECT_DATE_RANGES_COMPARE",
-                payload: {
-                    period,
-                    dateOne
-                }
+                payload: value
             });
         });
 
