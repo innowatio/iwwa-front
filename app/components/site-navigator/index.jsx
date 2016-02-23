@@ -15,9 +15,7 @@ const itemsStyle = (theme) => (R.merge(styles(theme).buttonBasicStyle, {
     fontSize: "22px",
     border: "0",
     marginTop: "10px",
-    width: "95%",
-    height: "55px",
-    lineHeight: "20px",
+    width: "98%",
     padding: "14px",
     borderRadius: "20px"
 }));

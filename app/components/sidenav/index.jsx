@@ -21,7 +21,8 @@ const stylesFunction = ({colors}) => ({
         color: colors.navText,
         margin: "0 0 0 10px",
         height: "30px",
-        padding: "10px auto"
+        padding: "10px auto",
+        lineHeight: "40px"
     }
 });
 
@@ -35,7 +36,8 @@ var SideNav = React.createClass({
         style: PropTypes.object
     },
     contextTypes: {
-        theme: PropTypes.object
+        theme: PropTypes.object,
+        router: PropTypes.object
     },
     getInitialState: function () {
         return {
@@ -52,6 +54,9 @@ var SideNav = React.createClass({
         location.reload();
     },
     renderNavItem: function (styles, menuItem) {
+        // Not all the menuItem have the `url` key. If not, it's set to empty
+        // string.
+        const active = this.context.router.isActive(menuItem.url || "");
         return menuItem.url ? (
             <li key={menuItem.key}>
                 <Link
@@ -61,10 +66,10 @@ var SideNav = React.createClass({
                     to={menuItem.url}
                 >
                     <components.Icon
-                        color={this.getTheme().colors.iconSidenav}
+                        color={active ? this.getTheme().colors.iconSidenavActive : this.getTheme().colors.iconSidenav}
                         icon={menuItem.iconClassName}
-                        size={"30px"}
-                        style={{verticalAlign: "middle", lineHeight: "30px"}}
+                        size={"35px"}
+                        style={{verticalAlign: "text-top", lineHeight: "26px"}}
                     />
                     <span style={styles.sideLabel}>
                         {menuItem.label}
@@ -77,8 +82,8 @@ var SideNav = React.createClass({
                     <components.Icon
                         color={this.getTheme().colors.iconSidenav}
                         icon={menuItem.iconClassName}
-                        size={"30px"}
-                        style={{verticalAlign: "middle", lineHeight: "30px"}}
+                        size={"35px"}
+                        style={{verticalAlign: "text-top", lineHeight: "26px"}}
                     />
                     <span style={styles.sideLabel}>
                         {menuItem.label}
