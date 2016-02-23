@@ -10,32 +10,32 @@ import {
 
 function id (state = null, {type, payload}) {
     switch (type) {
-    case MODIFY_EXISTENT_ALARM:
-        return payload;
-    case RESET_ALARM_FORM_VIEW:
-        return null;
-    default:
-        return state;
+        case MODIFY_EXISTENT_ALARM:
+            return payload;
+        case RESET_ALARM_FORM_VIEW:
+            return null;
+        default:
+            return state;
     }
 }
 
 function statePostAlarm (state = false, {type}) {
     switch (type) {
-    case CREATE_OR_MODIFY_ALARM_START:
-        return true;
-    case CREATION_ALARM_STOP:
-        return false;
-    default:
-        return state;
+        case CREATE_OR_MODIFY_ALARM_START:
+            return true;
+        case CREATION_ALARM_STOP:
+            return false;
+        default:
+            return state;
     }
 }
 
 function selectedTab (state = 3, {type, payload}) {
     switch (type) {
-    case NUMBER_OF_SELECTED_TABS:
-        return payload;
-    default:
-        return state;
+        case NUMBER_OF_SELECTED_TABS:
+            return payload;
+        default:
+            return state;
     }
 }
 

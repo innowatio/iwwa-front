@@ -14,21 +14,21 @@ import {SELECT_SINGLE_ELECTRICAL_SENSOR_REAL_TIME} from "actions/real-time";
 */
 function fullPath (state = null, {type, payload}) {
     switch (type) {
-    case SELECT_SINGLE_ELECTRICAL_SENSOR_CHART:
-    case SELECT_SINGLE_ELECTRICAL_SENSOR_CONSUMPTION:
-    case SELECT_SINGLE_ELECTRICAL_SENSOR_REAL_TIME:
-        return payload;
-    default:
-        return state;
+        case SELECT_SINGLE_ELECTRICAL_SENSOR_CHART:
+        case SELECT_SINGLE_ELECTRICAL_SENSOR_CONSUMPTION:
+        case SELECT_SINGLE_ELECTRICAL_SENSOR_REAL_TIME:
+            return payload;
+        default:
+            return state;
     }
 }
 
 function period (state = null, {type, payload}) {
     switch (type) {
-    case SELECT_CONSUMPTIONS_PERIOD:
-        return payload;
-    default:
-        return state;
+        case SELECT_CONSUMPTIONS_PERIOD:
+            return payload;
+        default:
+            return state;
     }
 }
 
