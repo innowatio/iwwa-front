@@ -6,15 +6,15 @@ import {defaultTheme} from "lib/theme";
 
 var styleLabelValue = ({colors}) => ({
     color: colors.labelAmbientalSurveys,
-    fontSize: "54px",
+    fontSize: "48px",
     fontWeight: "500",
     lineHeight: "56px",
-    margin: "0px 10px"
+    margin: "0px 6px"
 });
 
 var styleLabelUnit = ({colors}) => ({
     color: colors.labelAmbientalSurveys,
-    fontSize: "26px",
+    fontSize: "30px",
     display: "inline-block",
     verticalAlign: "text-bottom",
     fontWeight: "500"
@@ -28,7 +28,8 @@ var MeasureLabel = React.createClass({
     propTypes: {
         id: React.PropTypes.string,
         style: React.PropTypes.object,
-        styleText: React.PropTypes.object,
+        styleTextLabel: React.PropTypes.object,
+        styleTextUnit: React.PropTypes.object,
         unit: React.PropTypes.string.isRequired,
         value: React.PropTypes.number
     },
@@ -49,7 +50,7 @@ var MeasureLabel = React.createClass({
                             style={
                                 R.merge(
                                     styleLabelValue(theme),
-                                    this.props.styleText || {}
+                                    this.props.styleTextLabel || {}
                                 )
                             }
                         >
@@ -61,7 +62,7 @@ var MeasureLabel = React.createClass({
                                 style={
                                     R.merge(
                                         styleLabelUnit(theme),
-                                        this.props.styleText || {}
+                                        this.props.styleTextUnit || {}
                                     )
                                 }
                             >
@@ -70,9 +71,10 @@ var MeasureLabel = React.createClass({
                             <div
                                 className="subject"
                                 style={{
-                                    fontSize: "12px",
-                                    lineHeight: "10px",
-                                    color: theme.colors.labelAmbientalSurveys
+                                    fontSize: "13px",
+                                    lineHeight: "2px",
+                                    fontWeight: "400",
+                                    color: theme.colors.mainFontColor
                                 }}
                             >
                                 {this.props.id}

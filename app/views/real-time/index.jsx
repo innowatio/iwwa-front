@@ -19,8 +19,8 @@ const styleSiteButton = ({colors}) => ({
     padding: "0",
     border: "0",
     borderRadius: "100%",
-    margin: "13px",
-    backgroundColor: colors.secondary
+    margin: "3px 0 0 0",
+    backgroundColor: colors.primary
 });
 
 var RealTime = React.createClass({
@@ -54,18 +54,27 @@ var RealTime = React.createClass({
         return this.context.theme || defaultTheme;
     },
     drawGauge: function (params) {
+        const {colors} = this.getTheme();
         return (
             <div style={{margin: "auto", width: R.path(["style", "width"], params) || "200px"}}>
                 <components.Gauge
                     valueLabel={this.getGaugeLabel({
                         id: params.id,
-                        styleText: params.styleText,
+                        styleTextLabel: params.styleTextLabel,
+                        styleTextUnit: params.styleTextUnit,
                         unit: params.unit || "",
                         value: params.value
                     })}
                     {...params}
                 />
-                <div style={{textAlign: "center"}}>
+                <div
+                    style={{
+                        textAlign: "center",
+                        fontSize: "18px",
+                        color: colors.backgroundGaugeBar,
+                        textTransform: "uppercase"
+                    }}
+                >
                     <div>{params.id}</div>
                 </div>
             </div>
@@ -74,7 +83,6 @@ var RealTime = React.createClass({
     drawGauges: function () {
         const {colors} = this.getTheme();
         if (this.findLatestMeasuresForEnergy().size > 0) {
-            var sizeValues = this.findLatestMeasuresForEnergy().size;
             return this.findLatestMeasuresForEnergy().map((measure) => {
                 var gaugeParams = {
                     id: measure.get("id"),
@@ -82,18 +90,18 @@ var RealTime = React.createClass({
                     maximum: 100,
                     minimum: 0,
                     style: {height: "auto", width: "100%"},
-                    styleGaugeBar: {stroke: colors.lineReale},
-                    stylePointer: {fill: colors.greyBorder},
-                    styleText: {color: colors.lineReale},
+                    styleGaugeBar: {stroke: colors.backgroundGaugeBar},
+                    stylePointer: {fill: colors.backgroundGaugeBar},
+                    styleTextLabel: {color: colors.backgroundGaugeBar, fontSize: "30px", lineHeight: "34px"},
+                    styleTextUnit: {color: colors.backgroundGaugeBar, fontSize: "18px", lineHeight: "20px", marginBottom: "4px"},
                     unit: measure.get("unit"),
                     value: parseFloat(measure.get("value")).toFixed(2) / 1 || 0
                 };
                 return (
                     <bootstrap.Col
                         key={measure.get("key")}
-                        lg={sizeValues > 4 ? 4 : 6}
-                        md={sizeValues > 4 ? 4 : 6}
-                        sm={6}
+                        md={4}
+                        xs={6}
                         style={{padding: "20px"}}
                     >
                         {this.drawGauge(gaugeParams)}
@@ -116,8 +124,10 @@ var RealTime = React.createClass({
                 maximum: 100,
                 minimum: 0,
                 style: {height: "auto", width: "100%"},
-                styleLabel: {top: "-30px"},
-                stylePointer: {fill: colors.greyBorder},
+                styleLabel: {top: "-15%"},
+                stylePointer: {fill: colors.backgroundGaugeBar},
+                styleTextLabel: {color: colors.backgroundGaugeBar, fontSize: "50px", lineHeight: "60px"},
+                styleTextUnit: {color: colors.backgroundGaugeBar, fontSize: "35px", lineHeight: "40px", marginBottom: "4px"},
                 unit: unit,
                 value: parseFloat(value).toFixed(2) / 1
             };
@@ -269,29 +279,67 @@ var RealTime = React.createClass({
                     <div style={{fontSize: "18px", marginBottom: "0px", paddingTop: "18px", width: "100%"}}>
                         {getTitleForSingleSensor(this.props.realTime, this.props.collections)}
                     </div>
-                </div>
-                <div style={styles(theme).mainDivStyle}>
-                    <bootstrap.Col sm={12}>
-                        <span className="pull-right">
-                            {this.renderModalButton()}
-                        </span>
+                    <bootstrap.Col sm={4}>
+                        {this.renderModalButton()}
                     </bootstrap.Col>
-                    <h3 className="text-center" style={{color: theme.colors.primary}}>
-                        {`${selectedSiteName ? selectedSiteName + " - " : ""}Rilevazioni ambientali`}
-                    </h3>
-                    <components.VariablesPanel
-                        values={this.findLatestMeasuresForVariables()}
-                    />
-                    <h3 className="text-center" style={{color: theme.colors.primary}}>
-                        {`${selectedSiteName ? selectedSiteName + " - " : ""}Pods`}
-                    </h3>
-                    <div style={{overflow: "scroll"}}>
-                        <bootstrap.Col className="text-center" sm={4} style={{padding: "20px"}}>
-                            {this.drawGaugeTotal()}
-                        </bootstrap.Col>
-                        <bootstrap.Col sm={8}>
-                            {this.drawGauges()}
-                        </bootstrap.Col>
+                </div>
+                <div style={styles(theme).mainDivStyle, {position: "relative"}}>
+                    <div
+                        style={{
+                            position: "absolute",
+                            top: "20px",
+                            left: "0px",
+                            width: "100%",
+                            backgroundColor: theme.colors.backgroundRealTimeSection,
+                            borderTop: "1px solid " + theme.colors.borderRealTimeSection,
+                            borderBottom: "1px solid " + theme.colors.borderRealTimeSection
+                        }}
+                    >
+                        <h3
+                            className="text-center"
+                            style={{color: theme.colors.mainFontColor, fontSize: "24px", fontWeight: "400", textTransform: "uppercase"}}
+                        >
+                            {`${selectedSiteName ? selectedSiteName + " - " : ""}Rilevazioni ambientali`}
+                        </h3>
+                        <components.VariablesPanel
+                            values={this.findLatestMeasuresForVariables()}
+                        />
+                    </div>
+                    <div
+                        style={{
+                            position: "relative",
+                            top: "220px",
+                            margin: "0px 30px 0px 30px",
+                            height: "calc(100vh - 395px)",
+                            overflow: "hidden",
+                            backgroundColor: theme.colors.backgroundRealTimeSection,
+                            border: "1px solid " + theme.colors.borderRealTimeSection,
+                            borderRadius: "20px"
+                        }}
+                    >
+                        <div
+                            style={{
+                                overflow: "auto",
+                                position: "absolute",
+                                top: "0",
+                                bottom: "0",
+                                left: "0",
+                                right: "-20px"
+                            }}
+                        >
+                            <h3
+                                className="text-center"
+                                style={{color: theme.colors.mainFontColor, fontSize: "24px", fontWeight: "400", textTransform: "uppercase"}}
+                            >
+                                {`${selectedSiteName ? selectedSiteName + " - " : ""}Pods`}
+                            </h3>
+                            <bootstrap.Col className="text-center" md={4} xs={12} style={{padding: "20px", color: theme.colors.mainFontColor}}>
+                                {this.drawGaugeTotal()}
+                            </bootstrap.Col>
+                            <bootstrap.Col md={8} xs={12}>
+                                {this.drawGauges()}
+                            </bootstrap.Col>
+                        </div>
                     </div>
                 </div>
             </div>
