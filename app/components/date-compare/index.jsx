@@ -2,7 +2,6 @@ import * as bootstrap from "react-bootstrap";
 import {equals, partial, merge} from "ramda";
 import React, {PropTypes} from "react";
 import moment from "moment";
-
 import components from "components";
 import {defaultTheme} from "lib/theme";
 import {styles} from "lib/styles_restyling";

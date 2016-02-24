@@ -1,6 +1,5 @@
 import * as bootstrap from "react-bootstrap";
 import React, {PropTypes} from "react";
-
 import components from "components";
 import {defaultTheme} from "lib/theme";
 import {styles} from "lib/styles_restyling";

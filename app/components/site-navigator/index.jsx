@@ -1,12 +1,12 @@
-var bootstrap  = require("react-bootstrap");
-var Immutable  = require("immutable");
-var IPropTypes = require("react-immutable-proptypes");
-var R          = require("ramda");
-var Radium     = require("radium");
-var React      = require("react");
+var bootstrap       = require("react-bootstrap");
+var Immutable       = require("immutable");
+var IPropTypes      = require("react-immutable-proptypes");
+var R               = require("ramda");
+var Radium          = require("radium");
+var React           = require("react");
+var components      = require("components");
+var defaultTheme    = require ("lib/theme");
 
-var components = require("components");
-import {defaultTheme} from "lib/theme";
 import {styles} from "lib/styles_restyling";
 
 const itemsStyle = (theme) => (R.merge(styles(theme).buttonBasicStyle, {
@@ -15,7 +15,7 @@ const itemsStyle = (theme) => (R.merge(styles(theme).buttonBasicStyle, {
     fontSize: "22px",
     border: "0",
     marginTop: "10px",
-    width: "98%",
+    width: "95%",
     padding: "14px",
     borderRadius: "20px"
 }));
@@ -132,7 +132,9 @@ var SiteNavigator = React.createClass({
         const theme = this.getTheme();
         return (
             <div>
-                <h3 className="text-center" style={{color: theme.colors.mainFontColor}}>{this.props.title}</h3>
+                <h3 className="text-center" style={styles(theme).titleFullScreenModal}>
+                    {this.props.title}
+                </h3>
                 <bootstrap.Col style={{marginTop: "20px"}} xs={12}>
                     <div className="search-container">
                         <Radium.Style
@@ -176,14 +178,18 @@ var SiteNavigator = React.createClass({
                         />
                     </div>
                 </bootstrap.Col>
-                <bootstrap.Col style={{overflow: "auto", marginTop: "10px", height: "calc(100vh - 350px)", minHeight: "300px"}} xs={4}>
+                <bootstrap.Col style={{position: "relative", overflow: "hidden", paddingRight:"60px", marginTop: "10px", height: "calc(100vh - 350px)", minHeight: "300px"}} xs={4}>
                     <div className="site-navigator-parent">
                         <Radium.Style
                             rules={{
                                 ".btn-group-vertical": {
-                                    width: "100%",
-                                    padding: "12px",
-                                    overflow: "auto"
+                                    position: "absolute",
+                                    top: "0",
+                                    bottom: "0",
+                                    left: "0",
+                                    right: "-20px",
+                                    overflow: "auto",
+                                    padding: "15px"
                                 }
                             }}
                             scopeSelector=".site-navigator-parent"
