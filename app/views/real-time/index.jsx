@@ -253,6 +253,7 @@ var RealTime = React.createClass({
                     onConfirm={this.onConfirmFullscreenModal}
                     onHide={this.closeModal}
                     onReset={this.closeModal}
+                    renderConfirmButton={true}
                     show={this.state.showModal}
                 >
                     {this.renderModalBody()}
