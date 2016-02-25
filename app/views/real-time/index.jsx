@@ -94,8 +94,17 @@ var RealTime = React.createClass({
                     style: {height: "auto", width: "100%"},
                     styleGaugeBar: {stroke: colors.backgroundGaugeBar},
                     stylePointer: {fill: colors.backgroundGaugeBar},
-                    styleTextLabel: {color: colors.backgroundGaugeBar, fontSize: "30px", lineHeight: "34px"},
-                    styleTextUnit: {color: colors.backgroundGaugeBar, fontSize: "18px", lineHeight: "20px", marginBottom: "4px"},
+                    styleTextLabel: {
+                        color: colors.backgroundGaugeBar,
+                        fontSize: "30px",
+                        lineHeight: "34px"
+                    },
+                    styleTextUnit: {
+                        color: colors.backgroundGaugeBar,
+                        fontSize: "18px",
+                        lineHeight: "20px",
+                        marginBottom: "4px"
+                    },
                     unit: measure.get("unit"),
                     value: parseFloat(measure.get("value")).toFixed(2) / 1 || 0
                 };
@@ -114,24 +123,26 @@ var RealTime = React.createClass({
     getSensorById: function (sensorId) {
         return this.props.collections.getIn(["sensors", sensorId]);
     },
-    // shouldConsumptionPanelRender: function (fullPath) {
-    //     if (R.isArrayLike(fullPath) && fullPath.length > 0) {
-    //         // All sensors under a site
-    //         const site = this.getSitoById(fullPath[0]);
-    //         if (site) {
-    //             const sensorsType = site.get("sensorsIds").map(sensorId => {
-    //                 const sensorObject = this.getSensorById(sensorId);
-    //                 if (sensorObject) {
-    //                     return sensorObject.get("type");
-    //                 }
-    //             });
-    //             return parameters.getConsumptions(this.getTheme()).filter(consumption => {
-    //                 return R.contains(consumption.type, sensorsType);
-    //             });
-    //         }
-    //     }
-    //     return [];
-    // },
+    numberOfConsumptionSensor: function (fullPath) {
+        if (R.isArrayLike(fullPath) && fullPath.length > 0) {
+            // All sensors under a site
+            const site = this.getSitoById(fullPath[0]);
+            if (site) {
+                const sensorsType = site.get("sensorsIds").map(sensorId => {
+                    const sensorObject = this.getSensorById(sensorId);
+                    if (sensorObject) {
+                        return sensorObject.get("type");
+                    }
+                });
+                return sensorsType.reduce((acc, sensorsType) => {
+                    return acc + sensorsDecorators.consumptionSensors(this.getTheme()).filter(consumptionSensor => {
+                        return consumptionSensor.type === sensorsType;
+                    }).length;
+                }, 0);
+            }
+        }
+        return 0;
+    },
     drawGaugeTotal: function () {
         const {colors} = this.getTheme();
         if (this.findLatestMeasuresForEnergy().size > 0) {
@@ -149,8 +160,17 @@ var RealTime = React.createClass({
                 style: {height: "auto", width: "100%"},
                 styleLabel: {top: "-15%"},
                 stylePointer: {fill: colors.backgroundGaugeBar},
-                styleTextLabel: {color: colors.backgroundGaugeBar, fontSize: "50px", lineHeight: "60px"},
-                styleTextUnit: {color: colors.backgroundGaugeBar, fontSize: "35px", lineHeight: "40px", marginBottom: "4px"},
+                styleTextLabel: {
+                    color: colors.backgroundGaugeBar,
+                    fontSize: "50px",
+                    lineHeight: "60px"
+                },
+                styleTextUnit: {
+                    color: colors.backgroundGaugeBar,
+                    fontSize: "35px",
+                    lineHeight: "40px",
+                    marginBottom: "4px"
+                },
                 unit: unit,
                 value: parseFloat(value).toFixed(2) / 1
             };
@@ -304,8 +324,8 @@ var RealTime = React.createClass({
     renderConsumptionPanel: function () {
         const {colors} = this.getTheme();
         const selectedSiteName = this.getSelectedSiteName();
-// this.shouldConsumptionPanelRender(this.props.realTime.fullPath)
-        return  (
+        const numberOfConsumptionSensor = this.numberOfConsumptionSensor(this.props.realTime.fullPath);
+        return numberOfConsumptionSensor > 0 ? (
             <div
                 style={{
                     position: "absolute",
@@ -329,10 +349,11 @@ var RealTime = React.createClass({
                     {`${selectedSiteName ? selectedSiteName + " - " : ""}Rilevazioni ambientali`}
                 </h3>
                 <components.VariablesPanel
+                    numberOfConsumptionSensor={numberOfConsumptionSensor}
                     values={this.findLatestMeasuresForVariables()}
                 />
             </div>
-        );
+        ) : null;
     },
     render: function () {
         const theme = this.getTheme();
@@ -374,11 +395,21 @@ var RealTime = React.createClass({
                         >
                             <h3
                                 className="text-center"
-                                style={{color: theme.colors.mainFontColor, fontSize: "24px", fontWeight: "400", textTransform: "uppercase"}}
+                                style={{
+                                    color: theme.colors.mainFontColor,
+                                    fontSize: "24px",
+                                    fontWeight: "400",
+                                    textTransform: "uppercase"
+                                }}
                             >
                                 {`${selectedSiteName ? selectedSiteName + " - " : ""}Pods`}
                             </h3>
-                            <bootstrap.Col className="text-center" md={4} xs={12} style={{padding: "20px", color: theme.colors.mainFontColor}}>
+                            <bootstrap.Col
+                                className="text-center"
+                                md={4}
+                                style={{padding: "20px", color: theme.colors.mainFontColor}}
+                                xs={12}
+                            >
                                 {this.drawGaugeTotal()}
                             </bootstrap.Col>
                             <bootstrap.Col md={8} xs={12}>
