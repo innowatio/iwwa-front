@@ -202,7 +202,7 @@ var DateFilter = React.createClass({
                             backgroundPosition: "center",
                             width: "5%",
                             height: "34px",
-                            backgroundSize: "37px 37px",
+                            backgroundSize: "42px 42px",
                             backgroundRepeat: "no-repeat",
                             borderBottomLeftRadius: "30px",
                             borderTopLeftRadius: "30px",
