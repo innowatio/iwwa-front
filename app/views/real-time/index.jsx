@@ -6,8 +6,9 @@ var React      = require("react");
 import {connect} from "react-redux";
 import {bindActionCreators} from "redux";
 
-var components        = require("components");
-var readingsRealTime  = require("lib/readings-real-time-aggregates-to-realtime-view");
+import components from "components";
+import {decorateMeasure, addValueToMeasures} from "./utils";
+import * as sensorsDecorators from "lib/sensors-decorators";
 import {styles} from "lib/styles_restyling";
 import {selectRealTimeSite} from "actions/real-time";
 import {defaultTheme} from "lib/theme";
@@ -41,6 +42,7 @@ var RealTime = React.createClass({
     },
     componentDidMount: function () {
         this.props.asteroid.subscribe("sites");
+        this.props.asteroid.subscribe("sensors");
         if (this.props.realTime.site) {
             this.props.asteroid.subscribe("readingsRealTimeAggregatesBySite", this.props.realTime.site);
         }
@@ -109,6 +111,27 @@ var RealTime = React.createClass({
             });
         }
     },
+    getSensorById: function (sensorId) {
+        return this.props.collections.getIn(["sensors", sensorId]);
+    },
+    // shouldConsumptionPanelRender: function (fullPath) {
+    //     if (R.isArrayLike(fullPath) && fullPath.length > 0) {
+    //         // All sensors under a site
+    //         const site = this.getSitoById(fullPath[0]);
+    //         if (site) {
+    //             const sensorsType = site.get("sensorsIds").map(sensorId => {
+    //                 const sensorObject = this.getSensorById(sensorId);
+    //                 if (sensorObject) {
+    //                     return sensorObject.get("type");
+    //                 }
+    //             });
+    //             return parameters.getConsumptions(this.getTheme()).filter(consumption => {
+    //                 return R.contains(consumption.type, sensorsType);
+    //             });
+    //         }
+    //     }
+    //     return [];
+    // },
     drawGaugeTotal: function () {
         const {colors} = this.getTheme();
         if (this.findLatestMeasuresForEnergy().size > 0) {
@@ -177,15 +200,16 @@ var RealTime = React.createClass({
         );
     },
     findLatestMeasuresWithCriteria: function (criteria) {
-        var res = readingsRealTime.decorators(this.getTheme()).filter(criteria);
+        const decorators = R.unnest(sensorsDecorators.allSensorsDecorator(this.getTheme()));
+        var res = Immutable.fromJS(decorators).filter(criteria);
         if (this.props.realTime.fullPath && this.getMeasures().size) {
             var decoMeasurements = this.getSite(this.props.realTime.fullPath[0]).get("sensors")
                 .map(sensor => {
-                    return readingsRealTime.decorateMeasure(sensor, this.getTheme());
+                    return decorateMeasure(sensor, this.getTheme());
                 });
             res = R.filter(
                 criteria,
-                readingsRealTime.addValueToMeasures(
+                addValueToMeasures(
                     decoMeasurements.flatten(1),
                     this.getMeasuresBySite()
             ));
@@ -193,14 +217,17 @@ var RealTime = React.createClass({
         return res;
     },
     findLatestMeasuresForEnergy: function () {
-        var measures = this.findLatestMeasuresWithCriteria(function (decorator) {
-            return decorator.get("type") === "pod" && decorator.get("keyType") === "activeEnergy";
+        var measures = this.findLatestMeasuresWithCriteria(decorator => {
+            return (
+                decorator.get("type") === "pod" &&
+                decorator.get("keyType") === "activeEnergy"
+            );
         });
         return measures.map(pod => {
             var anzId = (pod.get("children") || Immutable.List()).map(anz => {
-                return readingsRealTime.decorateMeasure(anz, this.getTheme());
+                return decorateMeasure(anz, this.getTheme());
             });
-            return pod.set("value", readingsRealTime.addValueToMeasures(
+            return pod.set("value", addValueToMeasures(
                 anzId.flatten(1),
                 this.getMeasuresBySite()
             ).filter(decorator => {
@@ -211,8 +238,11 @@ var RealTime = React.createClass({
         });
     },
     findLatestMeasuresForVariables: function () {
-        return this.findLatestMeasuresWithCriteria(function (decorator) {
-            return decorator.get("type") !== "pod" && decorator.get("type") !== "pod-anz";
+        return this.findLatestMeasuresWithCriteria(decorator => {
+            return (
+                decorator.get("type") !== "pod" &&
+                decorator.get("type") !== "pod-anz"
+            );
         });
     },
     getSitoById: function (sitoId) {
@@ -230,7 +260,7 @@ var RealTime = React.createClass({
     onConfirmFullscreenModal: function () {
         const siteId = this.state.value[0];
         this.props.asteroid.subscribe("readingsRealTimeAggregatesBySite", siteId);
-        this.props.selectRealTimeSite(this.state.value);
+        this.props.selectRealTimeSite(this.state.value || this.props.realTime.fullPath);
         this.closeModal();
     },
     renderModalButton: function () {
@@ -271,11 +301,45 @@ var RealTime = React.createClass({
             />
         );
     },
+    renderConsumptionPanel: function () {
+        const {colors} = this.getTheme();
+        const selectedSiteName = this.getSelectedSiteName();
+// this.shouldConsumptionPanelRender(this.props.realTime.fullPath)
+        return  (
+            <div
+                style={{
+                    position: "absolute",
+                    top: "20px",
+                    left: "0px",
+                    width: "100%",
+                    backgroundColor: colors.backgroundRealTimeSection,
+                    borderTop: "1px solid " + colors.borderRealTimeSection,
+                    borderBottom: "1px solid " + colors.borderRealTimeSection
+                }}
+            >
+                <h3
+                    className="text-center"
+                    style={{
+                        color: colors.mainFontColor,
+                        fontSize: "24px",
+                        fontWeight: "400",
+                        textTransform: "uppercase"
+                    }}
+                >
+                    {`${selectedSiteName ? selectedSiteName + " - " : ""}Rilevazioni ambientali`}
+                </h3>
+                <components.VariablesPanel
+                    values={this.findLatestMeasuresForVariables()}
+                />
+            </div>
+        );
+    },
     render: function () {
         const theme = this.getTheme();
         const selectedSiteName = this.getSelectedSiteName();
         return (
             <div>
+                {/* Title page */}
                 <div style={styles(this.getTheme()).titlePage}>
                     <div style={{fontSize: "18px", marginBottom: "0px", paddingTop: "18px", width: "100%"}}>
                         {getTitleForSingleSensor(this.props.realTime, this.props.collections)}
@@ -285,27 +349,7 @@ var RealTime = React.createClass({
                     </bootstrap.Col>
                 </div>
                 <div style={styles(theme).mainDivStyle, {position: "relative"}}>
-                    <div
-                        style={{
-                            position: "absolute",
-                            top: "20px",
-                            left: "0px",
-                            width: "100%",
-                            backgroundColor: theme.colors.backgroundRealTimeSection,
-                            borderTop: "1px solid " + theme.colors.borderRealTimeSection,
-                            borderBottom: "1px solid " + theme.colors.borderRealTimeSection
-                        }}
-                    >
-                        <h3
-                            className="text-center"
-                            style={{color: theme.colors.mainFontColor, fontSize: "24px", fontWeight: "400", textTransform: "uppercase"}}
-                        >
-                            {`${selectedSiteName ? selectedSiteName + " - " : ""}Rilevazioni ambientali`}
-                        </h3>
-                        <components.VariablesPanel
-                            values={this.findLatestMeasuresForVariables()}
-                        />
-                    </div>
+                    {this.renderConsumptionPanel()}
                     <div
                         style={{
                             position: "relative",

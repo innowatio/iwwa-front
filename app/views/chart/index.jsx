@@ -12,6 +12,7 @@ var components         = require("components/");
 // var GetTutorialMixin   = require("lib/get-tutorial-mixin");
 // var tutorialString     = require("assets/JSON/tutorial-string.json").historicalGraph;
 import * as parameters from "./parameters";
+import {consumptionSensors} from "lib/sensors-decorators";
 import {
     selectSingleElectricalSensor,
     selectElectricalType,
@@ -209,7 +210,7 @@ var Chart = React.createClass({
                         return sensorObject.get("type");
                     }
                 });
-                return parameters.getConsumptions(this.getTheme()).filter(consumption => {
+                return consumptionSensors(this.getTheme()).filter(consumption => {
                     return R.contains(consumption.type, sensorsType);
                 });
             }

@@ -46,44 +46,6 @@ export function getSources (theme) {
     ];
 }
 
-export function getConsumptions ({colors}) {
-    return [
-        {
-            label: "Temperatura",
-            iconColor: colors.iconSensors,
-            color: colors.temperature,
-            key: "temperature",
-            type: "thl",
-            iconClass: "thermometer"
-        },
-        {
-            label: "Umidità",
-            iconColor: colors.iconSensors,
-            color: colors.humidity,
-            key: "humidity",
-            type: "thl",
-            iconClass: "humidity"
-        },
-        {
-            label: "Lux",
-            iconColor: colors.iconSensors,
-            color: colors.illuminance,
-            key: "illuminance",
-            type: "thl",
-            iconClass: "lightbulb"
-        },
-        {
-            label: "CO2",
-            iconColor: colors.iconSensors,
-            color: colors.co2,
-            key: "co2",
-            type: "co2",
-            iconClass: "co2"
-        }
-        // {label: "Allarmi", key: "allarms", iconClass: "danger" }
-    ];
-}
-
 export function getExportType () {
     return [
         {

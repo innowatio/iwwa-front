@@ -32,7 +32,7 @@ var VariablesPanel = React.createClass({
         return this.props.values.map((variable) => {
             return (
                 <div key={variable.get("key")} style={{width: "25%", flex: "1 0 auto"}}>
-                    <div style={style(variable.get("buttonBgColor")).box} styleName="variableContainer">
+                    <div style={style(variable.get("color")).box} styleName="variableContainer">
                         <components.Icon
                             color={this.getTheme().colors.iconVariable}
                             icon={variable.get("icon")}
