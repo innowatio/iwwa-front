@@ -61,7 +61,6 @@ var RealTime = React.createClass({
             <div style={{margin: "auto", width: R.path(["style", "width"], params) || "200px"}}>
                 <components.Gauge
                     valueLabel={this.getGaugeLabel({
-                        id: params.id,
                         styleTextLabel: params.styleTextLabel,
                         styleTextUnit: params.styleTextUnit,
                         unit: params.unit || "",

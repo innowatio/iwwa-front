@@ -39,6 +39,22 @@ var MeasureLabel = React.createClass({
     getTheme: function () {
         return this.context.theme || defaultTheme;
     },
+    renderIdGauge: function () {
+        const {colors} = this.getTheme();
+        return (
+            <div
+                className="subject"
+                style={{
+                    fontSize: "13px",
+                    lineHeight: "2px",
+                    fontWeight: "400",
+                    color: colors.mainFontColor
+                }}
+            >
+                {this.props.id}
+            </div>
+        );
+    },
     render: function () {
         const theme = this.getTheme();
         return (
@@ -68,17 +84,7 @@ var MeasureLabel = React.createClass({
                             >
                                 {this.props.unit}
                             </div>
-                            <div
-                                className="subject"
-                                style={{
-                                    fontSize: "13px",
-                                    lineHeight: "2px",
-                                    fontWeight: "400",
-                                    color: theme.colors.mainFontColor
-                                }}
-                            >
-                                {this.props.id}
-                            </div>
+                            {this.props.id ? this.renderIdGauge() : null}
                         </div>
                     </div>
                 </b>
