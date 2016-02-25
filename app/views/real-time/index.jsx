@@ -321,10 +321,9 @@ var RealTime = React.createClass({
             />
         );
     },
-    renderConsumptionPanel: function () {
+    renderConsumptionPanel: function (numberOfConsumptionSensor) {
         const {colors} = this.getTheme();
         const selectedSiteName = this.getSelectedSiteName();
-        const numberOfConsumptionSensor = this.numberOfConsumptionSensor(this.props.realTime.fullPath);
         return numberOfConsumptionSensor > 0 ? (
             <div
                 style={{
@@ -358,6 +357,7 @@ var RealTime = React.createClass({
     render: function () {
         const theme = this.getTheme();
         const selectedSiteName = this.getSelectedSiteName();
+        const numberOfConsumptionSensor = this.numberOfConsumptionSensor(this.props.realTime.fullPath);
         return (
             <div>
                 {/* Title page */}
@@ -370,13 +370,13 @@ var RealTime = React.createClass({
                     </bootstrap.Col>
                 </div>
                 <div style={styles(theme).mainDivStyle, {position: "relative"}}>
-                    {this.renderConsumptionPanel()}
+                    {this.renderConsumptionPanel(numberOfConsumptionSensor)}
                     <div
                         style={{
                             position: "relative",
-                            top: "220px",
+                            top: numberOfConsumptionSensor > 0 ? "220px" : "20px",
                             margin: "0px 30px 0px 30px",
-                            height: "calc(100vh - 395px)",
+                            height: numberOfConsumptionSensor > 0 ? "calc(100vh - 395px)" : "calc(100vh - 175px)",
                             overflow: "hidden",
                             backgroundColor: theme.colors.backgroundRealTimeSection,
                             border: "1px solid " + theme.colors.borderRealTimeSection,
