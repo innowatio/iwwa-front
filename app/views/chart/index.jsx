@@ -143,13 +143,13 @@ var Chart = React.createClass({
             this.props.selectSingleElectricalSensor([firstSite.get("_id")]);
         }
     },
-    onChangeExport: function (valueChanged) {
+    exportPng: function () {
         var exportAPILocation = this.refs.historicalGraph.refs.compareGraph.refs.temporalLineGraph;
-        if (valueChanged.key === "png") {
-            exportAPILocation.exportPNG();
-        } else if (valueChanged.key === "csv") {
-            exportAPILocation.exportCSV();
-        }
+        return exportAPILocation.exportPNG;
+    },
+    exportCsv: function () {
+        var exportAPILocation = this.refs.historicalGraph.refs.compareGraph.refs.temporalLineGraph;
+        return exportAPILocation.exportCSV;
     },
     subscribeToMisure: function (props) {
         const dateFirstChartState = props.chart[0].date;
@@ -424,6 +424,8 @@ var Chart = React.createClass({
     renderExport: function () {
         return (
             <components.Export
+                exportPng={this.exportPng}
+                exportCsv={this.exportCsv}
                 title={"INVIA I DATI VISUALIZZATI VIA EMAIL"}
             />
         );
@@ -459,7 +461,6 @@ var Chart = React.createClass({
                             getIcon={R.prop("iconClass")}
                             getKey={R.prop("key")}
                             getLabel={R.prop("label")}
-                            onChange={this.onChangeExport}
                         />
                     </components.Popover>
                 </components.TutorialAnchor>
@@ -546,9 +547,6 @@ var Chart = React.createClass({
                         >
                             {this.renderChildComponent()}
                         </components.FullscreenModal>
-                        <span className="pull-left" style={{display: "flex"}}>
-                            {ENVIRONMENT === "cordova" ? null : this.renderExportButton()}
-                        </span>
                         <span className="pull-right" style={{display: "flex"}}>
                             <components.TutorialAnchor
                                 message={tutorialString.valori}

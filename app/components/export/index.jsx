@@ -16,6 +16,8 @@ const buttonExport = (theme) => ({
 
 var Export = React.createClass({
     propTypes: {
+        exportCsv: PropTypes.func,
+        exportPng: PropTypes.func,
         title: PropTypes.string
     },
     contextTypes: {
@@ -28,7 +30,7 @@ var Export = React.createClass({
         return (
             <bootstrap.Col xs={6}>
                 <components.Button
-                    onClick={""}
+                    onClick={this.props.exportPng}
                     style={buttonExport(theme)}
                 >
                     <components.Icon
@@ -45,7 +47,7 @@ var Export = React.createClass({
         return (
             <bootstrap.Col xs={6}>
                 <components.Button
-                    onClick={""}
+                    onClick={this.props.exportCsv}
                     style={buttonExport(theme)}
                 >
                     <components.Icon
