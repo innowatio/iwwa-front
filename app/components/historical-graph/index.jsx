@@ -1,12 +1,9 @@
 import IPropTypes from "react-immutable-proptypes";
 import React, {PropTypes} from "react";
-import ReactPureRender from "react-addons-pure-render-mixin";
 
-import components from "components";
 import DateCompareGraph from "./date-compare";
 import SourcesAndSensorsCompare from "./sources-and-sensors-compare";
 import SitesCompareGraph from "./sites-compare";
-import {defaultTheme} from "lib/theme";
 
 var HistoricalGraph = React.createClass({
     propTypes: {
@@ -16,18 +13,7 @@ var HistoricalGraph = React.createClass({
         isComparationActive: PropTypes.bool,
         isDateCompareActive: PropTypes.bool,
         misure: IPropTypes.map.isRequired,
-        resetCompare: PropTypes.func.isRequired,
         sites: PropTypes.arrayOf(IPropTypes.map).isRequired
-    },
-    contextTypes: {
-        theme: PropTypes.object
-    },
-    mixins: [ReactPureRender],
-    getTheme: function () {
-        return this.context.theme || defaultTheme;
-    },
-    exportPNG: function () {
-        return this.refs.temporalLineGraph.exportPNG;
     },
     renderDateCompareGraph: function () {
         return <DateCompareGraph {...this.props} ref="compareGraph"/>;
@@ -48,30 +34,8 @@ var HistoricalGraph = React.createClass({
         return this.renderValoriCompareGraph();
     },
     render: function () {
-        const {colors} = this.getTheme();
         return (
             <div style={{width: "100%", height: "100%"}}>
-                <div
-                    onClick={this.props.resetCompare}
-                    style={{
-                        color: colors.resetCompare,
-                        display: this.props.isComparationActive ? "flex" : "none",
-                        position: "relative",
-                        marginLeft: "50px",
-                        verticalAlign: "middle",
-                        lineHeight: "28px",
-                        cursor: "pointer"
-                    }}
-                >
-                    <components.Icon
-                        color={this.getTheme().colors.iconLogout}
-                        icon={"logout"}
-                        size={"28px"}
-                        style={{lineHeight: "20px", paddingRight: "5px"}}
-                    />
-                    <components.Spacer direction="h" size={5} />
-                    {"Esci dal confronto"}
-                </div>
                 {this.renderGraph()}
             </div>
         );
