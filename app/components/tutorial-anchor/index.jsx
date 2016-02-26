@@ -1,7 +1,7 @@
 var Radium = require("radium");
 var React  = require("react");
 
-var colors = require("lib/colors");
+import {defaultTheme} from "lib/theme";
 
 var TutorialAnchor = React.createClass({
     propTypes: {
@@ -10,15 +10,22 @@ var TutorialAnchor = React.createClass({
         order: React.PropTypes.number,
         position: React.PropTypes.oneOf(["right", "left", "top", "bottom"])
     },
+    contextTypes: {
+        theme: React.PropTypes.object
+    },
+    getTheme: function () {
+        return this.context.theme || defaultTheme;
+    },
     getOptions: function () {
         return {
-            element: this.refs.div.getDOMNode(),
+            element: this.refs.div,
             intro: this.props.message,
             position: this.props.position,
             order: this.props.order
         };
     },
     render: function () {
+        const {colors} = this.getTheme();
         return (
             <div className="tutorial" ref="div">
                 <Radium.Style
@@ -29,6 +36,9 @@ var TutorialAnchor = React.createClass({
                             lineHeight: "inherit",
                             border: "0px",
                             textShadow: "none"
+                        },
+                        ".introjs-tooltip": {
+                            maxWidth: "380px"
                         },
                         "a:focus": {
                             outline: "0px",

@@ -1,117 +1,147 @@
-var color      = require("color");
 var Immutable  = require("immutable");
-var Radium     = require("radium");
 var R          = require("ramda");
 var React      = require("react");
+var moment     = require("moment");
 var bootstrap  = require("react-bootstrap");
 var IPropTypes = require("react-immutable-proptypes");
+import {connect} from "react-redux";
+import {bindActionCreators} from "redux";
 
-var CollectionUtils  = require("lib/collection-utils");
-var colors           = require("lib/colors");
-var components       = require("components/");
-var icons            = require("lib/icons");
-var QuerystringMixin = require("lib/querystring-mixin");
-var styles           = require("lib/styles");
-var transformers     = require("./transformers.js");
-var GetTutorialMixin = require("lib/get-tutorial-mixin");
-var tutorialString   = require("assets/JSON/tutorial-string.json").historicalGraph;
+var CollectionUtils    = require("lib/collection-utils");
+var components         = require("components/");
+// var GetTutorialMixin   = require("lib/get-tutorial-mixin");
+var tutorialString     = require("assets/JSON/tutorial-string.json").historicalGraph;
+import * as parameters from "./parameters";
+import {
+    selectSingleElectricalSensor,
+    selectElectricalType,
+    selectEnvironmentalSensor,
+    selectSource,
+    selectMultipleElectricalSensor,
+    selectDateRanges,
+    selectDateRangesCompare,
+    removeAllCompare
+} from "actions/chart";
+import {styles} from "lib/styles_restyling";
+import {defaultTheme} from "lib/theme";
+import {getTitleForSingleSensor, getStringPeriod, getSensorName} from "lib/page-header-utils";
 
-var multiselectStyles = {
-    multiselectPopover: {
-        width: "175px"
-    },
-    multiselect: {
-        width: "450px",
-        height: "35px",
-        display: "inline-block"
-    }
-};
+const measurementTypeButtonStyle = (theme) => R.merge(styles(theme).buttonSelectChart, {
+    minWidth: "132px",
+    height: "45px",
+    fontSize: "15px",
+    margin: "0 0 0 10px",
+    padding: "0"
+});
 
-var graphStyle = {
-    border: "solid 1px " + color(colors.darkBlack).alpha(0.1).rgbString(),
-    boxShadow: "2px 2px 5px " + colors.greySubTitle
-};
+const sourceButtonStyle = (theme) => R.merge(styles(theme).buttonSelectChart, {
+    minWidth: "85px",
+    height: "30px"
+});
 
-var dateCompareProps;
-var sitoInputProps;
+const consumptionButtonStyle = ({colors}) => ({
+    color: colors.greySubTitle,
+    textAlign: "center",
+    marginRight: "15px !important",
+    padding: "0",
+    verticalAlign: "middle",
+    borderRadius: "22px",
+    width: "45px",
+    height: "45px",
+    transition: "width 0.4s ease-in-out",
+    border: "none"
+});
+
+const consumptionButtonSelectedStyle = ({colors}) => ({
+    color: colors.white,
+    backgroundColor: colors.consumption,
+    borderRadius: "22px",
+    verticalAlign: "middle",
+    width: "160px",
+    height: "45px",
+    transition: "width 0.4s ease-in-out"
+});
+
+const dateButtonStyle = ({colors}) => ({
+    background: colors.primary,
+    border: "0px none",
+    height: "35px",
+    width: "auto",
+    position: "absolute",
+    top: "50%"
+});
+
+const alarmButtonStyle = ({colors}) => ({
+    background: colors.titleColor,
+    border: "0px none",
+    borderRadius: "100%",
+    height: "50px",
+    margin: "auto",
+    width: "50px"
+});
 
 var Chart = React.createClass({
     propTypes: {
         asteroid: React.PropTypes.object,
-        collections: IPropTypes.map,
+        chart: React.PropTypes.arrayOf(React.PropTypes.object).isRequired,
+        collections: IPropTypes.map.isRequired,
         localStorage: React.PropTypes.object,
-        location: React.PropTypes.object,
-        params: React.PropTypes.object
+        location: React.PropTypes.object.isRequired,
+        removeAllCompare: React.PropTypes.func.isRequired,
+        selectDateRanges: React.PropTypes.func.isRequired,
+        selectDateRangesCompare: React.PropTypes.func.isRequired,
+        selectElectricalType: React.PropTypes.func.isRequired,
+        selectEnvironmentalSensor: React.PropTypes.func.isRequired,
+        selectMultipleElectricalSensor: React.PropTypes.func.isRequired,
+        selectSingleElectricalSensor: React.PropTypes.func.isRequired,
+        selectSource: React.PropTypes.func.isRequired
     },
-    mixins: [QuerystringMixin,
-        GetTutorialMixin("historicalGraph", [
-            "valori",
-            "export",
-            "tipologie",
-            "siti",
-            "dateFilter",
-            "compare",
-            "graph"
-    ])],
+    contextTypes: {
+        theme: React.PropTypes.object
+    },
+    mixins: [
+        // GetTutorialMixin("historicalGraph",
+        //     ["valori", "export", "tipologie", "siti", "dateFilter", "compare", "graph"]
+        // )
+    ],
+    getInitialState: function () {
+        return {
+            showFullscreenModal: false,
+            selectedWidget: null,
+            value: undefined
+        };
+    },
     componentDidMount: function () {
-        this.props.asteroid.subscribe("siti");
-        if (R.has("idAlarm", this.props.params)) {
+        this.props.asteroid.subscribe("sites");
+        this.props.asteroid.subscribe("sensors");
+        if (this.props.chart[0].alarms) {
             this.props.asteroid.subscribe("alarms");
         }
+        this.updateFirstSiteToChart();
         this.subscribeToMisure(this.props);
     },
     componentWillReceiveProps: function (props) {
         this.subscribeToMisure(props);
     },
     componentDidUpdate: function () {
-        var siti = this.props.collections.get("siti") || Immutable.Map();
-        if (siti.size > 0 && this.refs.historicalGraph.props.siti.length < 1) {
-            sitoInputProps.onChange([siti.first()], "sito");
+        this.updateFirstSiteToChart();
+    },
+    getTheme: function () {
+        return this.context.theme || defaultTheme;
+    },
+    closeModal: function () {
+        this.setState({
+            showFullscreenModal: false,
+            selectedWidget: null,
+            value: undefined
+        });
+    },
+    updateFirstSiteToChart: function () {
+        var sites = this.props.collections.get("sites") || Immutable.Map();
+        if (sites.size > 0 && !this.props.chart[0].sensorId) {
+            const firstSite = sites.first();
+            this.props.selectSingleElectricalSensor([firstSite.get("_id")]);
         }
-    },
-    getPeriods: function () {
-        return [
-            {label: "Settimana", key: "week"},
-            {label: "Mese", key: "month"},
-            {label: "Trimestre", key: "quarter"}
-        ];
-    },
-    getTipologie: function () {
-        return [
-            {label: "Attiva", key: 1},
-            {label: "Potenza", key: 2},
-            {label: "Reattiva", key: 3}
-        ];
-    },
-    getValori: function () {
-        return [
-            {label: "Reale", color: colors.lineReale, key: "reale"},
-            {label: "Previsionale", color: colors.linePrevisionale, key: "previsionale"}
-        ];
-    },
-    getExportType: function () {
-        return [
-            {label: "Png", key: "png", icon: icons.iconPNG},
-            {label: "Csv", key: "csv", icon: icons.iconCSV}
-        ];
-    },
-    getDateCompare: function () {
-        return [
-            {label: "IERI", key: "days"},
-            {label: "7 GG FA", key: "7 days before"},
-            {label: "SETTIMANA SCORSA", key: "weeks"},
-            {label: "MESE SCORSO", key: "months"},
-            {label: "12 MESI FA", key: "years"}
-        ];
-    },
-    getDateFilter: function () {
-        return [
-            {label: "IERI", key: "days"},
-            {label: "SETTIMANA SCORSA", key: "weeks"},
-            {label: "MESE SCORSO", key: "months"},
-            {label: "2 MESI FA", key: "2months"},
-            {label: "ALTRO PERIODO", key: "custom"}
-        ];
     },
     onChangeExport: function (valueChanged) {
         var exportAPILocation = this.refs.historicalGraph.refs.compareGraph.refs.temporalLineGraph;
@@ -121,240 +151,501 @@ var Chart = React.createClass({
             exportAPILocation.exportCSV();
         }
     },
-    resetCompare: function () {
-        if (sitoInputProps.value && sitoInputProps.value.length > 1) {
-            var val = sitoInputProps.value[0];
-            sitoInputProps.onChange([val], "sito");
-        }
-        if (this.refs.historicalGraph.props.dateCompare) {
-            dateCompareProps.onChange(null, "dateCompare");
-        }
-    },
     subscribeToMisure: function (props) {
-        var self = this;
-        var sitoQuery = R.path(["location", "query", "sito"], props);
-        var siti = (sitoQuery && sitoQuery.split(",")) || [];
-        siti.forEach(function (sito) {
-            self.props.asteroid.subscribe("misureBySito", sito);
+        const dateFirstChartState = props.chart[0].date;
+        var dateStart;
+        var dateEnd;
+        // Query for date-compare
+        if (dateFirstChartState.type === "dateCompare") {
+            const dateSecondChartState = props.chart[1].date;
+            dateStart = [
+                moment.utc(dateFirstChartState.start).format("YYYY-MM-DD"),
+                moment.utc(dateSecondChartState.start).format("YYYY-MM-DD")
+            ];
+            dateEnd = [
+                moment.utc(dateFirstChartState.end).format("YYYY-MM-DD"),
+                moment.utc(dateSecondChartState.end).format("YYYY-MM-DD")
+            ];
+        // Query for date-filter
+        } else if (dateFirstChartState.type === "dateFilter") {
+            dateStart = moment.utc(dateFirstChartState.start).format("YYYY-MM-DD");
+            dateEnd = moment.utc(dateFirstChartState.end).format("YYYY-MM-DD");
+        } else {
+            // If no data is selected, is displayed the past month.
+            dateStart = moment.utc().startOf("month").format("YYYY-MM-DD");
+            dateEnd = moment.utc().endOf("month").format("YYYY-MM-DD");
+        }
+        const sensors = props.chart.map(singleSelection => singleSelection.sensorId);
+        const measurementTypes = props.chart.map(singleSelection => singleSelection.measurementType.key);
+        const sources = props.chart.map(singleSelection => singleSelection.source.key);
+        sensors[0] && sensors.forEach((sensorId, idx) => {
+            props.asteroid.subscribe(
+                "dailyMeasuresBySensor",
+                sensorId,
+                R.is(Array, dateStart) ? dateStart[idx] : dateStart,
+                R.is(Array, dateEnd) ? dateEnd[idx] : dateEnd,
+                sources[idx],
+                measurementTypes[idx]
+            );
         });
     },
-    render: function () {
-        // Sito
-        var siti = this.props.collections.get("siti") || Immutable.Map();
-        sitoInputProps = this.bindToQueryParameter(
-            "sito",
-            transformers.sito(siti)
+    getSitoById: function (sitoId) {
+        const sites = this.props.collections.get("sites") || Immutable.Map();
+        return sites.find(site => {
+            return site.get("_id") === sitoId;
+        });
+    },
+    getSensorById: function (sensorId) {
+        return this.props.collections.getIn(["sensors", sensorId]);
+    },
+    getConsumptionVariablesFromFullPath: function (fullPath) {
+        if (R.isArrayLike(fullPath) && fullPath.length > 0) {
+            // All sensors under a site
+            const site = this.getSitoById(fullPath[0]);
+            if (site) {
+                const sensorsType = site.get("sensorsIds").map(sensorId => {
+                    const sensorObject = this.getSensorById(sensorId);
+                    if (sensorObject) {
+                        return sensorObject.get("type");
+                    }
+                });
+                return parameters.getConsumptions(this.getTheme()).filter(consumption => {
+                    return R.contains(consumption.type, sensorsType);
+                });
+            }
+        }
+        return [];
+    },
+    firstSensorOfConsumptionInTheSite: function (consumptionTypes) {
+        const site = this.getSitoById(this.props.chart[0].site);
+        var typeOfSensorId;
+        if (consumptionTypes.key === "co2") {
+            typeOfSensorId = "COOV";
+        } else {
+            typeOfSensorId = "ZTHL";
+        }
+        return site.get("sensorsIds").find(sensorId => {
+            if (!isNaN(parseInt(sensorId))) {
+                return true;
+            }
+            return sensorId.slice(0, 4) === typeOfSensorId;
+        });
+    },
+    onChangeConsumption: function (sensorId, consumptionTypes) {
+        const selectedSensorId = this.firstSensorOfConsumptionInTheSite(consumptionTypes);
+        this.props.selectEnvironmentalSensor([selectedSensorId], [consumptionTypes]);
+    },
+    onChangeMultiSources: function (currentValue, allowedValue) {
+        const value = currentValue.map(value => value.key);
+        const index = value.indexOf(allowedValue.key);
+        if (index === -1) {
+            /*
+            *   The array does not contain the current value, hence we add it
+            */
+            this.props.selectSource(R.append(allowedValue, R.uniq(currentValue)));
+        } else {
+            /*
+            *   The array contains the current value, hence we remove it
+            */
+            const arrayWithValueRemoved = R.remove(index, 1, currentValue);
+            arrayWithValueRemoved.length > 0 ? this.props.selectSource(arrayWithValueRemoved) : null;
+        }
+    },
+    isDateCompare: function () {
+        return this.props.chart[0].date.type === "dateCompare";
+    },
+    isComparationActive: function (selectedSitesId, selectedSources) {
+        return (
+            this.isDateCompare() ||
+            selectedSitesId.length > 1 ||
+            (
+                this.props.chart.length >= 2 &&
+                !R.allUniq(this.props.chart.map(singleSelection => singleSelection.measurementType)) &&
+                R.uniq(selectedSources).length === 1
+            )
         );
-
-        // Tipologia
-        var tipologie = this.getTipologie();
-        var tipologiaInputProps = this.bindToQueryParameter(
-            "tipologia",
-            transformers.tipologia(tipologie)
+    },
+    getTitleForChart: function () {
+        if (this.props.chart.length === 1) {
+            // Selezione sito-pod-sensor:
+            // NameSito (· NamePod/Sensor )· Period
+            return [
+                getTitleForSingleSensor(this.props.chart[0], this.props.collections),
+                getStringPeriod(this.props.chart[0].date)
+            ].join(" · ");
+        } else if (this.props.chart.length > 1) {
+            // Comparazione per data (su sito pod o sensor):
+            // NameSito (· NamePod/Sensor )· Period1 & Period2
+            if (
+                !R.isEmpty(this.props.chart[0].date.period) &&
+                this.props.chart[0].date !== this.props.chart[1].date &&
+                R.equals(this.props.chart[0].fullPath, this.props.chart[1].fullPath)
+            ) {
+                return [
+                    getTitleForSingleSensor(this.props.chart[0], this.props.collections),
+                    getStringPeriod(this.props.chart[0].date)
+                ].join(" · ");
+            } else if (this.props.chart[0].site === this.props.chart[1].site) {
+                // Compara energia con variabile:
+                // NameSito (· NamePod/Sensor )· measureType & variableType
+                return [
+                    getTitleForSingleSensor(this.props.chart[0], this.props.collections),
+                    getSensorName(this.props.chart[1].sensorId, this.props.collections)
+                ].join(" & ") + ` · ${getStringPeriod(this.props.chart[0].date)}`;
+            // Comparazione siti:
+            // NameSito1 & NameSito2
+            } else if (this.props.chart[0].fullPath !== this.props.chart[1].fullPath) {
+                return [
+                    getTitleForSingleSensor(this.props.chart[0], this.props.collections),
+                    getTitleForSingleSensor(this.props.chart[1], this.props.collections)
+                ].join(" & ") + ` · ${getStringPeriod(this.props.chart[0].date)}`;
+            }
+        }
+    },
+    onChangeWidget: function ({key}) {
+        this.setState({
+            showFullscreenModal: true,
+            selectedWidget: key
+        });
+    },
+    onConfirmFullscreenModal: function () {
+        const {chart} = this.props;
+        switch (this.state.selectedWidget) {
+            case "siteNavigator":
+                // Set the default value to pass.
+                this.props.selectSingleElectricalSensor(this.state.value || chart[0].fullPath);
+                break;
+            case "dateFilter":
+                this.props.selectDateRanges(
+                    // Set the default value to pass.
+                    this.state.value || (chart[0].date.type === "dateFilter" && chart[0].date) || {
+                        start: moment().startOf("month").valueOf(),
+                        end: moment().endOf("month").valueOf(),
+                        valueType: {label: "calendario", key: "calendar"}
+                    }
+                );
+                break;
+            case "siteCompare":
+                this.props.selectMultipleElectricalSensor(
+                    this.state.value ||
+                    // Set the default value to pass.
+                    (this.props.chart[1] && this.props.chart[1].fullPath)
+                );
+                break;
+            case "dateCompare":
+                this.props.selectDateRangesCompare(
+                    this.state.value ||
+                    (this.props.chart[0].date.type === "dateCompare" &&  {
+                        period: this.props.chart[0].date.period,
+                        dateOne: moment.utc().valueOf()
+                    }) || {
+                        // Set the default value to pass.
+                        period: parameters.getDateCompare()[0],
+                        dateOne: moment.utc().valueOf()
+                    }
+                );
+                break;
+        }
+        return this.closeModal();
+    },
+    onChangeWidgetValue: function (value) {
+        this.setState({value});
+    },
+    renderChildComponent: function () {
+        switch (this.state.selectedWidget) {
+            case "siteNavigator":
+                return this.renderSiteNavigator();
+            case "dateFilter":
+                return this.renderDateFilter();
+            case "siteCompare":
+                return this.renderSiteCompare();
+            case "dateCompare":
+                return this.renderDateCompare();
+        }
+    },
+    renderDateCompare: function () {
+        return (
+            <components.DateCompare
+                allowedValues={parameters.getDateCompare()}
+                getKey={R.prop("key")}
+                getLabel={R.prop("label")}
+                onChange={this.onChangeWidgetValue}
+                period={
+                    (this.state.value && this.state.value.period) ||
+                    this.props.chart[0].date.period ||
+                    parameters.getDateCompare()[0]
+                }
+            />
         );
-        // Valore
-        var valori = this.getValori();
-        var valoreInputProps = this.bindToQueryParameter(
-            "valore",
-            transformers.valore(valori)
+    },
+    renderSiteCompare: function () {
+        const sites = this.props.collections.get("sites") || Immutable.Map();
+        return (
+            <components.SiteNavigator
+                allowedValues={sites.sortBy(site => site.get("name"))}
+                onChange={this.onChangeWidgetValue}
+                path={this.state.value || (this.props.chart[1] && this.props.chart[1].fullPath) || []}
+                title={
+                    " QUALE PUNTO DI MISURAZIONE VUOI COMPARARE CON " +
+                    getTitleForSingleSensor(this.props.chart[0], this.props.collections).toUpperCase() +
+                    " ? "
+                }
+            />
         );
-        var valoreGetActiveStyle = function (valore) {
-            return {
-                background: valore.color,
-                color: colors.white,
-                fontSize: "13px",
-                border: "1px " + colors.greyBorder
-            };
-        };
-        // Compare
-        var compareDate = this.getDateCompare();
-        dateCompareProps = this.bindToQueryParameter(
-            "dateCompare",
-            transformers.dateCompare(compareDate)
+    },
+    renderDateFilter: function () {
+        return (
+            <components.DateFilter
+                getKey={R.prop("key")}
+                getLabel={R.prop("label")}
+                onChange={this.onChangeWidgetValue}
+                title={"SELEZIONA IL PERIODO DA VISUALIZZARE"}
+                value={
+                    this.state.value && this.state.selectedWidget === "dateFilter" ? this.state.value : (
+                    this.props.chart[0].date.type === "dateFilter" ? this.props.chart[0].date : undefined
+                )}
+            />
         );
-        // Date filter
-        var filterDate = this.getDateFilter();
-        var dateFilterProps = this.bindToQueryParameter(
-            "dateFilter",
-            transformers.dateFilter()
+    },
+    renderSiteNavigator: function () {
+        const sites = this.props.collections.get("sites") || Immutable.Map();
+        return (
+            <components.SiteNavigator
+                allowedValues={sites.sortBy(site => site.get("name"))}
+                onChange={this.onChangeWidgetValue}
+                path={this.state.value || this.props.chart[0].fullPath || []}
+                title={"QUALE PUNTO DI MISURAZIONE VUOI VISUALIZZARE?"}
+            />
         );
-
-        // Alarms
-        var alarms = this.bindToQueryParameter(
-            "alarms",
-            transformers.alarms()
-        );
-
-        var valoriMulti = (
-            !dateCompareProps.value &&
-            sitoInputProps.value.length <= 1
-        );
-
+    },
+    renderExportButton: function () {
         return (
             <div>
                 <components.TutorialAnchor
-                    message={tutorialString.introTutorial}
-                    order={0}
-                    ref="intro"
-                />
-                <h2
-                    className="text-center"
-                    style={styles.titlePage}
+                    message={tutorialString.export}
+                    order={2}
+                    position="right"
+                    ref="export"
                 >
-                    <components.Spacer direction="v" size={5} />
-                    Storico consumi
-                </h2>
-                <bootstrap.Col sm={12} style={styles.colVerticalPadding}>
-                    <span className="pull-left" style={{display: "flex"}}>
-                        <components.TutorialAnchor
-                            message={tutorialString.valori}
-                            order={1}
-                            position="right"
-                            ref="valori"
-                        >
-                            <components.ButtonGroupSelect
-                                allowedValues={valori}
-                                getActiveStyle={valoreGetActiveStyle}
-                                getKey={R.prop("key")}
-                                getLabel={R.prop("label")}
-                                multi={valoriMulti}
-                                {...valoreInputProps}
+                    <components.Popover
+                        arrowColor={this.getTheme().colors.white}
+                        hideOnChange={true}
+                        title={
+                            <components.Icon
+                                color={this.getTheme().colors.iconDropdown}
+                                icon={"export"}
+                                size={"28px"}
+                                style={{lineHeight: "20px", verticalAlign: "middle"}}
                             />
-                        </components.TutorialAnchor>
-                        <components.TutorialAnchor
-                            message={tutorialString.export}
-                            order={2}
-                            position="right"
-                            ref="export"
-                        >
-                            <components.Popover
-                                hideOnChange={true}
-                                title={<img src={icons.iconExport} style={{width: "50%"}} />}
-                                tooltipId="tooltipExport"
-                                tooltipMessage="Esporta"
-                                tooltipPosition="right"
-                            >
-                                <components.DropdownButton
-                                    allowedValues={this.getExportType()}
-                                    getIcon={R.prop("icon")}
-                                    getKey={R.prop("key")}
-                                    getLabel={R.prop("label")}
-                                    onChange={this.onChangeExport}
-                                />
-                            </components.Popover>
-                        </components.TutorialAnchor>
-                    </span>
-                    <span className="pull-right" style={{display: "flex"}}>
-                        <components.TutorialAnchor
-                            message={tutorialString.tipologie}
-                            order={3}
-                            position="left"
-                            ref="tipologie"
-                        >
-                            <components.Popover
-                                hideOnChange={true}
-                                title={<img src={icons.iconPower} style={{width: "75%"}} />}
-                                tooltipId="tooltipInterest"
-                                tooltipMessage="Quantità d'interesse"
-                                tooltipPosition="left"
-                            >
-                                <components.DropdownSelect
-                                    allowedValues={tipologie}
-                                    getKey={R.prop("key")}
-                                    getLabel={R.prop("label")}
-                                    style={{float: "left"}}
-                                    {...tipologiaInputProps}
-                                />
-                            </components.Popover>
-                        </components.TutorialAnchor>
-                        <components.TutorialAnchor
-                            message={tutorialString.siti}
-                            order={4}
-                            position="left"
-                            ref="siti"
-                        >
-                            <components.Popover
-                                hideOnChange={true}
-                                style="inherit"
-                                title={<img src={icons.iconSiti} style={{width: "75%"}} />}
-                                tooltipId="tooltipMisurazione"
-                                tooltipMessage="Punti di misurazione"
-                                tooltipPosition="top"
-                            >
-                                <components.SelectTree
-                                    allowedValues={siti}
-                                    filter={CollectionUtils.siti.filter}
-                                    getKey={CollectionUtils.siti.getKey}
-                                    getLabel={CollectionUtils.siti.getLabel}
-                                    placeholder={"Punto di misurazione"}
-                                    {...sitoInputProps}
-                                />
-                            </components.Popover>
-                        </components.TutorialAnchor>
-                        <components.TutorialAnchor
-                            message={tutorialString.dateFilter}
-                            order={5}
-                            position="left"
-                            ref="dateFilter"
-                        >
-                            <components.DatefilterModal
-                                allowedValues={filterDate}
-                                getKey={R.prop("key")}
-                                getLabel={R.prop("label")}
-                                title={<img src={icons.iconCalendar} style={{width: "75%"}} />}
-                                {...dateFilterProps}
-                            />
-                        </components.TutorialAnchor>
-                        <components.TutorialAnchor
-                            message={tutorialString.compare}
-                            order={6}
-                            position="left"
-                            ref="compare"
-                        >
-                            <components.Compare>
-                                <components.SitiCompare
-                                    allowedValues={siti}
-                                    filter={CollectionUtils.siti.filter}
-                                    getKey={CollectionUtils.siti.getKey}
-                                    getSitoLabel={CollectionUtils.siti.getLabel}
-                                    open={"undefined"}
-                                    style={multiselectStyles.multiselect}
-                                    {...sitoInputProps}
-                                />
-                                <components.DataCompare
-                                    allowedValues={compareDate}
-                                    getKey={R.prop("key")}
-                                    getLabel={R.prop("label")}
-                                    {...dateCompareProps}
-                                />
-                            </components.Compare>
-                        </components.TutorialAnchor>
-                    </span>
-                </bootstrap.Col>
-                <bootstrap.Col  className="modal-container" sm={12} style={{height: "100%"}}>
-                    <components.TutorialAnchor
-                        message={tutorialString.graph}
-                        order={7}
-                        position="top"
-                        ref="graph"
+                        }
+                        tooltipId="tooltipExport"
+                        tooltipMessage="Esporta"
+                        tooltipPosition="left"
                     >
-                        <components.HistoricalGraph
-                            alarms={alarms.value}
-                            dateCompare={dateCompareProps.value}
-                            dateFilter={dateFilterProps.value}
-                            misure={this.props.collections.get("misure") || Immutable.Map()}
-                            ref="historicalGraph"
-                            resetCompare={this.resetCompare}
-                            siti={sitoInputProps.value}
-                            style={graphStyle}
-                            tipologia={tipologiaInputProps.value}
-                            valori={valoreInputProps.value}
+                        <components.DropdownButton
+                            allowedValues={parameters.getExportType()}
+                            getColor={R.prop("color")}
+                            getIcon={R.prop("iconClass")}
+                            getKey={R.prop("key")}
+                            getLabel={R.prop("label")}
+                            onChange={this.onChangeExport}
                         />
-                    </components.TutorialAnchor>
-                </bootstrap.Col>
+                    </components.Popover>
+                </components.TutorialAnchor>
+            </div>
+        );
+    },
+    render: function () {
+        const selectedSitesId = R.uniq(this.props.chart.map(singleSelection => singleSelection.site));
+        const selectedSites = selectedSitesId.map(siteId => this.getSitoById(siteId));
+        const selectedSources = this.props.chart.map(singleSelection => singleSelection.source);
+        const selectedConsumptionType = (
+            this.props.chart.length > 1 &&
+            R.allUniq(this.props.chart.map(singleSelection => singleSelection.measurementType))
+        ) ?
+            this.props.chart[1].measurementType :
+            null;
+        const valoriMulti = (!this.isDateCompare() && selectedSitesId.length < 2 && !selectedConsumptionType);
+        const variables = this.getConsumptionVariablesFromFullPath(this.props.chart[0].fullPath);
+        return (
+            <div>
+                <div style={styles(this.getTheme()).titlePage}>
+                    <div style={{fontSize: "18px", marginBottom: "0px", paddingTop: "16px", width: "100%"}}>
+                        {this.getTitleForChart().toUpperCase()}
+                    </div>
+                    <components.Button style={alarmButtonStyle(this.getTheme())}>
+                        <components.Icon
+                            color={this.getTheme().colors.iconHeader}
+                            icon={"danger"}
+                            size={"28px"}
+                            style={{lineHeight: "20px"}}
+                        />
+                    </components.Button>
+
+                    <components.Popover
+                        className="pull-right"
+                        hideOnChange={true}
+                        style={styles(this.getTheme()).chartPopover}
+                        title={
+                            <components.Icon
+                                color={this.getTheme().colors.iconHeader}
+                                icon={"settings"}
+                                size={"32px"}
+                                style={{lineHeight: "20px", verticalAlign: "middle"}}
+                            />
+                        }
+                    >
+                        <components.DropdownButton
+                            allowedValues={parameters.getChartSetting(this.getTheme())}
+                            getColor={R.prop("color")}
+                            getIcon={R.prop("iconClass")}
+                            getKey={R.prop("key")}
+                            getLabel={R.prop("label")}
+                            onChange={this.onChangeWidget}
+                            style={styles(this.getTheme()).chartDropdownButton}
+                        />
+                    </components.Popover>
+                </div>
+                <components.Button
+                    style={R.merge(dateButtonStyle(
+                        this.getTheme()), {
+                            borderRadius: "0 20px 20px 0",
+                            left: "0px",
+                            padding: "0"
+                        })
+                    }
+                >
+                    <components.Icon
+                        color={this.getTheme().colors.iconArrowSwitch}
+                        icon={"arrow-left"}
+                        size={"34px"}
+                        style={{lineHeight: "20px"}}
+                    />
+                </components.Button>
+                <div style={styles(this.getTheme()).mainDivStyle}>
+                    <bootstrap.Col sm={12} style={styles(this.getTheme()).colVerticalPadding}>
+                        <components.FullscreenModal
+                            onConfirm={this.onConfirmFullscreenModal}
+                            onHide={this.closeModal}
+                            onReset={this.closeModal}
+                            show={this.state.showFullscreenModal}
+                        >
+                            {this.renderChildComponent()}
+                        </components.FullscreenModal>
+                        <span className="pull-left" style={{display: "flex"}}>
+                            {ENVIRONMENT === "cordova" ? null : this.renderExportButton()}
+                        </span>
+                        <span className="pull-right" style={{display: "flex"}}>
+                            <components.TutorialAnchor
+                                message={tutorialString.valori}
+                                order={1}
+                                position="right"
+                                ref="valori"
+                            >
+                                <components.ButtonGroupSelect
+                                    allowedValues={parameters.getSources(this.getTheme())}
+                                    getKey={R.prop("key")}
+                                    getLabel={R.prop("label")}
+                                    multi={valoriMulti}
+                                    onChange={this.props.selectSource}
+                                    onChangeMulti={this.onChangeMultiSources}
+                                    style={sourceButtonStyle(this.getTheme())}
+                                    styleToMergeWhenActiveState={{
+                                        background: this.getTheme().colors.buttonPrimary,
+                                        border: "0px none"
+                                    }}
+                                    value={selectedSources}
+                                />
+                            </components.TutorialAnchor>
+                        </span>
+                    </bootstrap.Col>
+                    <bootstrap.Col className="modal-container" sm={12}>
+                        <components.TutorialAnchor
+                            message={ENVIRONMENT === "cordova" ? tutorialString.appGraph : tutorialString.webGraph}
+                            order={7}
+                            position="top"
+                            ref="graph"
+                        >
+                            <components.HistoricalGraph
+                                chart={this.props.chart}
+                                getY2Label={CollectionUtils.labelGraph.getY2Label}
+                                getYLabel={CollectionUtils.labelGraph.getYLabel}
+                                isComparationActive={this.isComparationActive(selectedSitesId, selectedSources)}
+                                isDateCompareActive={this.isDateCompare()}
+                                misure={this.props.collections.get("readings-daily-aggregates") || Immutable.Map()}
+                                ref="historicalGraph"
+                                resetCompare={this.props.removeAllCompare}
+                                sites={selectedSites}
+                            />
+                        </components.TutorialAnchor>
+                    </bootstrap.Col>
+                    <bootstrap.Col sm={12}>
+                        <span className="pull-left" style={{display: "flex", width: "auto"}}>
+                            <components.ConsumptionButtons
+                                allowedValues={variables}
+                                onChange={consumptionTypes => this.onChangeConsumption(null, consumptionTypes)}
+                                selectedValue={selectedConsumptionType}
+                                styleButton={consumptionButtonStyle(this.getTheme())}
+                                styleButtonSelected={consumptionButtonSelectedStyle(this.getTheme())}
+                            />
+                        </span>
+                        <span className="pull-right" style={{display: "flex"}}>
+                            <components.TutorialAnchor
+                                message={tutorialString.tipologie}
+                                order={3}
+                                position="left"
+                                ref="tipologie"
+                            >
+                                <components.ButtonGroupSelect
+                                    allowedValues={parameters.getMeasurementTypes()}
+                                    getKey={R.prop("key")}
+                                    getLabel={R.prop("label")}
+                                    onChange={this.props.selectElectricalType}
+                                    style={measurementTypeButtonStyle(this.getTheme())}
+                                    styleToMergeWhenActiveState={{
+                                        background: this.getTheme().colors.buttonPrimary,
+                                        border: "0px none"
+                                    }}
+                                    value={[this.props.chart[0].measurementType]}
+                                />
+                            </components.TutorialAnchor>
+                        </span>
+                    </bootstrap.Col>
+                </div>
+                <components.Button
+                    style={
+                        R.merge(dateButtonStyle(this.getTheme()),
+                        {borderRadius: "20px 0 0 20px", right: "0px", padding: "0"})
+                    }
+                >
+                    <components.Icon
+                        color={this.getTheme().colors.iconArrowSwitch}
+                        icon={"arrow-right"}
+                        size={"34px"}
+                        style={{lineHeight: "20px"}}
+                    />
+                </components.Button>
             </div>
         );
     }
 });
 
-module.exports = Radium(Chart);
+function mapStateToProps (state) {
+    return {
+        collections: state.collections,
+        chart: state.chart
+    };
+}
+function mapDispatchToProps (dispatch) {
+    return {
+        selectSingleElectricalSensor: bindActionCreators(selectSingleElectricalSensor, dispatch),
+        selectElectricalType: bindActionCreators(selectElectricalType, dispatch),
+        selectEnvironmentalSensor: bindActionCreators(selectEnvironmentalSensor, dispatch),
+        selectSource: bindActionCreators(selectSource, dispatch),
+        selectMultipleElectricalSensor: bindActionCreators(selectMultipleElectricalSensor, dispatch),
+        selectDateRanges: bindActionCreators(selectDateRanges, dispatch),
+        selectDateRangesCompare: bindActionCreators(selectDateRangesCompare, dispatch),
+        removeAllCompare: bindActionCreators(removeAllCompare, dispatch)
+    };
+}
+module.exports = connect(mapStateToProps, mapDispatchToProps)(Chart);

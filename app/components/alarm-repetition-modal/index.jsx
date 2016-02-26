@@ -1,17 +1,16 @@
-var Calendar   = require("react-widgets").Calendar;
-var Radium     = require("radium");
-var R          = require("ramda");
-var React      = require("react");
-var bootstrap  = require("react-bootstrap");
+var Calendar      = require("react-widgets").Calendar;
+var Radium        = require("radium");
+var R             = require("ramda");
+var React         = require("react");
+var bootstrap     = require("react-bootstrap");
+var TimePicker    = require("react-time-picker");
 
-var colors     = require("lib/colors");
 var components = require("components");
 var stringIt   = require("lib/string-it");
-var styles     = require("lib/styles");
-var TimePicker = require("react-time-picker");
-var icons      = require("lib/icons");
+import {styles} from "lib/styles_restyling";
+import {defaultTheme} from "lib/theme";
 
-var style = {
+const style = ({colors}) => ({
     timePicker: {
         border: "0px none",
         width: "40%",
@@ -22,7 +21,7 @@ var style = {
         color: colors.greySubTitle,
         textAlign: "left"
     }
-};
+});
 
 var AlarmRepetitionModal = React.createClass({
     propTypes: {
@@ -30,6 +29,9 @@ var AlarmRepetitionModal = React.createClass({
         value: React.PropTypes.oneOfType([
             React.PropTypes.array,
             React.PropTypes.object]).isRequired
+    },
+    contextTypes: {
+        theme: React.PropTypes.object
     },
     getInitialState: function () {
         return {
@@ -40,6 +42,9 @@ var AlarmRepetitionModal = React.createClass({
             valueTimeEnd: this.props.value.timeEnd || "00:00",
             valueTimeStart: this.props.value.timeStart || "00:00"
         };
+    },
+    getTheme: function () {
+        return this.context.theme || defaultTheme;
     },
     getRepetitionOptions: function () {
         return [
@@ -59,7 +64,7 @@ var AlarmRepetitionModal = React.createClass({
     },
     labelParser: function () {
         var labels = [];
-        var repetitions = this.props.value.weekDays;
+        var repetitions = this.props.value.weekDays || [];
         this.getRepetitionOptions().map(function (record) {
             if (R.contains(record.key, repetitions)) {
                 labels.push(record.label);
@@ -108,14 +113,23 @@ var AlarmRepetitionModal = React.createClass({
         this.setState({isOpen: !this.state.isOpen});
     },
     renderDateSelection: function () {
+        const theme = this.getTheme();
         return (
             <span key="datepicker">
                 <bootstrap.ListGroupItem
                     onClick={this.toggleDatepicker}
-                    style={style.option}
+                    style={style(theme).option}
                 >
                     {"Solo il giorno"}
-                    <img src={icons.iconCalendar} style={{height: "18px", marginLeft: "50px"}}/>
+                    <components.Icon
+                        color={this.getTheme().colors.iconCalendar}
+                        icon={"calendar"}
+                        size={"34px"}
+                        style={{
+                            verticalAlign: "middle",
+                            lineHeight: "20px"
+                        }}
+                    />
                 </bootstrap.ListGroupItem>
                 <bootstrap.ListGroupItem style={{display: this.state.isDatepickerVisible ? "" : "none"}}>
                     <Calendar
@@ -131,11 +145,12 @@ var AlarmRepetitionModal = React.createClass({
         );
     },
     renderTimeSelection: function () {
+        const theme = this.getTheme();
         return (
             <bootstrap.ListGroupItem
                 key={"timepickers"}
                 style={{
-                    color: colors.greySubTitle,
+                    color: theme.colors.greySubTitle,
                     alignItems: "center",
                     display: "flex",
                     textAlign: "left",
@@ -143,25 +158,29 @@ var AlarmRepetitionModal = React.createClass({
                     paddingBottom: "2px"
                 }}
             >
-                <span style={{
-                    color: colors.greySubTitle,
-                    alignItems: "center",
-                    display: "flex"
-                }}>
+                <span
+                    style={{
+                        color: theme.colors.greySubTitle,
+                        alignItems: "center",
+                        display: "flex"
+                    }}
+                >
                     {"Dalle ore"}
                     <TimePicker
                         className="timepicker"
-                        onChange={R.partial(this.onChange, "valueTimeStart")}
-                        style={style.timePicker}
+                        onChange={R.partial(this.onChange, ["valueTimeStart"])}
+                        style={style(theme).timePicker}
                         value={this.state.valueTimeStart}
                     />
                 </span>
                 <components.Spacer direction="h" size={50} />
-                <span style={{
-                    color: colors.greySubTitle,
-                    alignItems: "center",
-                    display: "flex"
-                }}>
+                <span
+                    style={{
+                        color: theme.colors.greySubTitle,
+                        alignItems: "center",
+                        display: "flex"
+                    }}
+                >
                     {"Alle ore"}
                     <Radium.Style
                         rules={{
@@ -173,8 +192,8 @@ var AlarmRepetitionModal = React.createClass({
                     />
                     <TimePicker
                         className="timepicker"
-                        onChange={R.partial(this.onChange, "valueTimeEnd")}
-                        style={style.timePicker}
+                        onChange={R.partial(this.onChange, ["valueTimeEnd"])}
+                        style={style(theme).timePicker}
                         value={this.state.valueTimeEnd}
                     />
                 </span>
@@ -182,18 +201,28 @@ var AlarmRepetitionModal = React.createClass({
         );
     },
     render: function () {
+        const theme = this.getTheme();
         return (
             <span>
-                <h4 style={{color: colors.primary}}>{stringIt.titleAlarmNotify}</h4>
-                <div onClick={this.toggleModal} style={styles.divAlarmOpenModal}>
+                <h4 style={{color: theme.colors.primary}}>{stringIt.titleAlarmNotify}</h4>
+                <div onClick={this.toggleModal} style={styles(theme).divAlarmOpenModal}>
                     {this.labelParser()}
-                    <img src={icons.iconArrowRight} style={{float: "right", width: "33px"}} />
+                    <components.Icon
+                        color={this.getTheme().colors.iconArrow}
+                        icon={"arrow-right"}
+                        size={"34px"}
+                        style={{
+                            float: "right",
+                            verticalAlign: "middle",
+                            lineHeight: "20px"
+                        }}
+                    />
                 </div>
                 <components.ModalOptionList
                     allowedValues={this.getRepetitionOptions()}
                     getKey={R.prop("key")}
                     getLabel={R.prop("label")}
-                    header={<h4 style={{color: colors.primary}}>{"Seleziona tipo di notifica"} </h4>}
+                    header={<h4 style={{color: theme.colors.primary}}>{"Seleziona tipo di notifica"}</h4>}
                     isModalOpen={this.state.isOpen}
                     onClickConfirm={this.onClickConfirm}
                     onClickReset={this.toggleModal}

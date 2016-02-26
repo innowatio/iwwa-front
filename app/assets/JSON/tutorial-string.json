@@ -3,12 +3,12 @@
 
         "valori": "Scegli che dati mostrare.",
         "export": "Esporta l'immagine del grafico o il CSV con i dati.",
-        "tipologie": "Scegli il tipo di energia da mostrare.",
+        "tipologie": "Scegli il tipo di dato da mostrare tra: <ul type='disc'> <li>Energia Attiva</li> <li>Energia Reattiva</li> <li>Potenza Massima</li> <ul>",
         "siti": "Scegli il punto di misura.",
         "dateFilter": "Specifica il periodo temporale.",
         "compare": "Compara 2 siti o 2 periodi temporali per uno stesso sito.",
-        "graph": "Puoi fare zoom <img src='../_assets/icons/tutorial/tutorial_pinch.svg'/> e scroll <img src='../_assets/icons/tutorial/tutorial_swipe.svg'/>"
-
+        "appGraph": "Puoi fare zoom <img src='../_assets/icons/tutorial/tutorial_pinch.svg'/> e scroll <img src='../_assets/icons/tutorial/tutorial_swipe.svg'/>",
+        "webGraph": "Puoi fare lo zoom cliccando e muovendo il mouse. <br /> Puoi fare lo scroll premendo il tasto SHIFT e scrollando."
     },
 
     "alarmForm": {

@@ -1,33 +1,38 @@
-var Immutable  = require("immutable");
-var R          = require("ramda");
-var React      = require("react");
-var bootstrap  = require("react-bootstrap");
-var IPropTypes = require("react-immutable-proptypes");
+var bootstrap       = require("react-bootstrap");
+var Immutable       = require("immutable");
+var IPropTypes      = require("react-immutable-proptypes");
+var R               = require("ramda");
+var React           = require("react");
+var ReactPureRender = require("react-addons-pure-render-mixin");
 
-var colors     = require("lib/colors");
 var components = require("components");
-
-var styleDropdown = {
-    fontSize: "13px",
-    color: colors.greySubTitle,
-    backgroundColor: colors.greyBackground,
-    border: "1px " + colors.greyBorder
-};
+import {defaultTheme} from "lib/theme";
 
 var ButtonGroupSelect = React.createClass({
     propTypes: {
-        allowedValues: React.PropTypes.array.isRequired,
-        getActiveStyle: React.PropTypes.func,
+        allowedValues: React.PropTypes.oneOfType([
+            React.PropTypes.array,
+            IPropTypes.list
+        ]).isRequired,
         getKey: React.PropTypes.func,
         getLabel: React.PropTypes.func,
+        // This parameter is for check if the sources are two (real and previsional)
         multi: React.PropTypes.bool,
         onChange: React.PropTypes.func.isRequired,
+        onChangeMulti: React.PropTypes.func,
+        showArrowActive: React.PropTypes.bool,
+        style: React.PropTypes.object,
+        styleToMergeWhenActiveState: React.PropTypes.object,
         value: React.PropTypes.oneOfType([
             React.PropTypes.array,
             IPropTypes.list
-        ])
+        ]),
+        vertical: React.PropTypes.bool
     },
-    mixins: [React.addons.PureRenderMixin],
+    contextTypes: {
+        theme: React.PropTypes.object
+    },
+    mixins: [ReactPureRender],
     getDefaultProps: function () {
         var defaultGetter = function (allowedValue) {
             return allowedValue.toString();
@@ -36,8 +41,12 @@ var ButtonGroupSelect = React.createClass({
             getActiveStyle: R.always({}),
             getKey: defaultGetter,
             getLabel: defaultGetter,
-            multi: false
+            multi: false,
+            vertical: false
         };
+    },
+    getTheme: function () {
+        return this.context.theme || defaultTheme;
     },
     isActiveMulti: function (allowedValue) {
         var keys = this.props.value.map(this.props.getKey);
@@ -64,58 +73,54 @@ var ButtonGroupSelect = React.createClass({
             this.isActiveSingle(allowedValue)
         );
     },
-    onChangeMulti: function (allowedValue) {
-        var index = this.props.value.indexOf(allowedValue);
-        if (index === -1) {
-            /*
-            *   The array does not contain the current value, hence we add it
-            */
-            this.props.onChange(
-                R.is(Immutable.List, this.props.value) ?
-                this.props.value.push(allowedValue) :
-                R.append(allowedValue, this.props.value)
-            );
-        } else {
-            /*
-            *   The array contains the current value, hence we remove it
-            */
-            this.props.onChange(
-                R.is(Immutable.List, this.props.value) ?
-                this.props.value.remove(index) :
-                R.remove(index, 1, this.props.value)
-            );
-        }
+    onChange: function (allowedValue) {
+        return this.props.multi ?
+            this.props.onChangeMulti(this.props.value, allowedValue) :
+            this.props.onChange([allowedValue]);
     },
-    onChangeSingle: function (allowedValue) {
-        this.props.onChange(
-            R.is(Immutable.List, this.props.value) ?
-            Immutable.List(allowedValue) :
-            [allowedValue]
+    getActiveStyle: function () {
+        return R.merge(
+            this.props.style || {},
+            this.props.styleToMergeWhenActiveState || {}
         );
     },
-    onChange: function (allowedValue) {
+    renderButtonArrow: function () {
         return (
-            this.props.multi ?
-            this.onChangeMulti(allowedValue) :
-            this.onChangeSingle(allowedValue)
+            <div style={{
+                content: "",
+                display: "block",
+                position: "absolute",
+                zIndex: "100",
+                left: "100%",
+                top: "20px",
+                width: "0px",
+                height: "0px",
+                marginLeft: "-1px",
+                borderStyle: "solid",
+                borderWidth: "8px 0 8px 18px",
+                borderColor: "transparent transparent transparent " + this.getTheme().colors.buttonPrimary}}
+            />
         );
     },
     renderButtonOption: function (allowedValue) {
-        var active = this.isActive(allowedValue);
+        const active = this.isActive(allowedValue);
         return (
             <components.Button
-                active={active}
+                disabled={allowedValue.isDisabled || false}
                 key={this.props.getKey(allowedValue)}
-                onClick={R.partial(this.onChange, allowedValue)}
-                style={active ? this.props.getActiveStyle(allowedValue) : styleDropdown}
+                onClick={R.partial(this.onChange, [allowedValue])}
+                style={active ? this.getActiveStyle() : this.props.style}
             >
-                {this.props.getLabel(allowedValue)}
+                <p style={{overflow: "hidden", margin: "0", padding: "0", whiteSpace: "nowrap", textOverflow: "ellipsis"}}>
+                    {this.props.getLabel(allowedValue)}
+                </p>
+                {active && this.props.showArrowActive ? this.renderButtonArrow() : undefined}
             </components.Button>
         );
     },
     render: function () {
         return (
-            <bootstrap.ButtonGroup>
+            <bootstrap.ButtonGroup vertical={this.props.vertical}>
                 {this.props.allowedValues.map(this.renderButtonOption)}
             </bootstrap.ButtonGroup>
         );

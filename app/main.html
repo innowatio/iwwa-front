@@ -21,10 +21,11 @@
                 height: 100%;
             }
             * {
-                font-family: lato;
+                font-family: lato,
+                font-weight: 400;
             }
             @media (max-width : 1024px){
-                .tooltip {
+                .tooltip-popover {
                     display: none;
                 }
             }
@@ -32,6 +33,7 @@
     </head>
 
     <body>
+        <div id="root" />
         <!-- @if ENVIRONMENT=='cordova' -->
         <script src="cordova.js"></script>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/dygraph/1.1.1/dygraph-combined-dev.js"></script>

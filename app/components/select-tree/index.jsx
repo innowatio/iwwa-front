@@ -1,14 +1,14 @@
-var Radium     = require("radium");
-var bootstrap  = require("react-bootstrap");
-var R          = require("ramda");
-var React      = require("react");
-var ReactLink  = require("react/lib/ReactLink");
-var IPropTypes = require("react-immutable-proptypes");
-var Waypoint   = require("react-waypoint");
+var bootstrap       = require("react-bootstrap");
+var IPropTypes      = require("react-immutable-proptypes");
+var R               = require("ramda");
+var Radium          = require("radium");
+var React           = require("react");
+var ReactLink       = require("react/lib/ReactLink");
+var ReactPureRender = require("react-addons-pure-render-mixin");
+var Waypoint        = require("react-waypoint");
 
 var components = require("components");
-var colors     = require("lib/colors");
-var icons      = require("lib/icons");
+import {defaultTheme} from "lib/theme";
 
 var SelectTree = React.createClass({
     propTypes: {
@@ -17,6 +17,7 @@ var SelectTree = React.createClass({
             IPropTypes.iterable
         ]).isRequired,
         buttonCloseDefault: React.PropTypes.bool,
+        chart: React.PropTypes.object,
         filter: React.PropTypes.func.isRequired,
         getKey: React.PropTypes.func,
         getLabel: React.PropTypes.func,
@@ -27,7 +28,10 @@ var SelectTree = React.createClass({
         ]),
         valueLink: ReactLink.PropTypes.link()
     },
-    mixins: [React.addons.PureRenderMixin],
+    contextTypes: {
+        theme: React.PropTypes.object
+    },
+    mixins: [ReactPureRender],
     getDefaultProps: function () {
         return {
             getLabel: function (allowedValue) {
@@ -43,6 +47,9 @@ var SelectTree = React.createClass({
             activeKey: "",
             subMenu: false
         };
+    },
+    getTheme: function () {
+        return this.context.theme || defaultTheme;
     },
     getValue: function () {
         return (
@@ -60,7 +67,7 @@ var SelectTree = React.createClass({
             value: allowedValue
         });
         if (this.props.onChange) {
-            this.props.onChange([allowedValue]);
+            this.props.onChange([allowedValue.get("_id")]);
         }
         if (this.props.valueLink) {
             this.props.valueLink.requestChange(allowedValue);
@@ -82,17 +89,19 @@ var SelectTree = React.createClass({
         return this.props.filter(allowedValue, this.state.inputFilter);
     },
     renderHeader: function (allowedValue) {
+        const {colors} = this.getTheme();
         return (
             <span>
                 <components.Button
                     bsStyle="link"
-                    onClick={R.partial(this.onClickActiveSite, allowedValue)}
+                    onClick={R.partial(this.onClickActiveSite, [allowedValue])}
                     style={{
                         textDecoration: "none",
                         width: this.state.subMenu ? "80%" : "100%",
                         textOverflow: "ellipsis",
                         overflow: "hidden",
                         whiteSpace: "nowrap",
+                        border: "0px",
                         backgroundColor: allowedValue === this.state.value ? colors.primary : colors.white,
                         color: allowedValue === this.state.value ? colors.white : colors.black
                     }}
@@ -106,10 +115,11 @@ var SelectTree = React.createClass({
         );
     },
     renderButtonSubMenu: function (allowedValue) {
+        const {colors} = this.getTheme();
         return this.state.subMenu ?
             <components.Button
                 bsStyle="link"
-                onClick={R.partial(this.onClickOpenPanel, allowedValue)}
+                onClick={R.partial(this.onClickOpenPanel, [allowedValue])}
                 style={{
                     height: "54px",
                     width: this.state.subMenu ? "20%" : "0%",
@@ -117,19 +127,26 @@ var SelectTree = React.createClass({
                     color: allowedValue === this.state.value ? colors.white : colors.black
                 }}
             >
-                <img src={icons.iconDown}/>
-        </components.Button> : null;
+                <components.Icon
+                    color={this.getTheme().colors.iconInputSelect}
+                    icon={"arrow-down"}
+                    size={"28px"}
+                    style={{lineHeight: "20px"}}
+                />
+            </components.Button> : null;
     },
     renderPanel: function (allowedValue) {
         return (
             <bootstrap.Panel
-                collapsible
+                collapsible={true}
                 eventKey={this.props.getLabel(allowedValue)}
                 header={this.renderHeader(allowedValue)}
                 key={this.props.getKey(allowedValue)}
                 style={{
                     width: this.props.buttonCloseDefault ? "100%" : "200px",
                     borderTop: "0px",
+                    borderLeft: "0px",
+                    borderRight: "0px",
                     marginTop: "0px",
                     borderRadius: "0px"
                 }}
@@ -138,6 +155,7 @@ var SelectTree = React.createClass({
         );
     },
     render: function () {
+        const {colors} = this.getTheme();
         var panelOfSite = this.props.allowedValues
             .filter(this.filter)
             .slice(0, this.state.numberOfValues)
@@ -151,8 +169,9 @@ var SelectTree = React.createClass({
                     position: "relative",
                     overflow: "scroll",
                     maxHeight: "400px",
-                    width: this.props.buttonCloseDefault ? "430px" : "200px"
-                }}>
+                    width: this.props.buttonCloseDefault ? "430px" : ""
+                }}
+            >
                 <Radium.Style
                     rules={{
                         ".form-group": {
@@ -160,7 +179,7 @@ var SelectTree = React.createClass({
                             height: "34px",
                             margin: "0px",
                             zIndex: "10",
-                            width: this.props.buttonCloseDefault ? "428px" : "198px"
+                            width: this.props.buttonCloseDefault ? "428px" : "200px"
                         },
                         ".panel-group": {
                             paddingTop: "34px",
@@ -174,7 +193,9 @@ var SelectTree = React.createClass({
                             textOverflow: "ellipsis",
                             overflow: "hidden",
                             whiteSpace: "nowrap",
-                            padding: "0px"
+                            padding: "0px",
+                            borderRadius: "0px",
+                            border: "0px"
                         },
                         ".input-search": {
                             borderBottomLeftRadius: "0px",
@@ -198,22 +219,29 @@ var SelectTree = React.createClass({
                     scopeSelector=".site-selector"
                 />
                 <bootstrap.Input
-                    addonAfter={<img src={icons.iconSearch} style={{height: "21px"}}/>}
+                    addonAfter={
+                        <components.Icon
+                            color={this.getTheme().colors.iconInputSearch}
+                            icon={"search"}
+                            size={"28px"}
+                            style={{lineHeight: "20px"}}
+                        />
+                    }
                     className="input-search"
                     onChange={(input) => this.setState({inputFilter: input.target.value})}
                     placeholder="Ricerca"
                     type="text"
                 />
                 <bootstrap.PanelGroup
-                    accordion
+                    accordion={true}
                     activeKey={this.state.activeKey}
                     style={{maxHeight: "300px"}}
                 >
                     {panelOfSite}
                     <Waypoint
-                      onEnter={() => this.setState({
-                          numberOfValues: this.state.numberOfValues + 20
-                      })}
+                        onEnter={() => this.setState({
+                            numberOfValues: this.state.numberOfValues + 20
+                        })}
                     />
                 </bootstrap.PanelGroup>
             </div>

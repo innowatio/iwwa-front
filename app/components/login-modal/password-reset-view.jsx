@@ -1,38 +1,84 @@
-var color     = require("color");
-var Radium    = require("radium");
-var React     = require("react");
-var bootstrap = require("react-bootstrap");
+import color from "color";
+import Radium, {Style} from "radium";
+import React, {PropTypes} from "react";
+import * as bootstrap from "react-bootstrap";
 
-var components = require("components");
-var colors     = require("lib/colors");
-var icons      = require("lib/icons");
+import components from "components";
+import string from "lib/string-it";
+import {dafaultTheme} from "lib/theme";
 
-var styles = {
+const stylesFunction = ({colors}) => ({
+    radiumStylePasswordReset: {
+        ".form-group": {
+            marginBottom: "0px"
+        },
+        ".form-group div, .form-group span, .form-group input": {
+            border: "0px",
+            height: "88px",
+            fontSize: "26px",
+            borderTopLeftRadius: "20px !important",
+            boxShadow: "none",
+            background: color(colors.black).alpha(0).rgbString(),
+            color: colors.white
+        },
+        ".form-control:focus": {
+            boxShadow: "none"
+        },
+        "::-webkit-input-placeholder": {
+            color: colors.white
+        },
+        ":-moz-placeholder": { /* Firefox 18- */
+            color: colors.white
+        },
+        "::-moz-placeholder": {  /* Firefox 19+ */
+            color: colors.white
+        },
+        ":-ms-input-placeholder": {
+            color: colors.white
+        }
+    },
     inputs: {
-        borderRadius: "6px",
+        height: "88px",
+        fontSize: "26px",
+        borderRadius: "20px",
+        fontWeight: "300",
         overflow: "hidden",
-        border: "solid 1px " + color(colors.white).alpha(0.3).rgbString(),
-        color: colors.white
+        border: "solid 1px",
+        borderColor: color(colors.white).alpha(0.3).rgbString(),
+        color: colors.white,
+        backgroundColor: color(colors.black).alpha(0.15).rgbString()
     },
     button: {
-        background: colors.primary,
-        color: colors.white
+        background: colors.buttonPrimary,
+        color: colors.white,
+        height: "78px",
+        width: "70%",
+        margin: "auto",
+        borderRadius: "30px",
+        border: "0px none",
+        fontSize: "30px"
     },
     errorAlert: {
         marginTop: "16px",
         textAlign: "center"
     }
-};
+});
 
 var PasswordResetView = React.createClass({
     propTypes: {
-        asteroid: React.PropTypes.object.isRequired
+        asteroid: PropTypes.object.isRequired
+    },
+    contextTypes: {
+        theme: PropTypes.object
     },
     getInitialState: function () {
         return {
             emailSent: false,
             error: null
         };
+    },
+    getTheme: function () {
+        return this.context.theme || dafaultTheme;
     },
     setEmailSent: function () {
         this.setState({
@@ -53,7 +99,7 @@ var PasswordResetView = React.createClass({
             .then(this.setEmailSent)
             .catch(this.setError);
     },
-    renderError: function () {
+    renderError: function (styles) {
         return this.state.error ? (
             <bootstrap.Alert
                 bsStyle="danger"
@@ -70,42 +116,23 @@ var PasswordResetView = React.createClass({
             </h4>
         );
     },
-    renderResetForm: function () {
+    renderResetForm: function (styles) {
         return (
             <div>
                 <div className="ac-login-modal-inputs" style={styles.inputs}>
                     <Radium.Style
-                        rules={{
-                            ".form-group": {
-                                marginBottom: "0px"
-                            },
-                            ".form-group div, .form-group span, .form-group input": {
-                                border: "0px",
-                                borderRadius: "0px !important",
-                                boxShadow: "none",
-                                background: color(colors.darkBlack).alpha(0.1).rgbString(),
-                                color: colors.white
-                            },
-                            ".form-control:focus": {
-                                boxShadow: "none"
-                            },
-                            "::-webkit-input-placeholder": {
-                               color: colors.white
-                            },
-                            ":-moz-placeholder": { /* Firefox 18- */
-                               color: colors.white
-                            },
-                            "::-moz-placeholder": {  /* Firefox 19+ */
-                               color: colors.white
-                            },
-                            ":-ms-input-placeholder": {
-                               color: colors.white
-                            }
-                        }}
+                        rules={styles.radiumStylePasswordReset}
                         scopeSelector=".ac-login-modal-inputs"
                     />
                     <bootstrap.Input
-                        addonBefore={<img src={icons.iconUser} style={{width: "20px"}}/>}
+                        addonBefore={
+                            <components.Icon
+                                color={this.getTheme().colors.iconLogin}
+                                icon={"user"}
+                                size={"45px"}
+                                style={{lineHeight: "20px", verticalAlign: "middle"}}
+                            />
+                        }
                         bsSize="large"
                         placeholder="Email"
                         ref="email"
@@ -119,17 +146,18 @@ var PasswordResetView = React.createClass({
                     onClick={this.passwordReset}
                     style={styles.button}
                 >
-                    {"INVIA MAIL DI RESET"}
+                    {string.sendMailResetPswButton}
                 </components.Button>
                 {this.renderError()}
             </div>
         );
     },
     render: function () {
+        const styles = stylesFunction(this.getTheme());
         return (
             this.state.emailSent ?
-            this.renderInfoMessage() :
-            this.renderResetForm()
+            this.renderInfoMessage(styles) :
+            this.renderResetForm(styles)
         );
     }
 });

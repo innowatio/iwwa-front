@@ -47,11 +47,11 @@ Dygraph.Export.DEFAULT_ATTRS = {
     vLabelLeft: 20,
 
     legendHeight: 20,    // Height of the legend area
-	legendMargin: 20,
-	lineHeight: 30,
-	maxlabelsWidth: 0,
-	labelTopMargin: 35,
-	magicNumbertop: 8
+    legendMargin: 20,
+    lineHeight: 30,
+    maxlabelsWidth: 0,
+    labelTopMargin: 35,
+    magicNumbertop: 8
 
 };
 
@@ -196,12 +196,12 @@ Dygraph.Export.putLabel = function (ctx, divLabel, options, font, color) {
     var width = parseInt(divLabel.style.width, 10);
 
     switch (divLabel.style.textAlign) {
-    case "center":
-        left = left + Math.ceil(width / 2);
-        break;
-    case "right":
-        left = left + width;
-        break;
+        case "center":
+            left = left + Math.ceil(width / 2);
+            break;
+        case "right":
+            left = left + width;
+            break;
     }
 
     Dygraph.Export.putText(ctx, left, top, divLabel, font, color);

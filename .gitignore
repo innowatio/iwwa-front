@@ -2,3 +2,5 @@ node_modules/
 builds/
 npm-debug.log
 .publish/
+.DS_Store
+.idea

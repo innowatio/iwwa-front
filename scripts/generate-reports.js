@@ -20,7 +20,7 @@ proGulp.task("generateMochaReport", function () {
     mkdirp.sync(targetDir);
     return gulp.src("./test/unit/**/*unit*")
         .pipe(gp.spawnMocha({
-            compilers: "jsx:babel/register",
+            compilers: "jsx:babel-core/register",
             reporter: "mochawesome",
             env: {
                 NODE_PATH: "app:test",

@@ -1,24 +1,50 @@
-var Radium = require("radium");
-var React  = require("react");
-var R      = require("ramda");
+import Radium from "radium";
+import React, {PropTypes} from "react";
 
-var components        = require("components");
-var assetsPathTo      = require("lib/assets-path-to");
-var colors            = require("lib/colors");
-var LoginView         = require("./login-view.jsx");
-var PasswordResetView = require("./password-reset-view.jsx");
+import components from "components";
+import assetsPathTo from "lib/assets-path-to";
+import LoginView from "./login-view";
+import PasswordResetView from "./password-reset-view";
+import string from "lib/string-it";
+import {defaultTheme} from "lib/theme";
 
-var styles = {
-    overlay: {
+const backgroundKeyFrames = Radium.keyframes({
+    "0%": {
+        backgroundPosition: "100% 0%"
+    },
+    "50%": {
+        backgroundPosition: "0% 100%"
+    },
+    "100%": {
+        backgroundPosition: "100% 0%"
+    }
+});
+
+const stylesFunction = ({colors}) => ({
+    backgroundImageOverlay: {
         position: "fixed",
         top: "0px",
         left: "0px",
         height: "100%",
         width: "100%",
-        backgroundColor: colors.black,
-        backgroundImage: "url(" + assetsPathTo("images/login-background.jpg") + ")",
-        backgroundSize: "cover",
-        zIndex: 10000,
+        zIndex: 100000000000,
+        overflowY: "scroll",
+        backgroundImage: `url(${assetsPathTo("restyling/images/logo_big.png")})`,
+        backgroundSize: "cover"
+    },
+    overlay: {
+        animation: "x 30s ease infinite",
+        animationName: backgroundKeyFrames,
+        animationDirection: "normal",
+        backgroundImage: colors.backgroundLogin,
+        backgroundSize: "4000% 4000%",
+        position: "absolute",
+        display: "block",
+        top: "0px",
+        left: "0px",
+        height: "100%",
+        width: "100%",
+        zIndex: 10000000000,
         overflowY: "scroll"
     },
     body: {
@@ -34,34 +60,41 @@ var styles = {
             textAlign: "center"
         },
         logo: {
-            width: "250px"
+            width: "220px"
         },
         firstLine: {
-            fontSize: "48px"
+            fontSize: "48px",
+            fontWeight: "400"
         },
         secondLine: {
-            fontSize: "24px"
+            fontSize: "26px",
+            lineHeight: "24px"
         }
     },
     activeView: {
-        width: "520px",
+        width: "50%",
+        height: "40%",
         position: "relative",
-        margin: "auto",
-        maxWidth: "90%"
+        margin: "auto"
     },
     viewSwitcher: {
         cursor: "pointer",
         textAlign: "center",
+        fontSize: "24px",
+        fontWeight: "300",
         ":hover": {
             textDecoration: "underline"
         }
     }
-};
+});
 
 var LoginModal = React.createClass({
     propTypes: {
-        asteroid: React.PropTypes.object.isRequired,
-        isOpen: React.PropTypes.bool.isRequired
+        asteroid: PropTypes.object.isRequired,
+        isOpen: PropTypes.bool.isRequired
+    },
+    contextTypes: {
+        theme: PropTypes.object
     },
     getInitialState: function () {
         return {
@@ -73,6 +106,9 @@ var LoginModal = React.createClass({
     },
     componentWillReceiveProps: function (props) {
         this.attachModalOpenClass(props);
+    },
+    getTheme: function () {
+        return this.context.theme || defaultTheme;
     },
     attachModalOpenClass: function (props) {
         if (props.isOpen) {
@@ -91,8 +127,7 @@ var LoginModal = React.createClass({
         });
     },
     renderActiveView: function () {
-        return (
-            this.state.activeView === "login" ?
+        return (this.state.activeView === "login" ?
             <LoginView asteroid={this.props.asteroid} /> :
             <PasswordResetView asteroid={this.props.asteroid} />
         );
@@ -100,31 +135,43 @@ var LoginModal = React.createClass({
     renderViewSwitcherText: function () {
         return (
             this.state.activeView === "login" ?
-            "Password dimenticata?" :
-            "Torna alla login"
+            string.forgetPassword :
+            string.returnToLogin
         );
     },
     render: function () {
+        const styles = stylesFunction(this.getTheme());
         return this.props.isOpen ? (
-            <div style={R.merge(styles.overlay, {zIndex: 10000000000})}>
-                <div style={styles.body}>
-                    <div style={styles.title.container}>
-                        <div>
-                            <img src={assetsPathTo("images/logo.png")} style={styles.title.logo} />
+            <div style={styles.overlay}>
+                <div style={styles.backgroundImageOverlay}>
+                    <div style={styles.body}>
+                        <div style={styles.title.container}>
+                            <div>
+                                <components.Icon
+                                    color={this.getTheme().colors.iconLogoInnowatio}
+                                    icon={"innowatio-logo"}
+                                    size={"180px"}
+                                    style={{
+                                        display: "inline-block",
+                                        height: "170px",
+                                        margin: "0 0 0 20px",
+                                        verticalAlign: "middle"
+                                    }}
+                                />
+                            </div>
+                            <div style={styles.title.firstLine}>{string.appName}</div>
+                            <div style={styles.title.secondLine}>{string.innowatio}</div>
                         </div>
-                        <components.Spacer direction="v" size={32} />
-                        <div style={styles.title.firstLine}>{"Diamo Energia alla tua Energia"}</div>
-                        <div style={styles.title.secondLine}>{"Innowatio"}</div>
+                        <components.Spacer direction="v" size={64} />
+                        <div style={styles.activeView}>
+                            {this.renderActiveView()}
+                        </div>
+                        <components.Spacer direction="v" size={16} />
+                        <div onClick={this.switchView} style={styles.viewSwitcher}>
+                            {this.renderViewSwitcherText()}
+                        </div>
+                        <components.Spacer direction="v" size={20} />
                     </div>
-                    <components.Spacer direction="v" size={64} />
-                    <div style={styles.activeView}>
-                        {this.renderActiveView()}
-                    </div>
-                    <components.Spacer direction="v" size={16} />
-                    <div onClick={this.switchView} style={styles.viewSwitcher}>
-                        {this.renderViewSwitcherText()}
-                    </div>
-                    <components.Spacer direction="v" size={20} />
                 </div>
             </div>
         ) : null;

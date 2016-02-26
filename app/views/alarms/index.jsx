@@ -4,30 +4,45 @@ var React      = require("react");
 var bootstrap  = require("react-bootstrap");
 var IPropTypes = require("react-immutable-proptypes");
 var Router     = require("react-router");
-var color      = require("color");
 var moment     = require("moment");
 var R          = require("ramda");
+import {connect} from "react-redux";
+import {bindActionCreators} from "redux";
 
 var CollectionUtils = require("lib/collection-utils");
 var components      = require("components");
-var styles          = require("lib/styles");
-var colors          = require("lib/colors");
-var icons           = require("lib/icons");
+import {
+    displayAlarmsOnChart,
+    modifyExistentAlarm,
+    resetAlarmFormView,
+    submitAlarmCreationOrChange,
+    numberOfSelectedTabs
+} from "actions/alarms";
+import {styles} from "lib/styles_restyling";
+import {defaultTheme} from "lib/theme";
 
-var getKeyFromAlarm = function (alarm) {
-    return alarm.get("_id");
+var getKeyFromCollection = function (collection) {
+    return collection.get("_id");
 };
 
 var Alarms = React.createClass({
     propTypes: {
+        alarms: React.PropTypes.object.isRequired,
         asteroid: React.PropTypes.object,
-        collections: IPropTypes.map,
+        collections: IPropTypes.map.isRequired,
+        displayAlarmsOnChart: React.PropTypes.func.isRequired,
         location: React.PropTypes.object,
-        params: React.PropTypes.object
+        modifyExistentAlarm: React.PropTypes.func.isRequired,
+        numberOfSelectedTabs: React.PropTypes.func.isRequired,
+        params: React.PropTypes.object,
+        resetAlarmFormView: React.PropTypes.func.isRequired,
+        submitAlarmCreationOrChange: React.PropTypes.func.isRequired
+    },
+    contextTypes: {
+        theme: React.PropTypes.object
     },
     getInitialState: function () {
         return {
-            key: 1,
             active: [
                 "TUTTI"
             ]
@@ -35,12 +50,14 @@ var Alarms = React.createClass({
     },
     componentDidMount: function () {
         this.props.asteroid.subscribe("alarms");
-        this.props.asteroid.subscribe("notifications");
-        this.props.asteroid.subscribe("siti");
+        this.props.asteroid.subscribe("sites");
+    },
+    getTheme: function () {
+        return this.context.theme || defaultTheme;
     },
     getAlarm: function () {
         return (
-            this.props.collections.getIn(["alarms", this.props.params.id]) ||
+            this.props.collections.getIn(["alarms", this.props.alarms.id]) ||
             Immutable.Map()
         );
     },
@@ -48,20 +65,20 @@ var Alarms = React.createClass({
         return this.props.collections.get("alarms") || Immutable.Map();
     },
     getSiti: function () {
-        return this.props.collections.get("siti") || Immutable.Map();
+        return this.props.collections.get("sites") || Immutable.Map();
     },
     getType: function () {
-        return (this.props.params.id ? "update" : "insert");
+        return this.props.alarms.id ? "update" : "insert";
     },
-    getSitoByPod: function (pod) {
-        return this.getSiti().find(
-            sito => (
-                sito.get("pod") === pod
-            ));
+    getSitoBySensor: function (sensorId) {
+        return this.getSiti()
+            .find((site = Immutable.Map()) =>
+                R.contains(sensorId, site.get("sensorsIds").toArray())
+            );
     },
     getNotificationsList: function (notifications) {
         var notificationDates = [];
-        notifications.forEach(function (notification) {
+        notifications.forEach(notification => {
             if (notification.get("date")) {
                 notificationDates.push(notification.get("date"));
             }
@@ -80,14 +97,8 @@ var Alarms = React.createClass({
         ), Immutable.Map());
         return ret;
     },
-    getChartUrl: function (sito, alarms, startDate, endDate) {
-        var url = `/chart/`;
-        url += `?sito=${sito}`;
-        url += `&dateFilter=${startDate}-${endDate}`;
-        url += `&alarms=${alarms}`;
-        return url;
-    },
     getColumnsAlarms: function () {
+        const {colors} = this.getTheme();
         var self = this;
         return [
             {
@@ -102,8 +113,10 @@ var Alarms = React.createClass({
                 },
                 valueFormatter: function (value) {
                     return (
-                        <img
-                            src={value ? icons.iconFlag : icons.iconPause}
+                        <components.Icon
+                            color={colors.iconAlarmAction}
+                            icon={value ? "flag" : "pause"}
+                            size={"20px"}
                         />
                     );
                 }
@@ -116,14 +129,13 @@ var Alarms = React.createClass({
                         width: "40%"
                     };
                 },
-                valueFormatter: function (value, item) {
+                valueFormatter: function (value) {
                     var sito = self.getSiti().find(siti => {
                         return siti.get("pod") === value;
                     });
-                    var latest = R.last(self.getNotificationsList(item.get("notifications").sort()));
                     return (
                         <span>
-                            {CollectionUtils.siti.getLabel(sito) + " - " + moment(latest).format("DD/MM/YYYY HH:mm")}
+                            {CollectionUtils.sites.getLabel(sito)}
                         </span>
                     );
                 }
@@ -132,10 +144,17 @@ var Alarms = React.createClass({
                 key: "_id",
                 valueFormatter: function (value) {
                     return (
-                        <Router.Link onClick={self.onClickAction} to={`/alarms/${value}`}>
-                            <img src={icons.iconSettings}
-                                style={{float: "right", height: "28px"}}/>
-                        </Router.Link>
+                        <components.Icon
+                            color={colors.iconAlarmAction}
+                            icon={"settings"}
+                            onClick={R.partial(self.onClickAction, [value])}
+                            size={"30px"}
+                            style={{
+                                float: "right",
+                                cursor: "pointer",
+                                verticalAlign: "middle"
+                            }}
+                        />
                     );
                 }
             },
@@ -148,15 +167,28 @@ var Alarms = React.createClass({
                     // value is a list of maps
                     var notificationDates = self.getNotificationsList(value);
                     if (notificationDates.length > 0) {
-                        var lowerDate = moment(notificationDates[notificationDates.length - 1]).subtract(15, "days").format("YYYYMMDD");
-                        var upperDate = moment(notificationDates[notificationDates.length - 1]).add(15, "days").format("YYYYMMDD");
-                        var alarms = R.dropRepeats(notificationDates).join("-");
-                        const sito = self.getSitoByPod(item.get("podId")).get("_id");
-                        var chartUrl = self.getChartUrl(sito, alarms, lowerDate, upperDate);
+                        const alarms = R.dropRepeats(notificationDates);
+                        const sensorId = item.get("podId");
+                        const site = self.getSitoBySensor(sensorId) ?
+                            self.getSitoBySensor(sensorId).get("_id") : null;
                         return (
-                            <Router.Link to={chartUrl}>
-                                <img src={icons.iconPNG}
-                                    style={{float: "right", height: "28px"}}/>
+                            <Router.Link to={"/chart/"}>
+                                <components.Icon
+                                    color={colors.iconPng}
+                                    icon={"png"}
+                                    onClick={
+                                        R.partial(
+                                            self.props.displayAlarmsOnChart,
+                                            [sensorId, site, alarms]
+                                        )
+                                    }
+                                    size={"30px"}
+                                    style={{
+                                        float: "right",
+                                        cursor: "pointer",
+                                        verticalAlign: "middle"
+                                    }}
+                                />
                             </Router.Link>
                         );
                     } else {
@@ -170,6 +202,7 @@ var Alarms = React.createClass({
         ];
     },
     getColumnsNotifications: function () {
+        const {colors} = this.getTheme();
         var self = this;
         return [
             {
@@ -180,7 +213,7 @@ var Alarms = React.createClass({
                     };
                 },
                 valueFormatter: function (value) {
-                    var date = moment(value, "x");
+                    var date = moment.utc(value, "x");
                     return (
                         <span style={{marginLeft: "20px"}}>
                             {date.locale("it").format("LLL")}
@@ -202,7 +235,7 @@ var Alarms = React.createClass({
                     });
                     return (
                         <span style={{marginLeft: "20px"}}>
-                            {CollectionUtils.siti.getLabel(sito)}
+                            {CollectionUtils.sites.getLabel(sito)}
                         </span>
                     );
                 }
@@ -210,28 +243,40 @@ var Alarms = React.createClass({
             {
                 key: "dateNotification",
                 valueFormatter: function (value, item) {
-                    var notificationDate = item.get("date");
-                    var lowerDate = moment(notificationDate).subtract(15, "days").format("YYYYMMDD");
-                    var upperDate = moment(notificationDate).add(15, "days").format("YYYYMMDD");
-                    const sito = self.getSitoByPod(item.get("podId")).get("_id");
-                    var chartUrl = self.getChartUrl(sito, notificationDate, lowerDate, upperDate);
+                    var notificationDate = [item.get("date")];
+                    const sensorId = item.get("podId");
+                    const site = self.getSitoBySensor(sensorId) ?
+                        self.getSitoBySensor(sensorId).get("_id") : null;
                     return (
-                        <Router.Link to={chartUrl}>
-                            <img src={icons.iconPNG}
-                                style={{float: "right", height: "28px"}}/>
+                        <Router.Link to={"/chart/"}>
+                            <components.Icon
+                                color={colors.iconPng}
+                                icon={"png"}
+                                onClick={
+                                    R.partial(
+                                        self.props.displayAlarmsOnChart,
+                                        [sensorId, site, notificationDate]
+                                    )
+                                }
+                                size={"30px"}
+                                style={{
+                                    float: "right",
+                                    cursor: "pointer",
+                                    verticalAlign: "middle"
+                                }}
+                            />
                         </Router.Link>
                     );
                 }
             }
         ];
     },
-    onClickAction: function () {
-        this.activeKey(1);
+    onClickAction: function (alarmsId) {
+        this.props.modifyExistentAlarm(alarmsId);
+        this.props.numberOfSelectedTabs(1);
     },
     activeKey: function (key) {
-        this.setState({
-            key: key
-        });
+        this.props.numberOfSelectedTabs(key);
     },
     alarmFilterTitle: function () {
         return [
@@ -261,11 +306,12 @@ var Alarms = React.createClass({
         return value;
     },
     renderFilterTableCell: function (allowedValue, label) {
+        const {colors} = this.getTheme();
         var active = this.state.active[0] === label || this.state.active[1] === label;
         return (
             <bootstrap.ListGroupItem
                 key={[allowedValue, label]}
-                onClick={R.partial(this.onClickFilter, label, allowedValue)}
+                onClick={R.partial(this.onClickFilter, [label, allowedValue])}
                 style={{
                     paddingLeft: "10px",
                     borderRadius: "0px",
@@ -276,21 +322,23 @@ var Alarms = React.createClass({
                     textAlign: "center",
                     paddingTop: "0px",
                     paddingBottom: "0px"
-                }}>
-                    <h5>{label}</h5>
+                }}
+            >
+                <h5>{label}</h5>
             </bootstrap.ListGroupItem>
         );
     },
     renderFilterCell: function (value) {
+        const {colors} = this.getTheme();
         return (
             <div key={value.title}>
                 <h5 style={{color: colors.primary, width: "250px", paddingLeft: "10px"}}>
-                        {value.title}
+                    {value.title}
                 </h5>
                 <bootstrap.ListGroup>
                     {
                         R.is(Array, value.label) ?
-                        value.label.map(R.partial(this.renderFilterTableCell, value)) :
+                        value.label.map(R.partial(this.renderFilterTableCell, [value])) :
                         this.renderFilterTableCell(value, value.label)
                     }
                 </bootstrap.ListGroup>
@@ -309,11 +357,12 @@ var Alarms = React.createClass({
                     }}
                     scopeSelector=".alarm-filter"
                 />
-                {alarmFilter.map(this.renderFilterCell)}
+            {alarmFilter.map(this.renderFilterCell)}
             </div>
         );
     },
     renderFilterButton: function () {
+        const {colors} = this.getTheme();
         return (
             <div className="element-table" style={{marginRight: "84px", height: "40px", float: "right"}}>
                 <Radium.Style
@@ -328,10 +377,18 @@ var Alarms = React.createClass({
                 <components.Popover
                     title={
                         <span style={{display: "flex", height: "40px"}}>
-                            <img src={icons.iconFilter} style={{width: "26px"}}/>
-                            <h4 style={{color: colors.primary}}>Filter</h4>
-                        </span>}
-                        >
+                            <components.Icon
+                                color={this.getTheme().colors.iconFilter}
+                                icon={"filter"}
+                                size={"30px"}
+                                style={{
+                                    verticalAlign: "middle"
+                                }}
+                            />
+                            <h4 style={{color: colors.primary}}>{"Filter"}</h4>
+                        </span>
+                    }
+                >
                     {this.renderFilter()}
                 </components.Popover>
             </div>
@@ -340,88 +397,93 @@ var Alarms = React.createClass({
     render: function () {
         var allowedValues = this.props.collections.get("alarms") || Immutable.Map();
         return (
-            <div className="alarm-tab" style={{paddingBottom: "15px"}}>
-                <h2
-                    className="text-center"
-                    style={styles.titlePage}
-                >
-                    <components.Spacer direction="v" size={5} />
-                    Allarmi
-                </h2>
-                <Radium.Style
-                    rules={{
-                        ".nav-tabs.nav > .active > a": {
-                            color: colors.titleColor,
-                            backgroundColor: colors.white,
-                            width: "200px",
-                            textAlign: "center"
-                        },
-                        ".nav-tabs.nav > li > a": {
-                            backgroundColor: colors.primary,
-                            color: colors.white,
-                            width: "200px",
-                            textAlign: "center"
-                        },
-                        ".tabbed-area > div": {
-                            height: "100%"
-                        },
-                        ".tab-content": {
-                            height: "90%",
-                            borderBottom: "solid 1px " + color(colors.darkBlack).alpha(0.1).rgbString(),
-                            borderRight: "solid 1px " + color(colors.darkBlack).alpha(0.1).rgbString(),
-                            borderLeft: "solid 1px " + color(colors.darkBlack).alpha(0.1).rgbString(),
-                            borderTop: "0px",
-                            boxShadow: "2px 2px 5px " + colors.greySubTitle
-                        }
-                    }}
-                    scopeSelector=".alarm-tab"
-                />
-            <div className="tabbed-area" style={styles.tabbedArea}>
-                <bootstrap.TabbedArea
-                    activeKey={this.state.key}
-                    animation={false}
-                    bsStyle={"tabs"}
-                    onSelect={this.activeKey}
-                >
-                    <bootstrap.TabPane eventKey={1} tab="Impostazione">
-                        <components.AlarmForm
-                            alarm={this.getAlarm()}
-                            siti={this.getSiti()}
-                            type={this.getType()}
-                        />
-                    </bootstrap.TabPane>
-                        <bootstrap.TabPane eventKey={2} tab="Allarmi">
-                            {this.renderFilterButton()}
-                            <components.CollectionElementsTable
-                                collection={ R.isNil(allowedValues) ? Immutable.Map() : allowedValues.filter(this.filterAlarms)}
-                                columns={this.getColumnsAlarms()}
-                                getKey={getKeyFromAlarm}
-                                hover={true}
-                                width={"40%"}
-                            />
-                        </bootstrap.TabPane>
-                        <bootstrap.TabPane eventKey={3} tab="Storico allarmi">
-                            {/* <div style={{marginRight: "30px", height: "40px", paddingTop: "20px"}}>
-                                <div onClick={this.onClickFilter} style={{float: "right", display: "flex", cursor: "pointer"}}>
-                                    <components.Icon icon="filter" style={{paddingTop: "13px"}}/>
-                                    <components.Spacer direction="h" size={10} />
-                                    <h4 style={{color: colors.primary}}>Filter</h4>
-                                </div>
-                            </div> */}
-                            <components.Spacer direction="v" size={30}/>
-                            <components.CollectionElementsTable
-                                collection={this.getNotifications().sort(R.partialRight(this.sortByDate, false))}
-                                columns={this.getColumnsNotifications()}
-                                getKey={getKeyFromAlarm}
-                                hover={true}
-                                width={"30%"}
-                            />
-                        </bootstrap.TabPane>
-                    </bootstrap.TabbedArea>
+            <div>
+                <div style={styles(this.getTheme()).titlePage}>
+                    <div style={{fontSize: "18px", marginBottom: "0px", paddingTop: "18px", width: "100%"}}>
+                        {""}
+                    </div>
+                </div>
+                <div className="alarm-tab" style={{paddingBottom: "15px"}}>
+                    <Radium.Style
+                        rules={styles(this.getTheme()).tabForm}
+                        scopeSelector=".alarm-tab"
+                    />
+                    <div className="tabbed-area" style={styles(this.getTheme()).tabbedArea}>
+                        <bootstrap.Tabs
+                            activeKey={this.props.alarms.selectedTab}
+                            animation={false}
+                            bsStyle={"tabs"}
+                            onSelect={this.activeKey}
+                        >
+                            <bootstrap.Tab eventKey={1} title="Impostazione">
+                                <components.AlarmForm
+                                    alarm={this.getAlarm()}
+                                    alarmsReduxState={this.props.alarms}
+                                    reset={this.props.resetAlarmFormView}
+                                    siti={this.getSiti()}
+                                    submit={this.props.submitAlarmCreationOrChange}
+                                    type={this.getType()}
+                                />
+                            </bootstrap.Tab>
+                            <bootstrap.Tab
+                                eventKey={2}
+                                style={{
+                                    height: "100%",
+                                    overflow: "scroll"
+                                }}
+                                title="Allarmi"
+                            >
+                                {this.renderFilterButton()}
+                                <components.CollectionElementsTable
+                                    collection={
+                                        R.isNil(allowedValues) ?
+                                        Immutable.Map() :
+                                        allowedValues.filter(this.filterAlarms)}
+                                    columns={this.getColumnsAlarms()}
+                                    getKey={getKeyFromCollection}
+                                    hover={true}
+                                    width={"40%"}
+                                />
+                            </bootstrap.Tab>
+                            <bootstrap.Tab eventKey={3} style={{height: "100%", overflow: "scroll"}} title="Storico allarmi">
+                                {/* <div style={{marginRight: "30px", height: "40px", paddingTop: "20px"}}>
+                                    <div onClick={this.onClickFilter}
+                                        style={{float: "right", display: "flex", cursor: "pointer"}}>
+                                        <components.Icon icon="filter" style={{paddingTop: "13px"}}/>
+                                        <components.Spacer direction="h" size={10} />
+                                        <h4 style={{color: colors.primary}}>Filter</h4>
+                                    </div>
+                                </div> */}
+                                <components.Spacer direction="v" size={30}/>
+                                <components.CollectionElementsTable
+                                    collection={this.getNotifications().sort(R.partialRight(this.sortByDate, [false]))}
+                                    columns={this.getColumnsNotifications()}
+                                    getKey={getKeyFromCollection}
+                                    hover={true}
+                                    width={"30%"}
+                                />
+                            </bootstrap.Tab>
+                        </bootstrap.Tabs>
+                    </div>
                 </div>
             </div>
         );
     }
 });
 
-module.exports = Radium(Alarms);
+function mapStateToProps (state) {
+    return {
+        collections: state.collections,
+        alarms: state.alarms
+    };
+}
+function mapDispatchToProps (dispatch) {
+    return {
+        displayAlarmsOnChart: bindActionCreators(displayAlarmsOnChart, dispatch),
+        modifyExistentAlarm: bindActionCreators(modifyExistentAlarm, dispatch),
+        submitAlarmCreationOrChange: bindActionCreators(submitAlarmCreationOrChange, dispatch),
+        resetAlarmFormView: bindActionCreators(resetAlarmFormView, dispatch),
+        numberOfSelectedTabs: bindActionCreators(numberOfSelectedTabs, dispatch)
+    };
+}
+module.exports = connect(mapStateToProps, mapDispatchToProps)(Radium(Alarms));

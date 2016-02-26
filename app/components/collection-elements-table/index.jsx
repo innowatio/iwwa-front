@@ -1,10 +1,9 @@
-var Radium     = require("radium");
 var R          = require("ramda");
 var React      = require("react");
 var bootstrap  = require("react-bootstrap");
 var IPropTypes = require("react-immutable-proptypes");
 
-var colors = require("lib/colors");
+import {defaultTheme} from "lib/theme";
 
 var columnType = React.PropTypes.oneOfType([
     React.PropTypes.string,
@@ -49,7 +48,8 @@ var Row = React.createClass({
         var value = this.props.item.get(column.key);
         return (
             <td key={index}
-                style={R.merge({verticalAlign: "middle"}, R.isNil(column.style) ? {} : column.style(value))}>
+                style={R.merge({verticalAlign: "middle"}, R.isNil(column.style) ? {} : column.style(value))}
+            >
                 {
                     column.valueFormatter ?
                     column.valueFormatter(value, this.props.item) :
@@ -69,7 +69,8 @@ var Row = React.createClass({
 
 var RowHead = React.createClass({
     propTypes: {
-        headColumn: React.PropTypes.array
+        headColumn: React.PropTypes.array,
+        headStyle: React.PropTypes.object
     },
     renderCell: function (column) {
         return (
@@ -80,7 +81,7 @@ var RowHead = React.createClass({
     },
     render: function () {
         return (
-            <tr>
+            <tr style={this.props.headStyle}>
                 {this.props.headColumn.map(this.renderCell)}
             </tr>
         );
@@ -94,48 +95,55 @@ var CollectionElementsTable = React.createClass({
         columns: columnsType,
         condensed: React.PropTypes.bool,
         getKey: React.PropTypes.func,
-        head: React.PropTypes.array,
+        headColumn: React.PropTypes.array,
+        headStyle: React.PropTypes.object,
         hover: React.PropTypes.bool,
         siti: IPropTypes.map,
         striped: React.PropTypes.bool,
+        style: React.PropTypes.object,
         width: React.PropTypes.string
     },
+    contextTypes: {
+        theme: React.PropTypes.object
+    },
+    getTheme: function () {
+        return this.context.theme || defaultTheme;
+    },
     renderHead: function () {
-        return !R.isNil(this.props.head) ? (
+        return !R.isNil(this.props.headColumn) ? (
             <thead>
                 <RowHead
-                    headColumn={this.props.head}
+                    headColumn={this.props.headColumn}
+                    headStyle={this.props.headStyle}
                 />
             </thead>
         ) : null;
     },
     renderBody: function () {
         return (
-            <div>
-                {this.renderHead()}
-                <tbody>
-                    {this.props.collection.map(item => {
-                        var key = (
-                            this.props.getKey ?
-                            this.props.getKey(item) :
-                            item.hashCode()
-                        );
-                        return (
-                            <Row
-                                columns={this.props.columns}
-                                item={item}
-                                key={key}
-                                width={this.props.width}
-                            />
-                        );
-                    }).toArray()}
-                </tbody>
-            </div>
+            <tbody>
+                {this.props.collection.map(item => {
+                    var key = (
+                        this.props.getKey ?
+                        this.props.getKey(item) :
+                        item.hashCode()
+                    );
+                    return (
+                        <Row
+                            columns={this.props.columns}
+                            item={item}
+                            key={key}
+                            width={this.props.width}
+                        />
+                    );
+                }).toArray()}
+            </tbody>
         );
     },
     render: function () {
+        const {colors} = this.getTheme();
         return (
-            <div style={{overflow: "auto", paddingTop: "10px", width: "100%"}}>
+            <div style={[this.props.style, {overflow: "auto", paddingTop: "10px", width: "100%"}]}>
                 <bootstrap.Table
                     bordered={this.props.bordered}
                     condensed={this.props.condensed}
@@ -143,6 +151,7 @@ var CollectionElementsTable = React.createClass({
                     striped={this.props.striped}
                     style={{borderBottom: "1px solid" + colors.greyBorder}}
                 >
+                    {this.renderHead()}
                     {this.renderBody()}
                 </bootstrap.Table>
             </div>
@@ -150,4 +159,4 @@ var CollectionElementsTable = React.createClass({
     }
 });
 
-module.exports = Radium(CollectionElementsTable);
+module.exports = CollectionElementsTable;

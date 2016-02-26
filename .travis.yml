@@ -1,7 +1,7 @@
 language: node_js
 
 node_js:
-  - iojs
+  - 5
 
 install:
   - npm install --no-optional
@@ -9,3 +9,4 @@ install:
 script:
   - npm run lint
   - npm test
+  - npm run deploy

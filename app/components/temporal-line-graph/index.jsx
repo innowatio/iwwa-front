@@ -1,6 +1,7 @@
+import React, {PropTypes} from "react";
+import IPropTypes from "react-immutable-proptypes";
 var R         = require("ramda");
 var Radium    = require("radium");
-var React     = require("react");
 var Loader    = require("halogen/PacmanLoader");
 var bootstrap = require("react-bootstrap");
 var moment    = require("moment");
@@ -8,44 +9,53 @@ var moment    = require("moment");
 var AppPropTypes     = require("lib/app-prop-types.js");
 var dygraphExport    = require("lib/dygraph-export.js");
 var DygraphCSVExport = require("lib/dygraph-export-csv.js");
-var colors           = require("lib/colors");
+import {defaultTheme} from "lib/theme";
 
-var styles = {
+var styles = ({colors}) => ({
     graphContainer: {
-        width: "calc(100vw - 100px)",
-        height: "calc(100vh - 350px)",
-        margin: "20px 20px 30px 20px"
+        height: "calc(100vh - 360px)",
+        margin: "20px 20px 30px 0px",
+        color: colors.axisLabel
     }
-};
+});
 
 const oneMonthInMilliseconds = moment.duration(1, "months").asMilliseconds();
 
 var TemporalLineGraph = React.createClass({
     propTypes: {
-        alarms: React.PropTypes.arrayOf(React.PropTypes.number),
-        colors: React.PropTypes.arrayOf(React.PropTypes.string),
-        coordinates: React.PropTypes.arrayOf(
+        alarms: PropTypes.arrayOf(PropTypes.number),
+        colors: PropTypes.arrayOf(PropTypes.string),
+        coordinates: PropTypes.arrayOf(
             AppPropTypes.DygraphCoordinate
         ).isRequired,
-        dateWindow: React.PropTypes.arrayOf(React.PropTypes.number),
-        labels: React.PropTypes.array,
-        lockInteraction: React.PropTypes.bool,
-        showRangeSelector: React.PropTypes.bool,
-        sito: React.PropTypes.object,
-        xLabel: React.PropTypes.string,
-        xLegendFormatter: React.PropTypes.func,
-        xTicker: React.PropTypes.func,
-        yLabel: React.PropTypes.string
+        dateFilter: PropTypes.object,
+        dateWindow: PropTypes.object,
+        labels: PropTypes.array,
+        lockInteraction: PropTypes.bool,
+        showRangeSelector: PropTypes.bool,
+        site: IPropTypes.map,
+        xLabel: PropTypes.string,
+        xLegendFormatter: PropTypes.func,
+        xTicker: PropTypes.func,
+        y2Label: PropTypes.string,
+        yLabel: PropTypes.string
+    },
+    contextTypes: {
+        theme: PropTypes.object
     },
     componentDidMount: function () {
         this.drawGraph();
     },
-    componentWillReceiveProps: function (nextProps) {
-        var options = this.getOptionsFromProps(nextProps);
+    componentWillReceiveProps: function (nextProps, nextContext) {
+        const theme = nextContext ? nextContext.theme : this.getTheme();
+        var options = this.getOptionsFromProps(nextProps, theme);
         this.graph.updateOptions(R.merge(options, {
             file: this.getCoordinatesFromProps(nextProps)
         }));
         this.drawAnnotations();
+    },
+    getTheme: function () {
+        return this.context.theme || defaultTheme;
     },
     getCoordinatesFromProps: function (props) {
         return (
@@ -54,46 +64,102 @@ var TemporalLineGraph = React.createClass({
             props.coordinates
         );
     },
-    getOptionsFromProps: function (props) {
+    getUnderlayForWeekEnd: function (canvas, area, g, date, dayFrom0Unix, theme) {
+        if (
+            R.equals(moment.utc(date).format("YYYY-MM-DD"), moment.utc(date).day(6).format("YYYY-MM-DD"))
+        ) {
+            const dayBottomLeft = moment.utc(dayFrom0Unix ? dayFrom0Unix : date).startOf("day");
+            const dayTopRight = moment.utc(dayFrom0Unix ? dayFrom0Unix : date).add({days: 1}).endOf("day");
+            var bottomLeft = g.toDomCoords(dayBottomLeft, -20);
+            var topRight = g.toDomCoords(dayTopRight, +20);
+            var left = bottomLeft[0];
+            var right = topRight[0];
+            canvas.fillStyle = theme.colors.graphUnderlay;
+            canvas.fillRect(left, area.y, right - left, area.h);
+        }
+    },
+    getOptionsFromProps: function (props, theme) {
         var options = {
+            series: {},
+            connectSeparatedPoints: true,
             drawPoints: true,
-            errorBars: true,
+            errorBars: false,
             hideOverlayOnMouseOut: false,
+            includeZero: true,
             labels: this.getLabelsFromProps(props),
             labelsSeparateLines: true,
-            legend: "always",
+            legend: "never",
             sigma: 2,
             strokeWidth: 1.5,
             xlabel: props.xLabel,
             ylabel: props.yLabel,
+            y2label: props.y2Label ? props.y2Label : "",
             axes: {
                 x: {},
-                y: {}
+                y: {},
+                y2: {}
             }
         };
-        if (props.coordinates.length !== 0) {
-            var lastDate;
-            options.underlayCallback = function (canvas, area, g) {
-                props.coordinates.map(value => {
-                    var date = value[0];
-                    if (moment(lastDate).date() !== moment(date).date() && R.equals(moment(date), moment(date).day(6))) {
-                        lastDate = date;
-                        var bottomLeft = g.toDomCoords(moment(date).startOf("day"), -20);
-                        var topRight = g.toDomCoords(moment(date).add(1, "days").endOf("day"), +20);
-                        var left = bottomLeft[0];
-                        var right = topRight[0];
-
-                        canvas.fillStyle = colors.greyBackground;
-                        canvas.fillRect(left, area.y, right - left, area.h);
-                    }
-                });
+        if (!R.isEmpty(props.coordinates)) {
+            if (props.y2Label) {
+                var maxY2Range = R.reduce(function (prev, elm) {
+                    return R.max(prev, elm[2][0]);
+                }, 0, props.coordinates);
+                options.axes.y2.valueRange = [0, maxY2Range * 1.01];
+            }
+            var labels = this.getLabelsFromProps(props);
+            var externalLabel = labels[2];
+            var maxYRange = R.reduce(function (prev, elm) {
+                // Y axis is at the height of the max of y or y2
+                return elm.length === 2 || props.y2Label ? // TACCONATA
+                R.max(prev, elm[1][0]) :
+                R.max(R.max(prev, elm[1][0]), R.max(prev, elm[2][0]));
+            }, 0, props.coordinates);
+            if (maxYRange === 0.01) {
+                options.axes.y.valueRange = [0, 10]; // Tacconata
+            } else {
+                options.axes.y.valueRange = [0, maxYRange * 1.01];
+            }
+            props.y2Label ? options.series[externalLabel] = {axis: "y2"} : null;
+        }
+        if (props.coordinates.length !== 0 && !props.dateWindow && R.isEmpty(props.dateFilter)) {
+            const dateStart = props.coordinates[0][0];
+            const dateEnd = R.last(props.coordinates)[0];
+            options.underlayCallback = (canvas, area, g) => {
+                const numberOfDayInGraph = moment.utc(dateEnd).diff(dateStart, "days");
+                for (var i=0; i<=numberOfDayInGraph; i++) {
+                    const day = moment.utc(dateStart).add({days: i});
+                    this.getUnderlayForWeekEnd(canvas, area, g, day, null, theme);
+                }
+            };
+        }
+        if (!R.isEmpty(props.dateFilter)) {
+            const date = props.dateFilter;
+            options.underlayCallback = (canvas, area, g) => {
+                const numberOfDayInGraph = moment.utc(date.end).diff(date.start, "days");
+                for (var i=0; i<=numberOfDayInGraph; i++) {
+                    const day = moment.utc(date.start).add({days: i});
+                    this.getUnderlayForWeekEnd(canvas, area, g, day, null, theme);
+                }
+            };
+        }
+        if (props.dateWindow) {
+            const dateStart = props.dateWindow.start;
+            options.underlayCallback = (canvas, area, g) => {
+                for (var i=0; i<=props.dateWindow.dayToAdd; i++) {
+                    const day = moment.utc(dateStart).add({days: i});
+                    const dayFrom0Unix = moment.utc(0).add({days: i});
+                    this.getUnderlayForWeekEnd(canvas, area, g, day, dayFrom0Unix, theme);
+                }
             };
         }
         if (props.colors) {
             options.colors = props.colors;
         }
-        if (props.dateWindow) {
-            options.dateWindow = props.dateWindow;
+        if (props.dateFilter && props.dateFilter.type === "dateFilter") {
+            options.dateWindow = [props.dateFilter.start, props.dateFilter.end];
+        } else if (props.dateWindow) {
+            options.dateWindow = props.dateWindow.dateArray;
         } else {
             const {max, min} = props.coordinates.reduce((acc, coordinate) => {
                 return {
@@ -102,10 +168,9 @@ var TemporalLineGraph = React.createClass({
                 };
             }, {max: new Date(0), min: new Date()});
             const delta = max - min;
-            if (delta < oneMonthInMilliseconds) {
-                return;
+            if (delta >= oneMonthInMilliseconds) {
+                options.dateWindow = [max -  oneMonthInMilliseconds, max];
             }
-            options.dateWindow = [max -  oneMonthInMilliseconds, max];
         }
         if (props.lockInteraction) {
             options.interactionModel = {};
@@ -128,30 +193,28 @@ var TemporalLineGraph = React.createClass({
     drawAnnotations: function () {
         var annotations = [];
         if (this.props.alarms) {
-            for (var i = 0; i < this.props.alarms.length; i++) {
+            this.props.alarms.map((alarm) =>
                 annotations.push({
                     series: "Reale",
-                    x: this.props.alarms[i],
+                    x: alarm,
                     text: "alarm",
                     cssClass: "alarmPoint",
                     attachAtBottom: false,
                     tickHeight: 0,
                     width: 8,
                     height: 4
-                });
-            }
+                })
+            );
         }
-
         this.graph.setAnnotations(annotations);
     },
     drawGraph: function () {
-        var container = this.refs.graphContainer.getDOMNode();
+        var container = this.refs.graphContainer;
         var coordinates = this.getCoordinatesFromProps(this.props);
-        var options = this.getOptionsFromProps(this.props);
+        var options = this.getOptionsFromProps(this.props, this.getTheme());
         /*
         *   Instantiating the graph automatically renders it to the page
         */
-
         Dygraph.Interaction.moveTouch = function (event, g, context) {
             // If the tap moves, then it's definitely not part of a double-tap.
             context.startTimeForDoubleTapMs = null;
@@ -237,7 +300,8 @@ var TemporalLineGraph = React.createClass({
     },
     renderSpinner: function () {
         // TODO Set a timeout.
-        if (!R.isNil(this.props.sito) && this.props.sito.size > 0 && this.props.coordinates.length === 0) {
+        const {colors} = this.getTheme();
+        if (!R.isNil(this.props.site) && this.props.site.size > 0 && this.props.coordinates.length === 0) {
             return (
                 <div className="modal-spinner">
                     <bootstrap.Modal
@@ -246,6 +310,7 @@ var TemporalLineGraph = React.createClass({
                         container={this}
                         enforceFocus={false}
                         onHide={R.identity()}
+                        show={true}
                         style={{zIndex: 1000}}
                     >
                         <Radium.Style
@@ -259,8 +324,7 @@ var TemporalLineGraph = React.createClass({
                                 },
                                 ".modal-container .modal, .modal-container .modal-backdrop": {
                                     position: "absolute",
-                                    width: "98%",
-                                    left: "1%"
+                                    width: "98%"
                                 },
                                 ".modal": {
                                     top: "50%",
@@ -283,27 +347,43 @@ var TemporalLineGraph = React.createClass({
                             }}
                             scopeSelector=".modal-container"
                         />
-                    <Loader color={colors.primary} style={{zIndex: 1010, position: "relative"}}/>
+                        <Loader color={colors.primary} style={{zIndex: 1010, position: "relative"}}/>
                     </bootstrap.Modal>
                 </div>
             );
         }
     },
     render: function () {
+        const {colors} = this.getTheme();
         return (
-            <span>
-                {this.renderSpinner()}
+            <div className="container-graph">
                 <Radium.Style
                     rules={{
-                    ".alarmPoint": {
-                        border: "solid 4px red !important",
-                        borderRadius: "50%"
-                    }
-                }} />
-                <div ref="graphContainer" style={styles.graphContainer}/>
-            </span>
+                        ".alarmPoint": {
+                            border: `4px solid ${colors.red} !important`,
+                            borderRadius: "50%"
+                        },
+                        ".dygraph-axis-label": {
+                            color: colors.axisLabel,
+                            fontSize: "11px",
+                            margin: "0px 10px"
+                        },
+                        ".dygraph-y2label": {
+                            backgroundColor: colors.background,
+                            height: "58px"
+                        },
+                        ".dygraph-legend": {
+                            display: ENVIRONMENT === "cordova" ? "none" : "initial",
+                            top: "-50px !important",
+                            boxShadow: "2px 2px 5px " + colors.greySubTitle
+                        }
+                    }}
+                    scopeSelector=".container-graph"
+                />
+                <div ref="graphContainer" style={styles(this.getTheme()).graphContainer}/>
+            </div>
         );
     }
 });
 
-module.exports = TemporalLineGraph;
+module.exports = Radium(TemporalLineGraph);

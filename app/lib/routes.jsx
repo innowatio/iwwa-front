@@ -1,27 +1,26 @@
-var React          = require("react");
-var Router         = require("react-router");
-var BrowserHistory = require("react-router/lib/BrowserHistory");
-var HashHistory    = require("react-router/lib/HashHistory");
+import React from "react";
+import {Router, Route, hashHistory, browserHistory} from "react-router";
 
-var views = require("views");
 
-var checkLocalStorageAndRedirect = function (nextState, replaceState) {
-    if (!nextState.location.query && localStorage.query) {
-        nextState.location.query = JSON.parse(localStorage.query);
-    }
-    return replaceState;
-};
+import * as views from "views";
+
+const history = (ENVIRONMENT === "cordova" ? hashHistory : browserHistory);
 
 module.exports = (
-    <Router.Router history={ENVIRONMENT === "cordova" ? HashHistory.history : BrowserHistory.history}>
-        <Router.Route component={views.Root} name="root">
-            <Router.Route component={views.Alarms} name="alarms" path="/alarms/" />
-            <Router.Route component={views.Alarms} name="alarm" path="/alarms/:id" />
-            <Router.Route component={views.Users} name="users" path="/users/" />
-            <Router.Route component={views.User} name="user" path="/users/:id" />
-            <Router.Route component={views.Chart} name="chart" onEnter={checkLocalStorageAndRedirect} path="/chart/" />
-            <Router.Route component={views.Dashboard} name="dashboard" path="/dashboard/" />
-            <Router.Route component={views.Dashboard} name="home" path="/" />
-        </Router.Route>
-    </Router.Router>
+    <Router history={history}>
+        <Route component={views.Root} name="root">
+            <Route component={views.Alarms} name="alarms" path="/alarms/" titleView="Allarmi" />
+            <Route component={views.Alarms} name="alarm" path="/alarms/:id" titleView="Allarmi" />
+            <Route component={views.Dashboard} name="dashboard" path="/dashboard/" titleView="Dashboard"/>
+            <Route component={views.Users} name="users" path="/users/" titleView="Amministrazione utenti"/>
+            <Route component={views.User} name="user" path="/users/:id" />
+            <Route component={views.Chart} name="chart" path="/chart/" titleView="Storico consumi" />
+            <Route component={views.SummaryConsumptions} name="consumptions" path="/consumptions/" titleView="Riepilogo Consumi" />
+            <Route component={views.RealTime} name="live" path="/live/" titleView="Consumi live" />
+            <Route component={views.Dashboard} name="home" path="/" />
+            <Route component={views.Monitoring} name="monitoring" path="/monitoring/" titleView="Monitoring" />
+            <Route component={views.Sensor} name="new-sensor" path="/monitoring/sensor/" titleView="Add sensor" />
+            <Route component={views.Sensor} name="edit-sensor" path="/monitoring/sensor/:id" titleView="Edit sensor" />
+        </Route>
+    </Router>
 );

@@ -1,11 +1,26 @@
-var R     = require("ramda");
-var React = require("react/addons");
-var FastClick = require("fastclick");
+import R from "ramda";
+import React from "react";
+import {render} from "react-dom";
+import FastClick from "fastclick";
+import {Provider} from "react-redux";
+
+import asteroid from "lib/asteroid";
+import {syncStoreAndAsteroid} from "lib/asteroid-redux";
+import store from "lib/redux-store";
+import routes from "lib/routes";
 
 FastClick.attach(document.body);
+syncStoreAndAsteroid(store, asteroid);
 
-var routes = require("lib/routes");
-React.render(routes, document.body);
+const App = (
+    <Provider store={store}>
+        {routes}
+    </Provider>
+);
+
+window.store = store;
+
+render(App, document.getElementById("root"));
 
 // Init cordova-specific behaviours
 require("cordova-scripts/init");

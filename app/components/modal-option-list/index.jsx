@@ -2,11 +2,11 @@ var Radium     = require("radium");
 var R          = require("ramda");
 var React      = require("react");
 var bootstrap  = require("react-bootstrap");
+var Modal = bootstrap.Modal;
 
-var colors     = require("lib/colors");
 var components = require("components");
 var measures   = require("lib/measures");
-var icons   = require("lib/icons");
+import {defaultTheme} from "lib/theme";
 
 var ModalOptionList = React.createClass({
     propTypes: {
@@ -24,36 +24,53 @@ var ModalOptionList = React.createClass({
             React.PropTypes.array,
             React.PropTypes.object])
     },
+    contextTypes: {
+        theme: React.PropTypes.object
+    },
     getInitialState: function () {
         return {
             value: this.props.value ? this.props.value : []
         };
     },
+    getTheme: function () {
+        return this.context.theme || defaultTheme;
+    },
     renderGroupItems: function (value) {
-        var active = R.contains(this.props.getKey(value), this.props.value);
+        const {colors} = this.getTheme();
+        const active = R.contains(this.props.getKey(value), this.props.value);
         if (React.isValidElement(value)) {
             return value;
         } else {
             return (
                 <bootstrap.ListGroupItem
                     key={this.props.getKey(value)}
-                    onClick={R.partial(value.action, this.props.getKey(value))}
+                    onClick={R.partial(value.action, [this.props.getKey(value)])}
                     style={{
                         color: colors.greySubTitle,
                         textAlign: "left"
                     }}
                 >
                     {this.props.getLabel(value)}
-                    <img src={icons.iconFlagColor} style={{float: "right", visibility: active ? "visible" : "hidden"}}/>
+                    <components.Icon
+                        color={this.getTheme().colors.iconFlag}
+                        icon={"flag"}
+                        size={"28px"}
+                        style={{
+                            lineHeight: "20px",
+                            float: "right",
+                            visibility: active ? "visible" : "hidden"
+                        }}
+                    />
                 </bootstrap.ListGroupItem>
             );
         }
     },
     render: function () {
+        const {colors} = this.getTheme();
         var repetitionItems = this.props.allowedValues.map(this.renderGroupItems);
         return (
             <div>
-                <bootstrap.Modal
+                <Modal
                     container={this}
                     onHide={this.props.toggleModal}
                     show={this.props.isModalOpen}
@@ -67,25 +84,26 @@ var ModalOptionList = React.createClass({
                         }}
                         scopeSelector=".modal-dialog"
                     />
-                    <bootstrap.Modal.Header
-                        closeButton
+                    <Modal.Header
+                        closeButton={true}
                         style={{borderBottom: "none"}}
                     >
                         {this.props.header}
-                    </bootstrap.Modal.Header>
-                    <bootstrap.Modal.Body style={{textAlign: "center"}}>
+                    </Modal.Header>
+                    <Modal.Body style={{textAlign: "center"}}>
                         <bootstrap.ListGroup>
                             {repetitionItems.toArray ? repetitionItems.toArray() : repetitionItems}
                         </bootstrap.ListGroup>
-                    </bootstrap.Modal.Body>
-                    <bootstrap.Modal.Footer style={{textAlign: "center"}}>
+                    </Modal.Body>
+                    <Modal.Footer style={{textAlign: "center"}}>
                         <components.Button
                             onClick={this.props.onClickConfirm}
                             style={{
                                 background: colors.primary,
                                 color: colors.white,
                                 height: "45px"
-                            }}>
+                            }}
+                        >
                             {"CONFERMA"}
                         </components.Button>
                         <components.Button
@@ -94,11 +112,12 @@ var ModalOptionList = React.createClass({
                                 background: colors.greyBackground,
                                 color: colors.primary,
                                 height: "45px"
-                            }}>
+                            }}
+                        >
                             {"RESET"}
                         </components.Button>
-                    </bootstrap.Modal.Footer>
-                </bootstrap.Modal>
+                    </Modal.Footer>
+                </Modal>
             </div>
         );
     }

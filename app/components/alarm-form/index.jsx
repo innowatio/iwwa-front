@@ -1,44 +1,41 @@
-var axios      = require("axios");
-var Immutable  = require("immutable");
-var moment     = require("moment");
-var Radium     = require("radium");
-var R          = require("ramda");
-var React      = require("react");
-var bootstrap  = require("react-bootstrap");
-var IPropTypes = require("react-immutable-proptypes");
-var Router     = require("react-router");
+var bootstrap       = require("react-bootstrap");
+var Immutable       = require("immutable");
+var IPropTypes      = require("react-immutable-proptypes");
+var R               = require("ramda");
+var Radium          = require("radium");
+var React           = require("react");
+var ReactStateMixin = require("react-addons-linked-state-mixin");
 
-var components      = require("components");
-var CollectionUtils = require("lib/collection-utils");
-var colors          = require("lib/colors");
-var stringIt        = require("lib/string-it");
-var styles          = require("lib/styles");
-var tutorialString  = require("assets/JSON/tutorial-string.json");
-var GetTutorialMixin   = require("lib/get-tutorial-mixin");
-var icons           = require("lib/icons");
-
-var less = function (time1, time2) {
-    return (
-        moment(time1, "hh:mm").toDate() <
-        moment(time2, "hh:mm").toDate()
-    );
-};
+var components       = require("components");
+var CollectionUtils  = require("lib/collection-utils");
+var stringIt         = require("lib/string-it");
+var tutorialString   = require("assets/JSON/tutorial-string.json");
+var GetTutorialMixin = require("lib/get-tutorial-mixin");
+import {styles} from "lib/styles_restyling";
+import {defaultTheme} from "lib/theme";
 
 var AlarmForm = React.createClass({
     propTypes: {
         alarm: IPropTypes.map.isRequired,
-        onCancel: React.PropTypes.func,
-        onSubmit: React.PropTypes.func,
+        alarmsReduxState: React.PropTypes.object.isRequired,
+        reset: React.PropTypes.func,
         siti: IPropTypes.map.isRequired,
+        submit: React.PropTypes.func.isRequired,
         type: React.PropTypes.oneOf(["insert", "update"]).isRequired
     },
-    mixins: [React.addons.LinkedStateMixin, GetTutorialMixin(
+    contextTypes: {
+        theme: React.PropTypes.object
+    },
+    mixins: [ReactStateMixin, GetTutorialMixin(
         "alarm-form", ["siti", "threshold", "name", "notification", "repetition"])],
     getInitialState: function () {
         return this.getStateFromProps(this.props);
     },
     componentWillReceiveProps: function (props) {
         this.setState(this.getStateFromProps(props));
+    },
+    getTheme: function () {
+        return this.context.theme || defaultTheme;
     },
     getSitoFromProps: function (props) {
         var pod = props.alarm.get("podId");
@@ -51,7 +48,6 @@ var AlarmForm = React.createClass({
             active: props.alarm.get("active") || true,
             name: props.alarm.get("name"),
             notification: props.alarm.get("notification") || ["mail"],
-            type: props.alarm.get("type"),
             sito: this.getSitoFromProps(props),
             repetition: {
                 weekDays: props.alarm.get("repetition") || [0, 1, 2, 3, 4, 5, 6],
@@ -66,81 +62,16 @@ var AlarmForm = React.createClass({
             modalNotificationOpen: false
         };
     },
-    cancel: function () {
-        console.log("Cancel");
+    isAutomatic: function () {
+        return (this.props.alarm.get("type") === "automatic");
     },
     reset: function () {
+        this.props.reset();
         this.setState(this.getStateFromProps(this.props));
     },
     submit: function () {
-        this.setState({
-            saving: true
-        });
-
-        var rule = {
-            $and: []
-        };
-
-        rule.$and.push({
-            reale: {
-                $gt: parseInt(this.state.threshold)
-            }
-        });
-
-        if (!R.isEmpty(this.state.repetition.weekDays)) {
-            rule.$and.push({
-                "date.weekDay": {
-                    $in: this.state.repetition.weekDays
-                }
-            });
-        }
-        if (this.state.repetition.day) {
-            var day = moment(this.state.repetition.day);
-            rule.$and.push({
-                "date.monthDay": day.date(),
-                "date.month": day.month(),
-                "date.year": day.year()
-            });
-        }
-
-        var timeStart = moment(this.state.repetition.timeStart, "hh:mm");
-        var timeEnd = moment(this.state.repetition.timeEnd, "hh:mm");
-        if (!less(this.state.repetition.timeEnd, this.state.repetition.timeStart)) {
-            rule.$and.push({
-                "date.hour": {
-                    $lt: timeEnd.hour()
-                }
-            });
-            rule.$and.push({
-                "date.hour": {
-                    $gt: timeStart.hour()
-                }
-            });
-        }
-
-        var alarm = {
-            active: this.state.active,
-            name: this.state.name,
-            podId: this.state.sito.get("pod"),
-            rule: JSON.stringify(rule)
-        };
-
-        var requestBody;
-        if (this.props.type === "update") {
-            requestBody = {
-                method: "/alarms/replace",
-                params: [this.props.alarm.get("_id"), alarm]
-            };
-        } else {
-            requestBody = {
-                method: "/alarms/insert",
-                params: [alarm]
-            };
-        }
-        var endpoint = WRITE_BACKEND_HOST + "/alarms";
-        axios.post(endpoint, requestBody)
-            .then(() => this.setState({saving: false}))
-            .catch(() => this.setState({saving: false}));
+        console.log("SUBMIT");
+        this.props.submit(this.state, this.props.type, this.props.alarm);
     },
     addTooltip: function () {
         return (
@@ -158,129 +89,208 @@ var AlarmForm = React.createClass({
         return this.state.notification;
     },
     renderAlarmSelectSite: function () {
-        return (
-            <div>
-                <h3 style={{color: colors.primary}}>{stringIt.titleTabImpostazioniAlarm}</h3>
-                <h5>
-                    {"Seleziona un punto da monitorare e le soglie di allarme "}
-                    <bootstrap.OverlayTrigger
-                        overlay={this.addTooltip()}
-                        placement="right"
-                        rootClose={true}
-                        trigger="click"
-                    >
-                        <components.Button  bsStyle="link">
-                            <img src={icons.iconInfo} style={{width: "75%"}}/>
-                        </components.Button>
-                    </bootstrap.OverlayTrigger>
-                </h5>
-                    <components.Popover
-                        arrow="none"
-                        hideOnChange={true}
-                        style="inherit"
-                        title={this.renderTitleSelectSite()}
-                    >
-                        <components.SelectTree
-                            allowedValues={this.props.siti}
-                            buttonCloseDefault={true}
-                            filter={CollectionUtils.siti.filter}
-                            getKey={CollectionUtils.siti.getKey}
-                            getLabel={CollectionUtils.siti.getLabel}
-                            valueLink={this.linkState("sito")}
-                        />
-                    </components.Popover>
-            </div>
-        );
+        const {colors} = this.getTheme();
+        return !this.isAutomatic() ? (
+            <bootstrap.Col lg={6} md={6} xs={12}>
+                <components.TutorialAnchor
+                    message={tutorialString.alarmForm.siti}
+                    order={1}
+                    position="right"
+                    ref="siti"
+                >
+                    <div>
+                        <h3 style={{color: colors.primary}}>{stringIt.titleTabImpostazioniAlarm}</h3>
+                        <h5>
+                            {"Seleziona un punto da monitorare e le soglie di allarme "}
+                            <bootstrap.OverlayTrigger
+                                overlay={this.addTooltip()}
+                                placement="right"
+                                rootClose={true}
+                                trigger="click"
+                            >
+                                <components.Button  bsStyle="link">
+                                    <components.Icon
+                                        color={this.getTheme().colors.iconInfo}
+                                        icon={"info"}
+                                        size={"20px"}
+                                        style={{
+                                            float: "right",
+                                            verticalAlign: "middle",
+                                            lineHeight: "20px"
+                                        }}
+                                    />
+                                </components.Button>
+                            </bootstrap.OverlayTrigger>
+                        </h5>
+                        <components.Popover
+                            arrow="none"
+                            hideOnChange={true}
+                            title={this.renderTitleSelectSite()}
+                        >
+                            <components.SelectTree
+                                allowedValues={this.props.siti}
+                                buttonCloseDefault={true}
+                                filter={CollectionUtils.sites.filter}
+                                getKey={CollectionUtils.sites.getKey}
+                                getLabel={CollectionUtils.sites.getLabel}
+                                valueLink={this.linkState("sito")}
+                            />
+                        </components.Popover>
+                    </div>
+                </components.TutorialAnchor>
+            </bootstrap.Col>
+        ) : null;
     },
     renderAlarmThreshold: function () {
-        return (
-            <div>
-                <h4 style={{color: colors.primary}}>{stringIt.titleAlarmThreshold}</h4>
-                <div style={{backgroundColor: colors.greyBackground, textAlign: "center"}}>
-                    <components.Spacer direction="v" size={3} />
-                    <h4
-                        style={{
-                            color: colors.primary,
-                            marginTop: "8px"
-                        }}> {`Soglia (${this.state.threshold} kWh)`}
-                    </h4>
-                    <components.Spacer direction="v" size={10} />
-                    <bootstrap.Input
-                        max={600}
-                        min={0}
-                        step={5}
-                        style={styles.inputRange}
-                        type="range"
-                        valueLink={this.linkState("threshold")}
-                    />
-                </div>
-            </div>
-        );
+        const theme = this.getTheme();
+        return !this.isAutomatic() ? (
+            <bootstrap.Col lg={6} md={6} xs={12}>
+                <components.TutorialAnchor
+                    message={tutorialString.alarmForm.threshold}
+                    order={2}
+                    position="left"
+                    ref="threshold"
+                >
+                    <div>
+                        <h4 style={{color: theme.colors.primary}}>{stringIt.titleAlarmThreshold}</h4>
+                        <div style={{backgroundColor: theme.colors.greyBackground, textAlign: "center"}}>
+                            <components.Spacer direction="v" size={3} />
+                            <h4
+                                style={{
+                                    color: theme.colors.primary,
+                                    marginTop: "8px"
+                                }}
+                            >
+                                {`Soglia (${this.state.threshold} kWh)`}
+                            </h4>
+                            <components.Spacer direction="v" size={10} />
+                            <bootstrap.Input
+                                max={600}
+                                min={0}
+                                step={5}
+                                style={styles(theme).inputRange}
+                                type="range"
+                                valueLink={this.linkState("threshold")}
+                            />
+                        </div>
+                    </div>
+                </components.TutorialAnchor>
+            </bootstrap.Col>
+        ) : null;
     },
     renderAlarmName: function () {
+        const theme = this.getTheme();
         return (
-            <div>
-                <h4 style={{color: colors.primary}}>{stringIt.titleAlarmName}</h4>
-                <bootstrap.Input
-                    style={styles.inputLine}
-                    type="text"
-                    valueLink={this.linkState("name")}
-                />
-            </div>
+            <bootstrap.Col lg={6} md={6} xs={12}>
+                <components.TutorialAnchor
+                    message={tutorialString.alarmForm.name}
+                    order={3}
+                    position="right"
+                    ref="name"
+                >
+                    <div>
+                        <h4 style={{color: theme.colors.primary}}>{stringIt.titleAlarmName}</h4>
+                        {this.isAutomatic() ?
+                            <h5>{this.props.alarm.get("name")}</h5> :
+                            <bootstrap.Input
+                                style={styles(theme).inputLine}
+                                type="text"
+                                valueLink={this.linkState("name")}
+                            />
+                        }
+                    </div>
+                </components.TutorialAnchor>
+            </bootstrap.Col>
         );
     },
     renderAlarmNotification: function () {
         return (
-            <components.AlarmNotificationModal
-                updateParentState={this.updateState}
-                value={this.state.notification}
-            />
+            <bootstrap.Col lg={6} md={6} xs={12}>
+                <components.TutorialAnchor
+                    message={tutorialString.alarmForm.notification}
+                    order={5}
+                    position="right"
+                    ref="notification"
+                >
+                    <components.AlarmNotificationModal
+                        updateParentState={this.updateState}
+                        value={this.state.notification}
+                    />
+                </components.TutorialAnchor>
+            </bootstrap.Col>
         );
     },
     renderAlarmActive: function () {
+        const {colors} = this.getTheme();
         return (
-            <div style={{display: this.props.type === "update" ? "block" : "none"}}>
-                <components.Spacer direction="v" size={30} />
-                <bootstrap.Input
-                    checkedLink={this.linkState("active")}
-                    label={
-                        <h4 style={{color: colors.primary, marginTop: "0px"}}>
-                            {stringIt.titleAlarmActive}
-                        </h4>
-                    }
-                    type="checkbox"
-                />
-            </div>
+            <bootstrap.Col lg={6} md={6} xs={12}>
+                <div style={{display: this.props.type === "update" ? "block" : "none"}}>
+                    <components.Spacer direction="v" size={30} />
+                    <bootstrap.Input
+                        checkedLink={this.linkState("active")}
+                        label={
+                            <h4 style={{color: colors.primary, marginTop: "0px"}}>
+                                {stringIt.titleAlarmActive}
+                            </h4>
+                        }
+                        type="checkbox"
+                    />
+                </div>
+            </bootstrap.Col>
         );
     },
     renderAlarmRepetition: function () {
-        return (
-            <components.AlarmRepetitionModal
-                updateParentState={this.updateState}
-                value={this.state.repetition}
-            />
-        );
+        return !this.isAutomatic() ? (
+            <bootstrap.Col lg={6} md={6} xs={12}>
+                <components.TutorialAnchor
+                    message={tutorialString.alarmForm.repetition}
+                    order={4}
+                    position="left"
+                    ref="repetition"
+                >
+                    <components.AlarmRepetitionModal
+                        updateParentState={this.updateState}
+                        value={this.state.repetition}
+                    />
+                </components.TutorialAnchor>
+            </bootstrap.Col>
+        ) : null;
     },
     renderResetButton: function () {
         return (
-            <Router.Link to={`/alarms/`}>
-                <components.Button bsStyle="link" disabled={this.state.saving} onClick={this.reset}>
-                    {<img src={icons.iconReset} style={{width: "75%"}}/>}
-                </components.Button>
-            </Router.Link>
+            <components.Button
+                bsStyle="link"
+                disabled={this.props.alarmsReduxState.statePostAlarm}
+                onClick={this.reset}
+            >
+                {
+                    <components.Icon
+                        color={this.getTheme().colors.iconArrow}
+                        icon={"reset"}
+                        size={"35px"}
+                        style={{
+                            float: "right",
+                            verticalAlign: "middle",
+                            lineHeight: "20px"
+                        }}
+                    />
+                }
+            </components.Button>
         );
     },
     renderSubmitButton: function () {
+        const {colors} = this.getTheme();
         return (
             <components.Button
-                disabled={this.state.saving}
+                disabled={this.props.alarmsReduxState.statePostAlarm}
                 onClick={this.submit}
                 style={{
                     backgroundColor: colors.primary,
                     color: colors.white,
                     width: "230px",
                     height: "45px"
-                }}>
+                }}
+            >
                 {this.props.type === "update" ? "SALVA" : "CREA"}
             </components.Button>
         );
@@ -288,24 +298,66 @@ var AlarmForm = React.createClass({
     renderTitleSelectSite: function () {
         return this.state.sito.size === 0 ?
             <span>
-                Seleziona punto di misurazione
-                <img src={icons.iconDown} style={{float: "right", paddingTop: "5px", width: "16px"}}/>
+                {"Seleziona punto di misurazione"}
+                <components.Icon
+                    color={this.getTheme().colors.iconInputSelect}
+                    icon={"arrow-down"}
+                    size={"20px"}
+                    style={{
+                        float: "right",
+                        verticalAlign: "middle"
+                    }}
+                />
             </span> :
             <span>
-                {CollectionUtils.siti.getLabel(this.state.sito)}
+                {CollectionUtils.sites.getLabel(this.state.sito)}
                 <components.Spacer direction="h" size={30} />
                 {this.state.sito.get("pod")}
-                <img src={icons.iconDown} style={{float: "right", paddingTop: "5px", width: "16px"}}/>
+                <components.Icon
+                    color={this.getTheme().colors.iconInputSelect}
+                    icon={"arrow-down"}
+                    size={"20px"}
+                    style={{
+                        float: "right",
+                        verticalAlign: "middle"
+                    }}
+                />
             </span>;
     },
+    renderAutomaticAlarmBanner: function () {
+        const {colors} = this.getTheme();
+        return this.isAutomatic() ? (
+            <bootstrap.Col xs={12}>
+                <bootstrap.Alert
+                    style={{
+                        backgroundColor: colors.greyBackground,
+                        borderColor: colors.greyBorder,
+                        color: colors.titleColor
+                    }}
+                >
+                    <h4>
+                        {"Allarme automatico"}
+                    </h4>
+                    <p>
+                        {"L'allarme scatta quando il valore misurato supera le seguenti soglie:"}
+                    </p>
+                    <ul>
+                        <li>{"300% del valore previsionale dalle 22.00 alle 07.00"}</li>
+                        <li>{"200% del valore previsionale dalle 07.00 alle 22.00"}</li>
+                    </ul>
+                </bootstrap.Alert>
+            </bootstrap.Col>
+        ) : null;
+    },
     render: function () {
+        const theme = this.getTheme();
         return (
             <div className="alarm-form" style={{height: "100%"}}>
-                <div style={R.merge(styles.colVerticalPadding, {height: "100%", overflow: "auto"})}>
+                <div style={R.merge(styles(theme).colVerticalPadding, {height: "100%", overflow: "auto"})}>
                     <Radium.Style
                         rules={{
                             ".input-group-addon": {
-                                backgroundColor: colors.white,
+                                backgroundColor: theme.colors.white,
                                 borderTop: "0",
                                 borderRight: "0",
                                 borderBottomRightRadius: "0",
@@ -314,65 +366,21 @@ var AlarmForm = React.createClass({
                         }}
                         scopeSelector=".alarm-form"
                     />
-                <div style={{height: "calc(100vh - 420px)"}}>
-                    <bootstrap.Col lg={6} md={6} xs={12}>
-                        <components.TutorialAnchor
-                            message={tutorialString.alarmForm.siti}
-                            order={1}
-                            position="right"
-                            ref="siti"
-                        >
-                            {this.renderAlarmSelectSite()}
-                        </components.TutorialAnchor>
-                    </bootstrap.Col>
-                    <bootstrap.Col lg={6} md={6} xs={12}>
-                        <components.TutorialAnchor
-                            message={tutorialString.alarmForm.threshold}
-                            order={2}
-                            position="left"
-                            ref="threshold"
-                        >
-                            {this.renderAlarmThreshold()}
-                        </components.TutorialAnchor>
-                    </bootstrap.Col>
-                    <bootstrap.Col lg={6} md={6} xs={12}>
-                        <components.TutorialAnchor
-                            message={tutorialString.alarmForm.name}
-                            order={3}
-                            position="right"
-                            ref="name"
-                        >
-                            {this.renderAlarmName()}
-                        </components.TutorialAnchor>
-                        <components.TutorialAnchor
-                            message={tutorialString.alarmForm.notification}
-                            order={5}
-                            position="right"
-                            ref="notification"
-                        >
-                            {this.renderAlarmNotification()}
-                        </components.TutorialAnchor>
-                    </bootstrap.Col>
-                    <bootstrap.Col lg={6} md={6} xs={12}>
-                            {this.renderAlarmActive()}
-                    </bootstrap.Col>
-                    <bootstrap.Col lg={6} md={6} xs={12}>
-                        <components.TutorialAnchor
-                            message={tutorialString.alarmForm.repetition}
-                            order={4}
-                            position="left"
-                            ref="repetition"
-                        >
-                            {this.renderAlarmRepetition()}
-                        </components.TutorialAnchor>
+                    <div style={{height: "calc(100vh - 420px)"}}>
+                        {this.renderAutomaticAlarmBanner()}
+                        {this.renderAlarmSelectSite()}
+                        {this.renderAlarmThreshold()}
+                        {this.renderAlarmName()}
+                        {this.renderAlarmNotification()}
+                        {this.renderAlarmActive()}
+                        {this.renderAlarmRepetition()}
+                    </div>
+                    <bootstrap.Col style={{paddingTop: "8vh", textAlign: "center"}} xs={12}>
+                        {this.renderSubmitButton()}
+                        {this.renderResetButton()}
                     </bootstrap.Col>
                 </div>
-                <bootstrap.Col style={{paddingTop: "8vh", textAlign: "center"}} xs={12}>
-                    {this.renderSubmitButton()}
-                    {this.renderResetButton()}
-                </bootstrap.Col>
             </div>
-        </div>
         );
     }
 });

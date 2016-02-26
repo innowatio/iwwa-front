@@ -1,348 +1,182 @@
-var Immutable  = require("immutable");
-var moment     = require("moment");
-var Radium     = require("radium");
-var R          = require("ramda");
-var React      = require("react");
-var IPropTypes = require("react-immutable-proptypes");
+import React, {PropTypes} from "react";
+import {Map} from "immutable";
+import {range} from "ramda";
+import moment from "moment";
+import ReactPureRender from "react-addons-pure-render-mixin";
+import IPropTypes from "react-immutable-proptypes";
 
-var colors      = require("lib/colors");
-var components  = require("components");
-var formatValue = require("./format-value.js");
+import components from "components";
+import readingsDailyAggregatesToDygraphData from "lib/readings-daily-aggregates-to-dygraph-data";
+import {defaultTheme} from "lib/theme";
 
 var DateCompare = React.createClass({
     propTypes: {
-        dateCompare: React.PropTypes.shape({
-            period: React.PropTypes.object,
-            dateOne: React.PropTypes.date
-        }),
+        chart: PropTypes.arrayOf(PropTypes.object).isRequired,
+        getYLabel: React.PropTypes.func.isRequired,
         misure: IPropTypes.map,
-        siti: React.PropTypes.arrayOf(IPropTypes.map),
-        tipologia: React.PropTypes.object,
-        valori: React.PropTypes.arrayOf(React.PropTypes.object)
+        sites: React.PropTypes.arrayOf(IPropTypes.map)
     },
-    mixins: [React.addons.PureRenderMixin],
-    getDateRanges: function () {
-        var dc = this.props.dateCompare;
-        if (dc.period.key === "7 days before") {
-            return {
-                rangeOne: {
-                    start: moment(dc.dateOne).subtract(1, "days").valueOf(),
-                    end: dc.dateOne.getTime()
-                },
-                rangeTwo: {
-                    start: moment(dc.dateOne).subtract(1, "weeks").subtract(1, "days").valueOf(),
-                    end: moment(dc.dateOne).subtract(1, "weeks").valueOf()
-                }
-            };
-        }
-        if (dc.period.key === "years") {
-            return {
-                rangeOne: {
-                    start: moment(dc.dateOne).subtract(5, "weeks").valueOf(),
-                    end: dc.dateOne.getTime()
-                },
-                rangeTwo: {
-                    start: moment(dc.dateOne).subtract(57, "weeks").valueOf(),
-                    end: moment(dc.dateOne).subtract(53, "weeks").valueOf()
-                }
-            };
-        }
-        if (dc.period.key === "months") {
-            return {
-                rangeOne: {
-                    start: moment(dc.dateOne).subtract(5, "weeks").valueOf(),
-                    end: dc.dateOne.getTime()
-                },
-                rangeTwo: {
-                    start: moment(dc.dateOne).subtract(10, "weeks").valueOf(),
-                    end: moment(dc.dateOne).subtract(5, "weeks").valueOf()
-                }
-            };
-        }
-        return {
-            rangeOne: {
-                start: moment(dc.dateOne).subtract(1, dc.period.key).valueOf(),
-                end: dc.dateOne.getTime()
-            },
-            rangeTwo: {
-                start: moment(dc.dateOne).subtract(2, dc.period.key).valueOf(),
-                end: moment(dc.dateOne).subtract(1, dc.period.key).valueOf()
-            }
-        };
+    contextTypes: {
+        theme: PropTypes.object
+    },
+    mixins: [ReactPureRender],
+    getTheme: function () {
+        return this.context.theme || defaultTheme;
+    },
+    getDatesFromChartState: function () {
+        return this.props.chart.map(singleSelection => singleSelection.date);
     },
     getCoordinates: function () {
-        var self = this;
-        var sito = self.props.siti[0] || Immutable.Map();
-        var pod = sito.get("pod");
-        var ranges = self.getDateRanges();
-        var valore = self.props.valori[0];
-        return self.props.misure
-            .filter(function (misura) {
-                return misura.get("pod") === pod;
-            })
-            .filter(function (misura) {
-                return misura.get("tipologia") === self.props.tipologia.key;
-            })
-            .reduce(function (acc, misura) {
-                var date = moment(misura.get("data")).valueOf();
-                if (
-                    moment(date).isBetween(ranges.rangeOne.start, ranges.rangeOne.end)
-                ) {
-                    acc = acc.withMutations(function (map) {
-                        var position = date - ranges.rangeOne.start;
-                        var value = map.get(position) || [position, null, null];
-                        value[1] = formatValue(misura.get(valore.key));
-                        map.set(position, value);
-                    });
-                }
-                if (
-                    moment(date).isBetween(ranges.rangeTwo.start, ranges.rangeTwo.end)
-                ) {
-                    acc = acc.withMutations(function (map) {
-                        var position = date - ranges.rangeTwo.start;
-                        var value = map.get(position) || [position, null, null];
-                        value[2] = formatValue(misura.get(valore.key));
-                        map.set(position, value);
-                    });
-                }
-                return acc;
-            }, Immutable.Map())
-            .toList()
-            .sort(function (m1, m2) {
-                return (m1[0] < m2[0] ? -1 : 1);
-            })
-            .toArray();
+        return readingsDailyAggregatesToDygraphData(this.props.misure, this.props.chart);
     },
     getLabels: function () {
-        if (this.props.dateCompare.period.key === "7 days before") {
-            return ["Data"].concat([
-                moment(this.props.dateCompare.dateOne).subtract(1, "days").format("MMM DD, YYYY"),
-                moment(this.props.dateCompare.dateOne).subtract(1, "weeks").subtract(1, "days").format("MMM DD, YYYY")
-            ]);
-        }
-        if (this.props.dateCompare.period.key === "months") {
-            return ["Data"].concat([
-                moment(this.props.dateCompare.dateOne).subtract(5, "weeks").format("MMM DD, YYYY"),
-                moment(this.props.dateCompare.dateOne).subtract(10, "weeks").format("MMM DD, YYYY")
-            ]);
-        }
-        if (this.props.dateCompare.period.key === "years") {
-            return ["Data"].concat([
-                moment(this.props.dateCompare.dateOne).subtract(5, "weeks").format("MMM DD, YYYY"),
-                moment(this.props.dateCompare.dateOne).subtract(57, "weeks").format("MMM DD, YYYY")
-            ]);
-        }
+        const dates = this.getDatesFromChartState();
         return ["Data"].concat([
-            moment(this.props.dateCompare.dateOne).subtract(1, this.props.dateCompare.period.key).format("MMM DD, YYYY"),
-            moment(this.props.dateCompare.dateOne).subtract(2, this.props.dateCompare.period.key).format("MMM DD, YYYY")
+            moment.utc(dates[0].start).format("MMM DD, YYYY"),
+            moment.utc(dates[1].start).format("MMM DD, YYYY")
         ]);
     },
     getDateWindow: function () {
-        if (this.props.dateCompare.period.key === "7 days before") {
-            return [
-                0,
-                moment(0).add(1, "days").valueOf()
-            ];
+        const {period, start} = this.props.chart[0].date;
+        if (period.key === "years" || period.key === "months") {
+            // Get date window from 0 (1 Jan 1970) to 5 or 6 weeks later (this is
+            // found from the function `weeksToAdd`).
+            const endDate = moment.utc(start).add({weeks: this.weeksToAdd()}).endOf("isoWeek");
+            const numberOfDayToEndDate = moment(endDate).diff(start, "days");
+            return {
+                start,
+                dayToAdd: this.weeksToAdd() * 8,
+                dateArray: [moment.utc(0).valueOf(), moment.utc(0).add({days: numberOfDayToEndDate + 1}).valueOf()]
+            };
         }
-        if (this.props.dateCompare.period.key === "years" || this.props.dateCompare.period.key === "months") {
-            return [
-                0,
-                moment(0).add(5, "weeks").valueOf()
-            ];
+        if (period.key === "7 days before") {
+            return {
+                start,
+                dayToAdd: 1,
+                dateArray: [moment.utc(0).valueOf(), moment.utc(0).add({day: 1}).valueOf()]
+            };
         }
-        return [
-            0,
-            moment(0).add(1, this.props.dateCompare.period.key).valueOf()
-        ];
+        const endDate = moment.utc(start).add(1, period.key).endOf("day");
+        // We add a day to count the last day, that end at the 23:59:59.
+        const numberOfDayToEndDate = moment(endDate).diff(start, "days");
+        return {
+            start,
+            dayToAdd: numberOfDayToEndDate,
+            dateArray: [moment.utc(0).valueOf(), moment.utc(0).add({days: numberOfDayToEndDate}).valueOf()]
+        };
+    },
+    weeksToAdd: function () {
+        const {start, end} = this.props.chart[0].date;
+        return moment.utc(end).diff(start, "weeks");
     },
     xLegendFormatter: function (value) {
-        var date = moment(value);
         return [
             "<b style='color:black;'>",
-            "Giorno " + date.format("DD"),
+            "Giorno " + moment.utc(value).diff(0, "days"),
             ", ",
-            "ore " + date.format("HH:mm"),
+            "ore " + moment.utc(value).format("HH:mm"),
             "</b>"
         ].join("");
     },
+    getXTickerLabel: function (delta, rangeOne, rangeTwo) {
+        return {
+            v: delta,
+            label: [
+                "<small>" + rangeOne + "</small>",
+                "<small style='color:red;'>" + rangeTwo + "</small>"
+            ].join("<br />")
+        };
+    },
     xTicker: function () {
-        var self = this;
-        if (self.props.dateCompare.period.key === "days") {
-            return R.range(0, 25).map(function (n) {
-                var delta = moment(0).add(n, "hours").valueOf();
+        const self = this;
+        const {period} = self.props.chart[0].date;
+        const dates = this.getDatesFromChartState();
+        if (period.key === "days" || period.key === "7 days before") {
+            // Range of 24h.
+            return range(0, 25).map(n => {
+                const delta = moment.utc(0).add(n, "hours").valueOf();
+                var rangeOne = moment.utc(dates[0].start).add(n, "hours");
+                var rangeTwo = moment.utc(dates[1].start).add(n, "hours");
                 if (n === 0) {
-                    return {
-                        v: delta,
-                        label: [
-                            "<small>" + moment(self.props.dateCompare.dateOne)
-                                .subtract(1, "days").add(n, "hours").format("DD MMM") + "</small>",
-                            "<small style='color:red;'>" + moment(self.props.dateCompare.dateOne)
-                                .subtract(2, "days").add(n, "hours").format("DD MMM") + "</small>"
-                        ].join("<br />")
-                    };
+                    // In the first tick of the day, write day and month.
+                    rangeOne = moment.utc(rangeOne).format("DD MMM");
+                    rangeTwo = moment.utc(rangeTwo).format("DD MMM");
+                } else {
+                    // In the other tick, write hour and minutes.
+                    rangeOne = moment.utc(rangeOne).format("HH:mm");
+                    rangeTwo = moment.utc(rangeTwo).format("HH:mm");
                 }
-                return {
-                    v: delta,
-                    label: [
-                        "<small>" + moment(self.props.dateCompare.dateOne)
-                            .subtract(1, "days").add(n, "hours").format("HH:mm") + "</small>",
-                        "<small style='color:red;'>" + moment(self.props.dateCompare.dateOne)
-                            .subtract(2, "days").add(n, "hours").format("HH:mm") + "</small>"
-                    ].join("<br />")
-                };
+                return self.getXTickerLabel(delta, rangeOne, rangeTwo);
             });
         }
-        if (self.props.dateCompare.period.key === "7 days before") {
-            return R.range(0, 25).map(function (n) {
-                var delta = moment(0).add(n, "hours").valueOf();
-                if (n === 0) {
-                    return {
-                        v: delta,
-                        label: [
-                            "<small>" + moment(self.props.dateCompare.dateOne)
-                                .subtract(1, "days").add(n, "hours").format("DD MMM") + "</small>",
-                            "<small style='color:red;'>" + moment(self.props.dateCompare.dateOne)
-                                .subtract({weeks: 1, days: 1}).add(n, "hours").format("DD MMM") + "</small>"
-                        ].join("<br />")
-                    };
-                }
-                return {
-                    v: delta,
-                    label: [
-                        "<small>" + moment(self.props.dateCompare.dateOne)
-                            .subtract(1, "days").add(n, "hours").format("HH:mm") + "</small>",
-                        "<small style='color:red;'>" + moment(self.props.dateCompare.dateOne)
-                            .subtract({weeks: 1, days: 1}).add(n, "hours").format("HH:mm") + "</small>"
-                    ].join("<br />")
-                };
+        if (period.key === "week") {
+            // Range of 1 week --> 7 days.
+            return range(0, 8).map(function (n) {
+                const delta = moment.utc(0).add(n, "days").valueOf();
+                const rangeOne = moment.utc(dates[0].start).add(n, "days").format("DD MMM");
+                const rangeTwo = moment.utc(dates[1].start).add(n, "days").format("DD MMM");
+                return self.getXTickerLabel(delta, rangeOne, rangeTwo);
             });
         }
-        if (self.props.dateCompare.period.key === "weeks") {
-            return R.range(0, 8).map(function (n) {
-                var delta = moment(0).add(n, "days").valueOf();
-                return {
-                    v: delta,
-                    label: [
-                        "<small>" + moment(self.props.dateCompare.dateOne)
-                        .subtract(1, "weeks").add(n, "days").format("DD MMM") + "</small>",
-                        "<small style='color:red;'>" + moment(self.props.dateCompare.dateOne)
-                        .subtract(2, "weeks").add(n, "days").format("DD MMM") + "</small>"
-                    ].join("<br />")
-                };
-            });
-        }
-        if (self.props.dateCompare.period.key === "months") {
-            return R.range(0, 36).map(function (n) {
-                var delta = moment(0).add(n, "days").valueOf();
-                if (n === 0) {
-                    return {
-                        v: delta,
-                        label: [
-                            "<small>" + moment(self.props.dateCompare.dateOne)
-                                .subtract(5, "weeks").add(n, "days").format("DD MMM") + "</small>",
-                            "<small style='color:red;'>" + moment(self.props.dateCompare.dateOne)
-                                .subtract(10, "weeks").add(n, "days").format("DD MMM") + "</small>"
-                        ].join("<br />")
-                    };
+        if (period.key === "months" || period.key === "years") {
+            // Range of 5 or 6 weeks --> (5 || 6) * 7 days.
+            return range(0, (this.weeksToAdd() * 8) + 2).map(n => {
+                const delta = moment.utc(0).add(n, "days").valueOf();
+                var rangeOne = moment.utc(dates[0].start).add(n, "days");
+                var rangeTwo = moment.utc(dates[1].start).add(n, "days");
+                if (n === 0 && period.key === "months") {
+                    // In the first tick of the month, write the day and the month.
+                    rangeOne = moment.utc(rangeOne).format("DD MMM");
+                    rangeTwo = moment.utc(rangeTwo).format("DD MMM");
+                } else if (n === 0 && period.key === "years") {
+                    // In the first tick of the year, write the year.
+                    rangeOne = moment.utc(rangeOne).format("YYYY");
+                    rangeTwo = moment.utc(rangeTwo).format("YYYY");
+                } else if (n === 1 && period.key === "years") {
+                    // In the second tick of the year, write the day and the month.
+                    rangeOne = moment.utc(rangeOne).format("DD MMM");
+                    rangeTwo = moment.utc(rangeTwo).format("DD MMM");
+                } else if (rangeOne.format("DD") === "01") {
+                    // If is the first of the month, write also the month.
+                    rangeOne = moment.utc(rangeOne).format("DD MMM");
+                    rangeTwo = moment.utc(rangeTwo).format("DD");
+                } else if (rangeTwo.format("DD") === "01") {
+                    // If is the first of the month, write also the month.
+                    rangeOne = moment.utc(rangeOne).format("DD");
+                    rangeTwo = moment.utc(rangeTwo).format("DD MMM");
+                } else {
+                    // In the other cases, write only the day
+                    rangeOne = moment.utc(rangeOne).format("DD");
+                    rangeTwo = moment.utc(rangeTwo).format("DD");
                 }
-                if (moment(self.props.dateCompare.dateOne).subtract(5, "weeks").add(n, "days").format("DD") === "01") {
-                    return {
-                        v: delta,
-                        label: [
-                            "<small>" + moment(self.props.dateCompare.dateOne)
-                                .subtract(5, "weeks").add(n, "days").format("DD MMM") + "</small>",
-                            "<small style='color:red;'>" + moment(self.props.dateCompare.dateOne)
-                                .subtract(10, "weeks").add(n, "days").format("DD") + "</small>"
-                        ].join("<br />")
-                    };
-                }
-                if (moment(self.props.dateCompare.dateOne).subtract(10, "weeks").add(delta).format("DD") === "01") {
-                    return {
-                        v: delta,
-                        label: [
-                            "<small>" + moment(self.props.dateCompare.dateOne)
-                                .subtract(5, "weeks").add(n, "days").format("DD") + "</small>",
-                            "<small style='color:red;'>" + moment(self.props.dateCompare.dateOne)
-                                .subtract(10, "weeks").add(n, "days").format("DD MMM") + "</small>"
-                        ].join("<br />")
-                    };
-                }
-                return {
-                    v: delta,
-                    label: [
-                        "<small>" + moment(self.props.dateCompare.dateOne)
-                            .subtract(5, "weeks").add(n, "days").format("DD") + "</small>",
-                        "<small style='color:red;'>" + moment(self.props.dateCompare.dateOne)
-                            .subtract(10, "weeks").add(n, "days").format("DD") + "</small>"
-                    ].join("<br />")
-                };
-            });
-        }
-        if (self.props.dateCompare.period.key === "years") {
-            return R.range(0, 36).map(function (n) {
-                var delta = moment(0).add(n, "days").valueOf();
-                if (n === 0) {
-                    return {
-                        v: delta,
-                        label: [
-                            "<small>" + moment(self.props.dateCompare.dateOne)
-                                .subtract(5, "weeks").add(n, "days").format("YYYY") + "</small>",
-                            "<small style='color:red;'>" + moment(self.props.dateCompare.dateOne)
-                                .subtract(57, "weeks").add(n, "days").format("YYYY") + "</small>"
-                        ].join("<br />")
-                    };
-                }
-                if (moment(self.props.dateCompare.dateOne).subtract(5, "weeks").add(n, "days").format("DD") === "01") {
-                    return {
-                        v: delta,
-                        label: [
-                            "<small>" + moment(self.props.dateCompare.dateOne)
-                                .subtract(5, "weeks").add(n, "days").format("DD MMM") + "</small>",
-                            "<small style='color:red;'>" + moment(self.props.dateCompare.dateOne)
-                                .subtract(57, "weeks").add(n, "days").format("DD") + "</small>"
-                        ].join("<br />")
-                    };
-                }
-                if (moment(self.props.dateCompare.dateOne).subtract(53, "weeks").subtract(4, "weeks").add(delta).format("DD") === "01") {
-                    return {
-                        v: delta,
-                        label: [
-                            "<small>" + moment(self.props.dateCompare.dateOne)
-                                .subtract(5, "weeks").add(n, "days").format("DD") + "</small>",
-                            "<small style='color:red;'>" + moment(self.props.dateCompare.dateOne)
-                                .subtract(57, "weeks").add(n, "days").format("DD MMM") + "</small>"
-                        ].join("<br />")
-                    };
-                }
-                return {
-                    v: delta,
-                    label: [
-                        "<small>" + moment(self.props.dateCompare.dateOne)
-                            .subtract(5, "weeks").add(n, "days").format("DD") + "</small>",
-                        "<small style='color:red;'>" + moment(self.props.dateCompare.dateOne)
-                            .subtract(57, "weeks").add(n, "days").format("DD") + "</small>"
-                    ].join("<br />")
-                };
+                return self.getXTickerLabel(delta, rangeOne, rangeTwo);
             });
         }
         return [];
     },
     render: function () {
-        var valori = this.props.valori[0];
+        const source = this.props.chart[0].source;
+        const {colors} = this.getTheme();
+        /*
+        *   `y2label` is empty. It's a workaround to prevent this dygraph
+        *    bug: https://github.com/danvk/dygraphs/issues/629
+        */
         return (
             <components.TemporalLineGraph
-                colors={[valori.color, colors.lineCompare]}
+                colors={[source.color, colors.lineCompare]}
                 coordinates={this.getCoordinates()}
                 dateWindow={this.getDateWindow()}
                 labels={this.getLabels()}
                 lockInteraction={true}
                 ref="temporalLineGraph"
-                sito={this.props.siti[0] || Immutable.Map()}
+                site={this.props.sites[0] || Map()}
                 xLegendFormatter={this.xLegendFormatter}
                 xTicker={this.xTicker}
-                yLabel="kWh"/>
+                y2label={" "}
+                yLabel={this.props.getYLabel(this.props.chart[0].sensorId)}
+            />
         );
     }
 });
 
-module.exports = Radium(DateCompare);
+module.exports = DateCompare;

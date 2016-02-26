@@ -1,104 +1,90 @@
-var bootstrap  = require("react-bootstrap");
-var Radium     = require("radium");
-var React      = require("react");
-var Router     = require("react-router");
-var R          = require("ramda");
+import {Nav} from "react-bootstrap";
+import React, {PropTypes} from "react";
+import {Link} from "react-router";
+import {merge, partial} from "ramda";
+import {Style} from "radium";
+import * as components from "components";
 
-var colors   = require("lib/colors");
-var measures = require("lib/measures");
+import {defaultTheme} from "lib/theme";
+import * as measures from "lib/measures";
 
-var styles = {
-    sidebar: {
-        height: "100%",
-        borderRightWidth: "1px",
-        borderRightStyle: "solid",
-        borderRightColor: colors.primary,
-        backgroundColor: colors.white,
-        zIndex: 1040// ,
-        // "@media only screen": {
-        //     left: "-" + measures.sidebarWidth
-        // }
-    },
-    hamburger: {
-        height: measures.headerHeight,
-        backgroundColor: colors.primary,
-        fontSize: "35px",
-        textAlign: "left",
-        paddingRight: "15px",
-        paddingTop: "5px",
-        cursor: "pointer"
-    },
+const stylesFunction = ({colors}) => ({
     menu: {
         position: "absolute",
         width: "100%"
     },
     activeLink: {
-        borderLeft: "4px solid " + colors.primary,
         borderRadius: "0px",
-        backgroundColor: colors.greyLight
-    },
-    iconsBar: {
-        height: "100%",
-        zIndex: 1041,
-        borderRightWidth: "1px",
-        borderRightStyle: "solid",
-        borderRightColor: colors.primary,
-        backgroundColor: colors.white
+        backgroundColor: colors.navBackgroundSelected
     },
     sideLabel: {
-        color: colors.primary,
-        marginLeft: "10px",
-        verticalAlign: "middle",
-        height: "100%"
+        color: colors.navText,
+        margin: "0 0 0 10px",
+        height: "30px",
+        padding: "10px auto",
+        lineHeight: "40px"
     }
-};
+});
 
 var SideNav = React.createClass({
     propTypes: {
-        items: React.PropTypes.arrayOf(
-            React.PropTypes.object
+        items: PropTypes.arrayOf(
+            PropTypes.object
         ),
-        linkClickAction: React.PropTypes.func,
-        style: React.PropTypes.object,
-        toggleSidebar: React.PropTypes.func.isRequired
+        linkClickAction: PropTypes.func,
+        sidebarOpen: PropTypes.bool,
+        style: PropTypes.object
+    },
+    contextTypes: {
+        theme: PropTypes.object,
+        router: PropTypes.object
     },
     getInitialState: function () {
         return {
             visible: false
         };
     },
+    getTheme: function () {
+        return this.context.theme || defaultTheme;
+    },
     resetTutorial: function () {
-        localStorage[`hideTutorialOnPage_historicalGraph`] = false;
-        localStorage[`hideTutorialOnPage_alarm-form`] = false;
+        localStorage["hideTutorialOnPage_historicalGraph"] = false;
+        localStorage["hideTutorialOnPage_alarm-form"] = false;
         this.props.linkClickAction();
         location.reload();
     },
-    renderIconSideBar: function (menuItem) {
-        return (
-            <li key={menuItem.iconPath} style={{height: "55px"}}>
-                <img src={menuItem.iconPath} style={{float: "right", width: "30px"}} />
-            </li>
-        );
-    },
-    renderNavItem: function (menuItem) {
-        return !R.isNil(menuItem.url) ? (
-            <li key={menuItem.iconPath}>
-                <Router.Link
+    renderNavItem: function (styles, menuItem) {
+        // Not all the menuItem have the `url` key. If not, it's set to empty
+        // string.
+        const active = this.context.router.isActive(menuItem.url || "");
+        return menuItem.url ? (
+            <li key={menuItem.key}>
+                <Link
                     activeStyle={styles.activeLink}
                     onClick={this.props.linkClickAction}
-                    style={{height: "55px"}}
+                    style={{cursor: "pointer", padding: "15px 10px"}}
                     to={menuItem.url}
                 >
-                    <img src={menuItem.iconPath} style={{float: "left", width: "30px"}} />
+                    <components.Icon
+                        color={active ? this.getTheme().colors.iconSidenavActive : this.getTheme().colors.iconSidenav}
+                        icon={menuItem.iconClassName}
+                        size={"35px"}
+                        style={{verticalAlign: "text-top", lineHeight: "26px"}}
+                    />
                     <span style={styles.sideLabel}>
                         {menuItem.label}
                     </span>
-                </Router.Link>
+                </Link>
             </li>
         ) : (
-            <li key={menuItem.iconPath} onClick={this.resetTutorial} style={{cursor: "pointer"}}>
-                <a style={{height: "55px"}}>
-                    <img src={menuItem.iconPath} style={{float: "left", width: "30px"}} />
+            <li className={"navigationItem"} key={menuItem.key} onClick={this.resetTutorial} style={{cursor: "pointer", padding: "5px 0px"}}>
+                <a style={{cursor: "pointer", padding: "15px 10px"}}>
+                    <components.Icon
+                        color={this.getTheme().colors.iconSidenav}
+                        icon={menuItem.iconClassName}
+                        size={"35px"}
+                        style={{verticalAlign: "text-top", lineHeight: "26px"}}
+                    />
                     <span style={styles.sideLabel}>
                         {menuItem.label}
                     </span>
@@ -107,16 +93,28 @@ var SideNav = React.createClass({
         );
     },
     render: function () {
+        const styles = merge(stylesFunction(this.getTheme()), {
+            left: (this.state.sidebarOpen ?
+            "0px" :
+            `-${measures.sidebarWidth}px`)
+        });
         return (
-            <div style={[styles.sidebar, this.props.style]}>
+            <div style={this.props.style}>
                 <div id="menu" style={styles.menu}>
-                    <bootstrap.Nav bsStyle="pills" stacked >
-                        {this.props.items.map(this.renderNavItem)}
-                    </bootstrap.Nav>
+                    <Style
+                        rules={{".nav > li > a:hover": styles.activeLink}}
+                    />
+                    <Nav bsStyle="pills" stacked={true} >
+                        {
+                            this.props.items.map(
+                                partial(this.renderNavItem, [styles])
+                            )
+                        }
+                    </Nav>
                 </div>
             </div>
         );
     }
 });
 
-module.exports = Radium(SideNav);
+module.exports = SideNav;
