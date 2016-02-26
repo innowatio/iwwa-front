@@ -6,7 +6,7 @@ import {Link} from "react-router";
 import {bindActionCreators} from "redux";
 import {deleteSensor, cloneSensor, favoriteSensor, monitorSensor, selectSensor, combineSensor} from "actions/sensors";
 import {selectChartType} from "actions/monitoring-chart";
-import {DropdownSelect, MonitoringChart, ObjectSelect} from "components";
+import {MonitoringChart, ObjectSelect} from "components";
 
 const chartTypes = [
     {label: "Area", id: "areaspline"},
