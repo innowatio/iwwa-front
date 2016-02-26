@@ -11,7 +11,7 @@ class ObjectSelect extends Component {
         onBlur: PropTypes.func.isRequired,
         onChange: PropTypes.func.isRequired,
         options: PropTypes.arrayOf(PropTypes.shape({
-            id: PropTypes.number.isRequired,
+            id: PropTypes.any.isRequired,
             label: PropTypes.string.isRequired
         })),
         value: PropTypes.any // array or individual value
@@ -45,4 +45,4 @@ class ObjectSelect extends Component {
     }
 }
 
-export default ObjectSelect;
+module.exports = ObjectSelect;

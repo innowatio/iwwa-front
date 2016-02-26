@@ -5,24 +5,15 @@ import {connect} from "react-redux";
 import {Link} from "react-router";
 import {bindActionCreators} from "redux";
 import {deleteSensor, cloneSensor, favoriteSensor, monitorSensor, selectSensor, combineSensor} from "actions/sensors";
+import {selectChartType} from "actions/monitoring-chart";
+import {DropdownSelect, MonitoringChart, ObjectSelect} from "components";
 
-const mapStateToProps = (state) => {
-    return {
-        sensors: state.sensors.allSensors,
-        selected: state.sensors.selectedSensors
-    };
-};
-
-const mapDispatchToProps = (dispatch) => {
-    return {
-        cloneSensor: bindActionCreators(cloneSensor, dispatch),
-        combineSensor: bindActionCreators(combineSensor, dispatch),
-        deleteSensor: bindActionCreators(deleteSensor, dispatch),
-        favoriteSensor: bindActionCreators(favoriteSensor, dispatch),
-        monitorSensor: bindActionCreators(monitorSensor, dispatch),
-        selectSensor: bindActionCreators(selectSensor, dispatch)
-    };
-};
+const chartTypes = [
+    {label: "Area", id: "areaspline"},
+    {label: "Istogramma", id: "column"},
+    {label: "In pila", id: "stacked"},
+    {label: "In pila percentuale", id: "percent"}
+];
 
 var Monitoring = React.createClass({
     propTypes: {
@@ -31,6 +22,8 @@ var Monitoring = React.createClass({
         deleteSensor: React.PropTypes.func.isRequired,
         favoriteSensor: React.PropTypes.func.isRequired,
         monitorSensor: React.PropTypes.func.isRequired,
+        monitoringChart: React.PropTypes.object.isRequired,
+        selectChartType: React.PropTypes.func.isRequired,
         selectSensor: React.PropTypes.func.isRequired,
         selected: React.PropTypes.array,
         sensors: React.PropTypes.array.isRequired
@@ -116,9 +109,38 @@ var Monitoring = React.createClass({
                     columns={this.getColumns()}
                     onRowClick={this.props.selectSensor}
                 />
+                <div>
+                    <ObjectSelect
+                        options={chartTypes}
+                        onBlur={this.props.selectChartType}
+                        onChange={this.props.selectChartType}
+                        value={this.props.monitoringChart.type}
+                    />
+                    <MonitoringChart series={this.props.selected} type={this.props.monitoringChart.type} />
+                </div>
             </div>
         );
     }
 });
+
+const mapStateToProps = (state) => {
+    return {
+        monitoringChart: state.monitoringChart,
+        selected: state.sensors.selectedSensors,
+        sensors: state.sensors.allSensors
+    };
+};
+
+const mapDispatchToProps = (dispatch) => {
+    return {
+        cloneSensor: bindActionCreators(cloneSensor, dispatch),
+        combineSensor: bindActionCreators(combineSensor, dispatch),
+        deleteSensor: bindActionCreators(deleteSensor, dispatch),
+        favoriteSensor: bindActionCreators(favoriteSensor, dispatch),
+        monitorSensor: bindActionCreators(monitorSensor, dispatch),
+        selectChartType: bindActionCreators(selectChartType, dispatch),
+        selectSensor: bindActionCreators(selectSensor, dispatch)
+    };
+};
 
 module.exports = connect(mapStateToProps, mapDispatchToProps)(Monitoring);

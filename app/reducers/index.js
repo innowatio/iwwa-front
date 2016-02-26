@@ -7,6 +7,7 @@ import {collections} from "./collections";
 import {chart} from "./chart";
 import {consumptions} from "./consumptions";
 import {alarms} from "./alarms";
+import {monitoringChart} from "./monitoring-chart";
 import {realTime} from "./real-time";
 import {userSetting} from "./user-setting";
 import {sensors} from "./sensors";
@@ -16,6 +17,7 @@ const rootReducer = storage.reducer(combineReducers({
     chart,
     consumptions,
     alarms,
+    monitoringChart,
     realTime,
     userSetting,
     form,
@@ -24,10 +26,3 @@ const rootReducer = storage.reducer(combineReducers({
 }));
 
 export default rootReducer;
-
-
-//TODO differenze da capire
-
-//export default combineReducers({
-//    routing,
-//});

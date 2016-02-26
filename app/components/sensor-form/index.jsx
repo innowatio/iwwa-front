@@ -2,7 +2,7 @@ import React from "react";
 import Icon from "components/icon";
 import TagsInput from "react-tagsinput";
 import {reduxForm} from "redux-form";
-import ObjectSelect from "components/object-select";
+import {ObjectSelect} from "components";
 
 export const fields = ["name", "description", "unitOfMeasurement", "aggregationType", "siteRef", "clientRef", "tags", "alarmDelay"];
 
