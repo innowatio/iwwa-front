@@ -5,18 +5,12 @@ import {connect} from "react-redux";
 import {Link} from "react-router";
 import {bindActionCreators} from "redux";
 import {deleteSensor, cloneSensor, favoriteSensor, monitorSensor, selectSensor, combineSensor} from "actions/sensors";
-import {selectChartType} from "actions/monitoring-chart";
-import {MonitoringChart, ObjectSelect} from "components";
-
-const chartTypes = [
-    {label: "Area", id: "areaspline"},
-    {label: "Istogramma", id: "column"},
-    {label: "In pila", id: "stacked"},
-    {label: "In pila percentuale", id: "percent"}
-];
+import {addToFavorite, selectChartType} from "actions/monitoring-chart";
+import {MonitoringChart} from "components";
 
 var Monitoring = React.createClass({
     propTypes: {
+        addToFavorite: React.PropTypes.func.isRequired,
         cloneSensor: React.PropTypes.func.isRequired,
         combineSensor: React.PropTypes.func.isRequired,
         deleteSensor: React.PropTypes.func.isRequired,
@@ -109,15 +103,12 @@ var Monitoring = React.createClass({
                     columns={this.getColumns()}
                     onRowClick={this.props.selectSensor}
                 />
-                <div>
-                    <ObjectSelect
-                        options={chartTypes}
-                        onBlur={this.props.selectChartType}
-                        onChange={this.props.selectChartType}
-                        value={this.props.monitoringChart.type}
-                    />
-                    <MonitoringChart series={this.props.selected} type={this.props.monitoringChart.type} />
-                </div>
+                <MonitoringChart
+                    addToFavorite={this.props.addToFavorite}
+                    selectChartType={this.props.selectChartType}
+                    series={this.props.selected}
+                    type={this.props.monitoringChart.type}
+                />
             </div>
         );
     }
@@ -133,6 +124,7 @@ const mapStateToProps = (state) => {
 
 const mapDispatchToProps = (dispatch) => {
     return {
+        addToFavorite: bindActionCreators(addToFavorite, dispatch),
         cloneSensor: bindActionCreators(cloneSensor, dispatch),
         combineSensor: bindActionCreators(combineSensor, dispatch),
         deleteSensor: bindActionCreators(deleteSensor, dispatch),
