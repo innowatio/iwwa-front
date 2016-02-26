@@ -62,12 +62,12 @@ var MonitoringChart = React.createClass({
             },
             rangeSelector: {
                 buttons: [
-                    { type: 'day', count: 1, text: '1d' },
-                    { type: 'week', count: 1, text: '1w' },
-                    { type: 'month', count: 1, text: '1m' },
-                    { type: 'year', count: 1, text: '1y' },
-                    { type: 'ytd', text: 'YTD' },
-                    { type: 'all', text: 'All' }
+                    {type: "day", count: 1, text: "1d"},
+                    {type: "week", count: 1, text: "1w"},
+                    {type: "month", count: 1, text: "1m"},
+                    {type: "year", count: 1, text: "1y"},
+                    {type: "ytd", text: "YTD"},
+                    {type: "all", text: "All"}
                 ],
                 selected: 2
             },
