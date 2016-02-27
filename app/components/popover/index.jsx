@@ -58,6 +58,7 @@ var Popover = React.createClass({
         return this.props.notClosePopoverOnClick ? null : this.refs.menuPopover.hide();
     },
     getButton: function () {
+        const theme = this.getTheme();
         return this.props.arrow === "none" ?
             <bootstrap.Button
                 style={{
@@ -65,7 +66,11 @@ var Popover = React.createClass({
                     whiteSpace: "normal",
                     outline: "0px",
                     outlineStyle: "none",
-                    outlineWidth: "0px"
+                    outlineWidth: "0px",
+                    marginTop: "10px",
+                    border: `1px solid ${theme.colors.borderSelectButton}`,
+                    color: theme.colors.mainFontColor,
+                    backgroundColor: theme.colors.backgroundSelectButton
                 }}
             >
                 {this.props.title}

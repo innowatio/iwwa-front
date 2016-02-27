@@ -14,6 +14,29 @@ var GetTutorialMixin = require("lib/get-tutorial-mixin");
 import {styles} from "lib/styles_restyling";
 import {defaultTheme} from "lib/theme";
 
+var styleH3 = ({colors}) => ({
+    fontSize: "20px",
+    lineHeight: "20px",
+    fontWeight: "400",
+    color: colors.mainFontColor
+});
+var styleH4 = ({colors}) => ({
+    color: colors.mainFontColor,
+    fontSize: "16px",
+    margin: "0",
+    padding: "0"
+});
+
+var styleSiteButton = ({colors}) => ({
+    width: "50px",
+    height: "50px",
+    padding: "0",
+    border: "0",
+    marginRight: "20px",
+    borderRadius: "100%",
+    backgroundColor: colors.secondary
+});
+
 var AlarmForm = React.createClass({
     propTypes: {
         alarm: IPropTypes.map.isRequired,
@@ -89,7 +112,7 @@ var AlarmForm = React.createClass({
         return this.state.notification;
     },
     renderAlarmSelectSite: function () {
-        const {colors} = this.getTheme();
+        const theme = this.getTheme();
         return !this.isAutomatic() ? (
             <bootstrap.Col lg={6} md={6} xs={12}>
                 <components.TutorialAnchor
@@ -99,8 +122,8 @@ var AlarmForm = React.createClass({
                     ref="siti"
                 >
                     <div>
-                        <h3 style={{color: colors.primary}}>{stringIt.titleTabImpostazioniAlarm}</h3>
-                        <h5>
+                        <h3 style={styleH3(theme)}>{stringIt.titleTabImpostazioniAlarm}</h3>
+                        <h4 style={styleH4(theme)}>
                             {"Seleziona un punto da monitorare e le soglie di allarme "}
                             <bootstrap.OverlayTrigger
                                 overlay={this.addTooltip()}
@@ -110,7 +133,7 @@ var AlarmForm = React.createClass({
                             >
                                 <components.Button  bsStyle="link">
                                     <components.Icon
-                                        color={this.getTheme().colors.iconInfo}
+                                        color={theme.colors.iconInfo}
                                         icon={"info"}
                                         size={"20px"}
                                         style={{
@@ -121,21 +144,25 @@ var AlarmForm = React.createClass({
                                     />
                                 </components.Button>
                             </bootstrap.OverlayTrigger>
-                        </h5>
-                        <components.Popover
-                            arrow="none"
-                            hideOnChange={true}
-                            title={this.renderTitleSelectSite()}
-                        >
-                            <components.SelectTree
-                                allowedValues={this.props.siti}
-                                buttonCloseDefault={true}
-                                filter={CollectionUtils.sites.filter}
-                                getKey={CollectionUtils.sites.getKey}
-                                getLabel={CollectionUtils.sites.getLabel}
-                                valueLink={this.linkState("sito")}
-                            />
-                        </components.Popover>
+                        </h4>
+                        <div style={{minHeight: "50px", margin: "0"}}>
+                            {this.renderSiteButton()}
+                            <components.Popover
+                                arrow="none"
+                                hideOnChange={true}
+                                title={this.renderTitleSelectSite()}
+                            >
+                                <components.SelectTree
+                                    allowedValues={this.props.siti}
+                                    buttonCloseDefault={true}
+                                    filter={CollectionUtils.sites.filter}
+                                    getKey={CollectionUtils.sites.getKey}
+                                    getLabel={CollectionUtils.sites.getLabel}
+                                    valueLink={this.linkState("sito")}
+                                />
+                            </components.Popover>
+                        </div>
+                        {this.renderAlarmName()}
                     </div>
                 </components.TutorialAnchor>
             </bootstrap.Col>
@@ -152,13 +179,21 @@ var AlarmForm = React.createClass({
                     ref="threshold"
                 >
                     <div>
-                        <h4 style={{color: theme.colors.primary}}>{stringIt.titleAlarmThreshold}</h4>
-                        <div style={{backgroundColor: theme.colors.greyBackground, textAlign: "center"}}>
+                        <h3 style={styleH3(theme)}>{stringIt.titleAlarmThreshold}</h3>
+                        <div style={{
+                            backgroundColor: theme.colors.backgroundSelectButton,
+                            textAlign: "center",
+                            borderRadius: "20px",
+                            border: `1px solid ${theme.colors.borderSelectButton}`,
+                            padding: "20px"
+                        }}
+                        >
                             <components.Spacer direction="v" size={3} />
                             <h4
                                 style={{
-                                    color: theme.colors.primary,
-                                    marginTop: "8px"
+                                    color: theme.colors.mainFontColor,
+                                    fontSize: "16px",
+                                    fontWeight: "300"
                                 }}
                             >
                                 {`Soglia (${this.state.threshold} kWh)`}
@@ -172,6 +207,16 @@ var AlarmForm = React.createClass({
                                 type="range"
                                 valueLink={this.linkState("threshold")}
                             />
+                            <p style={{
+                                color: theme.colors.mainFontColor,
+                                fontStyle: "italic",
+                                fontSize: "16px",
+                                fontWeight: "300",
+                                textAlign: "left"
+                            }}
+                            >
+                                {"Imposta il limite massimo "}
+                            </p>
                         </div>
                     </div>
                 </components.TutorialAnchor>
@@ -181,7 +226,7 @@ var AlarmForm = React.createClass({
     renderAlarmName: function () {
         const theme = this.getTheme();
         return (
-            <bootstrap.Col lg={6} md={6} xs={12}>
+            <div>
                 <components.TutorialAnchor
                     message={tutorialString.alarmForm.name}
                     order={3}
@@ -189,9 +234,13 @@ var AlarmForm = React.createClass({
                     ref="name"
                 >
                     <div>
-                        <h4 style={{color: theme.colors.primary}}>{stringIt.titleAlarmName}</h4>
+                        <h3 style={styleH3(theme)}>{stringIt.titleAlarmName}</h3>
                         {this.isAutomatic() ?
-                            <h5>{this.props.alarm.get("name")}</h5> :
+                            <h3 style={{
+                                color: theme.colors.mainFontColor,
+                                fontSize: "20px"
+                            }}
+                            >{this.props.alarm.get("name")}</h3> :
                             <bootstrap.Input
                                 style={styles(theme).inputLine}
                                 type="text"
@@ -200,7 +249,7 @@ var AlarmForm = React.createClass({
                         }
                     </div>
                 </components.TutorialAnchor>
-            </bootstrap.Col>
+            </div>
         );
     },
     renderAlarmNotification: function () {
@@ -221,7 +270,7 @@ var AlarmForm = React.createClass({
         );
     },
     renderAlarmActive: function () {
-        const {colors} = this.getTheme();
+        const theme = this.getTheme();
         return (
             <bootstrap.Col lg={6} md={6} xs={12}>
                 <div style={{display: this.props.type === "update" ? "block" : "none"}}>
@@ -229,9 +278,7 @@ var AlarmForm = React.createClass({
                     <bootstrap.Input
                         checkedLink={this.linkState("active")}
                         label={
-                            <h4 style={{color: colors.primary, marginTop: "0px"}}>
-                                {stringIt.titleAlarmActive}
-                            </h4>
+                            <h3 style={styleH3(theme)}>{stringIt.titleAlarmActive}</h3>
                         }
                         type="checkbox"
                     />
@@ -285,22 +332,42 @@ var AlarmForm = React.createClass({
                 disabled={this.props.alarmsReduxState.statePostAlarm}
                 onClick={this.submit}
                 style={{
-                    backgroundColor: colors.primary,
-                    color: colors.white,
+                    backgroundColor: colors.buttonPrimary,
+                    color: colors.mainFontColor,
                     width: "230px",
-                    height: "45px"
+                    height: "45px",
+                    borderRadius: "30px",
+                    border: "0"
                 }}
             >
                 {this.props.type === "update" ? "SALVA" : "CREA"}
             </components.Button>
         );
     },
+    renderSiteButton: function () {
+        const theme = this.getTheme();
+        return (
+            <components.Button className="pull-left" onClick={this.openModal} style={styleSiteButton(theme)} >
+                <components.Icon
+                    color={this.getTheme().colors.iconSiteButton}
+                    icon={"map"}
+                    size={"38px"}
+                    style={{
+                        textAlign: "center",
+                        verticalAlign: "middle",
+                        lineHeight: "20px"
+                    }}
+                />
+            </components.Button>
+        );
+    },
     renderTitleSelectSite: function () {
+        const theme = this.getTheme();
         return this.state.sito.size === 0 ?
             <span>
                 {"Seleziona punto di misurazione"}
                 <components.Icon
-                    color={this.getTheme().colors.iconInputSelect}
+                    color={theme.colors.iconInputSelect}
                     icon={"arrow-down"}
                     size={"20px"}
                     style={{
@@ -308,21 +375,23 @@ var AlarmForm = React.createClass({
                         verticalAlign: "middle"
                     }}
                 />
-            </span> :
+            </span>
+            :
             <span>
                 {CollectionUtils.sites.getLabel(this.state.sito)}
                 <components.Spacer direction="h" size={30} />
                 {this.state.sito.get("pod")}
                 <components.Icon
-                    color={this.getTheme().colors.iconInputSelect}
+                    color={theme.colors.iconInputSelect}
                     icon={"arrow-down"}
                     size={"20px"}
                     style={{
-                        float: "right",
+                        textAlign: "right",
                         verticalAlign: "middle"
                     }}
                 />
-            </span>;
+            </span>
+        ;
     },
     renderAutomaticAlarmBanner: function () {
         const {colors} = this.getTheme();
@@ -330,12 +399,12 @@ var AlarmForm = React.createClass({
             <bootstrap.Col xs={12}>
                 <bootstrap.Alert
                     style={{
-                        backgroundColor: colors.greyBackground,
-                        borderColor: colors.greyBorder,
-                        color: colors.titleColor
+                        backgroundColor: colors.backgroundContentModal,
+                        borderColor: colors.borderContentModal,
+                        color: colors.mainFontColor
                     }}
                 >
-                    <h4>
+                    <h4 style={{color: colors.mainFontColor}}>
                         {"Allarme automatico"}
                     </h4>
                     <p>
@@ -370,7 +439,8 @@ var AlarmForm = React.createClass({
                         {this.renderAutomaticAlarmBanner()}
                         {this.renderAlarmSelectSite()}
                         {this.renderAlarmThreshold()}
-                        {this.renderAlarmName()}
+                    </div>
+                    <div style={{clear: "both"}}>
                         {this.renderAlarmNotification()}
                         {this.renderAlarmActive()}
                         {this.renderAlarmRepetition()}

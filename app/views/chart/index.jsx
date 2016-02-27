@@ -145,11 +145,11 @@ var Chart = React.createClass({
     },
     exportPng: function () {
         var exportAPILocation = this.refs.historicalGraph.refs.compareGraph.refs.temporalLineGraph;
-        return exportAPILocation.exportPNG;
+        exportAPILocation.exportPNG();
     },
     exportCsv: function () {
         var exportAPILocation = this.refs.historicalGraph.refs.compareGraph.refs.temporalLineGraph;
-        return exportAPILocation.exportCSV;
+        exportAPILocation.exportCSV();
     },
     subscribeToMisure: function (props) {
         const dateFirstChartState = props.chart[0].date;

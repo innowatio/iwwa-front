@@ -6,6 +6,13 @@ import stringIt from "lib/string-it";
 import {styles} from "lib/styles_restyling";
 import {defaultTheme} from "lib/theme";
 
+var styleH3 = ({colors}) => ({
+    fontSize: "20px",
+    lineHeight: "20px",
+    fontWeight: "400",
+    color: colors.mainFontColor
+});
+
 var AlarmNotificationModal = React.createClass({
     propTypes: {
         updateParentState: PropTypes.func.isRequired,
@@ -68,16 +75,16 @@ var AlarmNotificationModal = React.createClass({
         this.setState({isOpen: !this.state.isOpen});
     },
     render: function () {
-        const {colors} = this.getTheme();
+        const theme = this.getTheme();
         return (
             <span>
-                <h4 style={{color: colors.primary}}>{stringIt.titleAlarmNotify}</h4>
-                <div onClick={this.toggleModal} style={styles(this.getTheme()).divAlarmOpenModal}>
+                <h3 style={styleH3(theme)}>{stringIt.titleAlarmNotify}</h3>
+                <div onClick={this.toggleModal} style={styles(theme).divAlarmOpenModal}>
                     {this.labelParser()}
                     <components.Icon
-                        color={this.getTheme().colors.iconArrow}
+                        color={theme.colors.iconArrow}
                         icon={"arrow-right"}
-                        size={"34px"}
+                        size={"38px"}
                         style={{
                             float: "right",
                             verticalAlign: "middle",
@@ -90,7 +97,7 @@ var AlarmNotificationModal = React.createClass({
                     allowedValues={this.getNotificationOptions()}
                     getKey={prop("key")}
                     getLabel={prop("label")}
-                    header={<h4 style={{color: colors.primary}}>{"Seleziona tipo di notifica"}</h4>}
+                    header={<h4 style={{color: theme.colors.primary}}>{"Seleziona tipo di notifica"}</h4>}
                     isModalOpen={this.state.isOpen}
                     onClickConfirm={this.onClickConfirm}
                     onClickReset={this.toggleModal}
