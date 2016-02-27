@@ -10,8 +10,9 @@ import {bindActionCreators} from "redux";
 var CollectionUtils    = require("lib/collection-utils");
 var components         = require("components/");
 // var GetTutorialMixin   = require("lib/get-tutorial-mixin");
-var tutorialString     = require("assets/JSON/tutorial-string.json").historicalGraph;
+// var tutorialString     = require("assets/JSON/tutorial-string.json").historicalGraph;
 import * as parameters from "./parameters";
+import {consumptionSensors} from "lib/sensors-decorators";
 import {
     selectSingleElectricalSensor,
     selectElectricalType,
@@ -209,7 +210,7 @@ var Chart = React.createClass({
                         return sensorObject.get("type");
                     }
                 });
-                return parameters.getConsumptions(this.getTheme()).filter(consumption => {
+                return consumptionSensors(this.getTheme()).filter(consumption => {
                     return R.contains(consumption.type, sensorsType);
                 });
             }
@@ -351,6 +352,12 @@ var Chart = React.createClass({
     onChangeWidgetValue: function (value) {
         this.setState({value});
     },
+    selectedSitesId: function () {
+        return R.uniq(this.props.chart.map(singleSelection => singleSelection.site));
+    },
+    selectedSources: function () {
+        return this.props.chart.map(singleSelection => singleSelection.source);
+    },
     renderChildComponent: function () {
         switch (this.state.selectedWidget) {
             case "siteNavigator":
@@ -430,59 +437,47 @@ var Chart = React.createClass({
             />
         );
     },
-    renderExportButton: function () {
-        const theme = this.getTheme();
-        return (
-            <div>
-                <components.TutorialAnchor
-                    message={tutorialString.export}
-                    order={2}
-                    position="right"
-                    ref="export"
-                >
-                    <components.Popover
-                        arrowColor={theme.colors.white}
-                        hideOnChange={true}
-                        title={
-                            <components.Icon
-                                color={theme.colors.iconDropdown}
-                                icon={"export"}
-                                size={"28px"}
-                                style={{lineHeight: "20px", verticalAlign: "middle"}}
-                            />
-                        }
-                        tooltipId="tooltipExport"
-                        tooltipMessage="Esporta"
-                        tooltipPosition="left"
-                    >
-                        <components.DropdownButton
-                            allowedValues={parameters.getExportType()}
-                            getColor={R.prop("color")}
-                            getIcon={R.prop("iconClass")}
-                            getKey={R.prop("key")}
-                            getLabel={R.prop("label")}
-                        />
-                    </components.Popover>
-                </components.TutorialAnchor>
+    renderChartResetButton: function () {
+        const {colors} = this.getTheme();
+        return this.isComparationActive(this.selectedSitesId(), this.selectedSources()) ? (
+            <div
+                onClick={this.props.removeAllCompare}
+                style={{
+                    color: colors.resetCompare,
+                    display: "flex",
+                    position: "relative",
+                    marginLeft: "50px",
+                    verticalAlign: "middle",
+                    lineHeight: "28px",
+                    cursor: "pointer"
+                }}
+            >
+                <components.Icon
+                    color={this.getTheme().colors.iconLogout}
+                    icon={"logout"}
+                    size={"28px"}
+                    style={{lineHeight: "20px", paddingRight: "5px"}}
+                />
+                <components.Spacer direction="h" size={5} />
+                {"Esci dal confronto"}
             </div>
-        );
+        ) : null;
     },
     render: function () {
         const theme = this.getTheme();
-        const selectedSitesId = R.uniq(this.props.chart.map(singleSelection => singleSelection.site));
-        const selectedSites = selectedSitesId.map(siteId => this.getSitoById(siteId));
-        const selectedSources = this.props.chart.map(singleSelection => singleSelection.source);
+        const selectedSites = this.selectedSitesId().map(siteId => this.getSitoById(siteId));
         const selectedConsumptionType = (
             this.props.chart.length > 1 &&
             R.allUniq(this.props.chart.map(singleSelection => singleSelection.measurementType))
         ) ?
             this.props.chart[1].measurementType :
             null;
-        const valoriMulti = (!this.isDateCompare() && selectedSitesId.length < 2 && !selectedConsumptionType);
+        const valoriMulti = (!this.isDateCompare() && this.selectedSitesId().length < 2 && !selectedConsumptionType);
         const variables = this.getConsumptionVariablesFromFullPath(this.props.chart[0].fullPath);
         return (
             <div>
                 <div style={styles(this.getTheme()).titlePage}>
+                    {/* Title Page */}
                     <div style={{fontSize: "18px", marginBottom: "0px", paddingTop: "16px", width: "100%"}}>
                         {this.getTitleForChart().toUpperCase()}
                     </div>
@@ -494,7 +489,6 @@ var Chart = React.createClass({
                             style={{lineHeight: "20px"}}
                         />
                     </components.Button>
-
                     <components.Popover
                         className="pull-right"
                         hideOnChange={true}
@@ -519,6 +513,7 @@ var Chart = React.createClass({
                         />
                     </components.Popover>
                 </div>
+                {/* Button Left and Right arrow */}
                 <components.Button
                     style={R.merge(dateButtonStyle(
                         this.getTheme()), {
@@ -535,10 +530,35 @@ var Chart = React.createClass({
                         style={{lineHeight: "20px"}}
                     />
                 </components.Button>
+                {/* Button top chart */}
                 <div style={styles(theme).mainDivStyle}>
                     <bootstrap.Col sm={12} style={styles(theme).colVerticalPadding}>
+                        {this.renderChartResetButton()}
+                        <span className="pull-right" style={{display: "flex"}}>
+                            <components.ButtonGroupSelect
+                                allowedValues={parameters.getSources(this.getTheme())}
+                                getKey={R.prop("key")}
+                                getLabel={R.prop("label")}
+                                multi={valoriMulti}
+                                onChange={this.props.selectSource}
+                                onChangeMulti={this.onChangeMultiSources}
+                                style={sourceButtonStyle(this.getTheme())}
+                                styleToMergeWhenActiveState={{
+                                    background: this.getTheme().colors.buttonPrimary,
+                                    border: "0px none"
+                                }}
+                                value={this.selectedSources()}
+                            />
+                        </span>
+                    </bootstrap.Col>
+                    {/* Chart and widget modal */}
+                    <bootstrap.Col className="modal-container" sm={12}>
                         <components.FullscreenModal
-                            backgroundColor={this.state.selectedWidget !== "export" ? undefined : theme.colors.backgroundModalExport}
+                            backgroundColor={
+                                this.state.selectedWidget !== "export" ?
+                                undefined :
+                                theme.colors.backgroundModalExport
+                            }
                             onConfirm={this.onConfirmFullscreenModal}
                             onHide={this.closeModal}
                             onReset={this.closeModal}
@@ -547,50 +567,18 @@ var Chart = React.createClass({
                         >
                             {this.renderChildComponent()}
                         </components.FullscreenModal>
-                        <span className="pull-right" style={{display: "flex"}}>
-                            <components.TutorialAnchor
-                                message={tutorialString.valori}
-                                order={1}
-                                position="right"
-                                ref="valori"
-                            >
-                                <components.ButtonGroupSelect
-                                    allowedValues={parameters.getSources(this.getTheme())}
-                                    getKey={R.prop("key")}
-                                    getLabel={R.prop("label")}
-                                    multi={valoriMulti}
-                                    onChange={this.props.selectSource}
-                                    onChangeMulti={this.onChangeMultiSources}
-                                    style={sourceButtonStyle(this.getTheme())}
-                                    styleToMergeWhenActiveState={{
-                                        background: this.getTheme().colors.buttonPrimary,
-                                        border: "0px none"
-                                    }}
-                                    value={selectedSources}
-                                />
-                            </components.TutorialAnchor>
-                        </span>
+                        <components.HistoricalGraph
+                            chart={this.props.chart}
+                            getY2Label={CollectionUtils.labelGraph.getY2Label}
+                            getYLabel={CollectionUtils.labelGraph.getYLabel}
+                            isComparationActive={this.isComparationActive(this.selectedSitesId(), this.selectedSources())}
+                            isDateCompareActive={this.isDateCompare()}
+                            misure={this.props.collections.get("readings-daily-aggregates") || Immutable.Map()}
+                            ref="historicalGraph"
+                            sites={selectedSites}
+                        />
                     </bootstrap.Col>
-                    <bootstrap.Col className="modal-container" sm={12}>
-                        <components.TutorialAnchor
-                            message={ENVIRONMENT === "cordova" ? tutorialString.appGraph : tutorialString.webGraph}
-                            order={7}
-                            position="top"
-                            ref="graph"
-                        >
-                            <components.HistoricalGraph
-                                chart={this.props.chart}
-                                getY2Label={CollectionUtils.labelGraph.getY2Label}
-                                getYLabel={CollectionUtils.labelGraph.getYLabel}
-                                isComparationActive={this.isComparationActive(selectedSitesId, selectedSources)}
-                                isDateCompareActive={this.isDateCompare()}
-                                misure={this.props.collections.get("readings-daily-aggregates") || Immutable.Map()}
-                                ref="historicalGraph"
-                                resetCompare={this.props.removeAllCompare}
-                                sites={selectedSites}
-                            />
-                        </components.TutorialAnchor>
-                    </bootstrap.Col>
+                    {/* Button bottom chart */}
                     <bootstrap.Col sm={12}>
                         <span className="pull-left" style={{display: "flex", width: "auto"}}>
                             <components.ConsumptionButtons
@@ -602,25 +590,18 @@ var Chart = React.createClass({
                             />
                         </span>
                         <span className="pull-right" style={{display: "flex"}}>
-                            <components.TutorialAnchor
-                                message={tutorialString.tipologie}
-                                order={3}
-                                position="left"
-                                ref="tipologie"
-                            >
-                                <components.ButtonGroupSelect
-                                    allowedValues={parameters.getMeasurementTypes()}
-                                    getKey={R.prop("key")}
-                                    getLabel={R.prop("label")}
-                                    onChange={this.props.selectElectricalType}
-                                    style={measurementTypeButtonStyle(this.getTheme())}
-                                    styleToMergeWhenActiveState={{
-                                        background: theme.colors.buttonPrimary,
-                                        border: "0px none"
-                                    }}
-                                    value={[this.props.chart[0].measurementType]}
-                                />
-                            </components.TutorialAnchor>
+                            <components.ButtonGroupSelect
+                                allowedValues={parameters.getMeasurementTypes()}
+                                getKey={R.prop("key")}
+                                getLabel={R.prop("label")}
+                                onChange={this.props.selectElectricalType}
+                                style={measurementTypeButtonStyle(this.getTheme())}
+                                styleToMergeWhenActiveState={{
+                                    background: theme.colors.buttonPrimary,
+                                    border: "0px none"
+                                }}
+                                value={[this.props.chart[0].measurementType]}
+                            />
                         </span>
                     </bootstrap.Col>
                 </div>

@@ -17,6 +17,7 @@ var style = (variableColor) => ({
 
 var VariablesPanel = React.createClass({
     propTypes: {
+        numberOfConsumptionSensor: React.PropTypes.number,
         values: React.PropTypes.oneOfType([
             React.PropTypes.arrayOf(React.PropTypes.object),
             React.PropTypes.object
@@ -31,8 +32,14 @@ var VariablesPanel = React.createClass({
     renderVariableBox: function () {
         return this.props.values.map((variable) => {
             return (
-                <div key={variable.get("key")} style={{width: "25%", flex: "1 0 auto"}}>
-                    <div style={style(variable.get("buttonBgColor")).box} styleName="variableContainer">
+                <div
+                    key={variable.get("key")}
+                    style={{
+                        width: this.props.numberOfConsumptionSensor > 4 ? "24%" : "25%",
+                        flex: "1 0 auto"
+                    }}
+                >
+                    <div style={style(variable.get("color")).box} styleName="variableContainer">
                         <components.Icon
                             color={this.getTheme().colors.iconVariable}
                             icon={variable.get("icon")}
@@ -53,7 +60,7 @@ var VariablesPanel = React.createClass({
     render: function () {
         return (
             <div style={{width: "100%", height: "110px", overflow: "hidden"}}>
-                <div style={{display: "flex", height: "130px", overflow: "auto"}}>{this.renderVariableBox()}</div>
+                <div style={{display: "flex", height: "115%", overflow: "auto"}}>{this.renderVariableBox()}</div>
             </div>
         );
     }
