@@ -13,11 +13,12 @@ const styles = {
     },
     label: {
         position: "absolute",
-        top: "-20px",
+        top: "-15%",
         left: "0px",
         height: "100%",
         width: "100%",
         display: "flex",
+        textAlign: "left",
         justifyContent: "center",
         alignItems: "flex-end"
     }
@@ -25,22 +26,22 @@ const styles = {
 
 var styleGauge = ({colors}) => ({
     fill: "none",
-    stroke: colors.greyLight,
-    strokeWidth: "8",
+    stroke: colors.backgroundGauge,
+    strokeWidth: "4",
     zIndex: 1
 });
 
 var styleGaugeBar = ({colors}) => ({
     fill: "none",
-    stroke: colors.primary,
-    strokeWidth: "10",
+    stroke: colors.backgroundGaugeBar,
+    strokeWidth: "4",
     zIndex: 2,
     WebkitTransition: "-webkit-transform 800ms ease",
     transition: "transform 800ms ease"
 });
 
 var stylePointer = ({colors}) => ({
-    fill: colors.black,
+    fill: colors.backgroundGaugeBar,
     WebkitTransition: "-webkit-transform 800ms ease",
     transition: "transform 800ms ease",
     zIndex: 5
@@ -76,11 +77,11 @@ var Gauge = React.createClass({
             <div style={R.merge(styles.container, this.props.style)}>
                 <svg height="100%" preserveAspectRatio="none" viewBox="0 0 200 105" width="100%" >
                     <line
-                        style={{stroke: theme.colors.greyLight, strokeWidth: "3"}}
+                        style={{stroke: theme.colors.backgroundGaugeBar, strokeWidth: "1", zIndex: "200"}}
                         x1="5"
-                        x2="195"
-                        y1="99"
-                        y2="99"
+                        x2="196"
+                        y1="100"
+                        y2="100"
                     />
                     <defs>
                         <clipPath id="cut-off-top">
@@ -104,19 +105,19 @@ var Gauge = React.createClass({
                         />
                     </g>
                     <rect
-                        fill={theme.colors.greyLight}
-                        height="5"
-                        style={{zIndex: 4}}
-                        width="198"
-                        x="0"
+                        fill={theme.colors.backgroundRealTimeSection}
+                        height="10"
+                        style={{zIndex: 100}}
+                        width="196"
+                        x="2"
                         y="100"
                     />
                     {/* Pointer */}
                     <g transform={transform} >
                         <circle
-                            cx="-84.5"
+                            cx="-82.8"
                             cy="0"
-                            r="3"
+                            r="3.6"
                             style={R.merge(stylePointer(theme), this.props.stylePointer || {})}
                         />
                         <path

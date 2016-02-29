@@ -6,8 +6,9 @@ var React      = require("react");
 import {connect} from "react-redux";
 import {bindActionCreators} from "redux";
 
-var components        = require("components");
-var readingsRealTime  = require("lib/readings-real-time-aggregates-to-realtime-view");
+import components from "components";
+import {decorateMeasure, addValueToMeasures} from "./utils";
+import * as sensorsDecorators from "lib/sensors-decorators";
 import {styles} from "lib/styles_restyling";
 import {selectRealTimeSite} from "actions/real-time";
 import {defaultTheme} from "lib/theme";
@@ -19,8 +20,8 @@ const styleSiteButton = ({colors}) => ({
     padding: "0",
     border: "0",
     borderRadius: "100%",
-    margin: "13px",
-    backgroundColor: colors.secondary
+    margin: "3px 0 0 0",
+    backgroundColor: colors.primary
 });
 
 var RealTime = React.createClass({
@@ -41,6 +42,7 @@ var RealTime = React.createClass({
     },
     componentDidMount: function () {
         this.props.asteroid.subscribe("sites");
+        this.props.asteroid.subscribe("sensors");
         if (this.props.realTime.site) {
             this.props.asteroid.subscribe("readingsRealTimeAggregatesBySite", this.props.realTime.site);
         }
@@ -54,52 +56,101 @@ var RealTime = React.createClass({
         return this.context.theme || defaultTheme;
     },
     drawGauge: function (params) {
+        const {colors} = this.getTheme();
         return (
             <div style={{margin: "auto", width: R.path(["style", "width"], params) || "200px"}}>
                 <components.Gauge
                     valueLabel={this.getGaugeLabel({
-                        id: params.id,
-                        styleText: params.styleText,
+                        styleTextLabel: params.styleTextLabel,
+                        styleTextUnit: params.styleTextUnit,
                         unit: params.unit || "",
                         value: params.value
                     })}
                     {...params}
                 />
-                <div style={{textAlign: "center"}}>
-                    <div>{params.id}</div>
+                <div
+                    style={{
+                        textAlign: "center",
+                        fontSize: "18px",
+                        color: colors.backgroundGaugeBar,
+                        textTransform: "uppercase"
+                    }}
+                >
+                    <div>{params.description}</div>
                 </div>
+                <div
+                    style={{
+                        textAlign: "center",
+                        fontSize: "18px",
+                        color: colors.mainFontColor,
+                        textTransform: "uppercase"
+                    }}
+                >
+                    {params.id}</div>
             </div>
         );
     },
     drawGauges: function () {
         const {colors} = this.getTheme();
         if (this.findLatestMeasuresForEnergy().size > 0) {
-            var sizeValues = this.findLatestMeasuresForEnergy().size;
             return this.findLatestMeasuresForEnergy().map((measure) => {
                 var gaugeParams = {
                     id: measure.get("id"),
                     key: measure.get("key"),
+                    description: measure.get("description"),
                     maximum: 100,
                     minimum: 0,
                     style: {height: "auto", width: "100%"},
-                    styleGaugeBar: {stroke: colors.lineReale},
-                    stylePointer: {fill: colors.greyBorder},
-                    styleText: {color: colors.lineReale},
+                    styleGaugeBar: {stroke: colors.backgroundGaugeBar},
+                    stylePointer: {fill: colors.backgroundGaugeBar},
+                    styleTextLabel: {
+                        color: colors.backgroundGaugeBar,
+                        fontSize: "30px",
+                        lineHeight: "34px"
+                    },
+                    styleTextUnit: {
+                        color: colors.backgroundGaugeBar,
+                        fontSize: "18px",
+                        lineHeight: "20px",
+                        marginBottom: "4px"
+                    },
                     unit: measure.get("unit"),
                     value: parseFloat(measure.get("value")).toFixed(2) / 1 || 0
                 };
                 return (
                     <bootstrap.Col
                         key={measure.get("key")}
-                        lg={sizeValues > 4 ? 4 : 6}
-                        md={sizeValues > 4 ? 4 : 6}
-                        sm={6}
+                        md={4}
+                        xs={6}
                         style={{padding: "20px"}}
                     >
                         {this.drawGauge(gaugeParams)}
                     </bootstrap.Col>);
             });
         }
+    },
+    getSensorById: function (sensorId) {
+        return this.props.collections.getIn(["sensors", sensorId]);
+    },
+    numberOfConsumptionSensor: function (fullPath) {
+        if (R.isArrayLike(fullPath) && fullPath.length > 0) {
+            // All sensors under a site
+            const site = this.getSitoById(fullPath[0]);
+            if (site) {
+                const sensorsType = site.get("sensorsIds").map(sensorId => {
+                    const sensorObject = this.getSensorById(sensorId);
+                    if (sensorObject) {
+                        return sensorObject.get("type");
+                    }
+                });
+                return sensorsType.reduce((acc, sensorsType) => {
+                    return acc + sensorsDecorators.consumptionSensors(this.getTheme()).filter(consumptionSensor => {
+                        return consumptionSensor.type === sensorsType;
+                    }).length;
+                }, 0);
+            }
+        }
+        return 0;
     },
     drawGaugeTotal: function () {
         const {colors} = this.getTheme();
@@ -111,13 +162,25 @@ var RealTime = React.createClass({
                 };
             }, {value: 0, unit: ""});
             var gaugeParams = {
-                id: "Consumi totali",
+                description: "Consumi totali",
+                id: getTitleForSingleSensor(this.props.realTime, this.props.collections),
                 key: "Consumi totali",
                 maximum: 100,
                 minimum: 0,
                 style: {height: "auto", width: "100%"},
-                styleLabel: {top: "-30px"},
-                stylePointer: {fill: colors.greyBorder},
+                styleLabel: {top: "-15%"},
+                stylePointer: {fill: colors.backgroundGaugeBar},
+                styleTextLabel: {
+                    color: colors.backgroundGaugeBar,
+                    fontSize: "50px",
+                    lineHeight: "60px"
+                },
+                styleTextUnit: {
+                    color: colors.backgroundGaugeBar,
+                    fontSize: "35px",
+                    lineHeight: "40px",
+                    marginBottom: "4px"
+                },
                 unit: unit,
                 value: parseFloat(value).toFixed(2) / 1
             };
@@ -167,15 +230,16 @@ var RealTime = React.createClass({
         );
     },
     findLatestMeasuresWithCriteria: function (criteria) {
-        var res = readingsRealTime.decorators(this.getTheme()).filter(criteria);
+        const decorators = R.unnest(sensorsDecorators.allSensorsDecorator(this.getTheme()));
+        var res = Immutable.fromJS(decorators).filter(criteria);
         if (this.props.realTime.fullPath && this.getMeasures().size) {
             var decoMeasurements = this.getSite(this.props.realTime.fullPath[0]).get("sensors")
                 .map(sensor => {
-                    return readingsRealTime.decorateMeasure(sensor, this.getTheme());
+                    return decorateMeasure(sensor, this.getTheme());
                 });
             res = R.filter(
                 criteria,
-                readingsRealTime.addValueToMeasures(
+                addValueToMeasures(
                     decoMeasurements.flatten(1),
                     this.getMeasuresBySite()
             ));
@@ -183,14 +247,17 @@ var RealTime = React.createClass({
         return res;
     },
     findLatestMeasuresForEnergy: function () {
-        var measures = this.findLatestMeasuresWithCriteria(function (decorator) {
-            return decorator.get("type") === "pod" && decorator.get("keyType") === "activeEnergy";
+        var measures = this.findLatestMeasuresWithCriteria(decorator => {
+            return (
+                decorator.get("type") === "pod" &&
+                decorator.get("keyType") === "activeEnergy"
+            );
         });
         return measures.map(pod => {
             var anzId = (pod.get("children") || Immutable.List()).map(anz => {
-                return readingsRealTime.decorateMeasure(anz, this.getTheme());
+                return decorateMeasure(anz, this.getTheme());
             });
-            return pod.set("value", readingsRealTime.addValueToMeasures(
+            return pod.set("value", addValueToMeasures(
                 anzId.flatten(1),
                 this.getMeasuresBySite()
             ).filter(decorator => {
@@ -201,8 +268,11 @@ var RealTime = React.createClass({
         });
     },
     findLatestMeasuresForVariables: function () {
-        return this.findLatestMeasuresWithCriteria(function (decorator) {
-            return decorator.get("type") !== "pod" && decorator.get("type") !== "pod-anz";
+        return this.findLatestMeasuresWithCriteria(decorator => {
+            return (
+                decorator.get("type") !== "pod" &&
+                decorator.get("type") !== "pod-anz"
+            );
         });
     },
     getSitoById: function (sitoId) {
@@ -220,7 +290,7 @@ var RealTime = React.createClass({
     onConfirmFullscreenModal: function () {
         const siteId = this.state.value[0];
         this.props.asteroid.subscribe("readingsRealTimeAggregatesBySite", siteId);
-        this.props.selectRealTimeSite(this.state.value);
+        this.props.selectRealTimeSite(this.state.value || this.props.realTime.fullPath);
         this.closeModal();
     },
     renderModalButton: function () {
@@ -243,6 +313,7 @@ var RealTime = React.createClass({
                     onConfirm={this.onConfirmFullscreenModal}
                     onHide={this.closeModal}
                     onReset={this.closeModal}
+                    renderConfirmButton={true}
                     show={this.state.showModal}
                 >
                     {this.renderModalBody()}
@@ -260,38 +331,101 @@ var RealTime = React.createClass({
             />
         );
     },
+    renderConsumptionPanel: function (numberOfConsumptionSensor) {
+        const {colors} = this.getTheme();
+        const selectedSiteName = this.getSelectedSiteName();
+        return numberOfConsumptionSensor > 0 ? (
+            <div
+                style={{
+                    position: "absolute",
+                    top: "20px",
+                    left: "0px",
+                    width: "100%",
+                    backgroundColor: colors.backgroundRealTimeSection,
+                    borderTop: "1px solid " + colors.borderRealTimeSection,
+                    borderBottom: "1px solid " + colors.borderRealTimeSection
+                }}
+            >
+                <h3
+                    className="text-center"
+                    style={{
+                        color: colors.mainFontColor,
+                        fontSize: "24px",
+                        fontWeight: "400",
+                        textTransform: "uppercase"
+                    }}
+                >
+                    {`${selectedSiteName ? selectedSiteName + " - " : ""}Rilevazioni ambientali`}
+                </h3>
+                <components.VariablesPanel
+                    numberOfConsumptionSensor={numberOfConsumptionSensor}
+                    values={this.findLatestMeasuresForVariables()}
+                />
+            </div>
+        ) : null;
+    },
     render: function () {
         const theme = this.getTheme();
         const selectedSiteName = this.getSelectedSiteName();
+        const numberOfConsumptionSensor = this.numberOfConsumptionSensor(this.props.realTime.fullPath);
         return (
             <div>
+                {/* Title page */}
                 <div style={styles(this.getTheme()).titlePage}>
                     <div style={{fontSize: "18px", marginBottom: "0px", paddingTop: "18px", width: "100%"}}>
                         {getTitleForSingleSensor(this.props.realTime, this.props.collections)}
                     </div>
-                </div>
-                <div style={styles(theme).mainDivStyle}>
-                    <bootstrap.Col sm={12}>
-                        <span className="pull-right">
-                            {this.renderModalButton()}
-                        </span>
+                    <bootstrap.Col sm={4}>
+                        {this.renderModalButton()}
                     </bootstrap.Col>
-                    <h3 className="text-center" style={{color: theme.colors.primary}}>
-                        {`${selectedSiteName ? selectedSiteName + " - " : ""}Rilevazioni ambientali`}
-                    </h3>
-                    <components.VariablesPanel
-                        values={this.findLatestMeasuresForVariables()}
-                    />
-                    <h3 className="text-center" style={{color: theme.colors.primary}}>
-                        {`${selectedSiteName ? selectedSiteName + " - " : ""}Pods`}
-                    </h3>
-                    <div style={{overflow: "scroll"}}>
-                        <bootstrap.Col className="text-center" sm={4} style={{padding: "20px"}}>
-                            {this.drawGaugeTotal()}
-                        </bootstrap.Col>
-                        <bootstrap.Col sm={8}>
-                            {this.drawGauges()}
-                        </bootstrap.Col>
+                </div>
+                <div style={styles(theme).mainDivStyle, {position: "relative"}}>
+                    {this.renderConsumptionPanel(numberOfConsumptionSensor)}
+                    <div
+                        style={{
+                            position: "relative",
+                            top: numberOfConsumptionSensor > 0 ? "220px" : "20px",
+                            margin: "0px 30px 0px 30px",
+                            height: numberOfConsumptionSensor > 0 ? "calc(100vh - 395px)" : "calc(100vh - 175px)",
+                            overflow: "hidden",
+                            backgroundColor: theme.colors.backgroundRealTimeSection,
+                            border: "1px solid " + theme.colors.borderRealTimeSection,
+                            borderRadius: "20px"
+                        }}
+                    >
+                        <div
+                            style={{
+                                overflow: "auto",
+                                position: "absolute",
+                                top: "0",
+                                bottom: "0",
+                                left: "0",
+                                right: "-20px"
+                            }}
+                        >
+                            <h3
+                                className="text-center"
+                                style={{
+                                    color: theme.colors.mainFontColor,
+                                    fontSize: "24px",
+                                    fontWeight: "400",
+                                    textTransform: "uppercase"
+                                }}
+                            >
+                                {`${selectedSiteName ? selectedSiteName + " - " : ""}Pods`}
+                            </h3>
+                            <bootstrap.Col
+                                className="text-center"
+                                md={4}
+                                style={{padding: "20px", color: theme.colors.mainFontColor}}
+                                xs={12}
+                            >
+                                {this.drawGaugeTotal()}
+                            </bootstrap.Col>
+                            <bootstrap.Col md={8} xs={12}>
+                                {this.drawGauges()}
+                            </bootstrap.Col>
+                        </div>
                     </div>
                 </div>
             </div>

@@ -4,9 +4,11 @@ import measures from "lib/measures";
 
 export const styles = (theme) => ({
     titleFullScreenModal: {
-        color: theme.colors.white,
+        color: theme.colors.mainFontColor,
         marginTop: "0px",
-        marginBottom: "50px"
+        marginBottom: "50px",
+        fontWeight: "400",
+        fontSize: "28px"
     },
     base: {
         display: "flex",
@@ -60,14 +62,6 @@ export const styles = (theme) => ({
         boxShadow: "2px 2px 5px " + theme.colors.mainDivShadow,
         height: measures.mainComponentHeight
     },
-    tabbedArea: {
-        width: "96%",
-        marginLeft: "2%",
-        marginTop: "1%",
-        height: "calc(100vh - 150px)",
-        borderRadius: "3px",
-        overflow: "hidden"
-    },
     titlePage: {
         width: "100%",
         color: theme.colors.white,
@@ -97,10 +91,13 @@ export const styles = (theme) => ({
         outline: "0px"
     },
     divAlarmOpenModal: {
-        height: "34px",
+        height: "35px",
         width: "100%",
-        borderBottom: "1px solid" + theme.colors.greyBorder,
-        cursor: "pointer"
+        borderBottom: "1px solid" + theme.colors.white,
+        cursor: "pointer",
+        color: theme.colors.textSelectButton,
+        fontSize: "16px",
+        fontWeight: "300"
     },
     titleTab: {
         color: theme.colors.titleColor,

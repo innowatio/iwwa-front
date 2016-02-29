@@ -18,7 +18,6 @@ import {
     submitAlarmCreationOrChange,
     numberOfSelectedTabs
 } from "actions/alarms";
-import {styles} from "lib/styles_restyling";
 import {defaultTheme} from "lib/theme";
 
 var getKeyFromCollection = function (collection) {
@@ -105,7 +104,7 @@ var Alarms = React.createClass({
                 key: "active",
                 style: function (value) {
                     return {
-                        backgroundColor: value ? colors.green : colors.grey,
+                        backgroundColor: value ? colors.activeAlarm : colors.backgroundTableColoumn,
                         width: "37px",
                         height: "100%",
                         textAlign: "center"
@@ -394,78 +393,114 @@ var Alarms = React.createClass({
             </div>
         );
     },
-    render: function () {
+    renderTabs: function () {
         var allowedValues = this.props.collections.get("alarms") || Immutable.Map();
+        const {colors} = this.getTheme();
+        return (
+            <div className="alarm-tab" style={{}}>
+                <Radium.Style
+                    rules={{
+                        "ul": {
+                            border: "0px",
+                            height: "56px",
+                            backgroundColor: colors.secondary
+                        },
+                        "ul li": {
+                            color: colors.white,
+                            margin: "0 1.5%"
+                        },
+                        "ul li a": {
+                            height: "55px",
+                            lineHeight: "55px",
+                            fontSize: "17px",
+                            textTransform: "uppercase",
+                            padding: "0px 4px"
+                        },
+                        ".nav-tabs > li > a": {
+                            height: "44px",
+                            color: colors.white,
+                            border: "0",
+                            outline: "none",
+                            borderBottom: "3px solid" + colors.secondary
+                        },
+                        ".nav-tabs > li:hover > a:hover": {
+                            fontWeight: "400"
+                        },
+                        ".nav-tabs > li.active > a, .nav-tabs > li > a:hover, .nav-tabs > li.active > a:hover, .nav-tabs > li.active > a:focus": {
+                            height: "44px",
+                            fontSize: "17px",
+                            fontWeight: "500",
+                            color: colors.white,
+                            border: "0px",
+                            borderRadius: "0px",
+                            outline: "none",
+                            backgroundColor: colors.secondary,
+                            borderBottom: "3px solid" + colors.buttonPrimary,
+                            outlineStyle: "none",
+                            outlineWidth: "0px"
+                        }
+                    }}
+                    scopeSelector=".alarm-tab"
+                />
+                <div className="tabbed-area">
+                    <bootstrap.Tabs
+                        activeKey={this.props.alarms.selectedTab}
+                        animation={false}
+                        bsStyle={"tabs"}
+                        onSelect={this.activeKey}
+                    >
+                        <bootstrap.Tab eventKey={1} title="Impostazione">
+                            <components.AlarmForm
+                                alarm={this.getAlarm()}
+                                alarmsReduxState={this.props.alarms}
+                                reset={this.props.resetAlarmFormView}
+                                siti={this.getSiti()}
+                                submit={this.props.submitAlarmCreationOrChange}
+                                type={this.getType()}
+                            />
+                        </bootstrap.Tab>
+                        <bootstrap.Tab
+                            eventKey={2}
+                            style={{
+                                height: "100%",
+                                overflow: "scroll"
+                            }}
+                            title="Allarmi"
+                        >
+                            {this.renderFilterButton()}
+                            <components.CollectionElementsTable
+                                collection={
+                                    R.isNil(allowedValues) ?
+                                    Immutable.Map() :
+                                    allowedValues.filter(this.filterAlarms)}
+                                columns={this.getColumnsAlarms()}
+                                getKey={getKeyFromCollection}
+                                hover={true}
+                                width={"40%"}
+                            />
+                        </bootstrap.Tab>
+                        <bootstrap.Tab
+                            eventKey={3}
+                            style={{height: "100%", overflow: "scroll"}}
+                            title="Storico allarmi"
+                        >
+                            <components.CollectionElementsTable
+                                collection={this.getNotifications().sort(R.partialRight(this.sortByDate, [false]))}
+                                columns={this.getColumnsNotifications()}
+                                getKey={getKeyFromCollection}
+                                hover={true}
+                                width={"30%"}
+                            />
+                        </bootstrap.Tab>
+                    </bootstrap.Tabs>
+                </div>
+            </div>
+        );
+    },
+    render: function () {
         return (
             <div>
-                <div style={styles(this.getTheme()).titlePage}>
-                    <div style={{fontSize: "18px", marginBottom: "0px", paddingTop: "18px", width: "100%"}}>
-                        {""}
-                    </div>
-                </div>
-                <div className="alarm-tab" style={{paddingBottom: "15px"}}>
-                    <Radium.Style
-                        rules={styles(this.getTheme()).tabForm}
-                        scopeSelector=".alarm-tab"
-                    />
-                    <div className="tabbed-area" style={styles(this.getTheme()).tabbedArea}>
-                        <bootstrap.Tabs
-                            activeKey={this.props.alarms.selectedTab}
-                            animation={false}
-                            bsStyle={"tabs"}
-                            onSelect={this.activeKey}
-                        >
-                            <bootstrap.Tab eventKey={1} title="Impostazione">
-                                <components.AlarmForm
-                                    alarm={this.getAlarm()}
-                                    alarmsReduxState={this.props.alarms}
-                                    reset={this.props.resetAlarmFormView}
-                                    siti={this.getSiti()}
-                                    submit={this.props.submitAlarmCreationOrChange}
-                                    type={this.getType()}
-                                />
-                            </bootstrap.Tab>
-                            <bootstrap.Tab
-                                eventKey={2}
-                                style={{
-                                    height: "100%",
-                                    overflow: "scroll"
-                                }}
-                                title="Allarmi"
-                            >
-                                {this.renderFilterButton()}
-                                <components.CollectionElementsTable
-                                    collection={
-                                        R.isNil(allowedValues) ?
-                                        Immutable.Map() :
-                                        allowedValues.filter(this.filterAlarms)}
-                                    columns={this.getColumnsAlarms()}
-                                    getKey={getKeyFromCollection}
-                                    hover={true}
-                                    width={"40%"}
-                                />
-                            </bootstrap.Tab>
-                            <bootstrap.Tab eventKey={3} style={{height: "100%", overflow: "scroll"}} title="Storico allarmi">
-                                {/* <div style={{marginRight: "30px", height: "40px", paddingTop: "20px"}}>
-                                    <div onClick={this.onClickFilter}
-                                        style={{float: "right", display: "flex", cursor: "pointer"}}>
-                                        <components.Icon icon="filter" style={{paddingTop: "13px"}}/>
-                                        <components.Spacer direction="h" size={10} />
-                                        <h4 style={{color: colors.primary}}>Filter</h4>
-                                    </div>
-                                </div> */}
-                                <components.Spacer direction="v" size={30}/>
-                                <components.CollectionElementsTable
-                                    collection={this.getNotifications().sort(R.partialRight(this.sortByDate, [false]))}
-                                    columns={this.getColumnsNotifications()}
-                                    getKey={getKeyFromCollection}
-                                    hover={true}
-                                    width={"30%"}
-                                />
-                            </bootstrap.Tab>
-                        </bootstrap.Tabs>
-                    </div>
-                </div>
+                {this.renderTabs()}
             </div>
         );
     }

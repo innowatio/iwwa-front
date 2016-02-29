@@ -55,7 +55,8 @@ var ConsumptionButtons = React.createClass({
                 >
                 {isSelected ? consumption.label : ""}
                 </div>
-            </components.Button>);
+            </components.Button>
+        );
     },
     render: function () {
         return (
