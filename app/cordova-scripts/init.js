@@ -1,4 +1,4 @@
-var initPushNotifications = require("./push-notifications");
+import initPushNotifications from "./push-notifications";
 
 if (ENVIRONMENT === "cordova") {
     document.addEventListener("deviceready", function () {

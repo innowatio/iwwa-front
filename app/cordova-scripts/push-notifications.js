@@ -1,18 +1,18 @@
-var asteroid = require("lib/asteroid.js");
+import asteroid from "lib/asteroid";
 
-var saveRegistrationId = function (registrationId) {
+function saveRegistrationId (registrationId) {
     asteroid.call("saveRegistrationId", registrationId);
-};
+}
 
-module.exports = function initPushNotifications () {
-    var options = {
-       ios: {
-           alert: "true",
-           badge: "true",
-           sound: "true"
+export default function initPushNotifications () {
+    const options = {
+        ios: {
+            alert: "true",
+            badge: "true",
+            sound: "true"
         }
     };
-    var push = PushNotification.init(options);
+    const push = PushNotification.init(options);
     push.on("registration", function (data) {
         if (asteroid.loggedIn) {
             saveRegistrationId(data.registrationId);
@@ -30,4 +30,4 @@ module.exports = function initPushNotifications () {
         console.log("ERROR");
         console.log(e);
     });
-};
+}
