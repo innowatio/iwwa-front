@@ -17,6 +17,7 @@ exports.Icon                    = require("./icon/");
 exports.LoginModal              = require("./login-modal/");
 exports.MeasureLabel            = require("./measure-label/");
 exports.ModalOptionList         = require("./modal-option-list/");
+exports.NotificationModal       = require("./notification-modal/");
 exports.ObjectSelect            = require("./object-select/");
 exports.PageContainer           = require("./page-container/");
 exports.Popover                 = require("./popover/");

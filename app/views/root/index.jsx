@@ -3,6 +3,7 @@ import React, {PropTypes} from "react";
 import {StyleRoot} from "radium";
 import {connect} from "react-redux";
 import {bindActionCreators} from "redux";
+import get from "lodash.get";
 
 var asteroid          = require("lib/asteroid");
 var components        = require("components");
@@ -10,6 +11,7 @@ var LocalStorageMixin = require("lib/localstorage-mixin");
 var measures          = require("lib/measures");
 import {theme, defaultTheme} from "lib/theme";
 import {selectThemeColor} from "actions/user-setting";
+import {closeNotificationModal} from "actions/notifications";
 
 const stylesFunction = ({colors}) => ({
     header: {
@@ -50,6 +52,7 @@ const stylesFunction = ({colors}) => ({
 var Root = React.createClass({
     propTypes: {
         children: PropTypes.node,
+        closeNotificationModal: PropTypes.func,
         reduxState: PropTypes.object,
         selectThemeColor: PropTypes.func
     },
@@ -115,6 +118,7 @@ var Root = React.createClass({
         ) : null;
     },
     render: function () {
+        const {notifications} = this.props.reduxState;
         const styles = stylesFunction(this.getTheme());
         const titleView = this.props.children.props.route.titleView || "";
         return (
@@ -136,6 +140,11 @@ var Root = React.createClass({
                         />
                     </div>
                     <div style={styles.content}>
+                        <components.NotificationModal
+                            closeModal={this.props.closeNotificationModal}
+                            message={get(notifications, "data.message", "")}
+                            show={notifications.showModal}
+                        />
                         <components.PageContainer
                             asteroid={asteroid}
                             children={this.props.children}
@@ -162,6 +171,7 @@ function mapStateToProps (state) {
 }
 function mapDispatchToProps (dispatch) {
     return {
+        closeNotificationModal: bindActionCreators(closeNotificationModal, dispatch),
         selectThemeColor: bindActionCreators(selectThemeColor, dispatch)
     };
 }
