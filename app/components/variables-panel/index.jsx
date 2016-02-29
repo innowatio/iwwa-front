@@ -60,7 +60,7 @@ var VariablesPanel = React.createClass({
     render: function () {
         return (
             <div style={{width: "100%", height: "110px", overflow: "hidden"}}>
-                <div style={{display: "flex", height: "100%", overflow: "auto"}}>{this.renderVariableBox()}</div>
+                <div style={{display: "flex", height: "115%", overflow: "auto"}}>{this.renderVariableBox()}</div>
             </div>
         );
     }

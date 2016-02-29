@@ -23,6 +23,13 @@ const style = ({colors}) => ({
     }
 });
 
+var styleH3 = ({colors}) => ({
+    fontSize: "20px",
+    lineHeight: "20px",
+    fontWeight: "400",
+    color: colors.mainFontColor
+});
+
 var AlarmRepetitionModal = React.createClass({
     propTypes: {
         updateParentState: React.PropTypes.func.isRequired,
@@ -122,7 +129,7 @@ var AlarmRepetitionModal = React.createClass({
                 >
                     {"Solo il giorno"}
                     <components.Icon
-                        color={this.getTheme().colors.iconCalendar}
+                        color={theme.colors.iconCalendar}
                         icon={"calendar"}
                         size={"34px"}
                         style={{
@@ -204,13 +211,13 @@ var AlarmRepetitionModal = React.createClass({
         const theme = this.getTheme();
         return (
             <span>
-                <h4 style={{color: theme.colors.primary}}>{stringIt.titleAlarmNotify}</h4>
+                <h3 style={styleH3(theme)}>{stringIt.titleAlarmNotify}</h3>
                 <div onClick={this.toggleModal} style={styles(theme).divAlarmOpenModal}>
                     {this.labelParser()}
                     <components.Icon
                         color={this.getTheme().colors.iconArrow}
                         icon={"arrow-right"}
-                        size={"34px"}
+                        size={"38px"}
                         style={{
                             float: "right",
                             verticalAlign: "middle",
@@ -222,7 +229,16 @@ var AlarmRepetitionModal = React.createClass({
                     allowedValues={this.getRepetitionOptions()}
                     getKey={R.prop("key")}
                     getLabel={R.prop("label")}
-                    header={<h4 style={{color: theme.colors.primary}}>{"Seleziona tipo di notifica"}</h4>}
+                    header={
+                        <h4
+                            style={{
+                                color: theme.colors.mainFontColor,
+                                fontSize: "20px",
+                                marginBottom: "10px"
+                            }}
+                        >
+                        {"Seleziona tipo di notifica"}</h4>
+                    }
                     isModalOpen={this.state.isOpen}
                     onClickConfirm={this.onClickConfirm}
                     onClickReset={this.toggleModal}

@@ -76,8 +76,17 @@ var RealTime = React.createClass({
                         textTransform: "uppercase"
                     }}
                 >
-                    <div>{params.id}</div>
+                    <div>{params.description}</div>
                 </div>
+                <div
+                    style={{
+                        textAlign: "center",
+                        fontSize: "18px",
+                        color: colors.mainFontColor,
+                        textTransform: "uppercase"
+                    }}
+                >
+                    {params.id}</div>
             </div>
         );
     },
@@ -88,6 +97,7 @@ var RealTime = React.createClass({
                 var gaugeParams = {
                     id: measure.get("id"),
                     key: measure.get("key"),
+                    description: measure.get("description"),
                     maximum: 100,
                     minimum: 0,
                     style: {height: "auto", width: "100%"},
@@ -152,7 +162,8 @@ var RealTime = React.createClass({
                 };
             }, {value: 0, unit: ""});
             var gaugeParams = {
-                id: "Consumi totali",
+                description: "Consumi totali",
+                id: getTitleForSingleSensor(this.props.realTime, this.props.collections),
                 key: "Consumi totali",
                 maximum: 100,
                 minimum: 0,

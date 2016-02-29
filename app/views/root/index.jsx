@@ -37,7 +37,7 @@ const stylesFunction = ({colors}) => ({
     },
     footer: {
         position: "fixed",
-        backgroundColor: colors.darkBlack,
+        backgroundColor: colors.backgroundFooter,
         color: colors.greySubTitle,
         height: measures.footerHeight,
         width: "100%",
