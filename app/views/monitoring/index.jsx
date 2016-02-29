@@ -105,9 +105,9 @@ var Monitoring = React.createClass({
                 />
                 <MonitoringChart
                     addToFavorite={this.props.addToFavorite}
+                    chartState={this.props.monitoringChart}
                     selectChartType={this.props.selectChartType}
                     series={this.props.selected}
-                    type={this.props.monitoringChart.type}
                 />
             </div>
         );

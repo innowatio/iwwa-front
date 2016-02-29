@@ -15,10 +15,10 @@ let config;
 var MonitoringChart = React.createClass({
     propTypes: {
         addToFavorite: React.PropTypes.func.isRequired,
+        chartState: React.PropTypes.object.isRequired,
         config: React.PropTypes.object,
         selectChartType: React.PropTypes.func.isRequired,
-        series: React.PropTypes.array.isRequired,
-        type: React.PropTypes.string.isRequired
+        series: React.PropTypes.array.isRequired
     },
     getRandomValue: function () {
         return Math.floor((Math.random() * 100) + 1);
@@ -50,9 +50,16 @@ var MonitoringChart = React.createClass({
         };
     },
     getCommonConfig: function () {
+            //xAxis: [{
+            //    categories: ["Jan", "Feb", "Mar", "Apr", "May", "Jun",
+            //        "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"],
+            //    crosshair: true
+            //}],
+            //yAxis: this.props.chartState.yAxis,
         return {
             chart: {
-                type: this.props.type
+                type: this.props.chartState.type,
+                height: 600
             },
             credits: {
                 enabled: false
@@ -73,23 +80,91 @@ var MonitoringChart = React.createClass({
             },
             title: {
                 text: "Highstock"
+            },
+            yAxis: [
+                { // Primary yAxis
+                    labels: {
+                        format: "{value}°C"
+                    },
+                    title: {
+                        text: "Temperature"
+                    },
+                    opposite: true
+                },
+                { // Secondary yAxis
+                    gridLineWidth: 0,
+                    title: {
+                        text: "Rainfall"
+                    },
+                    labels: {
+                        format: "{value} mm"
+                    }
+                },
+                { // Tertiary yAxis
+                    gridLineWidth: 0,
+                    title: {
+                        text: "Sea-Level Pressure"
+                    },
+                    labels: {
+                        format: "{value} mb"
+                    },
+                    opposite: true
+                }
+            ],
+            tooltip: {
+                shared: true
             }
         };
+    },
+    getAreasplineConfig: function () {
+        return {};
     },
     getColumnConfig: function () {
         return {};
     },
     getStackedConfig: function () {
-        return {};
+        return {
+            chart: {
+                type: "column",
+                height: 600
+            },
+            yAxis: {
+                ...this.props.chartState.yAxis,
+                stackLabels: {
+                    enabled: true,
+                    style: {
+                        fontWeight: "bold"
+                    }
+                }
+            },
+            plotOptions: {
+                column: {
+                    stacking: "normal",
+                    dataLabels: {
+                        enabled: true,
+                        style: {
+                            textShadow: "0 0 3px black"
+                        }
+                    }
+                }
+            }
+        };
     },
     getPercentConfig: function () {
-        return {};
-    },
-    getAreasplineConfig: function () {
-        return {};
+        return {
+            chart: {
+                type: "column",
+                height: 600
+            },
+            plotOptions: {
+                column: {
+                    stacking: "percent"
+                }
+            }
+        };
     },
     getSpecificTypeConfig: function () {
-        switch (this.props.type) {
+        switch (this.props.chartState.type) {
             case "column":
                 return this.getColumnConfig();
             case "stacked":
@@ -117,15 +192,18 @@ var MonitoringChart = React.createClass({
         this.props.addToFavorite(config);
     },
     render: function () {
+        let type = chartTypes.find((item) => {
+            return item.id === this.props.chartState.type;
+        });
         return (
             <div>
                 <ObjectSelect
                     options={chartTypes}
-                    onBlur={this.props.selectChartType}
+                    onBlur={() => {}}
                     onChange={this.props.selectChartType}
-                    value={this.props.type}
+                    value={type}
                 />
-                <Button bsStyle="primary" onClick={this.addToFavorite}>
+                <Button bsStyle="primary" onClick={this.addToFavorite} style={{float: "right"}}>
                     {"Add to favorite"}
                 </Button>
                 <ReactHighstock config={this.getHighstockConfig()} />

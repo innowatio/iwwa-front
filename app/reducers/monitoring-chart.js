@@ -1,8 +1,12 @@
 import {ADD_TO_FAVORITE, SELECT_CHART_TYPE} from "../actions/monitoring-chart";
 
 let defaultState = {
+    favourites: [],
     type: "areaspline",
-    favourites: []
+    yAxis: {
+        min: 0,
+        max: 100
+    }
 };
 
 export function monitoringChart (state = defaultState, action) {
