@@ -48,53 +48,65 @@ describe("`consumptions-utils`", () => {
 
     });
 
-    describe("`getSumByPeriod` function", () => {
+    describe("`getSumBySiteAndPeriod` function", () => {
 
         it("should return the sum of all values in a given range", () => {
             const measurements = Immutable.Map({
-                "site00022-2016-02-01-reading-activeEnergy": Immutable.Map({
-                    "day": "2016-02-01",
+                "site00022-2017-reading-activeEnergy": Immutable.Map({
+                    "year": "2017",
                     "sensorId": "site00022",
                     "source": "reading",
                     "measurementType": "activeEnergy",
-                    "measurementValues": "14.107, 10,,,10",
-                    "unitOfMeasurement": "kWh",
-                    "measurementsDeltaInMs": 300000
+                    "measurementValues": "100,200,300,10",
+                    "unitOfMeasurement": "kWh"
                 }),
-                "site00022-2016-02-02-reading-activeEnergy": Immutable.Map({
-                    "day": "2016-02-02",
+                "site00022-2016-reading-activeEnergy": Immutable.Map({
+                    "year": "2016",
+                    "sensorId": "site00022",
+                    "source": "reading",
+                    "measurementType": "activeEnergy",
+                    "measurementValues": "14.107, 10,1,2,10",
+                    "unitOfMeasurement": "kWh"
+                }),
+                "site00022-2015-reading-activeEnergy": Immutable.Map({
+                    "year": "2015",
                     "sensorId": "site00022",
                     "source": "reading",
                     "measurementType": "activeEnergy",
                     "measurementValues": "500,,,,,,,,,,100",
-                    "unitOfMeasurement": "kWh",
-                    "measurementsDeltaInMs": 300000
+                    "unitOfMeasurement": "kWh"
                 }),
-                "site00022-2016-03-02-reading-activeEnergy": Immutable.Map({
-                    "day": "2016-03-02",
+                "site00022-2014-reading-activeEnergy": Immutable.Map({
+                    "year": "2014",
                     "sensorId": "site00022",
                     "source": "reading",
                     "measurementType": "activeEnergy",
-                    "measurementValues": "1.107, 10,,,10",
-                    "unitOfMeasurement": "kWh",
-                    "measurementsDeltaInMs": 300000
+                    "measurementValues": "10,10,10,10,,,,",
+                    "unitOfMeasurement": "kWh"
                 }),
-                "site00021-2016-02-02-reading-activeEnergy": Immutable.Map({
-                    "day": "2016-02-02",
+                "site00021-2016-reading-activeEnergy": Immutable.Map({
+                    "year": "2016",
                     "sensorId": "site00021",
                     "source": "reading",
                     "measurementType": "activeEnergy",
-                    "measurementValues": "14.107, 10,,,10",
-                    "unitOfMeasurement": "kWh",
-                    "measurementsDeltaInMs": 300000
+                    "measurementValues": "9,9,,,99",
+                    "unitOfMeasurement": "kWh"
+                }),
+                "site00021-2015-reading-activeEnergy": Immutable.Map({
+                    "year": "2015",
+                    "sensorId": "site00021",
+                    "source": "reading",
+                    "measurementType": "activeEnergy",
+                    "measurementValues": "14.666,19.1,,,1.23",
+                    "unitOfMeasurement": "kWh"
                 })
             });
             const period = {
-                start: "2016-02-01",
-                end: "2016-02-03"
+                start: "2015-01-01",
+                end: "2016-01-03"
             };
-            // 1st + 2nd
-            expect(getSumBySiteAndPeriod(period, "site00022", measurements)).to.be.equals(634.107);
+            // 2nd + 3rd
+            expect(getSumBySiteAndPeriod(period, "site00022", measurements)).to.be.equals(625.107);
         });
 
     });

@@ -14,9 +14,30 @@ export function getTimeRangeByPeriod (period) {
 }
 
 export function getSumBySiteAndPeriod (period, siteId, measures) {
+    const startYear = moment(period.start).year() + "";
+    const endYear = moment(period.end).year() + "";
     const allMeasures = flatten(measures
-        .filter(measure => (measure.get("day") >= period.start && measure.get("day") < period.end && measure.get("sensorId") === siteId))
-        .map(measure => measure.get("measurementValues").split(","))
+        .filter(measure => (measure.get("year") === startYear || measure.get("year") === endYear) && measure.get("sensorId") === siteId)
+        .map(measure => {
+            return {
+                year: measure.get("year"),
+                measurementValues: measure.get("measurementValues").split(",")
+            };
+        })
+        .map(measure => {
+            const startDay = moment(period.start).dayOfYear();
+            const endDay = moment(period.end).dayOfYear();
+            if (startYear === endYear) {
+                return measure["measurementValues"].slice(startDay -1, endDay);
+            } else {
+                // start > end
+                if (measure["year"] === endYear) {
+                    return measure["measurementValues"].slice(0, endDay);
+                } else if (measure["year"] === startYear) {
+                    return measure["measurementValues"].slice(startDay -1, measure["measurementValues"].lenght);
+                }
+            }
+        })
         .toArray());
     const sum = allMeasures.reduce((a, b) => a + (parseFloat(b) || 0), 0);
     return sum;
