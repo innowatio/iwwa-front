@@ -116,7 +116,7 @@ var MonitoringChart = React.createClass({
             }
         };
     },
-    getAreasplineConfig: function () {
+    getBasicLineConfig: function () {
         return {};
     },
     getColumnConfig: function () {
@@ -171,9 +171,9 @@ var MonitoringChart = React.createClass({
                 return this.getStackedConfig();
             case "percent":
                 return this.getPercentConfig();
-            case "areaspline":
+            case "line":
             default:
-                return this.getAreasplineConfig();
+                return this.getBasicLineConfig();
         }
     },
     getHighstockConfig: function () {
