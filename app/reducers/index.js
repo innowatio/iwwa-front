@@ -11,6 +11,7 @@ import {monitoringChart} from "./monitoring-chart";
 import {realTime} from "./real-time";
 import {userSetting} from "./user-setting";
 import {sensors} from "./sensors";
+import {notifications} from "./notifications";
 
 const rootReducer = storage.reducer(combineReducers({
     collections,
@@ -22,7 +23,8 @@ const rootReducer = storage.reducer(combineReducers({
     userSetting,
     form,
     routing,
-    sensors
+    sensors,
+    notifications
 }));
 
 export default rootReducer;

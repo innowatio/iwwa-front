@@ -19,6 +19,7 @@ exports.LoginModal              = require("./login-modal/");
 exports.MeasureLabel            = require("./measure-label/");
 exports.ModalOptionList         = require("./modal-option-list/");
 exports.MonitoringChart         = require("./monitoring-chart/");
+exports.NotificationModal       = require("./notification-modal/");
 exports.ObjectSelect            = require("./object-select/");
 exports.PageContainer           = require("./page-container/");
 exports.Popover                 = require("./popover/");

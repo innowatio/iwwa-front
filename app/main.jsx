@@ -22,5 +22,8 @@ window.store = store;
 
 render(App, document.getElementById("root"));
 
+// Init cordova-specific behaviours
+require("cordova-scripts/init");
+
 window.R = R;
 window.React = React;

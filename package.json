@@ -6,6 +6,7 @@
   "scripts": {
     "build": "gulp build",
     "build-cordova": "node scripts/build-cordova.js",
+    "run-ios": "cd builds/cordova-app && cordova run ios",
     "dev": "gulp dev",
     "predeploy": "ENVIRONMENT=prod npm run build",
     "deploy": "asd-upload builds/prod/",
@@ -92,6 +93,7 @@
     "iwwa-icons": "^1.0.2",
     "jsx-chai": "^2.0.0",
     "lodash.debounce": "^4.0.3",
+    "lodash.get": "^4.1.2",
     "lodash.throttle": "^4.0.1",
     "moment": "^2.11.2",
     "radium": "^0.16.6",
@@ -131,6 +133,7 @@
       "cordova-plugin-device",
       "cordova-plugin-inappbrowser",
       "cordova-plugin-statusbar",
+      "phonegap-plugin-push",
       "https://github.com/robertklein/cordova-ios-security.git",
       "https://github.com/innowatio/cordova-ios-fullscreen.git"
     ]
