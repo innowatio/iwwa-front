@@ -80,7 +80,6 @@
     "asteroid-immutable-collections-mixin": "^1.0.1",
     "axios": "^0.9.1",
     "bootstrap": "^3.3.6",
-    "bootstrap-table-react": "^1.0.1",
     "color": "^0.11.1",
     "compression": "^1.6.1",
     "dygraphs": "^1.1.1",

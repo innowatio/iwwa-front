@@ -1,17 +1,23 @@
-import {Button} from "react-bootstrap";
-import Table from "bootstrap-table-react";
+import Immutable from "immutable";
 import React from "react";
+import {Button} from "react-bootstrap";
+import IPropTypes from "react-immutable-proptypes";
 import {connect} from "react-redux";
 import {Link} from "react-router";
 import {bindActionCreators} from "redux";
 import {deleteSensor, cloneSensor, favoriteSensor, monitorSensor, selectSensor, combineSensor} from "actions/sensors";
 import {addToFavorite, selectChartType} from "actions/monitoring-chart";
-import {MonitoringChart} from "components";
+import {CollectionElementsTable, MonitoringChart} from "components";
+
+var getKeyFromCollection = function (collection) {
+    return collection.get("_id");
+};
 
 var Monitoring = React.createClass({
     propTypes: {
         addToFavorite: React.PropTypes.func.isRequired,
         cloneSensor: React.PropTypes.func.isRequired,
+        collections: IPropTypes.map.isRequired,
         combineSensor: React.PropTypes.func.isRequired,
         deleteSensor: React.PropTypes.func.isRequired,
         favoriteSensor: React.PropTypes.func.isRequired,
@@ -22,7 +28,9 @@ var Monitoring = React.createClass({
         selected: React.PropTypes.array,
         sensors: React.PropTypes.array.isRequired
     },
-
+    componentDidMount: function () {
+        this.props.asteroid.subscribe("sensors");
+    },
     getDeleteSensor: function (id) {
         return () => {
             this.props.deleteSensor(id);
@@ -43,7 +51,7 @@ var Monitoring = React.createClass({
             this.props.monitorSensor(id);
         };
     },
-    getColumns: function () {
+    getSensorsColumns: function () {
         return [
             {
                 key: "Favorite",
@@ -58,27 +66,24 @@ var Monitoring = React.createClass({
                 )
             },
             {
-                key: "name",
+                key: "_id",
                 valueFormatter: (value, item) => (
-                    <Link to={"/monitoring/sensor/" + item.id}>
-                        {item.fields.name}
+                    <Link to={"/monitoring/sensor/" + value}>
+                        {value}
                     </Link>
                 )
             },
             {
-                key: "description",
-                valueFormatter: (value, item) => (
-                    item.fields.description
-                )
+                key: "description"
             },
             {
                 key: "",
                 valueFormatter: (value, item) => (
                     <div>
-                        <Button onClick={this.getCloneSensor(item.id)}>
+                        <Button onClick={this.getCloneSensor(item.get("_id"))}>
                             {"Clone"}
                         </Button>
-                        <Button bsStyle="danger" onClick={this.getDeleteSensor(item.id)}>
+                        <Button bsStyle="danger" onClick={this.getDeleteSensor(item.get("_id"))}>
                             {"Delete"}
                         </Button>
                     </div>
@@ -87,6 +92,7 @@ var Monitoring = React.createClass({
         ];
     },
     render: function () {
+        let sensors = this.props.collections.get("sensors") || Immutable.Map();
         return (
             <div>
                 <Button bsStyle="primary" href="/monitoring/sensor/">
@@ -98,10 +104,13 @@ var Monitoring = React.createClass({
                 <Button disabled={!(this.props.selected.length > 0)} >
                     {"Assign sensors"}
                 </Button>
-                <Table
-                    collection={this.props.sensors}
-                    columns={this.getColumns()}
+                <CollectionElementsTable
+                    collection={sensors}
+                    columns={this.getSensorsColumns()}
+                    getKey={getKeyFromCollection}
+                    hover={true}
                     onRowClick={this.props.selectSensor}
+                    width={"60%"}
                 />
                 <MonitoringChart
                     addToFavorite={this.props.addToFavorite}
@@ -116,6 +125,7 @@ var Monitoring = React.createClass({
 
 const mapStateToProps = (state) => {
     return {
+        collections: state.collections,
         monitoringChart: state.monitoringChart,
         selected: state.sensors.selectedSensors,
         sensors: state.sensors.allSensors
