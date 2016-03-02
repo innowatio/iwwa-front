@@ -16,6 +16,7 @@ var getKeyFromCollection = function (collection) {
 var Monitoring = React.createClass({
     propTypes: {
         addToFavorite: React.PropTypes.func.isRequired,
+        asteroid: React.PropTypes.object,
         cloneSensor: React.PropTypes.func.isRequired,
         collections: IPropTypes.map.isRequired,
         combineSensor: React.PropTypes.func.isRequired,
@@ -67,7 +68,7 @@ var Monitoring = React.createClass({
             },
             {
                 key: "_id",
-                valueFormatter: (value, item) => (
+                valueFormatter: (value) => (
                     <Link to={"/monitoring/sensor/" + value}>
                         {value}
                     </Link>
