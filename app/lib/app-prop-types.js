@@ -1,5 +1,9 @@
 var R = require("ramda");
 
+// export function HighChartsCoordinate (props, propName) {
+//
+// }
+
 var isArrayOfNumbers = function (thing) {
     return (
         R.is(Array, thing) &&
