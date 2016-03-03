@@ -11,6 +11,8 @@ import {bindActionCreators} from "redux";
 import {defaultTheme} from "lib/theme";
 import {selectSite, selectPeriod} from "actions/consumptions";
 import {getSumBySiteAndPeriod, getTimeRangeByPeriod, tabParameters} from "lib/consumptions-utils";
+import moment from "moment";
+import {partial} from "Ramda";
 
 
 var styleLeftPane  = {
@@ -95,15 +97,17 @@ var SummaryConsumptions = React.createClass({
     componentDidMount: function () {
         this.props.asteroid.subscribe("sites");
     },
-    subscribeToMeasuresByPerdiod: function (period) {
-        this.props.asteroid.subscribe(
-            "dailyMeasuresBySensor",
-            this.props.consumptions.fullPath[0],
-            period.start,
-            period.end,
-            "reading",
-            "activeEnergy"
-        );
+    subscribeToConsumptions: function () {
+        const periods = [moment().subtract(1, "year").format("YYYY"), moment().format("YYYY")];
+        periods.map(year => {
+            this.props.asteroid.subscribe(
+                "yearlyConsumptions",
+                this.props.consumptions.fullPath[0],
+                year,
+                "reading",
+                "activeEnergy"
+            );
+        });
     },
     getTheme: function () {
         return this.context.theme || defaultTheme;
@@ -113,6 +117,14 @@ var SummaryConsumptions = React.createClass({
             return this.props.collections.getIn(["sites", this.props.consumptions.fullPath[0]]);
         }
         return Immutable.Map({name: ""});
+    },
+    getSum: function (dateRange) {
+        return parseFloat(
+            getSumBySiteAndPeriod(
+                dateRange,
+                this.props.consumptions.fullPath[0],
+                this.props.collections.get("consumptions-yearly-aggregates") || Immutable.Map())
+            .toFixed(2));
     },
     closeModal: function () {
         this.setState ({
@@ -129,6 +141,30 @@ var SummaryConsumptions = React.createClass({
     },
     onChangeWidgetValue: function (value) {
         this.setState({value});
+    },
+    renderComparisons: function () {
+        const self = this;
+        const selectedTab = tabParameters().find(param => param.key === this.props.consumptions.period);
+        const comparisons = selectedTab.comparisons;
+        const now = getTimeRangeByPeriod(selectedTab.period);
+        console.log(selectedTab.period);
+        console.log(now);
+        return (
+            <div>
+                {comparisons.map(partial(self.renderProgressBar, [now]))}
+            </div>
+        );
+    },
+    renderProgressBar: function (now, comparisonParams) {
+        const sumMax = this.getSum(comparisonParams);
+        const sumNow = this.getSum(now);
+        return (
+            <components.ProgressBar
+                key={comparisonParams.key}
+                max={sumMax}
+                now={sumNow}
+                title={comparisonParams.title}
+            />);
     },
     renderModalBody: function () {
         const sites = this.props.collections.get("sites") || Immutable.Map({});
@@ -215,12 +251,9 @@ var SummaryConsumptions = React.createClass({
     renderTabContent: function (siteName, theme, tabParameters) {
         var sum = 0;
         if (this.props.consumptions.fullPath) {
-            this.subscribeToMeasuresByPerdiod(getTimeRangeByPeriod(tabParameters.period));
+            this.subscribeToConsumptions();
 
-            sum = getSumBySiteAndPeriod(
-                getTimeRangeByPeriod(tabParameters.period),
-                this.props.consumptions.fullPath[0],
-                this.props.collections.get("readings-daily-aggregates") || Immutable.Map());
+            sum = this.getSum(getTimeRangeByPeriod(tabParameters.period));
         }
         return (
             <div style={styleContent(theme)}>
@@ -265,6 +298,7 @@ var SummaryConsumptions = React.createClass({
                     >
                         {this.renderModalBody()}
                     </components.FullscreenModal>
+                    {this.props.consumptions.period && this.props.consumptions.fullPath ? this.renderComparisons() : undefined}
                 </div>
             </div>
         );

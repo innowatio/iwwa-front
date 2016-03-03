@@ -2,14 +2,13 @@ import {flatten} from "ramda";
 import moment from "moment";
 
 
-const DATE_FORMAT = "YYYY-MM-DD";
 const PERIODS = ["day", "week", "month", "year"];
 
 export function getTimeRangeByPeriod (period) {
     const now = moment.utc();
     return {
-        start: now.startOf(period).format(DATE_FORMAT),
-        end: now.endOf(period).add(1, "minute").format(DATE_FORMAT)
+        start: now.startOf(period).format(),
+        end: now.endOf(period).format()
     };
 }
 
@@ -47,6 +46,13 @@ export function tabParameters () {
     return PERIODS.map(period => getTitleAndSubtitle(period));
 }
 
+function getPreviousPeriod (subtractPeriod, rangePeriod) {
+    return {
+        start: moment.utc().subtract(1, subtractPeriod).startOf(rangePeriod).format(),
+        end: moment.utc().subtract(1, subtractPeriod).endOf(rangePeriod).format()
+    };
+}
+
 function getTitleAndSubtitle (period) {
     const periodDates = getTimeRangeByPeriod(period);
     switch (PERIODS.indexOf(period)) {
@@ -57,7 +63,16 @@ function getTitleAndSubtitle (period) {
                 period: period,
                 periodTitle: "OGGI HAI UTILIZZATO",
                 periodSubtitle: `${moment(periodDates.start).locale("it").format("DD MMMM YYYY")}`.toUpperCase(),
-                title: "OGGI"
+                title: "OGGI",
+                comparisons: [{
+                    key: "today-1d",
+                    title: "IERI",
+                    ...getPreviousPeriod(period, period)
+                }, {
+                    key: "today-7d",
+                    title: `${moment().locale("it").format("dddd")} scors${moment().day() === 6 ? "a" : "o"}`.toUpperCase(),
+                    ...getPreviousPeriod("week", "day")
+                }]
             };
         case 1:
             return {
@@ -66,7 +81,12 @@ function getTitleAndSubtitle (period) {
                 period: period,
                 periodTitle: "QUESTA SETTIMANA HAI UTILIZZATO",
                 periodSubtitle: `${moment(periodDates.start).format("DD")} - ${moment(periodDates.end).locale("it").format("DD MMMM YYYY")}`.toUpperCase(),
-                title: "SETTIMANA CORRENTE"
+                title: "SETTIMANA CORRENTE",
+                comparisons: [{
+                    key: "week-1w",
+                    title: "SETTIMANA SCORSA",
+                    ...getPreviousPeriod(period, period)
+                }]
             };
         case 2:
             return {
@@ -75,7 +95,16 @@ function getTitleAndSubtitle (period) {
                 period: period,
                 periodTitle: `NEL MESE DI ${moment(periodDates.start).locale("it").format("MMMM")} HAI UTILIZZATO`.toUpperCase(),
                 periodSubtitle: `${moment(periodDates.start).format("YYYY")}`,
-                title: "MESE CORRENTE"
+                title: "MESE CORRENTE",
+                comparisons: [{
+                    key: "month-1m",
+                    title: `${moment(getPreviousPeriod(period, period).start).locale("it").format("MMMM YYYY")}`.toUpperCase(),
+                    ...getPreviousPeriod(period, period)
+                }, {
+                    key: "month-1y",
+                    title: `${moment(getPreviousPeriod("year", "month").start).locale("it").format("MMMM YYYY")}`.toUpperCase(),
+                    ...getPreviousPeriod("year", "month")
+                }]
             };
         case 3:
             return {
@@ -84,7 +113,12 @@ function getTitleAndSubtitle (period) {
                 period: period,
                 periodTitle: `NEL ${moment(periodDates.start).format("YYYY")} HAI UTILIZZATO`,
                 periodSubtitle: `${moment(periodDates.start).format("YYYY")}`.toUpperCase(),
-                title: "ANNO CORRENTE"
+                title: "ANNO CORRENTE",
+                comparisons: [{
+                    key: "year-1y",
+                    title: `${moment(getPreviousPeriod(period, period).start).locale("it").format("YYYY")}`.toUpperCase(),
+                    ...getPreviousPeriod(period, period)
+                }]
             };
         default:
             return {
@@ -93,7 +127,8 @@ function getTitleAndSubtitle (period) {
                 period: period,
                 periodTitle: "",
                 periodSubtitle: "",
-                title: ""
+                title: "",
+                comparisons: []
             };
     }
 }
