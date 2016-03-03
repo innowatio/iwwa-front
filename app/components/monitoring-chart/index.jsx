@@ -1,5 +1,5 @@
 import React from "react";
-import {Button} from "react-bootstrap";
+import {Button, Input} from "react-bootstrap";
 import ReactHighstock from "react-highcharts/bundle/ReactHighstock"; // Highstock is bundled
 import {ObjectSelect} from "components";
 
@@ -17,8 +17,15 @@ var MonitoringChart = React.createClass({
         addToFavorite: React.PropTypes.func.isRequired,
         chartState: React.PropTypes.object.isRequired,
         config: React.PropTypes.object,
+        onChangeYAxisValues: React.PropTypes.func.isRequired,
         selectChartType: React.PropTypes.func.isRequired,
         series: React.PropTypes.array.isRequired
+    },
+    getInitialState: function () {
+        return {
+            yAxisMax: this.props.chartState.yAxis.max,
+            yAxisMin: this.props.chartState.yAxis.min
+        };
     },
     getRandomValue: function () {
         return Math.floor((Math.random() * 100) + 1);
@@ -30,7 +37,6 @@ var MonitoringChart = React.createClass({
         var currentTime = new Date();
 
         this.props.series.forEach (function (item) {
-            console.log(item);
             series.push({
                 name: item,
                 data: [[currentTime.getTime(), self.getRandomValue()]]
@@ -51,12 +57,6 @@ var MonitoringChart = React.createClass({
         };
     },
     getCommonConfig: function () {
-            //xAxis: [{
-            //    categories: ["Jan", "Feb", "Mar", "Apr", "May", "Jun",
-            //        "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"],
-            //    crosshair: true
-            //}],
-            //yAxis: this.props.chartState.yAxis,
         return {
             chart: {
                 type: this.props.chartState.type,
@@ -82,39 +82,10 @@ var MonitoringChart = React.createClass({
             title: {
                 text: "Highstock"
             },
-            yAxis: [
-                { // Primary yAxis
-                    labels: {
-                        format: "{value}°C"
-                    },
-                    title: {
-                        text: "Temperature"
-                    },
-                    opposite: true
-                },
-                { // Secondary yAxis
-                    gridLineWidth: 0,
-                    title: {
-                        text: "Rainfall"
-                    },
-                    labels: {
-                        format: "{value} mm"
-                    }
-                },
-                { // Tertiary yAxis
-                    gridLineWidth: 0,
-                    title: {
-                        text: "Sea-Level Pressure"
-                    },
-                    labels: {
-                        format: "{value} mb"
-                    },
-                    opposite: true
-                }
-            ],
             tooltip: {
                 shared: true
-            }
+            },
+            yAxis: this.props.chartState.yAxis
         };
     },
     getBasicLineConfig: function () {
@@ -192,12 +163,31 @@ var MonitoringChart = React.createClass({
     addToFavorite: function () {
         this.props.addToFavorite(config);
     },
+    handleAxisChange: function () {
+        this.setState({
+            yAxisMax: this.refs.yAxisMax.getValue(),
+            yAxisMin: this.refs.yAxisMin.getValue()
+        });
+    },
+    getYAxisValidationState: function () {
+        console.log(this.state);
+        let {yAxisMin, yAxisMax} = this.state;
+        if (isNaN(yAxisMin) || isNaN(yAxisMax)) return "error";
+        if (parseInt(yAxisMin) > parseInt(yAxisMax)) return "warning";
+        return "success";
+    },
+    changeYAxisValues: function () {
+        this.props.onChangeYAxisValues({
+            max: this.state.yAxisMax,
+            min: this.state.yAxisMin
+        });
+    },
     render: function () {
         let type = chartTypes.find((item) => {
             return item.id === this.props.chartState.type;
         });
         return (
-            <div style={{"margin-bottom": "60px"}}>
+            <div style={{marginBottom: "60px"}}>
                 <ObjectSelect
                     options={chartTypes}
                     onBlur={() => {}}
@@ -207,6 +197,31 @@ var MonitoringChart = React.createClass({
                 <Button bsStyle="primary" onClick={this.addToFavorite} style={{float: "right"}}>
                     {"Add to favorite"}
                 </Button>
+
+                <div>
+                    <Input
+                        type="text"
+                        value={this.state.yAxisMin}
+                        label="yAxis min"
+                        bsStyle={this.getYAxisValidationState()}
+                        hasFeedback={true}
+                        ref="yAxisMin"
+                        onChange={this.handleAxisChange}
+                    />
+                    <Input
+                        type="text"
+                        value={this.state.yAxisMax}
+                        label="yAxis max"
+                        bsStyle={this.getYAxisValidationState()}
+                        hasFeedback={true}
+                        ref="yAxisMax"
+                        onChange={this.handleAxisChange}
+                    />
+                    <Button onClick={this.changeYAxisValues}>
+                        {"Change axis value"}
+                    </Button>
+                </div>
+
                 <ReactHighstock config={this.getHighstockConfig()} />
             </div>
         );

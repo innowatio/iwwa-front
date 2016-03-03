@@ -5,8 +5,8 @@ import IPropTypes from "react-immutable-proptypes";
 import {connect} from "react-redux";
 import {Link} from "react-router";
 import {bindActionCreators} from "redux";
-import {deleteSensor, cloneSensor, favoriteSensor, monitorSensor, selectSensor, combineSensor} from "actions/sensors";
-import {addToFavorite, selectChartType} from "actions/monitoring-chart";
+import {cloneSensor, combineSensor, deleteSensor, favoriteSensor, monitorSensor, selectSensor} from "actions/sensors";
+import {addToFavorite, changeYAxisValues, selectChartType} from "actions/monitoring-chart";
 import {CollectionElementsTable, MonitoringChart} from "components";
 
 var getKeyFromCollection = function (collection) {
@@ -17,6 +17,7 @@ var Monitoring = React.createClass({
     propTypes: {
         addToFavorite: React.PropTypes.func.isRequired,
         asteroid: React.PropTypes.object,
+        changeYAxisValues: React.PropTypes.func.isRequired,
         cloneSensor: React.PropTypes.func.isRequired,
         collections: IPropTypes.map.isRequired,
         combineSensor: React.PropTypes.func.isRequired,
@@ -31,6 +32,24 @@ var Monitoring = React.createClass({
     },
     componentDidMount: function () {
         this.props.asteroid.subscribe("sensors");
+        this.subscribeToSensorsData(this.props);
+    },
+    componentWillReceiveProps: function (props) {
+        this.subscribeToSensorsData(props);
+    },
+    subscribeToSensorsData: function (props) {
+        console.log(props.selected);
+        props.selected[0] && props.selected.forEach((sensorId) => {
+            //TODO capire bene cosa va preso...
+            props.asteroid.subscribe(
+                "dailyMeasuresBySensor",
+                sensorId,
+                "2015-01-01",
+                "2016-03-01",
+                "reading",
+                "activeEnergy"
+            );
+        });
     },
     getDeleteSensor: function (id) {
         return () => {
@@ -92,6 +111,12 @@ var Monitoring = React.createClass({
             }
         ];
     },
+    getChartSeries: function () {
+        let measures = this.props.collections.get("readings-daily-aggregates") || Immutable.Map();
+        console.log(measures);
+        //TODO prendere le misure
+        return this.props.selected;
+    },
     render: function () {
         let sensors = this.props.collections.get("sensors") || Immutable.Map();
         return (
@@ -115,9 +140,10 @@ var Monitoring = React.createClass({
                 />
                 <MonitoringChart
                     addToFavorite={this.props.addToFavorite}
+                    onChangeYAxisValues={this.props.changeYAxisValues}
                     chartState={this.props.monitoringChart}
                     selectChartType={this.props.selectChartType}
-                    series={this.props.selected}
+                    series={this.getChartSeries()}
                 />
             </div>
         );
@@ -136,6 +162,7 @@ const mapStateToProps = (state) => {
 const mapDispatchToProps = (dispatch) => {
     return {
         addToFavorite: bindActionCreators(addToFavorite, dispatch),
+        changeYAxisValues: bindActionCreators(changeYAxisValues, dispatch),
         cloneSensor: bindActionCreators(cloneSensor, dispatch),
         combineSensor: bindActionCreators(combineSensor, dispatch),
         deleteSensor: bindActionCreators(deleteSensor, dispatch),

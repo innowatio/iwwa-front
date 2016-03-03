@@ -1,11 +1,11 @@
-import {ADD_TO_FAVORITE, SELECT_CHART_TYPE} from "../actions/monitoring-chart";
+import {ADD_TO_FAVORITE, CHANGE_Y_AXIS_VALUES, SELECT_CHART_TYPE} from "../actions/monitoring-chart";
 
 let defaultState = {
     favourites: [],
     type: "spline",
     yAxis: {
         min: 0,
-        max: 100
+        max: 60
     }
 };
 
@@ -19,6 +19,14 @@ export function monitoringChart (state = defaultState, action) {
                 favourites: favourite
             };
         }
+        case CHANGE_Y_AXIS_VALUES:
+            return {
+                ...state,
+                yAxis: {
+                    ...state.yAxis,
+                    ...action.values
+                }
+            };
         case SELECT_CHART_TYPE:
             return {
                 ...state,
