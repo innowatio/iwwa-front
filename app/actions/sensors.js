@@ -37,7 +37,7 @@ export const favoriteSensor = (id) => getBasicObject("FAVORITE_SENSOR", id);
 
 export const monitorSensor = (id) => getBasicObject("MONITOR_SENSOR", id);
 
-export const selectSensor = (sensor) => getBasicObject("SELECT_SENSOR", sensor.id);
+export const selectSensor = (sensor) => getBasicObject("SELECT_SENSOR", sensor.get("_id"));
 
 export const combineSensor = () => {
     return {

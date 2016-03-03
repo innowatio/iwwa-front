@@ -130,14 +130,14 @@ export function sensors (state = defaultState, action) {
         }
         case "SELECT_SENSOR": {
             newState = cloneState(state);
-            var foundSelected = findSensor(newState.selectedSensors, action.id);
-            if (foundSelected) {
-                newState.selectedSensors = newState.selectedSensors.filter(t => {
-                    return t.id !== action.id;
+            if (newState.selectedSensors.find((it) => {
+                return it === action.id;
+            })) {
+                newState.selectedSensors = newState.selectedSensors.filter(it => {
+                    return it !== action.id;
                 });
             } else {
-                found = findSensor(newState.allSensors, action.id);
-                newState.selectedSensors.push(found);
+                newState.selectedSensors.push(action.id);
             }
             return newState;
         }

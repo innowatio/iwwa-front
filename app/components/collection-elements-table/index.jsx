@@ -30,6 +30,7 @@ var Row = React.createClass({
     propTypes: {
         columns: columnsType,
         item: IPropTypes.map,
+        onClick: React.PropTypes.func,
         width: React.PropTypes.string
     },
     renderCellElement: function (columnElement) {
@@ -60,7 +61,7 @@ var Row = React.createClass({
     },
     render: function () {
         return (
-            <tr>
+            <tr onClick={this.props.onClick} style={{cursor: this.props.onClick ? "pointer" : ""}}>
                 {this.props.columns.map(this.renderCell)}
             </tr>
         );
@@ -98,6 +99,7 @@ var CollectionElementsTable = React.createClass({
         headColumn: React.PropTypes.array,
         headStyle: React.PropTypes.object,
         hover: React.PropTypes.bool,
+        onRowClick: React.PropTypes.func,
         siti: IPropTypes.map,
         striped: React.PropTypes.bool,
         style: React.PropTypes.object,
@@ -133,6 +135,7 @@ var CollectionElementsTable = React.createClass({
                             columns={this.props.columns}
                             item={item}
                             key={key}
+                            onClick={() => this.props.onRowClick(item)}
                             width={this.props.width}
                         />
                     );

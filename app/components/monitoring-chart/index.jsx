@@ -4,7 +4,7 @@ import ReactHighstock from "react-highcharts/bundle/ReactHighstock"; // Highstoc
 import {ObjectSelect} from "components";
 
 const chartTypes = [
-    {label: "Area", id: "areaspline"},
+    {label: "Linea", id: "spline"},
     {label: "Istogramma", id: "column"},
     {label: "In pila", id: "stacked"},
     {label: "In pila percentuale", id: "percent"}
@@ -30,8 +30,9 @@ var MonitoringChart = React.createClass({
         var currentTime = new Date();
 
         this.props.series.forEach (function (item) {
+            console.log(item);
             series.push({
-                name: item.fields.name,
+                name: item,
                 data: [[currentTime.getTime(), self.getRandomValue()]]
             });
         });
@@ -196,7 +197,7 @@ var MonitoringChart = React.createClass({
             return item.id === this.props.chartState.type;
         });
         return (
-            <div>
+            <div style={{"margin-bottom": "60px"}}>
                 <ObjectSelect
                     options={chartTypes}
                     onBlur={() => {}}
