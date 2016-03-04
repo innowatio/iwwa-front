@@ -62,12 +62,12 @@ var Popover = React.createClass({
         return this.props.arrow === "none" ?
             <bootstrap.Button
                 style={{
-                    width: "430px",
+                    width: "400px",
                     whiteSpace: "normal",
                     outline: "0px",
                     outlineStyle: "none",
                     outlineWidth: "0px",
-                    marginTop: "6px",
+                    marginTop: "8px",
                     border: `1px solid ${theme.colors.borderSelectButton}`,
                     color: theme.colors.mainFontColor,
                     backgroundColor: theme.colors.backgroundSelectButton
@@ -117,7 +117,7 @@ var Popover = React.createClass({
                             padding: "0px",
                             maxWidth: "500px",
                             backgroundColor: colors.transparent,
-                            width: this.props.arrow === "none" ? "430px" : "",
+                            width: this.props.arrow === "none" ? "398px" : "",
                             marginTop: this.props.arrow === "none" ? "0px !important" : ""
                         },
                         ".popover-content": {

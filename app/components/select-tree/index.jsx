@@ -97,7 +97,7 @@ var SelectTree = React.createClass({
                     onClick={R.partial(this.onClickActiveSite, [allowedValue])}
                     style={{
                         textDecoration: "none",
-                        width: this.state.subMenu ? "80%" : "100%",
+                        width: this.state.subMenu ? "430px" : "100%",
                         textOverflow: "ellipsis",
                         overflow: "hidden",
                         whiteSpace: "nowrap",
@@ -146,7 +146,7 @@ var SelectTree = React.createClass({
                 header={this.renderHeader(allowedValue)}
                 key={this.props.getKey(allowedValue)}
                 style={{
-                    width: this.props.buttonCloseDefault ? "100%" : "200px",
+                    width: this.props.buttonCloseDefault ? "430px" : "200px",
                     border: "0px",
                     marginTop: "0px",
                     borderRadius: "0px",
@@ -171,7 +171,7 @@ var SelectTree = React.createClass({
                     position: "relative",
                     overflow: "auto",
                     maxHeight: "400px",
-                    width: this.props.buttonCloseDefault ? "430px" : "",
+                    width: this.props.buttonCloseDefault ? "400px" : "",
                     backgroundColor: colors.transparent,
                     color: colors.white
                 }}
@@ -179,14 +179,12 @@ var SelectTree = React.createClass({
                 <Radium.Style
                     rules={{
                         ".form-group": {
-                            position: "fixed",
                             height: "34px",
                             margin: "0px",
-                            zIndex: "10",
-                            width: this.props.buttonCloseDefault ? "428px" : "200px"
+                            zIndex: "10"
                         },
                         ".panel-group": {
-                            paddingTop: "44px",
+                            paddingTop: "10px",
                             marginBottom: "0px"
                         },
                         ".panel-title": {

@@ -396,7 +396,7 @@ var AlarmForm = React.createClass({
     renderTitleSelectSite: function () {
         const theme = this.getTheme();
         return this.state.sito.size === 0 ?
-            <span style={{padding: "4px"}}>
+            <span>
                 {"Seleziona punto di misurazione"}
                 <components.Icon
                     color={theme.colors.iconInputSelect}
@@ -406,7 +406,7 @@ var AlarmForm = React.createClass({
                 />
             </span>
             :
-            <span style={{padding: "4px"}}>
+            <span>
                 {CollectionUtils.sites.getLabel(this.state.sito)}
                 {this.state.sito.get("pod")}
                 <components.Icon

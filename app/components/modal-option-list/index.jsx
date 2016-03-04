@@ -2,10 +2,8 @@ var Radium     = require("radium");
 var R          = require("ramda");
 var React      = require("react");
 var bootstrap  = require("react-bootstrap");
-var Modal = bootstrap.Modal;
 
 var components = require("components");
-var measures   = require("lib/measures");
 import {defaultTheme} from "lib/theme";
 
 var ModalOptionList = React.createClass({
@@ -47,7 +45,9 @@ var ModalOptionList = React.createClass({
                     onClick={R.partial(value.action, [this.props.getKey(value)])}
                     style={{
                         color: colors.greySubTitle,
-                        textAlign: "left"
+                        textAlign: "left",
+                        borderRadius: "0",
+                        borderBottom: "1px solid " + colors.white
                     }}
                 >
                     {this.props.getLabel(value)}
@@ -69,13 +69,15 @@ var ModalOptionList = React.createClass({
         const {colors} = this.getTheme();
         var repetitionItems = this.props.allowedValues.map(this.renderGroupItems);
         return (
-            <div clasName="vattelapesca">
-                <Radium.Style
-                    rules={this.props.styleRules}
-                    scopeSelector=".vattelapesca"
-                    >
-                </Radium.Style>
-                <div>{this.props.header}</div>
+            <div style={{
+                width: "55%",
+                margin: "0 auto",
+                border: "1px solid " + colors.borderContentModal,
+                backgroundColor: colors.backgroundContentModal,
+                borderRadius: "20px"
+            }}
+            >
+                <div style={{color: colors.mainFontColor, textAlign: "center", padding: "20px 0px"}}>{this.props.header}</div>
                 <bootstrap.ListGroup>
                     {repetitionItems.toArray ? repetitionItems.toArray() : repetitionItems}
                 </bootstrap.ListGroup>
@@ -84,7 +86,10 @@ var ModalOptionList = React.createClass({
     },
     render: function () {
         return (
-            <div>
+            <div style={{
+                margin: "38px"
+            }}
+            >
                 <components.FullscreenModal
                     children={this.renderModalBody()}
                     container={this}
