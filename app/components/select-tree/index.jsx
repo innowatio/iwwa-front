@@ -117,17 +117,7 @@ var SelectTree = React.createClass({
     renderButtonSubMenu: function (allowedValue) {
         const {colors} = this.getTheme();
         return this.state.subMenu ?
-            (<div className="sub-menu">
-                <Radium.Style
-                    rules={{
-                        "button:hover": {
-                            // backgroundColor: colors.primary
-                            backgroundColor: "black !important",
-                            color: colors.black
-                        }
-                    }}
-                    scopeSelector=".sub-menu"
-                />
+            (<div>
                 <components.Button
                     bsStyle="link"
                     onClick={R.partial(this.onClickOpenPanel, [allowedValue])}
@@ -141,8 +131,8 @@ var SelectTree = React.createClass({
                     <components.Icon
                         color={colors.iconInputSelect}
                         icon={"arrow-down"}
-                        size={"28px"}
-                        style={{lineHeight: "20px"}}
+                        size={"20px"}
+                        style={{lineHeight: "20px", float: "right"}}
                     />
                 </components.Button>
             </div>) : null;

@@ -396,31 +396,24 @@ var AlarmForm = React.createClass({
     renderTitleSelectSite: function () {
         const theme = this.getTheme();
         return this.state.sito.size === 0 ?
-            <span>
+            <span style={{padding: "4px"}}>
                 {"Seleziona punto di misurazione"}
                 <components.Icon
                     color={theme.colors.iconInputSelect}
                     icon={"arrow-down"}
                     size={"20px"}
-                    style={{
-                        float: "right",
-                        verticalAlign: "middle"
-                    }}
+                    style={{lineHeight: "20px", float: "right"}}
                 />
             </span>
             :
-            <span>
+            <span style={{padding: "4px"}}>
                 {CollectionUtils.sites.getLabel(this.state.sito)}
-                <components.Spacer direction="h" size={30} />
                 {this.state.sito.get("pod")}
                 <components.Icon
                     color={theme.colors.iconInputSelect}
                     icon={"arrow-down"}
                     size={"20px"}
-                    style={{
-                        textAlign: "right",
-                        verticalAlign: "middle"
-                    }}
+                    style={{lineHeight: "20px", float: "right"}}
                 />
             </span>
         ;

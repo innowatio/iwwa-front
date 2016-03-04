@@ -65,59 +65,36 @@ var ModalOptionList = React.createClass({
             );
         }
     },
-    render: function () {
+    renderModalBody: function () {
         const {colors} = this.getTheme();
         var repetitionItems = this.props.allowedValues.map(this.renderGroupItems);
         return (
+            <div clasName="vattelapesca">
+                <Radium.Style
+                    rules={this.props.styleRules}
+                    scopeSelector=".vattelapesca"
+                    >
+                </Radium.Style>
+                <div>{this.props.header}</div>
+                <bootstrap.ListGroup>
+                    {repetitionItems.toArray ? repetitionItems.toArray() : repetitionItems}
+                </bootstrap.ListGroup>
+            </div>
+        );
+    },
+    render: function () {
+        return (
             <div>
-                <Modal
+                <components.FullscreenModal
+                    children={this.renderModalBody()}
                     container={this}
+                    onConfirm={this.props.onClickConfirm}
                     onHide={this.props.toggleModal}
+                    onReset={this.props.onClickReset}
+                    renderConfirmButton={true}
                     show={this.props.isModalOpen}
                 >
-                    <Radium.Style
-                        rules={{
-                            ".modal-content": {
-                                width: measures.modalWidthMedium,
-                                left: "calc(50% - 400px / 2)"
-                            }
-                        }}
-                        scopeSelector=".modal-dialog"
-                    />
-                    <Modal.Header
-                        closeButton={true}
-                        style={{borderBottom: "none"}}
-                    >
-                        {this.props.header}
-                    </Modal.Header>
-                    <Modal.Body style={{textAlign: "center"}}>
-                        <bootstrap.ListGroup>
-                            {repetitionItems.toArray ? repetitionItems.toArray() : repetitionItems}
-                        </bootstrap.ListGroup>
-                    </Modal.Body>
-                    <Modal.Footer style={{textAlign: "center"}}>
-                        <components.Button
-                            onClick={this.props.onClickConfirm}
-                            style={{
-                                background: colors.primary,
-                                color: colors.white,
-                                height: "45px"
-                            }}
-                        >
-                            {"CONFERMA"}
-                        </components.Button>
-                        <components.Button
-                            onClick={this.props.onClickReset}
-                            style={{
-                                background: colors.greyBackground,
-                                color: colors.primary,
-                                height: "45px"
-                            }}
-                        >
-                            {"RESET"}
-                        </components.Button>
-                    </Modal.Footer>
-                </Modal>
+                </components.FullscreenModal>
             </div>
         );
     }
