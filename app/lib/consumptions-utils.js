@@ -1,4 +1,4 @@
-import {flatten} from "ramda";
+import {flatten, range} from "ramda";
 import moment from "moment";
 
 
@@ -13,8 +13,8 @@ export function getTimeRangeByPeriod (period) {
 }
 
 export function getSumBySiteAndPeriod (period, siteId, measures) {
-    const startYear = moment(period.start).year() + "";
-    const endYear = moment(period.end).year() + "";
+    const startYear = moment.utc(period.start).year() + "";
+    const endYear = moment.utc(period.end).year() + "";
     const allMeasures = flatten(measures
         .filter(measure => (measure.get("year") === startYear || measure.get("year") === endYear) && measure.get("sensorId") === siteId)
         .map(measure => {
@@ -24,8 +24,8 @@ export function getSumBySiteAndPeriod (period, siteId, measures) {
             };
         })
         .map(measure => {
-            const startDay = moment(period.start).dayOfYear();
-            const endDay = moment(period.end).dayOfYear();
+            const startDay = moment.utc(period.start).dayOfYear();
+            const endDay = moment.utc(period.end).dayOfYear();
             if (startYear === endYear) {
                 return measure["measurementValues"].slice(startDay -1, endDay);
             } else {
@@ -33,13 +33,48 @@ export function getSumBySiteAndPeriod (period, siteId, measures) {
                 if (measure["year"] === endYear) {
                     return measure["measurementValues"].slice(0, endDay);
                 } else if (measure["year"] === startYear) {
-                    return measure["measurementValues"].slice(startDay -1, measure["measurementValues"].lenght);
+                    return measure["measurementValues"].slice(startDay -1, measure["measurementValues"].length);
                 }
             }
         })
         .toArray());
     const sum = allMeasures.reduce((a, b) => a + (parseFloat(b) || 0), 0);
     return sum;
+}
+
+export function getTimeRangeFromDateByPeriod (date, period) {
+    return {
+        start: date.startOf(period).format(),
+        end: date.endOf(period).format()
+    };
+}
+
+export function getAverageBySiteAndPeriod (offsetNumber, offsetPeriod, sensorId, measurements) {
+    const maxRange = parseInt(moment([moment().year() + 1]).diff(moment([moment().year() -1]), offsetPeriod, true) / offsetNumber);
+    const sumsByPeriod = range(1, maxRange).map(index => {
+        const period = {
+            start: moment.utc().subtract(index * offsetNumber, offsetPeriod).startOf(offsetPeriod).format(),
+            end: moment.utc().subtract(index * offsetNumber, offsetPeriod).endOf(offsetPeriod).format()
+        };
+        return getSumBySiteAndPeriod(period, sensorId, measurements);
+    });
+    const {sum, counter} = sumsByPeriod.reduce((a, b) => {
+        // skips 0s
+        if (b) {
+            return {
+                sum: a.sum + (parseFloat(b) || 0),
+                counter: a.counter+1
+            };
+        } else {
+            return {
+                sum: a.sum,
+                counter: a.counter
+            };
+        }
+
+    }, {sum: 0, counter: 0});
+
+    return counter > 0 ? sum/counter : 0;
 }
 
 export function tabParameters () {

@@ -1,6 +1,11 @@
 require("unit-setup.js");
 
-import {getTimeRangeByPeriod, getSumBySiteAndPeriod, tabParameters} from "lib/consumptions-utils";
+import {
+    getTimeRangeByPeriod,
+    getSumBySiteAndPeriod,
+    tabParameters,
+    getAverageBySiteAndPeriod
+} from "lib/consumptions-utils";
 import * as Immutable from "immutable";
 
 describe("`consumptions-utils`", () => {
@@ -50,7 +55,7 @@ describe("`consumptions-utils`", () => {
 
     describe("`getSumBySiteAndPeriod` function", () => {
 
-        it("should return the sum of all values in a given range", () => {
+        it("should return the sum of all values in a given range [on multiple years]", () => {
             const measurements = Immutable.Map({
                 "site00022-2017-reading-activeEnergy": Immutable.Map({
                     "year": "2017",
@@ -65,7 +70,7 @@ describe("`consumptions-utils`", () => {
                     "sensorId": "site00022",
                     "source": "reading",
                     "measurementType": "activeEnergy",
-                    "measurementValues": "14.107, 10,1,2,10",
+                    "measurementValues": "14.107,10,1,2,10",
                     "unitOfMeasurement": "kWh"
                 }),
                 "site00022-2015-reading-activeEnergy": Immutable.Map({
@@ -101,12 +106,12 @@ describe("`consumptions-utils`", () => {
                     "unitOfMeasurement": "kWh"
                 })
             });
-            const period = {
-                start: "2015-01-01",
-                end: "2016-01-03"
+            const periodRange = {
+                start: "2015-01-01T00:00:00+00:00",
+                end: "2016-01-03T23:59:59+00:00"
             };
             // 2nd + 3rd
-            expect(getSumBySiteAndPeriod(period, "site00022", measurements)).to.be.equals(625.107);
+            expect(getSumBySiteAndPeriod(periodRange, "site00022", measurements)).to.be.equals(625.107);
         });
 
     });
@@ -181,6 +186,79 @@ describe("`consumptions-utils`", () => {
             const ret = tabParameters();
             expect(ret).to.deep.equal(expected);
         });
+    });
 
+    describe("`getAverageBySiteAndPeriod` function", () => {
+
+        it("should return the proper average, based on `period` and SensorId [period = 'day']", () => {
+            const measurements = Immutable.Map({
+                "site00022-2016-reading-activeEnergy": Immutable.Map({
+                    "year": "2016",
+                    "sensorId": "site00022",
+                    "source": "reading",
+                    "measurementType": "activeEnergy",
+                    "measurementValues": "100,120,120,110,100,0",
+                    "unitOfMeasurement": "kWh"
+                }),
+                "site00022-2015-reading-activeEnergy": Immutable.Map({
+                    "year": "2015",
+                    "sensorId": "site00022",
+                    "source": "reading",
+                    "measurementType": "activeEnergy",
+                    "measurementValues": Array(359) + [100, 80, 80, 110, 90, 90],
+                    "unitOfMeasurement": "kWh"
+                })
+            });
+
+            expect(getAverageBySiteAndPeriod(1, "day", "site00022", measurements)).to.be.equals(100);
+        });
+
+        it("should return the proper average, based on `period` and SensorId [period = 'week']", () => {
+            const values = [0, 0, 0, 0, 0, 0, 110] + Array(354) + [200, 220, 180, 210, 190, 200];
+            const measurements = Immutable.Map({
+                "site00022-2016-reading-activeEnergy": Immutable.Map({
+                    "year": "2016",
+                    "sensorId": "site00022",
+                    "source": "reading",
+                    "measurementType": "activeEnergy",
+                    "measurementValues": "100,120,80,110,90,0",
+                    "unitOfMeasurement": "kWh"
+                }),
+                "site00022-2015-reading-activeEnergy": Immutable.Map({
+                    "year": "2015",
+                    "sensorId": "site00022",
+                    "source": "reading",
+                    "measurementType": "activeEnergy",
+                    "measurementValues": values,
+                    "unitOfMeasurement": "kWh"
+                })
+            });
+
+            expect(getAverageBySiteAndPeriod(7, "day", "site00022", measurements)).to.be.equals(150);
+        });
+
+        it("should return the proper average, based on `period` and SensorId [period = 'month']", () => {
+            const values = [0, 0, 0, 200, 0, 200, 0] + Array(354) + [200, 220, 180, 210, 190, 200];
+            const measurements = Immutable.Map({
+                "site00022-2016-reading-activeEnergy": Immutable.Map({
+                    "year": "2016",
+                    "sensorId": "site00022",
+                    "source": "reading",
+                    "measurementType": "activeEnergy",
+                    "measurementValues": "100,120,80,110,90,0",
+                    "unitOfMeasurement": "kWh"
+                }),
+                "site00022-2015-reading-activeEnergy": Immutable.Map({
+                    "year": "2015",
+                    "sensorId": "site00022",
+                    "source": "reading",
+                    "measurementType": "activeEnergy",
+                    "measurementValues": values,
+                    "unitOfMeasurement": "kWh"
+                })
+            });
+
+            expect(getAverageBySiteAndPeriod(1, "month", "site00022", measurements)).to.be.equals(800);
+        });
     });
 });
