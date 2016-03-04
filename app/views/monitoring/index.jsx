@@ -6,7 +6,7 @@ import {connect} from "react-redux";
 import {Link} from "react-router";
 import {bindActionCreators} from "redux";
 import {cloneSensor, combineSensor, deleteSensor, favoriteSensor, monitorSensor, selectSensor} from "actions/sensors";
-import {addToFavorite, changeYAxisValues, selectChartType} from "actions/monitoring-chart";
+import {addToFavorite, changeYAxisValues, selectChartType, selectFavoriteChart} from "actions/monitoring-chart";
 import {CollectionElementsTable, MonitoringChart} from "components";
 
 var getKeyFromCollection = function (collection) {
@@ -26,6 +26,7 @@ var Monitoring = React.createClass({
         monitorSensor: React.PropTypes.func.isRequired,
         monitoringChart: React.PropTypes.object.isRequired,
         selectChartType: React.PropTypes.func.isRequired,
+        selectFavoriteChart: React.PropTypes.func.isRequired,
         selectSensor: React.PropTypes.func.isRequired,
         selected: React.PropTypes.array,
         sensors: React.PropTypes.array.isRequired
@@ -70,6 +71,11 @@ var Monitoring = React.createClass({
         return () => {
             this.props.monitorSensor(id);
         };
+    },
+    getFavoritesChartsColumns: function () {
+        return [
+            {key: "_id"}
+        ];
     },
     getSensorsColumns: function () {
         return [
@@ -138,6 +144,20 @@ var Monitoring = React.createClass({
                     onRowClick={this.props.selectSensor}
                     width={"60%"}
                 />
+                <div>
+                    <h3>
+                        {"Favorites charts"}
+                    </h3>
+                    <CollectionElementsTable
+                        collection={this.props.monitoringChart.favorites}
+                        columns={this.getFavoritesChartsColumns()}
+                        getKey={getKeyFromCollection}
+                        hover={true}
+                        onRowClick={this.props.selectFavoriteChart}
+                        width={"60%"}
+                    />
+                </div>
+
                 <MonitoringChart
                     addToFavorite={this.props.addToFavorite}
                     onChangeYAxisValues={this.props.changeYAxisValues}
@@ -169,6 +189,7 @@ const mapDispatchToProps = (dispatch) => {
         favoriteSensor: bindActionCreators(favoriteSensor, dispatch),
         monitorSensor: bindActionCreators(monitorSensor, dispatch),
         selectChartType: bindActionCreators(selectChartType, dispatch),
+        selectFavoriteChart: bindActionCreators(selectFavoriteChart, dispatch),
         selectSensor: bindActionCreators(selectSensor, dispatch)
     };
 };

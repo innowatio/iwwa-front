@@ -1,7 +1,8 @@
-import {ADD_TO_FAVORITE, CHANGE_Y_AXIS_VALUES, SELECT_CHART_TYPE} from "../actions/monitoring-chart";
+import {ADD_TO_FAVORITE, CHANGE_Y_AXIS_VALUES, SELECT_CHART_TYPE, SELECT_FAVORITE_CHART} from "../actions/monitoring-chart";
+import Immutable from "immutable";
 
 let defaultState = {
-    favourites: [],
+    favorites: Immutable.Map(),
     type: "spline",
     yAxis: {
         min: 0,
@@ -9,19 +10,25 @@ let defaultState = {
     }
 };
 
+let nextFavoriteId = 0;
+
 export function monitoringChart (state = defaultState, action) {
     switch (action.type) {
         case ADD_TO_FAVORITE: {
-            let favourite = state.favourites.slice();
-            favourite.push(action.config);
+            let favorites = state.favorites.set(nextFavoriteId, Immutable.Map({
+                _id: nextFavoriteId,
+                config: action.config    
+            }));
+            nextFavoriteId++;
             return {
                 ...state,
-                favourites: favourite
+                favorites: favorites
             };
         }
         case CHANGE_Y_AXIS_VALUES:
             return {
                 ...state,
+                config: null,
                 yAxis: {
                     ...state.yAxis,
                     ...action.values
@@ -30,7 +37,15 @@ export function monitoringChart (state = defaultState, action) {
         case SELECT_CHART_TYPE:
             return {
                 ...state,
+                config: null,
                 type: action.payload
+            };
+        case SELECT_FAVORITE_CHART:
+            return {
+                ...state,
+                config: action.payload,
+                type: action.payload.chart.type,
+                yAxis: action.payload.yAxis
             };
         default:
             return state;

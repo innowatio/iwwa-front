@@ -16,15 +16,20 @@ var MonitoringChart = React.createClass({
     propTypes: {
         addToFavorite: React.PropTypes.func.isRequired,
         chartState: React.PropTypes.object.isRequired,
-        config: React.PropTypes.object,
         onChangeYAxisValues: React.PropTypes.func.isRequired,
         selectChartType: React.PropTypes.func.isRequired,
         series: React.PropTypes.array.isRequired
     },
     getInitialState: function () {
+        return this.initializeState(this.props);
+    },
+    componentWillReceiveProps: function (props) {
+        this.setState(this.initializeState(props));
+    },
+    initializeState: function (props) {
         return {
-            yAxisMax: this.props.chartState.yAxis.max,
-            yAxisMin: this.props.chartState.yAxis.min
+            yAxisMax: props.chartState.yAxis.max,
+            yAxisMin: props.chartState.yAxis.min
         };
     },
     getRandomValue: function () {
@@ -149,8 +154,8 @@ var MonitoringChart = React.createClass({
         }
     },
     getHighstockConfig: function () {
-        if (this.props.config) {
-            config = this.props.config;
+        if (this.props.chartState.config) {
+            config = this.props.chartState.config;
         } else {
             config = {
                 ...this.getCommonConfig(),
