@@ -146,24 +146,28 @@ var SummaryConsumptions = React.createClass({
         const self = this;
         const selectedTab = tabParameters().find(param => param.key === this.props.consumptions.period);
         const comparisons = selectedTab.comparisons;
-        const now = getTimeRangeByPeriod(selectedTab.period);
-        console.log(selectedTab.period);
-        console.log(now);
         return (
             <div>
-                {comparisons.map(partial(self.renderProgressBar, [now]))}
+                {comparisons.map(self.renderProgressBar)}
             </div>
         );
     },
-    renderProgressBar: function (now, comparisonParams) {
-        const sumMax = this.getSum(comparisonParams);
-        const sumNow = this.getSum(now);
+    renderProgressBar: function (comparisonParams) {
+        const max = parseInt(comparisonParams.max(
+            this.props.consumptions.fullPath[0],
+            this.props.collections.get("consumptions-yearly-aggregates") || Immutable.Map()).toFixed(0));
+        const now = parseInt(
+            comparisonParams.now(
+                this.props.consumptions.fullPath[0],
+                this.props.collections.get("consumptions-yearly-aggregates") || Immutable.Map()).toFixed(0));
         return (
             <components.ProgressBar
                 key={comparisonParams.key}
-                max={sumMax}
-                now={sumNow}
+                max={max}
+                now={now}
                 title={comparisonParams.title}
+                styleMaxLabel={{color: "white"}}
+                styleTitleLabel={{color: "white"}}
             />);
     },
     renderModalBody: function () {
