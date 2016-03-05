@@ -402,25 +402,18 @@ var AlarmForm = React.createClass({
                     color={theme.colors.iconInputSelect}
                     icon={"arrow-down"}
                     size={"20px"}
-                    style={{
-                        float: "right",
-                        verticalAlign: "middle"
-                    }}
+                    style={{lineHeight: "20px", float: "right"}}
                 />
             </span>
             :
             <span>
                 {CollectionUtils.sites.getLabel(this.state.sito)}
-                <components.Spacer direction="h" size={30} />
                 {this.state.sito.get("pod")}
                 <components.Icon
                     color={theme.colors.iconInputSelect}
                     icon={"arrow-down"}
                     size={"20px"}
-                    style={{
-                        textAlign: "right",
-                        verticalAlign: "middle"
-                    }}
+                    style={{lineHeight: "20px", float: "right"}}
                 />
             </span>
         ;

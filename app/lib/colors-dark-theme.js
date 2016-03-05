@@ -55,7 +55,7 @@ export const colorsDarkTheme = {
     iconInputSearch: "#ffffff",
     iconSensors: "#ffffff",
     iconVariable: "#ffffff",
-    iconInputSelect: "#3e50b4",
+    iconInputSelect: "#ffffff",
     iconInfo: "#ffffff",
     iconFilter: "#ffffff",
     iconPng: "#ffffff",
