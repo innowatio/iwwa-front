@@ -143,21 +143,20 @@ var SummaryConsumptions = React.createClass({
         this.setState({value});
     },
     renderComparisons: function () {
-        const self = this;
         const selectedTab = tabParameters().find(param => param.key === this.props.consumptions.period);
         const comparisons = selectedTab.comparisons;
         return (
             <div>
-                {comparisons.map(self.renderProgressBar)}
+                {comparisons.map(partial(this.renderProgressBar, [selectedTab.now]))}
             </div>
         );
     },
-    renderProgressBar: function (comparisonParams) {
+    renderProgressBar: function (comparisonNow, comparisonParams) {
         const max = parseInt(comparisonParams.max(
             this.props.consumptions.fullPath[0],
             this.props.collections.get("consumptions-yearly-aggregates") || Immutable.Map()).toFixed(0));
         const now = parseInt(
-            comparisonParams.now(
+            comparisonNow(
                 this.props.consumptions.fullPath[0],
                 this.props.collections.get("consumptions-yearly-aggregates") || Immutable.Map()).toFixed(0));
         return (

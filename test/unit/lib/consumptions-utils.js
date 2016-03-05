@@ -131,18 +131,15 @@ describe("`consumptions-utils`", () => {
                 comparisons: [{
                     key: "today-1d",
                     title: "IERI",
-                    max: mockFunc,
-                    now: mockFunc
+                    max: mockFunc
                 }, {
                     key: "today-7d",
                     title: "MERCOLEDÌ SCORSO",
-                    max: mockFunc,
-                    now: mockFunc
+                    max: mockFunc
                 }, {
                     key: "avg-7d",
                     title: "MEDIA MERCOLEDÌ",
-                    max: mockFunc,
-                    now: mockFunc
+                    max: mockFunc
                 }]
             }, {
                 key: "week",
@@ -155,8 +152,7 @@ describe("`consumptions-utils`", () => {
                 comparisons: [{
                     key: "week-1w",
                     title: "SETTIMANA SCORSA",
-                    max: mockFunc,
-                    now: mockFunc
+                    max: mockFunc
                 }]
             }, {
                 key: "month",
@@ -169,18 +165,15 @@ describe("`consumptions-utils`", () => {
                 comparisons: [{
                     key: "month-1m",
                     title: "DICEMBRE 2015",
-                    max: mockFunc,
-                    now: mockFunc
+                    max: mockFunc
                 }, {
                     key: "month-1y",
                     title: "GENNAIO 2015",
-                    max: mockFunc,
-                    now: mockFunc
+                    max: mockFunc
                 }, {
                     key: "avg-month",
                     title: "MEDIA DEI MESI",
-                    max: mockFunc,
-                    now: mockFunc
+                    max: mockFunc
                 }]
             }, {
                 key: "year",
@@ -193,8 +186,7 @@ describe("`consumptions-utils`", () => {
                 comparisons: [{
                     key: "year-1y",
                     title: "2015",
-                    max: mockFunc,
-                    now: mockFunc
+                    max: mockFunc
                 }]
             }];
 
