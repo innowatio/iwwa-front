@@ -9,6 +9,8 @@ var ProgressBar = React.createClass({
         min: React.PropTypes.number,
         now: React.PropTypes.number,
         style: React.PropTypes.object,
+        styleMaxLabel: React.PropTypes.object,
+        styleTitleLabel: React.PropTypes.object,
         title: React.PropTypes.string
     },
     render: function () {
@@ -19,8 +21,8 @@ var ProgressBar = React.createClass({
         const isDanger = (now / max) >= DANGER_PERCENTAGE;
 
         return (
-            <div className="progress-bar-main-div">
-                <div className="progress-title">
+            <div className="progress-bar-main-div" >
+                <div className="progress-title" style={this.props.styleTitleLabel}>
                     {this.props.title}
                 </div>
                 <Radium.Style
@@ -34,7 +36,7 @@ var ProgressBar = React.createClass({
                     min={min}
                     now={now}
                 />
-                <div className="progress-max">
+                <div className="progress-max" style={this.props.styleMaxLabel}>
                     {max + "kWh"}
                 </div>
             </div>
