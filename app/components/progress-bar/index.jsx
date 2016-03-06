@@ -37,7 +37,7 @@ var ProgressBar = React.createClass({
                     now={now}
                 />
                 <div className="progress-max" style={this.props.styleMaxLabel}>
-                    {max + "kWh"}
+                    {max + " kWh"}
                 </div>
             </div>
         );

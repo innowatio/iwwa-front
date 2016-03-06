@@ -12,8 +12,7 @@ import {defaultTheme} from "lib/theme";
 import {selectSite, selectPeriod} from "actions/consumptions";
 import {getSumBySiteAndPeriod, getTimeRangeByPeriod, tabParameters} from "lib/consumptions-utils";
 import moment from "moment";
-import {partial} from "Ramda";
-
+import {partial, merge} from "Ramda";
 
 var styleLeftPane  = {
     width: "70%",
@@ -80,6 +79,7 @@ var styleSiteButton = ({colors}) => ({
     margin: "13px",
     backgroundColor: colors.secondary
 });
+
 var SummaryConsumptions = React.createClass({
     propTypes: {
         asteroid: React.PropTypes.object,
@@ -142,7 +142,71 @@ var SummaryConsumptions = React.createClass({
     onChangeWidgetValue: function (value) {
         this.setState({value});
     },
-    renderComparisons: function () {
+    renderCustomersComparisons: function () {
+        const title = "Confronta i tuoi consumi con quelli di attività simili alla tua";
+        const hint = "Stai andando molto bene. Hai usato il 10% di energia in meno dei tuoi vicini.";
+        const selectedTab = tabParameters().find(param => param.key === this.props.consumptions.period);
+        const now = parseInt(selectedTab.now(
+            this.props.consumptions.fullPath[0],
+            this.props.collections.get("consumptions-yearly-aggregates") || Immutable.Map()).toFixed(0));
+        return (
+            <div>
+                <span>{title}</span>
+                <components.ProgressBar
+                    key={"neighbors-efficient"}
+                    max={now * 1.1}
+                    now={now}
+                    title={"I tuoi vicini più efficienti"}
+                    styleMaxLabel={{color: "white"}}
+                    styleTitleLabel={{color: "white"}}
+                />
+                <components.ProgressBar
+                    key={"you"}
+                    max={now * 1.3}
+                    now={now}
+                    title={"Tu"}
+                    styleMaxLabel={{color: "white"}}
+                    styleTitleLabel={{color: "white"}}
+                />
+                <components.ProgressBar
+                    key={"neighbors-all"}
+                    max={now * 1.4}
+                    now={now}
+                    title={"Tutti i tuoi vicini"}
+                    styleMaxLabel={{color: "white"}}
+                    styleTitleLabel={{color: "white"}}
+                />
+                <div style={{alignItems: "center"}}>
+                    <div>
+                        <components.Icon
+                            color={"green"}
+                            icon={"good"}
+                            size={"30px"}
+                        />
+                        <span style={merge({}, {color: "green"})}>
+                            {"GRANDE!"}
+                        </span>
+                    </div>
+                    <div>
+                        <components.Icon
+                            color={"white"}
+                            icon={"middling"}
+                            size={"30px"}
+                        />
+                    </div>
+                    <div>
+                        <components.Icon
+                            color={"white"}
+                            icon={"bad"}
+                            size={"30px"}
+                        />
+                    </div>
+                </div>
+                <span>{hint}</span>
+            </div>
+        );
+    },
+    renderPeriodComparisons: function () {
         const selectedTab = tabParameters().find(param => param.key === this.props.consumptions.period);
         const comparisons = selectedTab.comparisons;
         return (
@@ -194,9 +258,9 @@ var SummaryConsumptions = React.createClass({
         const {colors} = this.getTheme();
         return (
             <bootstrap.Tabs
-                activeKey={this.props.consumptions.period || tabParameters()[0].key}
+                activeKey={this.props.consumptions.period}
                 className="style-tab"
-                defaultActiveKey={this.props.consumptions.period || tabParameters()[0].key}
+                defaultActiveKey={tabParameters()[0].key}
                 onSelect={this.props.selectPeriod}
             >
                 <Radium.Style
@@ -245,7 +309,7 @@ var SummaryConsumptions = React.createClass({
                 />
                 {
                     tabParameters().map(parameter => {
-                        return self.renderSingleTab (siteName, theme, parameter);
+                        return self.renderSingleTab(siteName, theme, parameter);
                     })
                 }
             </bootstrap.Tabs>
@@ -255,7 +319,6 @@ var SummaryConsumptions = React.createClass({
         var sum = 0;
         if (this.props.consumptions.fullPath) {
             this.subscribeToConsumptions();
-
             sum = this.getSum(getTimeRangeByPeriod(tabParameters.period));
         }
         return (
@@ -282,7 +345,7 @@ var SummaryConsumptions = React.createClass({
                 <div style={styleRightPane(theme)}>
                     <components.Button className="pull-right" onClick={this.openModal} style={styleSiteButton(theme)} >
                         <components.Icon
-                            color={this.getTheme().colors.iconSiteButton}
+                            color={theme.colors.iconSiteButton}
                             icon={"map"}
                             size={"38px"}
                             style={{
@@ -301,7 +364,8 @@ var SummaryConsumptions = React.createClass({
                     >
                         {this.renderModalBody()}
                     </components.FullscreenModal>
-                    {this.props.consumptions.period && this.props.consumptions.fullPath ? this.renderComparisons() : undefined}
+                    {this.props.consumptions.period && this.props.consumptions.fullPath ? this.renderPeriodComparisons() : undefined}
+                    {this.props.consumptions.period && this.props.consumptions.fullPath ? this.renderCustomersComparisons() : undefined}
                 </div>
             </div>
         );
