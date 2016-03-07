@@ -145,7 +145,7 @@ var AlarmForm = React.createClass({
                                 </components.Button>
                             </bootstrap.OverlayTrigger>
                         </h4>
-                        <div style={{minHeight: "50px", margin: "0"}}>
+                        <div style={{minHeight: "50px"}}>
                             {this.renderSiteButton()}
                             <components.Popover
                                 arrow="none"
@@ -155,6 +155,7 @@ var AlarmForm = React.createClass({
                                 <components.SelectTree
                                     allowedValues={this.props.siti}
                                     buttonCloseDefault={true}
+                                    className="site-select"
                                     filter={CollectionUtils.sites.filter}
                                     getKey={CollectionUtils.sites.getKey}
                                     getLabel={CollectionUtils.sites.getLabel}
@@ -184,8 +185,9 @@ var AlarmForm = React.createClass({
                             backgroundColor: theme.colors.backgroundSelectButton,
                             textAlign: "center",
                             borderRadius: "20px",
+                            margin: "30px 0",
                             border: `1px solid ${theme.colors.borderSelectButton}`,
-                            padding: "20px"
+                            padding: "20px 5%"
                         }}
                         >
                             <components.Spacer direction="v" size={3} />
@@ -199,15 +201,45 @@ var AlarmForm = React.createClass({
                                 {`Soglia (${this.state.threshold} kWh)`}
                             </h4>
                             <components.Spacer direction="v" size={10} />
-                            <bootstrap.Input
-                                max={600}
-                                min={0}
-                                step={5}
-                                style={styles(theme).inputRange}
-                                type="range"
-                                valueLink={this.linkState("threshold")}
-                            />
+                            <div className="inputRangeBar">
+                                <Radium.Style
+                                    rules={styles(theme).inputRangeBar}
+                                    scopeSelector=".inputRangeBar"
+                                />
+                                <bootstrap.Input
+                                    bsStyle={"success"}
+                                    max={600}
+                                    min={0}
+                                    step={5}
+                                    style={styles(theme).inputRange}
+                                    type="range"
+                                    valueLink={this.linkState("threshold")}
+                                />
+                            </div>
+                            <div style={{
+                                width: "50%",
+                                float:"left",
+                                fontSize: "16px",
+                                textAlign: "left",
+                                fontWeight: "300",
+                                color: theme.colors.mainFontColor
+                            }}
+                            >
+                                {"0 Kwh"}
+                            </div>
+                            <div style={{
+                                width: "50%",
+                                float:"right",
+                                fontSize: "16px",
+                                textAlign: "right",
+                                fontWeight: "300",
+                                color: theme.colors.mainFontColor
+                            }}
+                            >
+                                {"600 Kwh"}
+                            </div>
                             <p style={{
+                                marginTop: "50px",
                                 color: theme.colors.mainFontColor,
                                 fontStyle: "italic",
                                 fontSize: "16px",
@@ -370,25 +402,18 @@ var AlarmForm = React.createClass({
                     color={theme.colors.iconInputSelect}
                     icon={"arrow-down"}
                     size={"20px"}
-                    style={{
-                        float: "right",
-                        verticalAlign: "middle"
-                    }}
+                    style={{lineHeight: "20px", float: "right"}}
                 />
             </span>
             :
             <span>
                 {CollectionUtils.sites.getLabel(this.state.sito)}
-                <components.Spacer direction="h" size={30} />
                 {this.state.sito.get("pod")}
                 <components.Icon
                     color={theme.colors.iconInputSelect}
                     icon={"arrow-down"}
                     size={"20px"}
-                    style={{
-                        textAlign: "right",
-                        verticalAlign: "middle"
-                    }}
+                    style={{lineHeight: "20px", float: "right"}}
                 />
             </span>
         ;
@@ -426,7 +451,7 @@ var AlarmForm = React.createClass({
                     <Radium.Style
                         rules={{
                             ".input-group-addon": {
-                                backgroundColor: theme.colors.white,
+                                backgroundColor: theme.colors.backgroundSelectSearch,
                                 borderTop: "0",
                                 borderRight: "0",
                                 borderBottomRightRadius: "0",
@@ -439,11 +464,11 @@ var AlarmForm = React.createClass({
                         {this.renderAutomaticAlarmBanner()}
                         {this.renderAlarmSelectSite()}
                         {this.renderAlarmThreshold()}
-                    </div>
-                    <div style={{clear: "both"}}>
-                        {this.renderAlarmNotification()}
-                        {this.renderAlarmActive()}
-                        {this.renderAlarmRepetition()}
+                        <div style={{clear: "both"}}>
+                            {this.renderAlarmNotification()}
+                            {this.renderAlarmActive()}
+                            {this.renderAlarmRepetition()}
+                        </div>
                     </div>
                     <bootstrap.Col style={{paddingTop: "8vh", textAlign: "center"}} xs={12}>
                         {this.renderSubmitButton()}

@@ -56,13 +56,13 @@ var AlarmRepetitionModal = React.createClass({
     getRepetitionOptions: function () {
         return [
             {label: "Tutti i giorni", key: [0, 1, 2, 3, 4, 5, 6], action: this.actionPutOrRemoveInArray},
-            {label: "Lunedì", key: 1, action: this.actionPutOrRemoveInArray},
-            {label: "Martedì", key: 2, action: this.actionPutOrRemoveInArray},
-            {label: "Mercoledì", key: 3, action: this.actionPutOrRemoveInArray},
-            {label: "Giovedì", key: 4, action: this.actionPutOrRemoveInArray},
-            {label: "Venerdì", key: 5, action: this.actionPutOrRemoveInArray},
-            {label: "Sabato", key: 6, action: this.actionPutOrRemoveInArray},
-            {label: "Domenica", key: 0, action: this.actionPutOrRemoveInArray},
+            {label: "Lun", key: 1, action: this.actionPutOrRemoveInArray},
+            {label: "Mar", key: 2, action: this.actionPutOrRemoveInArray},
+            {label: "Mer", key: 3, action: this.actionPutOrRemoveInArray},
+            {label: "Gio", key: 4, action: this.actionPutOrRemoveInArray},
+            {label: "Ven", key: 5, action: this.actionPutOrRemoveInArray},
+            {label: "Sab", key: 6, action: this.actionPutOrRemoveInArray},
+            {label: "Dom", key: 0, action: this.actionPutOrRemoveInArray},
             // TODO mettere tutte le date per la voce "Giorni Festivi" (IWWA-31)
             {label: "Giorni Festivi", key: [0, 6], action: this.actionPutOrRemoveInArray},
             this.renderDateSelection(),

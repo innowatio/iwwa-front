@@ -2,10 +2,8 @@ var Radium     = require("radium");
 var R          = require("ramda");
 var React      = require("react");
 var bootstrap  = require("react-bootstrap");
-var Modal = bootstrap.Modal;
 
 var components = require("components");
-var measures   = require("lib/measures");
 import {defaultTheme} from "lib/theme";
 
 var ModalOptionList = React.createClass({
@@ -47,7 +45,9 @@ var ModalOptionList = React.createClass({
                     onClick={R.partial(value.action, [this.props.getKey(value)])}
                     style={{
                         color: colors.greySubTitle,
-                        textAlign: "left"
+                        textAlign: "left",
+                        borderRadius: "0",
+                        borderBottom: "1px solid " + colors.white
                     }}
                 >
                     {this.props.getLabel(value)}
@@ -65,59 +65,41 @@ var ModalOptionList = React.createClass({
             );
         }
     },
-    render: function () {
+    renderModalBody: function () {
         const {colors} = this.getTheme();
         var repetitionItems = this.props.allowedValues.map(this.renderGroupItems);
         return (
-            <div>
-                <Modal
+            <div style={{
+                width: "55%",
+                margin: "0 auto",
+                border: "1px solid " + colors.borderContentModal,
+                backgroundColor: colors.backgroundContentModal,
+                borderRadius: "20px"
+            }}
+            >
+                <div style={{color: colors.mainFontColor, textAlign: "center", padding: "20px 0px"}}>{this.props.header}</div>
+                <bootstrap.ListGroup>
+                    {repetitionItems.toArray ? repetitionItems.toArray() : repetitionItems}
+                </bootstrap.ListGroup>
+            </div>
+        );
+    },
+    render: function () {
+        return (
+            <div style={{
+                margin: "38px"
+            }}
+            >
+                <components.FullscreenModal
+                    children={this.renderModalBody()}
                     container={this}
+                    onConfirm={this.props.onClickConfirm}
                     onHide={this.props.toggleModal}
+                    onReset={this.props.onClickReset}
+                    renderConfirmButton={true}
                     show={this.props.isModalOpen}
                 >
-                    <Radium.Style
-                        rules={{
-                            ".modal-content": {
-                                width: measures.modalWidthMedium,
-                                left: "calc(50% - 400px / 2)"
-                            }
-                        }}
-                        scopeSelector=".modal-dialog"
-                    />
-                    <Modal.Header
-                        closeButton={true}
-                        style={{borderBottom: "none"}}
-                    >
-                        {this.props.header}
-                    </Modal.Header>
-                    <Modal.Body style={{textAlign: "center"}}>
-                        <bootstrap.ListGroup>
-                            {repetitionItems.toArray ? repetitionItems.toArray() : repetitionItems}
-                        </bootstrap.ListGroup>
-                    </Modal.Body>
-                    <Modal.Footer style={{textAlign: "center"}}>
-                        <components.Button
-                            onClick={this.props.onClickConfirm}
-                            style={{
-                                background: colors.primary,
-                                color: colors.white,
-                                height: "45px"
-                            }}
-                        >
-                            {"CONFERMA"}
-                        </components.Button>
-                        <components.Button
-                            onClick={this.props.onClickReset}
-                            style={{
-                                background: colors.greyBackground,
-                                color: colors.primary,
-                                height: "45px"
-                            }}
-                        >
-                            {"RESET"}
-                        </components.Button>
-                    </Modal.Footer>
-                </Modal>
+                </components.FullscreenModal>
             </div>
         );
     }
