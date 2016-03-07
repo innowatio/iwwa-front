@@ -137,7 +137,7 @@ var SummaryConsumptions = React.createClass({
         this.setState ({showModal:true});
     },
     onConfirmFullscreenModal: function () {
-        this.props.selectSite(this.state.site);
+        this.props.selectSite(this.state.site || this.props.consumptions.fullPath);
         this.closeModal();
     },
     onChangeWidgetValue: function (site) {
