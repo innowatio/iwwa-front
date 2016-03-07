@@ -90,8 +90,9 @@ var SummaryConsumptions = React.createClass({
     },
     getInitialState: function () {
         return {
+            period: tabParameters()[0].key,
             showModal: false,
-            value: null
+            site: null
         };
     },
     componentDidMount: function () {
@@ -129,23 +130,26 @@ var SummaryConsumptions = React.createClass({
     closeModal: function () {
         this.setState ({
             showModal: false,
-            value: null
+            site: null
         });
     },
     openModal: function () {
         this.setState ({showModal:true});
     },
     onConfirmFullscreenModal: function () {
-        this.props.selectSite(this.state.value);
+        this.props.selectSite(this.state.site);
         this.closeModal();
     },
-    onChangeWidgetValue: function (value) {
-        this.setState({value});
+    onChangeWidgetValue: function (site) {
+        this.setState({site});
+    },
+    onChangeTabValue: function (tabPeriod) {
+        this.setState({period: tabPeriod});
     },
     renderCustomersComparisons: function () {
         const title = "Confronta i tuoi consumi con quelli di attività simili alla tua";
         const hint = "Stai andando molto bene. Hai usato il 10% di energia in meno dei tuoi vicini.";
-        const selectedTab = tabParameters().find(param => param.key === this.props.consumptions.period);
+        const selectedTab = tabParameters().find(param => param.key === this.state.period);
         const now = parseInt(selectedTab.now(
             this.props.consumptions.fullPath[0],
             this.props.collections.get("consumptions-yearly-aggregates") || Immutable.Map()).toFixed(0));
@@ -154,7 +158,7 @@ var SummaryConsumptions = React.createClass({
                 <span>{title}</span>
                 <components.ProgressBar
                     key={"neighbors-efficient"}
-                    max={now * 1.1}
+                    max={parseInt((now * 1.1).toFixed(0))}
                     now={now}
                     title={"I tuoi vicini più efficienti"}
                     styleMaxLabel={{color: "white"}}
@@ -162,7 +166,7 @@ var SummaryConsumptions = React.createClass({
                 />
                 <components.ProgressBar
                     key={"you"}
-                    max={now * 1.3}
+                    max={parseInt((now * 1.3).toFixed(0))}
                     now={now}
                     title={"Tu"}
                     styleMaxLabel={{color: "white"}}
@@ -170,7 +174,7 @@ var SummaryConsumptions = React.createClass({
                 />
                 <components.ProgressBar
                     key={"neighbors-all"}
-                    max={now * 1.4}
+                    max={parseInt((now * 1.4).toFixed(0))}
                     now={now}
                     title={"Tutti i tuoi vicini"}
                     styleMaxLabel={{color: "white"}}
@@ -207,7 +211,7 @@ var SummaryConsumptions = React.createClass({
         );
     },
     renderPeriodComparisons: function () {
-        const selectedTab = tabParameters().find(param => param.key === this.props.consumptions.period);
+        const selectedTab = tabParameters().find(param => param.key === this.state.period);
         const comparisons = selectedTab.comparisons;
         return (
             <div>
@@ -239,7 +243,7 @@ var SummaryConsumptions = React.createClass({
             <components.SiteNavigator
                 allowedValues={sites.sortBy(site => site.get("name"))}
                 onChange={this.onChangeWidgetValue}
-                path={this.state.value || this.props.consumptions.fullPath || []}
+                path={this.state.site || this.props.consumptions.fullPath || []}
                 title={"Quale punto di misurazione vuoi visualizzare?"}
             />
         );
@@ -258,10 +262,9 @@ var SummaryConsumptions = React.createClass({
         const {colors} = this.getTheme();
         return (
             <bootstrap.Tabs
-                activeKey={this.props.consumptions.period}
+                activeKey={this.state.period}
                 className="style-tab"
-                defaultActiveKey={tabParameters()[0].key}
-                onSelect={this.props.selectPeriod}
+                onSelect={this.onChangeTabValue}
             >
                 <Radium.Style
                     rules={{
@@ -364,8 +367,8 @@ var SummaryConsumptions = React.createClass({
                     >
                         {this.renderModalBody()}
                     </components.FullscreenModal>
-                    {this.props.consumptions.period && this.props.consumptions.fullPath ? this.renderPeriodComparisons() : undefined}
-                    {this.props.consumptions.period && this.props.consumptions.fullPath ? this.renderCustomersComparisons() : undefined}
+                    {this.props.consumptions.fullPath ? this.renderPeriodComparisons() : undefined}
+                    {this.props.consumptions.fullPath ? this.renderCustomersComparisons() : undefined}
                 </div>
             </div>
         );
