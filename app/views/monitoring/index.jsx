@@ -1,5 +1,5 @@
 import Immutable from "immutable";
-import React from "react";
+import React, {PropTypes} from "react";
 import {Button} from "react-bootstrap";
 import IPropTypes from "react-immutable-proptypes";
 import {connect} from "react-redux";
@@ -15,21 +15,21 @@ var getKeyFromCollection = function (collection) {
 
 var Monitoring = React.createClass({
     propTypes: {
-        addToFavorite: React.PropTypes.func.isRequired,
-        asteroid: React.PropTypes.object,
-        changeYAxisValues: React.PropTypes.func.isRequired,
-        cloneSensor: React.PropTypes.func.isRequired,
+        addToFavorite: PropTypes.func.isRequired,
+        asteroid: PropTypes.object,
+        changeYAxisValues: PropTypes.func.isRequired,
+        cloneSensor: PropTypes.func.isRequired,
         collections: IPropTypes.map.isRequired,
-        combineSensor: React.PropTypes.func.isRequired,
-        deleteSensor: React.PropTypes.func.isRequired,
-        favoriteSensor: React.PropTypes.func.isRequired,
-        monitorSensor: React.PropTypes.func.isRequired,
-        monitoringChart: React.PropTypes.object.isRequired,
-        selectChartType: React.PropTypes.func.isRequired,
-        selectFavoriteChart: React.PropTypes.func.isRequired,
-        selectSensor: React.PropTypes.func.isRequired,
-        selected: React.PropTypes.array,
-        sensors: React.PropTypes.array.isRequired
+        combineSensor: PropTypes.func.isRequired,
+        deleteSensor: PropTypes.func.isRequired,
+        favoriteSensor: PropTypes.func.isRequired,
+        monitorSensor: PropTypes.func.isRequired,
+        monitoringChart: PropTypes.object.isRequired,
+        selectChartType: PropTypes.func.isRequired,
+        selectFavoriteChart: PropTypes.func.isRequired,
+        selectSensor: PropTypes.func.isRequired,
+        selected: PropTypes.array,
+        sensors: PropTypes.array.isRequired
     },
     componentDidMount: function () {
         this.props.asteroid.subscribe("sensors");

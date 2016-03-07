@@ -7,6 +7,7 @@ exports.CollectionElementsTable = require("./collection-elements-table/");
 exports.ConsumptionButtons      = require("./consumption-buttons/");
 exports.DateCompare             = require("./date-compare/");
 exports.DateFilter              = require("./date-filter/");
+exports.SensorRow               = require("./draggable-sensor-row/");
 exports.DropdownButton          = require("./dropdown-button/");
 exports.DropdownSelect          = require("./dropdown-select/");
 exports.Export                  = require("./export/");
