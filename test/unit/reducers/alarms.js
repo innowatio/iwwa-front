@@ -1,6 +1,7 @@
 require("unit-setup.js");
 
-import * as alarmsReducer from "reducers/alarms";
+// import * as alarmsReducer from "reducers/alarms";
+var alarmsReducer = require("reducers/alarms");
 
 describe("`alarms` reducer", () => {
 
