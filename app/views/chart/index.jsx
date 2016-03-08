@@ -49,7 +49,7 @@ const consumptionButtonStyle = ({colors}) => ({
     borderRadius: "22px",
     width: "45px",
     height: "45px",
-    transition: "width 0.4s ease-in-out",
+    transition: "width 0.3s ease-in-out",
     border: "none"
 });
 
@@ -60,7 +60,7 @@ const consumptionButtonSelectedStyle = ({colors}) => ({
     verticalAlign: "middle",
     width: "160px",
     height: "45px",
-    transition: "width 0.4s ease-in-out"
+    transition: "width 0.3s ease-in-out"
 });
 
 const dateButtonStyle = ({colors}) => ({
