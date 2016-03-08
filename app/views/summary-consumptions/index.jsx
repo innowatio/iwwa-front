@@ -11,7 +11,8 @@ import {bindActionCreators} from "redux";
 import {defaultTheme} from "lib/theme";
 import {selectSite, selectPeriod} from "actions/consumptions";
 import {getSumBySiteAndPeriod, getTimeRangeByPeriod, tabParameters} from "lib/consumptions-utils";
-
+import moment from "moment";
+import {partial} from "Ramda";
 
 var styleLeftPane  = {
     width: "70%",
@@ -67,7 +68,8 @@ var styleUnit  = ({colors}) => ({
 var styleRightPane  = ({colors}) => ({
     width: "30%",
     float: "right",
-    borderTop: "4px solid " + colors.secondary
+    borderTop: "4px solid " + colors.secondary,
+    display: "block"
 });
 var styleSiteButton = ({colors}) => ({
     width: "50px",
@@ -78,6 +80,40 @@ var styleSiteButton = ({colors}) => ({
     margin: "13px",
     backgroundColor: colors.secondary
 });
+
+var styleProgressBar = ({colors}) => ({
+    backgroundColor: colors.progressBarBackground,
+    height: "12px",
+    margin: "auto",
+    maxWidth: "90%"
+});
+
+var styleProgressBarTitleLabel = ({colors}) => ({
+    fontSize: "18px",
+    color: colors.progressBarFont
+});
+
+var styleProgressBarMaxLabel = ({colors}) => ({
+    color: colors.progressBarFont,
+    float: "right",
+    fontSize: "16px"
+});
+
+var rulesProgressBar = ({colors}) => ({
+    ".progress-bar": {
+        color: colors.progressBarFont,
+        fontSize: "10px",
+        lineHeight: "10px",
+        textAlign: "left"
+    },
+    ".progress-bar-danger": {
+        backgroundColor: colors.progressBarDanger
+    },
+    ".progress-bar-info": {
+        backgroundColor: colors.progressBarInfo
+    }
+});
+
 var SummaryConsumptions = React.createClass({
     propTypes: {
         asteroid: React.PropTypes.object,
@@ -88,22 +124,25 @@ var SummaryConsumptions = React.createClass({
     },
     getInitialState: function () {
         return {
+            period: tabParameters()[0].key,
             showModal: false,
-            value: null
+            site: null
         };
     },
     componentDidMount: function () {
         this.props.asteroid.subscribe("sites");
     },
-    subscribeToMeasuresByPerdiod: function (period) {
-        this.props.asteroid.subscribe(
-            "dailyMeasuresBySensor",
-            this.props.consumptions.fullPath[0],
-            period.start,
-            period.end,
-            "reading",
-            "activeEnergy"
-        );
+    subscribeToConsumptions: function () {
+        const periods = [moment().subtract(1, "year").format("YYYY"), moment().format("YYYY")];
+        periods.map(year => {
+            this.props.asteroid.subscribe(
+                "yearlyConsumptions",
+                this.props.consumptions.fullPath[0],
+                year,
+                "reading",
+                "activeEnergy"
+            );
+        });
     },
     getTheme: function () {
         return this.context.theme || defaultTheme;
@@ -114,21 +153,128 @@ var SummaryConsumptions = React.createClass({
         }
         return Immutable.Map({name: ""});
     },
+    getSum: function (dateRange) {
+        return parseFloat(
+            getSumBySiteAndPeriod(
+                dateRange,
+                this.props.consumptions.fullPath[0],
+                this.props.collections.get("consumptions-yearly-aggregates") || Immutable.Map())
+            .toFixed(2));
+    },
     closeModal: function () {
         this.setState ({
             showModal: false,
-            value: null
+            site: null
         });
     },
     openModal: function () {
         this.setState ({showModal:true});
     },
     onConfirmFullscreenModal: function () {
-        this.props.selectSite(this.state.value);
+        this.props.selectSite(this.state.site || this.props.consumptions.fullPath);
         this.closeModal();
     },
-    onChangeWidgetValue: function (value) {
-        this.setState({value});
+    onChangeWidgetValue: function (site) {
+        this.setState({site});
+    },
+    onChangeTabValue: function (tabPeriod) {
+        this.setState({period: tabPeriod});
+    },
+    renderCustomersComparisons: function () {
+        const title = "Confronta i tuoi consumi con quelli di attività simili alla tua";
+        const selectedTab = tabParameters().find(param => param.key === this.state.period);
+        const now = parseInt(selectedTab.now(
+            this.props.consumptions.fullPath[0],
+            this.props.collections.get("consumptions-yearly-aggregates") || Immutable.Map()).toFixed(0));
+        return (
+            <div>
+                <span>{title}</span>
+                {this.renderStyledProgressBar(
+                    "neighbors-efficient",
+                    parseInt((now * 1.1).toFixed(0)),
+                    now,
+                    "I tuoi vicini più efficienti"
+                )}
+                {this.renderStyledProgressBar(
+                    "you",
+                    parseInt((now * 1.3).toFixed(0)),
+                    now,
+                    "Tu"
+                )}
+                {this.renderStyledProgressBar(
+                    "neighbors-all",
+                    parseInt((now * 1.4).toFixed(0)),
+                    now,
+                    "Tutti i tuoi vicini"
+                )}
+            </div>
+        );
+    },
+    renderFeedbackBox: function () {
+        const colors = this.getTheme();
+        const feedbackMessage = "Stai andando molto bene. Hai usato il 10% di energia in meno dei tuoi vicini.";
+        return (
+            <div>
+                <div>
+                    <components.Icon
+                        color={colors.feedbackGood}
+                        icon={"good"}
+                        size={"30px"}
+                    />
+                    <span>
+                        {"GRANDE!"}
+                    </span>
+                </div>
+                <div>
+                    <components.Icon
+                        color={colors.feedbackNeutral}
+                        icon={"middling"}
+                        size={"30px"}
+                    />
+                </div>
+                <div style={{width: "30%"}}>
+                    <components.Icon
+                        color={colors.feedbackNeutral}
+                        icon={"bad"}
+                        size={"30px"}
+                    />
+                </div>
+                <span>{feedbackMessage}</span>
+            </div>
+        );
+    },
+    renderPeriodComparisons: function () {
+        const selectedTab = tabParameters().find(param => param.key === this.state.period);
+        const comparisons = selectedTab.comparisons;
+        return (
+            <div>
+                {comparisons.map(partial(this.renderProgressBar, [selectedTab.now]))}
+            </div>
+        );
+    },
+    renderProgressBar: function (comparisonNow, comparisonParams) {
+        const max = parseInt(comparisonParams.max(
+            this.props.consumptions.fullPath[0],
+            this.props.collections.get("consumptions-yearly-aggregates") || Immutable.Map()).toFixed(0));
+        const now = parseInt(
+            comparisonNow(
+                this.props.consumptions.fullPath[0],
+                this.props.collections.get("consumptions-yearly-aggregates") || Immutable.Map()).toFixed(0));
+        return this.renderStyledProgressBar(comparisonParams.key, max, now, comparisonParams.title);
+    },
+    renderStyledProgressBar: function (key, max, now, title) {
+        const colors = this.getTheme();
+        return (
+            <components.ProgressBar
+                key={key}
+                max={max}
+                now={now}
+                title={title}
+                rules={rulesProgressBar(colors)}
+                style={styleProgressBar(colors)}
+                styleMaxLabel={styleProgressBarMaxLabel(colors)}
+                styleTitleLabel={styleProgressBarTitleLabel(colors)}
+            />);
     },
     renderModalBody: function () {
         const sites = this.props.collections.get("sites") || Immutable.Map({});
@@ -136,7 +282,7 @@ var SummaryConsumptions = React.createClass({
             <components.SiteNavigator
                 allowedValues={sites.sortBy(site => site.get("name"))}
                 onChange={this.onChangeWidgetValue}
-                path={this.state.value || this.props.consumptions.fullPath || []}
+                path={this.state.site || this.props.consumptions.fullPath || []}
                 title={"Quale punto di misurazione vuoi visualizzare?"}
             />
         );
@@ -155,10 +301,9 @@ var SummaryConsumptions = React.createClass({
         const {colors} = this.getTheme();
         return (
             <bootstrap.Tabs
-                activeKey={this.props.consumptions.period || tabParameters()[0].key}
+                activeKey={this.state.period}
                 className="style-tab"
-                defaultActiveKey={this.props.consumptions.period || tabParameters()[0].key}
-                onSelect={this.props.selectPeriod}
+                onSelect={this.onChangeTabValue}
             >
                 <Radium.Style
                     rules={{
@@ -206,7 +351,7 @@ var SummaryConsumptions = React.createClass({
                 />
                 {
                     tabParameters().map(parameter => {
-                        return self.renderSingleTab (siteName, theme, parameter);
+                        return self.renderSingleTab(siteName, theme, parameter);
                     })
                 }
             </bootstrap.Tabs>
@@ -215,12 +360,8 @@ var SummaryConsumptions = React.createClass({
     renderTabContent: function (siteName, theme, tabParameters) {
         var sum = 0;
         if (this.props.consumptions.fullPath) {
-            this.subscribeToMeasuresByPerdiod(getTimeRangeByPeriod(tabParameters.period));
-
-            sum = getSumBySiteAndPeriod(
-                getTimeRangeByPeriod(tabParameters.period),
-                this.props.consumptions.fullPath[0],
-                this.props.collections.get("readings-daily-aggregates") || Immutable.Map());
+            this.subscribeToConsumptions();
+            sum = this.getSum(getTimeRangeByPeriod(tabParameters.period));
         }
         return (
             <div style={styleContent(theme)}>
@@ -244,27 +385,34 @@ var SummaryConsumptions = React.createClass({
                     </div>
                 </div>
                 <div style={styleRightPane(theme)}>
-                    <components.Button className="pull-right" onClick={this.openModal} style={styleSiteButton(theme)} >
-                        <components.Icon
-                            color={this.getTheme().colors.iconSiteButton}
-                            icon={"map"}
-                            size={"38px"}
-                            style={{
-                                textAlign: "center",
-                                verticalAlign: "middle",
-                                lineHeight: "20px"
-                            }}
-                        />
-                    </components.Button>
-                    <components.FullscreenModal
-                        onConfirm={this.onConfirmFullscreenModal}
-                        onHide={this.closeModal}
-                        onReset={this.closeModal}
-                        renderConfirmButton={true}
-                        show={this.state.showModal}
-                    >
-                        {this.renderModalBody()}
-                    </components.FullscreenModal>
+                    <div>
+                        <components.Button className="pull-right" onClick={this.openModal} style={styleSiteButton(theme)} >
+                            <components.Icon
+                                color={theme.colors.iconSiteButton}
+                                icon={"map"}
+                                size={"38px"}
+                                style={{
+                                    textAlign: "center",
+                                    verticalAlign: "middle",
+                                    lineHeight: "20px"
+                                }}
+                            />
+                        </components.Button>
+                        <components.FullscreenModal
+                            onConfirm={this.onConfirmFullscreenModal}
+                            onHide={this.closeModal}
+                            onReset={this.closeModal}
+                            renderConfirmButton={true}
+                            show={this.state.showModal}
+                        >
+                            {this.renderModalBody()}
+                        </components.FullscreenModal>
+                    </div>
+                    <div>
+                        {this.props.consumptions.fullPath ? this.renderPeriodComparisons() : undefined}
+                        {this.props.consumptions.fullPath ? this.renderCustomersComparisons() : undefined}
+                        {this.props.consumptions.fullPath ? this.renderFeedbackBox() : undefined}
+                    </div>
                 </div>
             </div>
         );
