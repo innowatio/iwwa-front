@@ -1,7 +1,8 @@
-import {addIndex, findIndex, is, isEmpty, memoize, reduce, repeat} from "ramda";
+import {addIndex, findIndex, is, isEmpty, memoize, reduce} from "ramda";
 import moment from "moment";
 
-const oneDayInMs = moment.duration(1, "day").asMilliseconds();
+// const oneDayInMs = moment.duration(1, "day").asMilliseconds();
+const fiveMinutesInMs = moment.duration(5, "minutes").asMilliseconds();
 const NUMBER_OF_DATA_IN_DAY = 288;
 
 function getFilterFn (filter) {
@@ -38,31 +39,28 @@ export function yAxisByDate (filters) {
         indexes = is(Number, indexes) ? [indexes] : indexes;
         indexes.forEach(index => {
             const offsetDays = moment(aggregate.get("day")).diff(filters[index].date.start, "days");
-            return aggregate
+            aggregate
                 .get("measurementValues")
                 .split(",")
                 .map(value => parseFloat(value))
                 .forEach((value, offset) => {
                     const offsetInArray = (offsetDays * NUMBER_OF_DATA_IN_DAY) + offset;
-                    return isNaN(value) ?
-                        yAxis :
-                        yAxis[index][offsetInArray] = value;
+                    yAxis[index][offsetInArray] = isNaN(value) ? null : value;
+                    return yAxis;
                 });
+            return yAxis;
         });
         return yAxis;
     };
-
 }
 
-export default memoize(function readingsDailyAggregatesToDygraphData (aggregates, filters) {
-    const defaultYAxis = filters.map(filter => {
-        const numberOfDaysToChart = (filter.date.end - filter.date.start) / oneDayInMs + 1;
-        return repeat(null, numberOfDaysToChart * NUMBER_OF_DATA_IN_DAY);
-    });
-    const arraysOfData = aggregates.sortBy(a => a.get("day")).reduce(yAxisByDate(filters), defaultYAxis);
+export default memoize(function readingsDailyAggregatesToHighchartsData (aggregates, filters) {
+    const defaultYAxis = filters.map(() => []);
+    const arraysOfData = aggregates.sortBy(agg => agg.get("day")).reduce(yAxisByDate(filters), defaultYAxis);
     return arraysOfData.map((arrayOfData, index) => ({
         data: arrayOfData,
-        pointStart: new Date(filters[index].date.start),
-        pointInterval: NUMBER_OF_DATA_IN_DAY
+        pointStart: moment.utc(filters[index].date.start).valueOf(),
+        pointInterval: fiveMinutesInMs,
+        name: `${filters[index].source.label} - ${filters[index].measurementType.label}`
     }));
 });

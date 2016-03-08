@@ -13,6 +13,7 @@ exports.Export                  = require("./export/");
 exports.FullscreenModal         = require("./fullscreen-modal/");
 exports.Gauge                   = require("./gauge/");
 exports.Header                  = require("./header/");
+exports.HighCharts              = require("./highcharts//");
 exports.HistoricalGraph         = require("./historical-graph/");
 exports.Icon                    = require("./icon/");
 exports.LoginModal              = require("./login-modal/");
