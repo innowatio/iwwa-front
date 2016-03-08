@@ -63,7 +63,7 @@ export const colorsDarkTheme = {
     iconCalendar: "#ffffff",
     iconSiteButton: "#ffffff",
     iconCompare: "#ffffff",
-    iconFlag: "#ffffff",
+    iconFlag: "#ec4882",
     iconLogout: "#ffffff",
     labelAmbientalSurveys: "#ffffff",
     lineCompare: "#f74f68",
