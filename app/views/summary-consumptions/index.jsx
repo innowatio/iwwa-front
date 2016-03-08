@@ -11,7 +11,8 @@ import {bindActionCreators} from "redux";
 import {defaultTheme} from "lib/theme";
 import {selectSite, selectPeriod} from "actions/consumptions";
 import {getSumBySiteAndPeriod, getTimeRangeByPeriod, tabParameters} from "lib/consumptions-utils";
-
+import moment from "moment";
+import {partial, merge} from "Ramda";
 
 var styleLeftPane  = {
     width: "70%",
@@ -78,6 +79,7 @@ var styleSiteButton = ({colors}) => ({
     margin: "13px",
     backgroundColor: colors.secondary
 });
+
 var SummaryConsumptions = React.createClass({
     propTypes: {
         asteroid: React.PropTypes.object,
@@ -88,22 +90,25 @@ var SummaryConsumptions = React.createClass({
     },
     getInitialState: function () {
         return {
+            period: tabParameters()[0].key,
             showModal: false,
-            value: null
+            site: null
         };
     },
     componentDidMount: function () {
         this.props.asteroid.subscribe("sites");
     },
-    subscribeToMeasuresByPerdiod: function (period) {
-        this.props.asteroid.subscribe(
-            "dailyMeasuresBySensor",
-            this.props.consumptions.fullPath[0],
-            period.start,
-            period.end,
-            "reading",
-            "activeEnergy"
-        );
+    subscribeToConsumptions: function () {
+        const periods = [moment().subtract(1, "year").format("YYYY"), moment().format("YYYY")];
+        periods.map(year => {
+            this.props.asteroid.subscribe(
+                "yearlyConsumptions",
+                this.props.consumptions.fullPath[0],
+                year,
+                "reading",
+                "activeEnergy"
+            );
+        });
     },
     getTheme: function () {
         return this.context.theme || defaultTheme;
@@ -114,21 +119,123 @@ var SummaryConsumptions = React.createClass({
         }
         return Immutable.Map({name: ""});
     },
+    getSum: function (dateRange) {
+        return parseFloat(
+            getSumBySiteAndPeriod(
+                dateRange,
+                this.props.consumptions.fullPath[0],
+                this.props.collections.get("consumptions-yearly-aggregates") || Immutable.Map())
+            .toFixed(2));
+    },
     closeModal: function () {
         this.setState ({
             showModal: false,
-            value: null
+            site: null
         });
     },
     openModal: function () {
         this.setState ({showModal:true});
     },
     onConfirmFullscreenModal: function () {
-        this.props.selectSite(this.state.value);
+        this.props.selectSite(this.state.site || this.props.consumptions.fullPath);
         this.closeModal();
     },
-    onChangeWidgetValue: function (value) {
-        this.setState({value});
+    onChangeWidgetValue: function (site) {
+        this.setState({site});
+    },
+    onChangeTabValue: function (tabPeriod) {
+        this.setState({period: tabPeriod});
+    },
+    renderCustomersComparisons: function () {
+        const title = "Confronta i tuoi consumi con quelli di attività simili alla tua";
+        const hint = "Stai andando molto bene. Hai usato il 10% di energia in meno dei tuoi vicini.";
+        const selectedTab = tabParameters().find(param => param.key === this.state.period);
+        const now = parseInt(selectedTab.now(
+            this.props.consumptions.fullPath[0],
+            this.props.collections.get("consumptions-yearly-aggregates") || Immutable.Map()).toFixed(0));
+        return (
+            <div>
+                <span>{title}</span>
+                <components.ProgressBar
+                    key={"neighbors-efficient"}
+                    max={parseInt((now * 1.1).toFixed(0))}
+                    now={now}
+                    title={"I tuoi vicini più efficienti"}
+                    styleMaxLabel={{color: "white"}}
+                    styleTitleLabel={{color: "white"}}
+                />
+                <components.ProgressBar
+                    key={"you"}
+                    max={parseInt((now * 1.3).toFixed(0))}
+                    now={now}
+                    title={"Tu"}
+                    styleMaxLabel={{color: "white"}}
+                    styleTitleLabel={{color: "white"}}
+                />
+                <components.ProgressBar
+                    key={"neighbors-all"}
+                    max={parseInt((now * 1.4).toFixed(0))}
+                    now={now}
+                    title={"Tutti i tuoi vicini"}
+                    styleMaxLabel={{color: "white"}}
+                    styleTitleLabel={{color: "white"}}
+                />
+                <div style={{alignItems: "center"}}>
+                    <div>
+                        <components.Icon
+                            color={"green"}
+                            icon={"good"}
+                            size={"30px"}
+                        />
+                        <span style={merge({}, {color: "green"})}>
+                            {"GRANDE!"}
+                        </span>
+                    </div>
+                    <div>
+                        <components.Icon
+                            color={"white"}
+                            icon={"middling"}
+                            size={"30px"}
+                        />
+                    </div>
+                    <div>
+                        <components.Icon
+                            color={"white"}
+                            icon={"bad"}
+                            size={"30px"}
+                        />
+                    </div>
+                </div>
+                <span>{hint}</span>
+            </div>
+        );
+    },
+    renderPeriodComparisons: function () {
+        const selectedTab = tabParameters().find(param => param.key === this.state.period);
+        const comparisons = selectedTab.comparisons;
+        return (
+            <div>
+                {comparisons.map(partial(this.renderProgressBar, [selectedTab.now]))}
+            </div>
+        );
+    },
+    renderProgressBar: function (comparisonNow, comparisonParams) {
+        const max = parseInt(comparisonParams.max(
+            this.props.consumptions.fullPath[0],
+            this.props.collections.get("consumptions-yearly-aggregates") || Immutable.Map()).toFixed(0));
+        const now = parseInt(
+            comparisonNow(
+                this.props.consumptions.fullPath[0],
+                this.props.collections.get("consumptions-yearly-aggregates") || Immutable.Map()).toFixed(0));
+        return (
+            <components.ProgressBar
+                key={comparisonParams.key}
+                max={max}
+                now={now}
+                title={comparisonParams.title}
+                styleMaxLabel={{color: "white"}}
+                styleTitleLabel={{color: "white"}}
+            />);
     },
     renderModalBody: function () {
         const sites = this.props.collections.get("sites") || Immutable.Map({});
@@ -136,7 +243,7 @@ var SummaryConsumptions = React.createClass({
             <components.SiteNavigator
                 allowedValues={sites.sortBy(site => site.get("name"))}
                 onChange={this.onChangeWidgetValue}
-                path={this.state.value || this.props.consumptions.fullPath || []}
+                path={this.state.site || this.props.consumptions.fullPath || []}
                 title={"Quale punto di misurazione vuoi visualizzare?"}
             />
         );
@@ -155,10 +262,9 @@ var SummaryConsumptions = React.createClass({
         const {colors} = this.getTheme();
         return (
             <bootstrap.Tabs
-                activeKey={this.props.consumptions.period || tabParameters()[0].key}
+                activeKey={this.state.period}
                 className="style-tab"
-                defaultActiveKey={this.props.consumptions.period || tabParameters()[0].key}
-                onSelect={this.props.selectPeriod}
+                onSelect={this.onChangeTabValue}
             >
                 <Radium.Style
                     rules={{
@@ -206,7 +312,7 @@ var SummaryConsumptions = React.createClass({
                 />
                 {
                     tabParameters().map(parameter => {
-                        return self.renderSingleTab (siteName, theme, parameter);
+                        return self.renderSingleTab(siteName, theme, parameter);
                     })
                 }
             </bootstrap.Tabs>
@@ -215,12 +321,8 @@ var SummaryConsumptions = React.createClass({
     renderTabContent: function (siteName, theme, tabParameters) {
         var sum = 0;
         if (this.props.consumptions.fullPath) {
-            this.subscribeToMeasuresByPerdiod(getTimeRangeByPeriod(tabParameters.period));
-
-            sum = getSumBySiteAndPeriod(
-                getTimeRangeByPeriod(tabParameters.period),
-                this.props.consumptions.fullPath[0],
-                this.props.collections.get("readings-daily-aggregates") || Immutable.Map());
+            this.subscribeToConsumptions();
+            sum = this.getSum(getTimeRangeByPeriod(tabParameters.period));
         }
         return (
             <div style={styleContent(theme)}>
@@ -246,7 +348,7 @@ var SummaryConsumptions = React.createClass({
                 <div style={styleRightPane(theme)}>
                     <components.Button className="pull-right" onClick={this.openModal} style={styleSiteButton(theme)} >
                         <components.Icon
-                            color={this.getTheme().colors.iconSiteButton}
+                            color={theme.colors.iconSiteButton}
                             icon={"map"}
                             size={"38px"}
                             style={{
@@ -265,6 +367,8 @@ var SummaryConsumptions = React.createClass({
                     >
                         {this.renderModalBody()}
                     </components.FullscreenModal>
+                    {this.props.consumptions.fullPath ? this.renderPeriodComparisons() : undefined}
+                    {this.props.consumptions.fullPath ? this.renderCustomersComparisons() : undefined}
                 </div>
             </div>
         );
