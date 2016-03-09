@@ -97,13 +97,7 @@ var AlarmNotificationModal = React.createClass({
                     allowedValues={this.getNotificationOptions()}
                     getKey={prop("key")}
                     getLabel={prop("label")}
-                    header={
-                        <h4 style={{
-                            color: theme.colors.mainFontColor,
-                            textAlign: "center",
-                            padding: "20px 0px"
-                        }}
-                        >{"Seleziona tipo di notifica"}</h4>}
+                    header={"Seleziona tipo di notifica"}
                     isModalOpen={this.state.isOpen}
                     onClickConfirm={this.onClickConfirm}
                     onClickReset={this.toggleModal}

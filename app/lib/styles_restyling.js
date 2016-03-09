@@ -33,7 +33,7 @@ export const styles = (theme) => ({
         background: theme.colors.backgroundSelectButton,
         color: theme.colors.selectButton,
         marginRight: "9px",
-        marginTop: "96px",
+        marginTop: "6px",
         fontSize: "12px",
         border: `1px solid ${theme.colors.borderSelectButton}`,
         borderRadius: "30px"

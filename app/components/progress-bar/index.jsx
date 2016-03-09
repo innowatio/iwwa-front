@@ -8,6 +8,7 @@ var ProgressBar = React.createClass({
         max: React.PropTypes.number,
         min: React.PropTypes.number,
         now: React.PropTypes.number,
+        rules: React.PropTypes.object, 
         style: React.PropTypes.object,
         styleMaxLabel: React.PropTypes.object,
         styleTitleLabel: React.PropTypes.object,
@@ -26,7 +27,7 @@ var ProgressBar = React.createClass({
                     {this.props.title}
                 </div>
                 <Radium.Style
-                    rules={this.props.style || {}}
+                    rules={this.props.rules}
                     scopeSelector=".progress-bar-main-div"
                 />
                 <bootstrap.ProgressBar
@@ -35,6 +36,7 @@ var ProgressBar = React.createClass({
                     max={max}
                     min={min}
                     now={now}
+                    style={this.props.style}
                 />
                 <div className="progress-max" style={this.props.styleMaxLabel}>
                     {max + " kWh"}

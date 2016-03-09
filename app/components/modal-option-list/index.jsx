@@ -44,15 +44,21 @@ var ModalOptionList = React.createClass({
                     key={this.props.getKey(value)}
                     onClick={R.partial(value.action, [this.props.getKey(value)])}
                     style={{
-                        color: colors.greySubTitle,
+                        backgroundColor: colors.transparent,
+                        borderTop: "0",
+                        borderRight: "0",
+                        borderLeft: "0",
                         textAlign: "left",
                         borderRadius: "0",
-                        borderBottom: "1px solid " + colors.white
+                        fontSize: "16px",
+                        outline: "none",
+                        borderBottom: "1px solid " + colors.borderContentModal,
+                        color: active ? colors.iconFlag : colors.mainFontColor
                     }}
                 >
                     {this.props.getLabel(value)}
                     <components.Icon
-                        color={this.getTheme().colors.iconFlag}
+                        color={colors.iconFlag}
                         icon={"flag"}
                         size={"28px"}
                         style={{
@@ -77,7 +83,14 @@ var ModalOptionList = React.createClass({
                 borderRadius: "20px"
             }}
             >
-                <div style={{color: colors.mainFontColor, textAlign: "center", padding: "20px 0px"}}>{this.props.header}</div>
+                <h4 style={{
+                    color: colors.mainFontColor,
+                    textAlign: "center",
+                    padding: "20px 0px",
+                    margin: "0px",
+                    borderBottom: "1px solid " + colors.borderContentModal
+                }}
+                >{this.props.header}</h4>
                 <bootstrap.ListGroup>
                     {repetitionItems.toArray ? repetitionItems.toArray() : repetitionItems}
                 </bootstrap.ListGroup>

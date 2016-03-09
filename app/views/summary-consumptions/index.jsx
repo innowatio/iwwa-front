@@ -12,7 +12,7 @@ import {defaultTheme} from "lib/theme";
 import {selectSite, selectPeriod} from "actions/consumptions";
 import {getSumBySiteAndPeriod, getTimeRangeByPeriod, tabParameters} from "lib/consumptions-utils";
 import moment from "moment";
-import {partial, merge} from "Ramda";
+import {partial} from "Ramda";
 
 var styleLeftPane  = {
     width: "70%",
@@ -68,7 +68,8 @@ var styleUnit  = ({colors}) => ({
 var styleRightPane  = ({colors}) => ({
     width: "30%",
     float: "right",
-    borderTop: "4px solid " + colors.secondary
+    borderTop: "4px solid " + colors.secondary,
+    display: "block"
 });
 var styleSiteButton = ({colors}) => ({
     width: "50px",
@@ -78,6 +79,39 @@ var styleSiteButton = ({colors}) => ({
     borderRadius: "100%",
     margin: "13px",
     backgroundColor: colors.secondary
+});
+
+var styleProgressBar = ({colors}) => ({
+    backgroundColor: colors.progressBarBackground,
+    height: "12px",
+    margin: "auto",
+    maxWidth: "90%"
+});
+
+var styleProgressBarTitleLabel = ({colors}) => ({
+    fontSize: "18px",
+    color: colors.progressBarFont
+});
+
+var styleProgressBarMaxLabel = ({colors}) => ({
+    color: colors.progressBarFont,
+    float: "right",
+    fontSize: "16px"
+});
+
+var rulesProgressBar = ({colors}) => ({
+    ".progress-bar": {
+        color: colors.progressBarFont,
+        fontSize: "10px",
+        lineHeight: "10px",
+        textAlign: "left"
+    },
+    ".progress-bar-danger": {
+        backgroundColor: colors.progressBarDanger
+    },
+    ".progress-bar-info": {
+        backgroundColor: colors.progressBarInfo
+    }
 });
 
 var SummaryConsumptions = React.createClass({
@@ -148,7 +182,6 @@ var SummaryConsumptions = React.createClass({
     },
     renderCustomersComparisons: function () {
         const title = "Confronta i tuoi consumi con quelli di attività simili alla tua";
-        const hint = "Stai andando molto bene. Hai usato il 10% di energia in meno dei tuoi vicini.";
         const selectedTab = tabParameters().find(param => param.key === this.state.period);
         const now = parseInt(selectedTab.now(
             this.props.consumptions.fullPath[0],
@@ -156,57 +189,57 @@ var SummaryConsumptions = React.createClass({
         return (
             <div>
                 <span>{title}</span>
-                <components.ProgressBar
-                    key={"neighbors-efficient"}
-                    max={parseInt((now * 1.1).toFixed(0))}
-                    now={now}
-                    title={"I tuoi vicini più efficienti"}
-                    styleMaxLabel={{color: "white"}}
-                    styleTitleLabel={{color: "white"}}
-                />
-                <components.ProgressBar
-                    key={"you"}
-                    max={parseInt((now * 1.3).toFixed(0))}
-                    now={now}
-                    title={"Tu"}
-                    styleMaxLabel={{color: "white"}}
-                    styleTitleLabel={{color: "white"}}
-                />
-                <components.ProgressBar
-                    key={"neighbors-all"}
-                    max={parseInt((now * 1.4).toFixed(0))}
-                    now={now}
-                    title={"Tutti i tuoi vicini"}
-                    styleMaxLabel={{color: "white"}}
-                    styleTitleLabel={{color: "white"}}
-                />
-                <div style={{alignItems: "center"}}>
-                    <div>
-                        <components.Icon
-                            color={"green"}
-                            icon={"good"}
-                            size={"30px"}
-                        />
-                        <span style={merge({}, {color: "green"})}>
-                            {"GRANDE!"}
-                        </span>
-                    </div>
-                    <div>
-                        <components.Icon
-                            color={"white"}
-                            icon={"middling"}
-                            size={"30px"}
-                        />
-                    </div>
-                    <div>
-                        <components.Icon
-                            color={"white"}
-                            icon={"bad"}
-                            size={"30px"}
-                        />
-                    </div>
+                {this.renderStyledProgressBar(
+                    "neighbors-efficient",
+                    parseInt((now * 1.1).toFixed(0)),
+                    now,
+                    "I tuoi vicini più efficienti"
+                )}
+                {this.renderStyledProgressBar(
+                    "you",
+                    parseInt((now * 1.3).toFixed(0)),
+                    now,
+                    "Tu"
+                )}
+                {this.renderStyledProgressBar(
+                    "neighbors-all",
+                    parseInt((now * 1.4).toFixed(0)),
+                    now,
+                    "Tutti i tuoi vicini"
+                )}
+            </div>
+        );
+    },
+    renderFeedbackBox: function () {
+        const colors = this.getTheme();
+        const feedbackMessage = "Stai andando molto bene. Hai usato il 10% di energia in meno dei tuoi vicini.";
+        return (
+            <div>
+                <div>
+                    <components.Icon
+                        color={colors.feedbackGood}
+                        icon={"good"}
+                        size={"30px"}
+                    />
+                    <span>
+                        {"GRANDE!"}
+                    </span>
                 </div>
-                <span>{hint}</span>
+                <div>
+                    <components.Icon
+                        color={colors.feedbackNeutral}
+                        icon={"middling"}
+                        size={"30px"}
+                    />
+                </div>
+                <div style={{width: "30%"}}>
+                    <components.Icon
+                        color={colors.feedbackNeutral}
+                        icon={"bad"}
+                        size={"30px"}
+                    />
+                </div>
+                <span>{feedbackMessage}</span>
             </div>
         );
     },
@@ -227,14 +260,20 @@ var SummaryConsumptions = React.createClass({
             comparisonNow(
                 this.props.consumptions.fullPath[0],
                 this.props.collections.get("consumptions-yearly-aggregates") || Immutable.Map()).toFixed(0));
+        return this.renderStyledProgressBar(comparisonParams.key, max, now, comparisonParams.title);
+    },
+    renderStyledProgressBar: function (key, max, now, title) {
+        const colors = this.getTheme();
         return (
             <components.ProgressBar
-                key={comparisonParams.key}
+                key={key}
                 max={max}
                 now={now}
-                title={comparisonParams.title}
-                styleMaxLabel={{color: "white"}}
-                styleTitleLabel={{color: "white"}}
+                title={title}
+                rules={rulesProgressBar(colors)}
+                style={styleProgressBar(colors)}
+                styleMaxLabel={styleProgressBarMaxLabel(colors)}
+                styleTitleLabel={styleProgressBarTitleLabel(colors)}
             />);
     },
     renderModalBody: function () {
@@ -346,29 +385,34 @@ var SummaryConsumptions = React.createClass({
                     </div>
                 </div>
                 <div style={styleRightPane(theme)}>
-                    <components.Button className="pull-right" onClick={this.openModal} style={styleSiteButton(theme)} >
-                        <components.Icon
-                            color={theme.colors.iconSiteButton}
-                            icon={"map"}
-                            size={"38px"}
-                            style={{
-                                textAlign: "center",
-                                verticalAlign: "middle",
-                                lineHeight: "20px"
-                            }}
-                        />
-                    </components.Button>
-                    <components.FullscreenModal
-                        onConfirm={this.onConfirmFullscreenModal}
-                        onHide={this.closeModal}
-                        onReset={this.closeModal}
-                        renderConfirmButton={true}
-                        show={this.state.showModal}
-                    >
-                        {this.renderModalBody()}
-                    </components.FullscreenModal>
-                    {this.props.consumptions.fullPath ? this.renderPeriodComparisons() : undefined}
-                    {this.props.consumptions.fullPath ? this.renderCustomersComparisons() : undefined}
+                    <div>
+                        <components.Button className="pull-right" onClick={this.openModal} style={styleSiteButton(theme)} >
+                            <components.Icon
+                                color={theme.colors.iconSiteButton}
+                                icon={"map"}
+                                size={"38px"}
+                                style={{
+                                    textAlign: "center",
+                                    verticalAlign: "middle",
+                                    lineHeight: "20px"
+                                }}
+                            />
+                        </components.Button>
+                        <components.FullscreenModal
+                            onConfirm={this.onConfirmFullscreenModal}
+                            onHide={this.closeModal}
+                            onReset={this.closeModal}
+                            renderConfirmButton={true}
+                            show={this.state.showModal}
+                        >
+                            {this.renderModalBody()}
+                        </components.FullscreenModal>
+                    </div>
+                    <div>
+                        {this.props.consumptions.fullPath ? this.renderPeriodComparisons() : undefined}
+                        {this.props.consumptions.fullPath ? this.renderCustomersComparisons() : undefined}
+                        {this.props.consumptions.fullPath ? this.renderFeedbackBox() : undefined}
+                    </div>
                 </div>
             </div>
         );
