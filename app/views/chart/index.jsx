@@ -322,6 +322,7 @@ var Chart = React.createClass({
                     this.state.value || (chart[0].date.type === "dateFilter" && chart[0].date) || {
                         start: moment().startOf("month").valueOf(),
                         end: moment().endOf("month").valueOf(),
+                        type: "dateFilter",
                         valueType: {label: "calendario", key: "calendar"}
                     }
                 );
@@ -562,7 +563,9 @@ var Chart = React.createClass({
                             onConfirm={this.onConfirmFullscreenModal}
                             onHide={this.closeModal}
                             onReset={this.closeModal}
-                            renderConfirmButton={this.state.selectedWidget !== "export" && !R.isNil(this.state.selectedWidget)}
+                            renderConfirmButton={
+                                this.state.selectedWidget !== "export" && !R.isNil(this.state.selectedWidget)
+                            }
                             show={this.state.showFullscreenModal}
                         >
                             {this.renderChildComponent()}

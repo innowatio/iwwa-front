@@ -12,41 +12,41 @@ function endDate (startDate, numberOfWeeks) {
 }
 export function getDateRangesCompare ({period, dateOne}) {
     switch (period.key) {
-    case "days":
-    case "week": {
-        const dateStartArray = [
-            moment.utc(dateOne).startOf(period.key).valueOf(),
-            moment.utc(dateOne).subtract(1, period.key).startOf(period.key).valueOf()
-        ];
-        return map(dateStart => ({
-            start: dateStart,
-            end: moment(dateStart).endOf(period.key).valueOf()
-        }), dateStartArray);
-    }
-    case "7 days before": {
-        const dateStartArray = [
-            moment.utc(dateOne).startOf("day"),
-            moment.utc(dateOne).subtract({week: 1}).startOf("day")
-        ];
-        return map(dateStart => ({
-            start: dateStart.valueOf(),
-            end: dateStart.endOf("day").valueOf()
-        }), dateStartArray);
-    }
-    case "years":
-    case "months": {
-        const startOne = moment.utc(dateOne).startOf("month").startOf("isoWeek").valueOf();
-        const startTwo = period.key === "years" ?
-            moment.utc(dateOne).subtract({year: 1}).startOf("month").startOf("isoWeek").valueOf() :
-            moment.utc(dateOne).startOf("month").subtract({weeks: 5}).startOf("isoWeek").valueOf();
-        const numberOfWeek = numberOfWeeksToAdd(startOne, startTwo);
-        const dateStartArray = [startOne, startTwo];
-        return map(dateStart => ({
-            start: dateStart,
-            end:  endDate(dateStart, numberOfWeek)
-        }), dateStartArray);
-    }
-    default:
-        return [];
-    }
+        case "days":
+        case "week": {
+            const dateStartArray = [
+                moment.utc(dateOne).startOf(period.key).valueOf(),
+                moment.utc(dateOne).subtract(1, period.key).startOf(period.key).valueOf()
+            ];
+            return map(dateStart => ({
+                start: dateStart,
+                end: moment(dateStart).endOf(period.key).valueOf()
+            }), dateStartArray);
+        }
+        case "7 days before": {
+            const dateStartArray = [
+                moment.utc(dateOne).startOf("day"),
+                moment.utc(dateOne).subtract({week: 1}).startOf("day")
+            ];
+            return map(dateStart => ({
+                start: dateStart.valueOf(),
+                end: dateStart.endOf("day").valueOf()
+            }), dateStartArray);
+        }
+        case "years":
+        case "months": {
+            const startOne = moment.utc(dateOne).startOf("month").startOf("isoWeek").valueOf();
+            const startTwo = period.key === "years" ?
+                moment.utc(dateOne).subtract({year: 1}).startOf("month").startOf("isoWeek").valueOf() :
+                moment.utc(dateOne).startOf("month").subtract({weeks: 5}).startOf("isoWeek").valueOf();
+            const numberOfWeek = numberOfWeeksToAdd(startOne, startTwo);
+            const dateStartArray = [startOne, startTwo];
+            return map(dateStart => ({
+                start: dateStart,
+                end:  endDate(dateStart, numberOfWeek)
+            }), dateStartArray);
+        }
+        default:
+            return [];
+        }
 }

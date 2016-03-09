@@ -1,7 +1,8 @@
 import IPropTypes from "react-immutable-proptypes";
-import {prop, map, uniq} from "ramda";
+import {isEmpty, prop, map, uniq} from "ramda";
 import React, {PropTypes} from "react";
 import ReactPureRender from "react-addons-pure-render-mixin";
+import moment from "moment";
 
 import components from "components";
 import readingsDailyAggregatesToHighchartsData from "lib/readings-daily-aggregates-to-highcharts-data";
@@ -30,11 +31,19 @@ var ValoriCompare = React.createClass({
         }
         return colors;
     },
+    getDateFilter: function () {
+        return (
+            isEmpty(this.props.chart[0].date) ?
+            {start: moment.utc().startOf("month").valueOf(), end: moment.utc().endOf("month").valueOf()} :
+            this.props.chart[0].date
+        );
+    },
     render: function () {
         return (
             <components.HighCharts
                 colors={this.getColors()}
                 coordinates={this.getCoordinates()}
+                dateFilter={this.getDateFilter()}
                 yLabel={this.getYLabel()}
             />
         );
