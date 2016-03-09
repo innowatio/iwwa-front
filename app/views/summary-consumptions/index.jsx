@@ -12,7 +12,7 @@ import {defaultTheme} from "lib/theme";
 import {selectSite, selectPeriod} from "actions/consumptions";
 import {getSumBySiteAndPeriod, getTimeRangeByPeriod, tabParameters} from "lib/consumptions-utils";
 import moment from "moment";
-import {partial} from "Ramda";
+import {partial} from "ramda";
 
 var styleLeftPane  = {
     width: "70%",

@@ -53,22 +53,17 @@ var ConsumptionButtons = React.createClass({
                         verticalAlign: "middle"
                     }}
                 />
-                <div className="text-button">
-                    <Radium.Style
-                        rules={{
-                            "span": {
-                                textAlign: "center",
-                                paddingRight: "35px",
-                                lineHeight: "45px",
-                                height: "45px",
-                                color: theme.colors.mainFontColor,
-                                transition: "opacity 0.9s ease-in",
-                                transitionDelay: "1s"
-                            }
-                        }}
-                        scopeSelector=".text-button"
-                    />
-                {isSelected ? consumption.label : ""}
+                <div style={{
+                    textAlign: "center",
+                    paddingRight: "35px",
+                    lineHeight: "45px",
+                    height: "45px",
+                    opacity: isSelected ? "1" : "0",
+                    color: theme.colors.mainFontColor,
+                    transition: "opacity 0.8s ease-in-out"
+                }}
+                >
+                    {isSelected ? consumption.label : ""}
                 </div>
             </components.Button>
         );
