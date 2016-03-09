@@ -2,7 +2,8 @@ require("unit-setup.js");
 import {fromJS} from "immutable";
 import moment from "moment";
 
-import * as pageHeaderUtils from "lib/page-header-utils";
+// import * as pageHeaderUtils from "lib/page-header-utils";
+var pageHeaderUtils = require("lib/page-header-utils");
 
 describe("`page-header-utils` lib", () => {
 
