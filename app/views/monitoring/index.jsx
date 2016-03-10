@@ -1,13 +1,22 @@
 import Immutable from "immutable";
-import React from "react";
-import {Button} from "react-bootstrap";
+import React, {PropTypes} from "react";
 import IPropTypes from "react-immutable-proptypes";
 import {connect} from "react-redux";
 import {Link} from "react-router";
 import {bindActionCreators} from "redux";
 import {cloneSensor, combineSensor, deleteSensor, favoriteSensor, monitorSensor, selectSensor} from "actions/sensors";
 import {addToFavorite, changeYAxisValues, selectChartType, selectFavoriteChart} from "actions/monitoring-chart";
-import {CollectionElementsTable, MonitoringChart} from "components";
+import {Button, CollectionElementsTable, Icon, MonitoringChart, MonitoringSearch, SectionToolbar} from "components";
+
+const buttonStyle = ({colors}) => ({
+    background: colors.titleColor,
+    border: "0px none",
+    borderRadius: "100%",
+    height: "50px",
+    margin: "auto",
+    width: "50px"
+});
+
 
 var getKeyFromCollection = function (collection) {
     return collection.get("_id");
@@ -15,21 +24,24 @@ var getKeyFromCollection = function (collection) {
 
 var Monitoring = React.createClass({
     propTypes: {
-        addToFavorite: React.PropTypes.func.isRequired,
-        asteroid: React.PropTypes.object,
-        changeYAxisValues: React.PropTypes.func.isRequired,
-        cloneSensor: React.PropTypes.func.isRequired,
+        addToFavorite: PropTypes.func.isRequired,
+        asteroid: PropTypes.object,
+        changeYAxisValues: PropTypes.func.isRequired,
+        cloneSensor: PropTypes.func.isRequired,
         collections: IPropTypes.map.isRequired,
-        combineSensor: React.PropTypes.func.isRequired,
-        deleteSensor: React.PropTypes.func.isRequired,
-        favoriteSensor: React.PropTypes.func.isRequired,
-        monitorSensor: React.PropTypes.func.isRequired,
-        monitoringChart: React.PropTypes.object.isRequired,
-        selectChartType: React.PropTypes.func.isRequired,
-        selectFavoriteChart: React.PropTypes.func.isRequired,
-        selectSensor: React.PropTypes.func.isRequired,
-        selected: React.PropTypes.array,
-        sensors: React.PropTypes.array.isRequired
+        combineSensor: PropTypes.func.isRequired,
+        deleteSensor: PropTypes.func.isRequired,
+        favoriteSensor: PropTypes.func.isRequired,
+        monitorSensor: PropTypes.func.isRequired,
+        monitoringChart: PropTypes.object.isRequired,
+        selectChartType: PropTypes.func.isRequired,
+        selectFavoriteChart: PropTypes.func.isRequired,
+        selectSensor: PropTypes.func.isRequired,
+        selected: PropTypes.array,
+        sensors: PropTypes.array.isRequired
+    },
+    contextTypes: {
+        theme: PropTypes.object
     },
     componentDidMount: function () {
         this.props.asteroid.subscribe("sensors");
@@ -51,6 +63,9 @@ var Monitoring = React.createClass({
                 "activeEnergy"
             );
         });
+    },
+    getTheme: function () {
+        return this.context.theme || defaultTheme;
     },
     getDeleteSensor: function (id) {
         return () => {
@@ -125,25 +140,68 @@ var Monitoring = React.createClass({
     },
     render: function () {
         let sensors = this.props.collections.get("sensors") || Immutable.Map();
+        const theme = this.getTheme();
+        //<Button bsStyle="primary" href="/monitoring/sensor/">
+        //    {"Add sensor"}
+        //</Button>
+        //<Button disabled={!(this.props.selected.length > 1)} onClick={this.props.combineSensor} >
+        //    {"Combine sensors"}
+        //</Button>
+        //<Button disabled={!(this.props.selected.length > 0)} >
+        //    {"Assign sensors"}
+        //</Button>
         return (
             <div>
-                <Button bsStyle="primary" href="/monitoring/sensor/">
-                    {"Add sensor"}
-                </Button>
-                <Button disabled={!(this.props.selected.length > 1)} onClick={this.props.combineSensor} >
-                    {"Combine sensors"}
-                </Button>
-                <Button disabled={!(this.props.selected.length > 0)} >
-                    {"Assign sensors"}
-                </Button>
-                <CollectionElementsTable
-                    collection={sensors}
-                    columns={this.getSensorsColumns()}
-                    getKey={getKeyFromCollection}
-                    hover={true}
-                    onRowClick={this.props.selectSensor}
-                    width={"60%"}
-                />
+                <SectionToolbar>
+                    <Button style={buttonStyle(theme)}>
+                        <Icon
+                            color={theme.colors.iconHeader}
+                            icon={"add"}
+                            size={"28px"}
+                            style={{lineHeight: "20px"}}
+                        />
+                    </Button>
+                    <Button style={buttonStyle(theme)} disabled={!(this.props.selected.length > 1)} onClick={this.props.combineSensor}>
+                        <Icon
+                            color={theme.colors.iconHeader}
+                            icon={"duplicate"}
+                            size={"28px"}
+                            style={{lineHeight: "20px"}}
+                        />
+                    </Button>
+                    <Button style={buttonStyle(theme)} disabled={!(this.props.selected.length > 0)}>
+                        <Icon
+                            color={theme.colors.iconHeader}
+                            icon={"edit"}
+                            size={"28px"}
+                            style={{lineHeight: "20px"}}
+                        />
+                    </Button>
+                    <Button style={buttonStyle(theme)}>
+                        <Icon
+                            color={theme.colors.iconHeader}
+                            icon={"delete"}
+                            size={"28px"}
+                            style={{lineHeight: "20px"}}
+                        />
+                    </Button>
+                </SectionToolbar>
+
+                <MonitoringSearch />
+
+                <div style={{float: "left", width: "70%", maxHeight: "332px", overflow: "auto", textAlign: "center"}}>
+                    <label style={{color: theme.colors.navText}}>
+                        {"Seleziona alcuni sensori per visualizzare il grafico o per creare un nuovo sensore"}
+                    </label>
+                    <CollectionElementsTable
+                        collection={sensors}
+                        columns={this.getSensorsColumns()}
+                        getKey={getKeyFromCollection}
+                        hover={true}
+                        onRowClick={this.props.selectSensor}
+                        width={"60%"}
+                    />
+                </div>
                 <div>
                     <h3>
                         {"Favorites charts"}
