@@ -373,7 +373,6 @@ var RealTime = React.createClass({
                 {/* Title page */}
                 <div style={styles(this.getTheme()).titlePage}>
                     <div style={{fontSize: "18px", marginBottom: "0px", paddingTop: "18px", width: "100%"}}>
-                        {getTitleForSingleSensor(this.props.realTime, this.props.collections)}
                     </div>
                     <bootstrap.Col sm={4}>
                         {this.renderModalButton()}

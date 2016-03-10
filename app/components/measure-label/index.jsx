@@ -6,15 +6,17 @@ import {defaultTheme} from "lib/theme";
 
 var styleLabelValue = ({colors}) => ({
     color: colors.labelAmbientalSurveys,
-    fontSize: "48px",
+    fontSize: ENVIRONMENT === "cordova" ? "36px" : "48px",
     fontWeight: "500",
     lineHeight: "56px",
-    margin: "0px 6px"
+    margin: ENVIRONMENT === "cordova" ? "0px 5px 0px 0px" : "0px 6px"
 });
 
 var styleLabelUnit = ({colors}) => ({
     color: colors.labelAmbientalSurveys,
-    fontSize: "30px",
+    fontSize: ENVIRONMENT === "cordova" ? "20px" : "30px",
+    marginTop: ENVIRONMENT === "cordova" ? "5px" : "0px",
+    lineHeight: ENVIRONMENT === "cordova" ? "30px" : "40px",
     display: "inline-block",
     verticalAlign: "text-bottom",
     fontWeight: "500"

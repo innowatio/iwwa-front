@@ -388,7 +388,7 @@ var AlarmRepetitionModal = React.createClass({
         const theme = this.getTheme();
         return (
             <span>
-                <h3 style={styleH3(theme)}>{stringIt.titleAlarmNotify}</h3>
+                <h3 style={styleH3(theme)}>{stringIt.titleAlarmRepeat}</h3>
                 <div onClick={this.toggleModal} style={styles(theme).divAlarmOpenModal}>
                     {this.labelParser()}
                     <components.Icon
@@ -406,7 +406,7 @@ var AlarmRepetitionModal = React.createClass({
                     allowedValues={this.getRepetitionOptions()}
                     getKey={R.prop("key")}
                     getLabel={R.prop("label")}
-                    header={"Seleziona tipo di notifica"}
+                    header={"Seleziona Ripetizione"}
                     isModalOpen={this.state.isOpen}
                     onClickConfirm={this.onClickConfirm}
                     onClickReset={this.toggleModal}
