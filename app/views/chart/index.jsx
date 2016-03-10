@@ -441,6 +441,7 @@ var Chart = React.createClass({
         const {colors} = this.getTheme();
         return this.isComparationActive(this.selectedSitesId(), this.selectedSources()) ? (
             <div
+                className="pull-left"
                 onClick={this.props.removeAllCompare}
                 style={{
                     color: colors.resetCompare,
