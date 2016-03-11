@@ -2,7 +2,6 @@ import Immutable from "immutable";
 import React, {PropTypes} from "react";
 import IPropTypes from "react-immutable-proptypes";
 import {connect} from "react-redux";
-import {Link} from "react-router";
 import {bindActionCreators} from "redux";
 import {cloneSensor, combineSensor, deleteSensor, favoriteSensor, monitorSensor, selectSensor} from "actions/sensors";
 import {addToFavorite, changeYAxisValues, selectChartType, selectFavoriteChart} from "actions/monitoring-chart";
@@ -94,41 +93,68 @@ var Monitoring = React.createClass({
         ];
     },
     getSensorsColumns: function () {
+        const theme = this.getTheme();
         return [
             {
-                key: "Favorite",
-                valueFormatter: (value, item) => (
-                    <i className={"fa fa-star" + (item.favorite ? "" : "-o") + " clickable"} onClick={this.getFavoriteSensor(item.id)}/>
-                )
-            },
-            {
-                key: "Monitoring",
-                valueFormatter: (value, item) => (
-                    <i className={"fa " + (item.monitoring ? "fa-stop" : "fa-play") + " clickable"} onClick={this.getMonitorSensor(item.id)}/>
-                )
-            },
-            {
                 key: "_id",
-                valueFormatter: (value) => (
-                    <Link to={"/monitoring/sensor/" + value}>
-                        {value}
-                    </Link>
+                style: function () {
+                    return {
+                        borderRight: "solid 1px grey",
+                        width: "10%",
+                        height: "100%",
+                        textAlign: "left"
+                    };
+                }
+            },
+            {
+                key: "tag",
+                style: function () {
+                    return {
+                        width: "80%",
+                        height: "100%",
+                        padding: "3px 0px 0px 5px",
+                        textAlign: "left"
+                    };
+                },
+                valueFormatter: () => (
+                    <div>
+                        <Icon
+                            color={theme.colors.iconHeader}
+                            icon={"tag"}
+                            size={"27px"}
+                        />
+                    </div>
                 )
             },
             {
-                key: "description"
+                key: "info",
+                valueFormatter: () => (
+                    <Icon
+                        color={theme.colors.iconHeader}
+                        icon={"info"}
+                        size={"27px"}
+                    />
+                )
+            },
+            {
+                key: "chart",
+                style: function () {
+                    return {
+                        backgroundColor: "grey"
+                    };
+                },
+                valueFormatter: () => (
+                    <Icon
+                        color={theme.colors.iconHeader}
+                        icon={"chart"}
+                        size={"27px"}
+                    />
+                )
             },
             {
                 key: "",
-                valueFormatter: (value, item) => (
-                    <div>
-                        <Button onClick={this.getCloneSensor(item.get("_id"))}>
-                            {"Clone"}
-                        </Button>
-                        <Button bsStyle="danger" onClick={this.getDeleteSensor(item.get("_id"))}>
-                            {"Delete"}
-                        </Button>
-                    </div>
+                valueFormatter: () => (
+                    <div />
                 )
             }
         ];
@@ -142,6 +168,19 @@ var Monitoring = React.createClass({
     render: function () {
         let sensors = this.props.collections.get("sensors") || Immutable.Map();
         const theme = this.getTheme();
+            //{
+            //    key: "",
+            //    valueFormatter: (value, item) => (
+            //        <div>
+            //            <Button onClick={this.getCloneSensor(item.get("_id"))}>
+            //                {"Clone"}
+            //            </Button>
+            //            <Button bsStyle="danger" onClick={this.getDeleteSensor(item.get("_id"))}>
+            //                {"Delete"}
+            //            </Button>
+            //        </div>
+            //    )
+            //}
         //<Button bsStyle="primary" href="/monitoring/sensor/">
         //    {"Add sensor"}
         //</Button>
@@ -189,7 +228,7 @@ var Monitoring = React.createClass({
                 </SectionToolbar>
 
                 <MonitoringSearch
-                    style={{width: "25%", float: "left", marginTop: "2px", minHeight: "500px"}}
+                    style={{width: "25%", float: "left", marginTop: "2px", minHeight: "714px"}}
                 />
 
                 <div style={{float: "left", width: "75%", textAlign: "center", padding: "10px 10px 0px 20px"}}>
@@ -202,9 +241,16 @@ var Monitoring = React.createClass({
                         getKey={getKeyFromCollection}
                         hover={true}
                         onRowClick={this.props.selectSensor}
-                        style={{border: "grey solid 1px", borderRadius: "30px", background: "black", maxHeight: "308px", overflow: "auto", padding: 0}}
+                        style={{color: "white", border: "grey solid 1px", borderRadius: "30px", background: "black", maxHeight: "332px", overflow: "auto", padding: 0}}
                         width={"60%"}
                     />
+
+                    <div style={{border: "grey solid 1px", borderRadius: "30px", background: "black", marginTop: "50px", minHeight: "300px", overflow: "auto", padding: 0, verticalAlign: "middle"}}>
+                        <label style={{color: theme.colors.navText}}>
+                            {"Trascina in questo spazio i sensori che vuoi graficare"}
+                        </label>
+                    </div>
+
                 </div>
                 <div>
                     <h3>
