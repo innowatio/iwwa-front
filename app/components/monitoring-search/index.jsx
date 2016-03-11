@@ -1,6 +1,7 @@
 import Radium from "radium";
 import React, {PropTypes} from "react";
 import {Input} from "react-bootstrap";
+
 import {Button, Icon} from "components";
 
 import {styles} from "lib/styles_restyling";
@@ -8,6 +9,7 @@ import {defaultTheme} from "lib/theme";
 
 var MonitoringSearch = React.createClass({
     propTypes: {
+        filterSensors: PropTypes.func.isRequired,
         style: PropTypes.object
     },
     contextTypes: {
@@ -47,7 +49,10 @@ var MonitoringSearch = React.createClass({
         };
     },
     filterSensors: function () {
-
+        this.props.filterSensors({
+            tagsToFilter: this.state.tagsToSearch,
+            wordsToFilter: this.state.wordsToSearch
+        });
     },
     render: function () {
         let divStyle = {
@@ -136,7 +141,7 @@ var MonitoringSearch = React.createClass({
                     </div>
 
                     <div>
-                        <Button>
+                        <Button onClick={this.filterSensors}>
                             {"OK"}
                         </Button>
                         <Icon

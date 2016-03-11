@@ -1,12 +1,17 @@
 import Immutable from "immutable";
+import R from "ramda";
 import React, {PropTypes} from "react";
 import IPropTypes from "react-immutable-proptypes";
 import {connect} from "react-redux";
 import {bindActionCreators} from "redux";
-import {cloneSensor, combineSensor, deleteSensor, favoriteSensor, monitorSensor, selectSensor} from "actions/sensors";
-import {addToFavorite, changeYAxisValues, selectChartType, selectFavoriteChart} from "actions/monitoring-chart";
-import {Button, CollectionElementsTable, Icon, MonitoringChart, MonitoringSearch, SectionToolbar} from "components";
+
 import {defaultTheme} from "lib/theme";
+import {styles} from "lib/styles_restyling";
+
+import {Button, CollectionElementsTable, DropdownButton, Icon, MonitoringChart, MonitoringSearch, Popover, SectionToolbar} from "components";
+
+import {addToFavorite, changeYAxisValues, selectChartType, selectFavoriteChart} from "actions/monitoring-chart";
+import {cloneSensor, combineSensor, deleteSensor, favoriteSensor, filterSensors, monitorSensor, selectSensor} from "actions/sensors";
 
 const buttonStyle = ({colors}) => ({
     background: colors.titleColor,
@@ -16,6 +21,30 @@ const buttonStyle = ({colors}) => ({
     margin: "auto",
     width: "50px"
 });
+
+let advancedOptions = function ({colors}) {
+    return [
+        {
+            label: "Allarmi",
+            key: "alarms",
+            iconClass: "danger",
+            color: colors.iconDropdown
+        },
+        {
+            label: "Guarda preferiti",
+            key: "favoriteCharts",
+            iconClass: "",
+            color: colors.iconDropdown
+        },
+        {
+            label: "Assegna",
+            key: "assign",
+            iconClass: "map",
+            color: colors.iconDropdown
+        }
+    ];
+};
+
 
 
 var getKeyFromCollection = function (collection) {
@@ -32,6 +61,7 @@ var Monitoring = React.createClass({
         combineSensor: PropTypes.func.isRequired,
         deleteSensor: PropTypes.func.isRequired,
         favoriteSensor: PropTypes.func.isRequired,
+        filterSensors: PropTypes.func.isRequired,
         monitorSensor: PropTypes.func.isRequired,
         monitoringChart: PropTypes.object.isRequired,
         selectChartType: PropTypes.func.isRequired,
@@ -225,9 +255,32 @@ var Monitoring = React.createClass({
                             style={{lineHeight: "20px"}}
                         />
                     </Button>
+                    <Popover
+                        className="pull-right"
+                        hideOnChange={true}
+                        style={styles(theme).chartPopover}
+                        title={
+                            <Icon
+                                color={theme.colors.iconHeader}
+                                icon={"settings"}
+                                size={"32px"}
+                                style={{lineHeight: "20px", verticalAlign: "middle"}}
+                            />
+                        }
+                    >
+                        <DropdownButton
+                            allowedValues={advancedOptions(this.getTheme())}
+                            getColor={R.prop("color")}
+                            getIcon={R.prop("iconClass")}
+                            getKey={R.prop("key")}
+                            getLabel={R.prop("label")}
+                            style={styles(theme).chartDropdownButton}
+                        />
+                    </Popover>
                 </SectionToolbar>
 
                 <MonitoringSearch
+                    filterSensors={this.props.filterSensors}
                     style={{width: "25%", float: "left", marginTop: "2px", minHeight: "714px"}}
                 />
 
@@ -295,6 +348,7 @@ const mapDispatchToProps = (dispatch) => {
         combineSensor: bindActionCreators(combineSensor, dispatch),
         deleteSensor: bindActionCreators(deleteSensor, dispatch),
         favoriteSensor: bindActionCreators(favoriteSensor, dispatch),
+        filterSensors: bindActionCreators(filterSensors, dispatch),
         monitorSensor: bindActionCreators(monitorSensor, dispatch),
         selectChartType: bindActionCreators(selectChartType, dispatch),
         selectFavoriteChart: bindActionCreators(selectFavoriteChart, dispatch),
