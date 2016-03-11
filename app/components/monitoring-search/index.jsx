@@ -6,15 +6,6 @@ import {Button, Icon} from "components";
 import {styles} from "lib/styles_restyling";
 import {defaultTheme} from "lib/theme";
 
-const buttonStyle = ({colors}) => ({
-    background: colors.secondary,
-    border: "0px none",
-    borderRadius: "100%",
-    height: "50px",
-    margin: "auto",
-    width: "50px"
-});
-
 var MonitoringSearch = React.createClass({
     propTypes: {
         style: PropTypes.object
@@ -26,7 +17,9 @@ var MonitoringSearch = React.createClass({
     getInitialState: function () {
         return {
             standardSearchFilter: null,
-            tagSearchFilter: null
+            tagSearchFilter: null,
+            tagsToSearch: [],
+            wordsToSearch: []
         };
     },
     getTheme: function () {
@@ -53,6 +46,9 @@ var MonitoringSearch = React.createClass({
             }
         };
     },
+    filterSensors: function () {
+
+    },
     render: function () {
         let divStyle = {
             ...styles(this.getTheme()).titlePage,
@@ -72,6 +68,11 @@ var MonitoringSearch = React.createClass({
                             <Icon
                                 color={theme.colors.iconInputSearch}
                                 icon={"search"}
+                                onClick={() => {
+                                    let newWords = this.state.wordsToSearch.slice();
+                                    newWords.push(this.state.standardSearchFilter);
+                                    this.setState({wordsToSearch: newWords, standardSearchFilter: null});
+                                }}
                                 size={"34px"}
                                 style={{
                                     lineHeight: "10px",
@@ -86,15 +87,16 @@ var MonitoringSearch = React.createClass({
                         value={this.state.standardSearchFilter}
                     />
 
-                    <Radium.Style
-                        rules={this.getSearchStyle()}
-                        scopeSelector=".search-container"
-                    />
                     <Input
                         addonAfter={
                             <Icon
                                 color={theme.colors.iconInputSearch}
                                 icon={"tag"}
+                                onClick={() => {
+                                    let newTags = this.state.tagsToSearch.slice();
+                                    newTags.push(this.state.tagSearchFilter);
+                                    this.setState({tagsToSearch: newTags, tagSearchFilter: null});
+                                }}
                                 size={"34px"}
                                 style={{
                                     lineHeight: "10px",
@@ -113,18 +115,37 @@ var MonitoringSearch = React.createClass({
                         {"Riepilogo ricerca"}
                     </label>
 
+                    <div style={{textAlign: "left"}}>
+                        {this.state.wordsToSearch.map(item => {
+                            return (
+                                <label style={{marginRight: "10px"}}>
+                                    {item}
+                                </label>
+                            );
+                        })}
+                    </div>
+
+                    <div style={{textAlign: "left"}}>
+                        {this.state.tagsToSearch.map(item => {
+                            return (
+                                <label style={{border: "solid 1px", padding: "2px 10px 2px 10px", borderRadius: "35px", marginRight: "5px"}}>
+                                    {item}
+                                </label>
+                            );
+                        })}
+                    </div>
+
                     <div>
                         <Button>
                             {"OK"}
                         </Button>
-                        <Button style={buttonStyle(theme)}>
-                            <Icon
-                                color={theme.colors.iconHeader}
-                                icon={"reset"}
-                                size={"28px"}
-                                style={{lineHeight: "20px"}}
-                            />
-                        </Button>
+                        <Icon
+                            color={theme.colors.iconHeader}
+                            icon={"reset"}
+                            onClick={() => this.setState(this.getInitialState())}
+                            size={"28px"}
+                            style={{lineHeight: "20px"}}
+                        />
                     </div>
                 </div>
             </div>
