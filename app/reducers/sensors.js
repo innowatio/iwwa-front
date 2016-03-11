@@ -1,5 +1,3 @@
-import {FILTER_SENSORS} from "../actions/sensors";
-
 let aSensor = {
     id: -1,
     fields: {
