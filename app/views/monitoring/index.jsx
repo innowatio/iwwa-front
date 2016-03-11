@@ -7,6 +7,7 @@ import {bindActionCreators} from "redux";
 import {cloneSensor, combineSensor, deleteSensor, favoriteSensor, monitorSensor, selectSensor} from "actions/sensors";
 import {addToFavorite, changeYAxisValues, selectChartType, selectFavoriteChart} from "actions/monitoring-chart";
 import {Button, CollectionElementsTable, Icon, MonitoringChart, MonitoringSearch, SectionToolbar} from "components";
+import {defaultTheme} from "lib/theme";
 
 const buttonStyle = ({colors}) => ({
     background: colors.titleColor,
@@ -187,9 +188,11 @@ var Monitoring = React.createClass({
                     </Button>
                 </SectionToolbar>
 
-                <MonitoringSearch />
+                <MonitoringSearch
+                    style={{width: "25%", float: "left", marginTop: "2px", minHeight: "500px"}}
+                />
 
-                <div style={{float: "left", width: "70%", maxHeight: "332px", overflow: "auto", textAlign: "center"}}>
+                <div style={{float: "left", width: "75%", textAlign: "center", padding: "10px 10px 0px 20px"}}>
                     <label style={{color: theme.colors.navText}}>
                         {"Seleziona alcuni sensori per visualizzare il grafico o per creare un nuovo sensore"}
                     </label>
@@ -199,6 +202,7 @@ var Monitoring = React.createClass({
                         getKey={getKeyFromCollection}
                         hover={true}
                         onRowClick={this.props.selectSensor}
+                        style={{border: "grey solid 1px", borderRadius: "30px", background: "black", maxHeight: "308px", overflow: "auto", padding: 0}}
                         width={"60%"}
                     />
                 </div>

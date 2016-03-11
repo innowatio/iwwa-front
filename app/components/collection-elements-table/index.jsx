@@ -145,8 +145,14 @@ var CollectionElementsTable = React.createClass({
     },
     render: function () {
         const {colors} = this.getTheme();
+        let divStyle = {
+            overflow: "auto",
+            paddingTop: "10px",
+            width: "100%",
+            ...this.props.style
+        };
         return (
-            <div style={[this.props.style, {overflow: "auto", paddingTop: "10px", width: "100%"}]}>
+            <div style={divStyle}>
                 <bootstrap.Table
                     bordered={this.props.bordered}
                     condensed={this.props.condensed}

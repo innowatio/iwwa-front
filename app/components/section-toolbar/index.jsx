@@ -13,7 +13,7 @@ var SectionToolbar = React.createClass({
     getTheme: function () {
         return this.context.theme || defaultTheme;
     },
-    render: function() {
+    render: function () {
         const theme = this.getTheme();
         return (
             <div style={styles(theme).titlePage}>
