@@ -35,7 +35,11 @@ var VariablesPanel = React.createClass({
                 <div
                     key={variable.get("key")}
                     style={{
-                        width: this.props.numberOfConsumptionSensor > 4 ? "24%" : "25%",
+                        width: (
+                            ENVIRONMENT === "cordova" ?
+                            (this.props.numberOfConsumptionSensor > 3 ? "30%" : "33%") :
+                            (this.props.numberOfConsumptionSensor > 3 ? "23%" : "25%")
+                        ),
                         flex: "1 0 auto"
                     }}
                 >
@@ -43,12 +47,20 @@ var VariablesPanel = React.createClass({
                         <components.Icon
                             color={this.getTheme().colors.iconVariable}
                             icon={variable.get("icon")}
-                            size={"60px"}
-                            style={{lineHeight: "20px", width: "45px"}}
+                            size={ENVIRONMENT === "cordova" ? "48px" : "60px"}
+                            style={{
+                                lineHeight: ENVIRONMENT === "cordova" ? "70px" : "20px",
+                                width: ENVIRONMENT === "cordova" ? "30px" : "45px",
+                                verticalAlign: "middle"
+                            }}
                         />
                         <MeasureLabel
                             id={variable.get("id")}
-                            style={{paddingLeft: "10px", verticalAlign: "text-top"}}
+                            style={{
+                                paddingLeft: "16px",
+                                verticalAlign: "text-top",
+                                minWidth: ENVIRONMENT === "cordova" ? "40px" : "45px"
+                            }}
                             unit={variable.get("unit")}
                             value={variable.get("value")}
                         />
