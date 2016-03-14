@@ -15,12 +15,13 @@ import {addToFavorite, changeYAxisValues, selectChartType, selectFavoriteChart} 
 import {addSensor, cloneSensor, combineSensor, deleteSensor, editSensor, favoriteSensor, filterSensors, monitorSensor, selectSensor} from "actions/sensors";
 
 const buttonStyle = ({colors}) => ({
-    background: colors.titleColor,
+    backgroundColor: colors.buttonPrimary,
     border: "0px none",
     borderRadius: "100%",
     height: "50px",
     margin: "auto",
-    width: "50px"
+    width: "50px",
+    marginLeft: "10px"
 });
 
 let advancedOptions = function ({colors}) {
@@ -292,7 +293,7 @@ var Monitoring = React.createClass({
                         getKey={getKeyFromCollection}
                         hover={true}
                         onRowClick={this.props.selectSensor}
-                        style={{color: "white", border: "grey solid 1px", borderRadius: "30px", background: "black", maxHeight: "332px", overflow: "auto", padding: 0}}
+                        style={{color: "white", border: "grey solid 1px", borderRadius: "30px", background: theme.colors.backgroundContentModal, maxHeight: "332px", overflow: "auto", padding: 0}}
                         width={"60%"}
                     />
 
@@ -304,7 +305,7 @@ var Monitoring = React.createClass({
                         showFullscreenModal={this.state.showFullscreenModal}
                     />
 
-                    <div style={{border: "grey solid 1px", borderRadius: "30px", background: "black", marginTop: "50px", minHeight: "300px", overflow: "auto", padding: 0, verticalAlign: "middle"}}>
+                    <div style={{border: "grey solid 1px", borderRadius: "30px", background: theme.colors.backgroundContentModal, marginTop: "50px", minHeight: "300px", overflow: "auto", padding: 0, verticalAlign: "middle"}}>
                         <label style={{color: theme.colors.navText}}>
                             {"Trascina in questo spazio i sensori che vuoi graficare"}
                         </label>
