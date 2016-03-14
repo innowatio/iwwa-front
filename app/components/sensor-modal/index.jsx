@@ -39,9 +39,9 @@ var SensorForm = React.createClass({
         initialValues: PropTypes.object.isRequired,
         onSave: PropTypes.func.isRequired,
         resetForm: PropTypes.func.isRequired,
-        title: PropTypes.string,
         showFullscreenModal: PropTypes.bool.isRequired,
-        submitting: PropTypes.bool.isRequired
+        submitting: PropTypes.bool.isRequired,
+        title: PropTypes.string
     },
     contextTypes: {
         theme: PropTypes.object
