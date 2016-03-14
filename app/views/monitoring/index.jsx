@@ -222,7 +222,7 @@ var Monitoring = React.createClass({
         return (
             <div>
                 <SectionToolbar>
-                    <Button style={buttonStyle(theme)}>
+                    <Button style={buttonStyle(theme)} disabled={this.props.selected.length > 0} onClick={this.openModal}>
                         <Icon
                             color={theme.colors.iconHeader}
                             icon={"add"}
@@ -230,7 +230,7 @@ var Monitoring = React.createClass({
                             style={{lineHeight: "20px"}}
                         />
                     </Button>
-                    <Button style={buttonStyle(theme)} disabled={!(this.props.selected.length > 1)} onClick={this.getCloneSensor("todo")}>
+                    <Button style={buttonStyle(theme)} disabled={this.props.selected.length < 2} onClick={this.getCloneSensor("todo")}>
                         <Icon
                             color={theme.colors.iconHeader}
                             icon={"duplicate"}
@@ -301,8 +301,9 @@ var Monitoring = React.createClass({
                         closeForm={this.closeModal}
                         id={this.props.selected.length == 1 ? this.props.selected[0] : null}
                         initialValues={this.getSensorFields()}
-                        onSave={this.props.selected[0] ? this.props.editSensor : this.props.addSensor}
+                        onSave={this.props.selected.length == 1 ? this.props.editSensor : this.props.addSensor}
                         showFullscreenModal={this.state.showFullscreenModal}
+                        title={this.props.selected.length == 1 ? "MODIFICA SENSORE" : "CREA NUOVO SENSORE"}
                     />
 
                     <div style={{border: "grey solid 1px", borderRadius: "30px", background: theme.colors.backgroundContentModal, marginTop: "50px", minHeight: "300px", overflow: "auto", padding: 0, verticalAlign: "middle"}}>
