@@ -8,10 +8,11 @@ import {bindActionCreators} from "redux";
 import {defaultTheme} from "lib/theme";
 import {styles} from "lib/styles_restyling";
 
-import {Button, CollectionElementsTable, DropdownButton, Icon, MonitoringChart, MonitoringSearch, Popover, SectionToolbar} from "components";
+import {Button, CollectionElementsTable, DropdownButton, Icon, MonitoringChart,
+    MonitoringSearch, Popover, SectionToolbar, SensorForm} from "components";
 
 import {addToFavorite, changeYAxisValues, selectChartType, selectFavoriteChart} from "actions/monitoring-chart";
-import {cloneSensor, combineSensor, deleteSensor, favoriteSensor, filterSensors, monitorSensor, selectSensor} from "actions/sensors";
+import {addSensor, cloneSensor, combineSensor, deleteSensor, editSensor, favoriteSensor, filterSensors, monitorSensor, selectSensor} from "actions/sensors";
 
 const buttonStyle = ({colors}) => ({
     background: colors.titleColor,
@@ -45,14 +46,13 @@ let advancedOptions = function ({colors}) {
     ];
 };
 
-
-
 var getKeyFromCollection = function (collection) {
     return collection.get("_id");
 };
 
 var Monitoring = React.createClass({
     propTypes: {
+        addSensor: PropTypes.func.isRequired,
         addToFavorite: PropTypes.func.isRequired,
         asteroid: PropTypes.object,
         changeYAxisValues: PropTypes.func.isRequired,
@@ -60,6 +60,7 @@ var Monitoring = React.createClass({
         collections: IPropTypes.map.isRequired,
         combineSensor: PropTypes.func.isRequired,
         deleteSensor: PropTypes.func.isRequired,
+        editSensor: PropTypes.func.isRequired,
         favoriteSensor: PropTypes.func.isRequired,
         filterSensors: PropTypes.func.isRequired,
         monitorSensor: PropTypes.func.isRequired,
@@ -72,6 +73,11 @@ var Monitoring = React.createClass({
     },
     contextTypes: {
         theme: PropTypes.object
+    },
+    getInitialState: function () {
+        return {
+            showFullscreenModal: false
+        };
     },
     componentDidMount: function () {
         this.props.asteroid.subscribe("sensors");
@@ -121,6 +127,10 @@ var Monitoring = React.createClass({
         return [
             {key: "_id"}
         ];
+    },
+    getSensorFields: function () {
+        let found = R.find(R.propEq("_id", this.props.selected[0]))(this.props.sensors);
+        return (found ? found.fields : null);
     },
     getSensorsColumns: function () {
         const theme = this.getTheme();
@@ -195,31 +205,19 @@ var Monitoring = React.createClass({
         //TODO prendere le misure
         return this.props.selected;
     },
+    openModal: function () {
+        this.setState({
+            showFullscreenModal: true
+        });
+    },
+    closeModal: function () {
+        this.setState({
+            showFullscreenModal: false
+        });
+    },
     render: function () {
         let sensors = this.props.collections.get("sensors") || Immutable.Map();
         const theme = this.getTheme();
-            //{
-            //    key: "",
-            //    valueFormatter: (value, item) => (
-            //        <div>
-            //            <Button onClick={this.getCloneSensor(item.get("_id"))}>
-            //                {"Clone"}
-            //            </Button>
-            //            <Button bsStyle="danger" onClick={this.getDeleteSensor(item.get("_id"))}>
-            //                {"Delete"}
-            //            </Button>
-            //        </div>
-            //    )
-            //}
-        //<Button bsStyle="primary" href="/monitoring/sensor/">
-        //    {"Add sensor"}
-        //</Button>
-        //<Button disabled={!(this.props.selected.length > 1)} onClick={this.props.combineSensor} >
-        //    {"Combine sensors"}
-        //</Button>
-        //<Button disabled={!(this.props.selected.length > 0)} >
-        //    {"Assign sensors"}
-        //</Button>
         return (
             <div>
                 <SectionToolbar>
@@ -231,7 +229,7 @@ var Monitoring = React.createClass({
                             style={{lineHeight: "20px"}}
                         />
                     </Button>
-                    <Button style={buttonStyle(theme)} disabled={!(this.props.selected.length > 1)} onClick={this.props.combineSensor}>
+                    <Button style={buttonStyle(theme)} disabled={!(this.props.selected.length > 1)} onClick={this.getCloneSensor("todo")}>
                         <Icon
                             color={theme.colors.iconHeader}
                             icon={"duplicate"}
@@ -239,7 +237,7 @@ var Monitoring = React.createClass({
                             style={{lineHeight: "20px"}}
                         />
                     </Button>
-                    <Button style={buttonStyle(theme)} disabled={!(this.props.selected.length > 0)}>
+                    <Button style={buttonStyle(theme)} disabled={this.props.selected.length != 1} onClick={this.openModal}>
                         <Icon
                             color={theme.colors.iconHeader}
                             icon={"edit"}
@@ -247,7 +245,7 @@ var Monitoring = React.createClass({
                             style={{lineHeight: "20px"}}
                         />
                     </Button>
-                    <Button style={buttonStyle(theme)}>
+                    <Button style={buttonStyle(theme)} disabled={this.props.selected.length < 1} onClick={this.getDeleteSensor("todo")}>
                         <Icon
                             color={theme.colors.iconHeader}
                             icon={"delete"}
@@ -298,6 +296,14 @@ var Monitoring = React.createClass({
                         width={"60%"}
                     />
 
+                    <SensorForm
+                        closeForm={this.closeModal}
+                        id={this.props.selected.length == 1 ? this.props.selected[0] : null}
+                        initialValues={this.getSensorFields()}
+                        onSave={this.props.selected[0] ? this.props.editSensor : this.props.addSensor}
+                        showFullscreenModal={this.state.showFullscreenModal}
+                    />
+
                     <div style={{border: "grey solid 1px", borderRadius: "30px", background: "black", marginTop: "50px", minHeight: "300px", overflow: "auto", padding: 0, verticalAlign: "middle"}}>
                         <label style={{color: theme.colors.navText}}>
                             {"Trascina in questo spazio i sensori che vuoi graficare"}
@@ -342,11 +348,13 @@ const mapStateToProps = (state) => {
 
 const mapDispatchToProps = (dispatch) => {
     return {
+        addSensor: bindActionCreators(addSensor, dispatch),
         addToFavorite: bindActionCreators(addToFavorite, dispatch),
         changeYAxisValues: bindActionCreators(changeYAxisValues, dispatch),
         cloneSensor: bindActionCreators(cloneSensor, dispatch),
         combineSensor: bindActionCreators(combineSensor, dispatch),
         deleteSensor: bindActionCreators(deleteSensor, dispatch),
+        editSensor: bindActionCreators(editSensor, dispatch),
         favoriteSensor: bindActionCreators(favoriteSensor, dispatch),
         filterSensors: bindActionCreators(filterSensors, dispatch),
         monitorSensor: bindActionCreators(monitorSensor, dispatch),

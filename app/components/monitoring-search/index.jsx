@@ -141,15 +141,33 @@ var MonitoringSearch = React.createClass({
                     </div>
 
                     <div>
-                        <Button onClick={this.filterSensors}>
+                        <Button
+                            onClick={this.filterSensors}
+                            style={{
+                                ...styles(this.getTheme()).buttonSelectChart,
+                                width: "90px",
+                                height: "45px",
+                                lineHeight: "45px",
+                                padding: "0",
+                                marginTop: "none",
+                                fontSize: "19px",
+                                marginRight: "none",
+                                border: "0px",
+                                backgroundColor: this.getTheme().colors.buttonPrimary
+                            }}
+                        >
                             {"OK"}
                         </Button>
                         <Icon
-                            color={theme.colors.iconHeader}
+                            color={theme.colors.iconArrow}
                             icon={"reset"}
                             onClick={() => this.setState(this.getInitialState())}
-                            size={"28px"}
-                            style={{lineHeight: "20px"}}
+                            size={"35px"}
+                            style={{
+                                verticalAlign: "middle",
+                                lineHeight: "20px"
+                            }}
+
                         />
                     </div>
                 </div>
