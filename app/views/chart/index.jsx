@@ -31,13 +31,15 @@ const measurementTypeButtonStyle = (theme) => R.merge(styles(theme).buttonSelect
     minWidth: "132px",
     height: "45px",
     fontSize: "15px",
+    fontWeight: "300",
     margin: "0 0 0 10px",
     padding: "0"
 });
 
 const sourceButtonStyle = (theme) => R.merge(styles(theme).buttonSelectChart, {
     minWidth: "85px",
-    height: "30px"
+    height: "30px",
+    fontWeight: "300"
 });
 
 const consumptionButtonStyle = ({colors}) => ({
@@ -49,7 +51,7 @@ const consumptionButtonStyle = ({colors}) => ({
     borderRadius: "22px",
     width: "45px",
     height: "45px",
-    transition: "width 0.4s ease-in-out",
+    transition: "width 0.3s ease-in-out",
     border: "none"
 });
 
@@ -60,7 +62,7 @@ const consumptionButtonSelectedStyle = ({colors}) => ({
     verticalAlign: "middle",
     width: "160px",
     height: "45px",
-    transition: "width 0.4s ease-in-out"
+    transition: "width 0.3s ease-in-out"
 });
 
 const dateButtonStyle = ({colors}) => ({
@@ -442,6 +444,7 @@ var Chart = React.createClass({
         const {colors} = this.getTheme();
         return this.isComparationActive(this.selectedSitesId(), this.selectedSources()) ? (
             <div
+                className="pull-left"
                 onClick={this.props.removeAllCompare}
                 style={{
                     color: colors.resetCompare,
@@ -601,7 +604,8 @@ var Chart = React.createClass({
                                 style={measurementTypeButtonStyle(this.getTheme())}
                                 styleToMergeWhenActiveState={{
                                     background: theme.colors.buttonPrimary,
-                                    border: "0px none"
+                                    border: "0px none",
+                                    fontWeight: "300"
                                 }}
                                 value={[this.props.chart[0].measurementType]}
                             />

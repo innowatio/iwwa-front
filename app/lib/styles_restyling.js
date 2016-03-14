@@ -18,8 +18,7 @@ export const styles = (theme) => ({
         height: "100%"
     },
     chartDropdownButton: {
-        border: "1px solid",
-        borderColor: theme.colors.borderDropdown,
+        border: "1px solid " + theme.colors.borderDropdown,
         backgroundColor: theme.colors.backgroundDropdown,
         color: theme.colors.white,
         outline: "none",
@@ -59,7 +58,6 @@ export const styles = (theme) => ({
         borderRadius: "3px",
         overflow: "hidden",
         padding: "10px",
-        boxShadow: "2px 2px 5px " + theme.colors.mainDivShadow,
         height: measures.mainComponentHeight
     },
     titlePage: {
@@ -78,17 +76,33 @@ export const styles = (theme) => ({
         borderRight: "0px",
         borderRadius: "0px",
         WebkitBoxShadow: "none",
-        boxShadow: "none"
+        boxShadow: "none",
+        background: "none",
+        fontSize: "16px",
+        outline: "none",
+        padding: "0 5px",
+        color: theme.colors.mainFontColor
     },
     inputRange: {
-        width: "80%",
-        marginLeft: "10%",
-        backgroundColor: theme.colors.greyBackground,
+        width: "100%",
+        height: "12px !important",
+        borderRadius: "20px",
         padding: "0px",
         border: "0px",
+        backgroundColor: theme.colors.alarmRangeBar,
         WebkitBoxShadow: "none",
+        WebkitAppearance: "none",
         boxShadow: "none",
         outline: "0px"
+    },
+    inputRangeBar: {
+        "::-webkit-slider-thumb": {
+            WebkitAppearance: "none",
+            backgroundColor: theme.colors.alarmRangePoint,
+            width: "22px",
+            height: "22px",
+            borderRadius: "100%"
+        }
     },
     divAlarmOpenModal: {
         height: "35px",

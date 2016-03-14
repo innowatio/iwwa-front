@@ -97,13 +97,13 @@ var SelectTree = React.createClass({
                     onClick={R.partial(this.onClickActiveSite, [allowedValue])}
                     style={{
                         textDecoration: "none",
-                        width: this.state.subMenu ? "80%" : "100%",
+                        width: this.state.subMenu ? "430px" : "100%",
                         textOverflow: "ellipsis",
                         overflow: "hidden",
                         whiteSpace: "nowrap",
                         border: "0px",
-                        backgroundColor: allowedValue === this.state.value ? colors.primary : colors.white,
-                        color: allowedValue === this.state.value ? colors.white : colors.black
+                        backgroundColor: allowedValue === this.state.value ? colors.primary : colors.backgroundSelectSearch,
+                        color: colors.mainFontColor
                     }}
                 >
                     {this.props.getLabel(allowedValue)}
@@ -117,25 +117,28 @@ var SelectTree = React.createClass({
     renderButtonSubMenu: function (allowedValue) {
         const {colors} = this.getTheme();
         return this.state.subMenu ?
-            <components.Button
-                bsStyle="link"
-                onClick={R.partial(this.onClickOpenPanel, [allowedValue])}
-                style={{
-                    height: "54px",
-                    width: this.state.subMenu ? "20%" : "0%",
-                    backgroundColor: allowedValue === this.state.value ? colors.primary : colors.white,
-                    color: allowedValue === this.state.value ? colors.white : colors.black
-                }}
-            >
-                <components.Icon
-                    color={this.getTheme().colors.iconInputSelect}
-                    icon={"arrow-down"}
-                    size={"28px"}
-                    style={{lineHeight: "20px"}}
-                />
-            </components.Button> : null;
+            (<div>
+                <components.Button
+                    bsStyle="link"
+                    onClick={R.partial(this.onClickOpenPanel, [allowedValue])}
+                    style={{
+                        height: "54px ",
+                        width: this.state.subMenu ? "20%" : "0%",
+                        backgroundColor: allowedValue === this.state.value ? colors.primary : colors.backgroundSelectSearch,
+                        color: colors.mainFontColor
+                    }}
+                >
+                    <components.Icon
+                        color={colors.iconInputSelect}
+                        icon={"arrow-down"}
+                        size={"20px"}
+                        style={{lineHeight: "20px", float: "right"}}
+                    />
+                </components.Button>
+            </div>) : null;
     },
     renderPanel: function (allowedValue) {
+        const theme = this.getTheme();
         return (
             <bootstrap.Panel
                 collapsible={true}
@@ -143,12 +146,11 @@ var SelectTree = React.createClass({
                 header={this.renderHeader(allowedValue)}
                 key={this.props.getKey(allowedValue)}
                 style={{
-                    width: this.props.buttonCloseDefault ? "100%" : "200px",
-                    borderTop: "0px",
-                    borderLeft: "0px",
-                    borderRight: "0px",
+                    width: this.props.buttonCloseDefault ? "430px" : "200px",
+                    border: "0px",
                     marginTop: "0px",
-                    borderRadius: "0px"
+                    borderRadius: "0px",
+                    backgroundColor: theme.colors.transparent
                 }}
             >
             </bootstrap.Panel>
@@ -167,22 +169,22 @@ var SelectTree = React.createClass({
                 className="site-selector"
                 style={{
                     position: "relative",
-                    overflow: "scroll",
+                    overflow: "auto",
                     maxHeight: "400px",
-                    width: this.props.buttonCloseDefault ? "430px" : ""
+                    width: this.props.buttonCloseDefault ? "400px" : "",
+                    backgroundColor: colors.transparent,
+                    color: colors.white
                 }}
             >
                 <Radium.Style
                     rules={{
                         ".form-group": {
-                            position: "fixed",
                             height: "34px",
                             margin: "0px",
-                            zIndex: "10",
-                            width: this.props.buttonCloseDefault ? "428px" : "200px"
+                            zIndex: "10"
                         },
                         ".panel-group": {
-                            paddingTop: "34px",
+                            paddingTop: "10px",
                             marginBottom: "0px"
                         },
                         ".panel-title": {
@@ -198,22 +200,28 @@ var SelectTree = React.createClass({
                             border: "0px"
                         },
                         ".input-search": {
+                            position: "relative",
                             borderBottomLeftRadius: "0px",
-                            borderTop: "none",
-                            borderLeft: "none",
-                            borderRight: "none",
+                            borderTop: "1px solid " + colors.borderSelectSearch,
+                            borderLeft: "1px solid " + colors.borderSelectSearch,
+                            borderBottom: "1px solid " + colors.borderSelectSearch,
+                            borderRight: "0",
                             outline: "0px",
-                            boxShadow: "none"
+                            boxShadow: "none",
+                            height: "45px",
+                            fontSize: "14px",
+                            color: colors.mainFontColor,
+                            backgroundColor: colors.backgroundSelectSearch
                         },
                         ".form-control:focus": {
                             borderColor: colors.greyBorder
                         },
                         ".input-group-addon": {
                             borderBottomRightRadius: "0px",
-                            borderTop: "none",
-                            borderLeft: "none",
-                            borderRight: "none",
-                            backgroundColor: colors.white
+                            backgroundColor: colors.backgroundSelectSearch,
+                            borderTop: "1px solid " + colors.borderSelectSearch,
+                            borderRight: "1px solid " + colors.borderSelectSearch,
+                            borderBottom: "1px solid " + colors.borderSelectSearch
                         }
                     }}
                     scopeSelector=".site-selector"
@@ -224,7 +232,7 @@ var SelectTree = React.createClass({
                             color={this.getTheme().colors.iconInputSearch}
                             icon={"search"}
                             size={"28px"}
-                            style={{lineHeight: "20px"}}
+                            style={{lineHeight: "20px", margin: "0", padding: "0"}}
                         />
                     }
                     className="input-search"
@@ -235,7 +243,12 @@ var SelectTree = React.createClass({
                 <bootstrap.PanelGroup
                     accordion={true}
                     activeKey={this.state.activeKey}
-                    style={{maxHeight: "300px"}}
+                    style={{
+                        maxHeight: "300px",
+                        border: "1px solid " + colors.borderSelectSearch,
+                        borderRadius: "10px",
+                        overflow: "hidden"
+                    }}
                 >
                     {panelOfSite}
                     <Waypoint

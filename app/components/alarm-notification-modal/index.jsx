@@ -77,7 +77,7 @@ var AlarmNotificationModal = React.createClass({
     render: function () {
         const theme = this.getTheme();
         return (
-            <span>
+            <div>
                 <h3 style={styleH3(theme)}>{stringIt.titleAlarmNotify}</h3>
                 <div onClick={this.toggleModal} style={styles(theme).divAlarmOpenModal}>
                     {this.labelParser()}
@@ -97,14 +97,14 @@ var AlarmNotificationModal = React.createClass({
                     allowedValues={this.getNotificationOptions()}
                     getKey={prop("key")}
                     getLabel={prop("label")}
-                    header={<h4 style={{color: theme.colors.primary}}>{"Seleziona tipo di notifica"}</h4>}
+                    header={"Seleziona tipo di notifica"}
                     isModalOpen={this.state.isOpen}
                     onClickConfirm={this.onClickConfirm}
                     onClickReset={this.toggleModal}
                     toggleModal={this.toggleModal}
                     value={this.state.value}
                 />
-            </span>
+            </div>
         );
     }
 });

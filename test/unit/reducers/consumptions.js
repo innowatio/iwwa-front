@@ -1,6 +1,7 @@
 require("unit-setup.js");
 
-import * as consumptionsReducers from "reducers/consumptions";
+// import * as consumptionsReducers from "reducers/consumptions";
+var consumptionsReducers = require("reducers/consumptions");
 
 describe("`consumptions` reducer", () => {
 
