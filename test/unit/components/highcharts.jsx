@@ -1,6 +1,7 @@
 require("unit-setup.js");
 
 import moment from "moment";
+import {range} from "ramda";
 
 import HighCharts from "components/highcharts";
 
@@ -51,6 +52,69 @@ describe("HighCharts component", () => {
                 expect(moment.utc(dataObject.to).weekday()).to.equal(0);
                 expect(dataObject.color).to.equal("color");
             });
+        });
+
+    });
+
+    describe("`getXAxis` function", () => {
+
+        const getXAxis = HighCharts.prototype.getXAxis;
+        var instance = {
+            props: {
+                coordinates: range(0, 2)
+            },
+            getTheme: sinon.stub().returns({colors: {
+                axisLabel: "axisLabel",
+                lineCompare: "lineCompare"
+            }}),
+            getWeekendOverlay: sinon.stub().returns([])
+        };
+
+        it("should return an array if `isDateCompareActive` is set to `false`", () => {
+            const ret = getXAxis.call(instance);
+            expect(ret).to.be.an("object");
+        });
+
+        it("should return an array if `isDateCompareActive` is false", () => {
+            instance.props.isDateCompareActive = true;
+            const ret = getXAxis.call(instance);
+            expect(ret).to.be.an("array");
+        });
+
+        it("should return the correct object if `isDateCompareActive` is `true`", () => {
+            instance.props.isDateCompareActive = false;
+            const ret = getXAxis.call(instance);
+            expect(ret).to.deep.equal({
+                labels: {
+                    style: {
+                        color: "axisLabel"
+                    }
+                },
+                plotBands: [],
+                type: "datetime"
+            });
+        });
+
+        it("should return the array with the correct object if `isDateCompareActive` is `true`", () => {
+            instance.props.isDateCompareActive = true;
+            const ret = getXAxis.call(instance);
+            expect(ret).to.deep.equal([{
+                labels: {
+                    style: {
+                        color: "axisLabel"
+                    }
+                },
+                plotBands: [],
+                type: "datetime"
+            }, {
+                labels: {
+                    style: {
+                        color: "lineCompare"
+                    }
+                },
+                plotBands: [],
+                type: "datetime"
+            }]);
         });
 
     });

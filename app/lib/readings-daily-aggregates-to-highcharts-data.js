@@ -60,7 +60,6 @@ export default memoize(function readingsDailyAggregatesToHighchartsData (aggrega
     return arraysOfData.map((arrayOfData, index) => ({
         data: arrayOfData,
         pointStart: moment.utc(filters[index].date.start).valueOf(),
-        pointInterval: fiveMinutesInMs,
-        name: `${filters[index].source.label} - ${filters[index].measurementType.label}`
+        pointInterval: fiveMinutesInMs
     }));
 });

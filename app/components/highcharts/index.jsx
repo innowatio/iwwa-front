@@ -1,5 +1,5 @@
 import React, {PropTypes} from "react";
-import {addIndex, map} from "ramda";
+import {addIndex, map, range} from "ramda";
 import ReactHighcharts from "react-highcharts/bundle/ReactHighcharts";
 import Highcharts from "highcharts";
 import moment from "moment";
@@ -14,6 +14,9 @@ var HighCharts = React.createClass({
         colors: PropTypes.arrayOf(PropTypes.string),
         coordinates: PropTypes.arrayOf(PropTypes.object),
         dateFilter: PropTypes.object,
+        isComparationActive: PropTypes.bool,
+        isDateCompareActive: PropTypes.bool,
+        xLabel: PropTypes.arrayOf(PropTypes.string),
         yLabel: PropTypes.arrayOf(PropTypes.string)
     },
     contextTypes: {
@@ -21,7 +24,9 @@ var HighCharts = React.createClass({
     },
     getDefaultProps: function () {
         return {
-            coordinates: {data: []}
+            coordinates: {data: []},
+            isDateCompareActive: false,
+            isComparationActive: false
         };
     },
     getTheme: function () {
@@ -32,6 +37,26 @@ var HighCharts = React.createClass({
             return getYLabel(yLabelKey, this.props.colors[index]);
         }, this.props.yLabel);
     },
+    getXAxis: function () {
+        const {colors} = this.getTheme();
+        return this.props.isDateCompareActive ? range(0, this.props.coordinates.length).map((a, index) => ({
+            type: "datetime",
+            labels: {
+                style: {
+                    color: index === 1 ? colors.lineCompare : colors.axisLabel
+                }
+            },
+            plotBands: this.getWeekendOverlay()
+        })) : {
+            type: "datetime",
+            labels: {
+                style: {
+                    color: colors.axisLabel
+                }
+            },
+            plotBands: this.getWeekendOverlay()
+        };
+    },
     getWeekendOverlay: function () {
         var weekendOverlay = [];
         const {dateFilter} = this.props;
@@ -39,20 +64,27 @@ var HighCharts = React.createClass({
         const firstSaturday = moment.utc(dateFilter.start).weekday(6);
         for (var i=0; i<=dayInFilter/7; i++) {
             weekendOverlay.push({
-                from: moment.utc(firstSaturday).add({day: i*7}).startOf("day").valueOf(),
-                to: moment.utc(firstSaturday).add({day: 1 + i*7}).endOf("day").valueOf(),
+                from: moment.utc(firstSaturday).add({day: i * 7}).startOf("day").valueOf(),
+                to: moment.utc(firstSaturday).add({day: 1 + (i * 7)}).endOf("day").valueOf(),
                 color: this.getTheme().colors.graphUnderlay
             });
         }
         return weekendOverlay;
     },
     getSeries: function () {
+        const {isComparationActive, isDateCompareActive} = this.props;
         return mapIndexed((coordinate, index) => ({
             ...coordinate,
             connectNulls: true,
             turboThreshold: 0,
             color: this.props.colors[index],
-            yAxis: this.getYAxis().length > 1 && index > 0 ? index : 0,
+            xAxis: isDateCompareActive ? index : 0,
+            yAxis: (
+                this.getYAxis().length > 1 &&
+                index > 0 &&
+                !(isComparationActive || isDateCompareActive) ?
+                index : 0
+            ),
             fillColor: {
                 linearGradient: [0, 0, 0, 400],
                 stops: [
@@ -63,6 +95,7 @@ var HighCharts = React.createClass({
         }), this.props.coordinates);
     },
     getConfig: function () {
+        console.log(this.props.coordinates);
         const {colors} = this.getTheme();
         return {
             chart: {
@@ -77,9 +110,7 @@ var HighCharts = React.createClass({
                 enabled: false
             },
             legend: {
-                itemHiddenStyle: {color: colors.legendLabelHidden},
-                itemHoverStyle: {color: colors.legendLabelHover},
-                itemStyle: {color: colors.axisLabel}
+                enabled: false
             },
             plotOptions: {
                 area: {
@@ -93,19 +124,12 @@ var HighCharts = React.createClass({
             },
             series: this.getSeries(),
             title: null,
-            xAxis: {
-                labels: {
-                    style: {
-                        color: colors.axisLabel
-                    }
-                },
-                plotBands: this.getWeekendOverlay(),
-                type: "datetime"
-            },
+            xAxis: this.getXAxis(),
             yAxis: this.getYAxis()
         };
     },
     render: function () {
+        console.log(this.getConfig());
         return (
             <div>
                 <ReactHighcharts config={this.getConfig()} />

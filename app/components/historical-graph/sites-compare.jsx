@@ -1,19 +1,18 @@
-import {Map} from "immutable";
 import IPropTypes from "react-immutable-proptypes";
-import Radium from "radium";
 import React, {PropTypes} from "react";
 import ReactPureRender from "react-addons-pure-render-mixin";
+import {isEmpty} from "ramda";
+import moment from "moment";
 
 import components from "components";
-import readingsDailyAggregatesToDygraphData from "lib/readings-daily-aggregates-to-dygraph-data";
+import readingsDailyAggregatesToHighchartsData from "lib/readings-daily-aggregates-to-highcharts-data";
 import {defaultTheme} from "lib/theme";
 
-var sitesCompare = React.createClass({
+var SitesCompare = React.createClass({
     propTypes: {
         chart: PropTypes.arrayOf(PropTypes.object),
-        getYLabel: PropTypes.func,
-        misure: IPropTypes.map,
-        sites: PropTypes.arrayOf(IPropTypes.map)
+        isComparationActive: PropTypes.bool,
+        misure: IPropTypes.map
     },
     contextTypes: {
         theme: PropTypes.object
@@ -23,27 +22,27 @@ var sitesCompare = React.createClass({
         return this.context.theme || defaultTheme;
     },
     getCoordinates: function () {
-        return readingsDailyAggregatesToDygraphData(this.props.misure, this.props.chart);
+        return readingsDailyAggregatesToHighchartsData(this.props.misure, this.props.chart);
     },
-    getLabels: function () {
-        return ["Data"].concat([this.props.chart[0].sensorId, this.props.chart[1].sensorId]);
+    getDateFilter: function () {
+        return (
+            isEmpty(this.props.chart[0].date) ?
+            {start: moment.utc().startOf("month").valueOf(), end: moment.utc().endOf("month").valueOf()} :
+            this.props.chart[0].date
+        );
     },
     render: function () {
         const {colors} = this.getTheme();
         return (
-            <components.TemporalLineGraph
+            <components.HighCharts
                 colors={[this.props.chart[0].source.color, colors.lineCompare]}
-                coordinates={this.getCoordinates() || []}
-                dateFilter={this.props.chart[0].date}
-                labels={this.getLabels()}
-                lockInteraction={true}
-                ref="temporalLineGraph"
-                site={this.props.sites[0] || Map()}
-                xLabel=""
-                yLabel={this.props.getYLabel(this.props.chart[0].measurementType)}
+                coordinates={this.getCoordinates()}
+                dateFilter={this.getDateFilter()}
+                isComparationActive={this.props.isComparationActive}
+                yLabel={[this.props.chart[0].measurementType.key]}
             />
         );
     }
 });
 
-module.exports = Radium(sitesCompare);
+module.exports = SitesCompare;

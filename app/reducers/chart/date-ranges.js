@@ -20,7 +20,7 @@ export function getDateRangesCompare ({period, dateOne}) {
             ];
             return map(dateStart => ({
                 start: dateStart,
-                end: moment(dateStart).endOf(period.key).valueOf()
+                end: moment.utc(dateStart).endOf(period.key).valueOf()
             }), dateStartArray);
         }
         case "7 days before": {

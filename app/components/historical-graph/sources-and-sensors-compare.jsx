@@ -7,13 +7,10 @@ import moment from "moment";
 import components from "components";
 import readingsDailyAggregatesToHighchartsData from "lib/readings-daily-aggregates-to-highcharts-data";
 
-var ValoriCompare = React.createClass({
+var SourcesAndSensorsCompare = React.createClass({
     propTypes: {
         chart: PropTypes.arrayOf(PropTypes.object),
-        getY2Label: PropTypes.func,
-        getYLabel: PropTypes.func,
-        misure: IPropTypes.map,
-        sites: PropTypes.arrayOf(IPropTypes.map)
+        misure: IPropTypes.map
     },
     mixins: [ReactPureRender],
     getCoordinates: function () {
@@ -50,4 +47,4 @@ var ValoriCompare = React.createClass({
     }
 });
 
-module.exports = ValoriCompare;
+module.exports = SourcesAndSensorsCompare;

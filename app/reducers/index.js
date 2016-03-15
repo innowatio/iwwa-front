@@ -26,10 +26,3 @@ const rootReducer = storage.reducer(combineReducers({
 }));
 
 export default rootReducer;
-
-
-//TODO differenze da capire
-
-//export default combineReducers({
-//    routing,
-//});

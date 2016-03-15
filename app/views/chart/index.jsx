@@ -7,7 +7,6 @@ var IPropTypes = require("react-immutable-proptypes");
 import {connect} from "react-redux";
 import {bindActionCreators} from "redux";
 
-var CollectionUtils    = require("lib/collection-utils");
 var components         = require("components/");
 // var GetTutorialMixin   = require("lib/get-tutorial-mixin");
 // var tutorialString     = require("assets/JSON/tutorial-string.json").historicalGraph;
@@ -469,7 +468,6 @@ var Chart = React.createClass({
     },
     render: function () {
         const theme = this.getTheme();
-        const selectedSites = this.selectedSitesId().map(siteId => this.getSitoById(siteId));
         const selectedConsumptionType = (
             this.props.chart.length > 1 &&
             R.allUniq(this.props.chart.map(singleSelection => singleSelection.measurementType))
@@ -575,13 +573,9 @@ var Chart = React.createClass({
                         </components.FullscreenModal>
                         <components.HistoricalGraph
                             chart={this.props.chart}
-                            getY2Label={CollectionUtils.labelGraph.getY2Label}
-                            getYLabel={CollectionUtils.labelGraph.getYLabel}
                             isComparationActive={this.isComparationActive(this.selectedSitesId(), this.selectedSources())}
                             isDateCompareActive={this.isDateCompare()}
                             misure={this.props.collections.get("readings-daily-aggregates") || Immutable.Map()}
-                            ref="historicalGraph"
-                            sites={selectedSites}
                         />
                     </bootstrap.Col>
                     {/* Button bottom chart */}
