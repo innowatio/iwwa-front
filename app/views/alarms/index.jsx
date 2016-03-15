@@ -173,8 +173,8 @@ var Alarms = React.createClass({
                         return (
                             <Router.Link to={"/chart/"}>
                                 <components.Icon
-                                    color={colors.iconPng}
-                                    icon={"png"}
+                                    color={colors.iconChart}
+                                    icon={"chart"}
                                     onClick={
                                         R.partial(
                                             self.props.displayAlarmsOnChart,
@@ -249,8 +249,8 @@ var Alarms = React.createClass({
                     return (
                         <Router.Link to={"/chart/"}>
                             <components.Icon
-                                color={colors.iconPng}
-                                icon={"png"}
+                                color={colors.iconChart}
+                                icon={"chart"}
                                 onClick={
                                     R.partial(
                                         self.props.displayAlarmsOnChart,
@@ -312,7 +312,7 @@ var Alarms = React.createClass({
                 key={[allowedValue, label]}
                 onClick={R.partial(this.onClickFilter, [label, allowedValue])}
                 style={{
-                    paddingLeft: "10px",
+                    marginLeft: "10px",
                     borderRadius: "0px",
                     borderLeft: "0px",
                     borderRight: "0px",
@@ -363,28 +363,23 @@ var Alarms = React.createClass({
     renderFilterButton: function () {
         const {colors} = this.getTheme();
         return (
-            <div className="element-table" style={{marginRight: "84px", height: "40px", float: "right"}}>
-                <Radium.Style
-                    rules={{
-                        ".btn": {
-                            height: "40px",
-                            textDecoration: "none"
-                        }
-                    }}
-                    scopeSelector=".element-table"
-                />
+            <div style={{marginRight: "10px", height: "50px", marginBottom: "10px",  float: "right"}}>
                 <components.Popover
                     title={
-                        <span style={{display: "flex", height: "40px"}}>
+                        <span style={{display: "inline-block", width: "50px", height: "50px", marginBottom: "30px"}}>
                             <components.Icon
-                                color={this.getTheme().colors.iconFilter}
+                                color={colors.iconFilter}
                                 icon={"filter"}
                                 size={"30px"}
                                 style={{
-                                    verticalAlign: "middle"
+                                    verticalAlign: "middle",
+                                    lineHeight: "20px",
+                                    width: "50px",
+                                    height: "50px",
+                                    borderRadius: "20px",
+                                    backgroundColor: colors.primary
                                 }}
                             />
-                            <h4 style={{color: colors.primary}}>{"Filter"}</h4>
                         </span>
                     }
                 >
