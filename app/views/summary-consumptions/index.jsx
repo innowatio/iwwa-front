@@ -78,7 +78,7 @@ var styleSiteButton = ({colors}) => ({
     border: "0",
     borderRadius: "100%",
     clear: "both",
-    margin: "12px",
+    margin: "12px 12px 0 0",
     backgroundColor: colors.secondary
 });
 
@@ -91,7 +91,7 @@ var styleProgressBar = ({colors}) => ({
 });
 
 var styleProgressBarTitleLabel = ({colors}) => ({
-    fontSize: "18px",
+    fontSize: "16px",
     fontWeight: "300",
     color: colors.progressBarFont
 });
@@ -99,7 +99,7 @@ var styleProgressBarTitleLabel = ({colors}) => ({
 var styleProgressBarMaxLabel = ({colors}) => ({
     color: colors.progressBarFont,
     float: "right",
-    fontSize: "16px",
+    fontSize: "14px",
     fontWeight: "300"
 });
 
@@ -204,8 +204,8 @@ var SummaryConsumptions = React.createClass({
             }}
             >
                 <p style={{
-                    fontSize: "18px",
-                    margin: "10px 0",
+                    fontSize: "16px",
+                    margin: "15px 0px",
                     fontWeight: "400",
                     color: theme.colors.mainFontColor
                 }}
@@ -252,7 +252,7 @@ var SummaryConsumptions = React.createClass({
                     <components.Icon
                         color={theme.colors.feedbackGood}
                         icon={"good"}
-                        size={"56px"}
+                        size={"50px"}
                         style={{
                             clear: "both",
                             lineHeight: "20px"
@@ -262,41 +262,7 @@ var SummaryConsumptions = React.createClass({
                         {"GRANDE!"}
                     </p>
                 </div>
-                <div style={{
-                    textAlign: "center"
-                }}
-                >
-                    <components.Icon
-                        color={theme.colors.feedbackMiddling}
-                        icon={"middling"}
-                        size={"56px"}
-                        style={{
-                            clear: "both",
-                            lineHeight: "20px"
-                        }}
-                    />
-                    <p style={{color: theme.colors.feedbackMiddling, fontSize: "20px"}}>
-                        {"ATTENZIONE!"}
-                    </p>
-                </div>
-                <div style={{
-                    textAlign: "center"
-                }}
-                >
-                    <components.Icon
-                        color={theme.colors.feedbackBad}
-                        icon={"bad"}
-                        size={"56px"}
-                        style={{
-                            clear: "both",
-                            lineHeight: "20px"
-                        }}
-                    />
-                    <p style={{color: theme.colors.feedbackBad, fontSize: "20px"}}>
-                        {"UHM!"}
-                    </p>
-                </div>
-                <p style={{color: theme.colors.mainFontColor, fontSize: "16px"}}>{feedbackMessage}</p>
+                <p style={{color: theme.colors.mainFontColor, fontSize: "14px", fontWeight:"300"}}>{feedbackMessage}</p>
             </div>
         );
     },
@@ -322,7 +288,7 @@ var SummaryConsumptions = React.createClass({
     renderStyledProgressBar: function (key, max, now, title) {
         const colors = this.getTheme();
         return (
-            <div key={key} style={{marginBottom: "20px"}}>
+            <div key={key} style={{marginBottom: "15px"}}>
                 <components.ProgressBar
                     key={key}
                     max={max}
