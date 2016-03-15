@@ -232,7 +232,6 @@ var SummaryConsumptions = React.createClass({
         );
     },
     renderFeedbackBox: function () {
-        const colors = this.getTheme();
         const theme = this.getTheme();
         const feedbackMessage = "Stai andando molto bene. Hai usato il 10% di energia in meno dei tuoi vicini.";
         return (
@@ -247,44 +246,57 @@ var SummaryConsumptions = React.createClass({
             }}
             >
                 <div style={{
-                    padding: "10px",
                     textAlign: "center"
                 }}
                 >
                     <components.Icon
                         color={theme.colors.feedbackGood}
                         icon={"good"}
-                        size={"60px"}
+                        size={"56px"}
                         style={{
                             clear: "both",
                             lineHeight: "20px"
                         }}
                     />
-                <p style={{color: THEME.colors.feedbackGood}}>
+                    <p style={{color: theme.colors.feedbackGood, fontSize: "20px"}}>
                         {"GRANDE!"}
                     </p>
                 </div>
-                <div>
+                <div style={{
+                    textAlign: "center"
+                }}
+                >
                     <components.Icon
-                        color={colors.feedbackNeutral}
+                        color={theme.colors.feedbackMiddling}
                         icon={"middling"}
-                        size={"60px"}
+                        size={"56px"}
+                        style={{
+                            clear: "both",
+                            lineHeight: "20px"
+                        }}
                     />
-                    <p style={{color: colors.feedbackNeutral}}>
+                    <p style={{color: theme.colors.feedbackMiddling, fontSize: "20px"}}>
                         {"ATTENZIONE!"}
                     </p>
                 </div>
-                <div style={{width: "30%"}}>
+                <div style={{
+                    textAlign: "center"
+                }}
+                >
                     <components.Icon
-                        color={colors.feedbackBad}
+                        color={theme.colors.feedbackBad}
                         icon={"bad"}
-                        size={"60px"}
+                        size={"56px"}
+                        style={{
+                            clear: "both",
+                            lineHeight: "20px"
+                        }}
                     />
-                    <p style={{color: colors.feedbackBad}}>
+                    <p style={{color: theme.colors.feedbackBad, fontSize: "20px"}}>
                         {"UHM!"}
                     </p>
                 </div>
-                <p style={{color: colors.mainFontColor, fontSize: "16px"}}>{feedbackMessage}</p>
+                <p style={{color: theme.colors.mainFontColor, fontSize: "16px"}}>{feedbackMessage}</p>
             </div>
         );
     },

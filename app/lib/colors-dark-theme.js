@@ -83,7 +83,7 @@ export const colorsDarkTheme = {
     progressBarInfo: "#536dfe",
     progressBarDanger: "#eb2953",
     feedbackGood: "#00e676",
-    feedbackMiddling: "#fdd835",
+    feedbackMiddling: "#FDD734",
     feedbackBad: "#eb2953",
     feedbackNeutral: "#ffffff",
     red: "#f71c50",
