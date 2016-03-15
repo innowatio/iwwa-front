@@ -12,8 +12,7 @@ function endDate (startDate, numberOfWeeks) {
 }
 export function getDateRangesCompare ({period, dateOne}) {
     switch (period.key) {
-        case "days":
-        case "week": {
+        case "days": {
             const dateStartArray = [
                 moment.utc(dateOne).startOf(period.key).valueOf(),
                 moment.utc(dateOne).subtract(1, period.key).startOf(period.key).valueOf()
@@ -21,6 +20,16 @@ export function getDateRangesCompare ({period, dateOne}) {
             return map(dateStart => ({
                 start: dateStart,
                 end: moment.utc(dateStart).endOf(period.key).valueOf()
+            }), dateStartArray);
+        }
+        case "week": {
+            const dateStartArray = [
+                moment.utc(dateOne).startOf("isoWeek").valueOf(),
+                moment.utc(dateOne).subtract(1, period.key).startOf("isoWeek").valueOf()
+            ];
+            return map(dateStart => ({
+                start: dateStart,
+                end: moment.utc(dateStart).endOf("isoWeek").valueOf()
             }), dateStartArray);
         }
         case "7 days before": {
@@ -48,5 +57,5 @@ export function getDateRangesCompare ({period, dateOne}) {
         }
         default:
             return [];
-        }
+    }
 }

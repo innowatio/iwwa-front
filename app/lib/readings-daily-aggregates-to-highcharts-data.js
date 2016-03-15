@@ -1,7 +1,6 @@
 import {addIndex, findIndex, is, isEmpty, memoize, reduce} from "ramda";
 import moment from "moment";
 
-// const oneDayInMs = moment.duration(1, "day").asMilliseconds();
 const fiveMinutesInMs = moment.duration(5, "minutes").asMilliseconds();
 const NUMBER_OF_DATA_IN_DAY = 288;
 
@@ -38,7 +37,9 @@ export function yAxisByDate (filters) {
         }
         indexes = is(Number, indexes) ? [indexes] : indexes;
         indexes.forEach(index => {
-            const offsetDays = moment(aggregate.get("day")).diff(filters[index].date.start, "days");
+            const offsetDays = moment(
+                aggregate.get("day")
+            ).diff(moment(filters[index].date.start).format("YYYY-MM-DD"), "days");
             aggregate
                 .get("measurementValues")
                 .split(",")
