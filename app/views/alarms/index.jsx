@@ -363,21 +363,26 @@ var Alarms = React.createClass({
     renderFilterButton: function () {
         const {colors} = this.getTheme();
         return (
-            <div style={{marginRight: "10px", height: "50px", marginBottom: "10px",  float: "right"}}>
+            <div style={{marginTop: "10px", height: "auto", marginBottom: "10px", float: "right"}}>
                 <components.Popover
                     title={
-                        <span style={{display: "inline-block", width: "50px", height: "50px", marginBottom: "30px"}}>
+                        <span style={{
+                            display: "inline-block",
+                            width: "50px",
+                            height: "50px",
+                            borderRadius: "100%",
+                            lineHeight: "4",
+                            backgroundColor: colors.secondary
+                        }}
+                        >
                             <components.Icon
                                 color={colors.iconFilter}
                                 icon={"filter"}
-                                size={"30px"}
+                                size={"38px"}
                                 style={{
                                     verticalAlign: "middle",
                                     lineHeight: "20px",
-                                    width: "50px",
-                                    height: "50px",
-                                    borderRadius: "20px",
-                                    backgroundColor: colors.primary
+                                    textAlign: "center"
                                 }}
                             />
                         </span>

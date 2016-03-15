@@ -117,6 +117,7 @@ var User = React.createClass({
                     size={"20px"}
                     style={{
                         float: "right",
+                        lineHeight: "20px",
                         verticalAlign: "middle"
                     }}
                 />

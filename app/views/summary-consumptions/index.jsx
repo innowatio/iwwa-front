@@ -77,33 +77,38 @@ var styleSiteButton = ({colors}) => ({
     padding: "0",
     border: "0",
     borderRadius: "100%",
-    margin: "13px",
+    clear: "both",
+    margin: "12px",
     backgroundColor: colors.secondary
 });
 
 var styleProgressBar = ({colors}) => ({
     backgroundColor: colors.progressBarBackground,
-    height: "12px",
+    height: "14px",
     margin: "auto",
-    maxWidth: "90%"
+    borderRadius: "35px",
+    maxWidth: "100%"
 });
 
 var styleProgressBarTitleLabel = ({colors}) => ({
     fontSize: "18px",
+    fontWeight: "300",
     color: colors.progressBarFont
 });
 
 var styleProgressBarMaxLabel = ({colors}) => ({
     color: colors.progressBarFont,
     float: "right",
-    fontSize: "16px"
+    fontSize: "16px",
+    fontWeight: "300"
 });
 
 var rulesProgressBar = ({colors}) => ({
     ".progress-bar": {
         color: colors.progressBarFont,
         fontSize: "10px",
-        lineHeight: "10px",
+        padding: "0px 5px",
+        lineHeight: "12px",
         textAlign: "left"
     },
     ".progress-bar-danger": {
@@ -181,14 +186,30 @@ var SummaryConsumptions = React.createClass({
         this.setState({period: tabPeriod});
     },
     renderCustomersComparisons: function () {
+        const theme = this.getTheme();
         const title = "Confronta i tuoi consumi con quelli di attività simili alla tua";
         const selectedTab = tabParameters().find(param => param.key === this.state.period);
         const now = parseInt(selectedTab.now(
             this.props.consumptions.fullPath[0],
             this.props.collections.get("consumptions-yearly-aggregates") || Immutable.Map()).toFixed(0));
         return (
-            <div>
-                <span>{title}</span>
+            <div style={{
+                height: "auto",
+                padding: "10px",
+                borderTopLeftRadius: "25px",
+                borderTopRightRadius: "25px",
+                border: "1px solid " + theme.colors.borderConsumptionSection,
+                borderBottom: "0",
+                backgroundColor: theme.colors.backgroundConsumptionSection
+            }}
+            >
+                <p style={{
+                    fontSize: "18px",
+                    margin: "10px 0",
+                    fontWeight: "400",
+                    color: theme.colors.mainFontColor
+                }}
+                >{title}</p>
                 {this.renderStyledProgressBar(
                     "neighbors-efficient",
                     parseInt((now * 1.1).toFixed(0)),
@@ -212,34 +233,58 @@ var SummaryConsumptions = React.createClass({
     },
     renderFeedbackBox: function () {
         const colors = this.getTheme();
+        const theme = this.getTheme();
         const feedbackMessage = "Stai andando molto bene. Hai usato il 10% di energia in meno dei tuoi vicini.";
         return (
-            <div>
-                <div>
+            <div style={{
+                height: "auto",
+                padding: "10px",
+                borderBottomLeftRadius: "25px",
+                borderBottomRightRadius: "25px",
+                border: "1px solid " + theme.colors.borderConsumptionSection,
+                borderTop: "0",
+                backgroundColor: theme.colors.backgroundConsumptionSection
+            }}
+            >
+                <div style={{
+                    padding: "10px",
+                    textAlign: "center"
+                }}
+                >
                     <components.Icon
-                        color={colors.feedbackGood}
+                        color={theme.colors.feedbackGood}
                         icon={"good"}
-                        size={"30px"}
+                        size={"60px"}
+                        style={{
+                            clear: "both",
+                            lineHeight: "20px"
+                        }}
                     />
-                    <span>
+                <p style={{color: THEME.colors.feedbackGood}}>
                         {"GRANDE!"}
-                    </span>
+                    </p>
                 </div>
                 <div>
                     <components.Icon
                         color={colors.feedbackNeutral}
                         icon={"middling"}
-                        size={"30px"}
+                        size={"60px"}
                     />
+                    <p style={{color: colors.feedbackNeutral}}>
+                        {"ATTENZIONE!"}
+                    </p>
                 </div>
                 <div style={{width: "30%"}}>
                     <components.Icon
-                        color={colors.feedbackNeutral}
+                        color={colors.feedbackBad}
                         icon={"bad"}
-                        size={"30px"}
+                        size={"60px"}
                     />
+                    <p style={{color: colors.feedbackBad}}>
+                        {"UHM!"}
+                    </p>
                 </div>
-                <span>{feedbackMessage}</span>
+                <p style={{color: colors.mainFontColor, fontSize: "16px"}}>{feedbackMessage}</p>
             </div>
         );
     },
@@ -247,7 +292,7 @@ var SummaryConsumptions = React.createClass({
         const selectedTab = tabParameters().find(param => param.key === this.state.period);
         const comparisons = selectedTab.comparisons;
         return (
-            <div>
+            <div style={{padding: "12px", marginBottom: "20px"}}>
                 {comparisons.map(partial(this.renderProgressBar, [selectedTab.now]))}
             </div>
         );
@@ -265,16 +310,18 @@ var SummaryConsumptions = React.createClass({
     renderStyledProgressBar: function (key, max, now, title) {
         const colors = this.getTheme();
         return (
-            <components.ProgressBar
-                key={key}
-                max={max}
-                now={now}
-                title={title}
-                rules={rulesProgressBar(colors)}
-                style={styleProgressBar(colors)}
-                styleMaxLabel={styleProgressBarMaxLabel(colors)}
-                styleTitleLabel={styleProgressBarTitleLabel(colors)}
-            />);
+            <div key={key} style={{marginBottom: "20px"}}>
+                <components.ProgressBar
+                    key={key}
+                    max={max}
+                    now={now}
+                    title={title}
+                    rules={rulesProgressBar(colors)}
+                    style={styleProgressBar(colors)}
+                    styleMaxLabel={styleProgressBarMaxLabel(colors)}
+                    styleTitleLabel={styleProgressBarTitleLabel(colors)}
+                />
+            </div>);
     },
     renderModalBody: function () {
         const sites = this.props.collections.get("sites") || Immutable.Map({});
@@ -385,7 +432,7 @@ var SummaryConsumptions = React.createClass({
                     </div>
                 </div>
                 <div style={styleRightPane(theme)}>
-                    <div>
+                    <div style={{clear: "both", height: "50px", width: "100%"}}>
                         <components.Button className="pull-right" onClick={this.openModal} style={styleSiteButton(theme)} >
                             <components.Icon
                                 color={theme.colors.iconSiteButton}
@@ -408,7 +455,7 @@ var SummaryConsumptions = React.createClass({
                             {this.renderModalBody()}
                         </components.FullscreenModal>
                     </div>
-                    <div>
+                    <div style={{margin: "5px 20px"}}>
                         {this.props.consumptions.fullPath ? this.renderPeriodComparisons() : undefined}
                         {this.props.consumptions.fullPath ? this.renderCustomersComparisons() : undefined}
                         {this.props.consumptions.fullPath ? this.renderFeedbackBox() : undefined}
