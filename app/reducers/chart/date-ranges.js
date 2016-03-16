@@ -7,9 +7,11 @@ function numberOfWeeksToAdd (startOne, startTwo) {
         (endDate(startTwo, 5).valueOf() < moment.utc(startTwo).add({week: 1}).endOf("month").valueOf())
     ) ? 6 : 5;
 }
+
 function endDate (startDate, numberOfWeeks) {
     return moment.utc(startDate).add({weeks: numberOfWeeks}).endOf("isoWeek").valueOf();
 }
+
 export function getDateRangesCompare ({period, dateOne}) {
     switch (period.key) {
         case "days": {

@@ -61,7 +61,14 @@ describe("HighCharts component", () => {
         const getXAxis = HighCharts.prototype.getXAxis;
         var instance = {
             props: {
-                coordinates: range(0, 2)
+                coordinates: range(0, 2),
+                dateCompare: [{
+                    start: "2016-02-01",
+                    end: "2016-02-29"
+                }, {
+                    start: "2016-01-01",
+                    end: "2016-01-31"
+                }]
             },
             getTheme: sinon.stub().returns({colors: {
                 axisLabel: "axisLabel",
@@ -104,6 +111,8 @@ describe("HighCharts component", () => {
                         color: "axisLabel"
                     }
                 },
+                min: "2016-02-01",
+                max: "2016-02-29",
                 plotBands: [],
                 type: "datetime"
             }, {
@@ -112,6 +121,8 @@ describe("HighCharts component", () => {
                         color: "lineCompare"
                     }
                 },
+                min: "2016-01-01",
+                max: "2016-01-31",
                 plotBands: [],
                 type: "datetime"
             }]);

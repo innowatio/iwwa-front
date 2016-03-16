@@ -38,6 +38,7 @@ var DateCompare = React.createClass({
             <components.HighCharts
                 colors={[this.props.chart[0].source.color, this.getTheme().colors.lineCompare]}
                 coordinates={this.getCoordinates()}
+                dateCompare={this.getDatesFromChartState()}
                 dateFilter={this.getDatesFromChartState()[0]}
                 isDateCompareActive={this.props.isDateCompareActive}
                 xLabel={this.getXLabels()}

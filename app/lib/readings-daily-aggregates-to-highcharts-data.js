@@ -56,7 +56,7 @@ export function yAxisByDate (filters) {
 }
 
 export default memoize(function readingsDailyAggregatesToHighchartsData (aggregates, filters) {
-    const defaultYAxis = filters.map(() => []);
+    const defaultYAxis = filters.map(() => [null]);
     const arraysOfData = aggregates.sortBy(agg => agg.get("day")).reduce(yAxisByDate(filters), defaultYAxis);
     return arraysOfData.map((arrayOfData, index) => ({
         data: arrayOfData,

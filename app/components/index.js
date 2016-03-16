@@ -29,7 +29,6 @@ exports.SensorForm              = require("./sensor-form/");
 exports.SideNav                 = require("./sidenav/");
 exports.SiteNavigator           = require("./site-navigator/");
 exports.Spacer                  = require("./spacer/");
-exports.TemporalLineGraph       = require("./temporal-line-graph/");
 exports.TreeView                = require("./tree-view/");
 exports.TutorialAnchor          = require("./tutorial-anchor/");
 exports.VariablesPanel          = require("./variables-panel/");

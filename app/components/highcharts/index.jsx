@@ -13,6 +13,7 @@ var HighCharts = React.createClass({
     propTypes: {
         colors: PropTypes.arrayOf(PropTypes.string),
         coordinates: PropTypes.arrayOf(PropTypes.object),
+        dateCompare: PropTypes.arrayOf(PropTypes.object),
         dateFilter: PropTypes.object,
         isComparationActive: PropTypes.bool,
         isDateCompareActive: PropTypes.bool,
@@ -46,6 +47,8 @@ var HighCharts = React.createClass({
                     color: index === 1 ? colors.lineCompare : colors.axisLabel
                 }
             },
+            min: this.props.dateCompare[index].start,
+            max: this.props.dateCompare[index].end,
             plotBands: this.getWeekendOverlay()
         })) : {
             type: "datetime",
@@ -95,7 +98,6 @@ var HighCharts = React.createClass({
         }), this.props.coordinates);
     },
     getConfig: function () {
-        console.log(this.props.coordinates);
         const {colors} = this.getTheme();
         return {
             chart: {
@@ -129,7 +131,6 @@ var HighCharts = React.createClass({
         };
     },
     render: function () {
-        console.log(this.getConfig());
         return (
             <div>
                 <ReactHighcharts config={this.getConfig()} />
