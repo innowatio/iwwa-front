@@ -1,6 +1,7 @@
 import Immutable from "immutable";
 import R from "ramda";
 import React, {PropTypes} from "react";
+import IPropTypes from "react-immutable-proptypes";
 import {connect} from "react-redux";
 import {bindActionCreators} from "redux";
 
@@ -22,14 +23,16 @@ const buttonStyle = ({colors}) => ({
     marginLeft: "10px"
 });
 
-let advancedOptions = function ({colors}) {
+let advancedOptions = function () {
     return [];
 };
 
 var MonitoringChartView = React.createClass({
     propTypes: {
         addToFavorite: PropTypes.func.isRequired,
+        asteroid: PropTypes.object,
         changeYAxisValues: PropTypes.func.isRequired,
+        collections: IPropTypes.map.isRequired,
         monitoringChart: PropTypes.object.isRequired,
         selectChartType: PropTypes.func.isRequired,
         selectFavoriteChart: PropTypes.func.isRequired,
@@ -37,6 +40,23 @@ var MonitoringChartView = React.createClass({
     },
     contextTypes: {
         theme: PropTypes.object
+    },
+    componentDidMount: function () {
+        this.subscribeToSensorsData(this.props);
+    },
+    subscribeToSensorsData: function (props) {
+        console.log(props.selected);
+        props.selected[0] && props.selected.forEach((sensorId) => {
+            //TODO capire bene cosa va preso...
+            props.asteroid.subscribe(
+                "dailyMeasuresBySensor",
+                sensorId,
+                "2015-01-01",
+                "2016-03-01",
+                "reading",
+                "activeEnergy"
+            );
+        });
     },
     getFavoritesChartsColumns: function () {
         return [
@@ -54,17 +74,17 @@ var MonitoringChartView = React.createClass({
     },
     render: function () {
         const theme = this.getTheme();
-                    //<Button style={buttonStyle(theme)}>
-                    //    <Icon
-                    //        color={theme.colors.iconHeader}
-                    //        icon={"star"}
-                    //        size={"28px"}
-                    //        style={{lineHeight: "20px"}}
-                    //    />
-                    //</Button>
         return (
             <div>
                 <SectionToolbar backUrl={"/monitoring/"} title={"Torna alla gestione item"}>
+                    <Button style={buttonStyle(theme)}>
+                        <Icon
+                            color={theme.colors.iconHeader}
+                            icon={"star-o"}
+                            size={"28px"}
+                            style={{lineHeight: "20px"}}
+                        />
+                    </Button>
                     <Popover
                         className="pull-right"
                         hideOnChange={true}
@@ -72,7 +92,7 @@ var MonitoringChartView = React.createClass({
                         title={
                             <Icon
                                 color={theme.colors.iconHeader}
-                                icon={"settings"}
+                                icon={"option"}
                                 size={"32px"}
                                 style={{lineHeight: "20px", verticalAlign: "middle"}}
                             />
@@ -118,6 +138,7 @@ var MonitoringChartView = React.createClass({
 
 const mapStateToProps = (state) => {
     return {
+        collections: state.collections,
         monitoringChart: state.monitoringChart,
         selected: state.sensors.selectedSensors
     };

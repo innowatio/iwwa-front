@@ -21,17 +21,14 @@ var SectionToolbar = React.createClass({
     renderBackLink: function () {
         var {backUrl} = this.props;
         const theme = this.getTheme();
-                    //<Icon
-                    //    color={theme.colors.iconHeader}
-                    //    icon={"angle-left"}
-                    //    size={"27px"}
-                    ///>
-        if(backUrl) {
+        if (backUrl) {
             return (
-                <Link to={backUrl}>
-                    <label style={{fontSize: "large", color: "white", marginTop: "19px", marginRight: "10px"}}>
-                        {"<"}
-                    </label>
+                <Link to={backUrl} style={{marginTop: "14px", marginRight: "10px"}}>
+                    <Icon
+                        color={theme.colors.iconHeader}
+                        icon={"angle-left"}
+                        size={"27px"}
+                    />
                 </Link>
             );
         }

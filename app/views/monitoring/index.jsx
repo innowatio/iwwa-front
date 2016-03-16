@@ -79,20 +79,6 @@ var Monitoring = React.createClass({
     componentWillReceiveProps: function (props) {
         this.subscribeToSensorsData(props);
     },
-    subscribeToSensorsData: function (props) {
-        console.log(props.selected);
-        props.selected[0] && props.selected.forEach((sensorId) => {
-            //TODO capire bene cosa va preso...
-            props.asteroid.subscribe(
-                "dailyMeasuresBySensor",
-                sensorId,
-                "2015-01-01",
-                "2016-03-01",
-                "reading",
-                "activeEnergy"
-            );
-        });
-    },
     getTheme: function () {
         return this.context.theme || defaultTheme;
     },
@@ -244,7 +230,7 @@ var Monitoring = React.createClass({
                         title={
                             <Icon
                                 color={theme.colors.iconHeader}
-                                icon={"setting"}
+                                icon={"option"}
                                 size={"32px"}
                                 style={{lineHeight: "20px", verticalAlign: "middle"}}
                             />
