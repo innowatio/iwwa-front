@@ -74,10 +74,6 @@ var Monitoring = React.createClass({
     },
     componentDidMount: function () {
         this.props.asteroid.subscribe("sensors");
-        this.subscribeToSensorsData(this.props);
-    },
-    componentWillReceiveProps: function (props) {
-        this.subscribeToSensorsData(props);
     },
     getTheme: function () {
         return this.context.theme || defaultTheme;
