@@ -3,15 +3,16 @@ import R from "ramda";
 import React, {PropTypes} from "react";
 import IPropTypes from "react-immutable-proptypes";
 import {connect} from "react-redux";
+import {Link} from "react-router";
 import {bindActionCreators} from "redux";
 
 import {defaultTheme} from "lib/theme";
 import {styles} from "lib/styles_restyling";
+import {getKeyFromCollection} from "lib/collection-utils";
 
-import {Button, CollectionElementsTable, DropdownButton, Icon, MonitoringChart,
+import {Button, CollectionElementsTable, DropdownButton, Icon,
     MonitoringSearch, Popover, SectionToolbar, SensorForm} from "components";
 
-import {addToFavorite, changeYAxisValues, selectChartType, selectFavoriteChart} from "actions/monitoring-chart";
 import {addSensor, cloneSensor, combineSensor, deleteSensor, editSensor, favoriteSensor, filterSensors, monitorSensor, selectSensor} from "actions/sensors";
 
 const buttonStyle = ({colors}) => ({
@@ -47,16 +48,10 @@ let advancedOptions = function ({colors}) {
     ];
 };
 
-var getKeyFromCollection = function (collection) {
-    return collection.get("_id");
-};
-
 var Monitoring = React.createClass({
     propTypes: {
         addSensor: PropTypes.func.isRequired,
-        addToFavorite: PropTypes.func.isRequired,
         asteroid: PropTypes.object,
-        changeYAxisValues: PropTypes.func.isRequired,
         cloneSensor: PropTypes.func.isRequired,
         collections: IPropTypes.map.isRequired,
         combineSensor: PropTypes.func.isRequired,
@@ -65,9 +60,6 @@ var Monitoring = React.createClass({
         favoriteSensor: PropTypes.func.isRequired,
         filterSensors: PropTypes.func.isRequired,
         monitorSensor: PropTypes.func.isRequired,
-        monitoringChart: PropTypes.object.isRequired,
-        selectChartType: PropTypes.func.isRequired,
-        selectFavoriteChart: PropTypes.func.isRequired,
         selectSensor: PropTypes.func.isRequired,
         selected: PropTypes.array,
         sensors: PropTypes.array.isRequired
@@ -123,11 +115,6 @@ var Monitoring = React.createClass({
         return () => {
             this.props.monitorSensor(id);
         };
-    },
-    getFavoritesChartsColumns: function () {
-        return [
-            {key: "_id"}
-        ];
     },
     getSensorFields: function () {
         let found = R.find(R.propEq("_id", this.props.selected[0]))(this.props.sensors);
@@ -185,11 +172,13 @@ var Monitoring = React.createClass({
                     };
                 },
                 valueFormatter: () => (
-                    <Icon
-                        color={theme.colors.iconHeader}
-                        icon={"chart"}
-                        size={"27px"}
-                    />
+                    <Link to={"/monitoring/chart/"}>
+                        <Icon
+                            color={theme.colors.iconHeader}
+                            icon={"chart"}
+                            size={"27px"}
+                        />
+                    </Link>
                 )
             },
             {
@@ -199,12 +188,6 @@ var Monitoring = React.createClass({
                 )
             }
         ];
-    },
-    getChartSeries: function () {
-        let measures = this.props.collections.get("readings-daily-aggregates") || Immutable.Map();
-        console.log(measures);
-        //TODO prendere le misure
-        return this.props.selected;
     },
     openModal: function () {
         this.setState({
@@ -261,7 +244,7 @@ var Monitoring = React.createClass({
                         title={
                             <Icon
                                 color={theme.colors.iconHeader}
-                                icon={"settings"}
+                                icon={"setting"}
                                 size={"32px"}
                                 style={{lineHeight: "20px", verticalAlign: "middle"}}
                             />
@@ -313,27 +296,6 @@ var Monitoring = React.createClass({
                     </div>
 
                 </div>
-                <div>
-                    <h3>
-                        {"Favorites charts"}
-                    </h3>
-                    <CollectionElementsTable
-                        collection={this.props.monitoringChart.favorites}
-                        columns={this.getFavoritesChartsColumns()}
-                        getKey={getKeyFromCollection}
-                        hover={true}
-                        onRowClick={this.props.selectFavoriteChart}
-                        width={"60%"}
-                    />
-                </div>
-
-                <MonitoringChart
-                    addToFavorite={this.props.addToFavorite}
-                    onChangeYAxisValues={this.props.changeYAxisValues}
-                    chartState={this.props.monitoringChart}
-                    selectChartType={this.props.selectChartType}
-                    series={this.getChartSeries()}
-                />
             </div>
         );
     }
@@ -342,7 +304,6 @@ var Monitoring = React.createClass({
 const mapStateToProps = (state) => {
     return {
         collections: state.collections,
-        monitoringChart: state.monitoringChart,
         selected: state.sensors.selectedSensors,
         sensors: state.sensors.allSensors
     };
@@ -351,8 +312,6 @@ const mapStateToProps = (state) => {
 const mapDispatchToProps = (dispatch) => {
     return {
         addSensor: bindActionCreators(addSensor, dispatch),
-        addToFavorite: bindActionCreators(addToFavorite, dispatch),
-        changeYAxisValues: bindActionCreators(changeYAxisValues, dispatch),
         cloneSensor: bindActionCreators(cloneSensor, dispatch),
         combineSensor: bindActionCreators(combineSensor, dispatch),
         deleteSensor: bindActionCreators(deleteSensor, dispatch),
@@ -360,8 +319,6 @@ const mapDispatchToProps = (dispatch) => {
         favoriteSensor: bindActionCreators(favoriteSensor, dispatch),
         filterSensors: bindActionCreators(filterSensors, dispatch),
         monitorSensor: bindActionCreators(monitorSensor, dispatch),
-        selectChartType: bindActionCreators(selectChartType, dispatch),
-        selectFavoriteChart: bindActionCreators(selectFavoriteChart, dispatch),
         selectSensor: bindActionCreators(selectSensor, dispatch)
     };
 };

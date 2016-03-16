@@ -19,6 +19,7 @@ module.exports = (
             <Route component={views.RealTime} name="live" path="/live/" titleView="Consumi live" />
             <Route component={views.Dashboard} name="home" path="/" />
             <Route component={views.Monitoring} name="monitoring" path="/monitoring/" titleView="Monitoring" />
+            <Route component={views.MonitoringChartView} name="monitoring-chart" path="/monitoring/chart/" titleView="Monitoring chart" />
         </Route>
     </Router>
 );

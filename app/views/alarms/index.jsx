@@ -20,10 +20,6 @@ import {
 } from "actions/alarms";
 import {defaultTheme} from "lib/theme";
 
-var getKeyFromCollection = function (collection) {
-    return collection.get("_id");
-};
-
 var Alarms = React.createClass({
     propTypes: {
         alarms: React.PropTypes.object.isRequired,
@@ -474,7 +470,7 @@ var Alarms = React.createClass({
                                     Immutable.Map() :
                                     allowedValues.filter(this.filterAlarms)}
                                 columns={this.getColumnsAlarms()}
-                                getKey={getKeyFromCollection}
+                                getKey={CollectionUtils.getKeyFromCollection}
                                 hover={true}
                                 width={"40%"}
                             />
@@ -487,7 +483,7 @@ var Alarms = React.createClass({
                             <components.CollectionElementsTable
                                 collection={this.getNotifications().sort(R.partialRight(this.sortByDate, [false]))}
                                 columns={this.getColumnsNotifications()}
-                                getKey={getKeyFromCollection}
+                                getKey={CollectionUtils.getKeyFromCollection}
                                 hover={true}
                                 width={"30%"}
                             />
