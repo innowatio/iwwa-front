@@ -499,7 +499,7 @@ var Chart = React.createClass({
                         title={
                             <components.Icon
                                 color={theme.colors.iconHeader}
-                                icon={"settings"}
+                                icon={"option"}
                                 size={"32px"}
                                 style={{lineHeight: "20px", verticalAlign: "middle"}}
                             />
