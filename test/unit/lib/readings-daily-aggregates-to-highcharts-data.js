@@ -6,9 +6,9 @@ import {fromPairs, map, pipe, range, repeat} from "ramda";
 
 import readingsDailyAggregatesToHighchartsData from "lib/readings-daily-aggregates-to-highcharts-data";
 
-describe("readingsDailyAggregatesToDygraphData", () => {
+describe("readingsDailyAggregatesToHighchartsData", () => {
 
-    it("readings-daily-aggtregates -> dygraph data structure [CASE: sources-and-sensors-compare]", () => {
+    it("readings-daily-aggtregates -> highcharts data structure [CASE: sources-and-sensors-compare]", () => {
 
         const padLeft = n => (n < 10 ? `0${n}` : `${n}`);
         const measurementsString = idx => repeat(1 * idx, 288).join(",");
@@ -73,7 +73,7 @@ describe("readingsDailyAggregatesToDygraphData", () => {
         expect(result).to.be.an("array");
     });
 
-    // it("readings-daily-aggtregates -> dygraph data structure [CASE: date-compare]", () => {
+    // it("readings-daily-aggtregates -> highcharts data structure [CASE: date-compare]", () => {
     //
     //     const padLeft = n => (n < 10 ? `0${n}` : `${n}`);
     //     const measurementsString = idx => repeat(1 * idx, 288).join(",");
