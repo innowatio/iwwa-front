@@ -5,6 +5,7 @@ import max from "lodash.max";
 const fiveMinutesInMs = moment.duration(5, "minutes").asMilliseconds();
 const oneDayInMs = moment.duration(1, "day").asMilliseconds();
 const NUMBER_OF_DATA_IN_DAY = 288;
+const DEFAULT_DAY_IN_FILTER = 0;
 
 function getFilterFn (filter) {
     return memoize(aggregate => (
@@ -28,6 +29,13 @@ function getFindAggregateFilterIndex (filters) {
             return acc;
         }, [], filterFns)
     );
+}
+
+function numberOfDayInFilter (filters) {
+    const numberOfDayFilter = filters.map(({date}) => {
+        return Math.round((date.end - date.start) / oneDayInMs);
+    });
+    return max(numberOfDayFilter) || DEFAULT_DAY_IN_FILTER;
 }
 
 export function yAxisByDate (filters) {
@@ -55,15 +63,8 @@ export function yAxisByDate (filters) {
     };
 }
 
-function numberOfDay (filters) {
-    const numberOfDayFilter = filters.map(({date}) => {
-        return Math.round((date.end - date.start) / oneDayInMs);
-    });
-    return max(numberOfDayFilter);
-}
-
 export default memoize(function readingsDailyAggregatesToHighchartsData (aggregates, filters) {
-    const lengthOfData = numberOfDay(filters) * NUMBER_OF_DATA_IN_DAY;
+    const lengthOfData = numberOfDayInFilter(filters) * NUMBER_OF_DATA_IN_DAY;
     const defaultYAxis = filters.map(() => repeat(null, lengthOfData));
     const arraysOfData = aggregates.reduce(yAxisByDate(filters), defaultYAxis);
     return arraysOfData.map((arrayOfData, index) => ({
