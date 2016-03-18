@@ -159,15 +159,15 @@ var Chart = React.createClass({
         const exportAPILocation = this.refs.historicalGraph.refs.graphType.refs.highcharts.refs.chart;
         const chart = exportAPILocation.getChart();
         exportPNGImage(chart);
+        this.closeModal();
     },
     exportCsv: function () {
         const exportAPILocation = this.refs.historicalGraph.refs.graphType.refs.highcharts.refs.chart;
         const chart = exportAPILocation.getChart();
-        console.log("BBBBBBB");
         const csv = exportCSV(chart);
-        console.log(csv);
         const dataTypePrefix = "data:text/csv;base64,";
         this.openDownloadLink(dataTypePrefix + window.btoa(csv), "chart.csv");
+        this.closeModal();
     },
     subscribeToMisure: function (props) {
         const dateFirstChartState = props.chart[0].date;
