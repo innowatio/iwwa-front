@@ -20,7 +20,9 @@ import {
     selectMultipleElectricalSensor,
     selectDateRanges,
     selectDateRangesCompare,
-    removeAllCompare
+    removeAllCompare,
+    exportPNGImage,
+    exportCSV
 } from "actions/chart";
 import {styles} from "lib/styles_restyling";
 import {defaultTheme} from "lib/theme";
@@ -145,13 +147,27 @@ var Chart = React.createClass({
             this.props.selectSingleElectricalSensor([firstSite.get("_id")]);
         }
     },
+    openDownloadLink: function (content, name) {
+        var encodedUri = encodeURI(content);
+        var link = document.createElement("a");
+        link.setAttribute("href", encodedUri);
+        link.setAttribute("download", name);
+        link.setAttribute("target", "_blank");
+        link.click();
+    },
     exportPng: function () {
-        var exportAPILocation = this.refs.historicalGraph.refs.compareGraph.refs.temporalLineGraph;
-        exportAPILocation.exportPNG();
+        const exportAPILocation = this.refs.historicalGraph.refs.graphType.refs.highcharts.refs.chart;
+        const chart = exportAPILocation.getChart();
+        exportPNGImage(chart);
     },
     exportCsv: function () {
-        var exportAPILocation = this.refs.historicalGraph.refs.compareGraph.refs.temporalLineGraph;
-        exportAPILocation.exportCSV();
+        const exportAPILocation = this.refs.historicalGraph.refs.graphType.refs.highcharts.refs.chart;
+        const chart = exportAPILocation.getChart();
+        console.log("BBBBBBB");
+        const csv = exportCSV(chart);
+        console.log(csv);
+        const dataTypePrefix = "data:text/csv;base64,";
+        this.openDownloadLink(dataTypePrefix + window.btoa(csv), "chart.csv");
     },
     subscribeToMisure: function (props) {
         const dateFirstChartState = props.chart[0].date;
@@ -576,6 +592,7 @@ var Chart = React.createClass({
                             isComparationActive={this.isComparationActive(this.selectedSitesId(), this.selectedSources())}
                             isDateCompareActive={this.isDateCompare()}
                             misure={this.props.collections.get("readings-daily-aggregates") || Immutable.Map()}
+                            ref="historicalGraph"
                         />
                     </bootstrap.Col>
                     {/* Button bottom chart */}

@@ -39,6 +39,7 @@ var SitesCompare = React.createClass({
                 coordinates={this.getCoordinates()}
                 dateFilter={this.getDateFilter()}
                 isComparationActive={this.props.isComparationActive}
+                ref="highcharts"
                 yLabel={[this.props.chart[0].measurementType.key]}
             />
         );

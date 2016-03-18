@@ -41,6 +41,7 @@ var DateCompare = React.createClass({
                 dateCompare={this.getDatesFromChartState()}
                 dateFilter={this.getDatesFromChartState()[0]}
                 isDateCompareActive={this.props.isDateCompareActive}
+                ref="highcharts"
                 xLabel={this.getXLabels()}
                 yLabel={[this.props.chart[0].measurementType.key]}
             />

@@ -3,6 +3,12 @@ import {addIndex, map, range} from "ramda";
 import ReactHighcharts from "react-highcharts/bundle/ReactHighcharts";
 import Highcharts from "highcharts";
 import moment from "moment";
+import Exporting from "highcharts-exporting";
+Exporting(ReactHighcharts.Highcharts);
+import OfflineExport from "highcharts-offline-exporting";
+OfflineExport(ReactHighcharts.Highcharts);
+import ExportCSV from "highcharts-export-csv";
+ExportCSV(ReactHighcharts.Highcharts);
 
 import {getYLabel} from "./highchart-utils";
 import {defaultTheme} from "lib/theme";
@@ -111,6 +117,10 @@ var HighCharts = React.createClass({
             credits: {
                 enabled: false
             },
+            exporting: {
+                enabled: false,
+                scale: 1
+            },
             legend: {
                 enabled: false
             },
@@ -133,7 +143,7 @@ var HighCharts = React.createClass({
     render: function () {
         return (
             <div>
-                <ReactHighcharts config={this.getConfig()} />
+                <ReactHighcharts config={this.getConfig()} isPureConfig={true} ref="chart" />
             </div>
         );
     }

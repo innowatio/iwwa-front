@@ -1,4 +1,4 @@
-import {String, Number, tuple, struct, maybe, list} from "tcomb";
+import {String, Number, Object as object, tuple, struct, maybe, list} from "tcomb";
 
 import actionTypeValidator from "../lib/action-type-validator";
 
@@ -155,11 +155,29 @@ export function selectDateRanges (dateRanges) {
     };
 }
 
-/*
+/**
 *   A click on reset-compare
 */
 export function removeAllCompare () {
     return {
         type: REMOVE_ALL_COMPARE
     };
+}
+
+/**
+*   Export chart as PNG image
+*/
+const typeofExportPNGImage = actionTypeValidator(object);
+export function exportPNGImage (chart) {
+    typeofExportPNGImage(...arguments);
+    chart.exportChartLocal();
+}
+
+/**
+*   Export chart as PDF image
+*/
+const typeofExportCSV = actionTypeValidator(object);
+export function exportCSV (chart) {
+    typeofExportCSV(...arguments);
+    return chart.getCSV();
 }

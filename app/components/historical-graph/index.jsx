@@ -14,12 +14,12 @@ var HistoricalGraph = React.createClass({
     },
     renderGraph: function () {
         if (this.props.isDateCompareActive) {
-            return <DateCompare {...this.props}/>;
+            return <DateCompare {...this.props} ref="graphType" />;
         }
         if (this.props.isComparationActive) {
-            return <SitesCompare {...this.props}/>;
+            return <SitesCompare {...this.props}  ref="graphType" />;
         }
-        return <SourcesAndSensorsCompare {...this.props}/>;
+        return <SourcesAndSensorsCompare {...this.props}  ref="graphType" />;
     },
     render: function () {
         return (

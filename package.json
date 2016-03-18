@@ -88,6 +88,7 @@
     "font-awesome": "^4.5.0",
     "halogen": "^0.1.10",
     "highcharts": "^4.2.3",
+    "highcharts-export-csv": "github:highcharts/export-csv",
     "highcharts-exporting": "^0.1.2",
     "highcharts-offline-exporting": "^0.1.2",
     "immutable": "^3.7.6",

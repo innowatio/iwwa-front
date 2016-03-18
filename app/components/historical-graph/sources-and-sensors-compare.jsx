@@ -41,6 +41,7 @@ var SourcesAndSensorsCompare = React.createClass({
                 colors={this.getColors()}
                 coordinates={this.getCoordinates()}
                 dateFilter={this.getDateFilter()}
+                ref="highcharts"
                 yLabel={this.getYLabel()}
             />
         );
