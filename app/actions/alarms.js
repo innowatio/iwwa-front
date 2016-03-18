@@ -87,8 +87,7 @@ const typeofSubmitAlarmCreationOrChange = actionTypeValidator(
     object
 );
 // TODO: test this function
-export function submitAlarmCreationOrChange (
-    {active, name, repetition, sito, threshold}, typeProps, alarmProps) {
+export function submitAlarmCreationOrChange ({active, name, repetition, sito, threshold}, typeProps, alarmProps) {
     typeofSubmitAlarmCreationOrChange(...arguments);
     return dispatch => {
         dispatch({

@@ -77,7 +77,12 @@ var SideNav = React.createClass({
                 </Link>
             </li>
         ) : (
-            <li className={"navigationItem"} key={menuItem.key} onClick={this.resetTutorial} style={{cursor: "pointer", padding: "5px 0px"}}>
+            <li
+                className={"navigationItem"}
+                key={menuItem.key}
+                onClick={this.resetTutorial}
+                style={{cursor: "pointer", padding: "5px 0px"}}
+            >
                 <a style={{cursor: "pointer", padding: "15px 10px"}}>
                     <components.Icon
                         color={this.getTheme().colors.iconSidenav}

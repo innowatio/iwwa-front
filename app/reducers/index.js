@@ -10,6 +10,7 @@ import {alarms} from "./alarms";
 import {realTime} from "./real-time";
 import {userSetting} from "./user-setting";
 import {sensors} from "./sensors";
+import {notifications} from "./notifications";
 
 const rootReducer = storage.reducer(combineReducers({
     collections,
@@ -20,14 +21,8 @@ const rootReducer = storage.reducer(combineReducers({
     userSetting,
     form,
     routing,
-    sensors
+    sensors,
+    notifications
 }));
 
 export default rootReducer;
-
-
-//TODO differenze da capire
-
-//export default combineReducers({
-//    routing,
-//});
