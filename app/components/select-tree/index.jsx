@@ -146,7 +146,7 @@ var SelectTree = React.createClass({
                 header={this.renderHeader(allowedValue)}
                 key={this.props.getKey(allowedValue)}
                 style={{
-                    width: this.props.buttonCloseDefault ? "430px" : "200px",
+                    width: this.props.buttonCloseDefault ? "100%" : "200px",
                     border: "0px",
                     marginTop: "0px",
                     borderRadius: "0px",
