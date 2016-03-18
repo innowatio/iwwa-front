@@ -245,22 +245,32 @@ var Monitoring = React.createClass({
 
                 <MonitoringSearch
                     filterSensors={this.props.filterSensors}
-                    style={{width: "25%", float: "left", marginTop: "2px", minHeight: "714px"}}
+                    style={{width: "25%", float: "left", marginTop: "2px", minHeight: "782px"}}
                 />
 
                 <div style={{float: "left", width: "75%", textAlign: "center", padding: "10px 10px 0px 20px"}}>
                     <label style={{color: theme.colors.navText}}>
                         {"Seleziona alcuni sensori per visualizzare il grafico o per creare un nuovo sensore"}
                     </label>
-                    <CollectionElementsTable
-                        collection={sensors}
-                        columns={this.getSensorsColumns()}
-                        getKey={getKeyFromCollection}
-                        hover={true}
-                        onRowClick={this.props.selectSensor}
-                        style={{color: "white", border: "grey solid 1px", borderRadius: "30px", background: theme.colors.backgroundContentModal, maxHeight: "332px", overflow: "auto", padding: 0}}
-                        width={"60%"}
-                    />
+                    <div style={{color: "white", border: "grey solid 1px", borderRadius: "30px", background: theme.colors.backgroundContentModal, padding: 0}}>
+                        <CollectionElementsTable
+                            collection={sensors}
+                            columns={this.getSensorsColumns()}
+                            getKey={getKeyFromCollection}
+                            hover={true}
+                            onRowClick={this.props.selectSensor}
+                            style={{color: "white", maxHeight: "332px", overflow: "auto", padding: 0}}
+                            width={"60%"}
+                        />
+
+                        <label style={{color: theme.colors.navText, padding: "20px", paddingRight: "50px"}}>
+                            {"Seleziona tutti"}
+                        </label>
+                        <label style={{color: theme.colors.navText, padding: "20px"}}>
+                            {"Carica tutti"}
+                        </label>
+
+                    </div>
 
                     <SensorForm
                         closeForm={this.closeModal}
