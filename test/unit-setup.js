@@ -32,8 +32,6 @@ global.React = React;
 global.ReactDOM = ReactDOM;
 global.TestUtils = ReactTestUtils;
 
-// Avoid `Dygraph is not defined` when running tests
-global.Dygraph = {};
 // Avoid `ENVIRONMENT is not defined` when running tests
 global.ENVIRONMENT = "";
 // empty localStorage for tests
