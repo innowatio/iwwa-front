@@ -98,6 +98,7 @@ var HighCharts = React.createClass({
         }), this.props.coordinates);
     },
     getConfig: function () {
+        console.log(this.getSeries());
         const {colors} = this.getTheme();
         return {
             chart: {
