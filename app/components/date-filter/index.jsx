@@ -249,7 +249,11 @@ var DateFilter = React.createClass({
                         monthFormat="MMMM"
                         onChange={this.setMonthlyDate}
                         style={styleCalendar(this.getTheme())}
-                        value={this.props.value.valueType.key === "calendar" ? new Date(this.props.value.start) : null}
+                        value={
+                            this.props.value.valueType.key === "calendar" ?
+                            new Date(this.props.value.start) :
+                            null
+                        }
                     />
                     <div style={{borderTop: `1px solid ${colors.borderButtonCalendar}`}} />
                     <div style={{marginTop: "4%", display: "flex", justifyContent: "center"}}>

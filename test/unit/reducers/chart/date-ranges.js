@@ -282,13 +282,13 @@ describe("`getDateRangesCompare`", () => {
             inputArray.forEach(inputObj => {
                 const ret = getDateRangesCompare(inputObj);
                 expect(moment.utc(ret[0].start).format("DD")).to.equal(
-                    moment.utc(inputObj.dateOne).startOf("week").format("DD")
+                    moment.utc(inputObj.dateOne).startOf("isoWeek").format("DD")
                 );
-                expect(moment.utc(ret[0].start).weekday()).to.equal(0);
+                expect(moment.utc(ret[0].start).isoWeekday()).to.equal(1);
                 expect(moment.utc(ret[0].end).format("DD")).to.equal(
-                    moment.utc(inputObj.dateOne).endOf("week").format("DD")
+                    moment.utc(inputObj.dateOne).endOf("isoWeek").format("DD")
                 );
-                expect(moment.utc(ret[0].end).weekday()).to.equal(6);
+                expect(moment.utc(ret[0].end).isoWeekday()).to.equal(7);
             });
         });
 
@@ -296,13 +296,13 @@ describe("`getDateRangesCompare`", () => {
             inputArray.forEach(inputObj => {
                 const ret = getDateRangesCompare(inputObj);
                 expect(moment.utc(ret[1].start).format("DD")).to.equal(
-                    moment.utc(inputObj.dateOne).subtract({week: 1}).startOf("week").format("DD")
+                    moment.utc(inputObj.dateOne).subtract({week: 1}).startOf("isoWeek").format("DD")
                 );
-                expect(moment.utc(ret[1].start).weekday()).to.equal(0);
+                expect(moment.utc(ret[1].start).isoWeekday()).to.equal(1);
                 expect(moment.utc(ret[1].end).format("DD")).to.equal(
-                    moment.utc(inputObj.dateOne).subtract({week: 1}).endOf("week").format("DD")
+                    moment.utc(inputObj.dateOne).subtract({week: 1}).endOf("isoWeek").format("DD")
                 );
-                expect(moment.utc(ret[1].end).weekday()).to.equal(6);
+                expect(moment.utc(ret[1].end).isoWeekday()).to.equal(7);
             });
         });
 

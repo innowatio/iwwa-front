@@ -69,6 +69,8 @@ export const colorsDarkTheme = {
     iconFlag: "#ec4882",
     iconLogout: "#ffffff",
     labelAmbientalSurveys: "#ffffff",
+    legendLabelHover: "#ffffff",
+    legendLabelHidden: "#000000",
     lineCompare: "#f74f68",
     lineContrattuale: "#56c5e2",
     linePrevisionale: "#a8e1d4",
