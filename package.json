@@ -137,7 +137,7 @@
       "cordova-plugin-device",
       "cordova-plugin-inappbrowser",
       "cordova-plugin-statusbar",
-      "phonegap-plugin-push",
+      "phonegap-plugin-push --variable SENDER_ID=1234",
       "https://github.com/robertklein/cordova-ios-security.git",
       "https://github.com/innowatio/cordova-ios-fullscreen.git"
     ]
