@@ -2,7 +2,10 @@ import React, {PropTypes} from "react";
 import {Col} from "react-bootstrap";
 import TagsInput from "react-tagsinput";
 import {reduxForm} from "redux-form";
+
 import {FullscreenModal, ObjectSelect} from "components";
+
+import {styles} from "lib/styles_restyling";
 import {defaultTheme} from "lib/theme";
 
 export const fields = ["name", "description", "unitOfMeasurement", "siteRef", "clientRef", "tags"];
@@ -39,6 +42,7 @@ var SensorForm = React.createClass({
         initialValues: PropTypes.object.isRequired,
         onSave: PropTypes.func.isRequired,
         resetForm: PropTypes.func.isRequired,
+        sensorsToAggregate: PropTypes.array,
         showFullscreenModal: PropTypes.bool.isRequired,
         submitting: PropTypes.bool.isRequired,
         title: PropTypes.string
@@ -52,6 +56,32 @@ var SensorForm = React.createClass({
     saveForm: function (data) {
         this.props.onSave(data, this.props.id);
         this.props.closeForm();
+    },
+    renderSensorAggregation () {
+        if(this.props.sensorsToAggregate && this.props.sensorsToAggregate.length > 0) {
+            let theme = this.getTheme();
+            return (
+                <div style={{minHeight: "450px"}}>
+                    <Col md={6}>
+                        <div style={{...styles(theme).titlePage, borderRadius: "20px", height: "250px"}}>
+
+                        </div>
+                    </Col>
+                    <div>
+                        <label style={{color: theme.colors.navText}}>
+                            {"Trascina sensori ed operatori nello spazio blu per scegliere come aggregarli"}
+                        </label>
+                        {this.props.sensorsToAggregate.map(item => {
+                            return (
+                                <label style={{color: theme.colors.navText}}>
+                                    {item}
+                                </label>
+                            );
+                        })}
+                    </div>
+                </div>
+            );
+        }
     },
     render () {
         const {
@@ -143,6 +173,7 @@ var SensorForm = React.createClass({
                             </div>
                         </div>
                     </Col>
+                    {this.renderSensorAggregation()}
                 </form>
             </FullscreenModal>
         );

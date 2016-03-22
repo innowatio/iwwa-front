@@ -277,6 +277,7 @@ var Monitoring = React.createClass({
                         id={this.props.selected.length == 1 ? this.props.selected[0] : null}
                         initialValues={this.getSensorFields()}
                         onSave={this.props.selected.length == 1 ? this.props.editSensor : this.props.addSensor}
+                        sensorsToAggregate={this.props.selected}
                         showFullscreenModal={this.state.showFullscreenModal}
                         title={this.props.selected.length == 1 ? "MODIFICA SENSORE" : "CREA NUOVO SENSORE"}
                     />
