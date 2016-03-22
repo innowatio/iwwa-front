@@ -120,7 +120,11 @@ var HighCharts = React.createClass({
             },
             exporting: {
                 enabled: false,
-                scale: 1
+                scale: 1,
+                csv: {
+                    lineDelimiter: "\n",
+                    itemDelimiter: ";"
+                }
             },
             legend: {
                 enabled: false

@@ -110,6 +110,7 @@
     "react-dom": "^0.14.7",
     "react-highcharts": "^8.0.2",
     "react-immutable-proptypes": "^1.7.0",
+    "react-lazy-render": "^0.3.0",
     "react-redux": "^4.4.0",
     "react-router": "^2.0.0",
     "react-router-redux": "^3.0.0",
@@ -132,12 +133,12 @@
   "cordova": {
     "name": "energy-coach",
     "package": "com.innowatio.energycoach",
-    "version": "1.18.0",
+    "version": "1.19.0",
     "plugins": [
       "cordova-plugin-device",
       "cordova-plugin-inappbrowser",
       "cordova-plugin-statusbar",
-      "phonegap-plugin-push",
+      "phonegap-plugin-push --variable SENDER_ID=1234",
       "https://github.com/robertklein/cordova-ios-security.git",
       "https://github.com/innowatio/cordova-ios-fullscreen.git"
     ]
