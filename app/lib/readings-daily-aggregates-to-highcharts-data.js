@@ -3,7 +3,6 @@ import moment from "moment";
 import max from "lodash.max";
 
 const fiveMinutesInMs = moment.duration(5, "minutes").asMilliseconds();
-const oneDayInMs = moment.duration(1, "day").asMilliseconds();
 const NUMBER_OF_DATA_IN_DAY = 288;
 const DEFAULT_DAY_IN_FILTER = 0;
 
@@ -13,8 +12,8 @@ function getFilterFn (filter) {
         aggregate.get("source") === filter.source.key &&
         aggregate.get("measurementType") === filter.measurementType.key &&
         (filter.date.start ? moment.utc(aggregate.get("day")).isSameOrAfter(filter.date.start) : true) &&
-        (filter.date.end ? moment.utc(aggregate.get("day")).isSameOrBefore(filter.date.end) : true)
-    ));
+        (filter.date.end ? moment.utc(aggregate.get("day")).isSameOrBefore(filter.date.end) : true))
+    );
 }
 
 const indexedReduce = addIndex(reduce);
@@ -32,10 +31,10 @@ function getFindAggregateFilterIndex (filters) {
 }
 
 function numberOfDayInFilter (filters) {
-    const numberOfDayFilter = filters.map(({date}) => {
-        return Math.round((date.end - date.start) / oneDayInMs);
-    });
-    return max(numberOfDayFilter) || DEFAULT_DAY_IN_FILTER;
+    const numberOfDayToFilter = filters.map(
+        ({date}) => Math.round(moment(date.end).diff(date.start, "days", true))
+    );
+    return max(numberOfDayToFilter) || DEFAULT_DAY_IN_FILTER;
 }
 
 export function yAxisByDate (filters) {
@@ -64,6 +63,7 @@ export function yAxisByDate (filters) {
 }
 
 export default memoize(function readingsDailyAggregatesToHighchartsData (aggregates, filters) {
+    // Initialize the array of data because highcharts don't recognize undefined in array.
     const lengthOfData = numberOfDayInFilter(filters) * NUMBER_OF_DATA_IN_DAY;
     const defaultYAxis = filters.map(() => repeat(null, lengthOfData));
     const arraysOfData = aggregates.reduce(yAxisByDate(filters), defaultYAxis);
