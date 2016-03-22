@@ -5,6 +5,7 @@ export const colorsDarkTheme = {
     alarmRangePoint: "#ec4882",
     alarmSiteName: "#ec4882",
     background: "#303232",
+    backgroundAlarmsPanel: "#000000",
     backgroundAlarmsSection: "#28282A",
     backgroundArrowPopover: "rgb(56,56,57)",
     backgroundButtonExport: "#536DFE",
