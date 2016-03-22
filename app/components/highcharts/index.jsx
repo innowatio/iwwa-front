@@ -3,6 +3,7 @@ import {addIndex, map, range} from "ramda";
 import ReactHighcharts from "react-highcharts/bundle/ReactHighcharts";
 import Highcharts from "highcharts";
 import moment from "moment";
+
 import Exporting from "highcharts-exporting";
 Exporting(ReactHighcharts.Highcharts);
 import OfflineExport from "highcharts-offline-exporting";
@@ -143,7 +144,7 @@ var HighCharts = React.createClass({
     render: function () {
         return (
             <div>
-                <ReactHighcharts config={this.getConfig()} isPureConfig={true} ref="chart" />
+                <ReactHighcharts config={this.getConfig()} ref="chart" />
             </div>
         );
     }
