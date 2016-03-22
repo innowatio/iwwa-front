@@ -3,9 +3,8 @@ import {Col} from "react-bootstrap";
 import TagsInput from "react-tagsinput";
 import {reduxForm} from "redux-form";
 
-import {FullscreenModal, ObjectSelect} from "components";
+import {FullscreenModal, ObjectSelect, SensorAggregator} from "components";
 
-import {styles} from "lib/styles_restyling";
 import {defaultTheme} from "lib/theme";
 
 export const fields = ["name", "description", "unitOfMeasurement", "siteRef", "clientRef", "tags"];
@@ -58,29 +57,8 @@ var SensorForm = React.createClass({
         this.props.closeForm();
     },
     renderSensorAggregation () {
-        if(this.props.sensorsToAggregate && this.props.sensorsToAggregate.length > 0) {
-            let theme = this.getTheme();
-            return (
-                <div style={{minHeight: "450px"}}>
-                    <Col md={6}>
-                        <div style={{...styles(theme).titlePage, borderRadius: "20px", height: "250px"}}>
-
-                        </div>
-                    </Col>
-                    <div>
-                        <label style={{color: theme.colors.navText}}>
-                            {"Trascina sensori ed operatori nello spazio blu per scegliere come aggregarli"}
-                        </label>
-                        {this.props.sensorsToAggregate.map(item => {
-                            return (
-                                <label style={{color: theme.colors.navText}}>
-                                    {item}
-                                </label>
-                            );
-                        })}
-                    </div>
-                </div>
-            );
+        if (this.props.sensorsToAggregate && this.props.sensorsToAggregate.length > 0) {
+            return (<SensorAggregator sensors={this.props.sensorsToAggregate} />);
         }
     },
     render () {

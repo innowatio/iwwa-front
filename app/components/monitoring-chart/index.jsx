@@ -1,7 +1,7 @@
 import React from "react";
 import {Button, Input} from "react-bootstrap";
-import {DragDropContext} from 'react-dnd';
-import {default as TouchBackend} from 'react-dnd-touch-backend';
+import {DragDropContext} from "react-dnd";
+import {default as TouchBackend} from "react-dnd-touch-backend";
 import ReactHighstock from "react-highcharts/bundle/ReactHighstock"; // Highstock is bundled
 import {ObjectSelect, SensorRow} from "components";
 

@@ -1,16 +1,16 @@
 import React, {PropTypes} from "react";
-import {DragSource} from 'react-dnd';
+import {DragSource} from "react-dnd";
 
-import {Types} from 'lib/dnd-utils';
+import {Types} from "lib/dnd-utils";
 import {defaultTheme} from "lib/theme";
 
 const sensorSource = {
-    beginDrag(props) {
-        const item = { id: props.id };
+    beginDrag (props) {
+        const item = {id: props.id};
         return item;
     },
 
-    endDrag(props, monitor, component) {
+    endDrag (props, monitor) {
         if (!monitor.didDrop()) {
             return;
         }
@@ -18,7 +18,7 @@ const sensorSource = {
     }
 };
 
-function collect(connect, monitor) {
+function collect (connect, monitor) {
     return {
         connectDragSource: connect.dragSource(),
         isDragging: monitor.isDragging()
@@ -27,7 +27,9 @@ function collect(connect, monitor) {
 
 var DraggableSensor = React.createClass({
     propTypes: {
-        id: PropTypes.string
+        connectDragSource: PropTypes.func,
+        id: PropTypes.string,
+        isDragging: PropTypes.bool
     },
     contextTypes: {
         theme: PropTypes.object
@@ -38,11 +40,12 @@ var DraggableSensor = React.createClass({
     render () {
         const {id, isDragging, connectDragSource} = this.props;
         let theme = this.getTheme();
-
+        if (isDragging) {
+            return null;
+        }
         return connectDragSource(
-            <label style={{color: theme.colors.navText}}>
+            <label style={{color: theme.colors.navText, textAlign: "left", border: "1px solid", borderRadius: "10px", padding: "7px", display: "inherit"}}>
                 {id}
-                {isDragging && ' (dragging)'}
             </label>
         );
     }

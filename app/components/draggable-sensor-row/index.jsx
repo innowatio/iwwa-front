@@ -1,25 +1,25 @@
-import React, {PropTypes} from 'react';
-import {DragSource} from 'react-dnd';
-import {DnDItemTypes} from 'lib/constants';
+import React, {PropTypes} from "react";
+import {DragSource} from "react-dnd";
+import {DnDItemTypes} from "lib/constants";
 
 const sensorRowSource = {
-    beginDrag(props) {
-        return { id: props.sensorId };
+    beginDrag (props) {
+        return {id: props.sensorId};
     },
 
-    endDrag(props, monitor, component) {
+    endDrag (props, monitor) {
         if (!monitor.didDrop()) {
             return;
         }
 
         // When dropped on a compatible target, do something
         const item = monitor.getItem();
-        const dropResult = monitor.getDropResult();
+        //const dropResult = monitor.getDropResult();
         console.log("dragged " + item.id);
     }
 };
 
-function collect(connect, monitor) {
+function collect (connect, monitor) {
     return {
         connectDragSource: connect.dragSource(),
         isDragging: monitor.isDragging()
@@ -28,22 +28,23 @@ function collect(connect, monitor) {
 
 var SensorRow = React.createClass({
     propTypes: {
-        sensorId: PropTypes.string,
+        connectDragSource: PropTypes.func,
+        id: PropTypes.string,
         isDragging: PropTypes.bool,
-        connectDragSource: PropTypes.func
+        sensorId: PropTypes.string
     },
-    render() {
+    render () {
         // Your component receives its own props as usual
-        const { id } = this.props;
+        const {id} = this.props;
 
         // These two props are injected by React DnD,
         // as defined by your `collect` function above:
-        const { isDragging, connectDragSource } = this.props;
+        const {isDragging, connectDragSource} = this.props;
 
         return connectDragSource(
             <div>
-                I am a draggable card number {id}
-                {isDragging && ' (and I am being dragged now)'}
+                {"I am a draggable card number " + id}
+                {isDragging && " (and I am being dragged now)"}
             </div>
         );
     }

@@ -187,7 +187,7 @@ var Monitoring = React.createClass({
         return (
             <div>
                 <SectionToolbar>
-                    <Button style={buttonStyle(theme)} disabled={this.props.selected.length > 0} onClick={this.openModal}>
+                    <Button style={buttonStyle(theme)} onClick={this.openModal}>
                         <Icon
                             color={theme.colors.iconHeader}
                             icon={"add"}
