@@ -133,12 +133,12 @@
   "cordova": {
     "name": "energy-coach",
     "package": "com.innowatio.energycoach",
-    "version": "1.18.0",
+    "version": "1.19.0",
     "plugins": [
       "cordova-plugin-device",
       "cordova-plugin-inappbrowser",
       "cordova-plugin-statusbar",
-      "phonegap-plugin-push",
+      "phonegap-plugin-push --variable SENDER_ID=1234",
       "https://github.com/robertklein/cordova-ios-security.git",
       "https://github.com/innowatio/cordova-ios-fullscreen.git"
     ]
