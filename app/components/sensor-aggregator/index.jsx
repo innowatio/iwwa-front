@@ -3,7 +3,7 @@ import {Col} from "react-bootstrap";
 import {DragDropContext} from "react-dnd";
 import {default as TouchBackend} from "react-dnd-touch-backend";
 
-import {DraggableSensor} from "components";
+import {DraggableOperator, DraggableSensor} from "components";
 
 import {styles} from "lib/styles_restyling";
 import {defaultTheme} from "lib/theme";
@@ -36,6 +36,9 @@ var SensorAggregator = React.createClass({
                             <DraggableSensor id={item} />
                         );
                     })}
+                    <DraggableOperator type="delete" />
+                    <DraggableOperator type="add" />
+                    <DraggableOperator type="minus" />
                 </Col>
             </div>
         );
