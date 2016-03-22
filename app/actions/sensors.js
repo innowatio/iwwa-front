@@ -1,3 +1,5 @@
+export const FILTER_SENSORS = "FILTER_SENSORS";
+
 let nextSensorId = 0;
 
 function getBasicObject (type, id) {
@@ -34,6 +36,13 @@ export const cloneSensor = (id) => {
 };
 
 export const favoriteSensor = (id) => getBasicObject("FAVORITE_SENSOR", id);
+
+export const filterSensors = (payload) => {
+    return {
+        type: FILTER_SENSORS,
+        payload: payload
+    };
+};
 
 export const monitorSensor = (id) => getBasicObject("MONITOR_SENSOR", id);
 

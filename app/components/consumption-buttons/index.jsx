@@ -4,6 +4,7 @@ var Radium     = require("radium");
 var React      = require("react");
 
 var components = require("components");
+import {defaultTheme} from "lib/theme";
 
 var ConsumptionButtons = React.createClass({
     propTypes: {
@@ -15,7 +16,14 @@ var ConsumptionButtons = React.createClass({
         styleButtonSelected: React.PropTypes.object,
         styleIcon: React.PropTypes.object
     },
+    contextTypes: {
+        theme: React.PropTypes.object
+    },
+    getTheme: function () {
+        return this.context.theme || defaultTheme;
+    },
     renderConsumptionButton: function (consumption) {
+        const theme = this.getTheme();
         var isSelected = R.equals(consumption, this.props.selectedValue);
         const consumptionButtonColor = {
             backgroundColor: consumption.color
@@ -49,11 +57,13 @@ var ConsumptionButtons = React.createClass({
                     textAlign: "center",
                     paddingRight: "35px",
                     lineHeight: "45px",
-                    transition: "width 0.5s ease-in-out",
-                    overflow: "hidden"
+                    height: "45px",
+                    opacity: isSelected ? "1" : "0",
+                    color: theme.colors.mainFontColor,
+                    transition: "opacity 0.8s ease-in-out"
                 }}
                 >
-                {isSelected ? consumption.label : ""}
+                    {isSelected ? consumption.label : ""}
                 </div>
             </components.Button>
         );

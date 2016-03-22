@@ -20,10 +20,6 @@ import {
 } from "actions/alarms";
 import {defaultTheme} from "lib/theme";
 
-var getKeyFromCollection = function (collection) {
-    return collection.get("_id");
-};
-
 var Alarms = React.createClass({
     propTypes: {
         alarms: React.PropTypes.object.isRequired,
@@ -105,8 +101,9 @@ var Alarms = React.createClass({
                 style: function (value) {
                     return {
                         backgroundColor: value ? colors.activeAlarm : colors.backgroundTableColoumn,
-                        width: "37px",
+                        width: "47px",
                         height: "100%",
+                        color: colors.white,
                         textAlign: "center"
                     };
                 },
@@ -115,7 +112,7 @@ var Alarms = React.createClass({
                         <components.Icon
                             color={colors.iconAlarmAction}
                             icon={value ? "flag" : "pause"}
-                            size={"20px"}
+                            size={"34px"}
                         />
                     );
                 }
@@ -147,10 +144,11 @@ var Alarms = React.createClass({
                             color={colors.iconAlarmAction}
                             icon={"settings"}
                             onClick={R.partial(self.onClickAction, [value])}
-                            size={"30px"}
+                            size={"32px"}
                             style={{
                                 float: "right",
                                 cursor: "pointer",
+                                lineHeight: "20px",
                                 verticalAlign: "middle"
                             }}
                         />
@@ -173,18 +171,20 @@ var Alarms = React.createClass({
                         return (
                             <Router.Link to={"/chart/"}>
                                 <components.Icon
-                                    color={colors.iconPng}
-                                    icon={"png"}
+                                    color={colors.iconChart}
+                                    icon={"chart"}
                                     onClick={
                                         R.partial(
                                             self.props.displayAlarmsOnChart,
                                             [sensorId, site, alarms]
                                         )
                                     }
-                                    size={"30px"}
+                                    size={"34px"}
                                     style={{
                                         float: "right",
+                                        marginRight: "5px",
                                         cursor: "pointer",
+                                        lineHeight: "20px",
                                         verticalAlign: "middle"
                                     }}
                                 />
@@ -208,15 +208,28 @@ var Alarms = React.createClass({
                 key: "date",
                 style: function () {
                     return {
-                        width: "40%"
+                        width: "250px"
                     };
                 },
                 valueFormatter: function (value) {
                     var date = moment.utc(value, "x");
                     return (
-                        <span style={{marginLeft: "20px"}}>
-                            {date.locale("it").format("LLL")}
-                        </span>
+                        <div>
+                            <components.Icon
+                                color={colors.iconChart}
+                                icon={"arrow-down"}
+                                size={"14px"}
+                                style={{
+                                    marginLeft: "5px",
+                                    cursor: "pointer",
+                                    lineHeight: "20px",
+                                    verticalAlign: "middle"
+                                }}
+                            />
+                            <span style={{marginLeft: "20px"}}>
+                                {date.locale("it").format("LLL")}
+                            </span>
+                        </div>
                     );
                 }
             },
@@ -233,7 +246,7 @@ var Alarms = React.createClass({
                         return siti.get("pod") === value;
                     });
                     return (
-                        <span style={{marginLeft: "20px"}}>
+                        <span>
                             {CollectionUtils.sites.getLabel(sito)}
                         </span>
                     );
@@ -249,18 +262,20 @@ var Alarms = React.createClass({
                     return (
                         <Router.Link to={"/chart/"}>
                             <components.Icon
-                                color={colors.iconPng}
-                                icon={"png"}
+                                color={colors.iconChart}
+                                icon={"chart"}
                                 onClick={
                                     R.partial(
                                         self.props.displayAlarmsOnChart,
                                         [sensorId, site, notificationDate]
                                     )
                                 }
-                                size={"30px"}
+                                size={"34px"}
                                 style={{
                                     float: "right",
                                     cursor: "pointer",
+                                    lineHeight: "20px",
+                                    marginRight: "5px",
                                     verticalAlign: "middle"
                                 }}
                             />
@@ -312,7 +327,7 @@ var Alarms = React.createClass({
                 key={[allowedValue, label]}
                 onClick={R.partial(this.onClickFilter, [label, allowedValue])}
                 style={{
-                    paddingLeft: "10px",
+                    marginLeft: "10px",
                     borderRadius: "0px",
                     borderLeft: "0px",
                     borderRight: "0px",
@@ -363,28 +378,28 @@ var Alarms = React.createClass({
     renderFilterButton: function () {
         const {colors} = this.getTheme();
         return (
-            <div className="element-table" style={{marginRight: "84px", height: "40px", float: "right"}}>
-                <Radium.Style
-                    rules={{
-                        ".btn": {
-                            height: "40px",
-                            textDecoration: "none"
-                        }
-                    }}
-                    scopeSelector=".element-table"
-                />
+            <div style={{marginTop: "10px", height: "auto", marginBottom: "10px", float: "right"}}>
                 <components.Popover
                     title={
-                        <span style={{display: "flex", height: "40px"}}>
+                        <span style={{
+                            display: "inline-block",
+                            width: "50px",
+                            height: "50px",
+                            borderRadius: "100%",
+                            lineHeight: "4",
+                            backgroundColor: colors.secondary
+                        }}
+                        >
                             <components.Icon
-                                color={this.getTheme().colors.iconFilter}
+                                color={colors.iconFilter}
                                 icon={"filter"}
-                                size={"30px"}
+                                size={"38px"}
                                 style={{
-                                    verticalAlign: "middle"
+                                    verticalAlign: "middle",
+                                    lineHeight: "20px",
+                                    textAlign: "center"
                                 }}
                             />
-                            <h4 style={{color: colors.primary}}>{"Filter"}</h4>
                         </span>
                     }
                 >
@@ -460,13 +475,31 @@ var Alarms = React.createClass({
                             />
                         </bootstrap.Tab>
                         <bootstrap.Tab
+                            className="alarm-table"
                             eventKey={2}
-                            style={{
-                                height: "100%",
-                                overflow: "scroll"
-                            }}
                             title="Allarmi"
                         >
+                            <Radium.Style
+                                rules={{
+                                    "": {
+                                        height: "100%",
+                                        width: "98%",
+                                        margin: "0px auto",
+                                        overflow: "scroll",
+                                        color: colors.mainFontColor,
+                                        fontSize: "18px",
+                                        fontWeight: "300"
+                                    },
+                                    "table tr:hover": {
+                                        backgroundColor: colors.tableRowRollover
+                                    },
+                                    "table tr > td": {
+                                        padding: "3px 0px"
+                                    }
+                                }}
+                                scopeSelector=".alarm-table"
+                            />
+
                             {this.renderFilterButton()}
                             <components.CollectionElementsTable
                                 collection={
@@ -474,20 +507,44 @@ var Alarms = React.createClass({
                                     Immutable.Map() :
                                     allowedValues.filter(this.filterAlarms)}
                                 columns={this.getColumnsAlarms()}
-                                getKey={getKeyFromCollection}
+                                getKey={CollectionUtils.getKeyFromCollection}
                                 hover={true}
-                                width={"40%"}
+                                width={"30%"}
                             />
                         </bootstrap.Tab>
                         <bootstrap.Tab
+                            className="historical-alarm-table"
                             eventKey={3}
-                            style={{height: "100%", overflow: "scroll"}}
                             title="Storico allarmi"
                         >
+                            <Radium.Style
+                                rules={{
+                                    "": {
+                                        height: "100%",
+                                        width: "98%",
+                                        margin: "0px auto",
+                                        overflow: "scroll",
+                                        color: colors.mainFontColor,
+                                        fontSize: "18px",
+                                        fontWeight: "300"
+                                    },
+                                    "table tr:hover": {
+                                        backgroundColor: colors.tableRowRollover
+                                    },
+                                    "table tr td:nth-child(2n)": {
+                                        color: colors.alarmSiteName
+                                    },
+                                    "table tr > td": {
+                                        padding: "10px 0px"
+                                    }
+                                }}
+                                scopeSelector=".historical-alarm-table"
+                            />
+                            {this.renderFilterButton()}
                             <components.CollectionElementsTable
                                 collection={this.getNotifications().sort(R.partialRight(this.sortByDate, [false]))}
                                 columns={this.getColumnsNotifications()}
-                                getKey={getKeyFromCollection}
+                                getKey={CollectionUtils.getKeyFromCollection}
                                 hover={true}
                                 width={"30%"}
                             />

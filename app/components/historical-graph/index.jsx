@@ -1,37 +1,25 @@
 import IPropTypes from "react-immutable-proptypes";
 import React, {PropTypes} from "react";
 
-import DateCompareGraph from "./date-compare";
+import DateCompare from "./date-compare";
 import SourcesAndSensorsCompare from "./sources-and-sensors-compare";
-import SitesCompareGraph from "./sites-compare";
+import SitesCompare from "./sites-compare";
 
 var HistoricalGraph = React.createClass({
     propTypes: {
         chart: PropTypes.arrayOf(PropTypes.object).isRequired,
-        getY2Label: PropTypes.func,
-        getYLabel: PropTypes.func.isRequired,
         isComparationActive: PropTypes.bool,
         isDateCompareActive: PropTypes.bool,
-        misure: IPropTypes.map.isRequired,
-        sites: PropTypes.arrayOf(IPropTypes.map).isRequired
-    },
-    renderDateCompareGraph: function () {
-        return <DateCompareGraph {...this.props} ref="compareGraph"/>;
-    },
-    renderSitesCompareGraph: function () {
-        return <SitesCompareGraph {...this.props} ref="compareGraph"/>;
-    },
-    renderValoriCompareGraph: function () {
-        return <SourcesAndSensorsCompare {...this.props} ref="compareGraph"/>;
+        misure: IPropTypes.map.isRequired
     },
     renderGraph: function () {
         if (this.props.isDateCompareActive) {
-            return this.renderDateCompareGraph();
+            return <DateCompare {...this.props} ref="graphType" />;
         }
         if (this.props.isComparationActive) {
-            return this.renderSitesCompareGraph();
+            return <SitesCompare {...this.props}  ref="graphType" />;
         }
-        return this.renderValoriCompareGraph();
+        return <SourcesAndSensorsCompare {...this.props}  ref="graphType" />;
     },
     render: function () {
         return (

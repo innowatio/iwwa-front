@@ -7,7 +7,6 @@ var IPropTypes = require("react-immutable-proptypes");
 import {connect} from "react-redux";
 import {bindActionCreators} from "redux";
 
-var CollectionUtils    = require("lib/collection-utils");
 var components         = require("components/");
 // var GetTutorialMixin   = require("lib/get-tutorial-mixin");
 // var tutorialString     = require("assets/JSON/tutorial-string.json").historicalGraph;
@@ -21,7 +20,9 @@ import {
     selectMultipleElectricalSensor,
     selectDateRanges,
     selectDateRangesCompare,
-    removeAllCompare
+    removeAllCompare,
+    exportPNGImage,
+    exportCSV
 } from "actions/chart";
 import {styles} from "lib/styles_restyling";
 import {defaultTheme} from "lib/theme";
@@ -31,13 +32,15 @@ const measurementTypeButtonStyle = (theme) => R.merge(styles(theme).buttonSelect
     minWidth: "132px",
     height: "45px",
     fontSize: "15px",
+    fontWeight: "300",
     margin: "0 0 0 10px",
     padding: "0"
 });
 
 const sourceButtonStyle = (theme) => R.merge(styles(theme).buttonSelectChart, {
     minWidth: "85px",
-    height: "30px"
+    height: "30px",
+    fontWeight: "300"
 });
 
 const consumptionButtonStyle = ({colors}) => ({
@@ -49,7 +52,7 @@ const consumptionButtonStyle = ({colors}) => ({
     borderRadius: "22px",
     width: "45px",
     height: "45px",
-    transition: "width 0.4s ease-in-out",
+    transition: "width 0.3s ease-in-out",
     border: "none"
 });
 
@@ -60,7 +63,7 @@ const consumptionButtonSelectedStyle = ({colors}) => ({
     verticalAlign: "middle",
     width: "160px",
     height: "45px",
-    transition: "width 0.4s ease-in-out"
+    transition: "width 0.3s ease-in-out"
 });
 
 const dateButtonStyle = ({colors}) => ({
@@ -144,13 +147,27 @@ var Chart = React.createClass({
             this.props.selectSingleElectricalSensor([firstSite.get("_id")]);
         }
     },
+    openDownloadLink: function (content, name) {
+        var encodedUri = encodeURI(content);
+        var link = document.createElement("a");
+        link.setAttribute("href", encodedUri);
+        link.setAttribute("download", name);
+        link.setAttribute("target", "_blank");
+        link.click();
+    },
     exportPng: function () {
-        var exportAPILocation = this.refs.historicalGraph.refs.compareGraph.refs.temporalLineGraph;
-        exportAPILocation.exportPNG();
+        const exportAPILocation = this.refs.historicalGraph.refs.graphType.refs.highcharts.refs.chart;
+        const chart = exportAPILocation.getChart();
+        exportPNGImage(chart);
+        this.closeModal();
     },
     exportCsv: function () {
-        var exportAPILocation = this.refs.historicalGraph.refs.compareGraph.refs.temporalLineGraph;
-        exportAPILocation.exportCSV();
+        const exportAPILocation = this.refs.historicalGraph.refs.graphType.refs.highcharts.refs.chart;
+        const chart = exportAPILocation.getChart();
+        const csv = exportCSV(chart);
+        const dataTypePrefix = "data:text/csv;base64,";
+        this.openDownloadLink(dataTypePrefix + window.btoa(csv), "chart.csv");
+        this.closeModal();
     },
     subscribeToMisure: function (props) {
         const dateFirstChartState = props.chart[0].date;
@@ -322,6 +339,7 @@ var Chart = React.createClass({
                     this.state.value || (chart[0].date.type === "dateFilter" && chart[0].date) || {
                         start: moment().startOf("month").valueOf(),
                         end: moment().endOf("month").valueOf(),
+                        type: "dateFilter",
                         valueType: {label: "calendario", key: "calendar"}
                     }
                 );
@@ -441,6 +459,7 @@ var Chart = React.createClass({
         const {colors} = this.getTheme();
         return this.isComparationActive(this.selectedSitesId(), this.selectedSources()) ? (
             <div
+                className="pull-left"
                 onClick={this.props.removeAllCompare}
                 style={{
                     color: colors.resetCompare,
@@ -465,7 +484,6 @@ var Chart = React.createClass({
     },
     render: function () {
         const theme = this.getTheme();
-        const selectedSites = this.selectedSitesId().map(siteId => this.getSitoById(siteId));
         const selectedConsumptionType = (
             this.props.chart.length > 1 &&
             R.allUniq(this.props.chart.map(singleSelection => singleSelection.measurementType))
@@ -496,7 +514,7 @@ var Chart = React.createClass({
                         title={
                             <components.Icon
                                 color={theme.colors.iconHeader}
-                                icon={"settings"}
+                                icon={"option"}
                                 size={"32px"}
                                 style={{lineHeight: "20px", verticalAlign: "middle"}}
                             />
@@ -562,20 +580,19 @@ var Chart = React.createClass({
                             onConfirm={this.onConfirmFullscreenModal}
                             onHide={this.closeModal}
                             onReset={this.closeModal}
-                            renderConfirmButton={this.state.selectedWidget !== "export" && !R.isNil(this.state.selectedWidget)}
+                            renderConfirmButton={
+                                this.state.selectedWidget !== "export" && !R.isNil(this.state.selectedWidget)
+                            }
                             show={this.state.showFullscreenModal}
                         >
                             {this.renderChildComponent()}
                         </components.FullscreenModal>
                         <components.HistoricalGraph
                             chart={this.props.chart}
-                            getY2Label={CollectionUtils.labelGraph.getY2Label}
-                            getYLabel={CollectionUtils.labelGraph.getYLabel}
                             isComparationActive={this.isComparationActive(this.selectedSitesId(), this.selectedSources())}
                             isDateCompareActive={this.isDateCompare()}
                             misure={this.props.collections.get("readings-daily-aggregates") || Immutable.Map()}
                             ref="historicalGraph"
-                            sites={selectedSites}
                         />
                     </bootstrap.Col>
                     {/* Button bottom chart */}
@@ -598,7 +615,8 @@ var Chart = React.createClass({
                                 style={measurementTypeButtonStyle(this.getTheme())}
                                 styleToMergeWhenActiveState={{
                                     background: theme.colors.buttonPrimary,
-                                    border: "0px none"
+                                    border: "0px none",
+                                    fontWeight: "300"
                                 }}
                                 value={[this.props.chart[0].measurementType]}
                             />

@@ -1,56 +1,82 @@
 import Immutable from "immutable";
+import R from "ramda";
 import React, {PropTypes} from "react";
-import {Button} from "react-bootstrap";
 import IPropTypes from "react-immutable-proptypes";
 import {connect} from "react-redux";
 import {Link} from "react-router";
 import {bindActionCreators} from "redux";
-import {cloneSensor, combineSensor, deleteSensor, favoriteSensor, monitorSensor, selectSensor} from "actions/sensors";
-import {addToFavorite, changeYAxisValues, selectChartType, selectFavoriteChart} from "actions/monitoring-chart";
-import {CollectionElementsTable, MonitoringChart} from "components";
 
-var getKeyFromCollection = function (collection) {
-    return collection.get("_id");
+import {defaultTheme} from "lib/theme";
+import {styles} from "lib/styles_restyling";
+import {getKeyFromCollection} from "lib/collection-utils";
+
+import {Button, CollectionElementsTable, DropdownButton, Icon,
+    MonitoringSearch, Popover, SectionToolbar, SensorForm} from "components";
+
+import {addSensor, cloneSensor, combineSensor, deleteSensor, editSensor, favoriteSensor, filterSensors, monitorSensor, selectSensor} from "actions/sensors";
+
+const buttonStyle = ({colors}) => ({
+    backgroundColor: colors.buttonPrimary,
+    border: "0px none",
+    borderRadius: "100%",
+    height: "50px",
+    margin: "auto",
+    width: "50px",
+    marginLeft: "10px"
+});
+
+let advancedOptions = function ({colors}) {
+    return [
+        {
+            label: "Allarmi",
+            key: "alarms",
+            iconClass: "danger",
+            color: colors.iconDropdown
+        },
+        {
+            label: "Guarda preferiti",
+            key: "favoriteCharts",
+            iconClass: "",
+            color: colors.iconDropdown
+        },
+        {
+            label: "Assegna",
+            key: "assign",
+            iconClass: "map",
+            color: colors.iconDropdown
+        }
+    ];
 };
 
 var Monitoring = React.createClass({
     propTypes: {
-        addToFavorite: PropTypes.func.isRequired,
+        addSensor: PropTypes.func.isRequired,
         asteroid: PropTypes.object,
-        changeYAxisValues: PropTypes.func.isRequired,
         cloneSensor: PropTypes.func.isRequired,
         collections: IPropTypes.map.isRequired,
         combineSensor: PropTypes.func.isRequired,
         deleteSensor: PropTypes.func.isRequired,
+        editSensor: PropTypes.func.isRequired,
         favoriteSensor: PropTypes.func.isRequired,
+        filterSensors: PropTypes.func.isRequired,
         monitorSensor: PropTypes.func.isRequired,
-        monitoringChart: PropTypes.object.isRequired,
-        selectChartType: PropTypes.func.isRequired,
-        selectFavoriteChart: PropTypes.func.isRequired,
         selectSensor: PropTypes.func.isRequired,
         selected: PropTypes.array,
         sensors: PropTypes.array.isRequired
     },
+    contextTypes: {
+        theme: PropTypes.object
+    },
+    getInitialState: function () {
+        return {
+            showFullscreenModal: false
+        };
+    },
     componentDidMount: function () {
         this.props.asteroid.subscribe("sensors");
-        this.subscribeToSensorsData(this.props);
     },
-    componentWillReceiveProps: function (props) {
-        this.subscribeToSensorsData(props);
-    },
-    subscribeToSensorsData: function (props) {
-        console.log(props.selected);
-        props.selected[0] && props.selected.forEach((sensorId) => {
-            //TODO capire bene cosa va preso...
-            props.asteroid.subscribe(
-                "dailyMeasuresBySensor",
-                sensorId,
-                "2015-01-01",
-                "2016-03-01",
-                "reading",
-                "activeEnergy"
-            );
-        });
+    getTheme: function () {
+        return this.context.theme || defaultTheme;
     },
     getDeleteSensor: function (id) {
         return () => {
@@ -72,99 +98,197 @@ var Monitoring = React.createClass({
             this.props.monitorSensor(id);
         };
     },
-    getFavoritesChartsColumns: function () {
-        return [
-            {key: "_id"}
-        ];
+    getSensorFields: function () {
+        let found = R.find(R.propEq("_id", this.props.selected[0]))(this.props.sensors);
+        return (found ? found.fields : null);
     },
     getSensorsColumns: function () {
+        const theme = this.getTheme();
         return [
             {
-                key: "Favorite",
-                valueFormatter: (value, item) => (
-                    <i className={"fa fa-star" + (item.favorite ? "" : "-o") + " clickable"} onClick={this.getFavoriteSensor(item.id)}/>
-                )
-            },
-            {
-                key: "Monitoring",
-                valueFormatter: (value, item) => (
-                    <i className={"fa " + (item.monitoring ? "fa-stop" : "fa-play") + " clickable"} onClick={this.getMonitorSensor(item.id)}/>
-                )
-            },
-            {
                 key: "_id",
-                valueFormatter: (value) => (
-                    <Link to={"/monitoring/sensor/" + value}>
-                        {value}
+                style: function () {
+                    return {
+                        borderRight: "solid 1px grey",
+                        width: "10%",
+                        height: "100%",
+                        textAlign: "left"
+                    };
+                }
+            },
+            {
+                key: "tag",
+                style: function () {
+                    return {
+                        width: "80%",
+                        height: "100%",
+                        padding: "3px 0px 0px 5px",
+                        textAlign: "left"
+                    };
+                },
+                valueFormatter: () => (
+                    <div>
+                        <Icon
+                            color={theme.colors.iconHeader}
+                            icon={"tag"}
+                            size={"27px"}
+                        />
+                    </div>
+                )
+            },
+            {
+                key: "info",
+                valueFormatter: () => (
+                    <Icon
+                        color={theme.colors.iconHeader}
+                        icon={"info"}
+                        size={"27px"}
+                    />
+                )
+            },
+            {
+                key: "chart",
+                style: function () {
+                    return {
+                        backgroundColor: "grey"
+                    };
+                },
+                valueFormatter: () => (
+                    <Link to={"/monitoring/chart/"}>
+                        <Icon
+                            color={theme.colors.iconHeader}
+                            icon={"chart"}
+                            size={"27px"}
+                        />
                     </Link>
                 )
             },
             {
-                key: "description"
-            },
-            {
                 key: "",
-                valueFormatter: (value, item) => (
-                    <div>
-                        <Button onClick={this.getCloneSensor(item.get("_id"))}>
-                            {"Clone"}
-                        </Button>
-                        <Button bsStyle="danger" onClick={this.getDeleteSensor(item.get("_id"))}>
-                            {"Delete"}
-                        </Button>
-                    </div>
+                valueFormatter: () => (
+                    <div />
                 )
             }
         ];
     },
-    getChartSeries: function () {
-        let measures = this.props.collections.get("readings-daily-aggregates") || Immutable.Map();
-        console.log(measures);
-        //TODO prendere le misure
-        return this.props.selected;
+    openModal: function () {
+        this.setState({
+            showFullscreenModal: true
+        });
+    },
+    closeModal: function () {
+        this.setState({
+            showFullscreenModal: false
+        });
     },
     render: function () {
         let sensors = this.props.collections.get("sensors") || Immutable.Map();
+        const theme = this.getTheme();
         return (
             <div>
-                <Button bsStyle="primary" href="/monitoring/sensor/">
-                    {"Add sensor"}
-                </Button>
-                <Button disabled={!(this.props.selected.length > 1)} onClick={this.props.combineSensor} >
-                    {"Combine sensors"}
-                </Button>
-                <Button disabled={!(this.props.selected.length > 0)} >
-                    {"Assign sensors"}
-                </Button>
-                <CollectionElementsTable
-                    collection={sensors}
-                    columns={this.getSensorsColumns()}
-                    getKey={getKeyFromCollection}
-                    hover={true}
-                    onRowClick={this.props.selectSensor}
-                    width={"60%"}
-                />
-                <div>
-                    <h3>
-                        {"Favorites charts"}
-                    </h3>
-                    <CollectionElementsTable
-                        collection={this.props.monitoringChart.favorites}
-                        columns={this.getFavoritesChartsColumns()}
-                        getKey={getKeyFromCollection}
-                        hover={true}
-                        onRowClick={this.props.selectFavoriteChart}
-                        width={"60%"}
-                    />
-                </div>
+                <SectionToolbar>
+                    <Button style={buttonStyle(theme)} disabled={this.props.selected.length > 0} onClick={this.openModal}>
+                        <Icon
+                            color={theme.colors.iconHeader}
+                            icon={"add"}
+                            size={"28px"}
+                            style={{lineHeight: "20px"}}
+                        />
+                    </Button>
+                    <Button style={buttonStyle(theme)} disabled={this.props.selected.length < 2} onClick={this.getCloneSensor("todo")}>
+                        <Icon
+                            color={theme.colors.iconHeader}
+                            icon={"duplicate"}
+                            size={"28px"}
+                            style={{lineHeight: "20px"}}
+                        />
+                    </Button>
+                    <Button style={buttonStyle(theme)} disabled={this.props.selected.length != 1} onClick={this.openModal}>
+                        <Icon
+                            color={theme.colors.iconHeader}
+                            icon={"edit"}
+                            size={"28px"}
+                            style={{lineHeight: "20px"}}
+                        />
+                    </Button>
+                    <Button style={buttonStyle(theme)} disabled={this.props.selected.length < 1} onClick={this.getDeleteSensor("todo")}>
+                        <Icon
+                            color={theme.colors.iconHeader}
+                            icon={"delete"}
+                            size={"28px"}
+                            style={{lineHeight: "20px"}}
+                        />
+                    </Button>
+                    <Popover
+                        className="pull-right"
+                        hideOnChange={true}
+                        style={styles(theme).chartPopover}
+                        title={
+                            <Icon
+                                color={theme.colors.iconHeader}
+                                icon={"option"}
+                                size={"32px"}
+                                style={{lineHeight: "20px", verticalAlign: "middle"}}
+                            />
+                        }
+                    >
+                        <DropdownButton
+                            allowedValues={advancedOptions(this.getTheme())}
+                            getColor={R.prop("color")}
+                            getIcon={R.prop("iconClass")}
+                            getKey={R.prop("key")}
+                            getLabel={R.prop("label")}
+                            style={styles(theme).chartDropdownButton}
+                        />
+                    </Popover>
+                </SectionToolbar>
 
-                <MonitoringChart
-                    addToFavorite={this.props.addToFavorite}
-                    onChangeYAxisValues={this.props.changeYAxisValues}
-                    chartState={this.props.monitoringChart}
-                    selectChartType={this.props.selectChartType}
-                    series={this.getChartSeries()}
+                <MonitoringSearch
+                    filterSensors={this.props.filterSensors}
+                    style={{width: "25%", float: "left", marginTop: "2px", minHeight: "782px"}}
                 />
+
+                <div style={{float: "left", width: "75%", textAlign: "center", padding: "10px 10px 0px 20px"}}>
+                    <label style={{color: theme.colors.navText}}>
+                        {"Seleziona alcuni sensori per visualizzare il grafico o per creare un nuovo sensore"}
+                    </label>
+                    <div style={{color: "white", border: "grey solid 1px", borderRadius: "30px", background: theme.colors.backgroundContentModal, padding: 0}}>
+                        <CollectionElementsTable
+                            collection={sensors}
+                            columns={this.getSensorsColumns()}
+                            getKey={getKeyFromCollection}
+                            hover={true}
+                            onRowClick={this.props.selectSensor}
+                            style={{color: "white", maxHeight: "332px", overflow: "auto", padding: 0}}
+                            width={"60%"}
+                        />
+
+                        <label style={{color: theme.colors.navText, padding: "20px", paddingRight: "50px"}}>
+                            {"Seleziona tutti"}
+                        </label>
+                        <label style={{color: theme.colors.navText, padding: "20px"}}>
+                            {"Carica tutti"}
+                        </label>
+
+                    </div>
+
+                    <SensorForm
+                        closeForm={this.closeModal}
+                        id={this.props.selected.length == 1 ? this.props.selected[0] : null}
+                        initialValues={this.getSensorFields()}
+                        onSave={this.props.selected.length == 1 ? this.props.editSensor : this.props.addSensor}
+                        sensorsToAggregate={this.props.selected}
+                        showFullscreenModal={this.state.showFullscreenModal}
+                        title={this.props.selected.length == 1 ? "MODIFICA SENSORE" : "CREA NUOVO SENSORE"}
+                    />
+
+                    <div style={{border: "grey solid 1px", borderRadius: "30px", background: theme.colors.backgroundContentModal, marginTop: "50px", minHeight: "300px", overflow: "auto", padding: 0, verticalAlign: "middle"}}>
+                        <label style={{color: theme.colors.navText}}>
+                            {"Trascina in questo spazio i sensori che vuoi graficare"}
+                        </label>
+                    </div>
+
+                </div>
             </div>
         );
     }
@@ -173,7 +297,6 @@ var Monitoring = React.createClass({
 const mapStateToProps = (state) => {
     return {
         collections: state.collections,
-        monitoringChart: state.monitoringChart,
         selected: state.sensors.selectedSensors,
         sensors: state.sensors.allSensors
     };
@@ -181,15 +304,14 @@ const mapStateToProps = (state) => {
 
 const mapDispatchToProps = (dispatch) => {
     return {
-        addToFavorite: bindActionCreators(addToFavorite, dispatch),
-        changeYAxisValues: bindActionCreators(changeYAxisValues, dispatch),
+        addSensor: bindActionCreators(addSensor, dispatch),
         cloneSensor: bindActionCreators(cloneSensor, dispatch),
         combineSensor: bindActionCreators(combineSensor, dispatch),
         deleteSensor: bindActionCreators(deleteSensor, dispatch),
+        editSensor: bindActionCreators(editSensor, dispatch),
         favoriteSensor: bindActionCreators(favoriteSensor, dispatch),
+        filterSensors: bindActionCreators(filterSensors, dispatch),
         monitorSensor: bindActionCreators(monitorSensor, dispatch),
-        selectChartType: bindActionCreators(selectChartType, dispatch),
-        selectFavoriteChart: bindActionCreators(selectFavoriteChart, dispatch),
         selectSensor: bindActionCreators(selectSensor, dispatch)
     };
 };

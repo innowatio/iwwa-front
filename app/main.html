@@ -22,7 +22,7 @@
             }
             * {
                 font-family: lato !important;
-                font-weight: 400;
+                /*font-weight: 400;*/
             }
             @media (max-width : 1024px){
                 .tooltip-popover {
@@ -36,12 +36,10 @@
         <div id="root" />
         <!-- @if ENVIRONMENT=='cordova' -->
         <script src="cordova.js"></script>
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/dygraph/1.1.1/dygraph-combined-dev.js"></script>
         <script src="_assets/js/vendor.js"></script>
         <script src="_assets/js/app.js"></script>
         <!-- @endif -->
         <!-- @if ENVIRONMENT!='cordova' -->
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/dygraph/1.1.1/dygraph-combined-dev.js"></script>
         <script src="/_assets/js/vendor.js"></script>
         <script src="/_assets/js/app.js"></script>
         <!-- @endif -->
