@@ -29,10 +29,11 @@ const styles = ({colors}) => ({
         height: "55px",
         lineHeight: "48px",
         borderTop: "1px solid " + colors.white,
-        padding: "3px 0px"
+        padding: "3px 0px",
+        clear: "both"
     },
     iconArrowDown: {
-        float: "left",
+        display: "inline-block",
         lineHeight: "40px",
         verticalAlign: "middle",
         marginRight: "10px"
@@ -45,15 +46,15 @@ const styles = ({colors}) => ({
         verticalAlign: "middle"
     },
     data: {
+        display: "inline-block",
         margin: "0px 20px 0px 0px",
         padding: "0px",
         lineHeight: "35px",
-        float: "left",
         fontSize: "18px",
         fontWeight: "300"
     },
     sensorName: {
-        float: "left",
+        display: "inline-block",
         margin: "0px",
         padding: "0px",
         fontSize: "18px",
@@ -63,11 +64,9 @@ const styles = ({colors}) => ({
     },
     panel: {
         backgroundColor: colors.backgroundAlarmsPanel,
-        margin: "2px 0 0 0",
-        borderTop: "1px solid " + colors.white,
-        borderLeft: "0px",
-        borderRight: "0px",
-        borderBottom: "0px",
+        margin: "0",
+        padding: "0",
+        border: "0",
         borderRadius: "0px"
     }
 });
@@ -154,7 +153,7 @@ var Alarms = React.createClass({
                         backgroundColor: value ? colors.activeAlarm : colors.backgroundTableColoumn,
                         width: "47px",
                         height: "100%",
-                        color: colors.white,
+                        color: colors.mainFontColor,
                         textAlign: "center"
                     };
                 },
@@ -258,7 +257,6 @@ var Alarms = React.createClass({
         return (
             <div style={styles(this.getTheme()).headerContainer}>
                 <components.Button
-                    className="pull-left"
                     onClick={() => this.setState({
                         panelToOpen: isActivePanel ? null : index
                     })}
@@ -295,11 +293,12 @@ var Alarms = React.createClass({
         );
     },
     subListNotification: function (components, index) {
+        const isActive = this.state.panelToOpen === index;
         return (
             <bootstrap.Panel
                 accordion={true}
                 collapsible={true}
-                expanded={this.state.panelToOpen === index}
+                expanded={isActive}
                 style={styles(this.getTheme()).panel}
             >
                 {"Consumi maggiori del 41% rispetto alla media - 2 anomalie simili (15.5.15, 08.06.15)"}
@@ -441,7 +440,7 @@ var Alarms = React.createClass({
                             backgroundColor: colors.secondary
                         },
                         "ul li": {
-                            color: colors.white,
+                            color: colors.mainFontColor,
                             margin: "0 1.5%"
                         },
                         "ul li a": {
@@ -453,7 +452,7 @@ var Alarms = React.createClass({
                         },
                         ".nav-tabs > li > a": {
                             height: "44px",
-                            color: colors.white,
+                            color: colors.mainFontColor,
                             border: "0",
                             outline: "none",
                             borderBottom: "3px solid" + colors.secondary
@@ -465,7 +464,7 @@ var Alarms = React.createClass({
                             height: "44px",
                             fontSize: "17px",
                             fontWeight: "500",
-                            color: colors.white,
+                            color: colors.mainFontColor,
                             border: "0px",
                             borderRadius: "0px",
                             outline: "none",
