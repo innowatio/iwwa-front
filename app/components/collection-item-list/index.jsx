@@ -1,5 +1,6 @@
 import React, {PropTypes} from "react";
 import IPropTypes from "react-immutable-proptypes";
+import {Style} from "radium";
 
 import {defaultTheme} from "lib/theme";
 
@@ -14,6 +15,8 @@ var CollectionItemList = React.createClass({
     propTypes: {
         collections: IPropTypes.map.isRequired,
         headerComponent: PropTypes.func.isRequired,
+        hover: PropTypes.bool,
+        hoverStyle: PropTypes.object,
         // If is not specified, by default are showed all the items.
         initialVisibleRow: PropTypes.number,
         lazyLoadButtonStyle: PropTypes.object,
@@ -26,7 +29,8 @@ var CollectionItemList = React.createClass({
     },
     getDefaultProps: function () {
         return {
-            subListComponent: () => null
+            subListComponent: () => null,
+            hover: false
         };
     },
     getInitialState: function () {
@@ -37,10 +41,26 @@ var CollectionItemList = React.createClass({
     getTheme: function () {
         return this.context.theme || defaultTheme;
     },
+    onMouseOver: function (index) {
+        if (this.props.hover) {
+            this.setState({hover: index});
+        }
+    },
+    onMouseLeave: function () {
+        this.setState({hover: null});
+    },
     renderList: function (collection, index) {
         return (
-            <div key={index}>
-                {this.props.headerComponent(collection, index)}
+            <div className="item-list-container" key={index}>
+                <div className="hover-container">
+                    <Style
+                        rules={{
+                            ".hover-container:hover": this.props.hoverStyle
+                        }}
+                        scopeSelector=".item-list-container"
+                    />
+                    {this.props.headerComponent(collection, index)}
+                </div>
                 {this.props.subListComponent(collection, index)}
             </div>
         );
@@ -54,7 +74,7 @@ var CollectionItemList = React.createClass({
                 }
                 style={this.props.lazyLoadButtonStyle}
             >
-                <p style={{textAlign: "center"}}>{this.props.lazyLoadLabel}</p>
+                {this.props.lazyLoadLabel}
             </div>
         ) : null;
     },

@@ -32,6 +32,9 @@ const styles = ({colors}) => ({
         padding: "3px 0px",
         clear: "both"
     },
+    hoverStyle: {
+        backgroundColor: colors.backgroundAlarmsSection
+    },
     iconArrowDown: {
         display: "inline-block",
         lineHeight: "40px",
@@ -55,7 +58,8 @@ const styles = ({colors}) => ({
         fontWeight: "400",
         margin: "10px auto 0 auto",
         borderRadius: "30px",
-        cursor: "pointer"
+        cursor: "pointer",
+        textAlign: "center"
     },
     data: {
         display: "inline-block",
@@ -269,13 +273,14 @@ var Alarms = React.createClass({
         return (
             <div style={styles(this.getTheme()).headerContainer}>
                 <components.Button
-                    onClick={() => this.setState({
-                        panelToOpen: isActivePanel ? null : index
-                    })}
+                    onClick={() => this.setState({panelToOpen: isActivePanel ? null : index})}
                     style={{
                         backgroundColor: colors.transparent,
                         border: "0px",
-                        color: colors.mainFontColor
+                        color: colors.mainFontColor,
+                        boxShadow: "none",
+                        width: "calc(100vw - 100px)",
+                        textAlign: "left"
                     }}
                 >
                     <components.Icon
@@ -291,7 +296,8 @@ var Alarms = React.createClass({
                     className="pull-right"
                     style={{
                         backgroundColor: colors.transparent,
-                        border: "0px"
+                        border: "0px",
+                        width: "71px"
                     }}
                 >
                     <components.Icon
@@ -562,6 +568,8 @@ var Alarms = React.createClass({
                                 collections={this.getNotifications()}
                                 headerComponent={this.headerNotificationsList}
                                 initialVisibleRow={10}
+                                hover={true}
+                                hoverStyle={styles(this.getTheme()).hoverStyle}
                                 lazyLoadButtonStyle={styles(this.getTheme()).lazyLoadButtonStyle}
                                 lazyLoadLabel={"Carica altri"}
                                 sort={R.partialRight(this.sortByDate, [false])}
