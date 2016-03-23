@@ -106,6 +106,8 @@
     "react-addons-pure-render-mixin": "^0.14.7",
     "react-addons-test-utils": "^0.14.7",
     "react-bootstrap": "^0.28.3",
+    "react-dnd": "^2.1.2",
+    "react-dnd-touch-backend": "^0.2.4",
     "react-dom": "^0.14.7",
     "react-highcharts": "^8.0.2",
     "react-immutable-proptypes": "^1.7.0",

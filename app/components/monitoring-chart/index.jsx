@@ -1,7 +1,9 @@
 import React from "react";
 import {Button, Input} from "react-bootstrap";
+import {DragDropContext} from "react-dnd";
+import {default as TouchBackend} from "react-dnd-touch-backend";
 import ReactHighstock from "react-highcharts/bundle/ReactHighstock"; // Highstock is bundled
-import {ObjectSelect} from "components";
+import {ObjectSelect, SensorRow} from "components";
 
 const chartTypes = [
     {label: "Linea", id: "spline"},
@@ -202,6 +204,7 @@ var MonitoringChart = React.createClass({
                 <Button bsStyle="primary" onClick={this.addToFavorite} style={{float: "right"}}>
                     {"Add to favorite"}
                 </Button>
+                <SensorRow />
 
                 <div>
                     <Input
@@ -233,4 +236,4 @@ var MonitoringChart = React.createClass({
     }
 });
 
-module.exports = MonitoringChart;
+module.exports = DragDropContext(TouchBackend({enableMouseEvents: true}))(MonitoringChart);

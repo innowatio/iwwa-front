@@ -4,6 +4,8 @@ import {DragSource} from "react-dnd";
 import {Types} from "lib/dnd-utils";
 import {defaultTheme} from "lib/theme";
 
+import {Icon} from "components";
+
 const sensorSource = {
     beginDrag (props) {
         const item = {id: props.id};
@@ -25,11 +27,11 @@ function collect (connect, monitor) {
     };
 }
 
-var DraggableSensor = React.createClass({
+var DraggableOperator = React.createClass({
     propTypes: {
         connectDragSource: PropTypes.func,
-        id: PropTypes.string,
-        isDragging: PropTypes.bool
+        isDragging: PropTypes.bool,
+        type: PropTypes.string
     },
     contextTypes: {
         theme: PropTypes.object
@@ -38,17 +40,19 @@ var DraggableSensor = React.createClass({
         return this.context.theme || defaultTheme;
     },
     render () {
-        const {id, isDragging, connectDragSource} = this.props;
+        const {type, connectDragSource} = this.props;
         let theme = this.getTheme();
-        if (isDragging) {
-            return null;
-        }
         return connectDragSource(
-            <label style={{color: theme.colors.navText, textAlign: "left", border: "1px solid", borderRadius: "10px", padding: "7px", display: "inherit"}}>
-                {id}
-            </label>
+            <div style={{width: "40px", display: "inline"}}>
+                <Icon
+                    color={theme.colors.iconHeader}
+                    icon={type}
+                    size={"46px"}
+                    style={{lineHeight: "20px", width: "40px", height: "40px", borderRadius: "100%", background: "green"}}
+                />
+            </div>
         );
     }
 });
 
-module.exports = DragSource(Types.SENSOR, sensorSource, collect)(DraggableSensor);
+module.exports = DragSource(Types.OPERATOR, sensorSource, collect)(DraggableOperator);
