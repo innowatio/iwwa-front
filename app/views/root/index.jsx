@@ -24,7 +24,8 @@ const stylesFunction = ({colors}) => ({
         top: measures.headerHeight,
         backgroundColor: colors.background,
         height: `calc(100vh - ${measures.headerHeight})`,
-        transition: "left 0.3s ease"
+        transition: "left 0.3s ease",
+        overflow: "auto"
     },
     sidebar: {
         position: "absolute",
