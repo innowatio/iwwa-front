@@ -18,7 +18,6 @@ import {
     numberOfSelectedTabs
 } from "actions/alarms";
 import {defaultTheme} from "lib/theme";
-import CollectionUtils from "lib/collection-utils";
 
 const styles = ({colors}) => ({
     headerContainer: {
