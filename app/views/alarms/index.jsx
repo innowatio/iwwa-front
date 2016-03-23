@@ -45,6 +45,18 @@ const styles = ({colors}) => ({
         lineHeight: "20px",
         verticalAlign: "middle"
     },
+    lazyLoadButtonStyle: {
+        width: "230px",
+        height: "45px",
+        lineHeight: "43px",
+        backgroundColor: colors.buttonPrimary,
+        fontSize: "14px",
+        textTransform: "uppercase",
+        fontWeight: "400",
+        margin: "10px auto 0 auto",
+        borderRadius: "30px",
+        cursor: "pointer"
+    },
     data: {
         display: "inline-block",
         margin: "0px 20px 0px 0px",
@@ -550,6 +562,8 @@ var Alarms = React.createClass({
                                 collections={this.getNotifications()}
                                 headerComponent={this.headerNotificationsList}
                                 initialVisibleRow={10}
+                                lazyLoadButtonStyle={styles(this.getTheme()).lazyLoadButtonStyle}
+                                lazyLoadLabel={"Carica altri"}
                                 sort={R.partialRight(this.sortByDate, [false])}
                                 subListComponent={this.subListNotification}
                             />

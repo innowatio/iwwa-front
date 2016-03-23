@@ -1,25 +1,14 @@
 import React, {PropTypes} from "react";
 import IPropTypes from "react-immutable-proptypes";
+
 import {defaultTheme} from "lib/theme";
 
-const styles = ({colors}) => ({
-    loadMore: {
-        width: "230px",
-        height: "45px",
-        lineHeight: "43px",
-        backgroundColor: colors.buttonPrimary,
-        fontSize: "14px",
-        textTransform: "uppercase",
-        fontWeight: "400",
-        margin: "10px auto 0 auto",
-        borderRadius: "30px",
-        cursor: "pointer"
-    },
+const styles = {
     listContainer: {
         height: "calc(100vh - 270px)",
         overflow: "hidden"
     }
-});
+};
 
 var CollectionPanelList = React.createClass({
     propTypes: {
@@ -27,8 +16,13 @@ var CollectionPanelList = React.createClass({
         headerComponent: PropTypes.func.isRequired,
         // If is not specified, by default are showed all the items.
         initialVisibleRow: PropTypes.number,
+        lazyLoadButtonStyle: PropTypes.object,
+        lazyLoadLabel: PropTypes.string,
         sort: PropTypes.func,
         subListComponent: PropTypes.func
+    },
+    contextTypes: {
+        theme: PropTypes.object
     },
     getDefaultProps: function () {
         return {
@@ -58,9 +52,9 @@ var CollectionPanelList = React.createClass({
                 onClick={() => this.setState({
                     visibleValuesList: this.state.visibleValuesList + this.props.initialVisibleRow})
                 }
-                style={styles(this.getTheme()).loadMore}
+                style={this.props.lazyLoadButtonStyle}
             >
-                <p style={{textAlign: "center"}}>{"Carica altri"}</p>
+                <p style={{textAlign: "center"}}>{this.props.lazyLoadLabel}</p>
             </div>
         ) : null;
     },
@@ -74,7 +68,7 @@ var CollectionPanelList = React.createClass({
             .filter((obj, index) => (this.props.initialVisibleRow ? index < this.state.visibleValuesList : true));
         return (
             <div style={{marginTop: "84px"}}>
-                <div style={styles(this.getTheme()).listContainer} >
+                <div style={styles.listContainer} >
                     <div style={{overflow: "auto", height: "100%"}}>
                         {collectionList}
                         <div style={{borderTop: "1px solid " + colors.white}} />
