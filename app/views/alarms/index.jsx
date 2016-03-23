@@ -4,10 +4,10 @@ var React      = require("react");
 var bootstrap  = require("react-bootstrap");
 var IPropTypes = require("react-immutable-proptypes");
 var Router     = require("react-router");
-var moment     = require("moment");
 var R          = require("ramda");
 import {connect} from "react-redux";
 import {bindActionCreators} from "redux";
+import moment from "moment";
 
 var CollectionUtils = require("lib/collection-utils");
 var components      = require("components");
@@ -19,6 +19,53 @@ import {
     numberOfSelectedTabs
 } from "actions/alarms";
 import {defaultTheme} from "lib/theme";
+
+const styles = ({colors}) => ({
+    headerContainer: {
+        height: "55px",
+        lineHeight: "48px",
+        borderTop: "1px solid " + colors.white,
+        padding: "3px 0px",
+        clear: "both"
+    },
+    iconArrowDown: {
+        display: "inline-block",
+        lineHeight: "40px",
+        verticalAlign: "middle",
+        marginRight: "10px"
+    },
+    iconChart: {
+        float: "right",
+        marginRight: "5px",
+        cursor: "pointer",
+        lineHeight: "20px",
+        verticalAlign: "middle"
+    },
+    data: {
+        display: "inline-block",
+        margin: "0px 20px 0px 0px",
+        padding: "0px",
+        lineHeight: "35px",
+        fontSize: "18px",
+        fontWeight: "300"
+    },
+    sensorName: {
+        display: "inline-block",
+        margin: "0px",
+        padding: "0px",
+        fontSize: "18px",
+        lineHeight: "35px",
+        fontWeight: "300",
+        color:colors.alarmSiteName
+    },
+    panel: {
+        backgroundColor: colors.backgroundAlarmsPanel,
+        margin: "0",
+        padding: "0",
+        border: "0",
+        borderRadius: "0px"
+    }
+});
 
 var Alarms = React.createClass({
     propTypes: {
@@ -38,9 +85,8 @@ var Alarms = React.createClass({
     },
     getInitialState: function () {
         return {
-            active: [
-                "TUTTI"
-            ]
+            alarmToVisualize: "TUTTI",
+            panelToOpen: null
         };
     },
     componentDidMount: function () {
@@ -103,7 +149,7 @@ var Alarms = React.createClass({
                         backgroundColor: value ? colors.activeAlarm : colors.backgroundTableColoumn,
                         width: "47px",
                         height: "100%",
-                        color: colors.white,
+                        color: colors.mainFontColor,
                         textAlign: "center"
                     };
                 },
@@ -200,90 +246,60 @@ var Alarms = React.createClass({
             }
         ];
     },
-    getColumnsNotifications: function () {
+    headerNotificationsList: function (collection, index) {
         const {colors} = this.getTheme();
-        var self = this;
-        return [
-            {
-                key: "date",
-                style: function () {
-                    return {
-                        width: "250px"
-                    };
-                },
-                valueFormatter: function (value) {
-                    var date = moment.utc(value, "x");
-                    return (
-                        <div>
-                            <components.Icon
-                                color={colors.iconChart}
-                                icon={"arrow-down"}
-                                size={"14px"}
-                                style={{
-                                    marginLeft: "5px",
-                                    cursor: "pointer",
-                                    lineHeight: "20px",
-                                    verticalAlign: "middle"
-                                }}
-                            />
-                            <span style={{marginLeft: "20px"}}>
-                                {date.locale("it").format("LLL")}
-                            </span>
-                        </div>
-                    );
-                }
-            },
-            "name",
-            {
-                key: "podId",
-                style: function () {
-                    return {
-                        width: "30%"
-                    };
-                },
-                valueFormatter: function (value) {
-                    var sito = self.getSiti().find(siti => {
-                        return siti.get("pod") === value;
-                    });
-                    return (
-                        <span>
-                            {CollectionUtils.sites.getLabel(sito)}
-                        </span>
-                    );
-                }
-            },
-            {
-                key: "dateNotification",
-                valueFormatter: function (value, item) {
-                    var notificationDate = [item.get("date")];
-                    const sensorId = item.get("podId");
-                    const site = self.getSitoBySensor(sensorId) ?
-                        self.getSitoBySensor(sensorId).get("_id") : null;
-                    return (
-                        <Router.Link to={"/chart/"}>
-                            <components.Icon
-                                color={colors.iconChart}
-                                icon={"chart"}
-                                onClick={
-                                    R.partial(
-                                        self.props.displayAlarmsOnChart,
-                                        [sensorId, site, notificationDate]
-                                    )
-                                }
-                                size={"34px"}
-                                style={{
-                                    float: "right",
-                                    cursor: "pointer",
-                                    lineHeight: "20px",
-                                    marginRight: "5px",
-                                    verticalAlign: "middle"
-                                }}
-                            />
-                        </Router.Link>
-                    );
-                }
-            }
-        ];
+        const isActivePanel = R.equals(this.state.panelToOpen, index);
+        const date = moment(collection.get("date")).locale("it").format("LLL");
+        return (
+            <div style={styles(this.getTheme()).headerContainer}>
+                <components.Button
+                    onClick={() => this.setState({
+                        panelToOpen: isActivePanel ? null : index
+                    })}
+                    style={{
+                        backgroundColor: colors.transparent,
+                        border: "0px",
+                        color: colors.mainFontColor
+                    }}
+                >
+                    <components.Icon
+                        color={colors.white}
+                        icon={"arrow-down"}
+                        size={"14px"}
+                        style={styles(this.getTheme()).iconArrowDown}
+                    />
+                    <p style={styles(this.getTheme()).data}>{date}</p>
+                    <h5 style={styles(this.getTheme()).sensorName}>{collection.get("name")}</h5>
+                </components.Button>
+                <components.Button
+                    className="pull-right"
+                    style={{
+                        backgroundColor: colors.transparent,
+                        border: "0px"
+                    }}
+                >
+                    <components.Icon
+                        color={colors.iconChart}
+                        icon={"chart"}
+                        size={"34px"}
+                        style={styles(this.getTheme()).iconChart}
+                    />
+                </components.Button>
+            </div>
+        );
+    },
+    subListNotification: function (components, index) {
+        const isActive = this.state.panelToOpen === index;
+        return (
+            <bootstrap.Panel
+                accordion={true}
+                collapsible={true}
+                expanded={isActive}
+                style={styles(this.getTheme()).panel}
+            >
+                {"Consumi maggiori del 41% rispetto alla media - 2 anomalie simili (15.5.15, 08.06.15)"}
+            </bootstrap.Panel>
+        );
     },
     onClickAction: function (alarmsId) {
         this.props.modifyExistentAlarm(alarmsId);
@@ -294,62 +310,52 @@ var Alarms = React.createClass({
     },
     alarmFilterTitle: function () {
         return [
-            {title: "Quali allarmi vuoi visualizzare?", label: ["TUTTI", "ATTIVI", "INATTIVI"]}
+            {title: "Quali allarmi vuoi visualizzare?", label: ["TUTTI", "ATTIVI", "INATTIVI"], key: "alarmToVisualize"}
         ];
     },
     sortByDate: function (a, b, asc) {
-        var comparison = a.get("date") > b.get("date");
-        return asc ? comparison : !comparison;
+        if (asc) {
+            return a.get("date") > b.get("date") ? 1 : -1;
+        }
+        return a.get("date") > b.get("date") ? -1 : 1;
     },
-    onClickFilter: function (label, value) {
+    onClickFilter: function (value, label) {
         if (R.equals(value, this.alarmFilterTitle()[0])) {
             this.setState({
-                active: [
-                    label
-                ]
+                [value.key]: label
             });
         }
     },
     filterAlarms: function (value) {
-        if (this.state.active[0] === "ATTIVI") {
+        if (this.state.alarmToVisualize[0] === "ATTIVI") {
             return value.get("active") === true;
         }
-        if (this.state.active[0] === "INATTIVI") {
+        if (this.state.alarmToVisualize[0] === "INATTIVI") {
             return value.get("active") === false;
         }
         return value;
     },
-    renderFilterTableCell: function (allowedValue, label) {
-        const {colors} = this.getTheme();
-        var active = this.state.active[0] === label || this.state.active[1] === label;
+    renderFilterTableCell: function (allowedValue, label, index) {
         return (
-            <bootstrap.ListGroupItem
-                key={[allowedValue, label]}
-                onClick={R.partial(this.onClickFilter, [label, allowedValue])}
-                style={{
-                    marginLeft: "10px",
-                    borderRadius: "0px",
-                    borderLeft: "0px",
-                    borderRight: "0px",
-                    color: active ? colors.white : colors.greySubTitle,
-                    backgroundColor: active ? colors.primary : colors.white,
-                    textAlign: "center",
-                    paddingTop: "0px",
-                    paddingBottom: "0px"
-                }}
-            >
-                <h5>{label}</h5>
-            </bootstrap.ListGroupItem>
+            <div key={index} onClick={R.partial(this.onClickFilter, [allowedValue, label])}>
+                <bootstrap.Input
+                    defaultValue={R.equals(this.state[allowedValue.key], label)}
+                    name={allowedValue.key}
+                    type={"radio"}
+                    value={label}
+                />
+                {label}
+            </div>
         );
     },
     renderFilterCell: function (value) {
         const {colors} = this.getTheme();
         return (
             <div key={value.title}>
-                <h5 style={{color: colors.primary, width: "250px", paddingLeft: "10px"}}>
+                <h5 style={{color: colors.mainFontColor}}>
                     {value.title}
                 </h5>
-                <bootstrap.ListGroup>
+                <bootstrap.ListGroup style={{paddingLeft: "30px"}}>
                     {
                         R.is(Array, value.label) ?
                         value.label.map(R.partial(this.renderFilterTableCell, [value])) :
@@ -360,13 +366,22 @@ var Alarms = React.createClass({
         );
     },
     renderFilter: function () {
+        const {colors} = this.getTheme();
         var alarmFilter = this.alarmFilterTitle();
         return (
-            <div className="alarm-filter" style={{overflow: "auto"}}>
+            <div className="alarm-filter">
                 <Radium.Style
                     rules={{
-                        ".list-group": {
-                            marginBottom: "0px"
+                        "": {
+                            overflow: "auto",
+                            margin: "0px",
+                            border: "1px solid " + colors.borderDropdown,
+                            backgroundColor: colors.backgroundDropdown,
+                            borderRadius: "10px",
+                            color: colors.mainFontColor,
+                            outline: "none",
+                            fontSize: "15px",
+                            fontWeight: "300"
                         }
                     }}
                     scopeSelector=".alarm-filter"
@@ -412,7 +427,7 @@ var Alarms = React.createClass({
         var allowedValues = this.props.collections.get("alarms") || Immutable.Map();
         const {colors} = this.getTheme();
         return (
-            <div className="alarm-tab" style={{}}>
+            <div className="alarm-tab">
                 <Radium.Style
                     rules={{
                         "ul": {
@@ -421,7 +436,7 @@ var Alarms = React.createClass({
                             backgroundColor: colors.secondary
                         },
                         "ul li": {
-                            color: colors.white,
+                            color: colors.mainFontColor,
                             margin: "0 1.5%"
                         },
                         "ul li a": {
@@ -433,7 +448,7 @@ var Alarms = React.createClass({
                         },
                         ".nav-tabs > li > a": {
                             height: "44px",
-                            color: colors.white,
+                            color: colors.mainFontColor,
                             border: "0",
                             outline: "none",
                             borderBottom: "3px solid" + colors.secondary
@@ -445,7 +460,7 @@ var Alarms = React.createClass({
                             height: "44px",
                             fontSize: "17px",
                             fontWeight: "500",
-                            color: colors.white,
+                            color: colors.mainFontColor,
                             border: "0px",
                             borderRadius: "0px",
                             outline: "none",
@@ -513,40 +528,26 @@ var Alarms = React.createClass({
                             />
                         </bootstrap.Tab>
                         <bootstrap.Tab
-                            className="historical-alarm-table"
                             eventKey={3}
                             title="Storico allarmi"
+                            style={{
+                                height: "100%",
+                                width: "98%",
+                                margin: "0px auto",
+                                overflow: "scroll",
+                                color: colors.mainFontColor,
+                                fontSize: "18px",
+                                fontWeight: "300",
+                                position: "relative"
+                            }}
                         >
-                            <Radium.Style
-                                rules={{
-                                    "": {
-                                        height: "100%",
-                                        width: "98%",
-                                        margin: "0px auto",
-                                        overflow: "scroll",
-                                        color: colors.mainFontColor,
-                                        fontSize: "18px",
-                                        fontWeight: "300"
-                                    },
-                                    "table tr:hover": {
-                                        backgroundColor: colors.tableRowRollover
-                                    },
-                                    "table tr td:nth-child(2n)": {
-                                        color: colors.alarmSiteName
-                                    },
-                                    "table tr > td": {
-                                        padding: "10px 0px"
-                                    }
-                                }}
-                                scopeSelector=".historical-alarm-table"
-                            />
                             {this.renderFilterButton()}
-                            <components.CollectionElementsTable
-                                collection={this.getNotifications().sort(R.partialRight(this.sortByDate, [false]))}
-                                columns={this.getColumnsNotifications()}
-                                getKey={CollectionUtils.getKeyFromCollection}
-                                hover={true}
-                                width={"30%"}
+                            <components.CollectionPanelList
+                                collections={this.getNotifications()}
+                                headerComponent={this.headerNotificationsList}
+                                initialVisibleRow={10}
+                                sort={R.partialRight(this.sortByDate, [false])}
+                                subListComponent={this.subListNotification}
                             />
                         </bootstrap.Tab>
                     </bootstrap.Tabs>

@@ -5,6 +5,7 @@ export const colorsLightTheme = {
     alarmRangePoint: "#eb2953",
     alarmSiteName: "#eb2953",
     background: "#ffffff",
+    backgroundAlarmsPanel: "#eeeeee",
     backgroundAlarmsSection: "#eeeeee",
     backgroundArrowPopover: "rgb(255,255,255)",
     backgroundButtonExport: "#536DFE",
