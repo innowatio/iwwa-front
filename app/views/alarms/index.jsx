@@ -9,7 +9,6 @@ import {connect} from "react-redux";
 import {bindActionCreators} from "redux";
 import moment from "moment";
 
-var CollectionUtils = require("lib/collection-utils");
 var components      = require("components");
 import {
     displayAlarmsOnChart,
@@ -19,10 +18,7 @@ import {
     numberOfSelectedTabs
 } from "actions/alarms";
 import {defaultTheme} from "lib/theme";
-
-var getKeyFromCollection = function (collection) {
-    return collection.get("_id");
-};
+import CollectionUtils from "lib/collection-utils";
 
 const styles = ({colors}) => ({
     headerContainer: {
@@ -158,114 +154,178 @@ var Alarms = React.createClass({
         ), Immutable.Map());
         return ret;
     },
-    getColumnsAlarms: function () {
+    headerAlarmsList: function (collection) {
         const {colors} = this.getTheme();
-        var self = this;
-        return [
-            {
-                key: "active",
-                style: function (value) {
-                    return {
-                        backgroundColor: value ? colors.activeAlarm : colors.backgroundTableColoumn,
-                        width: "47px",
-                        height: "100%",
-                        color: colors.mainFontColor,
-                        textAlign: "center"
-                    };
-                },
-                valueFormatter: function (value) {
-                    return (
+        const active = collection.get("active");
+        const dateLastNotification = collection.get("notifications").last().get("date");
+        const formattedDate = dateLastNotification ?
+            ` - ${moment(dateLastNotification).locale("it").format("LLL")}` :
+            null;
+        return (
+            <div style={styles(this.getTheme()).headerContainer}>
+                <div
+                    style={{
+                        width: "calc(100vw - 200px)",
+                        float: "left"
+                    }}
+                >
+                    <components.Icon
+                        color={colors.iconAlarmAction}
+                        icon={active ? "flag" : "pause"}
+                        size={"34px"}
+                        style={{
+                            backgroundColor: active ? colors.activeAlarm : colors.backgroundTableColoumn,
+                            height: "100%",
+                            color: colors.mainFontColor,
+                            textAlign: "center"
+                        }}
+                    />
+                {`${collection.get("name")}${formattedDate}`}
+                </div>
+                <div
+                    style={{
+                        width: "140px",
+                        float: "right"
+                    }}
+                >
+                    <Router.Link to={"/chart/"}>
                         <components.Icon
-                            color={colors.iconAlarmAction}
-                            icon={value ? "flag" : "pause"}
+                            color={colors.iconChart}
+                            icon={"chart"}
                             size={"34px"}
-                        />
-                    );
-                }
-            },
-            "name",
-            {
-                key: "podId",
-                style: function () {
-                    return {
-                        width: "40%"
-                    };
-                },
-                valueFormatter: function (value) {
-                    var sito = self.getSiti().find(siti => {
-                        return siti.get("pod") === value;
-                    });
-                    return (
-                        <span>
-                            {CollectionUtils.sites.getLabel(sito)}
-                        </span>
-                    );
-                }
-            },
-            {
-                key: "_id",
-                valueFormatter: function (value) {
-                    return (
-                        <components.Icon
-                            color={colors.iconAlarmAction}
-                            icon={"settings"}
-                            onClick={R.partial(self.onClickAction, [value])}
-                            size={"32px"}
                             style={{
                                 float: "right",
+                                marginRight: "5px",
                                 cursor: "pointer",
                                 lineHeight: "20px",
                                 verticalAlign: "middle"
                             }}
                         />
-                    );
-                }
-            },
-            {
-                key: "notifications",
-                style: function () {
-                    return {width: "50px"};
-                },
-                valueFormatter: function (value, item) {
-                    // value is a list of maps
-                    var notificationDates = self.getNotificationsList(value);
-                    if (notificationDates.length > 0) {
-                        const alarms = R.dropRepeats(notificationDates);
-                        const sensorId = item.get("podId");
-                        const site = self.getSitoBySensor(sensorId) ?
-                            self.getSitoBySensor(sensorId).get("_id") : null;
-                        return (
-                            <Router.Link to={"/chart/"}>
-                                <components.Icon
-                                    color={colors.iconChart}
-                                    icon={"chart"}
-                                    onClick={
-                                        R.partial(
-                                            self.props.displayAlarmsOnChart,
-                                            [sensorId, site, alarms]
-                                        )
-                                    }
-                                    size={"34px"}
-                                    style={{
-                                        float: "right",
-                                        marginRight: "5px",
-                                        cursor: "pointer",
-                                        lineHeight: "20px",
-                                        verticalAlign: "middle"
-                                    }}
-                                />
-                            </Router.Link>
-                        );
-                    } else {
-                        return (
-                            <div></div>
-                        );
-                    }
-
-                }
-            }
-        ];
+                    </Router.Link>
+                    <components.Icon
+                        color={colors.iconAlarmAction}
+                        icon={"settings"}
+                        onClick={R.partial(this.onClickAction, [collection.get("_id")])}
+                        size={"32px"}
+                        style={{
+                            float: "right",
+                            cursor: "pointer",
+                            lineHeight: "20px",
+                            verticalAlign: "middle"
+                        }}
+                    />
+                </div>
+            </div>
+        );
     },
+    // getColumnsAlarms: function () {
+    //     const {colors} = this.getTheme();
+    //     var self = this;
+    //     return [
+    //         {
+    //             key: "active",
+    //             style: function (value) {
+    //                 return {
+    //                     backgroundColor: value ? colors.activeAlarm : colors.backgroundTableColoumn,
+    //                     width: "47px",
+    //                     height: "100%",
+    //                     color: colors.mainFontColor,
+    //                     textAlign: "center"
+    //                 };
+    //             },
+    //             valueFormatter: function (value) {
+    //                 return (
+    //                     <components.Icon
+    //                         color={colors.iconAlarmAction}
+    //                         icon={value ? "flag" : "pause"}
+    //                         size={"34px"}
+    //                     />
+    //                 );
+    //             }
+    //         },
+    //         "name",
+    //         {
+    //             key: "podId",
+    //             style: function () {
+    //                 return {
+    //                     width: "40%"
+    //                 };
+    //             },
+    //             valueFormatter: function (value) {
+    //                 var sito = self.getSiti().find(siti => {
+    //                     return siti.get("pod") === value;
+    //                 });
+    //                 return (
+    //                     <span>
+    //                         {CollectionUtils.sites.getLabel(sito)}
+    //                     </span>
+    //                 );
+    //             }
+    //         },
+    //         {
+    //             key: "_id",
+    //             valueFormatter: function (value) {
+    //                 return (
+    //                     <components.Icon
+    //                         color={colors.iconAlarmAction}
+    //                         icon={"settings"}
+    //                         onClick={R.partial(self.onClickAction, [value])}
+    //                         size={"32px"}
+    //                         style={{
+    //                             float: "right",
+    //                             cursor: "pointer",
+    //                             lineHeight: "20px",
+    //                             verticalAlign: "middle"
+    //                         }}
+    //                     />
+    //                 );
+    //             }
+    //         },
+    //         {
+    //             key: "notifications",
+    //             style: function () {
+    //                 return {width: "50px"};
+    //             },
+    //             valueFormatter: function (value, item) {
+    //                 // value is a list of maps
+    //                 var notificationDates = self.getNotificationsList(value);
+    //                 if (notificationDates.length > 0) {
+    //                     const alarms = R.dropRepeats(notificationDates);
+    //                     const sensorId = item.get("podId");
+    //                     const site = self.getSitoBySensor(sensorId) ?
+    //                         self.getSitoBySensor(sensorId).get("_id") : null;
+    //                     return (
+    //                         <Router.Link to={"/chart/"}>
+    //                             <components.Icon
+    //                                 color={colors.iconChart}
+    //                                 icon={"chart"}
+    //                                 onClick={
+    //                                     R.partial(
+    //                                         self.props.displayAlarmsOnChart,
+    //                                         [sensorId, site, alarms]
+    //                                     )
+    //                                 }
+    //                                 size={"34px"}
+    //                                 style={{
+    //                                     float: "right",
+    //                                     marginRight: "5px",
+    //                                     cursor: "pointer",
+    //                                     lineHeight: "20px",
+    //                                     verticalAlign: "middle"
+    //                                 }}
+    //                             />
+    //                         </Router.Link>
+    //                     );
+    //                 } else {
+    //                     return (
+    //                         <div></div>
+    //                     );
+    //                 }
+    //
+    //             }
+    //         }
+    //     ];
+    // },
     headerNotificationsList: function (collection, index) {
         const {colors} = this.getTheme();
         const isActivePanel = R.equals(this.state.panelToOpen, index);
@@ -538,7 +598,16 @@ var Alarms = React.createClass({
                             />
 
                             {this.renderFilterButton()}
-                            <components.CollectionElementsTable
+                            <components.CollectionItemList
+                                collections={R.isNil(allowedValues) ? Immutable.Map() : allowedValues.filter(this.filterAlarms)}
+                                headerComponent={this.headerAlarmsList}
+                                initialVisibleRow={10}
+                                hover={true}
+                                hoverStyle={styles(this.getTheme()).hoverStyle}
+                                lazyLoadButtonStyle={styles(this.getTheme()).lazyLoadButtonStyle}
+                                lazyLoadLabel={"Carica altri"}
+                            />
+                            {/*<components.CollectionElementsTable
                                 collection={
                                     R.isNil(allowedValues) ?
                                     Immutable.Map() :
@@ -547,7 +616,7 @@ var Alarms = React.createClass({
                                 getKey={getKeyFromCollection}
                                 hover={true}
                                 width={"30%"}
-                            />
+                            />*/}
                         </bootstrap.Tab>
                         <bootstrap.Tab
                             eventKey={3}
