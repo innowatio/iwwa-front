@@ -558,7 +558,7 @@ var Alarms = React.createClass({
                             }}
                         >
                             {this.renderFilterButton()}
-                            <components.CollectionPanelList
+                            <components.CollectionItemList
                                 collections={this.getNotifications()}
                                 headerComponent={this.headerNotificationsList}
                                 initialVisibleRow={10}

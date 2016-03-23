@@ -10,7 +10,7 @@ const styles = {
     }
 };
 
-var CollectionPanelList = React.createClass({
+var CollectionItemList = React.createClass({
     propTypes: {
         collections: IPropTypes.map.isRequired,
         headerComponent: PropTypes.func.isRequired,
@@ -80,4 +80,4 @@ var CollectionPanelList = React.createClass({
     }
 });
 
-module.exports = CollectionPanelList;
+module.exports = CollectionItemList;
