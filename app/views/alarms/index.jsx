@@ -19,26 +19,24 @@ import {
 } from "actions/alarms";
 import {defaultTheme} from "lib/theme";
 
-const styles = ({colors}) => ({
+const styles = ({colors}, active) => ({
     headerContainer: {
-        height: "55px",
-        lineHeight: "48px",
-        borderTop: "1px solid " + colors.white,
-        padding: "3px 0px",
-        clear: "both"
+        height: "50px",
+        borderTop: "1px solid " + colors.borderAlarmsRow,
+        clear: "both",
+        padding: "0px"
     },
     hoverStyle: {
-        backgroundColor: colors.backgroundAlarmsSection
+        backgroundColor: colors.backgroundAlarmsRowHover
     },
     iconArrowDown: {
         display: "inline-block",
-        lineHeight: "40px",
+        lineHeight: "20px",
         verticalAlign: "middle",
-        marginRight: "10px"
+        marginRight: "10px",
+        transform: active ? "rotateY(180deg)" : null
     },
     iconChart: {
-        float: "right",
-        marginRight: "5px",
         cursor: "pointer",
         lineHeight: "20px",
         verticalAlign: "middle"
@@ -164,16 +162,18 @@ var Alarms = React.createClass({
             <div style={styles(this.getTheme()).headerContainer}>
                 <div
                     style={{
-                        width: "calc(100vw - 200px)",
-                        float: "left"
+                        float: "left",
+                        height: "50px",
+                        minWidth: "auto",
+                        width: "calc(100vw - 200px)"
                     }}
                 >
                     <components.Icon
                         color={colors.iconAlarmAction}
                         icon={active ? "flag" : "pause"}
-                        size={"34px"}
+                        size={"30px"}
                         style={{
-                            backgroundColor: active ? colors.activeAlarm : colors.backgroundTableColoumn,
+                            backgroundColor: active ? colors.activeAlarm : colors.pausedAlarm,
                             height: "100%",
                             color: colors.mainFontColor,
                             textAlign: "center"
@@ -183,36 +183,35 @@ var Alarms = React.createClass({
                 </div>
                 <div
                     style={{
-                        width: "140px",
+                        width: "100px",
                         float: "right"
                     }}
                 >
+                    <components.Icon
+                        color={colors.iconAlarmAction}
+                        icon={"settings"}
+                        onClick={R.partial(this.onClickAction, [collection.get("_id")])}
+                        size={"28px"}
+                        style={{
+                            padding: "10px 5px",
+                            cursor: "pointer",
+                            lineHeight: "20px",
+                            verticalAlign: "middle"
+                        }}
+                    />
                     <Router.Link to={"/chart/"}>
                         <components.Icon
-                            color={colors.iconChart}
+                            color={colors.iconAlarmsChart}
                             icon={"chart"}
                             size={"34px"}
                             style={{
-                                float: "right",
-                                marginRight: "5px",
+                                padding: "6px 5px",
                                 cursor: "pointer",
                                 lineHeight: "20px",
                                 verticalAlign: "middle"
                             }}
                         />
                     </Router.Link>
-                    <components.Icon
-                        color={colors.iconAlarmAction}
-                        icon={"settings"}
-                        onClick={R.partial(this.onClickAction, [collection.get("_id")])}
-                        size={"32px"}
-                        style={{
-                            float: "right",
-                            cursor: "pointer",
-                            lineHeight: "20px",
-                            verticalAlign: "middle"
-                        }}
-                    />
                 </div>
             </div>
         );
@@ -332,18 +331,20 @@ var Alarms = React.createClass({
         return (
             <div style={styles(this.getTheme()).headerContainer}>
                 <components.Button
+                    className="pull-left"
                     onClick={() => this.setState({panelToOpen: isActivePanel ? null : index})}
                     style={{
                         backgroundColor: colors.transparent,
                         border: "0px",
                         color: colors.mainFontColor,
                         boxShadow: "none",
-                        width: "calc(100vw - 100px)",
+                        minWidth: "auto",
+                        width: "calc(100vw - 105px)",
                         textAlign: "left"
                     }}
                 >
                     <components.Icon
-                        color={colors.white}
+                        color={colors.mainFontColor}
                         icon={"arrow-down"}
                         size={"14px"}
                         style={styles(this.getTheme()).iconArrowDown}
@@ -360,7 +361,7 @@ var Alarms = React.createClass({
                     }}
                 >
                     <components.Icon
-                        color={colors.iconChart}
+                        color={colors.iconAlarmsChart}
                         icon={"chart"}
                         size={"34px"}
                         style={styles(this.getTheme()).iconChart}
@@ -450,23 +451,18 @@ var Alarms = React.createClass({
         const {colors} = this.getTheme();
         var alarmFilter = this.alarmFilterTitle();
         return (
-            <div className="alarm-filter">
-                <Radium.Style
-                    rules={{
-                        "": {
-                            overflow: "auto",
-                            margin: "0px",
-                            border: "1px solid " + colors.borderDropdown,
-                            backgroundColor: colors.backgroundDropdown,
-                            borderRadius: "10px",
-                            color: colors.mainFontColor,
-                            outline: "none",
-                            fontSize: "15px",
-                            fontWeight: "300"
-                        }
-                    }}
-                    scopeSelector=".alarm-filter"
-                />
+            <div style={{
+                overflow: "auto",
+                margin: "0px",
+                border: "1px solid " + colors.borderDropdown,
+                backgroundColor: colors.backgroundDropdown,
+                borderRadius: "10px",
+                color: colors.mainFontColor,
+                outline: "none",
+                fontSize: "15px",
+                fontWeight: "300"
+            }}
+            >
             {alarmFilter.map(this.renderFilterCell)}
             </div>
         );
