@@ -1,5 +1,4 @@
 import Immutable from "immutable";
-import R from "ramda";
 import React, {PropTypes} from "react";
 import IPropTypes from "react-immutable-proptypes";
 import {connect} from "react-redux";
@@ -7,11 +6,11 @@ import {bindActionCreators} from "redux";
 
 import {addToFavorite, changeYAxisValues, selectChartType, selectFavoriteChart} from "actions/monitoring-chart";
 
-import {getKeyFromCollection} from "lib/collection-utils";
-import {styles} from "lib/styles_restyling";
+//import {getKeyFromCollection} from "lib/collection-utils";
+//import {styles} from "lib/styles_restyling";
 import {defaultTheme} from "lib/theme";
 
-import {Button, CollectionElementsTable, DropdownButton, Icon, MonitoringChart, Popover, SectionToolbar} from "components";
+import {Button, Icon, MonitoringChart, SectionToolbar} from "components";
 
 const buttonStyle = ({colors}) => ({
     backgroundColor: colors.buttonPrimary,
@@ -22,10 +21,6 @@ const buttonStyle = ({colors}) => ({
     width: "50px",
     marginLeft: "10px"
 });
-
-let advancedOptions = function () {
-    return [];
-};
 
 var MonitoringChartView = React.createClass({
     propTypes: {
@@ -76,53 +71,7 @@ var MonitoringChartView = React.createClass({
         const theme = this.getTheme();
         return (
             <div>
-                <SectionToolbar backUrl={"/monitoring/"} title={"Torna alla gestione item"}>
-                    <Button style={buttonStyle(theme)}>
-                        <Icon
-                            color={theme.colors.iconHeader}
-                            icon={"star-o"}
-                            size={"28px"}
-                            style={{lineHeight: "20px"}}
-                        />
-                    </Button>
-                    <Popover
-                        className="pull-right"
-                        hideOnChange={true}
-                        style={styles(theme).chartPopover}
-                        title={
-                            <Icon
-                                color={theme.colors.iconHeader}
-                                icon={"option"}
-                                size={"32px"}
-                                style={{lineHeight: "20px", verticalAlign: "middle"}}
-                            />
-                        }
-                    >
-                        <DropdownButton
-                            allowedValues={advancedOptions(this.getTheme())}
-                            getColor={R.prop("color")}
-                            getIcon={R.prop("iconClass")}
-                            getKey={R.prop("key")}
-                            getLabel={R.prop("label")}
-                            style={styles(theme).chartDropdownButton}
-                        />
-                    </Popover>
-                </SectionToolbar>
-
-                <div>
-                    <label style={{color: theme.colors.navText}}>
-                        {"Grafici preferiti"}
-                    </label>
-                    <CollectionElementsTable
-                        collection={this.props.monitoringChart.favorites}
-                        columns={this.getFavoritesChartsColumns()}
-                        getKey={getKeyFromCollection}
-                        hover={true}
-                        onRowClick={this.props.selectFavoriteChart}
-                        width={"60%"}
-                        style={{color: "white"}}
-                    />
-                </div>
+                <SectionToolbar backUrl={"/monitoring/"} title={"Torna all'elenco sensori"} />
 
                 <MonitoringChart
                     addToFavorite={this.props.addToFavorite}
@@ -130,9 +79,95 @@ var MonitoringChartView = React.createClass({
                     chartState={this.props.monitoringChart}
                     selectChartType={this.props.selectChartType}
                     series={this.getChartSeries()}
+                    style={{width: "75%", padding: "20px", float: "left"}}
                 />
+
+                <div style={{width: "25%", backgroundColor: theme.colors.primary, float: "left", minHeight: "600px"}}>
+                    <div style={{textAlign: "center", padding: "20px", borderBottom: "solid 1px", borderColor: theme.colors.white}}>
+                        <label style={{color: theme.colors.navText, display: "inherit"}}>
+                            {"SCEGLI LO STILE DEL GRAFICO"}
+                        </label>
+                        <Button style={buttonStyle(theme)}>
+                            <Icon
+                                color={theme.colors.iconHeader}
+                                icon={"add"}
+                                size={"28px"}
+                                style={{lineHeight: "20px"}}
+                            />
+                        </Button>
+                        <Button style={buttonStyle(theme)}>
+                            <Icon
+                                color={theme.colors.iconHeader}
+                                icon={"add"}
+                                size={"28px"}
+                                style={{lineHeight: "20px"}}
+                            />
+                        </Button>
+                        <Button style={buttonStyle(theme)}>
+                            <Icon
+                                color={theme.colors.iconHeader}
+                                icon={"add"}
+                                size={"28px"}
+                                style={{lineHeight: "20px"}}
+                            />
+                        </Button>
+                        <Button style={buttonStyle(theme)}>
+                            <Icon
+                                color={theme.colors.iconHeader}
+                                icon={"add"}
+                                size={"28px"}
+                                style={{lineHeight: "20px"}}
+                            />
+                        </Button>
+                    </div>
+                    <div style={{textAlign: "center", padding: "20px", borderBottom: "solid 1px", borderColor: theme.colors.white}}>
+                        <label style={{color: theme.colors.navText, display: "inherit"}}>
+                            {"CAMBIA VALORI ASSI"}
+                        </label>
+                    </div>
+                    <div style={{textAlign: "center", padding: "20px", borderBottom: "solid 1px", borderColor: theme.colors.white}}>
+                        <div>
+                            <Button style={buttonStyle(theme)}>
+                                <Icon
+                                    color={theme.colors.iconHeader}
+                                    icon={"star-o"}
+                                    size={"28px"}
+                                    style={{lineHeight: "20px"}}
+                                />
+                            </Button>
+                            <label style={{color: theme.colors.navText}}>
+                                {"Aggiungi grafico ai preferiti"}
+                            </label>
+                        </div>
+                        <div>
+                            <Button style={buttonStyle(theme)}>
+                                <Icon
+                                    color={theme.colors.iconHeader}
+                                    icon={"star-o"}
+                                    size={"28px"}
+                                    style={{lineHeight: "20px"}}
+                                />
+                            </Button>
+                            <label style={{color: theme.colors.navText}}>
+                                {"Guarda l'elenco preferiti"}
+                            </label>
+                        </div>
+                    </div>
+                </div>
+
             </div>
         );
+                //<div>
+                //    <CollectionElementsTable
+                //        collection={this.props.monitoringChart.favorites}
+                //        columns={this.getFavoritesChartsColumns()}
+                //        getKey={getKeyFromCollection}
+                //        hover={true}
+                //        onRowClick={this.props.selectFavoriteChart}
+                //        width={"60%"}
+                //        style={{color: "white"}}
+                //    />
+                //</div>
     }
 });
 

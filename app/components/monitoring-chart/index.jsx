@@ -1,24 +1,28 @@
-import React from "react";
-import {Button, Input} from "react-bootstrap";
+import React, {PropTypes} from "react";
 import ReactHighstock from "react-highcharts/bundle/ReactHighstock"; // Highstock is bundled
-import {ObjectSelect, SensorRow} from "components";
 
-const chartTypes = [
-    {label: "Linea", id: "spline"},
-    {label: "Istogramma", id: "column"},
-    {label: "In pila", id: "stacked"},
-    {label: "In pila percentuale", id: "percent"}
-];
+import {defaultTheme} from "lib/theme";
+
+//const chartTypes = [
+//    {label: "Linea", id: "spline"},
+//    {label: "Istogramma", id: "column"},
+//    {label: "In pila", id: "stacked"},
+//    {label: "In pila percentuale", id: "percent"}
+//];
 
 let config;
 
 var MonitoringChart = React.createClass({
     propTypes: {
-        addToFavorite: React.PropTypes.func.isRequired,
-        chartState: React.PropTypes.object.isRequired,
-        onChangeYAxisValues: React.PropTypes.func.isRequired,
-        selectChartType: React.PropTypes.func.isRequired,
-        series: React.PropTypes.array.isRequired
+        addToFavorite: PropTypes.func.isRequired,
+        chartState: PropTypes.object.isRequired,
+        onChangeYAxisValues: PropTypes.func.isRequired,
+        selectChartType: PropTypes.func.isRequired,
+        series: PropTypes.array.isRequired,
+        style: PropTypes.object
+    },
+    contextTypes: {
+        theme: PropTypes.object
     },
     getInitialState: function () {
         return this.initializeState(this.props);
@@ -31,6 +35,9 @@ var MonitoringChart = React.createClass({
             yAxisMax: props.chartState.yAxis.max,
             yAxisMin: props.chartState.yAxis.min
         };
+    },
+    getTheme: function () {
+        return this.context.theme || defaultTheme;
     },
     getRandomValue: function () {
         return Math.floor((Math.random() * 100) + 1);
@@ -62,10 +69,14 @@ var MonitoringChart = React.createClass({
         };
     },
     getCommonConfig: function () {
+        const theme = this.getTheme();
         return {
             chart: {
+                height: 600,
                 type: this.props.chartState.type,
-                height: 600
+                style: {
+                    backgroundColor: theme.colors.background
+                }
             },
             credits: {
                 enabled: false
@@ -188,49 +199,47 @@ var MonitoringChart = React.createClass({
         });
     },
     render: function () {
-        let type = chartTypes.find((item) => {
-            return item.id === this.props.chartState.type;
-        });
+        //let type = chartTypes.find((item) => {
+        //    return item.id === this.props.chartState.type;
+        //});
         return (
-            <div style={{marginBottom: "60px"}}>
-                <ObjectSelect
-                    options={chartTypes}
-                    onBlur={() => {}}
-                    onChange={this.props.selectChartType}
-                    value={type}
-                />
-                <Button bsStyle="primary" onClick={this.addToFavorite} style={{float: "right"}}>
-                    {"Add to favorite"}
-                </Button>
-                <SensorRow />
-
-                <div>
-                    <Input
-                        type="text"
-                        value={this.state.yAxisMin}
-                        label="yAxis min"
-                        bsStyle={this.getYAxisValidationState()}
-                        hasFeedback={true}
-                        ref="yAxisMin"
-                        onChange={this.handleAxisChange}
-                    />
-                    <Input
-                        type="text"
-                        value={this.state.yAxisMax}
-                        label="yAxis max"
-                        bsStyle={this.getYAxisValidationState()}
-                        hasFeedback={true}
-                        ref="yAxisMax"
-                        onChange={this.handleAxisChange}
-                    />
-                    <Button onClick={this.changeYAxisValues}>
-                        {"Change axis value"}
-                    </Button>
-                </div>
-
+            <div style={{marginBottom: "60px", ...this.props.style}}>
                 <ReactHighstock config={this.getHighstockConfig()} />
             </div>
         );
+                //<ObjectSelect
+                //    options={chartTypes}
+                //    onBlur={() => {}}
+                //    onChange={this.props.selectChartType}
+                //    value={type}
+                ///>
+                //<Button bsStyle="primary" onClick={this.addToFavorite} style={{float: "right"}}>
+                //    {"Add to favorite"}
+                //</Button>
+                //
+                //<div>
+                //    <Input
+                //        type="text"
+                //        value={this.state.yAxisMin}
+                //        label="yAxis min"
+                //        bsStyle={this.getYAxisValidationState()}
+                //        hasFeedback={true}
+                //        ref="yAxisMin"
+                //        onChange={this.handleAxisChange}
+                //    />
+                //    <Input
+                //        type="text"
+                //        value={this.state.yAxisMax}
+                //        label="yAxis max"
+                //        bsStyle={this.getYAxisValidationState()}
+                //        hasFeedback={true}
+                //        ref="yAxisMax"
+                //        onChange={this.handleAxisChange}
+                //    />
+                //    <Button onClick={this.changeYAxisValues}>
+                //        {"Change axis value"}
+                //    </Button>
+                //</div>
     }
 });
 
