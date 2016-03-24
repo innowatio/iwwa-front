@@ -2,6 +2,7 @@ import Immutable from "immutable";
 import React, {PropTypes} from "react";
 import IPropTypes from "react-immutable-proptypes";
 import {connect} from "react-redux";
+import {Link} from "react-router";
 import {bindActionCreators} from "redux";
 
 import {addToFavorite, changeYAxisValues, selectChartType, selectFavoriteChart} from "actions/monitoring-chart";
@@ -140,14 +141,16 @@ var MonitoringChartView = React.createClass({
                             </label>
                         </div>
                         <div>
-                            <Button style={buttonStyle(theme)}>
-                                <Icon
-                                    color={theme.colors.iconHeader}
-                                    icon={"star-o"}
-                                    size={"28px"}
-                                    style={{lineHeight: "20px"}}
-                                />
-                            </Button>
+                            <Link to={"/monitoring/favorites/"}>
+                                <Button style={buttonStyle(theme)}>
+                                    <Icon
+                                        color={theme.colors.iconHeader}
+                                        icon={"star-o"}
+                                        size={"28px"}
+                                        style={{lineHeight: "20px"}}
+                                    />
+                                </Button>
+                            </Link>
                             <label style={{color: theme.colors.navText}}>
                                 {"Guarda l'elenco preferiti"}
                             </label>

@@ -20,6 +20,7 @@ module.exports = (
             <Route component={views.Dashboard} name="home" path="/" />
             <Route component={views.Monitoring} name="monitoring" path="/monitoring/" titleView="Monitoring" />
             <Route component={views.MonitoringChartView} name="monitoring-chart" path="/monitoring/chart/" titleView="Monitoring chart" />
+            <Route component={views.MonitoringFavoritesCharts} name="monitoring-favorites-charts" path="/monitoring/favorites/" titleView="Favorites charts" />
         </Route>
     </Router>
 );
