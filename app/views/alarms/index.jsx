@@ -18,7 +18,6 @@ import {
 import {defaultTheme} from "lib/theme";
 import NotificationRow from "./notification-row";
 import AlarmRow from "./alarm-row";
-import CollectionUtils from "lib/collection-utils";
 import {styles as stylesLib} from "lib/styles_restyling";
 
 const styles = ({colors}) => ({
@@ -76,7 +75,8 @@ var Alarms = React.createClass({
     getInitialState: function () {
         return {
             alarmToVisualize: "TUTTI",
-            panelToOpen: null
+            panelToOpen: null,
+            notificationSearch: ""
         };
     },
     componentDidMount: function () {
@@ -167,133 +167,20 @@ var Alarms = React.createClass({
         }
         return value;
     },
-    renderFilterTableCell: function (allowedValue, label, index) {
-        return (
-            <div key={index} onClick={R.partial(this.onClickFilter, [allowedValue, label])}>
-                <bootstrap.Input
-                    defaultValue={R.equals(this.state[allowedValue.key], label)}
-                    name={allowedValue.key}
-                    type={"radio"}
-                    value={label}
-                />
-                {label}
-            </div>
-        );
-    },
-    renderFilterCell: function (value) {
-        const {colors} = this.getTheme();
-        return (
-            <div key={value.title}>
-                <h5 style={{color: colors.mainFontColor}}>
-                    {value.title}
-                </h5>
-                <bootstrap.ListGroup style={{paddingLeft: "30px"}}>
-                    {
-                        R.is(Array, value.label) ?
-                        value.label.map(R.partial(this.renderFilterTableCell, [value])) :
-                        this.renderFilterTableCell(value, value.label)
-                    }
-                </bootstrap.ListGroup>
-            </div>
-        );
-    },
-    renderFilter: function () {
-        const {colors} = this.getTheme();
-        var alarmFilter = this.alarmFilterTitle();
-        return (
-            <div style={{
-                overflow: "auto",
-                margin: "0px",
-                border: "1px solid " + colors.borderDropdown,
-                backgroundColor: colors.backgroundDropdown,
-                borderRadius: "10px",
-                color: colors.mainFontColor,
-                outline: "none",
-                fontSize: "15px",
-                fontWeight: "300"
-            }}
-            >
-            {alarmFilter.map(this.renderFilterCell)}
-            </div>
-        );
-    },
-    renderInputSearch: function () {
-        const {colors} = this.getTheme();
-        return (
-            <div className="search-container">
-                <Radium.Style
-                    rules={{
-                        ".input-search": {
-                            height: "60px",
-                            fontSize: "20px",
-                            borderRight: "0px",
-                            borderTopLeftRadius: "20px",
-                            borderBottomLeftRadius: "20px",
-                            backgroundColor: colors.backgroundInputSearch,
-                            outline: "none !important",
-                            color: colors.white
-                        },
-                        ".input-group-addon": {
-                            backgroundColor: colors.backgroundInputSearch,
-                            borderTopRightRadius: "20px",
-                            borderBottomRightRadius: "20px",
-                            cursor: "pointer"
-                        }
-                    }}
-                    scopeSelector=".search-container"
-                />
-                <bootstrap.Input
-                    addonAfter={
-                        <components.Icon
-                            color={colors.iconInputSearch}
-                            icon={"search"}
-                            size={"34px"}
-                            style={{
-                                lineHeight: "10px",
-                                verticalAlign: "middle"
-                            }}
-                        />
-                    }
-                    className="input-search"
-                    onChange={event => this.setState({inputFilter: event.target.value})}
-                    placeholder="Ricerca"
-                    type="text"
-                    value={this.state.inputFilter}
-                />
-            </div>
-        );
-    },
     renderFilterButton: function () {
-        const {colors} = this.getTheme();
         return (
-            <div style={{marginTop: "10px", height: "auto", marginBottom: "10px", float: "right"}}>
-                <components.Popover
-                    title={
-                        <span style={{
-                            display: "inline-block",
-                            width: "50px",
-                            height: "50px",
-                            borderRadius: "100%",
-                            lineHeight: "4",
-                            backgroundColor: colors.secondary
-                        }}
-                        >
-                            <components.Icon
-                                color={colors.iconFilter}
-                                icon={"filter"}
-                                size={"38px"}
-                                style={{
-                                    verticalAlign: "middle",
-                                    lineHeight: "20px",
-                                    textAlign: "center"
-                                }}
-                            />
-                        </span>
-                    }
-                >
-                    {this.renderFilter()}
-                </components.Popover>
-            </div>
+            <components.ButtonFilter
+                filterList={this.alarmFilterTitle()}
+                onClickFilter={this.onClickFilter}
+            />
+        );
+    },
+    renderSearch: function (stateKey) {
+        return (
+            <components.InputFilter
+                inputValue={this.state[stateKey]}
+                onChangeFilter={(input) => this.setState({[stateKey]: input})}
+            />
         );
     },
     renderAlarmRow: function (element, elementId) {
@@ -358,7 +245,6 @@ var Alarms = React.createClass({
                                 }}
                                 scopeSelector=".alarm-table"
                             />
-                            {this.renderFilterButton()}
                             <components.CollectionItemList
                                 collections={R.isNil(allowedValues) ? Immutable.Map() : allowedValues.filter(this.filterAlarms)}
                                 headerComponent={this.renderAlarmRow}
@@ -375,7 +261,7 @@ var Alarms = React.createClass({
                             style={styles(this.getTheme()).tabStyle}
                         >
                             {this.renderFilterButton()}
-                            {this.renderInputSearch()}
+                            {this.renderSearch("notificationSearch")}
                             <components.CollectionItemList
                                 collections={this.getNotifications()}
                                 headerComponent={this.renderNotificationRow}
