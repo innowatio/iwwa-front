@@ -1,13 +1,14 @@
-var Immutable  = require("immutable");
-var Radium     = require("radium");
-var React      = require("react");
-var bootstrap  = require("react-bootstrap");
-var IPropTypes = require("react-immutable-proptypes");
-var R          = require("ramda");
+import Immutable from "immutable";
+import Radium from "radium";
+import React from "react";
+import * as bootstrap from "react-bootstrap";
+import IPropTypes from "react-immutable-proptypes";
+import R from "ramda";
 import {connect} from "react-redux";
 import {bindActionCreators} from "redux";
+import moment from "moment";
 
-var components      = require("components");
+import components from "components";
 import {
     displayAlarmsOnChart,
     modifyExistentAlarm,
@@ -19,6 +20,7 @@ import {defaultTheme} from "lib/theme";
 import NotificationRow from "./notification-row";
 import AlarmRow from "./alarm-row";
 import {styles as stylesLib} from "lib/styles_restyling";
+import CollectionUtils from "lib/collection-utils";
 
 const styles = ({colors}) => ({
     hoverStyle: {
@@ -113,9 +115,6 @@ var Alarms = React.createClass({
         ), Immutable.Map());
         return ret;
     },
-    onChangeInputFilter: function (value) {
-        this.setState({inputFilter: value});
-    },
     subListNotification: function (components, index) {
         const isActive = this.state.panelToOpen === index;
         return (
@@ -157,6 +156,19 @@ var Alarms = React.createClass({
     onClickPanel: function (elementId) {
         const isPanelOpen = !R.equals(this.state.panelToOpen, elementId);
         return this.setState({panelToOpen: isPanelOpen ? elementId : null});
+    },
+    dateFilter: function (item, search) {
+        const searchRegExp = new RegExp(search, "i");
+        return !R.isNil(item) ? (
+            searchRegExp.test(moment(item.get("date")).locale("it").format("LLL"))
+        ) : null;
+    },
+    notificationFilter: function (item) {
+        const search = this.state.notificationSearch;
+        return (
+            CollectionUtils.sites.filter(item, search) ||
+            this.dateFilter(item, search)
+        );
     },
     filterAlarms: function (value) {
         if (this.state.alarmToVisualize[0] === "ATTIVI") {
@@ -263,7 +275,7 @@ var Alarms = React.createClass({
                             {this.renderFilterButton()}
                             {this.renderSearch("notificationSearch")}
                             <components.CollectionItemList
-                                collections={this.getNotifications()}
+                                collections={this.getNotifications().filter(this.notificationFilter)}
                                 headerComponent={this.renderNotificationRow}
                                 initialVisibleRow={10}
                                 hover={true}
