@@ -84,61 +84,63 @@ var MonitoringChartView = React.createClass({
                 />
 
                 <div style={{width: "25%", backgroundColor: theme.colors.primary, float: "left", minHeight: "600px"}}>
-                    <div style={{textAlign: "center", padding: "20px", borderBottom: "solid 1px", borderColor: theme.colors.white}}>
+                    <div style={{padding: "20px", borderBottom: "solid 1px", borderColor: theme.colors.white}}>
                         <label style={{color: theme.colors.navText, display: "inherit"}}>
                             {"SCEGLI LO STILE DEL GRAFICO"}
                         </label>
-                        <Button style={buttonStyle(theme)} onClick={() => {
-                            this.props.selectChartType("spline");
-                        }}
-                        >
-                            <Icon
-                                color={theme.colors.iconHeader}
-                                icon={"add"}
-                                size={"28px"}
-                                style={{lineHeight: "20px"}}
-                            />
-                        </Button>
-                        <Button style={buttonStyle(theme)} onClick={() => {
-                            this.props.selectChartType("column");
-                        }}
-                        >
-                            <Icon
-                                color={theme.colors.iconHeader}
-                                icon={"add"}
-                                size={"28px"}
-                                style={{lineHeight: "20px"}}
-                            />
-                        </Button>
-                        <Button style={buttonStyle(theme)} onClick={() => {
-                            this.props.selectChartType("stacked");
-                        }}
-                        >
-                            <Icon
-                                color={theme.colors.iconHeader}
-                                icon={"add"}
-                                size={"28px"}
-                                style={{lineHeight: "20px"}}
-                            />
-                        </Button>
-                        <Button style={buttonStyle(theme)} onClick={() => {
-                            this.props.selectChartType("percent");
-                        }}
-                        >
-                            <Icon
-                                color={theme.colors.iconHeader}
-                                icon={"add"}
-                                size={"28px"}
-                                style={{lineHeight: "20px"}}
-                            />
-                        </Button>
+                        <div style={{textAlign: "center"}}>
+                            <Button style={buttonStyle(theme)} onClick={() => {
+                                this.props.selectChartType("spline");
+                            }}
+                            >
+                                <Icon
+                                    color={theme.colors.iconHeader}
+                                    icon={"add"}
+                                    size={"28px"}
+                                    style={{lineHeight: "20px"}}
+                                />
+                            </Button>
+                            <Button style={buttonStyle(theme)} onClick={() => {
+                                this.props.selectChartType("column");
+                            }}
+                            >
+                                <Icon
+                                    color={theme.colors.iconHeader}
+                                    icon={"add"}
+                                    size={"28px"}
+                                    style={{lineHeight: "20px"}}
+                                />
+                            </Button>
+                            <Button style={buttonStyle(theme)} onClick={() => {
+                                this.props.selectChartType("stacked");
+                            }}
+                            >
+                                <Icon
+                                    color={theme.colors.iconHeader}
+                                    icon={"add"}
+                                    size={"28px"}
+                                    style={{lineHeight: "20px"}}
+                                />
+                            </Button>
+                            <Button style={buttonStyle(theme)} onClick={() => {
+                                this.props.selectChartType("percent");
+                            }}
+                            >
+                                <Icon
+                                    color={theme.colors.iconHeader}
+                                    icon={"add"}
+                                    size={"28px"}
+                                    style={{lineHeight: "20px"}}
+                                />
+                            </Button>
+                        </div>
                     </div>
-                    <div style={{textAlign: "center", padding: "20px", borderBottom: "solid 1px", borderColor: theme.colors.white}}>
+                    <div style={{padding: "20px", borderBottom: "solid 1px", borderColor: theme.colors.white}}>
                         <label style={{color: theme.colors.navText, display: "inherit"}}>
                             {"CAMBIA VALORI ASSI"}
                         </label>
                     </div>
-                    <div style={{textAlign: "center", padding: "20px", borderBottom: "solid 1px", borderColor: theme.colors.white}}>
+                    <div style={{padding: "20px", borderBottom: "solid 1px", borderColor: theme.colors.white}}>
                         <div>
                             <Button style={buttonStyle(theme)}  onClick={this.props.addToFavorite}>
                                 <Icon

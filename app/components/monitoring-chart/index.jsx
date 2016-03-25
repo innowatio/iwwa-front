@@ -66,11 +66,8 @@ var MonitoringChart = React.createClass({
         const theme = this.getTheme();
         return {
             chart: {
-                height: 600,
-                type: this.props.chartState.type,
-                style: {
-                    backgroundColor: theme.colors.background
-                }
+                ...this.getCommonChartConfig(),
+                type: this.props.chartState.type
             },
             credits: {
                 enabled: false
@@ -79,23 +76,44 @@ var MonitoringChart = React.createClass({
                 enabled: true
             },
             rangeSelector: {
+                buttonTheme: { // styles for the buttons
+                    fill: "blue",
+                    r: 8,
+                    style: {
+                        color: "white",
+                        fontWeight: "bold"
+                    },
+                    states: {
+                        hover: {},
+                        select: {
+                            fill: theme.colors.buttonPrimary,
+                            style: {
+                                color: "white"
+                            }
+                        }
+                    }
+                },
                 buttons: [
-                    {type: "day", count: 1, text: "1d"},
-                    {type: "week", count: 1, text: "1w"},
-                    {type: "month", count: 1, text: "1m"},
-                    {type: "year", count: 1, text: "1y"},
+                    {type: "day", count: 1, text: "1 gg"},
+                    {type: "week", count: 1, text: "1 sett"},
+                    {type: "month", count: 1, text: "1 mese"},
+                    {type: "year", count: 1, text: "1 anno"},
                     {type: "ytd", text: "YTD"},
-                    {type: "all", text: "All"}
+                    {type: "all", text: "Tutto"}
                 ],
                 selected: 2
-            },
-            title: {
-                text: "Highstock"
             },
             tooltip: {
                 shared: true
             },
             yAxis: this.props.chartState.yAxis
+        };
+    },
+    getCommonChartConfig: function () {
+        const theme = this.getTheme();
+        return {
+            backgroundColor: theme.colors.background,
+            height: 600
         };
     },
     getBasicLineConfig: function () {
@@ -107,8 +125,8 @@ var MonitoringChart = React.createClass({
     getStackedConfig: function () {
         return {
             chart: {
-                type: "column",
-                height: 600
+                ...this.getCommonChartConfig(),
+                type: "column"
             },
             yAxis: {
                 ...this.props.chartState.yAxis,
@@ -135,8 +153,8 @@ var MonitoringChart = React.createClass({
     getPercentConfig: function () {
         return {
             chart: {
-                type: "column",
-                height: 600
+                ...this.getCommonChartConfig(),
+                type: "column"
             },
             plotOptions: {
                 column: {
@@ -162,7 +180,6 @@ var MonitoringChart = React.createClass({
         if (configProp) {
             return configProp;
         } else {
-            console.log("building chart of type: " + this.props.chartState.type);
             return {
                 ...this.getCommonConfig(),
                 ...this.getSpecificTypeConfig(),
