@@ -1,15 +1,42 @@
 import React, {PropTypes} from "react";
 import IPropTypes from "react-immutable-proptypes";
 import {Style} from "radium";
+import ReactPureRender from "react-addons-pure-render-mixin";
 
 import {defaultTheme} from "lib/theme";
 
 const styles = {
     listContainer: {
-        height: "calc(100vh - 270px)",
+        height: "calc(100% - 270px)",
         overflow: "hidden"
     }
 };
+
+var RowItem = React.createClass({
+    propTypes: {
+        element: IPropTypes.map.isRequired,
+        elementId: PropTypes.oneOfType([PropTypes.string, PropTypes.number]).isRequired,
+        header: PropTypes.func.isRequired,
+        hoverStyle: PropTypes.object,
+        subList: PropTypes.func.isRequired
+    },
+    mixins: [ReactPureRender],
+    render: function () {
+        console.log("RENDER ROW");
+        return (
+            <div className="item-list-container">
+                <div className="hover-container">
+                    <Style
+                        rules={{".hover-container:hover": this.props.hoverStyle}}
+                        scopeSelector=".item-list-container"
+                    />
+                    {this.props.header(this.props.element, this.props.elementId)}
+                </div>
+                {this.props.subList(this.props.element, this.props.elementId)}
+            </div>
+        );
+    }
+});
 
 var CollectionItemList = React.createClass({
     propTypes: {
@@ -27,6 +54,7 @@ var CollectionItemList = React.createClass({
     contextTypes: {
         theme: PropTypes.object
     },
+    mixins: [ReactPureRender],
     getDefaultProps: function () {
         return {
             subListComponent: () => null,
@@ -49,20 +77,16 @@ var CollectionItemList = React.createClass({
     onMouseLeave: function () {
         this.setState({hover: null});
     },
-    renderList: function (collection, index) {
+    renderItemList: function (element, elementId) {
         return (
-            <div className="item-list-container" key={index}>
-                <div className="hover-container">
-                    <Style
-                        rules={{
-                            ".hover-container:hover": this.props.hoverStyle
-                        }}
-                        scopeSelector=".item-list-container"
-                    />
-                    {this.props.headerComponent(collection, index)}
-                </div>
-                {this.props.subListComponent(collection, index)}
-            </div>
+            <RowItem
+                element={element}
+                elementId={elementId}
+                header={this.props.headerComponent}
+                hoverStyle={this.props.hoverStyle}
+                key={elementId}
+                subList={this.props.subListComponent}
+            />
         );
     },
     renderLazyLoad: function () {
@@ -72,7 +96,10 @@ var CollectionItemList = React.createClass({
                 onClick={() => this.setState({
                     visibleValuesList: this.state.visibleValuesList + this.props.initialVisibleRow})
                 }
-                style={this.props.lazyLoadButtonStyle}
+                style={{
+                    ...this.props.lazyLoadButtonStyle,
+                    marginBottom: "50px"
+                }}
             >
                 {this.props.lazyLoadLabel}
             </div>
@@ -82,7 +109,7 @@ var CollectionItemList = React.createClass({
         const {colors} = this.getTheme();
         const collectionList = this.props.collections
             .sort(this.props.sort)
-            .map(this.renderList)
+            .map(this.renderItemList)
             .toList()
             .toJS()
             .filter((obj, index) => (this.props.initialVisibleRow ? index < this.state.visibleValuesList : true));

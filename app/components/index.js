@@ -11,6 +11,7 @@ exports.DateFilter              = require("./date-filter/");
 exports.DropdownButton          = require("./dropdown-button/");
 exports.DropdownSelect          = require("./dropdown-select/");
 exports.Export                  = require("./export/");
+exports.Filter                  = require("./filter/");
 exports.FullscreenModal         = require("./fullscreen-modal/");
 exports.Gauge                   = require("./gauge/");
 exports.Header                  = require("./header/");

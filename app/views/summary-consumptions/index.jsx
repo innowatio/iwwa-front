@@ -3,16 +3,16 @@ var Immutable  = require("immutable");
 var IPropTypes = require("react-immutable-proptypes");
 var Radium     = require("radium");
 var React      = require("react");
+import moment from "moment";
+import {partial} from "ramda";
 
 var components   = require("components");
-
 import {connect} from "react-redux";
 import {bindActionCreators} from "redux";
 import {defaultTheme} from "lib/theme";
 import {selectSite, selectPeriod} from "actions/consumptions";
 import {getSumBySiteAndPeriod, getTimeRangeByPeriod, tabParameters} from "lib/consumptions-utils";
-import moment from "moment";
-import {partial} from "ramda";
+
 
 var styleLeftPane  = {
     width: "70%",
