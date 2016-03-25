@@ -3,21 +3,11 @@ import ReactHighstock from "react-highcharts/bundle/ReactHighstock"; // Highstoc
 
 import {defaultTheme} from "lib/theme";
 
-//const chartTypes = [
-//    {label: "Linea", id: "spline"},
-//    {label: "Istogramma", id: "column"},
-//    {label: "In pila", id: "stacked"},
-//    {label: "In pila percentuale", id: "percent"}
-//];
-
-let config;
-
 var MonitoringChart = React.createClass({
     propTypes: {
-        addToFavorite: PropTypes.func.isRequired,
         chartState: PropTypes.object.isRequired,
         onChangeYAxisValues: PropTypes.func.isRequired,
-        selectChartType: PropTypes.func.isRequired,
+        saveConfig: PropTypes.func.isRequired,
         series: PropTypes.array.isRequired,
         style: PropTypes.object
     },
@@ -25,15 +15,19 @@ var MonitoringChart = React.createClass({
         theme: PropTypes.object
     },
     getInitialState: function () {
-        return this.initializeState(this.props);
+        return this.getStateFromProps(this.props);
+    },
+    componentDidMount: function () {
+        this.props.saveConfig(this.state.config);
     },
     componentWillReceiveProps: function (props) {
-        this.setState(this.initializeState(props));
+        this.setState(this.getStateFromProps(props));
     },
-    initializeState: function (props) {
+    getStateFromProps: function (props) {
         return {
             yAxisMax: props.chartState.yAxis.max,
-            yAxisMin: props.chartState.yAxis.min
+            yAxisMin: props.chartState.yAxis.min,
+            config: this.getHighstockConfig(props.chartState.config)
         };
     },
     getTheme: function () {
@@ -164,20 +158,17 @@ var MonitoringChart = React.createClass({
                 return this.getBasicLineConfig();
         }
     },
-    getHighstockConfig: function () {
-        if (this.props.chartState.config) {
-            config = this.props.chartState.config;
+    getHighstockConfig: function (configProp) {
+        if (configProp) {
+            return configProp;
         } else {
-            config = {
+            console.log("building chart of type: " + this.props.chartState.type);
+            return {
                 ...this.getCommonConfig(),
                 ...this.getSpecificTypeConfig(),
                 ...this.getHighstockCoordinate()
             };
         }
-        return config;
-    },
-    addToFavorite: function () {
-        this.props.addToFavorite(config);
     },
     handleAxisChange: function () {
         this.setState({
@@ -199,24 +190,11 @@ var MonitoringChart = React.createClass({
         });
     },
     render: function () {
-        //let type = chartTypes.find((item) => {
-        //    return item.id === this.props.chartState.type;
-        //});
         return (
             <div style={{marginBottom: "60px", ...this.props.style}}>
-                <ReactHighstock config={this.getHighstockConfig()} />
+                <ReactHighstock config={this.state.config} />
             </div>
         );
-                //<ObjectSelect
-                //    options={chartTypes}
-                //    onBlur={() => {}}
-                //    onChange={this.props.selectChartType}
-                //    value={type}
-                ///>
-                //<Button bsStyle="primary" onClick={this.addToFavorite} style={{float: "right"}}>
-                //    {"Add to favorite"}
-                //</Button>
-                //
                 //<div>
                 //    <Input
                 //        type="text"

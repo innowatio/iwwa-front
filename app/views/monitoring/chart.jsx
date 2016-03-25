@@ -5,7 +5,7 @@ import {connect} from "react-redux";
 import {Link} from "react-router";
 import {bindActionCreators} from "redux";
 
-import {addToFavorite, changeYAxisValues, selectChartType, selectFavoriteChart} from "actions/monitoring-chart";
+import {addToFavorite, changeYAxisValues, saveChartConfig, selectChartType, selectFavoriteChart} from "actions/monitoring-chart";
 
 //import {getKeyFromCollection} from "lib/collection-utils";
 //import {styles} from "lib/styles_restyling";
@@ -30,6 +30,7 @@ var MonitoringChartView = React.createClass({
         changeYAxisValues: PropTypes.func.isRequired,
         collections: IPropTypes.map.isRequired,
         monitoringChart: PropTypes.object.isRequired,
+        saveChartConfig: PropTypes.func.isRequired,
         selectChartType: PropTypes.func.isRequired,
         selectFavoriteChart: PropTypes.func.isRequired,
         selected: PropTypes.array
@@ -75,10 +76,9 @@ var MonitoringChartView = React.createClass({
                 <SectionToolbar backUrl={"/monitoring/"} title={"Torna all'elenco sensori"} />
 
                 <MonitoringChart
-                    addToFavorite={this.props.addToFavorite}
                     onChangeYAxisValues={this.props.changeYAxisValues}
                     chartState={this.props.monitoringChart}
-                    selectChartType={this.props.selectChartType}
+                    saveConfig={this.props.saveChartConfig}
                     series={this.getChartSeries()}
                     style={{width: "75%", padding: "20px", float: "left"}}
                 />
@@ -88,7 +88,10 @@ var MonitoringChartView = React.createClass({
                         <label style={{color: theme.colors.navText, display: "inherit"}}>
                             {"SCEGLI LO STILE DEL GRAFICO"}
                         </label>
-                        <Button style={buttonStyle(theme)}>
+                        <Button style={buttonStyle(theme)} onClick={() => {
+                            this.props.selectChartType("spline");
+                        }}
+                        >
                             <Icon
                                 color={theme.colors.iconHeader}
                                 icon={"add"}
@@ -96,7 +99,10 @@ var MonitoringChartView = React.createClass({
                                 style={{lineHeight: "20px"}}
                             />
                         </Button>
-                        <Button style={buttonStyle(theme)}>
+                        <Button style={buttonStyle(theme)} onClick={() => {
+                            this.props.selectChartType("column");
+                        }}
+                        >
                             <Icon
                                 color={theme.colors.iconHeader}
                                 icon={"add"}
@@ -104,7 +110,10 @@ var MonitoringChartView = React.createClass({
                                 style={{lineHeight: "20px"}}
                             />
                         </Button>
-                        <Button style={buttonStyle(theme)}>
+                        <Button style={buttonStyle(theme)} onClick={() => {
+                            this.props.selectChartType("stacked");
+                        }}
+                        >
                             <Icon
                                 color={theme.colors.iconHeader}
                                 icon={"add"}
@@ -112,7 +121,10 @@ var MonitoringChartView = React.createClass({
                                 style={{lineHeight: "20px"}}
                             />
                         </Button>
-                        <Button style={buttonStyle(theme)}>
+                        <Button style={buttonStyle(theme)} onClick={() => {
+                            this.props.selectChartType("percent");
+                        }}
+                        >
                             <Icon
                                 color={theme.colors.iconHeader}
                                 icon={"add"}
@@ -128,7 +140,7 @@ var MonitoringChartView = React.createClass({
                     </div>
                     <div style={{textAlign: "center", padding: "20px", borderBottom: "solid 1px", borderColor: theme.colors.white}}>
                         <div>
-                            <Button style={buttonStyle(theme)}>
+                            <Button style={buttonStyle(theme)}  onClick={this.props.addToFavorite}>
                                 <Icon
                                     color={theme.colors.iconHeader}
                                     icon={"star-o"}
@@ -171,6 +183,13 @@ var MonitoringChartView = React.createClass({
                 //        style={{color: "white"}}
                 //    />
                 //</div>
+
+        //const chartTypes = [
+        //    {label: "Linea", id: "spline"},
+        //    {label: "Istogramma", id: "column"},
+        //    {label: "In pila", id: "stacked"},
+        //    {label: "In pila percentuale", id: "percent"}
+        //];
     }
 });
 
@@ -186,6 +205,7 @@ const mapDispatchToProps = (dispatch) => {
     return {
         addToFavorite: bindActionCreators(addToFavorite, dispatch),
         changeYAxisValues: bindActionCreators(changeYAxisValues, dispatch),
+        saveChartConfig: bindActionCreators(saveChartConfig, dispatch),
         selectChartType: bindActionCreators(selectChartType, dispatch),
         selectFavoriteChart: bindActionCreators(selectFavoriteChart, dispatch)
     };
