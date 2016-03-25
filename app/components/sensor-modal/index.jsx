@@ -1,10 +1,11 @@
 import React, {PropTypes} from "react";
-import {Col} from "react-bootstrap";
+import {Col, Input} from "react-bootstrap";
 import TagsInput from "react-tagsinput";
 import {reduxForm} from "redux-form";
 
 import {FullscreenModal, ObjectSelect, SensorAggregator} from "components";
 
+import {styles} from "lib/styles_restyling";
 import {defaultTheme} from "lib/theme";
 
 export const fields = ["name", "description", "unitOfMeasurement", "siteRef", "clientRef", "tags"];
@@ -98,48 +99,41 @@ var SensorForm = React.createClass({
                     </h3>
                     <Col md={6}>
                         <div className={"form-group" + (name.touched && name.error ? " has-error" : "")}>
-                            <label className="col-xs-4 control-label">
-                                {"Item name"}
-                            </label>
-                            <div className={"col-xs-" + (name.touched && name.error ? "5" : "8")}>
-                                <input type="text" className="col-xs-8 form-control" placeholder="Insert item name" {...name}/>
+                            <div className={"col-xs-" + (name.touched && name.error ? "9" : "12")}>
+                                <Input type="text" className="col-xs-12 form-control" placeholder="Nome" style={styles(theme).inputLine}
+                                    {...name}
+                                />
                             </div>
                             {name.touched && name.error && <div className="col-xs-3 help-block">{name.error}</div>}
                         </div>
                         <div className={"form-group" + (description.touched && description.error ? " has-error" : "")}>
-                            <label className="col-xs-4 control-label">
-                                {"Description"}
-                            </label>
-                            <div className={"col-xs-" + (description.touched && description.error ? "5" : "8")}>
-                                <textarea className="col-xs-8 form-control" placeholder="Insert a description" {...description}/>
+                            <div className={"col-xs-" + (description.touched && description.error ? "9" : "12")}>
+                                <textarea className="col-xs-12 form-control" placeholder="Descrizione" style={{...styles(theme).inputLine, resize: "none"}}
+                                    {...description}
+                                />
                             </div>
                             {description.touched && description.error && <div className="col-xs-3 help-block">{description.error}</div>}
                         </div>
                     </Col>
                     <Col md={6}>
                         <div className={"form-group" + (unitOfMeasurement.touched && unitOfMeasurement.error ? " has-error" : "")}>
-                            <label className="col-xs-4 control-label">
-                                {"Unit of measurement"}
-                            </label>
-                            <div className={"col-xs-" + (unitOfMeasurement.touched && unitOfMeasurement.error ? "5" : "8")}>
+                            <div className={"col-xs-" + (unitOfMeasurement.touched && unitOfMeasurement.error ? "9" : "12")}>
                                 <ObjectSelect options={potentialUnitsOfMeasurement} {...unitOfMeasurement}/>
                             </div>
                             {unitOfMeasurement.touched && unitOfMeasurement.error && <div className="col-xs-3 help-block">{unitOfMeasurement.error}</div>}
                         </div>
                         <div className={"form-group"}>
-                            <label className="col-xs-4 control-label">
-                                {"Site reference"}
-                            </label>
-                            <div className={"col-xs-8"}>
-                                <input type="text" className="col-xs-8 form-control" placeholder="Select site reference" {...siteRef}/>
+                            <div className={"col-xs-12"}>
+                                <Input type="text" className="col-xs-12 form-control" placeholder="Referenza sito" style={styles(theme).inputLine}
+                                    {...siteRef}
+                                />
                             </div>
                         </div>
                         <div className={"form-group"}>
-                            <label className="col-xs-4 control-label">
-                                {"Client reference"}
-                            </label>
-                            <div className={"col-xs-8"}>
-                                <input type="text" className="col-xs-8 form-control" placeholder="Select client reference" {...clientRef}/>
+                            <div className={"col-xs-12"}>
+                                <Input type="text" className="col-xs-12 form-control" placeholder="Referenza cliente" style={styles(theme).inputLine}
+                                    {...clientRef}
+                                />
                             </div>
                         </div>
                         <div className={"form-group"}>
