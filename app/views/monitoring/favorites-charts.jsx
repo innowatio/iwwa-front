@@ -4,16 +4,83 @@ import {bindActionCreators} from "redux";
 
 import {selectFavoriteChart} from "actions/monitoring-chart";
 
-import {SectionToolbar} from "components";
+import {getKeyFromCollection} from "lib/collection-utils";
+import {defaultTheme} from "lib/theme";
+
+import {CollectionElementsTable, Icon, SectionToolbar} from "components";
 
 var MonitoringFavoritesCharts = React.createClass({
     propTypes: {
+        monitoringChart: PropTypes.object.isRequired,
         selectFavoriteChart: PropTypes.func.isRequired
     },
+    contextTypes: {
+        theme: PropTypes.object
+    },
+    getTheme: function () {
+        return this.context.theme || defaultTheme;
+    },
+    getFavoritesChartsColumns: function () {
+        const theme = this.getTheme();
+        return [
+            {
+                key: "_id",
+                style: function () {
+                    return {
+                        borderRight: "solid 1px grey",
+                        width: "80%",
+                        height: "100%",
+                        textAlign: "left"
+                    };
+                }
+            },
+            {
+                key: "chart",
+                style: function () {
+                    return {
+                        backgroundColor: "grey"
+                    };
+                },
+                valueFormatter: () => (
+                    <Icon
+                        color={theme.colors.iconHeader}
+                        icon={"chart"}
+                        onClick={this.props.selectFavoriteChart}
+                        size={"27px"}
+                    />
+                )
+            },
+            {
+                key: "",
+                valueFormatter: () => (
+                    <div />
+                )
+            }
+        ];
+    },
     render: function () {
+        const theme = this.getTheme();
         return (
             <div>
                 <SectionToolbar backUrl={"/monitoring/chart/"} title={"Torna al monitoring"} />
+
+                <div style={{color: "white", border: "grey solid 1px", borderRadius: "30px", background: theme.colors.backgroundContentModal, padding: 0}}>
+                    <CollectionElementsTable
+                        collection={this.props.monitoringChart.favorites}
+                        columns={this.getFavoritesChartsColumns()}
+                        getKey={getKeyFromCollection}
+                        hover={true}
+                        width={"100%"}
+                        style={{color: "white"}}
+                    />
+
+                    <label style={{color: theme.colors.navText, padding: "20px"}}>
+                        {"Carica tutti"}
+                    </label>
+
+                </div>
+
+
             </div>
         );
     }

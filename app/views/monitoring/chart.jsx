@@ -7,8 +7,6 @@ import {bindActionCreators} from "redux";
 
 import {addToFavorite, changeYAxisValues, saveChartConfig, selectChartType, selectFavoriteChart} from "actions/monitoring-chart";
 
-//import {getKeyFromCollection} from "lib/collection-utils";
-//import {styles} from "lib/styles_restyling";
 import {defaultTheme} from "lib/theme";
 
 import {Button, Icon, MonitoringChart, SectionToolbar} from "components";
@@ -54,11 +52,6 @@ var MonitoringChartView = React.createClass({
                 "activeEnergy"
             );
         });
-    },
-    getFavoritesChartsColumns: function () {
-        return [
-            {key: "_id"}
-        ];
     },
     getChartSeries: function () {
         let measures = this.props.collections.get("readings-daily-aggregates") || Immutable.Map();
@@ -174,24 +167,6 @@ var MonitoringChartView = React.createClass({
 
             </div>
         );
-                //<div>
-                //    <CollectionElementsTable
-                //        collection={this.props.monitoringChart.favorites}
-                //        columns={this.getFavoritesChartsColumns()}
-                //        getKey={getKeyFromCollection}
-                //        hover={true}
-                //        onRowClick={this.props.selectFavoriteChart}
-                //        width={"60%"}
-                //        style={{color: "white"}}
-                //    />
-                //</div>
-
-        //const chartTypes = [
-        //    {label: "Linea", id: "spline"},
-        //    {label: "Istogramma", id: "column"},
-        //    {label: "In pila", id: "stacked"},
-        //    {label: "In pila percentuale", id: "percent"}
-        //];
     }
 });
 

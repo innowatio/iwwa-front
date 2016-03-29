@@ -3,7 +3,7 @@ import {Col} from "react-bootstrap";
 import {DragDropContext} from "react-dnd";
 import {default as TouchBackend} from "react-dnd-touch-backend";
 
-import {DraggableOperator, DraggableSensor} from "components";
+import {DraggableOperator, DraggableSensor, FormulaDropArea} from "components";
 
 import {styles} from "lib/styles_restyling";
 import {defaultTheme} from "lib/theme";
@@ -23,9 +23,7 @@ var SensorAggregator = React.createClass({
         return (
             <div style={{minHeight: "450px"}}>
                 <Col md={6}>
-                    <div style={{...styles(theme).titlePage, borderRadius: "20px", height: "250px"}}>
-
-                    </div>
+                    <FormulaDropArea style={{...styles(theme).titlePage, borderRadius: "20px", height: "250px"}} />
                 </Col>
                 <Col md={6} style={{textAlign: "center"}}>
                     <label style={{color: theme.colors.navText, marginBottom: "20px"}}>
@@ -33,7 +31,7 @@ var SensorAggregator = React.createClass({
                     </label>
                     {this.props.sensors.map(item => {
                         return (
-                            <DraggableSensor id={item} />
+                            <DraggableSensor key={item} />
                         );
                     })}
                     <DraggableOperator type="delete" />

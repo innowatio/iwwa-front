@@ -187,7 +187,7 @@ var Monitoring = React.createClass({
         return (
             <div>
                 <SectionToolbar>
-                    <Button style={buttonStyle(theme)} onClick={this.openModal}>
+                    <Button style={buttonStyle(theme)} disabled={this.props.selected.length < 1} onClick={this.openModal}>
                         <Icon
                             color={theme.colors.iconHeader}
                             icon={"add"}
@@ -195,7 +195,7 @@ var Monitoring = React.createClass({
                             style={{lineHeight: "20px"}}
                         />
                     </Button>
-                    <Button style={buttonStyle(theme)} disabled={this.props.selected.length < 2} onClick={this.getCloneSensor("todo")}>
+                    <Button style={buttonStyle(theme)} disabled={this.props.selected.length < 1} onClick={this.getCloneSensor("todo")}>
                         <Icon
                             color={theme.colors.iconHeader}
                             icon={"duplicate"}

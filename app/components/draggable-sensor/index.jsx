@@ -6,7 +6,7 @@ import {defaultTheme} from "lib/theme";
 
 const sensorSource = {
     beginDrag (props) {
-        const item = {id: props.id};
+        const item = {key: props.key};
         return item;
     },
 
@@ -28,8 +28,8 @@ function collect (connect, monitor) {
 var DraggableSensor = React.createClass({
     propTypes: {
         connectDragSource: PropTypes.func,
-        id: PropTypes.string,
-        isDragging: PropTypes.bool
+        isDragging: PropTypes.bool,
+        key: PropTypes.string
     },
     contextTypes: {
         theme: PropTypes.object
@@ -38,11 +38,11 @@ var DraggableSensor = React.createClass({
         return this.context.theme || defaultTheme;
     },
     render () {
-        const {id, connectDragSource} = this.props;
+        const {key, connectDragSource} = this.props;
         let theme = this.getTheme();
         return connectDragSource(
             <label style={{color: theme.colors.navText, textAlign: "left", border: "1px solid", borderRadius: "10px", padding: "7px", display: "inherit"}}>
-                {id}
+                {key}
             </label>
         );
     }

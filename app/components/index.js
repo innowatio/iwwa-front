@@ -13,6 +13,7 @@ exports.DraggableSensor         = require("./draggable-sensor/");
 exports.DropdownButton          = require("./dropdown-button/");
 exports.DropdownSelect          = require("./dropdown-select/");
 exports.Export                  = require("./export/");
+exports.FormulaDropArea         = require("./formula-drop-area/");
 exports.FullscreenModal         = require("./fullscreen-modal/");
 exports.Gauge                   = require("./gauge/");
 exports.Header                  = require("./header/");

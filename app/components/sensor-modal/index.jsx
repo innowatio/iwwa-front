@@ -58,7 +58,7 @@ var SensorForm = React.createClass({
         this.props.closeForm();
     },
     renderSensorAggregation () {
-        if (this.props.sensorsToAggregate && this.props.sensorsToAggregate.length > 0) {
+        if (this.props.sensorsToAggregate && this.props.sensorsToAggregate.length > 1) {
             return (<SensorAggregator sensors={this.props.sensorsToAggregate} />);
         }
     },
