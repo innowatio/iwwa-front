@@ -110,10 +110,7 @@ var CollectionItemList = React.createClass({
                 onClick={() => this.setState({
                     visibleValuesList: this.state.visibleValuesList + this.props.initialVisibleRow})
                 }
-                style={{
-                    ...this.props.lazyLoadButtonStyle,
-                    marginBottom: "50px"
-                }}
+                style={this.props.lazyLoadButtonStyle}
             >
                 {this.props.lazyLoadLabel}
             </div>
@@ -134,10 +131,12 @@ var CollectionItemList = React.createClass({
             }}
             >
                 {this.renderInputFilter()}
-                <div style={{height: "100%", marginBottom: "50px"}}>
+                <div style={{height: "100%"}}>
                     {collectionList.slice(0, this.props.initialVisibleRow ? this.state.visibleValuesList : Infinity)}
                     <div style={{borderTop: "1px solid " + colors.white}} />
-                    {this.renderLazyLoad(collectionList.length)}
+                    <div style={{marginBottom: "50px"}}>
+                        {this.renderLazyLoad(collectionList.length)}
+                    </div>
                 </div>
             </div>
         );

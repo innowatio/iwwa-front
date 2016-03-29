@@ -239,6 +239,7 @@ var Alarms = React.createClass({
                                 collections={R.isNil(allowedValues) ? Immutable.Map() : allowedValues.filter(this.filterAlarms)}
                                 headerComponent={this.renderAlarmRow}
                                 initialVisibleRow={10}
+                                filter={this.notificationFilter}
                                 hover={true}
                                 hoverStyle={styles(this.getTheme()).hoverStyle}
                                 lazyLoadButtonStyle={styles(this.getTheme()).lazyLoadButtonStyle}
