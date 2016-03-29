@@ -30,6 +30,7 @@ export const colorsDarkTheme = {
     borderConsumptionSection: "rgba(255,255,255,0.5)",
     borderContentModal: "rgba(255,255,255,0.5)",
     borderDropdown: "rgba(255,255,255,0.7)",
+    borderInputSearch: "rgba(255,255,255,0.7)",
     borderPopover: "rgba(255,255,255,0.7)",
     borderRealTimeSection: "rgba(255,255,255,0.5)",
     borderSelectButton: "rgba(255,255,255,0.5)",

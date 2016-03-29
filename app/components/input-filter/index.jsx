@@ -6,18 +6,28 @@ import components from "components";
 import {defaultTheme} from "lib/theme";
 
 const defaultStyles = ({colors}) => ({
+    "": {
+        marginTop: "22px"
+    },
     ".input-search": {
         height: "60px",
         fontSize: "20px",
         borderRight: "0px",
         borderTopLeftRadius: "20px",
         borderBottomLeftRadius: "20px",
+        borderColor: colors.borderInputSearch,
         backgroundColor: colors.backgroundInputSearch,
-        outline: "none !important",
-        color: colors.white
+        color: colors.mainFontColor
+    },
+    ".form-control:focus": {
+        borderColor: colors.borderInputSearch,
+        outline: "none",
+        boxShadow: "none",
+        WebkitBoxShadow: "none"
     },
     ".input-group-addon": {
         backgroundColor: colors.backgroundInputSearch,
+        borderColor: colors.borderInputSearch,
         borderTopRightRadius: "20px",
         borderBottomRightRadius: "20px",
         cursor: "pointer"

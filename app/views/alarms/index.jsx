@@ -243,6 +243,8 @@ var Alarms = React.createClass({
                                 }}
                                 scopeSelector=".alarm-table"
                             />
+                            {this.renderFilterButton()}
+                            {this.renderSearch("notificationSearch")}
                             <components.CollectionItemList
                                 collections={R.isNil(allowedValues) ? Immutable.Map() : allowedValues.filter(this.filterAlarms)}
                                 headerComponent={this.renderAlarmRow}

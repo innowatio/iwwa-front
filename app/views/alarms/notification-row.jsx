@@ -7,7 +7,7 @@ import {partial} from "ramda";
 import components from "components";
 import {defaultTheme} from "lib/theme";
 
-const styles = ({colors}, active) => ({
+const styles = ({colors}, open) => ({
     headerContainer: {
         height: "50px",
         borderTop: "1px solid " + colors.borderAlarmsRow,
@@ -16,10 +16,10 @@ const styles = ({colors}, active) => ({
     },
     iconArrowDown: {
         display: "inline-block",
-        lineHeight: "20px",
-        verticalAlign: "middle",
+        lineHeight: "15px",
+        verticalAlign: "text-top",
         marginRight: "10px",
-        transform: active ? "rotateY(180deg)" : null
+        transform: open ? null : "rotate(180deg)"
     },
     iconChart: {
         cursor: "pointer",
@@ -60,6 +60,7 @@ var NotificationRow = React.createClass({
     },
     render: function () {
         const {colors} = this.getTheme();
+        const open = this.props.open;
         const date = moment(this.props.element.get("date")).locale("it").format("LLL");
         return (
             <div style={styles(this.getTheme()).headerContainer}>
@@ -80,7 +81,7 @@ var NotificationRow = React.createClass({
                         color={colors.mainFontColor}
                         icon={"arrow-down"}
                         size={"14px"}
-                        style={styles(this.getTheme()).iconArrowDown}
+                        style={styles(this.getTheme(), open).iconArrowDown}
                     />
                     <p style={styles(this.getTheme()).data}>{date}</p>
                     <h5 style={styles(this.getTheme()).sensorName}>{this.props.element.get("name")}</h5>
