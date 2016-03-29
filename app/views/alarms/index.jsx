@@ -192,7 +192,6 @@ var Alarms = React.createClass({
     },
     render: function () {
         var allowedValues = this.props.collections.get("alarms") || Immutable.Map();
-        const {colors} = this.getTheme();
         return (
             <div className="alarm-tab">
                 <Radium.Style
