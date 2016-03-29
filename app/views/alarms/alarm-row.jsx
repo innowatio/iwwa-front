@@ -32,7 +32,7 @@ const styles = ({colors}, active) => ({
         backgroundColor: active ? colors.activeAlarm : colors.pausedAlarm,
         color: colors.white,
         display: "inline-block",
-        height: "50px",
+        height: "49px",
         width: "45px",
         verticalAlign: "middle",
         lineHeight: "55px",
@@ -71,7 +71,7 @@ var AlarmRow = React.createClass({
         const active = this.props.element.get("active");
         return (
             <div style={styles(this.getTheme()).headerContainer}>
-                <div style={{float: "left", height: "50px", minWidth: "auto", width: "calc(100% - 200px)"}} >
+                <div style={{float: "left", height: "48px", minWidth: "auto", width: "calc(100% - 200px)"}} >
                     <components.Icon
                         color={colors.iconAlarmAction}
                         icon={active ? "flag" : "pause"}
@@ -80,7 +80,7 @@ var AlarmRow = React.createClass({
                     />
                     {`${this.props.element.get("name")}${this.getFormattedDate()}`}
                 </div>
-                <div style={{width: "100px", lineHeight: "50px", float: "right"}} >
+                <div style={{width: "100px", lineHeight: "48px", float: "right"}} >
                     <components.Icon
                         color={colors.iconAlarmAction}
                         icon={"settings"}
