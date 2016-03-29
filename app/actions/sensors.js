@@ -1,4 +1,5 @@
 export const FILTER_SENSORS = "FILTER_SENSORS";
+export const SELECT_SENSOR = "SELECT_SENSOR";
 
 let nextSensorId = 0;
 
@@ -46,7 +47,7 @@ export const filterSensors = (payload) => {
 
 export const monitorSensor = (id) => getBasicObject("MONITOR_SENSOR", id);
 
-export const selectSensor = (sensor) => getBasicObject("SELECT_SENSOR", sensor.get("_id"));
+export const selectSensor = (sensor) => getBasicObject(SELECT_SENSOR, sensor.get("_id"));
 
 export const combineSensor = () => {
     return {

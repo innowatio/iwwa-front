@@ -15,6 +15,7 @@ var MonitoringFavoritesCharts = React.createClass({
         selectFavoriteChart: PropTypes.func.isRequired
     },
     contextTypes: {
+        router: React.PropTypes.object,
         theme: PropTypes.object
     },
     getTheme: function () {
@@ -28,7 +29,7 @@ var MonitoringFavoritesCharts = React.createClass({
                 style: function () {
                     return {
                         borderRight: "solid 1px grey",
-                        width: "80%",
+                        width: "96%",
                         height: "100%",
                         textAlign: "left"
                     };
@@ -38,14 +39,18 @@ var MonitoringFavoritesCharts = React.createClass({
                 key: "chart",
                 style: function () {
                     return {
-                        backgroundColor: "grey"
+                        backgroundColor: "grey",
+                        width: "1%"
                     };
                 },
-                valueFormatter: () => (
+                valueFormatter: (value, item) => (
                     <Icon
                         color={theme.colors.iconHeader}
                         icon={"chart"}
-                        onClick={this.props.selectFavoriteChart}
+                        onClick={() => {
+                            this.props.selectFavoriteChart(item);
+                            this.context.router.push("/monitoring/chart/");
+                        }}
                         size={"27px"}
                     />
                 )
@@ -64,14 +69,14 @@ var MonitoringFavoritesCharts = React.createClass({
             <div>
                 <SectionToolbar backUrl={"/monitoring/chart/"} title={"Torna al monitoring"} />
 
-                <div style={{color: "white", border: "grey solid 1px", borderRadius: "30px", background: theme.colors.backgroundContentModal, padding: 0}}>
+                <div style={{color: "white", border: "grey solid 1px", borderRadius: "30px", background: theme.colors.backgroundContentModal, padding: 0, margin: "20px", textAlign: "center"}}>
                     <CollectionElementsTable
                         collection={this.props.monitoringChart.favorites}
                         columns={this.getFavoritesChartsColumns()}
                         getKey={getKeyFromCollection}
                         hover={true}
                         width={"100%"}
-                        style={{color: "white"}}
+                        style={{color: "white", padding: "0"}}
                     />
 
                     <label style={{color: theme.colors.navText, padding: "20px"}}>

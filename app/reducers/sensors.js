@@ -1,3 +1,5 @@
+import {SELECT_SENSOR} from "../actions/sensors";
+
 let aSensor = {
     id: -1,
     fields: {
@@ -128,7 +130,7 @@ export function sensors (state = defaultState, action) {
             newState.allSensors = sortSensors(newState.allSensors);
             return newState;
         }
-        case "SELECT_SENSOR": {
+        case SELECT_SENSOR: {
             newState = cloneState(state);
             if (newState.selectedSensors.find((it) => {
                 return it === action.id;

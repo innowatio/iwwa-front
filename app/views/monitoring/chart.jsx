@@ -71,6 +71,7 @@ var MonitoringChartView = React.createClass({
                 <MonitoringChart
                     onChangeYAxisValues={this.props.changeYAxisValues}
                     chartState={this.props.monitoringChart}
+                    ref="monitoringChart"
                     saveConfig={this.props.saveChartConfig}
                     series={this.getChartSeries()}
                     style={{width: "75%", padding: "20px", float: "left"}}
@@ -135,7 +136,10 @@ var MonitoringChartView = React.createClass({
                     </div>
                     <div style={{padding: "20px", borderBottom: "solid 1px", borderColor: theme.colors.white}}>
                         <div>
-                            <Button style={buttonStyle(theme)}  onClick={this.props.addToFavorite}>
+                            <Button style={buttonStyle(theme)}  onClick={() => {
+                                this.props.addToFavorite(this.refs.monitoringChart.state.config);
+                            }}
+                            >
                                 <Icon
                                     color={theme.colors.iconHeader}
                                     icon={"star-o"}

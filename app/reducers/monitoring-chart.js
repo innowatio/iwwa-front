@@ -1,4 +1,5 @@
 import {ADD_TO_FAVORITE, CHANGE_Y_AXIS_VALUES, SAVE_CHART_CONFIG, SELECT_CHART_TYPE, SELECT_FAVORITE_CHART} from "../actions/monitoring-chart";
+import {SELECT_SENSOR} from "../actions/sensors";
 import Immutable from "immutable";
 
 let defaultState = {
@@ -17,7 +18,7 @@ export function monitoringChart (state = defaultState, action) {
         case ADD_TO_FAVORITE: {
             let favorites = state.favorites.set(nextFavoriteId, Immutable.Map({
                 _id: nextFavoriteId,
-                config: state.config
+                config: action.payload
             }));
             nextFavoriteId++;
             return {
@@ -51,6 +52,11 @@ export function monitoringChart (state = defaultState, action) {
                 config: action.payload,
                 type: action.payload.chart.type,
                 yAxis: action.payload.yAxis
+            };
+        case SELECT_SENSOR:
+            return {
+                ...state,
+                config: null
             };
         default:
             return state;
