@@ -109,10 +109,6 @@ var Alarms = React.createClass({
         ), Immutable.Map());
         return ret;
     },
-    subListNotification: function (components, index) {
-        const isExpanded = this.state.panelToOpen === index;
-        return <SubListNotification isExpanded={isExpanded} />;
-    },
     onClickAlarmSetting: function (alarmsId) {
         this.props.modifyExistentAlarm(alarmsId);
         this.props.numberOfSelectedTabs(1);
@@ -167,6 +163,10 @@ var Alarms = React.createClass({
     onChangeInputFilter: function (stateKey, input) {
         this.setState({[stateKey]: input});
     },
+    renderSubListNotification: function (components, index) {
+        const isExpanded = this.state.panelToOpen === index;
+        return <SubListNotification isExpanded={isExpanded} />;
+    },
     renderFilterButton: function () {
         return (
             <components.ButtonFilter
@@ -192,11 +192,13 @@ var Alarms = React.createClass({
         );
     },
     renderNotificationRow: function (element, elementId) {
+        const open = this.state.panelToOpen === elementId;
         return (
             <NotificationRow
                 element={element}
                 elementId={elementId}
                 onClickPanel={this.onClickPanel}
+                open={open}
             />
         );
     },
@@ -271,7 +273,7 @@ var Alarms = React.createClass({
                                 lazyLoadButtonStyle={styles(this.getTheme()).lazyLoadButtonStyle}
                                 lazyLoadLabel={"Carica altri"}
                                 sort={R.partialRight(this.sortByDate, [false])}
-                                subListComponent={this.subListNotification}
+                                subListComponent={this.renderSubListNotification}
                             />
                         </bootstrap.Tab>
                     </bootstrap.Tabs>
