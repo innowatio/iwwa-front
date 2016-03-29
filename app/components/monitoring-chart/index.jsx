@@ -6,7 +6,6 @@ import {defaultTheme} from "lib/theme";
 var MonitoringChart = React.createClass({
     propTypes: {
         chartState: PropTypes.object.isRequired,
-        onChangeYAxisValues: PropTypes.func.isRequired,
         saveConfig: PropTypes.func.isRequired,
         series: PropTypes.array.isRequired,
         style: PropTypes.object
@@ -25,8 +24,6 @@ var MonitoringChart = React.createClass({
     },
     getStateFromProps: function (props) {
         return {
-            yAxisMax: props.chartState.yAxis.max,
-            yAxisMin: props.chartState.yAxis.min,
             config: this.getHighstockConfig(props.chartState.config)
         };
     },
@@ -187,54 +184,12 @@ var MonitoringChart = React.createClass({
             };
         }
     },
-    handleAxisChange: function () {
-        this.setState({
-            yAxisMax: this.refs.yAxisMax.getValue(),
-            yAxisMin: this.refs.yAxisMin.getValue()
-        });
-    },
-    getYAxisValidationState: function () {
-        console.log(this.state);
-        let {yAxisMin, yAxisMax} = this.state;
-        if (isNaN(yAxisMin) || isNaN(yAxisMax)) return "error";
-        if (parseInt(yAxisMin) > parseInt(yAxisMax)) return "warning";
-        return "success";
-    },
-    changeYAxisValues: function () {
-        this.props.onChangeYAxisValues({
-            max: this.state.yAxisMax,
-            min: this.state.yAxisMin
-        });
-    },
     render: function () {
         return (
             <div style={{marginBottom: "60px", ...this.props.style}}>
                 <ReactHighstock config={this.state.config} />
             </div>
         );
-                //<div>
-                //    <Input
-                //        type="text"
-                //        value={this.state.yAxisMin}
-                //        label="yAxis min"
-                //        bsStyle={this.getYAxisValidationState()}
-                //        hasFeedback={true}
-                //        ref="yAxisMin"
-                //        onChange={this.handleAxisChange}
-                //    />
-                //    <Input
-                //        type="text"
-                //        value={this.state.yAxisMax}
-                //        label="yAxis max"
-                //        bsStyle={this.getYAxisValidationState()}
-                //        hasFeedback={true}
-                //        ref="yAxisMax"
-                //        onChange={this.handleAxisChange}
-                //    />
-                //    <Button onClick={this.changeYAxisValues}>
-                //        {"Change axis value"}
-                //    </Button>
-                //</div>
     }
 });
 
