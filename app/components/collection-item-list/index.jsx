@@ -127,7 +127,7 @@ var CollectionItemList = React.createClass({
         return (
             <div style={{
                 height: "calc(100% - 270px)",
-                marginTop: this.props.filter ? "22px" : "103px"
+                marginTop: this.props.filter ? "22px" : "none"
             }}
             >
                 {this.renderInputFilter()}

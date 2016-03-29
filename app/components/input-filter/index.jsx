@@ -7,7 +7,8 @@ import {defaultTheme} from "lib/theme";
 
 const defaultStyles = ({colors}) => ({
     "": {
-        marginTop: "22px"
+        marginTop: "22px",
+        marginBottom: "22px"
     },
     ".input-search": {
         height: "60px",

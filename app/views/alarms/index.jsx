@@ -71,8 +71,7 @@ var Alarms = React.createClass({
     getInitialState: function () {
         return {
             alarmToVisualize: "TUTTI",
-            panelToOpen: null,
-            notificationSearch: ""
+            panelToOpen: null
         };
     },
     componentDidMount: function () {
@@ -144,7 +143,7 @@ var Alarms = React.createClass({
             searchRegExp.test(moment(item.get("date")).locale("it").format("LLL"))
         ) : null;
     },
-    notificationFilter: function (item, search) {
+    getNotificationFilter: function (item, search) {
         return (
             CollectionUtils.sites.filter(item, search) ||
             this.dateFilter(item, search)
@@ -256,7 +255,7 @@ var Alarms = React.createClass({
                                 collections={this.getNotifications()}
                                 headerComponent={this.renderNotificationRow}
                                 initialVisibleRow={10}
-                                filter={this.notificationFilter}
+                                filter={this.getNotificationFilter}
                                 hover={true}
                                 hoverStyle={styles(this.getTheme()).hoverStyle}
                                 lazyLoadButtonStyle={styles(this.getTheme()).lazyLoadButtonStyle}
