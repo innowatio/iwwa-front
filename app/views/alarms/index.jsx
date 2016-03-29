@@ -21,6 +21,7 @@ import NotificationRow from "./notification-row";
 import AlarmRow from "./alarm-row";
 import {styles as stylesLib} from "lib/styles_restyling";
 import CollectionUtils from "lib/collection-utils";
+import SubListNotification from "./sub-list-notification.jsx";
 
 const styles = ({colors}) => ({
     hoverStyle: {
@@ -38,13 +39,6 @@ const styles = ({colors}) => ({
         borderRadius: "30px",
         cursor: "pointer",
         textAlign: "center"
-    },
-    panel: {
-        backgroundColor: colors.backgroundAlarmsPanel,
-        margin: "0",
-        padding: "0",
-        border: "0",
-        borderRadius: "0px"
     },
     tabStyle: {
         height: "100%",
@@ -116,17 +110,8 @@ var Alarms = React.createClass({
         return ret;
     },
     subListNotification: function (components, index) {
-        const isActive = this.state.panelToOpen === index;
-        return (
-            <bootstrap.Panel
-                accordion={true}
-                collapsible={true}
-                expanded={isActive}
-                style={styles(this.getTheme()).panel}
-            >
-                {"Consumi maggiori del 41% rispetto alla media - 2 anomalie simili (15.5.15, 08.06.15)"}
-            </bootstrap.Panel>
-        );
+        const isExpanded = this.state.panelToOpen === index;
+        return <SubListNotification isExpanded={isExpanded} />;
     },
     onClickAlarmSetting: function (alarmsId) {
         this.props.modifyExistentAlarm(alarmsId);
@@ -179,6 +164,9 @@ var Alarms = React.createClass({
         }
         return value;
     },
+    onChangeInputFilter: function (stateKey, input) {
+        this.setState({[stateKey]: input});
+    },
     renderFilterButton: function () {
         return (
             <components.ButtonFilter
@@ -190,8 +178,7 @@ var Alarms = React.createClass({
     renderSearch: function (stateKey) {
         return (
             <components.InputFilter
-                inputValue={this.state[stateKey]}
-                onChangeFilter={(input) => this.setState({[stateKey]: input})}
+                onChangeFilter={R.partial(this.onChangeInputFilter, [stateKey])}
             />
         );
     },
@@ -209,7 +196,6 @@ var Alarms = React.createClass({
             <NotificationRow
                 element={element}
                 elementId={elementId}
-                open={!R.equals(this.state.panelToOpen, elementId)}
                 onClickPanel={this.onClickPanel}
             />
         );

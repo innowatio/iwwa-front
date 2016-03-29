@@ -26,15 +26,23 @@ const defaultStyles = ({colors}) => ({
 
 var InputFilter = React.createClass({
     propTypes: {
-        inputValue: PropTypes.string.isRequired,
         onChangeFilter: PropTypes.func.isRequired,
         style: PropTypes.object
     },
     contextTypes: {
         theme: PropTypes.object
     },
+    getInitialState: function () {
+        return {
+            inputValue: ""
+        };
+    },
     getTheme: function () {
         return this.context.theme || defaultTheme;
+    },
+    onChangeValue: function (event) {
+        this.setState({inputValue: event.target.value});
+        this.props.onChangeFilter(event.target.value);
     },
     render: function () {
         const {colors} = this.getTheme();
@@ -58,10 +66,10 @@ var InputFilter = React.createClass({
                         />
                     }
                     className="input-search"
-                    onChange={event => this.props.onChangeFilter(event.target.value)}
+                    onChange={this.onChangeValue}
                     placeholder="Ricerca"
                     type="text"
-                    value={this.props.inputValue}
+                    value={this.state.inputValue}
                 />
             </div>
         );

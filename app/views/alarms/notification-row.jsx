@@ -49,16 +49,10 @@ var NotificationRow = React.createClass({
     propTypes: {
         element: IPropTypes.map.isRequired,
         elementId: PropTypes.any.isRequired,
-        onClickPanel: PropTypes.func.isRequired,
-        open: PropTypes.bool.isRequired
+        onClickPanel: PropTypes.func.isRequired
     },
     contextTypes: {
         theme: PropTypes.object
-    },
-    getDefaultProps: function () {
-        return {
-            open: false
-        };
     },
     mixin: [ReactPureRender],
     getTheme: function () {

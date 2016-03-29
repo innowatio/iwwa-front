@@ -112,7 +112,7 @@ var CollectionItemList = React.createClass({
             .map(this.renderItemList)
             .toList()
             .toJS()
-            .filter((obj, index) => (this.props.initialVisibleRow ? index < this.state.visibleValuesList : true));
+            .slice(0, this.props.initialVisibleRow ? this.state.visibleValuesList : Infinity);
         return (
             <div style={{marginTop: "84px"}}>
                 <div style={styles.listContainer} >
