@@ -4,14 +4,7 @@ import {Style} from "radium";
 import ReactPureRender from "react-addons-pure-render-mixin";
 
 import {defaultTheme} from "lib/theme";
-
-const styles = {
-    listContainer: {
-        height: "calc(100% - 270px)",
-        overflow: "hidden",
-        marginTop: "22px"
-    }
-};
+import components from "components";
 
 var RowItem = React.createClass({
     propTypes: {
@@ -23,7 +16,6 @@ var RowItem = React.createClass({
     },
     mixins: [ReactPureRender],
     render: function () {
-        console.log("RENDER ROW");
         return (
             <div className="item-list-container">
                 <div className="hover-container">
@@ -42,11 +34,13 @@ var RowItem = React.createClass({
 var CollectionItemList = React.createClass({
     propTypes: {
         collections: IPropTypes.map.isRequired,
+        filter: PropTypes.func,
         headerComponent: PropTypes.func.isRequired,
         hover: PropTypes.bool,
         hoverStyle: PropTypes.object,
         // If is not specified, by default are showed all the items.
         initialVisibleRow: PropTypes.number,
+        inputFilterStyle: PropTypes.object,
         lazyLoadButtonStyle: PropTypes.object,
         lazyLoadLabel: PropTypes.string,
         sort: PropTypes.func,
@@ -64,7 +58,8 @@ var CollectionItemList = React.createClass({
     },
     getInitialState: function () {
         return {
-            visibleValuesList: this.props.initialVisibleRow
+            visibleValuesList: this.props.initialVisibleRow,
+            search: ""
         };
     },
     getTheme: function () {
@@ -78,6 +73,17 @@ var CollectionItemList = React.createClass({
     onMouseLeave: function () {
         this.setState({hover: null});
     },
+    onChangeInputFilter: function (input) {
+        this.setState({
+            search: input,
+            visibleValuesList: this.props.initialVisibleRow
+        });
+    },
+    filter: function (element) {
+        return this.props.filter ?
+            this.props.filter(element, this.state.search) :
+            true;
+    },
     renderItemList: function (element, elementId) {
         return (
             <RowItem
@@ -90,9 +96,16 @@ var CollectionItemList = React.createClass({
             />
         );
     },
-    renderLazyLoad: function () {
-        const lengthOfCollection = this.props.collections.size;
-        return this.props.initialVisibleRow && (this.state.visibleValuesList <= lengthOfCollection) ? (
+    renderInputFilter: function () {
+        return this.props.filter ? (
+            <components.InputFilter
+                onChange={this.onChangeInputFilter}
+                style={this.props.inputFilterStyle}
+            />
+        ) : null;
+    },
+    renderLazyLoad: function (collectionSize) {
+        return this.props.initialVisibleRow && (this.state.visibleValuesList <= collectionSize) ? (
             <div
                 onClick={() => this.setState({
                     visibleValuesList: this.state.visibleValuesList + this.props.initialVisibleRow})
@@ -110,16 +123,21 @@ var CollectionItemList = React.createClass({
         const {colors} = this.getTheme();
         const collectionList = this.props.collections
             .sort(this.props.sort)
+            .filter(this.filter)
             .map(this.renderItemList)
             .toList()
-            .toJS()
-            .slice(0, this.props.initialVisibleRow ? this.state.visibleValuesList : Infinity);
+            .toJS();
         return (
-            <div style={styles.listContainer} >
-                <div style={{overflow: "auto", height: "100%"}}>
-                    {collectionList}
+            <div style={{
+                height: "calc(100% - 270px)",
+                marginTop: this.props.filter ? "22px" : "103px"
+            }}
+            >
+                {this.renderInputFilter()}
+                <div style={{height: "100%", marginBottom: "50px"}}>
+                    {collectionList.slice(0, this.props.initialVisibleRow ? this.state.visibleValuesList : Infinity)}
                     <div style={{borderTop: "1px solid " + colors.white}} />
-                    {this.renderLazyLoad()}
+                    {this.renderLazyLoad(collectionList.length)}
                 </div>
             </div>
         );

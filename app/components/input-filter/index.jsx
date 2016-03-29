@@ -36,7 +36,7 @@ const defaultStyles = ({colors}) => ({
 
 var InputFilter = React.createClass({
     propTypes: {
-        onChangeFilter: PropTypes.func.isRequired,
+        onChange: PropTypes.func.isRequired,
         style: PropTypes.object
     },
     contextTypes: {
@@ -52,7 +52,7 @@ var InputFilter = React.createClass({
     },
     onChangeValue: function (event) {
         this.setState({inputValue: event.target.value});
-        this.props.onChangeFilter(event.target.value);
+        this.props.onChange(event.target.value);
     },
     render: function () {
         const {colors} = this.getTheme();

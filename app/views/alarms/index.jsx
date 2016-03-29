@@ -144,8 +144,7 @@ var Alarms = React.createClass({
             searchRegExp.test(moment(item.get("date")).locale("it").format("LLL"))
         ) : null;
     },
-    notificationFilter: function (item) {
-        const search = this.state.notificationSearch;
+    notificationFilter: function (item, search) {
         return (
             CollectionUtils.sites.filter(item, search) ||
             this.dateFilter(item, search)
@@ -160,9 +159,6 @@ var Alarms = React.createClass({
         }
         return value;
     },
-    onChangeInputFilter: function (stateKey, input) {
-        this.setState({[stateKey]: input});
-    },
     renderSubListNotification: function (components, index) {
         const isExpanded = this.state.panelToOpen === index;
         return <SubListNotification isExpanded={isExpanded} />;
@@ -172,13 +168,6 @@ var Alarms = React.createClass({
             <components.ButtonFilter
                 filterList={this.alarmFilterTitle()}
                 onClickFilter={this.onClickFilter}
-            />
-        );
-    },
-    renderSearch: function (stateKey) {
-        return (
-            <components.InputFilter
-                onChangeFilter={R.partial(this.onChangeInputFilter, [stateKey])}
             />
         );
     },
@@ -246,7 +235,6 @@ var Alarms = React.createClass({
                                 scopeSelector=".alarm-table"
                             />
                             {this.renderFilterButton()}
-                            {this.renderSearch("notificationSearch")}
                             <components.CollectionItemList
                                 collections={R.isNil(allowedValues) ? Immutable.Map() : allowedValues.filter(this.filterAlarms)}
                                 headerComponent={this.renderAlarmRow}
@@ -263,11 +251,11 @@ var Alarms = React.createClass({
                             style={styles(this.getTheme()).tabStyle}
                         >
                             {this.renderFilterButton()}
-                            {this.renderSearch("notificationSearch")}
                             <components.CollectionItemList
-                                collections={this.getNotifications().filter(this.notificationFilter)}
+                                collections={this.getNotifications()}
                                 headerComponent={this.renderNotificationRow}
                                 initialVisibleRow={10}
+                                filter={this.notificationFilter}
                                 hover={true}
                                 hoverStyle={styles(this.getTheme()).hoverStyle}
                                 lazyLoadButtonStyle={styles(this.getTheme()).lazyLoadButtonStyle}
