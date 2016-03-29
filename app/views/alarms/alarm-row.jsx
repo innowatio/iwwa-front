@@ -16,22 +16,28 @@ const styles = ({colors}, active) => ({
         padding: "0px"
     },
     iconChart: {
-        padding: "6px 5px",
+        display: "inline-block",
         cursor: "pointer",
-        lineHeight: "20px",
+        lineHeight: "43px",
         verticalAlign: "middle"
     },
     iconSettings: {
-        padding: "10px 5px",
+        display: "inline-block",
         cursor: "pointer",
-        lineHeight: "20px",
+        marginRight: "20px",
+        lineHeight: "43px",
         verticalAlign: "middle"
     },
     iconAlarmStatus: {
         backgroundColor: active ? colors.activeAlarm : colors.pausedAlarm,
-        height: "100%",
-        color: colors.mainFontColor,
-        textAlign: "center"
+        color: colors.white,
+        display: "inline-block",
+        height: "50px",
+        width: "45px",
+        verticalAlign: "middle",
+        lineHeight: "55px",
+        textAlign: "center",
+        marginRight: "10px"
     }
 });
 
@@ -74,13 +80,13 @@ var AlarmRow = React.createClass({
                     />
                     {`${this.props.element.get("name")}${this.getFormattedDate()}`}
                 </div>
-                <div style={{width: "100px", float: "right"}} >
+                <div style={{width: "100px", lineHeight: "50px", float: "right"}} >
                     <components.Icon
                         color={colors.iconAlarmAction}
                         icon={"settings"}
                         onClick={partial(this.props.onClickAlarmSetting, [this.props.elementId])}
                         size={"28px"}
-                        style={styles(this.getTheme()).iconChart}
+                        style={styles(this.getTheme()).iconSettings}
                     />
                     <Link to={"/chart/"}>
                         <components.Icon

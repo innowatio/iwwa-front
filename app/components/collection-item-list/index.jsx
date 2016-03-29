@@ -8,7 +8,8 @@ import {defaultTheme} from "lib/theme";
 const styles = {
     listContainer: {
         height: "calc(100% - 270px)",
-        overflow: "hidden"
+        overflow: "hidden",
+        marginTop: "22px"
     }
 };
 
@@ -114,13 +115,11 @@ var CollectionItemList = React.createClass({
             .toJS()
             .filter((obj, index) => (this.props.initialVisibleRow ? index < this.state.visibleValuesList : true));
         return (
-            <div style={{marginTop: "22px"}}>
-                <div style={styles.listContainer} >
-                    <div style={{overflow: "auto", height: "100%"}}>
-                        {collectionList}
-                        <div style={{borderTop: "1px solid " + colors.white}} />
-                        {this.renderLazyLoad()}
-                    </div>
+            <div style={styles.listContainer} >
+                <div style={{overflow: "auto", height: "100%"}}>
+                    {collectionList}
+                    <div style={{borderTop: "1px solid " + colors.white}} />
+                    {this.renderLazyLoad()}
                 </div>
             </div>
         );
