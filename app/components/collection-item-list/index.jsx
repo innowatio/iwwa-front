@@ -125,11 +125,7 @@ var CollectionItemList = React.createClass({
             .toList()
             .toJS();
         return (
-            <div style={{
-                height: "calc(100% - 270px)",
-                marginTop: this.props.filter ? "22px" : "none"
-            }}
-            >
+            <div>
                 {this.renderInputFilter()}
                 <div style={{height: "100%"}}>
                     {collectionList.slice(0, this.props.initialVisibleRow ? this.state.visibleValuesList : Infinity)}

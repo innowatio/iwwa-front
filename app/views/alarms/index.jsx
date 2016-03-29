@@ -222,23 +222,12 @@ var Alarms = React.createClass({
                             style={styles(this.getTheme()).tabStyle}
                             title="Allarmi"
                         >
-                            <Radium.Style
-                                rules={{
-                                    "table tr:hover": {
-                                        backgroundColor: colors.tableRowRollover
-                                    },
-                                    "table tr > td": {
-                                        padding: "3px 0px"
-                                    }
-                                }}
-                                scopeSelector=".alarm-table"
-                            />
                             {this.renderFilterButton()}
                             <components.CollectionItemList
                                 collections={R.isNil(allowedValues) ? Immutable.Map() : allowedValues.filter(this.filterAlarms)}
                                 headerComponent={this.renderAlarmRow}
                                 initialVisibleRow={10}
-                                filter={this.notificationFilter}
+                                filter={this.getNotificationFilter}
                                 hover={true}
                                 hoverStyle={styles(this.getTheme()).hoverStyle}
                                 lazyLoadButtonStyle={styles(this.getTheme()).lazyLoadButtonStyle}
