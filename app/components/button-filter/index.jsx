@@ -94,7 +94,7 @@ var ButtonFilter = React.createClass({
     },
     render: function () {
         return (
-            <div style={{marginTop: "10px", height: "auto", marginBottom: "10px", float: "right"}}>
+            <div style={{marginTop: "20px", height: "auto", marginBottom: "20px", float: "right"}}>
                 <components.Popover title={this.renderTitlePopover()} >
                     {this.renderFilter()}
                 </components.Popover>

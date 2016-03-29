@@ -145,12 +145,19 @@ var SiteNavigator = React.createClass({
                                     borderRight: "0px",
                                     borderTopLeftRadius: "20px",
                                     borderBottomLeftRadius: "20px",
+                                    borderColor: theme.colors.borderInputSearch,
                                     backgroundColor: theme.colors.backgroundInputSearch,
-                                    outline: "none !important",
-                                    color: theme.colors.white
+                                    color: theme.colors.mainFontColor
+                                },
+                                ".form-control:focus": {
+                                    borderColor: theme.colors.borderInputSearch,
+                                    outline: "none",
+                                    boxShadow: "none",
+                                    WebkitBoxShadow: "none"
                                 },
                                 ".input-group-addon:last-child": {
                                     backgroundColor: theme.colors.backgroundInputSearch,
+                                    borderColor: theme.colors.borderInputSearch,
                                     borderTopRightRadius: "20px",
                                     borderBottomRightRadius: "20px",
                                     cursor: "pointer"

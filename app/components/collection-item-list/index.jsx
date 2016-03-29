@@ -114,7 +114,7 @@ var CollectionItemList = React.createClass({
             .toJS()
             .filter((obj, index) => (this.props.initialVisibleRow ? index < this.state.visibleValuesList : true));
         return (
-            <div style={{marginTop: "84px"}}>
+            <div style={{marginTop: "22px"}}>
                 <div style={styles.listContainer} >
                     <div style={{overflow: "auto", height: "100%"}}>
                         {collectionList}
