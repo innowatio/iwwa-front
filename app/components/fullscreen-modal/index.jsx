@@ -5,7 +5,6 @@ import React, {PropTypes} from "react";
 import {styles} from "lib/styles_restyling";
 import {defaultTheme} from "lib/theme";
 import components from "components";
-import icons from "lib/icons";
 
 var FullscreenModal = React.createClass({
     propTypes: {
@@ -23,7 +22,31 @@ var FullscreenModal = React.createClass({
     getTheme: function () {
         return this.context.theme || defaultTheme;
     },
+    renderHeader: function () {
+        const {colors} = this.getTheme();
+        return (
+            <components.Button
+                bsStyle={"link"}
+                onClick={this.props.onHide}
+                style={{
+                    display: "block",
+                    float: "right"
+                }}
+            >
+                <components.Icon
+                    color={colors.iconClose}
+                    icon={"close"}
+                    size={"60px"}
+                    style={{
+                        verticalAlign: "middle",
+                        lineHeight: "20px"
+                    }}
+                />
+            </components.Button>
+        );
+    },
     renderFooter: function () {
+        const {colors} = this.getTheme();
         return (
             <Modal.Footer>
                 <div style={{bottom: "15px", textAlign: "center", margin: "2% auto auto auto", height: "45px"}}>
@@ -39,14 +62,15 @@ var FullscreenModal = React.createClass({
                             fontSize: "20px",
                             marginRight: "none",
                             border: "0px",
-                            backgroundColor: this.getTheme().colors.buttonPrimary
+                            backgroundColor: colors.buttonPrimary,
+                            color: colors.white
                         }}
                     >
                         {"OK"}
                     </components.Button>
                     <components.Button bsStyle={"link"} onClick={this.props.onReset}>
                         <components.Icon
-                            color={this.getTheme().colors.iconArrow}
+                            color={colors.iconArrow}
                             icon={"reset"}
                             size={"35px"}
                             style={{
@@ -61,6 +85,7 @@ var FullscreenModal = React.createClass({
         );
     },
     render: function () {
+        const {colors} = this.getTheme();
         return (
             <Modal
                 className="fullscreen-modal-selector"
@@ -83,7 +108,7 @@ var FullscreenModal = React.createClass({
                             width: "100%"
                         },
                         ".modal-content": {
-                            backgroundColor: this.props.backgroundColor || this.getTheme().colors.backgroundModal,
+                            backgroundColor: this.props.backgroundColor || colors.backgroundModal,
                             border: "none",
                             borderRadius: "0",
                             height: "100%",
@@ -92,28 +117,21 @@ var FullscreenModal = React.createClass({
                         },
                         ".modal-header": {
                             borderBottom: "none",
-                            padding: "8px"
+                            padding: "0px"
+                        },
+                        ".modal-header span": {
+                            display: "none"
                         },
                         ".modal-footer": {
                             borderTop: "none",
                             display: "initial"
-                        },
-                        "button.close": {
-                            height: "40px",
-                            width: "40px",
-                            backgroundImage: `url(${icons.iconClose})`,
-                            backgroundSize: "100% 100%",
-                            backgroundRepeat: "no-repeat",
-                            opacity: 1,
-                            outline: "none"
-                        },
-                        "button.close > span": {
-                            display: "none"
                         }
                     }}
                     scopeSelector=".fullscreen-modal-selector"
                 />
-                <Modal.Header closeButton={true} />
+                <Modal.Header>
+                    {this.renderHeader()}
+                </Modal.Header>
                 <Modal.Body>
                     {this.props.children}
                 </Modal.Body>

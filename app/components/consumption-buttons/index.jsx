@@ -59,7 +59,7 @@ var ConsumptionButtons = React.createClass({
                     lineHeight: "45px",
                     height: "45px",
                     opacity: isSelected ? "1" : "0",
-                    color: theme.colors.mainFontColor,
+                    color: theme.colors.white,
                     transition: "opacity 0.8s ease-in-out"
                 }}
                 >

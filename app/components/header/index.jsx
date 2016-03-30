@@ -55,10 +55,7 @@ var Header = React.createClass({
     getUserSettings: function () {
         return [
             {label: "Tema scuro", key: "dark"},
-            {label: "Tema chiaro", key: "light"},
-            {label: "Amministra utenti", key: ""},
-            {label: "Amministra siti", key: ""},
-            {label: "Suggerimenti", key: ""}
+            {label: "Tema chiaro", key: "light"}
         ];
     },
     renderUserSetting: function () {

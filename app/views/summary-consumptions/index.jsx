@@ -32,7 +32,7 @@ var styleH2 = ({colors}) => ({
     lineHeight: "15px",
     fontWeight: "400",
     textTransform: "uppercase",
-    color: colors.mainFontColor,
+    color: colors.white,
     padding: "0"
 });
 
@@ -41,7 +41,7 @@ var styleH3 = ({colors}) => ({
     lineHeight: "20px",
     fontWeight: "400",
     textTransform: "uppercase",
-    color: colors.mainFontColor
+    color: colors.white
 });
 var styleRoundedDiv = ({colors}) => ({
     borderRadius: "100%",
@@ -55,7 +55,7 @@ var styleMeasure  = ({colors}) => ({
     fontSize: "90px",
     fontWeight: "600",
     lineHeight: "110px",
-    color: colors.mainFontColor
+    color: colors.white
 });
 var styleUnit  = ({colors}) => ({
     fontSize: "60px",
@@ -63,7 +63,7 @@ var styleUnit  = ({colors}) => ({
     lineHeight: "10px",
     margin: "0",
     padding: "0",
-    color: colors.mainFontColor
+    color: colors.white
 });
 var styleRightPane  = ({colors}) => ({
     width: "30%",
@@ -112,10 +112,12 @@ var rulesProgressBar = ({colors}) => ({
         textAlign: "left"
     },
     ".progress-bar-danger": {
-        backgroundColor: colors.progressBarDanger
+        backgroundColor: colors.progressBarDanger,
+        color: colors.white
     },
     ".progress-bar-info": {
-        backgroundColor: colors.progressBarInfo
+        backgroundColor: colors.progressBarInfo,
+        color: colors.white
     }
 });
 
@@ -126,6 +128,9 @@ var SummaryConsumptions = React.createClass({
         consumptions: React.PropTypes.object.isRequired,
         selectPeriod: React.PropTypes.func.isRequired,
         selectSite: React.PropTypes.func.isRequired
+    },
+    contextTypes: {
+        theme: React.PropTypes.object
     },
     getInitialState: function () {
         return {
@@ -186,7 +191,7 @@ var SummaryConsumptions = React.createClass({
         this.setState({period: tabPeriod});
     },
     renderCustomersComparisons: function () {
-        const theme = this.getTheme();
+        const {colors} = this.getTheme();
         const title = "Confronta i tuoi consumi con quelli di attività simili alla tua";
         const selectedTab = tabParameters().find(param => param.key === this.state.period);
         const now = parseInt(selectedTab.now(
@@ -198,16 +203,18 @@ var SummaryConsumptions = React.createClass({
                 padding: "10px",
                 borderTopLeftRadius: "25px",
                 borderTopRightRadius: "25px",
-                border: "1px solid " + theme.colors.borderConsumptionSection,
-                borderBottom: "0",
-                backgroundColor: theme.colors.backgroundConsumptionSection
+                borderLeft: "1px solid " + colors.borderConsumptionSection,
+                borderRight: "1px solid " + colors.borderConsumptionSection,
+                borderTop: "1px solid " + colors.borderConsumptionSection,
+                borderBottom: "0px",
+                backgroundColor: colors.backgroundConsumptionSection
             }}
             >
                 <p style={{
                     fontSize: "16px",
                     margin: "15px 0px",
                     fontWeight: "400",
-                    color: theme.colors.mainFontColor
+                    color: colors.mainFontColor
                 }}
                 >{title}</p>
                 {this.renderStyledProgressBar(
@@ -232,7 +239,7 @@ var SummaryConsumptions = React.createClass({
         );
     },
     renderFeedbackBox: function () {
-        const theme = this.getTheme();
+        const {colors} = this.getTheme();
         const feedbackMessage = "Stai andando molto bene. Hai usato il 10% di energia in meno dei tuoi vicini.";
         return (
             <div style={{
@@ -240,9 +247,11 @@ var SummaryConsumptions = React.createClass({
                 padding: "10px",
                 borderBottomLeftRadius: "25px",
                 borderBottomRightRadius: "25px",
-                border: "1px solid " + theme.colors.borderConsumptionSection,
-                borderTop: "0",
-                backgroundColor: theme.colors.backgroundConsumptionSection
+                borderLeft: "1px solid " + colors.borderConsumptionSection,
+                borderRight: "1px solid " + colors.borderConsumptionSection,
+                borderBottom: "1px solid " + colors.borderConsumptionSection,
+                borderTop: "0px",
+                backgroundColor: colors.backgroundConsumptionSection
             }}
             >
                 <div style={{
@@ -250,7 +259,7 @@ var SummaryConsumptions = React.createClass({
                 }}
                 >
                     <components.Icon
-                        color={theme.colors.feedbackGood}
+                        color={colors.feedbackGood}
                         icon={"good"}
                         size={"50px"}
                         style={{
@@ -258,11 +267,11 @@ var SummaryConsumptions = React.createClass({
                             lineHeight: "20px"
                         }}
                     />
-                    <p style={{color: theme.colors.feedbackGood, fontSize: "20px"}}>
+                    <p style={{color: colors.feedbackGood, fontSize: "20px"}}>
                         {"GRANDE!"}
                     </p>
                 </div>
-                <p style={{color: theme.colors.mainFontColor, fontSize: "14px", fontWeight:"300"}}>{feedbackMessage}</p>
+                <p style={{color: colors.mainFontColor, fontSize: "14px", fontWeight:"300"}}>{feedbackMessage}</p>
             </div>
         );
     },
@@ -338,7 +347,7 @@ var SummaryConsumptions = React.createClass({
                             backgroundColor: colors.secondary
                         },
                         "ul li": {
-                            color: colors.mainFontColor,
+                            color: colors.white,
                             margin: "0 1.5%"
                         },
                         "ul li a": {
@@ -350,7 +359,7 @@ var SummaryConsumptions = React.createClass({
                         },
                         ".nav-tabs > li > a": {
                             height: "44px",
-                            color: colors.mainFontColor,
+                            color: colors.white,
                             border: "0",
                             outline: "none",
                             borderBottom: "3px solid" + colors.secondary
@@ -362,7 +371,7 @@ var SummaryConsumptions = React.createClass({
                             height: "44px",
                             fontSize: "17px",
                             fontWeight: "500",
-                            color: colors.mainFontColor,
+                            color: colors.white,
                             border: "0px",
                             borderRadius: "0px",
                             outline: "none",

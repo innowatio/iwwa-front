@@ -127,9 +127,9 @@ var CollectionItemList = React.createClass({
         return (
             <div>
                 {this.renderInputFilter()}
-                <div style={{height: "100%"}}>
+                <div style={{height: "100%", overflow: "auto"}}>
                     {collectionList.slice(0, this.props.initialVisibleRow ? this.state.visibleValuesList : Infinity)}
-                    <div style={{borderTop: "1px solid " + colors.white}} />
+                    <div style={{borderTop: "1px solid " + colors.borderAlarmsRow}} />
                     <div style={{marginBottom: "50px"}}>
                         {this.renderLazyLoad(collectionList.length)}
                     </div>

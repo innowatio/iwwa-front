@@ -107,7 +107,7 @@ export const styles = (theme) => ({
     divAlarmOpenModal: {
         height: "35px",
         width: "100%",
-        borderBottom: "1px solid" + theme.colors.white,
+        borderBottom: "1px solid" + theme.colors.borderInputSettingsAlarm,
         cursor: "pointer",
         color: theme.colors.textSelectButton,
         fontSize: "16px",
@@ -161,7 +161,7 @@ export const styles = (theme) => ({
         },
         ".nav-tabs > li > a": {
             height: "44px",
-            color: theme.colors.mainFontColor,
+            color: theme.colors.white,
             border: "0",
             outline: "none",
             borderBottom: "3px solid" + theme.colors.secondary
@@ -173,7 +173,7 @@ export const styles = (theme) => ({
             height: "44px",
             fontSize: "17px",
             fontWeight: "500",
-            color: theme.colors.mainFontColor,
+            color: theme.colors.white,
             border: "0px",
             borderRadius: "0px",
             outline: "none",

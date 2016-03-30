@@ -25,6 +25,7 @@ import SubListNotification from "./sub-list-notification.jsx";
 
 const styles = ({colors}) => ({
     hoverStyle: {
+        clear: "both",
         backgroundColor: colors.backgroundAlarmsRowHover
     },
     lazyLoadButtonStyle: {
@@ -33,6 +34,7 @@ const styles = ({colors}) => ({
         lineHeight: "43px",
         backgroundColor: colors.buttonPrimary,
         fontSize: "14px",
+        color: colors.white,
         textTransform: "uppercase",
         fontWeight: "400",
         margin: "10px auto 0 auto",

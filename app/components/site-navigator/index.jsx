@@ -204,7 +204,7 @@ var SiteNavigator = React.createClass({
                         {this.renderSitesParent()}
                     </div>
                 </bootstrap.Col>
-                <bootstrap.Col style={{height: "calc(100vh - 350px)", minHeight: "300px"}} xs={8}>
+                <bootstrap.Col style={{height: "calc(100vh - 420px)", minHeight: "300px"}} xs={8}>
                     <div
                         className="site-navigator-child"
                         style={{
