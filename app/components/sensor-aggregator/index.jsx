@@ -20,10 +20,10 @@ var SensorAggregator = React.createClass({
     },
     render: function () {
         let theme = this.getTheme();
+                    // <FormulaDropArea style={{...styles(theme).titlePage, borderRadius: "20px", height: "250px"}} />
         return (
             <div style={{minHeight: "450px"}}>
                 <Col md={6}>
-                    <FormulaDropArea style={{...styles(theme).titlePage, borderRadius: "20px", height: "250px"}} />
                 </Col>
                 <Col md={6} style={{textAlign: "center"}}>
                     <label style={{color: theme.colors.navText, marginBottom: "20px"}}>
@@ -31,7 +31,7 @@ var SensorAggregator = React.createClass({
                     </label>
                     {this.props.sensors.map(item => {
                         return (
-                            <DraggableSensor key={item} />
+                            <DraggableSensor key={item} name={item} />
                         );
                     })}
                     <DraggableOperator type="delete" />

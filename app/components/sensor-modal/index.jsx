@@ -122,27 +122,27 @@ var SensorForm = React.createClass({
                             </div>
                             {unitOfMeasurement.touched && unitOfMeasurement.error && <div className="col-xs-3 help-block">{unitOfMeasurement.error}</div>}
                         </div>
-                        <div className={"form-group"}>
-                            <div className={"col-xs-12"}>
-                                <Input type="text" className="col-xs-12 form-control" placeholder="Referenza sito" style={styles(theme).inputLine}
-                                    {...siteRef}
-                                />
-                            </div>
+                        <div className={"form-group col-xs-12"}>
+                            <Input type="text" className="col-xs-12 form-control" placeholder="Referenza sito" style={styles(theme).inputLine}
+                                {...siteRef}
+                            />
                         </div>
-                        <div className={"form-group"}>
-                            <div className={"col-xs-12"}>
-                                <Input type="text" className="col-xs-12 form-control" placeholder="Referenza cliente" style={styles(theme).inputLine}
-                                    {...clientRef}
-                                />
-                            </div>
+                        <div className={"form-group col-xs-12"}>
+                            <Input type="text" className="col-xs-12 form-control" placeholder="Referenza cliente" style={styles(theme).inputLine}
+                                {...clientRef}
+                            />
                         </div>
-                        <div className={"form-group"}>
-                            <label className="col-xs-4 control-label">
-                                {"Tags"}
-                            </label>
-                            <div className={"col-xs-8"}>
-                                <TagsInput addOnBlur={true} {...tags} />
-                            </div>
+                        <div className={"form-group col-xs-12"}>
+                            <TagsInput
+                                addOnBlur={false}
+                                renderInput={(props) => {
+                                    let {onChange, value, ...other} = props;
+                                    return (
+                                        <input type='text' onChange={onChange} value={value} placeholder="Tags" {...other} />
+                                    );
+                                }}
+                                {...tags}
+                            />
                         </div>
                     </Col>
                     {this.renderSensorAggregation()}
