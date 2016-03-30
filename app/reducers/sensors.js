@@ -1,37 +1,7 @@
 import {SELECT_SENSOR} from "../actions/sensors";
 
-let aSensor = {
-    id: -1,
-    fields: {
-        name: "primo sensore",
-        description: "descrizione",
-        unitOfMeasurement: {
-            id: 2,
-            label: "Fahrenheit"
-        },
-        tags: ["temperature", "italy"]
-    },
-    monitoring: true
-};
-
-let bSensor = {
-    id: -2,
-    fields: {
-        name: "secondo sensore",
-        description: "descrizione",
-        unitOfMeasurement: {
-            id: 2,
-            label: "Fahrenheit"
-        },
-        tags: []
-    },
-    favorite: true,
-    monitoring: false
-};
-
 let defaultState = {
-    allSensors: [aSensor, bSensor],
-    //allSensors: [],
+    allSensors: [],
     selectedSensors: []
 };
 

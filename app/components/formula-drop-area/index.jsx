@@ -105,4 +105,4 @@ var FormulaDropArea = React.createClass({
     }
 });
 
-export default DropTarget([Types.SENSOR, Types.OPERATOR], formulaTarget, collect)(FormulaDropArea);
+module.exports = DropTarget([Types.SENSOR, Types.OPERATOR], formulaTarget, collect)(FormulaDropArea);

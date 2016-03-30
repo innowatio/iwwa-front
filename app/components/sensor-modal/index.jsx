@@ -11,7 +11,7 @@ import {defaultTheme} from "lib/theme";
 export const fields = ["name", "description", "unitOfMeasurement", "siteRef", "clientRef", "tags"];
 
 const potentialUnitsOfMeasurement = [
-    {id: null, label: "-Choose the unit of measurement-"},
+    {id: null, label: "Unità di misura"},
     {id: 1, label: "Celsius"},
     {id: 2, label: "Fahrenheit"},
     {id: 3, label: "Watt"}
@@ -136,9 +136,9 @@ var SensorForm = React.createClass({
                             <TagsInput
                                 addOnBlur={false}
                                 renderInput={(props) => {
-                                    let {onChange, value, ...other} = props;
+                                    let {...other} = props;
                                     return (
-                                        <input type='text' onChange={onChange} value={value} placeholder="Tags" {...other} />
+                                        <input type="text" placeholder="Tags" {...other} />
                                     );
                                 }}
                                 {...tags}
