@@ -57,7 +57,6 @@ var FullscreenModal = React.createClass({
         );
     },
     renderFooter: function () {
-        const {colors} = this.getTheme();
         return (
             <Modal.Footer>
                 <components.ButtonConfirmAndReset

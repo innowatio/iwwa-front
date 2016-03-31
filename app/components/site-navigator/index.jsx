@@ -28,6 +28,8 @@ const itemsStyleActive = ({colors}) => ({
     position: "relative"
 });
 
+const heightBody = "420px";
+
 var SiteNavigator = React.createClass({
     propTypes: {
         allowedValues: IPropTypes.map.isRequired,
@@ -185,7 +187,17 @@ var SiteNavigator = React.createClass({
                         />
                     </div>
                 </bootstrap.Col>
-                <bootstrap.Col style={{position: "relative", overflow: "hidden", paddingRight:"60px", marginTop: "10px", height: "calc(100vh - 350px)", minHeight: "300px"}} xs={4}>
+                <bootstrap.Col
+                    style={{
+                        position: "relative",
+                        overflow: "hidden",
+                        paddingRight:"60px",
+                        marginTop: "10px",
+                        height: `calc(100vh - ${heightBody})`,
+                        minHeight: "300px"
+                    }}
+                    xs={4}
+                >
                     <div className="site-navigator-parent">
                         <Radium.Style
                             rules={{
@@ -196,7 +208,8 @@ var SiteNavigator = React.createClass({
                                     left: "0",
                                     right: "-20px",
                                     overflow: "auto",
-                                    padding: "15px"
+                                    padding: "15px",
+                                    width: "100%"
                                 }
                             }}
                             scopeSelector=".site-navigator-parent"
@@ -204,7 +217,10 @@ var SiteNavigator = React.createClass({
                         {this.renderSitesParent()}
                     </div>
                 </bootstrap.Col>
-                <bootstrap.Col style={{height: "calc(100vh - 420px)", minHeight: "300px"}} xs={8}>
+                <bootstrap.Col
+                    style={{height: `calc(100vh - ${heightBody})`, minHeight: "300px"}}
+                    xs={8}
+                >
                     <div
                         className="site-navigator-child"
                         style={{
