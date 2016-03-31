@@ -34,7 +34,7 @@ var Export = React.createClass({
                     style={buttonExport(theme)}
                 >
                     <components.Icon
-                        color={theme.colors.iconDropdown}
+                        color={theme.colors.iconExport}
                         icon={"pdf"}
                         size={"200px"}
                         style={{verticalAlign: "middle"}}
@@ -51,7 +51,7 @@ var Export = React.createClass({
                     style={buttonExport(theme)}
                 >
                     <components.Icon
-                        color={theme.colors.iconDropdown}
+                        color={theme.colors.iconExport}
                         icon={"xls"}
                         size={"200px"}
                         style={{verticalAlign: "middle"}}

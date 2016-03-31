@@ -118,7 +118,10 @@ var Popover = React.createClass({
                             maxWidth: "500px",
                             backgroundColor: colors.transparent,
                             width: this.props.arrow === "none" ? "398px" : "",
-                            marginTop: this.props.arrow === "none" ? "0px !important" : ""
+                            marginTop: this.props.arrow === "none" ? "0px !important" : "",
+                            boxShadow: "none",
+                            WebkitBoxShadow: "none",
+                            border: "0px"
                         },
                         ".popover-content": {
                             padding: "0px",

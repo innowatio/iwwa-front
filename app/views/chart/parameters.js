@@ -1,9 +1,9 @@
-export function getChartSetting ({colors}) {
+export function getChartSetting ({colors}, active) {
     return [{
         label: "Punti di misurazione",
         key: "siteNavigator",
         iconClass: "map",
-        color: colors.iconDropdown
+        color: active ? colors.iconDropdown : colors.white
     },
     {
         label: "Periodo",

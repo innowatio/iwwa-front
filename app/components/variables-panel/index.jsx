@@ -45,7 +45,7 @@ var VariablesPanel = React.createClass({
                 >
                     <div style={style(variable.get("color")).box} styleName="variableContainer">
                         <components.Icon
-                            color={this.getTheme().colors.iconVariable}
+                            color={this.getTheme().colors.iconConsumptionVariable}
                             icon={variable.get("icon")}
                             size={ENVIRONMENT === "cordova" ? "48px" : "60px"}
                             style={{

@@ -4,17 +4,11 @@ var React      = require("react");
 var Router     = require("react-router");
 var moment     = require("moment");
 var R          = require("ramda");
+var Radium              = require("radium");
 
 var components = require("components");
 import {styles} from "lib/styles_restyling";
 import {defaultTheme} from "lib/theme";
-
-// var iconStyle = ({colors}) => ({
-//     color: colors.primary,
-//     paddingRight: "10px",
-//     float: "right",
-//     width: "30px"
-// });
 
 var Users = React.createClass({
     propTypes: {
@@ -38,7 +32,7 @@ var Users = React.createClass({
                 style: function () {
                     return {
                         width: "25%",
-                        color: theme.colors.greySubTitle
+                        color: theme.colors.mainFontColor
                     };
                 },
                 valueFormatter: function (value) {
@@ -50,7 +44,7 @@ var Users = React.createClass({
                 style: function () {
                     return {
                         width: "15%",
-                        color: theme.colors.greySubTitle
+                        color: theme.colors.mainFontColor
                     };
                 },
                 valueFormatter: function (value) {
@@ -62,7 +56,7 @@ var Users = React.createClass({
                 style: function () {
                     return {
                         width: "20%",
-                        color: theme.colors.greySubTitle
+                        color: theme.colors.mainFontColor
                     };
                 },
                 valueFormatter: function (value) {
@@ -75,7 +69,7 @@ var Users = React.createClass({
                 style: function () {
                     return {
                         width: "30%",
-                        color: theme.colors.greySubTitle
+                        color: theme.colors.mainFontColor
                     };
                 },
                 valueFormatter: function (value) {
@@ -95,8 +89,8 @@ var Users = React.createClass({
                             <components.Icon
                                 color={theme.colors.iconEditUser}
                                 icon={"edit"}
-                                size={"24px"}
-                                style={{float:"right", paddingTop:"5px"}} 
+                                size={"30px"}
+                                style={{float:"right", marginRight: "10px", lineHeight: "50px"}}
                             />
                         </Router.Link>
                     );
@@ -110,9 +104,32 @@ var Users = React.createClass({
     render: function () {
         const theme = this.getTheme();
         return (
-            <div>
+            <div className="table-user">
+                <Radium.Style
+                    rules={{
+                        ".table tr": {
+                            fontWeight: "300",
+                            fontSize: "16px",
+                            height: "50px"
+                        },
+                        ".table tbody tr td": {
+                            height: "50px",
+                            padding: "0 6px"
+                        },
+                        ".table tr:hover": {
+                            backgroundColor: theme.colors.backgroundUserRowHover
+                        }
+                    }}
+                    scopeSelector=".table-user"
+                />
                 <div style={styles(this.getTheme()).titlePage}>
-                    <div style={{fontSize: "18px", marginBottom: "0px", paddingTop: "18px", width: "100%"}}>
+                    <div style={{
+                        fontSize: "18px",
+                        marginBottom: "0px",
+                        paddingTop: "18px",
+                        width: "100%"
+                    }}
+                    >
                         {""}
                     </div>
                 </div>
@@ -122,9 +139,12 @@ var Users = React.createClass({
                         columns={this.getColumnsUsers()}
                         headColumn={["Email", "Email verificata", "Data di creazione", "Ruolo", ""]}
                         headStyle={{
-                            color: theme.colors.titleColor,
-                            fontSize: "13pt",
-                            backgroundColor: theme.colors.greyBackground
+                            color: theme.colors.mainFontColor,
+                            fontSize: "18px",
+                            fontWeight: "400",
+                            padding: "10px 6px",
+                            margin: "0",
+                            backgroundColor: theme.colors.backgroundUserRowHover
                         }}
                         hover={true}
                         style={{height: "calc(100vh - 100px)", paddingBottom: "10px"}}
