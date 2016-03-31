@@ -2,6 +2,7 @@ exports.AlarmForm               = require("./alarm-form/");
 exports.AlarmNotificationModal  = require("./alarm-notification-modal/");
 exports.AlarmRepetitionModal    = require("./alarm-repetition-modal/");
 exports.Button                  = require("./button/");
+exports.ButtonConfirmAndReset   = require("./button-confirm-and-reset/");
 exports.ButtonFilter            = require("./button-filter/");
 exports.ButtonGroupSelect       = require("./button-group-select/");
 exports.CollectionElementsTable = require("./collection-elements-table/");

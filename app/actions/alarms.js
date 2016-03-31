@@ -20,6 +20,7 @@ export const RESET_ALARM_FORM_VIEW = "RESET_ALARM_FORM_VIEW";
 export const CREATE_OR_MODIFY_ALARM_START = "CREATE_OR_MODIFY_ALARM_START";
 export const CREATION_ALARM_STOP = "CREATION_ALARM_STOP";
 export const NUMBER_OF_SELECTED_TABS = "NUMBER_OF_SELECTED_TABS";
+export const FILTER_COLLECTION = "FILTER_COLLECTION";
 
 // TODO: test this function
 function less (time1, time2) {
@@ -124,6 +125,10 @@ export function submitAlarmCreationOrChange ({active, name, repetition, sito, th
     };
 }
 
+/**
+*   A click on tab
+*   @param {number} selectedTab - index of the selected tab
+*/
 const typeofNumberOfSelectedTabs = actionTypeValidator(Number);
 export function numberOfSelectedTabs (selectedTab) {
     typeofNumberOfSelectedTabs(...arguments);
@@ -134,13 +139,26 @@ export function numberOfSelectedTabs (selectedTab) {
 }
 
 /**
+*   A click on tab
+*   @param {number} selectedTab - index of the selected tab
+*/
+const typeofFilterCollection = actionTypeValidator(object, String);
+export function filterCollection (filterSelection, collectionToFilter) {
+    typeofFilterCollection(...arguments);
+    return {
+        type: FILTER_COLLECTION,
+        payload: {
+            filterSelection,
+            collectionToFilter
+        }
+    };
+}
+
+/**
 *   A click on button in alarms to display the alarms point in chart
+*   @param {array} sensorId - id of the sensor referred to by the alarm
 *   @param {array} siteId - id of the site referred to by the alarm
 *   @param {array} alarms - date of the date (in miliseconds unix timestamp)
-*   @param {Number} startDate - start of the month of the alarms
-*       (in miliseconds unix timestamp)
-*   @param {Number} endDate - end of the month of the alarms
-*       (in miliseconds unix timestamp)
 */
 const typeofDisplayAlarmsOnChart = actionTypeValidator(
     String,

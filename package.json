@@ -111,6 +111,7 @@
     "react-highcharts": "^8.0.2",
     "react-immutable-proptypes": "^1.7.0",
     "react-lazy-render": "^0.3.0",
+    "react-radio-group": "^2.2.0",
     "react-redux": "^4.4.0",
     "react-router": "^2.0.0",
     "react-router-redux": "^3.0.0",

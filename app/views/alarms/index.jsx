@@ -7,6 +7,7 @@ import R from "ramda";
 import {connect} from "react-redux";
 import {bindActionCreators} from "redux";
 import moment from "moment";
+import get from "lodash.get";
 
 import components from "components";
 import {
@@ -14,7 +15,8 @@ import {
     modifyExistentAlarm,
     resetAlarmFormView,
     submitAlarmCreationOrChange,
-    numberOfSelectedTabs
+    numberOfSelectedTabs,
+    filterCollection
 } from "actions/alarms";
 import {defaultTheme} from "lib/theme";
 import NotificationRow from "./notification-row";
@@ -52,12 +54,34 @@ const styles = ({colors}) => ({
     }
 });
 
+const alarmButtonFilter = [{
+    title: "Quali allarmi vuoi visualizzare?",
+    filter: [
+        {label: "TUTTI", key: "all"},
+        {label: "ATTIVI", key: "active"},
+        {label: "INATTIVI", key: "inactive"},
+        {label: "IN PAUSA", key: "pause"}
+    ],
+    key: "status"
+}];
+
+const notificationButtonFilter = [{
+    title: "Seleziona periodo",
+    filter: [
+        {label: "SEMPRE", key: "-1"},
+        {label: "ULTIMI 7 GIORNI", key: "7"},
+        {label: "ULTIMI 30 GIORNI", key: "30"}
+    ],
+    key: "period"
+}];
+
 var Alarms = React.createClass({
     propTypes: {
         alarms: React.PropTypes.object.isRequired,
         asteroid: React.PropTypes.object,
         collections: IPropTypes.map.isRequired,
         displayAlarmsOnChart: React.PropTypes.func.isRequired,
+        filterCollection: React.PropTypes.func.isRequired,
         location: React.PropTypes.object,
         modifyExistentAlarm: React.PropTypes.func.isRequired,
         numberOfSelectedTabs: React.PropTypes.func.isRequired,
@@ -108,6 +132,14 @@ var Alarms = React.createClass({
         ), Immutable.Map());
         return ret;
     },
+    getNotificationFilter: function (item) {
+        const selectedPeriod = get(this.props, "alarms.filter.notification.period");
+        return CollectionUtils.filters.date(item.get("date"), selectedPeriod);
+    },
+    getAlarmFilter: function (item) {
+        const statusSelected = get(this.props, "alarms.filter.alarm.status");
+        return CollectionUtils.filters.status(item.get("active"), statusSelected);
+    },
     onClickAlarmSetting: function (alarmsId) {
         this.props.modifyExistentAlarm(alarmsId);
         this.props.numberOfSelectedTabs(1);
@@ -115,23 +147,11 @@ var Alarms = React.createClass({
     activeKey: function (key) {
         this.props.numberOfSelectedTabs(key);
     },
-    alarmFilterTitle: function () {
-        return [
-            {title: "Quali allarmi vuoi visualizzare?", label: ["TUTTI", "ATTIVI", "INATTIVI"], key: "alarmToVisualize"}
-        ];
-    },
     sortByDate: function (a, b, asc) {
         if (asc) {
             return a.get("date") > b.get("date") ? 1 : -1;
         }
         return a.get("date") > b.get("date") ? -1 : 1;
-    },
-    onClickFilter: function (value, label) {
-        if (R.equals(value, this.alarmFilterTitle()[0])) {
-            this.setState({
-                [value.key]: label
-            });
-        }
     },
     onClickPanel: function (elementId) {
         const isPanelOpen = !R.equals(this.state.panelToOpen, elementId);
@@ -143,30 +163,31 @@ var Alarms = React.createClass({
             searchRegExp.test(moment(item.get("date")).locale("it").format("LLL"))
         ) : null;
     },
-    getNotificationFilter: function (item, search) {
+    getSearchFilter: function (item, search) {
         return (
             CollectionUtils.sites.filter(item, search) ||
             this.dateFilter(item, search)
         );
     },
-    filterAlarms: function (value) {
-        if (this.state.alarmToVisualize[0] === "ATTIVI") {
-            return value.get("active") === true;
-        }
-        if (this.state.alarmToVisualize[0] === "INATTIVI") {
-            return value.get("active") === false;
-        }
-        return value;
-    },
     renderSubListNotification: function (components, index) {
         const isExpanded = this.state.panelToOpen === index;
         return <SubListNotification isExpanded={isExpanded} />;
     },
-    renderFilterButton: function () {
+    renderNotificationFilterButton: function () {
         return (
             <components.ButtonFilter
-                filterList={this.alarmFilterTitle()}
-                onClickFilter={this.onClickFilter}
+                activeFilter={this.props.alarms.filter}
+                filterList={notificationButtonFilter}
+                onConfirm={R.partialRight(this.props.filterCollection, ["notification"])}
+            />
+        );
+    },
+    renderAlarmFilterButton: function () {
+        return (
+            <components.ButtonFilter
+                activeFilter={this.props.alarms.filter}
+                filterList={alarmButtonFilter}
+                onConfirm={R.partialRight(this.props.filterCollection, ["alarm"])}
             />
         );
     },
@@ -221,12 +242,12 @@ var Alarms = React.createClass({
                             style={styles(this.getTheme()).tabStyle}
                             title="Allarmi"
                         >
-                            {this.renderFilterButton()}
+                            {this.renderAlarmFilterButton()}
                             <components.CollectionItemList
-                                collections={R.isNil(allowedValues) ? Immutable.Map() : allowedValues.filter(this.filterAlarms)}
+                                collections={allowedValues.filter(this.getAlarmFilter) || Immutable.Map()}
                                 headerComponent={this.renderAlarmRow}
                                 initialVisibleRow={10}
-                                filter={this.getNotificationFilter}
+                                filter={this.getSearchFilter}
                                 hover={true}
                                 hoverStyle={styles(this.getTheme()).hoverStyle}
                                 lazyLoadButtonStyle={styles(this.getTheme()).lazyLoadButtonStyle}
@@ -238,12 +259,12 @@ var Alarms = React.createClass({
                             title="Storico allarmi"
                             style={styles(this.getTheme()).tabStyle}
                         >
-                            {this.renderFilterButton()}
+                            {this.renderNotificationFilterButton()}
                             <components.CollectionItemList
-                                collections={this.getNotifications()}
+                                collections={this.getNotifications().filter(this.getNotificationFilter)}
                                 headerComponent={this.renderNotificationRow}
                                 initialVisibleRow={10}
-                                filter={this.getNotificationFilter}
+                                filter={this.getSearchFilter}
                                 hover={true}
                                 hoverStyle={styles(this.getTheme()).hoverStyle}
                                 lazyLoadButtonStyle={styles(this.getTheme()).lazyLoadButtonStyle}
@@ -268,6 +289,7 @@ function mapStateToProps (state) {
 function mapDispatchToProps (dispatch) {
     return {
         displayAlarmsOnChart: bindActionCreators(displayAlarmsOnChart, dispatch),
+        filterCollection: bindActionCreators(filterCollection, dispatch),
         modifyExistentAlarm: bindActionCreators(modifyExistentAlarm, dispatch),
         submitAlarmCreationOrChange: bindActionCreators(submitAlarmCreationOrChange, dispatch),
         resetAlarmFormView: bindActionCreators(resetAlarmFormView, dispatch),

@@ -1,6 +1,7 @@
 import React, {PropTypes} from "react";
 import {Style} from "radium";
 import * as bootstrap from "react-bootstrap";
+import ReactPureRender from "react-addons-pure-render-mixin";
 
 import components from "components";
 import {defaultTheme} from "lib/theme";
@@ -48,6 +49,7 @@ var InputFilter = React.createClass({
             inputValue: ""
         };
     },
+    mixin: [ReactPureRender],
     getTheme: function () {
         return this.context.theme || defaultTheme;
     },

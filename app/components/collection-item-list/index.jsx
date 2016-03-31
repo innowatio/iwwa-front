@@ -97,6 +97,7 @@ var CollectionItemList = React.createClass({
         );
     },
     renderInputFilter: function () {
+        // We use components.InputFilter because is used in many part of application.
         return this.props.filter ? (
             <components.InputFilter
                 onChange={this.onChangeInputFilter}

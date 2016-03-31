@@ -1,6 +1,7 @@
 var Immutable = require("immutable");
 var R         = require("ramda");
 var titleCase = require("title-case");
+var moment    = require("moment");
 
 exports.labelGraph = {
     getYLabel: function (tipologia) {
@@ -26,6 +27,22 @@ exports.labelGraph = {
         } else {
             return "";
         }
+    }
+};
+
+exports.filters = {
+    date: (date, days) => {
+        if (days < 0) {
+            return true;
+        }
+        return moment(moment().valueOf()).diff(date, "days") < days;
+    },
+    status: (status, selectedStatus) => {
+        // This filter is provvisory. Need to change alarm status.
+        if (selectedStatus === "all") {
+            return true;
+        }
+        return selectedStatus === "active" ? status : !status;
     }
 };
 

@@ -2,10 +2,21 @@ import {Modal} from "react-bootstrap";
 import Radium from "radium";
 import React, {PropTypes} from "react";
 
-import {styles} from "lib/styles_restyling";
 import {defaultTheme} from "lib/theme";
 import components from "components";
 import icons from "lib/icons";
+
+const buttonConfirmStyle = ({colors}) => ({
+    width: "275px",
+    height: "45px",
+    lineHeight: "45px",
+    padding: "0",
+    marginTop: "none",
+    fontSize: "20px",
+    marginRight: "none",
+    border: "0px",
+    backgroundColor: colors.buttonPrimary
+});
 
 var FullscreenModal = React.createClass({
     propTypes: {
@@ -26,37 +37,11 @@ var FullscreenModal = React.createClass({
     renderFooter: function () {
         return (
             <Modal.Footer>
-                <div style={{bottom: "15px", textAlign: "center", margin: "2% auto auto auto", height: "45px"}}>
-                    <components.Button
-                        onClick={this.props.onConfirm}
-                        style={{
-                            ...styles(this.getTheme()).buttonSelectChart,
-                            width: "275px",
-                            height: "45px",
-                            lineHeight: "45px",
-                            padding: "0",
-                            marginTop: "none",
-                            fontSize: "20px",
-                            marginRight: "none",
-                            border: "0px",
-                            backgroundColor: this.getTheme().colors.buttonPrimary
-                        }}
-                    >
-                        {"OK"}
-                    </components.Button>
-                    <components.Button bsStyle={"link"} onClick={this.props.onReset}>
-                        <components.Icon
-                            color={this.getTheme().colors.iconArrow}
-                            icon={"reset"}
-                            size={"35px"}
-                            style={{
-                                float: "right",
-                                verticalAlign: "middle",
-                                lineHeight: "20px"
-                            }}
-                        />
-                    </components.Button>
-                </div>
+                <components.ButtonConfirmAndReset
+                    confirmButtonStyle={buttonConfirmStyle(this.getTheme())}
+                    onConfirm={this.props.onConfirm}
+                    onReset={this.props.onReset}
+                />
             </Modal.Footer>
         );
     },
