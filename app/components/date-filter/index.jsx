@@ -163,7 +163,7 @@ var DateFilter = React.createClass({
                         },
                         ".rw-state-selected": {
                             backgroundColor: colors.buttonPrimary,
-                            color: colors.white,
+                            color: colors.white + "!important",
                             border: "none !important"
                         },
                         ".rw-calendar-grid td .rw-btn:hover": {
@@ -178,9 +178,6 @@ var DateFilter = React.createClass({
                             marginLeft: "8%",
                             color: colors.mainFontColor
                         },
-                        ".date-filter .rw-state-selected": {
-                            color: colors.white
-                        },
                         ".rw-header": {
                             marginLeft: "2%",
                             marginTop: "2%"
@@ -193,7 +190,7 @@ var DateFilter = React.createClass({
                             borderTop: `1px solid ${colors.borderButtonCalendar}`,
                             borderBottom: `1px solid ${colors.borderButtonCalendar}`,
                             width: "89.3%",
-                            color: colors.white,
+                            color: colors.mainFontColor,
                             outline: "none"
                         },
                         ".rw-calendar .rw-header .rw-btn-left": {
@@ -235,9 +232,16 @@ var DateFilter = React.createClass({
                         ".rw-calendar-grid": {
                             outline: "none"
                         },
-                        "button.btn.btn-default:hover": {
+                        ".btn.btn-default:hover": {
                             background: `${colors.buttonPrimary} !important`,
-                            border: "none !important"
+                            border: "none !important",
+                            color: colors.white + "!important"
+                        },
+                        ".rw-widget.rw-state-focus, .rw-widget.rw-state-focus:hover": {
+                            outline: "none",
+                            border: "none",
+                            boxShadow: "none",
+                            WebkitBoxShadow: "none"
                         }
                     }}
                     scopeSelector=".date-filter"

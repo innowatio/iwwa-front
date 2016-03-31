@@ -14,7 +14,8 @@ const buttonConfirmStyle = ({colors}) => ({
     fontSize: "20px",
     marginRight: "none",
     border: "0px",
-    backgroundColor: colors.buttonPrimary
+    backgroundColor: colors.buttonPrimary,
+    color: colors.white
 });
 
 var FullscreenModal = React.createClass({

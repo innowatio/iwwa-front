@@ -106,6 +106,7 @@ export const colorsLightTheme = {
     selectButton: "#000000",
     tableRowRollover: "rgba(0,0,0,0.3)",
     temperature: "#26C6DA",
+    textDropdown: "#3e50b4",
     textSelectButton: "#666666",
     textFooter: "#999999",
     titleColor: "#3e50b4",

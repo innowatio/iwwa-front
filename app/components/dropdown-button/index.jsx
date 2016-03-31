@@ -76,6 +76,13 @@ var DropdownButton = React.createClass({
         this.setState({allowedValue: {}});
     },
     renderButtonOption: function (allowedValue, index) {
+        const {colors} = this.getTheme();
+        const itemStyle = {
+            backgroundColor: (R.equals(this.state.allowedValue, allowedValue) ?
+                colors.buttonPrimary : colors.transparent),
+            color: (R.equals(this.state.allowedValue, allowedValue) ?
+                colors.white : colors.textDropdown)
+        };
         return (
             <bootstrap.ListGroupItem
                 key={this.props.getKey(allowedValue)}
@@ -95,14 +102,7 @@ var DropdownButton = React.createClass({
                     verticalAlign: "middle",
                     // This should overwrite the style over that position.
                     ...this.props.style
-                }, {
-                    backgroundColor: R.equals(this.state.allowedValue, allowedValue) ?
-                        this.getTheme().colors.buttonPrimary :
-                        this.getTheme().colors.transparent,
-                    color: R.equals(this.state.allowedValue, allowedValue) ?
-                        this.getTheme().colors.white :
-                        this.getTheme().colors.primary
-                })}
+                }, itemStyle)}
             >
                 {this.imageItem(allowedValue)}
                 {this.props.getLabel(allowedValue)}
