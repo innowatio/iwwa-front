@@ -4,6 +4,7 @@ import IPropTypes from "react-immutable-proptypes";
 import ReactPureRender from "react-addons-pure-render-mixin";
 import {partial} from "ramda";
 import {Link} from "react-router";
+import {Map} from "immutable";
 
 import components from "components";
 import {defaultTheme} from "lib/theme";
@@ -60,11 +61,12 @@ var AlarmRow = React.createClass({
         return this.context.theme || defaultTheme;
     },
     getFormattedDate: function () {
-        const dateLastNotification = this.props.element.get("notifications").last().get("date");
-        if (dateLastNotification) {
+        const notification = this.props.element.get("notifications").last();
+        if (notification) {
+            const dateLastNotification = notification.get("date") || Map();
             return ` - ${moment(dateLastNotification).locale("it").format("LLL")}`;
         }
-        return null;
+        return "";
     },
     render: function () {
         const {colors} = this.getTheme();

@@ -129,10 +129,9 @@ var Alarms = React.createClass({
         ), Immutable.Map());
     },
     getNotifications: function () {
-        var ret = this.getAlarms().reduce((acc, alarm) => (
+        return this.getAlarms().reduce((acc, alarm) => (
             acc.merge(this.getNotificationsFromAlarm(alarm))
-        ), Immutable.Map());
-        return ret;
+        ), Immutable.Map()).filter(this.getNotificationFilter);
     },
     getNotificationFilter: function (item) {
         const selectedPeriod = get(this.props, "alarms.filter.notification.period");
@@ -263,7 +262,7 @@ var Alarms = React.createClass({
                         >
                             {this.renderNotificationFilterButton()}
                             <components.CollectionItemList
-                                collections={this.getNotifications().filter(this.getNotificationFilter)}
+                                collections={this.getNotifications() || Immutable.Map()}
                                 headerComponent={this.renderNotificationRow}
                                 initialVisibleRow={10}
                                 filter={this.getSearchFilter}
