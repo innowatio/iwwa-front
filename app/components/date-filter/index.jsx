@@ -176,6 +176,9 @@ var DateFilter = React.createClass({
                             border: `1px solid ${colors.borderButtonCalendar}`,
                             width: "90%",
                             marginLeft: "8%",
+                            color: colors.mainFontColor
+                        },
+                        ".date-filter .rw-state-selected": {
                             color: colors.white
                         },
                         ".rw-header": {

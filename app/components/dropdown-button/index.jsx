@@ -13,6 +13,7 @@ var DropdownButton = React.createClass({
             IPropTypes.iterable
         ]).isRequired,
         getColor: React.PropTypes.func,
+        getHoverColor: React.PropTypes.func,
         getIcon: React.PropTypes.func,
         getKey: React.PropTypes.func,
         getLabel: React.PropTypes.func,
@@ -29,6 +30,7 @@ var DropdownButton = React.createClass({
         };
         return {
             getColor: defaultGetter,
+            getHoverColor: defaultGetter,
             getKey: defaultGetter,
             getLabel: defaultGetter,
             getIcon: defaultGetter
@@ -42,11 +44,18 @@ var DropdownButton = React.createClass({
     getTheme: function () {
         return this.context.theme || defaultTheme;
     },
+    getColor: function (allowedValue) {
+        return (
+            this.props.getHoverColor && R.equals(this.state.allowedValue, allowedValue) ?
+            this.props.getHoverColor(allowedValue) :
+            this.props.getColor(allowedValue)
+        );
+    },
     imageItem: function (allowedValue) {
         if (R.keys(allowedValue).length > 2) {
             return (
                 <components.Icon
-                    color={this.props.getColor(allowedValue)}
+                    color={this.getColor(allowedValue)}
                     icon={this.props.getIcon(allowedValue)}
                     size={"35px"}
                     style={{
@@ -87,10 +96,12 @@ var DropdownButton = React.createClass({
                     // This should overwrite the style over that position.
                     ...this.props.style
                 }, {
-                    backgroundColor: R.equals(
-                        this.state.allowedValue, allowedValue) ?
+                    backgroundColor: R.equals(this.state.allowedValue, allowedValue) ?
                         this.getTheme().colors.buttonPrimary :
-                        this.getTheme().colors.transparent
+                        this.getTheme().colors.transparent,
+                    color: R.equals(this.state.allowedValue, allowedValue) ?
+                        this.getTheme().colors.white :
+                        this.getTheme().colors.primary
                 })}
             >
                 {this.imageItem(allowedValue)}

@@ -28,7 +28,7 @@ export const colorsLightTheme = {
     backgroundUserRowHover: "#eeeeee",
     borderAlarmsRow: "#dddddd",
     borderAlarmsSection: "rgba(0,0,0,0.5)",
-    borderButtonCalendar: "#666666",
+    borderButtonCalendar: "#cccccc",
     borderConsumptionSection: "#cccccc",
     borderContentModal: "rgba(35, 31, 32, 0.2)",
     borderDropdown: "rgba(35, 31, 32, 0.3)",
