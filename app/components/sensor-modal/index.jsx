@@ -1,9 +1,10 @@
 import React, {PropTypes} from "react";
 import {Col, Input} from "react-bootstrap";
+import Select from "react-select";
 import TagsInput from "react-tagsinput";
 import {reduxForm} from "redux-form";
 
-import {FullscreenModal, ObjectSelect, SensorAggregator} from "components";
+import {FullscreenModal, SensorAggregator} from "components";
 
 import {styles} from "lib/styles_restyling";
 import {defaultTheme} from "lib/theme";
@@ -11,10 +12,9 @@ import {defaultTheme} from "lib/theme";
 export const fields = ["name", "description", "unitOfMeasurement", "siteRef", "clientRef", "tags"];
 
 const potentialUnitsOfMeasurement = [
-    {id: null, label: "Unità di misura"},
-    {id: 1, label: "Celsius"},
-    {id: 2, label: "Fahrenheit"},
-    {id: 3, label: "Watt"}
+    {value: 1, label: "Celsius"},
+    {value: 2, label: "Fahrenheit"},
+    {value: 3, label: "Watt"}
 ];
 
 const validate = values => {
@@ -118,7 +118,15 @@ var SensorForm = React.createClass({
                     <Col md={6}>
                         <div className={"form-group" + (unitOfMeasurement.touched && unitOfMeasurement.error ? " has-error" : "")}>
                             <div className={"col-xs-" + (unitOfMeasurement.touched && unitOfMeasurement.error ? "9" : "12")}>
-                                <ObjectSelect options={potentialUnitsOfMeasurement} {...unitOfMeasurement}/>
+                                <Select
+                                    autofocus
+                                    className="col-xs-12 form-control"
+                                    name="unitOfMeasurement"
+                                    options={potentialUnitsOfMeasurement}
+                                    placeholder="Unità di misura"
+                                    simpleValue
+                                    {...unitOfMeasurement}
+                                />
                             </div>
                             {unitOfMeasurement.touched && unitOfMeasurement.error && <div className="col-xs-3 help-block">{unitOfMeasurement.error}</div>}
                         </div>
