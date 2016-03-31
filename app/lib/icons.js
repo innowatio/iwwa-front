@@ -19,6 +19,7 @@ exports.iconExport              = assetsPathTo("icons/os__export.svg");
 exports.iconFilter              = assetsPathTo("icons/alarm/ico_innowatio_def_filter.svg");
 exports.iconFlag                = assetsPathTo("icons/alarm/ico_innowatio_def_flag.svg");
 exports.iconFlagColor           = assetsPathTo("icons/alarm/ico_innowatio_def_flag_color.svg");
+exports.iconGoGreen             = assetsPathTo("icons/ico_gogreen.svg");
 exports.iconHelp                = assetsPathTo("icons/os__Help.svg");
 exports.iconHistConsum          = assetsPathTo("icons/os__Historical_consumption-.svg");
 exports.iconHumidity            = assetsPathTo("icons/ico_innowatio_def_umid.svg");

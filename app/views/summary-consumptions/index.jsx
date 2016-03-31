@@ -5,6 +5,7 @@ var Radium     = require("radium");
 var React      = require("react");
 import moment from "moment";
 import {partial} from "ramda";
+import icons from "lib/icons";
 
 var components   = require("components");
 import {connect} from "react-redux";
@@ -21,8 +22,7 @@ var styleLeftPane  = {
 var styleContent  = ({colors}) => ({
     textAlign: "center",
     backgroundColor: colors.primary,
-    padding: "80px 0px",
-    height: "calc(100vh - 100px)"
+    height: "calc(100vh - 130px)"
 });
 var styleTabContent  = ({colors}) => ({
     backgroundColor: colors.primary
@@ -48,7 +48,7 @@ var styleRoundedDiv = ({colors}) => ({
     margin: "30px auto",
     width: "300px",
     height: "300px",
-    padding: "70px 10px 0 10px",
+    padding: "70px 10px 0px 10px",
     backgroundColor: colors.secondary
 });
 var styleMeasure  = ({colors}) => ({
@@ -64,6 +64,18 @@ var styleUnit  = ({colors}) => ({
     margin: "0",
     padding: "0",
     color: colors.white
+});
+var styleCongratMessage = ({colors}) => ({
+    color: colors.white,
+    width: "90%",
+    margin: "60px auto 20px auto",
+    minHeight: "100px",
+    height: "auto",
+    padding: "20px",
+    fontSize: "20px",
+    textAlign: "left",
+    borderRadius: "20px",
+    backgroundColor: colors.secondary
 });
 var styleRightPane  = ({colors}) => ({
     width: "30%",
@@ -397,6 +409,7 @@ var SummaryConsumptions = React.createClass({
             this.subscribeToConsumptions();
             sum = this.getSum(getTimeRangeByPeriod(tabParameters.period));
         }
+        const congratMessage = "COMPLIMENTI! Ieri hai utilizzato il 12% in meno dell’energia che utilizzi di solito.";
         return (
             <div style={styleContent(theme)}>
                 <h2 style={styleH2(theme)}>{siteName}</h2>
@@ -406,6 +419,19 @@ var SummaryConsumptions = React.createClass({
                     <span style={styleUnit(theme)}>{tabParameters.measureUnit}</span>
                 </div>
                 <p style={styleH2(theme)}>{tabParameters.periodSubtitle}</p>
+                <div style={styleCongratMessage(theme)}>
+                    <bootstrap.Col xs={12} md={8} lg={9} style={{float: "left"}}>{congratMessage}</bootstrap.Col>
+                    <bootstrap.Col xs={12} md={4} lg={3} style={{
+                        textAlign: "right",
+                        float: "right",
+                        backgroundImage: `url(${icons.iconGoGreen})`,
+                        backgroundRepeat: "none",
+                        width: "116px",
+                        height: "116px"
+                    }}
+                    ></bootstrap.Col>
+                    <div style={{clear: "both"}}></div>
+                </div>
             </div>
         );
     },
