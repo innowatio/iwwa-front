@@ -1,31 +1,46 @@
-var bootstrap           = require("react-bootstrap");
-var R                   = require("ramda");
-var Radium              = require("radium");
-var React               = require("react");
+import React, {PropTypes} from "react";
+import * as bootstrap from "react-bootstrap";
+import ReactDOM from "react-dom";
+import {isNil} from "ramda";
+import {Style} from "radium";
+
+import components from "components";
 import {defaulTheme} from "lib/theme";
+
+const styles = ({colors}) => ({
+    button: {
+        width: "400px",
+        whiteSpace: "normal",
+        marginTop: "8px",
+        border: `1px solid ${colors.borderSelectButton}`,
+        color: colors.mainFontColor,
+        backgroundColor: colors.backgroundSelectButton
+    },
+    overlayContainer: {
+        position: "relative",
+        boxShadow: "0 5px 10px rgba(0, 0, 0, 0.2)",
+        borderRadius: "3px",
+        marginLeft: "-5px",
+        marginTop: "5px",
+        zIndex: 1000
+    }
+});
 
 var Popover = React.createClass({
     propTypes: {
-        arrow: React.PropTypes.string,
-        arrowColor: React.PropTypes.string,
-        children: React.PropTypes.element,
+        arrow: PropTypes.string,
+        arrowColor: PropTypes.string,
+        children: PropTypes.element,
         hideOnChange: React.PropTypes.bool,
         notClosePopoverOnClick: React.PropTypes.bool,
-        style: React.PropTypes.object,
-        title: React.PropTypes.oneOfType([
-            React.PropTypes.element,
-            React.PropTypes.string
-        ]),
-        tooltipId: React.PropTypes.string,
-        tooltipMessage: React.PropTypes.string,
-        tooltipPosition: React.PropTypes.string
+        title: PropTypes.node
     },
     contextTypes: {
-        theme: React.PropTypes.object
+        theme: PropTypes.object
     },
-    getDefaultProps: function () {
+    getInitialState: function () {
         return {
-            tooltipPosition: "right"
+            show: false
         };
     },
     getTheme: function () {
@@ -36,7 +51,7 @@ var Popover = React.createClass({
         return React.cloneElement(child, {
             onChange: (a) => {
                 self.closePopover();
-                if (!R.isNil(child.props.onChange)) {
+                if (!isNil(child.props.onChange)) {
                     child.props.onChange(a);
                 } else {
                     child.props.valueLink.requestChange(a);
@@ -44,74 +59,36 @@ var Popover = React.createClass({
             }
         });
     },
-    addTooltip: function () {
-        return (
-            <bootstrap.Tooltip
-                className="tooltip-popover"
-                id={this.props.tooltipId}
-            >
-                {this.props.tooltipMessage}
-            </bootstrap.Tooltip>
+    closePopover: function () {
+        this.setState({show: false});
+    },
+    onHide: function () {
+        this.setState({show: false});
+    },
+    onOpenOverlay: function () {
+        this.setState({show: true});
+    },
+    renderButton: function () {
+        const theme = this.getTheme();
+        return this.props.arrow === "none" ? (
+            <components.Button onClick={this.onOpenOverlay} style={styles(theme).button} >
+                {this.props.title}
+            </components.Button>
+        ) : (
+            <components.Button bsStyle="link" onClick={this.onOpenOverlay} >
+                {this.props.title}
+            </components.Button>
         );
     },
-    closePopover: function () {
-        return this.props.notClosePopoverOnClick ? null : this.refs.menuPopover.hide();
-    },
-    getButton: function () {
-        const theme = this.getTheme();
-        return this.props.arrow === "none" ?
-            <bootstrap.Button
-                style={{
-                    width: "400px",
-                    whiteSpace: "normal",
-                    outline: "0px",
-                    outlineStyle: "none",
-                    outlineWidth: "0px",
-                    marginTop: "8px",
-                    border: `1px solid ${theme.colors.borderSelectButton}`,
-                    color: theme.colors.mainFontColor,
-                    backgroundColor: theme.colors.backgroundSelectButton
-                }}
-            >
-                {this.props.title}
-            </bootstrap.Button> :
-            <bootstrap.Button
-                bsStyle="link"
-                style={{
-                    outline: "0px",
-                    outlineStyle: "none",
-                    outlineWidth: "0px"
-                }}
-            >
-                {this.props.title}
-            </bootstrap.Button>;
-    },
-    getTooltipAndButton: function () {
-        var button = this.getButton();
-        if (this.props.tooltipMessage) {
-            return (
-                <bootstrap.OverlayTrigger
-                    overlay={this.addTooltip()}
-                    placement={this.props.tooltipPosition}
-                    rootClose={true}
-                    trigger="click"
-                >
-                    {button}
-                </bootstrap.OverlayTrigger>
-            );
-        }
-        return button;
-    },
-    renderOverlay: function () {
+    renderOverlayChildren: function () {
         const {colors} = this.getTheme();
         return (
             <bootstrap.Popover
                 animation={false}
                 className="multiselect-popover"
-                id={this.props.tooltipId + "-popover"}
-                style={this.props.style}
+                id={"popover"}
             >
-                <Radium.Style
+                <Style
                     rules={{
                         "": {
                             padding: "0px",
@@ -158,19 +135,26 @@ var Popover = React.createClass({
     },
     render: function () {
         return (
-            <bootstrap.OverlayTrigger
-                animation={false}
-                className="popover-overlay"
-                overlay={this.renderOverlay()}
-                placement="bottom"
-                ref={"menuPopover"}
-                rootClose={true}
-                trigger="click"
-            >
-                {this.getTooltipAndButton()}
-            </bootstrap.OverlayTrigger>
+            <div style={{position: "relative"}}>
+                <div ref="buttonOverlay">
+                    {this.renderButton()}
+                </div>
+                <bootstrap.Overlay
+                    animation={false}
+                    container={this}
+                    onHide={this.onHide}
+                    placement="bottom"
+                    rootClose={true}
+                    show={this.state.show}
+                    target={() => ReactDOM.findDOMNode(this.refs.buttonOverlay)}
+                >
+                    <div style={styles(this.getTheme()).overlayContainer}>
+                        {this.renderOverlayChildren()}
+                    </div>
+                </bootstrap.Overlay>
+            </div>
         );
     }
 });
 
-module.exports = Radium(Popover);
+module.exports = Popover;
