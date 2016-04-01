@@ -1,32 +1,37 @@
-export function getChartSetting ({colors}, active) {
+export function getChartSetting ({colors}) {
     return [{
         label: "Punti di misurazione",
         key: "siteNavigator",
         iconClass: "map",
-        color: active ? colors.iconDropdown : colors.white
+        hoverColor: colors.white,
+        color: colors.iconDropdown
     },
     {
         label: "Periodo",
         key: "dateFilter",
         iconClass: "calendar",
+        hoverColor: colors.white,
         color: colors.iconDropdown
     },
     {
         label: "Confronto tra sensori",
         key: "siteCompare",
         iconClass: "confront",
+        hoverColor: colors.white,
         color: colors.iconDropdown
     },
     {
         label: "Confronto tra periodi",
         key: "dateCompare",
         iconClass: "confront",
+        hoverColor: colors.white,
         color: colors.iconDropdown
     },
     {
         label: "Esporta",
         key: "export",
         iconClass: "export",
+        hoverColor: colors.white,
         color: colors.iconDropdown
     }];
 }

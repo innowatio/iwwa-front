@@ -94,7 +94,6 @@ var AlarmForm = React.createClass({
         this.setState(this.getStateFromProps(this.props));
     },
     submit: function () {
-        console.log("SUBMIT");
         this.props.submit(this.state, this.props.type, this.props.alarm);
     },
     addTooltip: function () {
