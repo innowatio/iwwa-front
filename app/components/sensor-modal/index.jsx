@@ -84,7 +84,7 @@ var SensorForm = React.createClass({
                 renderConfirmButton={true}
                 show={this.props.showFullscreenModal}
             >
-                <form className="form-horizontal" style={{margin: "0 15% 0 15%", padding: "10px", border: "solid white 1px", borderRadius: "20px", minHeight: "350px"}}>
+                <form className="form-horizontal" style={{margin: "0 15% 0 15%", padding: "10px", border: "solid white 1px", borderRadius: "20px", minHeight: "600px"}}>
                     <h3
                         className="text-center"
                         style={{
