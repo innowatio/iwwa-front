@@ -1,6 +1,6 @@
+var bootstrap  = require("react-bootstrap");
 var R          = require("ramda");
 var React      = require("react");
-var bootstrap  = require("react-bootstrap");
 var IPropTypes = require("react-immutable-proptypes");
 
 import {defaultTheme} from "lib/theme";
@@ -11,6 +11,8 @@ var DropdownSelect = React.createClass({
             React.PropTypes.array,
             IPropTypes.iterable
         ]).isRequired,
+        arrow: React.PropTypes.string,
+        arrowColor: React.PropTypes.string,
         getKey: React.PropTypes.func,
         getLabel: React.PropTypes.func,
         onChange: React.PropTypes.func.isRequired,
@@ -50,15 +52,12 @@ var DropdownSelect = React.createClass({
                 key={this.props.getKey(allowedValue)}
                 onClick={R.partial(this.props.onChange, [allowedValue])}
                 style={{
-                    background: (active ? colors.primary : ""),
-                    color: (active ? colors.white : colors.black),
-                    borderLeft: "0px",
-                    borderRight: "0px",
-                    borderTop: (index === 0 ? "0px" : undefined),
+                    backgroundColor: (active ? colors.buttonPrimary : colors.backgroundDropdown),
+                    color: (active ? colors.white : colors.mainFontColor),
+                    border: "1px solid " + colors.borderDropdown,
                     borderTopLeftRadius: (index === 0 ? "4px" : undefined),
                     borderTopRightRadius: (index === 0 ? "4px" : undefined),
-                    borderBottom: (index === 2 ? "0px" : undefined),
-                    fontSize: "12px",
+                    fontSize: "13px",
                     textAlign: "center"
                 }}
             >
@@ -67,6 +66,25 @@ var DropdownSelect = React.createClass({
         );
     },
     render: function () {
+        // <Radium.Style
+        //     rules={{
+        //         ".arrow, .arrow:after": {
+        //             borderBottomColor: colors.borderPopover + "!important"
+        //         },
+        //         ".arrow:after": {
+        //             borderBottomColor: colors.backgroundArrowPopoverTop + "!important"
+        //         },
+        //         "button.list-group-item:focus": {
+        //             outline: "none",
+        //             boxShadow: "none",
+        //             WebkitBoxShadow: "none"
+        //         },
+        //         "button.list-group-item:hover": {
+        //             backgroundColor: colors.buttonPrimary + "!important"
+        //         }
+        //     }}
+        //     scopeSelector=".dropdown"
+        // />
         var items = this.props.allowedValues.map(this.renderButtonOption);
         return (
             <div>

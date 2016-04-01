@@ -5,7 +5,8 @@ import {
     RESET_ALARM_FORM_VIEW,
     CREATE_OR_MODIFY_ALARM_START,
     CREATION_ALARM_STOP,
-    NUMBER_OF_SELECTED_TABS
+    NUMBER_OF_SELECTED_TABS,
+    FILTER_COLLECTION
 } from "../actions/alarms";
 
 function id (state = null, {type, payload}) {
@@ -39,8 +40,29 @@ function selectedTab (state = 3, {type, payload}) {
     }
 }
 
+const defaultFilter = {
+    alarm: {
+        status: "all"
+    },
+    notification: {
+        period: "-1"
+    }
+};
+function filter (state = defaultFilter, {type, payload}) {
+    switch (type) {
+        case FILTER_COLLECTION:
+            return {
+                ...state,
+                [payload.collectionToFilter]: payload.filterSelection
+            };
+        default:
+            return state;
+    }
+}
+
 export const alarms = combineReducers({
     id,
+    filter,
     statePostAlarm,
     selectedTab
 });

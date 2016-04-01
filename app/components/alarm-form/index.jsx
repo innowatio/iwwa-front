@@ -5,6 +5,7 @@ var R               = require("ramda");
 var Radium          = require("radium");
 var React           = require("react");
 var ReactStateMixin = require("react-addons-linked-state-mixin");
+import ReactPureRender from "react-addons-pure-render-mixin";
 
 var components       = require("components");
 var CollectionUtils  = require("lib/collection-utils");
@@ -49,7 +50,7 @@ var AlarmForm = React.createClass({
     contextTypes: {
         theme: React.PropTypes.object
     },
-    mixins: [ReactStateMixin, GetTutorialMixin(
+    mixins: [ReactStateMixin, ReactPureRender, GetTutorialMixin(
         "alarm-form", ["siti", "threshold", "name", "notification", "repetition"])],
     getInitialState: function () {
         return this.getStateFromProps(this.props);
@@ -93,7 +94,6 @@ var AlarmForm = React.createClass({
         this.setState(this.getStateFromProps(this.props));
     },
     submit: function () {
-        console.log("SUBMIT");
         this.props.submit(this.state, this.props.type, this.props.alarm);
     },
     addTooltip: function () {

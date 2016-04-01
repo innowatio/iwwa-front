@@ -523,6 +523,7 @@ var Chart = React.createClass({
                         <components.DropdownButton
                             allowedValues={parameters.getChartSetting(this.getTheme())}
                             getColor={R.prop("color")}
+                            getHoverColor={R.prop("hoverColor")}
                             getIcon={R.prop("iconClass")}
                             getKey={R.prop("key")}
                             getLabel={R.prop("label")}
