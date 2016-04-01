@@ -5,7 +5,7 @@ import {isNil} from "ramda";
 import {Style} from "radium";
 
 import components from "components";
-import {defaulTheme} from "lib/theme";
+import {defaultTheme} from "lib/theme";
 
 const styles = ({colors}) => ({
     button: {
@@ -44,7 +44,7 @@ var Popover = React.createClass({
         };
     },
     getTheme: function () {
-        return this.context.theme || defaulTheme;
+        return this.context.theme || defaultTheme;
     },
     addOnClickCloseToChild: function (child) {
         var self = this;

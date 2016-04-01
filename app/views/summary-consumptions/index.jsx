@@ -430,7 +430,7 @@ var SummaryConsumptions = React.createClass({
                         height: "116px"
                     }}
                     ></bootstrap.Col>
-                    <div style={{clear: "both"}}></div>
+                    <div style={{clear: "both"}} />
                 </div>
             </div>
         );

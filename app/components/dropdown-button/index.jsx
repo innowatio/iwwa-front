@@ -2,7 +2,7 @@ var R          = require("ramda");
 var React      = require("react");
 var bootstrap  = require("react-bootstrap");
 var IPropTypes = require("react-immutable-proptypes");
-var components = require("components/");
+var components = require("components");
 
 import {defaultTheme} from "lib/theme";
 
@@ -42,6 +42,7 @@ var DropdownButton = React.createClass({
         };
     },
     getTheme: function () {
+        console.log(R.equals(this.context.theme, defaultTheme));
         return this.context.theme || defaultTheme;
     },
     getColor: function (allowedValue) {

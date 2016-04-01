@@ -117,7 +117,7 @@ var Header = React.createClass({
             </div>
         );
     },
-    renderAllarmPage: function () {
+    renderAlarmPage: function () {
         return (
             <div style={{marginRight: "15px"}}>
                 <Link to="" >
@@ -158,7 +158,7 @@ var Header = React.createClass({
                 {this.renderUserSetting()}
                 {this.renderAdminPage()}
                 {this.renderInboxPage()}
-                {this.renderAllarmPage()}
+                {this.renderAlarmPage()}
                 <span onClick={this.logout} style={styles.icon}>
                     <components.Icon
                         color={this.getTheme().colors.iconHeader}
