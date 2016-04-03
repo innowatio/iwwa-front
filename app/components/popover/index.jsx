@@ -5,7 +5,7 @@ import {isNil} from "ramda";
 import {Style} from "radium";
 
 import components from "components";
-import {defaultTheme} from "lib/theme";
+import {defaulTheme} from "lib/theme";
 
 const styles = ({colors}) => ({
     button: {
@@ -15,14 +15,6 @@ const styles = ({colors}) => ({
         border: `1px solid ${colors.borderSelectButton}`,
         color: colors.mainFontColor,
         backgroundColor: colors.backgroundSelectButton
-    },
-    overlayContainer: {
-        position: "relative",
-        boxShadow: "0 5px 10px rgba(0, 0, 0, 0.2)",
-        borderRadius: "3px",
-        marginLeft: "-5px",
-        marginTop: "5px",
-        zIndex: 1000
     }
 });
 
@@ -44,7 +36,7 @@ var Popover = React.createClass({
         };
     },
     getTheme: function () {
-        return this.context.theme || defaultTheme;
+        return this.context.theme || defaulTheme;
     },
     addOnClickCloseToChild: function (child) {
         var self = this;
@@ -141,16 +133,13 @@ var Popover = React.createClass({
                 </div>
                 <bootstrap.Overlay
                     animation={false}
-                    container={this}
                     onHide={this.onHide}
                     placement="bottom"
                     rootClose={true}
                     show={this.state.show}
                     target={() => ReactDOM.findDOMNode(this.refs.buttonOverlay)}
                 >
-                    <div style={styles(this.getTheme()).overlayContainer}>
-                        {this.renderOverlayChildren()}
-                    </div>
+                    {this.renderOverlayChildren()}
                 </bootstrap.Overlay>
             </div>
         );

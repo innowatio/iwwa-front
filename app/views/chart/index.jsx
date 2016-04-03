@@ -272,7 +272,9 @@ var Chart = React.createClass({
     isDateCompare: function () {
         return this.props.chart[0].date.type === "dateCompare";
     },
-    isComparationActive: function (selectedSitesId, selectedSources) {
+    isComparationActive: function () {
+        const selectedSitesId = this.selectedSitesId();
+        const selectedSources = this.selectedSources();
         return (
             this.isDateCompare() ||
             selectedSitesId.length > 1 ||
@@ -490,7 +492,11 @@ var Chart = React.createClass({
         ) ?
             this.props.chart[1].measurementType :
             null;
-        const valoriMulti = (!this.isDateCompare() && this.selectedSitesId().length < 2 && !selectedConsumptionType);
+        const valoriMulti = (
+            !this.isDateCompare() &&
+            this.selectedSitesId().length < 2 &&
+            !selectedConsumptionType
+        );
         const variables = this.getConsumptionVariablesFromFullPath(this.props.chart[0].fullPath);
         return (
             <div>
@@ -516,7 +522,7 @@ var Chart = React.createClass({
                                 color={theme.colors.iconHeader}
                                 icon={"option"}
                                 size={"32px"}
-                                style={{lineHeight: "20px", verticalAlign: "middle"}}
+                                style={{verticalAlign: "middle"}}
                             />
                         }
                     >
@@ -590,7 +596,7 @@ var Chart = React.createClass({
                         </components.FullscreenModal>
                         <components.HistoricalGraph
                             chart={this.props.chart}
-                            isComparationActive={this.isComparationActive(this.selectedSitesId(), this.selectedSources())}
+                            isComparationActive={this.isComparationActive()}
                             isDateCompareActive={this.isDateCompare()}
                             misure={this.props.collections.get("readings-daily-aggregates") || Immutable.Map()}
                             ref="historicalGraph"
