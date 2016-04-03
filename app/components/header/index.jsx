@@ -73,9 +73,6 @@ var Header = React.createClass({
                         size={"30px"}
                         style={{lineHeight: "20px", verticalAlign: "middle"}}
                     />}
-                tooltipId="tooltipUserSetting"
-                tooltipMessage="Impostazioni dell'utente"
-                tooltipPosition="left"
             >
                 <components.DropdownSelect
                     allowedValues={this.getUserSettings()}

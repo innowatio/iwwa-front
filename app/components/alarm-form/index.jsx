@@ -98,9 +98,7 @@ var AlarmForm = React.createClass({
     },
     addTooltip: function () {
         return (
-            <bootstrap.Tooltip
-                id="createAlarmInfo"
-            >
+            <bootstrap.Tooltip id="createAlarmInfo">
                 {stringIt.createAlarmInfoTooltip}
             </bootstrap.Tooltip>
         );
