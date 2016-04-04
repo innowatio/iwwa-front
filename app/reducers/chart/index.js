@@ -154,7 +154,7 @@ export function chart (state = defaultChartState, {type, payload}) {
         }
         case SELECT_DATE_RANGES: {
             /*
-            *   Upgrade all the selection with the selected date range.
+            *   Upgrade the state with the selected date range.
             */
             if (state[0].date.type === "dateCompare") {
                 return [{

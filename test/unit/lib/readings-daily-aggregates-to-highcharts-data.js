@@ -54,8 +54,8 @@ describe("readingsDailyAggregatesToHighchartsData", () => {
                 key: "activeEnergy"
             },
             date: {
-                start: moment.utc("2015-01-01").valueOf(),
-                end: moment.utc("2015-01-31").valueOf(),
+                start: moment.utc("2015-02-01").valueOf(),
+                end: moment.utc("2015-02-28").valueOf(),
                 type: "dateFilter"
             }
         }
@@ -117,8 +117,10 @@ describe("readingsDailyAggregatesToHighchartsData", () => {
                 expect(res[index]).to.be.an("object");
                 expect(res[index]).to.have.all.keys(["data", "pointStart", "pointInterval"]);
                 expect(objectResult.data).to.be.an("array");
-                expect(objectResult.pointStart).to.be.a("number");
-                expect(objectResult.pointInterval).to.be.a("number");
+                expect(objectResult.pointStart).to.equal(
+                    moment.utc(filtersSitesCompare[index].date.start).add({minutes: moment().utcOffset()}).valueOf()
+                );
+                expect(objectResult.pointInterval).to.equal(300000);
             });
         });
 
@@ -134,8 +136,10 @@ describe("readingsDailyAggregatesToHighchartsData", () => {
                 expect(res[index]).to.be.an("object");
                 expect(res[index]).to.have.all.keys(["data", "pointStart", "pointInterval"]);
                 expect(objectResult.data).to.be.an("array");
-                expect(objectResult.pointStart).to.be.a("number");
-                expect(objectResult.pointInterval).to.be.a("number");
+                expect(objectResult.pointStart).to.equal(
+                    moment.utc(filtersDateCompare[index].date.start).add({minutes: moment().utcOffset()}).valueOf()
+                );
+                expect(objectResult.pointInterval).to.be.equal(300000);
             });
         });
 
