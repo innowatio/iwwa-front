@@ -16,7 +16,8 @@ import {
     resetAlarmFormView,
     submitAlarmCreationOrChange,
     numberOfSelectedTabs,
-    filterCollection
+    filterCollection,
+    resetFilter
 } from "actions/alarms";
 import {defaultTheme} from "lib/theme";
 import NotificationRow from "./notification-row";
@@ -89,6 +90,7 @@ var Alarms = React.createClass({
         numberOfSelectedTabs: React.PropTypes.func.isRequired,
         params: React.PropTypes.object,
         resetAlarmFormView: React.PropTypes.func.isRequired,
+        resetFilter: React.PropTypes.func,
         submitAlarmCreationOrChange: React.PropTypes.func.isRequired
     },
     contextTypes: {
@@ -294,6 +296,7 @@ function mapDispatchToProps (dispatch) {
         modifyExistentAlarm: bindActionCreators(modifyExistentAlarm, dispatch),
         submitAlarmCreationOrChange: bindActionCreators(submitAlarmCreationOrChange, dispatch),
         resetAlarmFormView: bindActionCreators(resetAlarmFormView, dispatch),
+        resetFilter: bindActionCreators(resetFilter, dispatch),
         numberOfSelectedTabs: bindActionCreators(numberOfSelectedTabs, dispatch)
     };
 }

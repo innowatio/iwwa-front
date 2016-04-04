@@ -21,6 +21,7 @@ export const CREATE_OR_MODIFY_ALARM_START = "CREATE_OR_MODIFY_ALARM_START";
 export const CREATION_ALARM_STOP = "CREATION_ALARM_STOP";
 export const NUMBER_OF_SELECTED_TABS = "NUMBER_OF_SELECTED_TABS";
 export const FILTER_COLLECTION = "FILTER_COLLECTION";
+export const RESET_FILTER = "RESET_FILTER";
 
 // TODO: test this function
 function less (time1, time2) {
@@ -187,6 +188,12 @@ export function modifyExistentAlarm (alarmId) {
     return {
         type: MODIFY_EXISTENT_ALARM,
         payload: alarmId
+    };
+}
+
+export function resetFilter () {
+    return {
+        type: RESET_FILTER
     };
 }
 

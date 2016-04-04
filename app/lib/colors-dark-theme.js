@@ -21,6 +21,7 @@ export const colorsDarkTheme = {
     backgroundLogin: "linear-gradient(235deg,#8a95c8,#7483be,#5b72b3,#4e64a1,#4554a1,#624899,#984898,#eb437f,#d26faa,#b08abc)",
     backgroundModal: "rgba(2, 2, 2, 0.8)",
     backgroundModalExport: "#3e50b4",
+    backgroundPopover: "rgba(56,56,57,0.8)",
     backgroundRealTimeSection: "#28282A",
     backgroundSelectButton: "rgba(35, 31, 32, 0.5)",
     backgroundSelectSearch: "#28282A",

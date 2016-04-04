@@ -64,7 +64,7 @@ var Header = React.createClass({
         });
         return (
             <components.Popover
-                arrowColor={this.getTheme().colors.white}
+                arrowColor={this.getTheme().colors.backgroundArrowPopover}
                 hideOnChange={true}
                 title={
                     <components.Icon
