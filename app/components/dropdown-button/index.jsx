@@ -42,7 +42,6 @@ var DropdownButton = React.createClass({
         };
     },
     getTheme: function () {
-        console.log(R.equals(this.context.theme, defaultTheme));
         return this.context.theme || defaultTheme;
     },
     getColor: function (allowedValue) {
