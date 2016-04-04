@@ -118,7 +118,7 @@ describe("readingsDailyAggregatesToHighchartsData", () => {
                 expect(res[index]).to.have.all.keys(["data", "pointStart", "pointInterval"]);
                 expect(objectResult.data).to.be.an("array");
                 expect(objectResult.pointStart).to.equal(
-                    moment.utc(filtersSitesCompare[index].date.start).add({minutes: moment().utcOffset()}).valueOf()
+                    moment.utc(filtersSitesCompare[index].date.start).valueOf()
                 );
                 expect(objectResult.pointInterval).to.equal(300000);
             });
@@ -137,7 +137,7 @@ describe("readingsDailyAggregatesToHighchartsData", () => {
                 expect(res[index]).to.have.all.keys(["data", "pointStart", "pointInterval"]);
                 expect(objectResult.data).to.be.an("array");
                 expect(objectResult.pointStart).to.equal(
-                    moment.utc(filtersDateCompare[index].date.start).add({minutes: moment().utcOffset()}).valueOf()
+                    moment.utc(filtersDateCompare[index].date.start).valueOf()
                 );
                 expect(objectResult.pointInterval).to.be.equal(300000);
             });
