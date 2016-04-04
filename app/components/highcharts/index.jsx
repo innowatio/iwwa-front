@@ -2,6 +2,8 @@ import React, {PropTypes} from "react";
 import {addIndex, map, range} from "ramda";
 import ReactHighcharts from "react-highcharts/bundle/ReactHighcharts";
 import moment from "moment";
+import ReactPureRender from "react-addons-pure-render-mixin";
+
 
 import Exporting from "highcharts-exporting";
 Exporting(ReactHighcharts.Highcharts);
@@ -29,6 +31,7 @@ var HighCharts = React.createClass({
     contextTypes: {
         theme: PropTypes.object
     },
+    mixins: [ReactPureRender],
     getDefaultProps: function () {
         return {
             coordinates: {data: []},
@@ -116,6 +119,9 @@ var HighCharts = React.createClass({
             chart: {
                 backgroundColor: colors.background,
                 ignoreHiddenSeries: false,
+                events: {
+                    redraw: () => console.log("redraw")
+                },
                 panning: true,
                 panKey: "shift",
                 type: "area",
