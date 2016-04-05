@@ -1,8 +1,9 @@
 import React, {PropTypes} from "react";
 import {addIndex, map, range} from "ramda";
 import ReactHighcharts from "react-highcharts/bundle/ReactHighcharts";
-import Highcharts from "highcharts";
 import moment from "moment";
+import ReactPureRender from "react-addons-pure-render-mixin";
+
 
 import Exporting from "highcharts-exporting";
 Exporting(ReactHighcharts.Highcharts);
@@ -30,12 +31,20 @@ var HighCharts = React.createClass({
     contextTypes: {
         theme: PropTypes.object
     },
+    mixins: [ReactPureRender],
     getDefaultProps: function () {
         return {
             coordinates: {data: []},
             isDateCompareActive: false,
             isComparationActive: false
         };
+    },
+    componentDidMount: function () {
+        ReactHighcharts.Highcharts.setOptions({
+            global: {
+                useUTC: false
+            }
+        });
     },
     getTheme: function () {
         return this.context.theme || defaultTheme;
@@ -99,7 +108,7 @@ var HighCharts = React.createClass({
                 linearGradient: [0, 0, 0, 400],
                 stops: [
                     [0, this.props.colors[index]],
-                    [1, Highcharts.Color(this.getTheme().colors.background).setOpacity(0).get("hex")]
+                    [1, ReactHighcharts.Highcharts.Color(this.getTheme().colors.background).setOpacity(0).get("hex")]
                 ]
             }
         }), this.props.coordinates);
@@ -110,6 +119,9 @@ var HighCharts = React.createClass({
             chart: {
                 backgroundColor: colors.background,
                 ignoreHiddenSeries: false,
+                events: {
+                    redraw: () => console.log("redraw")
+                },
                 panning: true,
                 panKey: "shift",
                 type: "area",

@@ -74,9 +74,12 @@ var DateFilter = React.createClass({
         return this.context.theme || defaultTheme;
     },
     setMonthlyDate: function (dateValue) {
-        const startDate = moment.utc(dateValue).valueOf();
+        const startDate = moment.utc(dateValue).add({minutes: moment(dateValue).utcOffset()}).valueOf();
         // Add one day to avoid to go in the past month.
-        const endDate = moment.utc(dateValue).add({day: 1}).endOf("month").valueOf();
+        const endDate = moment.utc(dateValue)
+            .add({minutes: moment(dateValue).utcOffset()})
+            .endOf("month")
+            .valueOf();
         this.props.onChange({
             start: startDate,
             end: endDate,
@@ -249,7 +252,7 @@ var DateFilter = React.createClass({
                 <div style={styleDateFilter(this.getTheme())}>
                     <Calendar
                         className="centering"
-                        culture="it"
+                        culture={window.navigator.language}
                         finalView="decade"
                         format="DD MMM YYYY"
                         initialView="year"
