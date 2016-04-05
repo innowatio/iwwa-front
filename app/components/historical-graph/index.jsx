@@ -7,7 +7,10 @@ import SitesCompare from "./sites-compare";
 
 var HistoricalGraph = React.createClass({
     propTypes: {
-        chart: PropTypes.arrayOf(PropTypes.object).isRequired,
+        chartState: PropTypes.shape({
+            zoom: PropTypes.object,
+            charts: PropTypes.arrayOf(PropTypes.object).isRequired
+        }).isRequired,
         isComparationActive: PropTypes.bool,
         isDateCompareActive: PropTypes.bool,
         misure: IPropTypes.map.isRequired

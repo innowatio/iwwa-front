@@ -10,6 +10,8 @@ export const SELECT_MULTIPLE_ELECTRICAL_SITE = "SELECT_MULTIPLE_ELECTRICAL_SITE"
 export const SELECT_DATE_RANGES = "SELECT_DATE_RANGES";
 export const SELECT_DATE_RANGES_COMPARE = "SELECT_DATE_RANGES_COMPARE";
 export const REMOVE_ALL_COMPARE = "REMOVE_ALL_COMPARE";
+export const SET_ZOOM_EXTREMES = "SET_ZOOM_EXTREMES";
+export const RESET_ZOOM = "RESET_ZOOM";
 
 /**
 *   A click on select-tree component for the choice of site
@@ -180,4 +182,28 @@ const typeofExportCSV = actionTypeValidator(object);
 export function exportCSV (chart) {
     typeofExportCSV(...arguments);
     return chart.getCSV();
+}
+
+/**
+*   Make zoom on chart
+*/
+const typeOfSetZoomExtremes = actionTypeValidator(struct({
+    max: Number,
+    min: Number
+}));
+export function setZoomExtremes (zoomExtremes) {
+    typeOfSetZoomExtremes(...arguments);
+    return {
+        type: SET_ZOOM_EXTREMES,
+        payload: zoomExtremes
+    };
+}
+
+/**
+*   A click on reset-zoom
+*/
+export function resetZoom () {
+    return {
+        type: RESET_ZOOM
+    };
 }

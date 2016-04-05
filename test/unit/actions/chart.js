@@ -201,4 +201,30 @@ describe("`chart` actions", () => {
 
     });
 
+    describe("`setZoomExtremes`", () => {
+
+        it("should return the correct object", () => {
+            const zoomExtremes = {
+                max: 123,
+                min: 456
+            };
+            const ret = chart.setZoomExtremes(zoomExtremes);
+            expect(ret).to.deep.equal({
+                type: "SET_ZOOM_EXTREMES",
+                payload: zoomExtremes
+            });
+        });
+
+        it("should return an `Error` if isn't passed the correct object", () => {
+            const zoomExtremes = {
+                max: "max",
+                min: "min"
+            };
+            function troubleMaker () {
+                chart.setZoomExtremes(zoomExtremes);
+            }
+            expect(troubleMaker).to.throw();
+        });
+    });
+
 });

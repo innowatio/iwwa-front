@@ -111,11 +111,19 @@ var HighCharts = React.createClass({
             }
         }), this.props.coordinates);
     },
+    onSelection: function (event) {
+        // event.resetSelection ? this.resetSelection() : ""
+        console.log(parseInt(event.xAxis[0].min), parseInt(event.xAxis[0].max));
+        console.log(event);
+    },
     getConfig: function () {
         const {colors} = this.getTheme();
         return {
             chart: {
                 backgroundColor: colors.background,
+                events: {
+                    selection: this.onSelection
+                },
                 ignoreHiddenSeries: false,
                 panning: true,
                 panKey: "shift",

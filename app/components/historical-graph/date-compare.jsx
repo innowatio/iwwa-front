@@ -9,7 +9,10 @@ import {defaultTheme} from "lib/theme";
 
 var DateCompare = React.createClass({
     propTypes: {
-        chart: PropTypes.arrayOf(PropTypes.object).isRequired,
+        chartState: PropTypes.shape({
+            zoom: PropTypes.object,
+            charts: PropTypes.arrayOf(PropTypes.object).isRequired
+        }).isRequired,
         isDateCompareActive: PropTypes.bool,
         misure: IPropTypes.map
     },
@@ -21,10 +24,10 @@ var DateCompare = React.createClass({
         return this.context.theme || defaultTheme;
     },
     getDatesFromChartState: function () {
-        return this.props.chart.map(singleSelection => singleSelection.date);
+        return this.props.chartState.charts.map(singleSelection => singleSelection.date);
     },
     getCoordinates: function () {
-        return readingsDailyAggregatesToHighchartsData(this.props.misure, this.props.chart);
+        return readingsDailyAggregatesToHighchartsData(this.props.misure, this.props.chartState.charts);
     },
     getXLabels: function () {
         const dates = this.getDatesFromChartState();
@@ -34,16 +37,17 @@ var DateCompare = React.createClass({
         ];
     },
     render: function () {
+        const {charts} = this.props.chartState;
         return (
             <components.HighCharts
-                colors={[this.props.chart[0].source.color, this.getTheme().colors.lineCompare]}
+                colors={[charts[0].source.color, this.getTheme().colors.lineCompare]}
                 coordinates={this.getCoordinates()}
                 dateCompare={this.getDatesFromChartState()}
                 dateFilter={this.getDatesFromChartState()[0]}
                 isDateCompareActive={this.props.isDateCompareActive}
                 ref="highcharts"
                 xLabel={this.getXLabels()}
-                yLabel={[this.props.chart[0].measurementType.key]}
+                yLabel={[charts[0].measurementType.key]}
             />
         );
     }

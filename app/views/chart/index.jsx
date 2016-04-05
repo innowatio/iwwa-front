@@ -87,7 +87,10 @@ const alarmButtonStyle = ({colors}) => ({
 var Chart = React.createClass({
     propTypes: {
         asteroid: React.PropTypes.object,
-        chart: React.PropTypes.arrayOf(React.PropTypes.object).isRequired,
+        chartState: React.PropTypes.shape({
+            zoom: React.PropTypes.object,
+            charts: React.PropTypes.arrayOf(React.PropTypes.object).isRequired
+        }).isRequired,
         collections: IPropTypes.map.isRequired,
         localStorage: React.PropTypes.object,
         location: React.PropTypes.object.isRequired,
@@ -118,7 +121,7 @@ var Chart = React.createClass({
     componentDidMount: function () {
         this.props.asteroid.subscribe("sites");
         this.props.asteroid.subscribe("sensors");
-        if (this.props.chart[0].alarms) {
+        if (this.props.chartState.charts[0].alarms) {
             this.props.asteroid.subscribe("alarms");
         }
         this.updateFirstSiteToChart();
@@ -142,7 +145,7 @@ var Chart = React.createClass({
     },
     updateFirstSiteToChart: function () {
         var sites = this.props.collections.get("sites") || Immutable.Map();
-        if (sites.size > 0 && !this.props.chart[0].sensorId) {
+        if (sites.size > 0 && !this.props.chartState.charts[0].sensorId) {
             const firstSite = sites.first();
             this.props.selectSingleElectricalSensor([firstSite.get("_id")]);
         }
@@ -170,12 +173,13 @@ var Chart = React.createClass({
         this.closeModal();
     },
     subscribeToMisure: function (props) {
-        const dateFirstChartState = props.chart[0].date;
+        const chartFilter = props.chartState.charts;
+        const dateFirstChartState = chartFilter[0].date;
         var dateStart;
         var dateEnd;
         // Query for date-compare
         if (dateFirstChartState.type === "dateCompare") {
-            const dateSecondChartState = props.chart[1].date;
+            const dateSecondChartState = chartFilter[1].date;
             dateStart = [
                 moment.utc(dateFirstChartState.start).format("YYYY-MM-DD"),
                 moment.utc(dateSecondChartState.start).format("YYYY-MM-DD")
@@ -193,9 +197,9 @@ var Chart = React.createClass({
             dateStart = moment.utc().startOf("month").format("YYYY-MM-DD");
             dateEnd = moment.utc().endOf("month").format("YYYY-MM-DD");
         }
-        const sensors = props.chart.map(singleSelection => singleSelection.sensorId);
-        const measurementTypes = props.chart.map(singleSelection => singleSelection.measurementType.key);
-        const sources = props.chart.map(singleSelection => singleSelection.source.key);
+        const sensors = chartFilter.map(singleSelection => singleSelection.sensorId);
+        const measurementTypes = chartFilter.map(singleSelection => singleSelection.measurementType.key);
+        const sources = chartFilter.map(singleSelection => singleSelection.source.key);
         sensors[0] && sensors.forEach((sensorId, idx) => {
             props.asteroid.subscribe(
                 "dailyMeasuresBySensor",
@@ -235,7 +239,7 @@ var Chart = React.createClass({
         return [];
     },
     firstSensorOfConsumptionInTheSite: function (consumptionTypes) {
-        const site = this.getSitoById(this.props.chart[0].site);
+        const site = this.getSitoById(this.props.chartState.charts[0].site);
         var typeOfSensorId;
         if (consumptionTypes.key === "co2") {
             typeOfSensorId = "COOV";
@@ -270,53 +274,55 @@ var Chart = React.createClass({
         }
     },
     isDateCompare: function () {
-        return this.props.chart[0].date.type === "dateCompare";
+        return this.props.chartState.charts[0].date.type === "dateCompare";
     },
     isComparationActive: function (selectedSitesId, selectedSources) {
+        const chartFilter = this.props.chartState.charts;
         return (
             this.isDateCompare() ||
             selectedSitesId.length > 1 ||
             (
-                this.props.chart.length >= 2 &&
-                !R.allUniq(this.props.chart.map(singleSelection => singleSelection.measurementType)) &&
+                chartFilter.length >= 2 &&
+                !R.allUniq(chartFilter.map(singleSelection => singleSelection.measurementType)) &&
                 R.uniq(selectedSources).length === 1
             )
         );
     },
     getTitleForChart: function () {
-        if (this.props.chart.length === 1) {
+        const chartFilter = this.props.chartState.charts;
+        if (chartFilter.length === 1) {
             // Selezione sito-pod-sensor:
             // NameSito (· NamePod/Sensor )· Period
             return [
-                getTitleForSingleSensor(this.props.chart[0], this.props.collections),
-                getStringPeriod(this.props.chart[0].date)
+                getTitleForSingleSensor(chartFilter[0], this.props.collections),
+                getStringPeriod(chartFilter[0].date)
             ].join(" · ");
-        } else if (this.props.chart.length > 1) {
+        } else if (chartFilter.length > 1) {
             // Comparazione per data (su sito pod o sensor):
             // NameSito (· NamePod/Sensor )· Period1 & Period2
             if (
-                !R.isEmpty(this.props.chart[0].date.period) &&
-                this.props.chart[0].date !== this.props.chart[1].date &&
-                R.equals(this.props.chart[0].fullPath, this.props.chart[1].fullPath)
+                !R.isEmpty(chartFilter[0].date.period) &&
+                chartFilter[0].date !== chartFilter[1].date &&
+                R.equals(chartFilter[0].fullPath, chartFilter[1].fullPath)
             ) {
                 return [
-                    getTitleForSingleSensor(this.props.chart[0], this.props.collections),
-                    getStringPeriod(this.props.chart[0].date)
+                    getTitleForSingleSensor(chartFilter[0], this.props.collections),
+                    getStringPeriod(chartFilter[0].date)
                 ].join(" · ");
-            } else if (this.props.chart[0].site === this.props.chart[1].site) {
+            } else if (chartFilter[0].site === chartFilter[1].site) {
                 // Compara energia con variabile:
                 // NameSito (· NamePod/Sensor )· measureType & variableType
                 return [
-                    getTitleForSingleSensor(this.props.chart[0], this.props.collections),
-                    getSensorName(this.props.chart[1].sensorId, this.props.collections)
-                ].join(" & ") + ` · ${getStringPeriod(this.props.chart[0].date)}`;
+                    getTitleForSingleSensor(chartFilter[0], this.props.collections),
+                    getSensorName(chartFilter[1].sensorId, this.props.collections)
+                ].join(" & ") + ` · ${getStringPeriod(chartFilter[0].date)}`;
             // Comparazione siti:
             // NameSito1 & NameSito2
-            } else if (this.props.chart[0].fullPath !== this.props.chart[1].fullPath) {
+            } else if (chartFilter[0].fullPath !== chartFilter[1].fullPath) {
                 return [
-                    getTitleForSingleSensor(this.props.chart[0], this.props.collections),
-                    getTitleForSingleSensor(this.props.chart[1], this.props.collections)
-                ].join(" & ") + ` · ${getStringPeriod(this.props.chart[0].date)}`;
+                    getTitleForSingleSensor(chartFilter[0], this.props.collections),
+                    getTitleForSingleSensor(chartFilter[1], this.props.collections)
+                ].join(" & ") + ` · ${getStringPeriod(chartFilter[0].date)}`;
             }
         }
     },
@@ -327,16 +333,16 @@ var Chart = React.createClass({
         });
     },
     onConfirmFullscreenModal: function () {
-        const {chart} = this.props;
+        const chartFilter = this.props.chartState.charts;
         switch (this.state.selectedWidget) {
             case "siteNavigator":
                 // Set the default value to pass.
-                this.props.selectSingleElectricalSensor(this.state.value || chart[0].fullPath);
+                this.props.selectSingleElectricalSensor(this.state.value || chartFilter[0].fullPath);
                 break;
             case "dateFilter":
                 this.props.selectDateRanges(
                     // Set the default value to pass.
-                    this.state.value || (chart[0].date.type === "dateFilter" && chart[0].date) || {
+                    this.state.value || (chartFilter[0].date.type === "dateFilter" && chartFilter[0].date) || {
                         start: moment().startOf("month").valueOf(),
                         end: moment().endOf("month").valueOf(),
                         type: "dateFilter",
@@ -348,14 +354,14 @@ var Chart = React.createClass({
                 this.props.selectMultipleElectricalSensor(
                     this.state.value ||
                     // Set the default value to pass.
-                    (this.props.chart[1] && this.props.chart[1].fullPath)
+                    (chartFilter[1] && chartFilter[1].fullPath)
                 );
                 break;
             case "dateCompare":
                 this.props.selectDateRangesCompare(
                     this.state.value ||
-                    (this.props.chart[0].date.type === "dateCompare" &&  {
-                        period: this.props.chart[0].date.period,
+                    (chartFilter[0].date.type === "dateCompare" &&  {
+                        period: chartFilter[0].date.period,
                         dateOne: moment.utc().valueOf()
                     }) || {
                         // Set the default value to pass.
@@ -371,10 +377,10 @@ var Chart = React.createClass({
         this.setState({value});
     },
     selectedSitesId: function () {
-        return R.uniq(this.props.chart.map(singleSelection => singleSelection.site));
+        return R.uniq(this.props.chartState.charts.map(singleSelection => singleSelection.site));
     },
     selectedSources: function () {
-        return this.props.chart.map(singleSelection => singleSelection.source);
+        return this.props.chartState.charts.map(singleSelection => singleSelection.source);
     },
     renderChildComponent: function () {
         switch (this.state.selectedWidget) {
@@ -399,7 +405,7 @@ var Chart = React.createClass({
                 onChange={this.onChangeWidgetValue}
                 period={
                     (this.state.value && this.state.value.period) ||
-                    this.props.chart[0].date.period ||
+                    this.props.chartState.charts[0].date.period ||
                     parameters.getDateCompare()[0]
                 }
                 title={"SELEZIONA IL PERIODO DA CONFRONTARE CON LA SELEZIONE ATTIVA"}
@@ -408,20 +414,22 @@ var Chart = React.createClass({
     },
     renderSiteCompare: function () {
         const sites = this.props.collections.get("sites") || Immutable.Map();
+        const chartFilter = this.props.chartState.charts;
         return (
             <components.SiteNavigator
                 allowedValues={sites.sortBy(site => site.get("name"))}
                 onChange={this.onChangeWidgetValue}
-                path={this.state.value || (this.props.chart[1] && this.props.chart[1].fullPath) || []}
+                path={this.state.value || (chartFilter[1] && chartFilter[1].fullPath) || []}
                 title={
                     " QUALE PUNTO DI MISURAZIONE VUOI COMPARARE CON " +
-                    getTitleForSingleSensor(this.props.chart[0], this.props.collections).toUpperCase() +
+                    getTitleForSingleSensor(chartFilter[0], this.props.collections).toUpperCase() +
                     " ? "
                 }
             />
         );
     },
     renderDateFilter: function () {
+        const chartFilter = this.props.chartState.charts;
         return (
             <components.DateFilter
                 getKey={R.prop("key")}
@@ -430,7 +438,7 @@ var Chart = React.createClass({
                 title={"SELEZIONA IL PERIODO DA VISUALIZZARE"}
                 value={
                     this.state.value && this.state.selectedWidget === "dateFilter" ? this.state.value : (
-                    this.props.chart[0].date.type === "dateFilter" ? this.props.chart[0].date : undefined
+                    chartFilter[0].date.type === "dateFilter" ? chartFilter[0].date : undefined
                 )}
             />
         );
@@ -441,7 +449,7 @@ var Chart = React.createClass({
             <components.SiteNavigator
                 allowedValues={sites.sortBy(site => site.get("name"))}
                 onChange={this.onChangeWidgetValue}
-                path={this.state.value || this.props.chart[0].fullPath || []}
+                path={this.state.value || this.props.chartState.charts[0].fullPath || []}
                 title={"QUALE PUNTO DI MISURAZIONE VUOI VISUALIZZARE?"}
             />
         );
@@ -485,13 +493,13 @@ var Chart = React.createClass({
     render: function () {
         const theme = this.getTheme();
         const selectedConsumptionType = (
-            this.props.chart.length > 1 &&
-            R.allUniq(this.props.chart.map(singleSelection => singleSelection.measurementType))
+            this.props.chartState.charts.length > 1 &&
+            R.allUniq(this.props.chartState.charts.map(singleSelection => singleSelection.measurementType))
         ) ?
-            this.props.chart[1].measurementType :
+            this.props.chartState.charts[1].measurementType :
             null;
         const valoriMulti = (!this.isDateCompare() && this.selectedSitesId().length < 2 && !selectedConsumptionType);
-        const variables = this.getConsumptionVariablesFromFullPath(this.props.chart[0].fullPath);
+        const variables = this.getConsumptionVariablesFromFullPath(this.props.chartState.charts[0].fullPath);
         return (
             <div>
                 <div style={styles(this.getTheme()).titlePage}>
@@ -589,7 +597,7 @@ var Chart = React.createClass({
                             {this.renderChildComponent()}
                         </components.FullscreenModal>
                         <components.HistoricalGraph
-                            chart={this.props.chart}
+                            chartState={this.props.chartState}
                             isComparationActive={this.isComparationActive(this.selectedSitesId(), this.selectedSources())}
                             isDateCompareActive={this.isDateCompare()}
                             misure={this.props.collections.get("readings-daily-aggregates") || Immutable.Map()}
@@ -619,7 +627,7 @@ var Chart = React.createClass({
                                     border: "0px none",
                                     fontWeight: "300"
                                 }}
-                                value={[this.props.chart[0].measurementType]}
+                                value={[this.props.chartState.charts[0].measurementType]}
                             />
                         </span>
                     </bootstrap.Col>
@@ -645,7 +653,7 @@ var Chart = React.createClass({
 function mapStateToProps (state) {
     return {
         collections: state.collections,
-        chart: state.chart
+        chartState: state.chart
     };
 }
 function mapDispatchToProps (dispatch) {

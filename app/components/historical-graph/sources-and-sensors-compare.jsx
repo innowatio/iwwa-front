@@ -9,30 +9,37 @@ import readingsDailyAggregatesToHighchartsData from "lib/readings-daily-aggregat
 
 var SourcesAndSensorsCompare = React.createClass({
     propTypes: {
-        chart: PropTypes.arrayOf(PropTypes.object),
+        chartState: PropTypes.shape({
+            zoom: PropTypes.object,
+            charts: PropTypes.arrayOf(PropTypes.object).isRequired
+        }).isRequired,
         misure: IPropTypes.map
     },
     mixins: [ReactPureRender],
     getCoordinates: function () {
-        return readingsDailyAggregatesToHighchartsData(this.props.misure, this.props.chart);
+        return readingsDailyAggregatesToHighchartsData(this.props.misure, this.props.chartState.charts);
     },
     getYLabel: function () {
-        const measurementTypes = uniq(this.props.chart.map(singleSelection => singleSelection.measurementType));
+        const chartFilter = this.props.chartState.charts;
+        const measurementTypes = uniq(
+            chartFilter.map(singleSelection => singleSelection.measurementType)
+        );
         return map(prop("key"), measurementTypes);
     },
     getColors: function () {
-        const sources = uniq(this.props.chart.map(singleSelection => singleSelection.source));
+        const chartFilter = this.props.chartState.charts;
+        const sources = uniq(chartFilter.map(singleSelection => singleSelection.source));
         var colors = map(prop("color"), sources);
-        if (this.props.chart.length > 1 && prop("color", this.props.chart[1].measurementType)) {
-            colors = [colors[0]].concat(prop("color", this.props.chart[1].measurementType));
+        if (chartFilter.length > 1 && prop("color", chartFilter[1].measurementType)) {
+            colors = [colors[0]].concat(prop("color", chartFilter[1].measurementType));
         }
         return colors;
     },
     getDateFilter: function () {
         return (
-            isEmpty(this.props.chart[0].date) ?
+            isEmpty(this.props.chartState.charts[0].date) ?
             {start: moment.utc().startOf("month").valueOf(), end: moment.utc().endOf("month").valueOf()} :
-            this.props.chart[0].date
+            this.props.chartState.charts[0].date
         );
     },
     render: function () {

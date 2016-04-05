@@ -10,7 +10,10 @@ import {defaultTheme} from "lib/theme";
 
 var SitesCompare = React.createClass({
     propTypes: {
-        chart: PropTypes.arrayOf(PropTypes.object),
+        chartState: PropTypes.shape({
+            zoom: PropTypes.object,
+            charts: PropTypes.arrayOf(PropTypes.object).isRequired
+        }).isRequired,
         isComparationActive: PropTypes.bool,
         misure: IPropTypes.map
     },
@@ -22,25 +25,26 @@ var SitesCompare = React.createClass({
         return this.context.theme || defaultTheme;
     },
     getCoordinates: function () {
-        return readingsDailyAggregatesToHighchartsData(this.props.misure, this.props.chart);
+        return readingsDailyAggregatesToHighchartsData(this.props.misure, this.props.chartState.charts);
     },
     getDateFilter: function () {
         return (
-            isEmpty(this.props.chart[0].date) ?
+            isEmpty(this.props.chartState.charts[0].date) ?
             {start: moment.utc().startOf("month").valueOf(), end: moment.utc().endOf("month").valueOf()} :
-            this.props.chart[0].date
+            this.props.chartState.charts[0].date
         );
     },
     render: function () {
         const {colors} = this.getTheme();
+        const {charts} = this.props.chartState;
         return (
             <components.HighCharts
-                colors={[this.props.chart[0].source.color, colors.lineCompare]}
+                colors={[charts[0].source.color, colors.lineCompare]}
                 coordinates={this.getCoordinates()}
                 dateFilter={this.getDateFilter()}
                 isComparationActive={this.props.isComparationActive}
                 ref="highcharts"
-                yLabel={[this.props.chart[0].measurementType.key]}
+                yLabel={[charts[0].measurementType.key]}
             />
         );
     }
