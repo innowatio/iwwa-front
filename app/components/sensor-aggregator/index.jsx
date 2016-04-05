@@ -34,9 +34,10 @@ var SensorAggregator = React.createClass({
                             <DraggableSensor key={item} name={item} />
                         );
                     })}
-                    <DraggableOperator type="delete" />
                     <DraggableOperator type="add" />
                     <DraggableOperator type="minus" />
+                    <DraggableOperator type="delete" />
+                    <DraggableOperator type="divide" />
                 </Col>
             </div>
         );
