@@ -1,11 +1,19 @@
 import "unit-setup.js";
 
 import R from "ramda";
+import sinon from "sinon";
 
 import Button from "components/button";
 import components from "components";
 
 describe("The `ButtonGroupSelect` component ", function () {
+
+    before(() => {
+        sinon.stub(components.ButtonGroupSelect.prototype, "componentDidMount");
+    });
+    after(() => {
+        components.ButtonGroupSelect.prototype.componentDidMount.restore();
+    });
 
     it("should have a default prop `getLabel` which stringifies `allowedValues`", function () {
         expect(components.ButtonGroupSelect.defaultProps.getLabel).to.be.a("function");
