@@ -38,7 +38,7 @@ var SensorForm = React.createClass({
         closeForm: PropTypes.func.isRequired,
         fields: PropTypes.object.isRequired,
         handleSubmit: PropTypes.func.isRequired,
-        id: PropTypes.number,
+        id: PropTypes.string,
         initialValues: PropTypes.object.isRequired,
         onSave: PropTypes.func.isRequired,
         resetForm: PropTypes.func.isRequired,
