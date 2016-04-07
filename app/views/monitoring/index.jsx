@@ -13,7 +13,7 @@ import {getKeyFromCollection} from "lib/collection-utils";
 import {Button, CollectionElementsTable, DropdownButton, Icon,
     MonitoringSearch, Popover, SectionToolbar, SensorForm} from "components";
 
-import {addSensor, cloneSensor, combineSensor, deleteSensor, editSensor, favoriteSensor, filterSensors, monitorSensor, selectSensor} from "actions/sensors";
+import {addSensor, cloneSensors, deleteSensor, editSensor, favoriteSensor, filterSensors, monitorSensor, selectSensor} from "actions/sensors";
 
 const buttonStyle = ({colors}) => ({
     backgroundColor: colors.buttonPrimary,
@@ -52,17 +52,15 @@ var Monitoring = React.createClass({
     propTypes: {
         addSensor: PropTypes.func.isRequired,
         asteroid: PropTypes.object,
-        cloneSensor: PropTypes.func.isRequired,
+        cloneSensors: PropTypes.func.isRequired,
         collections: IPropTypes.map.isRequired,
-        combineSensor: PropTypes.func.isRequired,
         deleteSensor: PropTypes.func.isRequired,
         editSensor: PropTypes.func.isRequired,
         favoriteSensor: PropTypes.func.isRequired,
         filterSensors: PropTypes.func.isRequired,
         monitorSensor: PropTypes.func.isRequired,
         selectSensor: PropTypes.func.isRequired,
-        selected: PropTypes.array,
-        sensors: PropTypes.array.isRequired
+        selected: PropTypes.array
     },
     contextTypes: {
         theme: PropTypes.object
@@ -83,11 +81,6 @@ var Monitoring = React.createClass({
             this.props.deleteSensor(id);
         };
     },
-    getCloneSensor: function (id) {
-        return () => {
-            this.props.cloneSensor(id);
-        };
-    },
     getFavoriteSensor: function (id) {
         return () => {
             this.props.favoriteSensor(id);
@@ -99,8 +92,9 @@ var Monitoring = React.createClass({
         };
     },
     getSensorFields: function () {
-        let found = R.find(R.propEq("_id", this.props.selected[0]))(this.props.sensors);
-        return (found ? found.fields : null);
+        var fields = this.props.selected[0].toJS();
+        fields.name = (fields.name ? fields.name : fields["_id"]);
+        return fields;
     },
     getSensorsColumns: function () {
         const theme = this.getTheme();
@@ -181,8 +175,26 @@ var Monitoring = React.createClass({
             showFullscreenModal: false
         });
     },
+    getAllSensors: function () {
+        return this.props.collections.get("sensors") || Immutable.Map();
+    },
+    renderSensorForm: function () {
+        if (this.props.selected.length > 0) {
+            return(
+                <SensorForm
+                    closeForm={this.closeModal}
+                    id={this.props.selected.length == 1 ? this.props.selected[0] : null}
+                    initialValues={this.getSensorFields()}
+                    onSave={this.props.selected.length == 1 ? this.props.editSensor : this.props.addSensor}
+                    sensorsToAggregate={this.props.selected}
+                    showFullscreenModal={this.state.showFullscreenModal}
+                    title={this.props.selected.length == 1 ? "MODIFICA SENSORE" : "CREA NUOVO SENSORE"}
+                />
+            );
+        }
+    },
     render: function () {
-        let sensors = this.props.collections.get("sensors") || Immutable.Map();
+        let sensors = this.getAllSensors();
         const theme = this.getTheme();
         return (
             <div>
@@ -195,7 +207,7 @@ var Monitoring = React.createClass({
                             style={{lineHeight: "20px"}}
                         />
                     </Button>
-                    <Button style={buttonStyle(theme)} disabled={this.props.selected.length < 1} onClick={this.getCloneSensor("todo")}>
+                    <Button style={buttonStyle(theme)} disabled={this.props.selected.length < 1} onClick={() => {this.props.cloneSensors(this.props.selected)}}>
                         <Icon
                             color={theme.colors.iconHeader}
                             icon={"duplicate"}
@@ -272,15 +284,7 @@ var Monitoring = React.createClass({
 
                     </div>
 
-                    <SensorForm
-                        closeForm={this.closeModal}
-                        id={this.props.selected.length == 1 ? this.props.selected[0] : null}
-                        initialValues={this.getSensorFields()}
-                        onSave={this.props.selected.length == 1 ? this.props.editSensor : this.props.addSensor}
-                        sensorsToAggregate={this.props.selected}
-                        showFullscreenModal={this.state.showFullscreenModal}
-                        title={this.props.selected.length == 1 ? "MODIFICA SENSORE" : "CREA NUOVO SENSORE"}
-                    />
+                    {this.renderSensorForm()}
 
                     <div style={{border: "grey solid 1px", borderRadius: "30px", background: theme.colors.backgroundContentModal, marginTop: "50px", minHeight: "300px", overflow: "auto", padding: 0, verticalAlign: "middle"}}>
                         <label style={{color: theme.colors.navText}}>
@@ -297,16 +301,14 @@ var Monitoring = React.createClass({
 const mapStateToProps = (state) => {
     return {
         collections: state.collections,
-        selected: state.sensors.selectedSensors,
-        sensors: state.sensors.allSensors
+        selected: state.sensors.selectedSensors
     };
 };
 
 const mapDispatchToProps = (dispatch) => {
     return {
         addSensor: bindActionCreators(addSensor, dispatch),
-        cloneSensor: bindActionCreators(cloneSensor, dispatch),
-        combineSensor: bindActionCreators(combineSensor, dispatch),
+        cloneSensors: bindActionCreators(cloneSensors, dispatch),
         deleteSensor: bindActionCreators(deleteSensor, dispatch),
         editSensor: bindActionCreators(editSensor, dispatch),
         favoriteSensor: bindActionCreators(favoriteSensor, dispatch),
