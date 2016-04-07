@@ -2,7 +2,7 @@ var R          = require("ramda");
 var React      = require("react");
 var bootstrap  = require("react-bootstrap");
 var IPropTypes = require("react-immutable-proptypes");
-var components = require("components/");
+var components = require("components");
 
 import {defaultTheme} from "lib/theme";
 

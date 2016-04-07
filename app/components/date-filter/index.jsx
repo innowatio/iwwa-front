@@ -11,7 +11,7 @@ import {styles} from "lib/styles_restyling";
 import icons from "lib/icons";
 
 const styleDateFilter = ({colors}) => ({
-    borderRadius: "30px",
+    borderRadius: "20px",
     outline: "0px",
     marginLeft: "30px",
     marginRight: "30px",
@@ -32,12 +32,14 @@ const styleCalendar = ({colors}) => ({
 const styleButtonGroupSelect = (theme) => R.merge(
     styles(theme).buttonSelectChart, {
         background: theme.colors.transparent,
-        border: `1px solid ${theme.colors.borderContentModal}`,
+        border: `1px solid ${theme.colors.borderButtonCalendar}`,
+        color: theme.colors.mainFontColor,
         width: "17%",
         minWidth: "200px",
         height: "41px",
         marginRight: "8px",
-        fontSize: "14px"
+        fontSize: "14px",
+        fontWeight: "400"
     }
 );
 
@@ -151,8 +153,7 @@ var DateFilter = React.createClass({
                             border: "1px solid " + colors.borderButtonCalendar,
                             boxShadow: "none",
                             WebkitBoxShadow: "none",
-                            backgroundColor: colors.backgroundContentModal,
-                            colors: colors.white
+                            backgroundColor: colors.backgroundButtonCalendar
                         },
                         ".rw-state-focus:hover": {
                             borderColor: colors.borderButtonCalendar,
@@ -186,7 +187,7 @@ var DateFilter = React.createClass({
                             marginTop: "2%"
                         },
                         ".rw-calendar .rw-header .rw-btn-view": {
-                            backgroundColor: colors.backgroundContentModal,
+                            backgroundColor: colors.backgroundButtonCalendar,
                             borderLeft: "0px",
                             borderRight: "0px",
                             borderRadius: "0px",
@@ -203,6 +204,7 @@ var DateFilter = React.createClass({
                             borderRight: "0px",
                             backgroundImage: `url(${icons.iconArrowLeft})`,
                             backgroundPosition: "center",
+                            backgroundColor: colors.backgroundCalendarArrowSwitch,
                             width: "5%",
                             height: "34px",
                             backgroundSize: "42px 42px",
@@ -221,6 +223,7 @@ var DateFilter = React.createClass({
                             borderLeft: "0px",
                             backgroundImage: `url(${icons.iconArrowRightWhite})`,
                             backgroundPosition: "center",
+                            backgroundColor: colors.backgroundCalendarArrowSwitch,
                             width: "5%",
                             height: "34px",
                             backgroundSize: "45px 45px",
@@ -238,7 +241,12 @@ var DateFilter = React.createClass({
                         ".btn.btn-default:hover": {
                             background: `${colors.buttonPrimary} !important`,
                             border: "none !important",
-                            color: colors.white + "!important"
+                            color: colors.white + "!important",
+                        },
+                        ".rw-state-selected .btn-default": {
+                            background: `${colors.buttonPrimary} !important`,
+                            border: "none !important",
+                            color: colors.white
                         },
                         ".rw-widget.rw-state-focus, .rw-widget.rw-state-focus:hover": {
                             outline: "none",
@@ -273,7 +281,11 @@ var DateFilter = React.createClass({
                             getLabel={R.prop("label")}
                             onChange={this.setTimeInterval}
                             style={styleButtonGroupSelect(this.getTheme())}
-                            styleToMergeWhenActiveState={{background: colors.buttonPrimary, border: "none"}}
+                            styleToMergeWhenActiveState={{
+                                background: colors.buttonPrimary,
+                                color: colors.white,
+                                border: "none"
+                            }}
                             value={[this.props.value.valueType]}
                         />
                     </div>
