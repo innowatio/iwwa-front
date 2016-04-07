@@ -175,7 +175,6 @@ var RealTime = React.createClass({
                     fontSize: "50px",
                     lineHeight: "60px"
                 },
-                // here i have to change the colour if the consumption are over the limit
                 styleTextUnit: {
                     color: colors.textGauge,
                     fontSize: "35px",

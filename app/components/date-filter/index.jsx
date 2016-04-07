@@ -241,7 +241,7 @@ var DateFilter = React.createClass({
                         ".btn.btn-default:hover": {
                             background: `${colors.buttonPrimary} !important`,
                             border: "none !important",
-                            color: colors.white + "!important",
+                            color: colors.white + "!important"
                         },
                         ".rw-state-selected .btn-default": {
                             background: `${colors.buttonPrimary} !important`,
