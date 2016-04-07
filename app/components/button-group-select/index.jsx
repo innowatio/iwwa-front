@@ -3,6 +3,7 @@ var Immutable       = require("immutable");
 var IPropTypes      = require("react-immutable-proptypes");
 var R               = require("ramda");
 var React           = require("react");
+var ReactDOM        = require("react-dom");
 var ReactPureRender = require("react-addons-pure-render-mixin");
 
 var components = require("components");
@@ -44,6 +45,15 @@ var ButtonGroupSelect = React.createClass({
             multi: false,
             vertical: false
         };
+    },
+    componentDidMount: function () {
+        const activeButton = this.refs.active;
+        if (activeButton) {
+            const domNode = ReactDOM.findDOMNode(activeButton);
+            console.log(activeButton);
+            console.log(domNode);
+            domNode.scrollIntoView();
+        }
     },
     getTheme: function () {
         return this.context.theme || defaultTheme;
@@ -106,6 +116,7 @@ var ButtonGroupSelect = React.createClass({
         const active = this.isActive(allowedValue);
         return (
             <components.Button
+                ref={active ? "active" : undefined}
                 disabled={allowedValue.isDisabled || false}
                 key={this.props.getKey(allowedValue)}
                 onClick={R.partial(this.onChange, [allowedValue])}
