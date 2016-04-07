@@ -121,6 +121,7 @@ var rulesProgressBar = ({colors}) => ({
         fontSize: "10px",
         padding: "0px 5px",
         lineHeight: "12px",
+        borderRadius: "20px",
         textAlign: "left"
     },
     ".progress-bar-danger": {
@@ -329,7 +330,7 @@ var SummaryConsumptions = React.createClass({
                 allowedValues={sites.sortBy(site => site.get("name"))}
                 onChange={this.onChangeWidgetValue}
                 path={this.state.site || this.props.consumptions.fullPath || []}
-                title={"Quale punto di misurazione vuoi visualizzare?"}
+                title={"QUALE PUNTO DI MISURAZIONE VUOI VISUALIZZARE?"}
             />
         );
     },

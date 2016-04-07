@@ -49,7 +49,8 @@ const styles = ({colors}) => ({
         border: "0px",
         padding: "0px 20px",
         fontSize: "14px",
-        backgroundColor: colors.buttonPrimary
+        backgroundColor: colors.buttonPrimary,
+        color: colors.white
     }
 });
 
@@ -61,13 +62,30 @@ var RadioButton = React.createClass({
         radioComponent: PropTypes.element.isRequired,
         value: PropTypes.object
     },
+    contextTypes: {
+        theme: React.PropTypes.object
+    },
     mixin: [ReactPureRender],
     onClick: function () {
         this.props.onClick(this.props.value.key);
     },
+    getTheme: function () {
+        return this.context.theme || defaultTheme;
+    },
     render: function () {
+        const {colors} = this.getTheme();
         return (
-            <div onClick={this.onClick} style={{padding: "2px 0px", borderBottom: "1px solid #ffffff"}} >
+            /*
+            *
+                We need to styling to the radio button, so we hide the input radio and
+                we use the label to graphicate it using CSS.
+            *
+            */
+            <div onClick={this.onClick} style={{
+                padding: "2px 0px",
+                borderBottom: "1px solid " + colors.borderDropdown
+            }}
+            >
                 <div className="radio-style">
                     <Radium.Style
                         rules={{
@@ -76,9 +94,9 @@ var RadioButton = React.createClass({
                                 clear: "both",
                                 width: "28px",
                                 height: "28px",
-                                background: "#ffffff",
+                                background: colors.radioButtonBackground,
+                                border: "1px solid " + colors.radioButtonBorder,
                                 margin: "5px 0px",
-
                                 WebkitBorderRadius: "50px",
                                 MozBorderRadius: "50px",
                                 borderRadius: "50px"
@@ -105,13 +123,13 @@ var RadioButton = React.createClass({
                                 position: "absolute",
                                 width: "16px",
                                 height: "16px",
-                                background: "#ec4882",
+                                background: colors.radioButtonActive,
 
                                 WebkitBorderRadius: "50px",
                                 MozBorderRadius: "50px",
                                 borderRadius: "50px",
-                                top: "2px",
-                                left: "2px"
+                                top: "1px",
+                                left: "1px"
                             },
                             "input[type='radio']:checked + label:after, input[type='radio'] + label:hover::after": {
                                 opacity: "1"

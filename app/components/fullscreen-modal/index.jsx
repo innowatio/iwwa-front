@@ -21,6 +21,7 @@ var FullscreenModal = React.createClass({
     propTypes: {
         backgroundColor: PropTypes.string,
         children: PropTypes.element,
+        iconCloseColor: PropTypes.string,
         onConfirm: PropTypes.func,
         onHide: PropTypes.func,
         onReset: PropTypes.func,
@@ -45,7 +46,7 @@ var FullscreenModal = React.createClass({
                 }}
             >
                 <components.Icon
-                    color={colors.iconClose}
+                    color={this.props.iconCloseColor || colors.iconClose}
                     icon={"close"}
                     size={"60px"}
                     style={{

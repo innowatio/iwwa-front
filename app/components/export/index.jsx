@@ -64,7 +64,7 @@ var Export = React.createClass({
         const theme = this.getTheme();
         return (
             <div>
-                <h3 className="text-center" style={styles(this.getTheme()).titleFullScreenModal}>
+                <h3 className="text-center" style={styles(this.getTheme()).titleFullScreenModalExport}>
                     {this.props.title}
                 </h3>
                 {this.renderExportButtonPdf(theme)}

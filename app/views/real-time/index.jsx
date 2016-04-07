@@ -104,12 +104,12 @@ var RealTime = React.createClass({
                     styleGaugeBar: {stroke: colors.backgroundGaugeBar},
                     stylePointer: {fill: colors.backgroundGaugeBar},
                     styleTextLabel: {
-                        color: colors.backgroundGaugeBar,
+                        color: colors.textGauge,
                         fontSize: "30px",
                         lineHeight: "34px"
                     },
                     styleTextUnit: {
-                        color: colors.backgroundGaugeBar,
+                        color: colors.textGauge,
                         fontSize: "18px",
                         lineHeight: "20px",
                         marginBottom: "4px"
@@ -175,8 +175,9 @@ var RealTime = React.createClass({
                     fontSize: "50px",
                     lineHeight: "60px"
                 },
+                // here i have to change the colour if the consumption are over the limit
                 styleTextUnit: {
-                    color: colors.backgroundGaugeBar,
+                    color: colors.textGauge,
                     fontSize: "35px",
                     lineHeight: "40px",
                     marginBottom: "4px"
@@ -327,7 +328,7 @@ var RealTime = React.createClass({
                 allowedValues={this.getSites()}
                 onChange={this.onChangeWidgetValue}
                 path={this.state.value || this.props.realTime.fullPath || []}
-                title={"Quale punto di misurazione vuoi visualizzare?"}
+                title={"QUALE PUNTO DI MISURAZIONE VUOI VISUALIZZARE?"}
             />
         );
     },
@@ -341,9 +342,9 @@ var RealTime = React.createClass({
                     top: "20px",
                     left: "0px",
                     width: "100%",
-                    backgroundColor: colors.backgroundRealTimeSection,
-                    borderTop: "1px solid " + colors.borderRealTimeSection,
-                    borderBottom: "1px solid " + colors.borderRealTimeSection
+                    backgroundColor: colors.backgroundRealTimeButton,
+                    borderTop: "1px solid " + colors.borderRealTimeButton,
+                    borderBottom: "1px solid " + colors.borderRealTimeButton
                 }}
             >
                 <h3

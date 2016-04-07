@@ -10,6 +10,13 @@ export const styles = (theme) => ({
         fontWeight: "400",
         fontSize: "28px"
     },
+    titleFullScreenModalExport: {
+        color: theme.colors.white,
+        marginTop: "0px",
+        marginBottom: "50px",
+        fontWeight: "400",
+        fontSize: "28px"
+    },
     base: {
         display: "flex",
         justifyContent: "space-between",
@@ -30,13 +37,14 @@ export const styles = (theme) => ({
     },
     buttonSelectChart: {
         position: "relative",
-        background: theme.colors.backgroundSelectButton,
-        color: theme.colors.selectButton,
+        background: theme.colors.backgroundChartButton,
+        color: theme.colors.textChartButton,
         marginRight: "9px",
         marginTop: "6px",
         fontSize: "12px",
-        border: `1px solid ${theme.colors.borderSelectButton}`,
-        borderRadius: "30px"
+        border: `1px solid ${theme.colors.borderChartButton}`,
+        borderRadius: "30px",
+        fontWeight: "300"
     },
     colVerticalPadding: {
         paddingTop: "10px",
@@ -62,8 +70,8 @@ export const styles = (theme) => ({
     },
     titlePage: {
         width: "100%",
-        color: theme.colors.white,
-        backgroundColor: theme.colors.titlePage,
+        color: theme.colors.titlePage,
+        backgroundColor: theme.colors.backgroundTitlePage,
         paddingLeft: "10px",
         paddingRight: "10px",
         height: "56px",
@@ -114,12 +122,12 @@ export const styles = (theme) => ({
         fontWeight: "300"
     },
     titleTab: {
-        color: theme.colors.titleColor,
+        color: theme.colors.titleTabColor,
         fontSize: "16pt"
     },
     tabForm: {
         ".nav-tabs.nav > .active > a": {
-            color: theme.colors.titleColor,
+            color: theme.colors.titleTabColor,
             backgroundColor: theme.colors.white,
             width: "200px",
             textAlign: "center"

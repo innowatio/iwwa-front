@@ -215,7 +215,7 @@ var User = React.createClass({
                         <h4 style={styles(theme).titleTab}>{stringIt.automaticReset}</h4>
                         <components.Spacer direction="v" size={20} />
                         <span>{stringIt.automaticEmail}</span>
-                        <span style={{fontSize: "12pt", color: theme.colors.titleColor}}>
+                        <span style={{fontSize: "12pt", color: theme.colors.titleTabColor}}>
                             {this.getUserEmail()}
                         </span>
                         <components.Spacer direction="v" size={60} />
@@ -232,7 +232,7 @@ var User = React.createClass({
                         <h4 style={styles(theme).titleTab}>{stringIt.manualReset}</h4>
                         <components.Spacer direction="v" size={20} />
                         <span>{stringIt.manualEmail}</span>
-                        <span style={{fontSize: "12pt", color: theme.colors.titleColor}}>
+                        <span style={{fontSize: "12pt", color: theme.colors.titleTabColor}}>
                             {this.getUserEmail()}
                         </span>
                         <h4 style={{color: theme.colors.primary}}>{stringIt.newPassword}</h4>
