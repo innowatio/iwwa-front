@@ -92,9 +92,11 @@ var Monitoring = React.createClass({
         };
     },
     getSensorFields: function () {
-        var fields = this.props.selected[0].toJS();
-        fields.name = (fields.name ? fields.name : fields["_id"]);
-        return fields;
+        if (this.props.selected.length == 1) {
+            var fields = this.props.selected[0].toJS();
+            fields.name = (fields.name ? fields.name : fields["_id"]);
+            return fields;
+        }
     },
     getSensorsColumns: function () {
         const theme = this.getTheme();

@@ -30,7 +30,7 @@ var DraggableSensor = React.createClass({
         connectDragSource: PropTypes.func,
         isDragging: PropTypes.bool,
         key: PropTypes.string,
-        name: PropTypes.string
+        sensor: PropTypes.object
     },
     contextTypes: {
         theme: PropTypes.object
@@ -39,11 +39,11 @@ var DraggableSensor = React.createClass({
         return this.context.theme || defaultTheme;
     },
     render () {
-        const {connectDragSource, name} = this.props;
+        const {connectDragSource, sensor} = this.props;
         let theme = this.getTheme();
         return connectDragSource(
             <label style={{color: theme.colors.navText, textAlign: "left", border: "1px solid", borderRadius: "10px", padding: "7px", display: "inherit"}}>
-                {name}
+                {(sensor.get("name") ? sensor.get("name") : sensor.get("_id")) + " - " + sensor.get("description")}
             </label>
         );
     }
