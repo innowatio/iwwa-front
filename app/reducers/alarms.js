@@ -6,7 +6,8 @@ import {
     CREATE_OR_MODIFY_ALARM_START,
     CREATION_ALARM_STOP,
     NUMBER_OF_SELECTED_TABS,
-    FILTER_COLLECTION
+    FILTER_COLLECTION,
+    RESET_FILTER
 } from "../actions/alarms";
 
 function id (state = null, {type, payload}) {
@@ -55,6 +56,8 @@ function filter (state = defaultFilter, {type, payload}) {
                 ...state,
                 [payload.collectionToFilter]: payload.filterSelection
             };
+        case RESET_FILTER:
+            return defaultFilter;
         default:
             return state;
     }
