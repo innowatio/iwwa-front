@@ -98,9 +98,7 @@ var AlarmForm = React.createClass({
     },
     addTooltip: function () {
         return (
-            <bootstrap.Tooltip
-                id="createAlarmInfo"
-            >
+            <bootstrap.Tooltip id="createAlarmInfo">
                 {stringIt.createAlarmInfoTooltip}
             </bootstrap.Tooltip>
         );
@@ -365,7 +363,7 @@ var AlarmForm = React.createClass({
                 onClick={this.submit}
                 style={{
                     backgroundColor: colors.buttonPrimary,
-                    color: colors.mainFontColor,
+                    color: colors.white,
                     width: "230px",
                     height: "45px",
                     borderRadius: "30px",

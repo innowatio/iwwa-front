@@ -81,10 +81,30 @@ var SiteNavigator = React.createClass({
         });
     },
     onClickChildren: function (value) {
-        const childrenPath = value.filter(value => {
+
+        /*
+        *   if you click 2 times the same value if it's the last
+        *   of the path, we remove it, otherwise we just remove
+        *   the selected values after it.
+        */
+        
+        const lastValue = R.last(value.filter(value => {
             return !R.isNil(value);
-        });
-        this.props.onChange([this.props.path[0]].concat(childrenPath) || []);
+        }));
+
+        const index = this.props.path.indexOf(lastValue);
+        if (index >= 0 && this.props.path.length -1 === index) {
+            const newPath = this.props.path.filter(value => {
+                return !R.isNil(value);
+            }).slice(0, index);
+
+            this.props.onChange(newPath);
+        } else {
+            const childrenPath = value.filter(value => {
+                return !R.isNil(value);
+            });
+            this.props.onChange([this.props.path[0]].concat(childrenPath) || []);
+        }
     },
     onClickParent: function (value) {
         const site = this.getKeyParent(value[0]);

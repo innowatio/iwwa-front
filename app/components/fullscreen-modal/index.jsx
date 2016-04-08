@@ -7,12 +7,11 @@ import components from "components";
 
 const buttonConfirmStyle = ({colors}) => ({
     width: "275px",
-    height: "45px",
+    height: "50px",
     lineHeight: "45px",
     padding: "0",
-    marginTop: "none",
+    margin: "0 0 0 20px",
     fontSize: "20px",
-    marginRight: "none",
     border: "0px",
     backgroundColor: colors.buttonPrimary,
     color: colors.white
@@ -22,6 +21,7 @@ var FullscreenModal = React.createClass({
     propTypes: {
         backgroundColor: PropTypes.string,
         children: PropTypes.element,
+        iconCloseColor: PropTypes.string,
         onConfirm: PropTypes.func,
         onHide: PropTypes.func,
         onReset: PropTypes.func,
@@ -46,7 +46,7 @@ var FullscreenModal = React.createClass({
                 }}
             >
                 <components.Icon
-                    color={colors.iconClose}
+                    color={this.props.iconCloseColor || colors.iconClose}
                     icon={"close"}
                     size={"60px"}
                     style={{
@@ -59,7 +59,7 @@ var FullscreenModal = React.createClass({
     },
     renderFooter: function () {
         return (
-            <Modal.Footer>
+            <Modal.Footer style={{display: "block", paddingLeft: "40px"}}>
                 <components.ButtonConfirmAndReset
                     confirmButtonStyle={buttonConfirmStyle(this.getTheme())}
                     onConfirm={this.props.onConfirm}
@@ -78,7 +78,9 @@ var FullscreenModal = React.createClass({
                 <Radium.Style
                     rules={{
                         ".modal-body": {
-                            paddingTop: 0
+                            paddingTop: "auto",
+                            height: "auto"
+
                         },
                         ".modal-dialog": {
                             bottom: "0",
@@ -119,6 +121,7 @@ var FullscreenModal = React.createClass({
                 <Modal.Body>
                     {this.props.children}
                 </Modal.Body>
+                <div style={{clear: "both"}}></div>
                 {this.props.renderConfirmButton ? this.renderFooter() : null}
             </Modal>
         );

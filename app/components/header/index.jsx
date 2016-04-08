@@ -64,7 +64,7 @@ var Header = React.createClass({
         });
         return (
             <components.Popover
-                arrowColor={this.getTheme().colors.white}
+                arrowColor={this.getTheme().colors.backgroundArrowPopover}
                 hideOnChange={true}
                 title={
                     <components.Icon
@@ -73,9 +73,6 @@ var Header = React.createClass({
                         size={"30px"}
                         style={{lineHeight: "20px", verticalAlign: "middle"}}
                     />}
-                tooltipId="tooltipUserSetting"
-                tooltipMessage="Impostazioni dell'utente"
-                tooltipPosition="left"
             >
                 <components.DropdownSelect
                     allowedValues={this.getUserSettings()}
@@ -117,7 +114,7 @@ var Header = React.createClass({
             </div>
         );
     },
-    renderAllarmPage: function () {
+    renderAlarmPage: function () {
         return (
             <div style={{marginRight: "15px"}}>
                 <Link to="" >
@@ -158,7 +155,7 @@ var Header = React.createClass({
                 {this.renderUserSetting()}
                 {this.renderAdminPage()}
                 {this.renderInboxPage()}
-                {this.renderAllarmPage()}
+                {this.renderAlarmPage()}
                 <span onClick={this.logout} style={styles.icon}>
                     <components.Icon
                         color={this.getTheme().colors.iconHeader}

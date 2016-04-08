@@ -6,10 +6,10 @@ import {defaultTheme} from "lib/theme";
 import {styles} from "lib/styles_restyling";
 
 const stylesContainer = {
-    bottom: "15px",
+    clear: "both",
     textAlign: "center",
-    margin: "2% auto auto auto",
-    height: "45px"
+    margin: "15px auto auto auto",
+    height: "50px"
 };
 
 var ButtonConfirmAndReset = React.createClass({
@@ -18,7 +18,8 @@ var ButtonConfirmAndReset = React.createClass({
         labelConfirmButton: PropTypes.node,
         labelResetButton: PropTypes.node,
         onConfirm: PropTypes.func,
-        onReset: PropTypes.func
+        onReset: PropTypes.func,
+        renderConfirmButton: PropTypes.bool
     },
     contextTypes: {
         theme: PropTypes.object

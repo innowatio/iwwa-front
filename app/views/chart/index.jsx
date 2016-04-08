@@ -67,7 +67,7 @@ const consumptionButtonSelectedStyle = ({colors}) => ({
 });
 
 const dateButtonStyle = ({colors}) => ({
-    background: colors.primary,
+    backgroundColor: colors.primary,
     border: "0px none",
     height: "35px",
     width: "auto",
@@ -76,7 +76,7 @@ const dateButtonStyle = ({colors}) => ({
 });
 
 const alarmButtonStyle = ({colors}) => ({
-    background: colors.titleColor,
+    backgroundColor: colors.backgroundDanger,
     border: "0px none",
     borderRadius: "100%",
     height: "50px",
@@ -278,14 +278,15 @@ var Chart = React.createClass({
     isDateCompare: function () {
         return this.props.chartState.charts[0].date.type === "dateCompare";
     },
-    isComparationActive: function (selectedSitesId, selectedSources) {
-        const chartFilter = this.props.chartState.charts;
+    isComparationActive: function () {
+        const selectedSitesId = this.selectedSitesId();
+        const selectedSources = this.selectedSources();
         return (
             this.isDateCompare() ||
             selectedSitesId.length > 1 ||
             (
-                chartFilter.length >= 2 &&
-                !R.allUniq(chartFilter.map(singleSelection => singleSelection.measurementType)) &&
+                this.props.chartState.charts.length >= 2 &&
+                !R.allUniq(this.props.chartState.charts.map(singleSelection => singleSelection.measurementType)) &&
                 R.uniq(selectedSources).length === 1
             )
         );
@@ -519,10 +520,10 @@ var Chart = React.createClass({
                         style={styles(theme).chartPopover}
                         title={
                             <components.Icon
-                                color={theme.colors.iconHeader}
+                                color={theme.colors.iconOption}
                                 icon={"option"}
                                 size={"32px"}
-                                style={{lineHeight: "20px", verticalAlign: "middle"}}
+                                style={{verticalAlign: "middle"}}
                             />
                         }
                     >
@@ -569,8 +570,9 @@ var Chart = React.createClass({
                                 onChangeMulti={this.onChangeMultiSources}
                                 style={sourceButtonStyle(this.getTheme())}
                                 styleToMergeWhenActiveState={{
-                                    background: this.getTheme().colors.buttonPrimary,
-                                    border: "0px none"
+                                    background: theme.colors.backgroundChartSelectedButton,
+                                    color: theme.colors.textSelectButton,
+                                    border: `1px solid ${theme.colors.borderChartSelectedButton}`
                                 }}
                                 value={this.selectedSources()}
                             />
@@ -584,6 +586,11 @@ var Chart = React.createClass({
                                 undefined :
                                 theme.colors.backgroundModalExport
                             }
+                            iconCloseColor={
+                                this.state.selectedWidget !== "export" ?
+                                theme.colors.iconClose :
+                                theme.colors.white
+                            }
                             onConfirm={this.onConfirmFullscreenModal}
                             onHide={this.closeModal}
                             onReset={this.closeModal}
@@ -596,7 +603,7 @@ var Chart = React.createClass({
                         </components.FullscreenModal>
                         <components.HistoricalGraph
                             chartState={this.props.chartState}
-                            isComparationActive={this.isComparationActive(this.selectedSitesId(), this.selectedSources())}
+                            isComparationActive={this.isComparationActive()}
                             isDateCompareActive={this.isDateCompare()}
                             misure={this.props.collections.get("readings-daily-aggregates") || Immutable.Map()}
                             ref="historicalGraph"
@@ -623,9 +630,9 @@ var Chart = React.createClass({
                                 onChange={this.props.selectElectricalType}
                                 style={measurementTypeButtonStyle(this.getTheme())}
                                 styleToMergeWhenActiveState={{
-                                    background: theme.colors.buttonPrimary,
-                                    border: "0px none",
-                                    fontWeight: "300"
+                                    background: theme.colors.backgroundChartSelectedButton,
+                                    color: theme.colors.textSelectButton,
+                                    border: `1px solid ${theme.colors.borderChartSelectedButton}`
                                 }}
                                 value={[this.props.chartState.charts[0].measurementType]}
                             />
