@@ -99,9 +99,9 @@ var HighCharts = React.createClass({
     },
     getWeekendOverlay: function () {
         var weekendOverlay = [];
-        const {dateFilter} = this.props;
-        const dayInFilter = moment.utc(dateFilter.end).diff(moment.utc(dateFilter.start), "days");
-        const firstSaturday = moment.utc(dateFilter.start).weekday(6);
+        const date = this.props.dateFilter || this.props.dateCompare[0];
+        const dayInFilter = moment.utc(date.end).diff(moment.utc(date.start), "days");
+        const firstSaturday = moment.utc(date.start).weekday(6);
         for (var i=0; i<=dayInFilter/7; i++) {
             weekendOverlay.push({
                 from: moment.utc(firstSaturday).add({day: i * 7}).startOf("day").valueOf(),

@@ -45,7 +45,6 @@ var DateCompare = React.createClass({
                 colors={[charts[0].source.color, this.getTheme().colors.lineCompare]}
                 coordinates={this.getCoordinates()}
                 dateCompare={this.getDatesFromChartState()}
-                dateFilter={this.getDatesFromChartState()[0]}
                 isDateCompareActive={this.props.isDateCompareActive}
                 ref="highcharts"
                 resetZoom={this.props.resetZoom}

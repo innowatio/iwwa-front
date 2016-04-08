@@ -343,14 +343,9 @@ var Chart = React.createClass({
                 break;
             case "dateFilter":
                 this.props.selectDateRanges(
-                    // Set the default value to pass.
-                    this.state.value || (chartFilter[0].date.type === "dateFilter" && chartFilter[0].date) || {
-                        start: moment().startOf("month").valueOf(),
-                        end: moment().endOf("month").valueOf(),
-                        type: "dateFilter",
-                        valueType: {label: "calendario", key: "calendar"}
-                    }
+                    this.state.value || (chartFilter[0].date.type === "dateFilter" && chartFilter[0].date)
                 );
+                this.props.resetZoom();
                 break;
             case "siteCompare":
                 this.props.selectMultipleElectricalSensor(
