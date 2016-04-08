@@ -11,7 +11,7 @@
     "predeploy": "ENVIRONMENT=prod npm run build",
     "deploy": "asd-upload builds/prod/",
     "emulate-ios": "cd builds/cordova-app && cordova emulate ios --target=\"iPad-Air\"",
-    "lint": "eslint app/**/*.js app/**/*.jsx app/**/**/*.jsx",
+    "lint": "eslint app test scripts --ext .js,.jsx",
     "generate-reports": "node scripts/generate-reports.js",
     "publish-reports": "node scripts/generate-reports.js && node scripts/publish-reports.js",
     "prestart": "gulp build",
