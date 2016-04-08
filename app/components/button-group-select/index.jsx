@@ -50,8 +50,6 @@ var ButtonGroupSelect = React.createClass({
         const activeButton = this.refs.active;
         if (activeButton) {
             const domNode = ReactDOM.findDOMNode(activeButton);
-            console.log(activeButton);
-            console.log(domNode);
             domNode.scrollIntoView();
         }
     },

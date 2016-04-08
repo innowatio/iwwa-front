@@ -1,4 +1,5 @@
 import {equals, head, last, update} from "ramda";
+import {combineReducers} from "redux";
 import moment from "moment";
 
 import {
@@ -9,7 +10,9 @@ import {
     SELECT_MULTIPLE_ELECTRICAL_SITE,
     SELECT_DATE_RANGES,
     SELECT_DATE_RANGES_COMPARE,
-    REMOVE_ALL_COMPARE
+    REMOVE_ALL_COMPARE,
+    SET_ZOOM_EXTREMES,
+    RESET_ZOOM
 } from "actions/chart";
 import {defaultTheme} from "lib/theme";
 import {DISPLAY_ALARMS_ON_CHART} from "actions/alarms";
@@ -32,7 +35,7 @@ const defaultChartState = [{
     source: {label: "Reale", color: defaultTheme.colors.lineReale, key: "reading"}
 }];
 
-export function chart (state = defaultChartState, {type, payload}) {
+function charts (state = defaultChartState, {type, payload}) {
     switch (type) {
         case SELECT_SINGLE_ELECTRICAL_SENSOR_CHART:
         case SELECT_SINGLE_ELECTRICAL_SENSOR_CONSUMPTION:
@@ -201,3 +204,21 @@ export function chart (state = defaultChartState, {type, payload}) {
             return state;
     }
 }
+
+function zoom (state = [], {type, payload}) {
+    switch (type) {
+        case SET_ZOOM_EXTREMES: {
+            return payload;
+        }
+        case RESET_ZOOM: {
+            return [];
+        }
+        default:
+            return state;
+    }
+}
+
+export const chart = combineReducers({
+    charts,
+    zoom
+});
