@@ -10,11 +10,13 @@ import {defaultTheme} from "lib/theme";
 var DateCompare = React.createClass({
     propTypes: {
         chartState: PropTypes.shape({
-            zoom: PropTypes.object,
+            zoom: PropTypes.arrayOf(PropTypes.object),
             charts: PropTypes.arrayOf(PropTypes.object).isRequired
         }).isRequired,
         isDateCompareActive: PropTypes.bool,
-        misure: IPropTypes.map
+        misure: IPropTypes.map,
+        resetZoom: PropTypes.func.isRequired,
+        setZoomExtremes: PropTypes.func.isRequired
     },
     contextTypes: {
         theme: PropTypes.object
@@ -46,8 +48,11 @@ var DateCompare = React.createClass({
                 dateFilter={this.getDatesFromChartState()[0]}
                 isDateCompareActive={this.props.isDateCompareActive}
                 ref="highcharts"
+                resetZoom={this.props.resetZoom}
+                setZoomExtremes={this.props.setZoomExtremes}
                 xLabel={this.getXLabels()}
                 yLabel={[charts[0].measurementType.key]}
+                zoom={this.props.chartState.zoom}
             />
         );
     }

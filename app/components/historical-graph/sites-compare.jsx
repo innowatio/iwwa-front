@@ -11,11 +11,13 @@ import {defaultTheme} from "lib/theme";
 var SitesCompare = React.createClass({
     propTypes: {
         chartState: PropTypes.shape({
-            zoom: PropTypes.object,
+            zoom: PropTypes.arrayOf(PropTypes.object),
             charts: PropTypes.arrayOf(PropTypes.object).isRequired
         }).isRequired,
         isComparationActive: PropTypes.bool,
-        misure: IPropTypes.map
+        misure: IPropTypes.map,
+        resetZoom: PropTypes.func.isRequired,
+        setZoomExtremes: PropTypes.func.isRequired
     },
     contextTypes: {
         theme: PropTypes.object
@@ -44,7 +46,10 @@ var SitesCompare = React.createClass({
                 dateFilter={this.getDateFilter()}
                 isComparationActive={this.props.isComparationActive}
                 ref="highcharts"
+                resetZoom={this.props.resetZoom}
+                setZoomExtremes={this.props.setZoomExtremes}
                 yLabel={[charts[0].measurementType.key]}
+                zoom={this.props.chartState.zoom}
             />
         );
     }

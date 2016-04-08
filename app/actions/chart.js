@@ -1,4 +1,4 @@
-import {String, Number, Object as object, tuple, struct, maybe, list} from "tcomb";
+import {String, Number, tuple, struct, maybe, list} from "tcomb";
 
 import actionTypeValidator from "../lib/action-type-validator";
 
@@ -167,30 +167,14 @@ export function removeAllCompare () {
 }
 
 /**
-*   Export chart as PNG image
-*/
-const typeofExportPNGImage = actionTypeValidator(object);
-export function exportPNGImage (chart) {
-    typeofExportPNGImage(...arguments);
-    chart.exportChartLocal();
-}
-
-/**
-*   Export chart as PDF image
-*/
-const typeofExportCSV = actionTypeValidator(object);
-export function exportCSV (chart) {
-    typeofExportCSV(...arguments);
-    return chart.getCSV();
-}
-
-/**
 *   Make zoom on chart
 */
-const typeOfSetZoomExtremes = actionTypeValidator(struct({
-    max: Number,
-    min: Number
-}));
+const typeOfSetZoomExtremes = actionTypeValidator(list(
+    struct({
+        max: Number,
+        min: Number
+    })
+));
 export function setZoomExtremes (zoomExtremes) {
     typeOfSetZoomExtremes(...arguments);
     return {

@@ -21,8 +21,8 @@ import {
     selectDateRanges,
     selectDateRangesCompare,
     removeAllCompare,
-    exportPNGImage,
-    exportCSV
+    resetZoom,
+    setZoomExtremes
 } from "actions/chart";
 import {styles} from "lib/styles_restyling";
 import {defaultTheme} from "lib/theme";
@@ -88,20 +88,22 @@ var Chart = React.createClass({
     propTypes: {
         asteroid: React.PropTypes.object,
         chartState: React.PropTypes.shape({
-            zoom: React.PropTypes.object,
+            zoom: React.PropTypes.arrayOf(React.PropTypes.object),
             charts: React.PropTypes.arrayOf(React.PropTypes.object).isRequired
         }).isRequired,
         collections: IPropTypes.map.isRequired,
         localStorage: React.PropTypes.object,
         location: React.PropTypes.object.isRequired,
         removeAllCompare: React.PropTypes.func.isRequired,
+        resetZoom: React.PropTypes.func.isRequired,
         selectDateRanges: React.PropTypes.func.isRequired,
         selectDateRangesCompare: React.PropTypes.func.isRequired,
         selectElectricalType: React.PropTypes.func.isRequired,
         selectEnvironmentalSensor: React.PropTypes.func.isRequired,
         selectMultipleElectricalSensor: React.PropTypes.func.isRequired,
         selectSingleElectricalSensor: React.PropTypes.func.isRequired,
-        selectSource: React.PropTypes.func.isRequired
+        selectSource: React.PropTypes.func.isRequired,
+        setZoomExtremes: React.PropTypes.func.isRequired
     },
     contextTypes: {
         theme: React.PropTypes.object
@@ -161,13 +163,13 @@ var Chart = React.createClass({
     exportPng: function () {
         const exportAPILocation = this.refs.historicalGraph.refs.graphType.refs.highcharts.refs.chart;
         const chart = exportAPILocation.getChart();
-        exportPNGImage(chart);
+        chart.getCSV();
         this.closeModal();
     },
     exportCsv: function () {
         const exportAPILocation = this.refs.historicalGraph.refs.graphType.refs.highcharts.refs.chart;
         const chart = exportAPILocation.getChart();
-        const csv = exportCSV(chart);
+        const csv = chart.exportChartLocal();
         const dataTypePrefix = "data:text/csv;base64,";
         this.openDownloadLink(dataTypePrefix + window.btoa(csv), "chart.csv");
         this.closeModal();
@@ -369,6 +371,7 @@ var Chart = React.createClass({
                         dateOne: moment.utc().valueOf()
                     }
                 );
+                this.props.resetZoom();
                 break;
         }
         return this.closeModal();
@@ -602,6 +605,8 @@ var Chart = React.createClass({
                             isDateCompareActive={this.isDateCompare()}
                             misure={this.props.collections.get("readings-daily-aggregates") || Immutable.Map()}
                             ref="historicalGraph"
+                            resetZoom={this.props.resetZoom}
+                            setZoomExtremes={this.props.setZoomExtremes}
                         />
                     </bootstrap.Col>
                     {/* Button bottom chart */}
@@ -665,7 +670,9 @@ function mapDispatchToProps (dispatch) {
         selectMultipleElectricalSensor: bindActionCreators(selectMultipleElectricalSensor, dispatch),
         selectDateRanges: bindActionCreators(selectDateRanges, dispatch),
         selectDateRangesCompare: bindActionCreators(selectDateRangesCompare, dispatch),
-        removeAllCompare: bindActionCreators(removeAllCompare, dispatch)
+        setZoomExtremes: bindActionCreators(setZoomExtremes, dispatch),
+        removeAllCompare: bindActionCreators(removeAllCompare, dispatch),
+        resetZoom: bindActionCreators(resetZoom, dispatch)
     };
 }
 module.exports = connect(mapStateToProps, mapDispatchToProps)(Chart);

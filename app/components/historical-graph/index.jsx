@@ -8,12 +8,14 @@ import SitesCompare from "./sites-compare";
 var HistoricalGraph = React.createClass({
     propTypes: {
         chartState: PropTypes.shape({
-            zoom: PropTypes.object,
+            zoom: PropTypes.arrayOf(PropTypes.object),
             charts: PropTypes.arrayOf(PropTypes.object).isRequired
         }).isRequired,
         isComparationActive: PropTypes.bool,
         isDateCompareActive: PropTypes.bool,
-        misure: IPropTypes.map.isRequired
+        misure: IPropTypes.map.isRequired,
+        resetZoom: PropTypes.func.isRequired,
+        setZoomExtremes: PropTypes.func.isRequired
     },
     renderGraph: function () {
         if (this.props.isDateCompareActive) {

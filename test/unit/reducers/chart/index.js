@@ -13,7 +13,7 @@ describe("`chart` reducer", () => {
             };
             const previousState = {min: 0, max: 1};
             const ret = zoom(previousState, valuePassedFromAction);
-            expect(ret).to.deep.equal({});
+            expect(ret).to.deep.equal([]);
         });
 
         it("return the zoomed extreme of the chart if type `SET_ZOOM_EXTREMES`", () => {
@@ -36,7 +36,7 @@ describe("`chart` reducer", () => {
                 type: "NOT_A_CORRECT_TYPE_CASE"
             };
             const ret = zoom(undefined, valuePassedFromAction);
-            expect(ret).to.deep.equal({});
+            expect(ret).to.deep.equal([]);
         });
 
     });

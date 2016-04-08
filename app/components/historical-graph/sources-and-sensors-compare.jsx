@@ -10,10 +10,12 @@ import readingsDailyAggregatesToHighchartsData from "lib/readings-daily-aggregat
 var SourcesAndSensorsCompare = React.createClass({
     propTypes: {
         chartState: PropTypes.shape({
-            zoom: PropTypes.object,
+            zoom: PropTypes.arrayOf(PropTypes.object),
             charts: PropTypes.arrayOf(PropTypes.object).isRequired
         }).isRequired,
-        misure: IPropTypes.map
+        misure: IPropTypes.map,
+        resetZoom: PropTypes.func.isRequired,
+        setZoomExtremes: PropTypes.func.isRequired
     },
     mixins: [ReactPureRender],
     getCoordinates: function () {
@@ -42,6 +44,9 @@ var SourcesAndSensorsCompare = React.createClass({
             this.props.chartState.charts[0].date
         );
     },
+    setZoomExtremes: function (zoom) {
+        this.props.setZoomExtremes(zoom);
+    },
     render: function () {
         return (
             <components.HighCharts
@@ -49,7 +54,10 @@ var SourcesAndSensorsCompare = React.createClass({
                 coordinates={this.getCoordinates()}
                 dateFilter={this.getDateFilter()}
                 ref="highcharts"
+                resetZoom={this.props.resetZoom}
+                setZoomExtremes={this.setZoomExtremes}
                 yLabel={this.getYLabel()}
+                zoom={this.props.chartState.zoom}
             />
         );
     }

@@ -204,10 +204,10 @@ describe("`chart` actions", () => {
     describe("`setZoomExtremes`", () => {
 
         it("should return the correct object", () => {
-            const zoomExtremes = {
+            const zoomExtremes = [{
                 max: 123,
                 min: 456
-            };
+            }];
             const ret = chart.setZoomExtremes(zoomExtremes);
             expect(ret).to.deep.equal({
                 type: "SET_ZOOM_EXTREMES",

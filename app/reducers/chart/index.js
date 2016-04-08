@@ -205,13 +205,13 @@ function charts (state = defaultChartState, {type, payload}) {
     }
 }
 
-function zoom (state = {}, {type, payload}) {
+function zoom (state = [], {type, payload}) {
     switch (type) {
         case SET_ZOOM_EXTREMES: {
             return payload;
         }
         case RESET_ZOOM: {
-            return {};
+            return [];
         }
         default:
             return state;
