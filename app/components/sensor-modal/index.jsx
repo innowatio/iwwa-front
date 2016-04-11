@@ -69,7 +69,6 @@ var SensorForm = React.createClass({
             handleSubmit
         } = this.props;
         let theme = this.getTheme();
-
         // TODO fix tags component
         tags.value = tags.value ? tags.value : [];
 
@@ -135,9 +134,6 @@ var SensorForm = React.createClass({
                         <div className={"form-group col-xs-12"}>
                             <TagsInput
                                 addOnBlur={true}
-                                onChange={(changeValue) => {
-                                    console.log(changeValue)
-                                }}
                                 renderInput={(props) => {
                                     let {...other} = props;
                                     return (
@@ -145,6 +141,7 @@ var SensorForm = React.createClass({
                                     );
                                 }}
                                 {...tags}
+                                onBlur={() => tags.value}
                             />
                         </div>
                     </Col>
