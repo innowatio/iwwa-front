@@ -130,12 +130,10 @@ var SensorForm = React.createClass({
                         <div className={"form-group" + (unitOfMeasurement.touched && unitOfMeasurement.error ? " has-error" : "")}>
                             <div className={"col-xs-" + (unitOfMeasurement.touched && unitOfMeasurement.error ? "9" : "12")}>
                                 <Select
-                                    autofocus
-                                    className="col-xs-12 form-control"
+                                    autofocus={true}
                                     name="unitOfMeasurement"
                                     options={potentialUnitsOfMeasurement}
                                     placeholder="Unità di misura"
-                                    simpleValue
                                     {...unitOfMeasurement}
                                 />
                             </div>
