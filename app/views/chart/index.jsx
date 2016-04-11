@@ -249,6 +249,61 @@ var Chart = React.createClass({
             return sensorId.slice(0, 4) === typeOfSensorId;
         });
     },
+    changeDateRanges: function (goForward) {
+        const {date} = this.props.chart[0];
+        var number = goForward ? 1 : -1;
+        var diff = Math.round(moment.duration(date.end - date.start).asDays());
+        var dateRange = {};
+        switch (diff) {
+            case 1:
+                dateRange.end = moment.utc(date.end).add({
+                    days: number
+                }).valueOf();
+                dateRange.start = moment.utc(date.start).add({
+                    days: number
+                }).valueOf();
+                break;
+            case 7:
+                dateRange.end = moment.utc(date.end).add({
+                    weeks: number
+                }).valueOf();
+                dateRange.start = moment.utc(date.start).add({
+                    weeks: number
+                }).valueOf();
+                break;
+            default:
+                dateRange.end = moment.utc(date.end).add({
+                    months: number
+                }).valueOf();
+                dateRange.start = moment.utc(date.start).add({
+                    months: number
+                }).valueOf();
+                break;
+        }
+        switch (date.type) {
+            case "dateFilter":
+                this.props.selectDateRanges({
+                    ...date,
+                    end: dateRange.end,
+                    start: dateRange.start,
+                    valueType: {}
+                });
+                break;
+            case "dateCompare":
+                this.props.selectDateRangesCompare({
+                    ...date,
+                    dateOne: dateRange.start
+                });
+                break;
+            default:
+        }
+    },
+    handleClickLeft: function () {
+        this.changeDateRanges(false);
+    },
+    handleClickRight: function () {
+        this.changeDateRanges(true);
+    },
     onChangeConsumption: function (sensorId, consumptionTypes) {
         const selectedSensorId = this.firstSensorOfConsumptionInTheSite(consumptionTypes);
         this.props.selectEnvironmentalSensor([selectedSensorId], [consumptionTypes]);
@@ -544,6 +599,7 @@ var Chart = React.createClass({
                     <components.Icon
                         color={theme.colors.iconArrowSwitch}
                         icon={"arrow-left"}
+                        onClick={this.handleClickLeft}
                         size={"34px"}
                         style={{lineHeight: "20px"}}
                     />
@@ -632,6 +688,7 @@ var Chart = React.createClass({
                     <components.Icon
                         color={theme.colors.iconArrowSwitch}
                         icon={"arrow-right"}
+                        onClick={this.handleClickRight}
                         size={"34px"}
                         style={{lineHeight: "20px"}}
                     />
