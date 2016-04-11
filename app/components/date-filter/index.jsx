@@ -117,6 +117,7 @@ var DateFilter = React.createClass({
                     end: moment.utc().endOf("isoWeek").valueOf(),
                     valueType: temporalFilter
                 });
+                break;
         }
     },
     getTemporalFilter: function () {

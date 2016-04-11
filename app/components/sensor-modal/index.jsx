@@ -59,26 +59,21 @@ var SensorForm = React.createClass({
     },
     renderSensorAggregation: function () {
         if (this.props.sensorsToAggregate && this.props.sensorsToAggregate.length > 1) {
-            return (
-                <SensorAggregator sensors={this.props.sensorsToAggregate} />
-            );
+            return (<SensorAggregator sensors={this.props.sensorsToAggregate} />);
         }
     },
     renderTagInput: function (props) {
         return (
-            <Input type="text" onChange={props.onChange} placeholder="tags" value={props.value} />
+            <input type="text" placeholder="Tags" {...props} />
         );
     },
-    render () {
+    render: function () {
         const {
             fields: {name, description, unitOfMeasurement, siteRef, clientRef, tags},
             resetForm,
             handleSubmit
         } = this.props;
         let theme = this.getTheme();
-        // TODO fix tags component
-        tags.value = tags.value ? tags.value : [];
-
         // TODO refactor to create more field components
         return (
             <FullscreenModal
