@@ -134,7 +134,10 @@ var SensorForm = React.createClass({
                         </div>
                         <div className={"form-group col-xs-12"}>
                             <TagsInput
-                                addOnBlur={false}
+                                addOnBlur={true}
+                                onChange={(changeValue) => {
+                                    console.log(changeValue)
+                                }}
                                 renderInput={(props) => {
                                     let {...other} = props;
                                     return (
