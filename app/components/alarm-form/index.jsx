@@ -180,11 +180,11 @@ var AlarmForm = React.createClass({
                     <div>
                         <h3 style={styleH3(theme)}>{stringIt.titleAlarmThreshold}</h3>
                         <div style={{
-                            backgroundColor: theme.colors.backgroundSelectButton,
+                            backgroundColor: theme.colors.backgroundAlarmsSection,
                             textAlign: "center",
                             borderRadius: "20px",
                             margin: "30px 0",
-                            border: `1px solid ${theme.colors.borderSelectButton}`,
+                            border: `1px solid ${theme.colors.borderAlarmsSection}`,
                             padding: "20px 5%"
                         }}
                         >

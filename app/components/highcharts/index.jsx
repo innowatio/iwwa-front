@@ -1,9 +1,7 @@
 import React, {PropTypes} from "react";
-import {addIndex, map, range} from "ramda";
+import {equals, range, isEmpty} from "ramda";
 import ReactHighcharts from "react-highcharts/bundle/ReactHighcharts";
 import moment from "moment";
-import ReactPureRender from "react-addons-pure-render-mixin";
-
 
 import Exporting from "highcharts-exporting";
 Exporting(ReactHighcharts.Highcharts);
@@ -15,8 +13,6 @@ ExportCSV(ReactHighcharts.Highcharts);
 import {getYLabel} from "./highchart-utils";
 import {defaultTheme} from "lib/theme";
 
-const mapIndexed = addIndex(map);
-
 var HighCharts = React.createClass({
     propTypes: {
         colors: PropTypes.arrayOf(PropTypes.string),
@@ -25,34 +21,59 @@ var HighCharts = React.createClass({
         dateFilter: PropTypes.object,
         isComparationActive: PropTypes.bool,
         isDateCompareActive: PropTypes.bool,
+        resetZoom: PropTypes.func.isRequired,
+        setZoomExtremes: PropTypes.func.isRequired,
         xLabel: PropTypes.arrayOf(PropTypes.string),
-        yLabel: PropTypes.arrayOf(PropTypes.string)
+        yLabel: PropTypes.arrayOf(PropTypes.string),
+        zoom: PropTypes.arrayOf(PropTypes.object)
     },
     contextTypes: {
         theme: PropTypes.object
     },
-    mixins: [ReactPureRender],
     getDefaultProps: function () {
         return {
             coordinates: {data: []},
             isDateCompareActive: false,
-            isComparationActive: false
+            isComparationActive: false,
+            zoom: []
         };
     },
     componentDidMount: function () {
+        this.setZoom();
         ReactHighcharts.Highcharts.setOptions({
             global: {
                 useUTC: false
             }
         });
     },
+    shouldComponentUpdate: function (newProps) {
+        return !(
+            equals(this.props.coordinates, newProps.coordinates)
+        );
+    },
+    componentDidUpdate: function () {
+        this.setZoom();
+    },
+    setZoom: function () {
+        const zoom = this.props.zoom;
+        if (!isEmpty(zoom)) {
+            const chart = this.refs.chart.getChart();
+            chart.xAxis.forEach((xAxis, index) => xAxis.setExtremes(zoom[index].min, zoom[index].max));
+            chart.showResetZoom();
+        }
+    },
     getTheme: function () {
         return this.context.theme || defaultTheme;
     },
     getYAxis: function () {
-        return mapIndexed((yLabelKey, index) => {
+        return this.props.yLabel.map((yLabelKey, index) => {
             return getYLabel(yLabelKey, this.props.colors[index]);
-        }, this.props.yLabel);
+        });
+    },
+    onSetExtreme: function (e) {
+        e.resetSelection ?
+        this.props.resetZoom() :
+        this.props.setZoomExtremes(e.xAxis.map(xAxis => ({max: xAxis.max, min: xAxis.min})));
     },
     getXAxis: function () {
         const {colors} = this.getTheme();
@@ -78,9 +99,9 @@ var HighCharts = React.createClass({
     },
     getWeekendOverlay: function () {
         var weekendOverlay = [];
-        const {dateFilter} = this.props;
-        const dayInFilter = moment.utc(dateFilter.end).diff(moment.utc(dateFilter.start), "days");
-        const firstSaturday = moment.utc(dateFilter.start).weekday(6);
+        const date = this.props.dateFilter || this.props.dateCompare[0];
+        const dayInFilter = moment.utc(date.end).diff(moment.utc(date.start), "days");
+        const firstSaturday = moment.utc(date.start).weekday(6);
         for (var i=0; i<=dayInFilter/7; i++) {
             weekendOverlay.push({
                 from: moment.utc(firstSaturday).add({day: i * 7}).startOf("day").valueOf(),
@@ -92,7 +113,7 @@ var HighCharts = React.createClass({
     },
     getSeries: function () {
         const {isComparationActive, isDateCompareActive} = this.props;
-        return mapIndexed((coordinate, index) => ({
+        return this.props.coordinates.map((coordinate, index) => ({
             ...coordinate,
             connectNulls: true,
             turboThreshold: 0,
@@ -111,17 +132,17 @@ var HighCharts = React.createClass({
                     [1, ReactHighcharts.Highcharts.Color(this.getTheme().colors.background).setOpacity(0).get("hex")]
                 ]
             }
-        }), this.props.coordinates);
+        }));
     },
     getConfig: function () {
         const {colors} = this.getTheme();
         return {
             chart: {
                 backgroundColor: colors.background,
-                ignoreHiddenSeries: false,
                 events: {
-                    redraw: () => console.log("redraw")
+                    selection: this.onSetExtreme
                 },
+                ignoreHiddenSeries: false,
                 panning: true,
                 panKey: "shift",
                 type: "area",
