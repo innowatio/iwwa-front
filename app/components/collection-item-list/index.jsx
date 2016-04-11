@@ -1,24 +1,46 @@
 import React, {PropTypes} from "react";
 import IPropTypes from "react-immutable-proptypes";
 import {Style} from "radium";
+import ReactPureRender from "react-addons-pure-render-mixin";
 
 import {defaultTheme} from "lib/theme";
+import components from "components";
 
-const styles = {
-    listContainer: {
-        height: "calc(100vh - 270px)",
-        overflow: "hidden"
+var RowItem = React.createClass({
+    propTypes: {
+        element: IPropTypes.map.isRequired,
+        elementId: PropTypes.oneOfType([PropTypes.string, PropTypes.number]).isRequired,
+        header: PropTypes.func.isRequired,
+        hoverStyle: PropTypes.object,
+        subList: PropTypes.func.isRequired
+    },
+    mixins: [ReactPureRender],
+    render: function () {
+        return (
+            <div className="item-list-container">
+                <div className="hover-container">
+                    <Style
+                        rules={{".hover-container:hover": this.props.hoverStyle}}
+                        scopeSelector=".item-list-container"
+                    />
+                    {this.props.header(this.props.element, this.props.elementId)}
+                </div>
+                {this.props.subList(this.props.element, this.props.elementId)}
+            </div>
+        );
     }
-};
+});
 
 var CollectionItemList = React.createClass({
     propTypes: {
         collections: IPropTypes.map.isRequired,
+        filter: PropTypes.func,
         headerComponent: PropTypes.func.isRequired,
         hover: PropTypes.bool,
         hoverStyle: PropTypes.object,
         // If is not specified, by default are showed all the items.
         initialVisibleRow: PropTypes.number,
+        inputFilterStyle: PropTypes.object,
         lazyLoadButtonStyle: PropTypes.object,
         lazyLoadLabel: PropTypes.string,
         sort: PropTypes.func,
@@ -27,6 +49,7 @@ var CollectionItemList = React.createClass({
     contextTypes: {
         theme: PropTypes.object
     },
+    mixins: [ReactPureRender],
     getDefaultProps: function () {
         return {
             subListComponent: () => null,
@@ -35,7 +58,8 @@ var CollectionItemList = React.createClass({
     },
     getInitialState: function () {
         return {
-            visibleValuesList: this.props.initialVisibleRow
+            visibleValuesList: this.props.initialVisibleRow,
+            search: ""
         };
     },
     getTheme: function () {
@@ -49,25 +73,40 @@ var CollectionItemList = React.createClass({
     onMouseLeave: function () {
         this.setState({hover: null});
     },
-    renderList: function (collection, index) {
+    onChangeInputFilter: function (input) {
+        this.setState({
+            search: input,
+            visibleValuesList: this.props.initialVisibleRow
+        });
+    },
+    filter: function (element) {
+        return this.props.filter ?
+            this.props.filter(element, this.state.search) :
+            true;
+    },
+    renderItemList: function (element, elementId) {
         return (
-            <div className="item-list-container" key={index}>
-                <div className="hover-container">
-                    <Style
-                        rules={{
-                            ".hover-container:hover": this.props.hoverStyle
-                        }}
-                        scopeSelector=".item-list-container"
-                    />
-                    {this.props.headerComponent(collection, index)}
-                </div>
-                {this.props.subListComponent(collection, index)}
-            </div>
+            <RowItem
+                element={element}
+                elementId={elementId}
+                header={this.props.headerComponent}
+                hoverStyle={this.props.hoverStyle}
+                key={elementId}
+                subList={this.props.subListComponent}
+            />
         );
     },
-    renderLazyLoad: function () {
-        const lengthOfCollection = this.props.collections.size;
-        return this.props.initialVisibleRow && (this.state.visibleValuesList <= lengthOfCollection) ? (
+    renderInputFilter: function () {
+        // We use components.InputFilter because is used in many part of application.
+        return this.props.filter ? (
+            <components.InputFilter
+                onChange={this.onChangeInputFilter}
+                style={this.props.inputFilterStyle}
+            />
+        ) : null;
+    },
+    renderLazyLoad: function (collectionSize) {
+        return this.props.initialVisibleRow && (this.state.visibleValuesList <= collectionSize) ? (
             <div
                 onClick={() => this.setState({
                     visibleValuesList: this.state.visibleValuesList + this.props.initialVisibleRow})
@@ -82,17 +121,18 @@ var CollectionItemList = React.createClass({
         const {colors} = this.getTheme();
         const collectionList = this.props.collections
             .sort(this.props.sort)
-            .map(this.renderList)
+            .filter(this.filter)
+            .map(this.renderItemList)
             .toList()
-            .toJS()
-            .filter((obj, index) => (this.props.initialVisibleRow ? index < this.state.visibleValuesList : true));
+            .toJS();
         return (
-            <div style={{marginTop: "84px"}}>
-                <div style={styles.listContainer} >
-                    <div style={{overflow: "auto", height: "100%"}}>
-                        {collectionList}
-                        <div style={{borderTop: "1px solid " + colors.white}} />
-                        {this.renderLazyLoad()}
+            <div>
+                {this.renderInputFilter()}
+                <div style={{height: "100%", overflow: "auto"}}>
+                    {collectionList.slice(0, this.props.initialVisibleRow ? this.state.visibleValuesList : Infinity)}
+                    <div style={{borderTop: "1px solid " + colors.borderAlarmsRow}} />
+                    <div style={{marginBottom: "50px"}}>
+                        {this.renderLazyLoad(collectionList.length)}
                     </div>
                 </div>
             </div>

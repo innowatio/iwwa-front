@@ -31,6 +31,7 @@
         "react-bootstrap",
         "react-dom",
         "react-immutable-proptypes",
+        "react-radio-group",
         "react-redux",
         "react-router",
         "react-tagsinput",

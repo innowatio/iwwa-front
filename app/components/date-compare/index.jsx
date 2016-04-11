@@ -1,6 +1,7 @@
 import * as bootstrap from "react-bootstrap";
 import {equals, partial, merge} from "ramda";
 import React, {PropTypes} from "react";
+import Radium from "radium";
 import moment from "moment";
 import components from "components";
 import {defaultTheme} from "lib/theme";
@@ -12,16 +13,9 @@ const stylesFunction = (theme) => ({
         margin: "50px auto",
         minHeight: "300px",
         borderRadius: "20px",
+        backgroundColor: theme.colors.backgroundContentModal,
         border: `1px solid ${theme.colors.borderContentModal}`,
-        padding: "16px",
-        backgroundColor: theme.colors.backgroundContentModal
-    },
-    buttonCompare: {
-        width: "100%",
-        height: "40px",
-        borderRadius: "20px",
-        marginRight: "8px",
-        marginBottom: "13px"
+        padding: "16px"
     }
 });
 
@@ -51,12 +45,40 @@ var DateCompare = React.createClass({
         const active = equals(allowedValue, this.props.period);
         const theme = this.getTheme();
         return (
-            <bootstrap.Col key={this.props.getKey(allowedValue)} lg={3} md={4} xs={12}>
+            <bootstrap.Col
+                className="button-compare"
+                key={this.props.getKey(allowedValue)}
+                lg={3}
+                md={4}
+                xs={12}
+            >
+                <Radium.Style
+                    rules={{
+                        ".btn-default": {
+                            width: "100%",
+                            background: theme.colors.transparent,
+                            border: `1px solid ${theme.colors.borderButtonCalendar}`,
+                            color: theme.colors.mainFontColor,
+                            height: "40px",
+                            borderRadius: "20px",
+                            marginRight: "8px",
+                            marginBottom: "13px",
+                            boxShadow: "none"
+                        },
+                        ".btn-default:hover": {
+                            background: theme.colors.buttonPrimary + "!important",
+                            border: "none",
+                            color: theme.colors.white + "!important"
+                        }
+                    }}
+                    scopeSelector={".button-compare"}
+                />
                 <components.Button
                     onClick={partial(this.selectedCheckboxDate, [allowedValue])}
                     style={merge(stylesFunction(theme).buttonCompare,
                         {
-                            color: active ? theme.colors.mainFontColor : theme.colors.mainFontColor,
+                            fontWeight: "400",
+                            color: active ? theme.colors.white : theme.colors.mainFontColor,
                             backgroundColor: active ? theme.colors.buttonPrimary : theme.colors.backgroundSelectButton,
                             borderColor: active ? theme.colors.transparent : theme.colors.borderSelectButton
                         }

@@ -28,6 +28,8 @@ const itemsStyleActive = ({colors}) => ({
     position: "relative"
 });
 
+const heightBody = "420px";
+
 var SiteNavigator = React.createClass({
     propTypes: {
         allowedValues: IPropTypes.map.isRequired,
@@ -79,10 +81,30 @@ var SiteNavigator = React.createClass({
         });
     },
     onClickChildren: function (value) {
-        const childrenPath = value.filter(value => {
+
+        /*
+        *   if you click 2 times the same value if it's the last
+        *   of the path, we remove it, otherwise we just remove
+        *   the selected values after it.
+        */
+        
+        const lastValue = R.last(value.filter(value => {
             return !R.isNil(value);
-        });
-        this.props.onChange([this.props.path[0]].concat(childrenPath) || []);
+        }));
+
+        const index = this.props.path.indexOf(lastValue);
+        if (index >= 0 && this.props.path.length -1 === index) {
+            const newPath = this.props.path.filter(value => {
+                return !R.isNil(value);
+            }).slice(0, index);
+
+            this.props.onChange(newPath);
+        } else {
+            const childrenPath = value.filter(value => {
+                return !R.isNil(value);
+            });
+            this.props.onChange([this.props.path[0]].concat(childrenPath) || []);
+        }
     },
     onClickParent: function (value) {
         const site = this.getKeyParent(value[0]);
@@ -145,12 +167,19 @@ var SiteNavigator = React.createClass({
                                     borderRight: "0px",
                                     borderTopLeftRadius: "20px",
                                     borderBottomLeftRadius: "20px",
+                                    borderColor: theme.colors.borderInputSearch,
                                     backgroundColor: theme.colors.backgroundInputSearch,
-                                    outline: "none !important",
-                                    color: theme.colors.white
+                                    color: theme.colors.mainFontColor
+                                },
+                                ".form-control:focus": {
+                                    borderColor: theme.colors.borderInputSearch,
+                                    outline: "none",
+                                    boxShadow: "none",
+                                    WebkitBoxShadow: "none"
                                 },
                                 ".input-group-addon:last-child": {
                                     backgroundColor: theme.colors.backgroundInputSearch,
+                                    borderColor: theme.colors.borderInputSearch,
                                     borderTopRightRadius: "20px",
                                     borderBottomRightRadius: "20px",
                                     cursor: "pointer"
@@ -178,7 +207,17 @@ var SiteNavigator = React.createClass({
                         />
                     </div>
                 </bootstrap.Col>
-                <bootstrap.Col style={{position: "relative", overflow: "hidden", paddingRight:"60px", marginTop: "10px", height: "calc(100vh - 350px)", minHeight: "300px"}} xs={4}>
+                <bootstrap.Col
+                    style={{
+                        position: "relative",
+                        overflow: "hidden",
+                        paddingRight:"60px",
+                        marginTop: "10px",
+                        height: `calc(100vh - ${heightBody})`,
+                        minHeight: "300px"
+                    }}
+                    xs={4}
+                >
                     <div className="site-navigator-parent">
                         <Radium.Style
                             rules={{
@@ -189,7 +228,8 @@ var SiteNavigator = React.createClass({
                                     left: "0",
                                     right: "-20px",
                                     overflow: "auto",
-                                    padding: "15px"
+                                    padding: "15px",
+                                    width: "100%"
                                 }
                             }}
                             scopeSelector=".site-navigator-parent"
@@ -197,7 +237,10 @@ var SiteNavigator = React.createClass({
                         {this.renderSitesParent()}
                     </div>
                 </bootstrap.Col>
-                <bootstrap.Col style={{height: "calc(100vh - 350px)", minHeight: "300px"}} xs={8}>
+                <bootstrap.Col
+                    style={{height: `calc(100vh - ${heightBody})`, minHeight: "300px"}}
+                    xs={8}
+                >
                     <div
                         className="site-navigator-child"
                         style={{

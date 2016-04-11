@@ -18,10 +18,10 @@ function getFilterFn (filter) {
 
 const indexedReduce = addIndex(reduce);
 
-function getFindAggregateFilterIndex (filters) {
-    const filterFns = filters.map(getFilterFn);
+function getFindAggregateFilterIndex (chartState) {
+    const filterFns = chartState.map(getFilterFn);
     return aggregate => (
-        filters[0].date.type !== "dateCompare" ?
+        chartState[0].date.type !== "dateCompare" ?
         findIndex(filterFn => filterFn(aggregate), filterFns) :
         indexedReduce((acc, filterFn, index) => {
             filterFn(aggregate) ? acc.push(index) : acc;
@@ -30,15 +30,15 @@ function getFindAggregateFilterIndex (filters) {
     );
 }
 
-function numberOfDayInFilter (filters) {
-    const numberOfDayToFilter = filters.map(
+function numberOfDayInFilter (chartState) {
+    const numberOfDayToFilter = chartState.map(
         ({date}) => Math.round(moment(date.end).diff(date.start, "days", true))
     );
     return max(numberOfDayToFilter) || DEFAULT_DAY_IN_FILTER;
 }
 
-export function yAxisByDate (filters) {
-    const findAggregateFilterIndex = getFindAggregateFilterIndex(filters);
+export function yAxisByDate (chartState) {
+    const findAggregateFilterIndex = getFindAggregateFilterIndex(chartState);
     return (yAxis, aggregate) => {
         var indexes = findAggregateFilterIndex(aggregate);
         if (indexes === -1 || isEmpty(indexes)) {
@@ -48,7 +48,7 @@ export function yAxisByDate (filters) {
         indexes.forEach(index => {
             const offsetDays = moment(
                 aggregate.get("day")
-            ).diff(moment(filters[index].date.start).format("YYYY-MM-DD"), "days");
+            ).diff(moment(chartState[index].date.start).format("YYYY-MM-DD"), "days");
             aggregate
                 .get("measurementValues")
                 .split(",")
@@ -62,14 +62,14 @@ export function yAxisByDate (filters) {
     };
 }
 
-export default memoize(function readingsDailyAggregatesToHighchartsData (aggregates, filters) {
+export default memoize(function readingsDailyAggregatesToHighchartsData (aggregates, chartState) {
     // Initialize the array of data because highcharts don't recognize undefined in array.
-    const lengthOfData = numberOfDayInFilter(filters) * NUMBER_OF_DATA_IN_DAY;
-    const defaultYAxis = filters.map(() => repeat(null, lengthOfData));
-    const arraysOfData = aggregates.reduce(yAxisByDate(filters), defaultYAxis);
+    const lengthOfData = numberOfDayInFilter(chartState) * NUMBER_OF_DATA_IN_DAY;
+    const defaultYAxis = chartState.map(() => repeat(null, lengthOfData));
+    const arraysOfData = aggregates.reduce(yAxisByDate(chartState), defaultYAxis);
     return arraysOfData.map((arrayOfData, index) => ({
         data: arrayOfData,
-        pointStart: moment.utc(filters[index].date.start).valueOf(),
+        pointStart: moment.utc(chartState[index].date.start).valueOf(),
         pointInterval: fiveMinutesInMs
     }));
 });

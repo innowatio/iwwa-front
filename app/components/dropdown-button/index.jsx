@@ -2,7 +2,7 @@ var R          = require("ramda");
 var React      = require("react");
 var bootstrap  = require("react-bootstrap");
 var IPropTypes = require("react-immutable-proptypes");
-var components = require("components/");
+var components = require("components");
 
 import {defaultTheme} from "lib/theme";
 
@@ -13,6 +13,7 @@ var DropdownButton = React.createClass({
             IPropTypes.iterable
         ]).isRequired,
         getColor: React.PropTypes.func,
+        getHoverColor: React.PropTypes.func,
         getIcon: React.PropTypes.func,
         getKey: React.PropTypes.func,
         getLabel: React.PropTypes.func,
@@ -29,6 +30,7 @@ var DropdownButton = React.createClass({
         };
         return {
             getColor: defaultGetter,
+            getHoverColor: defaultGetter,
             getKey: defaultGetter,
             getLabel: defaultGetter,
             getIcon: defaultGetter
@@ -42,11 +44,18 @@ var DropdownButton = React.createClass({
     getTheme: function () {
         return this.context.theme || defaultTheme;
     },
+    getColor: function (allowedValue) {
+        return (
+            this.props.getHoverColor && R.equals(this.state.allowedValue, allowedValue) ?
+            this.props.getHoverColor(allowedValue) :
+            this.props.getColor(allowedValue)
+        );
+    },
     imageItem: function (allowedValue) {
         if (R.keys(allowedValue).length > 2) {
             return (
                 <components.Icon
-                    color={this.props.getColor(allowedValue)}
+                    color={this.getColor(allowedValue)}
                     icon={this.props.getIcon(allowedValue)}
                     size={"35px"}
                     style={{
@@ -67,6 +76,13 @@ var DropdownButton = React.createClass({
         this.setState({allowedValue: {}});
     },
     renderButtonOption: function (allowedValue, index) {
+        const {colors} = this.getTheme();
+        const itemStyle = {
+            backgroundColor: (R.equals(this.state.allowedValue, allowedValue) ?
+                colors.buttonPrimary : colors.transparent),
+            color: (R.equals(this.state.allowedValue, allowedValue) ?
+                colors.white : colors.textDropdown)
+        };
         return (
             <bootstrap.ListGroupItem
                 key={this.props.getKey(allowedValue)}
@@ -86,12 +102,7 @@ var DropdownButton = React.createClass({
                     verticalAlign: "middle",
                     // This should overwrite the style over that position.
                     ...this.props.style
-                }, {
-                    backgroundColor: R.equals(
-                        this.state.allowedValue, allowedValue) ?
-                        this.getTheme().colors.buttonPrimary :
-                        this.getTheme().colors.transparent
-                })}
+                }, itemStyle)}
             >
                 {this.imageItem(allowedValue)}
                 {this.props.getLabel(allowedValue)}

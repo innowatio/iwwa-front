@@ -38,7 +38,7 @@ var SensorForm = React.createClass({
         closeForm: PropTypes.func.isRequired,
         fields: PropTypes.object.isRequired,
         handleSubmit: PropTypes.func.isRequired,
-        id: PropTypes.number,
+        id: PropTypes.string,
         initialValues: PropTypes.object.isRequired,
         onSave: PropTypes.func.isRequired,
         resetForm: PropTypes.func.isRequired,
@@ -69,7 +69,6 @@ var SensorForm = React.createClass({
             handleSubmit
         } = this.props;
         let theme = this.getTheme();
-
         // TODO fix tags component
         tags.value = tags.value ? tags.value : [];
 
@@ -84,7 +83,7 @@ var SensorForm = React.createClass({
                 renderConfirmButton={true}
                 show={this.props.showFullscreenModal}
             >
-                <form className="form-horizontal" style={{margin: "0 15% 0 15%", padding: "10px", border: "solid white 1px", borderRadius: "20px", minHeight: "350px"}}>
+                <form className="form-horizontal" style={{margin: "0 15% 0 15%", padding: "10px", border: "solid white 1px", borderRadius: "20px", minHeight: "600px"}}>
                     <h3
                         className="text-center"
                         style={{
@@ -142,7 +141,7 @@ var SensorForm = React.createClass({
                         </div>
                         <div className={"form-group col-xs-12"}>
                             <TagsInput
-                                addOnBlur={false}
+                                addOnBlur={true}
                                 renderInput={(props) => {
                                     let {...other} = props;
                                     return (
@@ -150,6 +149,7 @@ var SensorForm = React.createClass({
                                     );
                                 }}
                                 {...tags}
+                                onBlur={() => tags.value}
                             />
                         </div>
                     </Col>

@@ -1,4 +1,4 @@
-import {String, Number, Object as object, tuple, struct, maybe, list} from "tcomb";
+import {String, Number, tuple, struct, maybe, list} from "tcomb";
 
 import actionTypeValidator from "../lib/action-type-validator";
 
@@ -10,6 +10,8 @@ export const SELECT_MULTIPLE_ELECTRICAL_SITE = "SELECT_MULTIPLE_ELECTRICAL_SITE"
 export const SELECT_DATE_RANGES = "SELECT_DATE_RANGES";
 export const SELECT_DATE_RANGES_COMPARE = "SELECT_DATE_RANGES_COMPARE";
 export const REMOVE_ALL_COMPARE = "REMOVE_ALL_COMPARE";
+export const SET_ZOOM_EXTREMES = "SET_ZOOM_EXTREMES";
+export const RESET_ZOOM = "RESET_ZOOM";
 
 /**
 *   A click on select-tree component for the choice of site
@@ -165,19 +167,27 @@ export function removeAllCompare () {
 }
 
 /**
-*   Export chart as PNG image
+*   Make zoom on chart
 */
-const typeofExportPNGImage = actionTypeValidator(object);
-export function exportPNGImage (chart) {
-    typeofExportPNGImage(...arguments);
-    chart.exportChartLocal();
+const typeOfSetZoomExtremes = actionTypeValidator(list(
+    struct({
+        max: Number,
+        min: Number
+    })
+));
+export function setZoomExtremes (zoomExtremes) {
+    typeOfSetZoomExtremes(...arguments);
+    return {
+        type: SET_ZOOM_EXTREMES,
+        payload: zoomExtremes
+    };
 }
 
 /**
-*   Export chart as PDF image
+*   A click on reset-zoom
 */
-const typeofExportCSV = actionTypeValidator(object);
-export function exportCSV (chart) {
-    typeofExportCSV(...arguments);
-    return chart.getCSV();
+export function resetZoom () {
+    return {
+        type: RESET_ZOOM
+    };
 }

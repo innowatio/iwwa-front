@@ -1,5 +1,11 @@
+import axios from "axios";
+
 export const FILTER_SENSORS = "FILTER_SENSORS";
 export const SELECT_SENSOR = "SELECT_SENSOR";
+export const SENSOR_CREATION_FAIL = "SENSOR_CREATION_FAIL";
+export const SENSOR_CREATION_SUCCESS = "SENSOR_CREATION_SUCCESS";
+export const SENSOR_SAVING = "SENSOR_SAVING";
+
 
 let nextSensorId = 0;
 
@@ -7,6 +13,41 @@ function getBasicObject (type, id) {
     return {
         type: type,
         id: id
+    };
+}
+
+function getSensorObj(collectionItem) {
+    //TODO mettere id vero
+    return {
+        "id": nextSensorId,
+        "name": (collectionItem.get("name") ? collectionItem.get("name") : collectionItem.get("_id")),
+        "type": "custom-monitoring",
+        "description": collectionItem.get("description"),
+        "unitOfMeasurement": collectionItem.get("unitOfMeasurement"),
+        "virtual": true,
+        "formula": collectionItem.get("formula"),
+        "tags": collectionItem.get("tags"),
+        "siteId": collectionItem.get("siteId"),
+        "userId": collectionItem.get("userId")
+    }
+}
+
+function insertSensor(requestBody) {
+    return dispatch => {
+        dispatch({
+            type: SENSOR_SAVING
+        });
+        //TODO capire perché non entra
+        console.log("endpoint: ");
+        var endpoint = WRITE_BACKEND_HOST + "/sensors";
+        console.log(endpoint);
+        axios.post(endpoint, requestBody)
+            .then(() => dispatch({
+                type: SENSOR_CREATION_SUCCESS
+            }))
+            .catch(() => dispatch({
+                type: SENSOR_CREATION_FAIL
+            }));
     };
 }
 
@@ -28,11 +69,14 @@ export const editSensor = (sensor, id) => {
 
 export const deleteSensor = (id) => getBasicObject("DELETE_SENSOR", id);
 
-export const cloneSensor = (id) => {
+export const cloneSensors = (sensors) => {
+    sensors.forEach((el) => {
+        var sensor = getSensorObj(el);
+        sensor.name = "Copia di " + sensor.name;
+        insertSensor(sensor);
+    });
     return {
-        type: "CLONE_SENSOR",
-        id: id,
-        newId: nextSensorId++
+        type: "CLONING_SENSORS"
     };
 };
 
@@ -47,11 +91,9 @@ export const filterSensors = (payload) => {
 
 export const monitorSensor = (id) => getBasicObject("MONITOR_SENSOR", id);
 
-export const selectSensor = (sensor) => getBasicObject(SELECT_SENSOR, sensor.get("_id"));
-
-export const combineSensor = () => {
+export const selectSensor = (sensor) => {
     return {
-        type: "COMBINE_SENSOR",
-        newId: nextSensorId++
-    };
+        type: SELECT_SENSOR,
+        sensor: sensor
+    }
 };

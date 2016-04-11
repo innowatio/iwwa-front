@@ -4,7 +4,7 @@ import {flatten, range} from "ramda";
 
 import {getDateRangesCompare} from "reducers/chart/date-ranges";
 
-describe("`getDateRangesCompare`", () => {
+describe("`getDateRangesCompare` function", () => {
 
     const formattedNumber = n => (n < 10 ? `0${n}` : n);
 
