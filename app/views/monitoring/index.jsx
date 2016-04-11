@@ -9,11 +9,18 @@ import {bindActionCreators} from "redux";
 import {defaultTheme} from "lib/theme";
 import {styles} from "lib/styles_restyling";
 import {getKeyFromCollection} from "lib/collection-utils";
-
 import {Button, CollectionElementsTable, DropdownButton, Icon,
     MonitoringSearch, Popover, SectionToolbar, SensorForm} from "components";
-
-import {addSensor, cloneSensors, deleteSensor, editSensor, favoriteSensor, filterSensors, monitorSensor, selectSensor} from "actions/sensors";
+import {
+    addSensor,
+    cloneSensors,
+    deleteSensor,
+    editSensor,
+    favoriteSensor,
+    filterSensors,
+    monitorSensor,
+    selectSensor
+} from "actions/sensors";
 
 const buttonStyle = ({colors}) => ({
     backgroundColor: colors.buttonPrimary,
@@ -95,6 +102,8 @@ var Monitoring = React.createClass({
         if (this.props.selected.length == 1) {
             var fields = this.props.selected[0].toJS();
             fields.name = (fields.name ? fields.name : fields["_id"]);
+            // TODO initial value for tag.
+            fields.tags = [];
             return fields;
         }
     },
@@ -182,7 +191,7 @@ var Monitoring = React.createClass({
     },
     renderSensorForm: function () {
         if (this.props.selected.length > 0) {
-            return(
+            return (
                 <SensorForm
                     closeForm={this.closeModal}
                     id={this.props.selected.length == 1 ? this.props.selected[0] : null}
@@ -201,7 +210,11 @@ var Monitoring = React.createClass({
         return (
             <div>
                 <SectionToolbar>
-                    <Button style={buttonStyle(theme)} disabled={this.props.selected.length < 1} onClick={this.openModal}>
+                    <Button
+                        style={buttonStyle(theme)}
+                        disabled={this.props.selected.length < 1}
+                        onClick={this.openModal}
+                    >
                         <Icon
                             color={theme.colors.iconHeader}
                             icon={"add"}
@@ -209,7 +222,11 @@ var Monitoring = React.createClass({
                             style={{lineHeight: "20px"}}
                         />
                     </Button>
-                    <Button style={buttonStyle(theme)} disabled={this.props.selected.length < 1} onClick={() => {this.props.cloneSensors(this.props.selected)}}>
+                    <Button
+                        style={buttonStyle(theme)}
+                        disabled={this.props.selected.length < 1}
+                        onClick={() => this.props.cloneSensors(this.props.selected)}
+                    >
                         <Icon
                             color={theme.colors.iconHeader}
                             icon={"duplicate"}
@@ -217,7 +234,11 @@ var Monitoring = React.createClass({
                             style={{lineHeight: "20px"}}
                         />
                     </Button>
-                    <Button style={buttonStyle(theme)} disabled={this.props.selected.length != 1} onClick={this.openModal}>
+                    <Button
+                        style={buttonStyle(theme)}
+                        disabled={this.props.selected.length != 1}
+                        onClick={this.openModal}
+                    >
                         <Icon
                             color={theme.colors.iconHeader}
                             icon={"edit"}
@@ -225,7 +246,11 @@ var Monitoring = React.createClass({
                             style={{lineHeight: "20px"}}
                         />
                     </Button>
-                    <Button style={buttonStyle(theme)} disabled={this.props.selected.length < 1} onClick={this.getDeleteSensor("todo")}>
+                    <Button
+                        style={buttonStyle(theme)}
+                        disabled={this.props.selected.length < 1}
+                        onClick={this.getDeleteSensor("todo")}
+                    >
                         <Icon
                             color={theme.colors.iconHeader}
                             icon={"delete"}
@@ -266,7 +291,14 @@ var Monitoring = React.createClass({
                     <label style={{color: theme.colors.navText}}>
                         {"Seleziona alcuni sensori per visualizzare il grafico o per creare un nuovo sensore"}
                     </label>
-                    <div style={{color: "white", border: "grey solid 1px", borderRadius: "30px", background: theme.colors.backgroundContentModal, padding: 0}}>
+                    <div
+                        style={{
+                            color: "white",
+                            border: "grey solid 1px",
+                            borderRadius: "30px",
+                            background: theme.colors.backgroundContentModal,
+                            padding: 0}}
+                    >
                         <CollectionElementsTable
                             collection={sensors}
                             columns={this.getSensorsColumns()}
@@ -288,7 +320,18 @@ var Monitoring = React.createClass({
 
                     {this.renderSensorForm()}
 
-                    <div style={{border: "grey solid 1px", borderRadius: "30px", background: theme.colors.backgroundContentModal, marginTop: "50px", minHeight: "300px", overflow: "auto", padding: 0, verticalAlign: "middle"}}>
+                    <div
+                        style={{
+                            border: "grey solid 1px",
+                            borderRadius: "30px",
+                            background: theme.colors.backgroundContentModal,
+                            marginTop: "50px",
+                            minHeight: "300px",
+                            overflow: "auto",
+                            padding: 0,
+                            verticalAlign: "middle"
+                        }}
+                    >
                         <label style={{color: theme.colors.navText}}>
                             {"Trascina in questo spazio i sensori che vuoi graficare"}
                         </label>

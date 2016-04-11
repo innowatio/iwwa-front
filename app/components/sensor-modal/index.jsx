@@ -57,23 +57,24 @@ var SensorForm = React.createClass({
         this.props.onSave(data, this.props.id);
         this.props.closeForm();
     },
-    renderSensorAggregation () {
+    renderSensorAggregation: function () {
         if (this.props.sensorsToAggregate && this.props.sensorsToAggregate.length > 1) {
             return (<SensorAggregator sensors={this.props.sensorsToAggregate} />);
         }
     },
-    render () {
+    renderTagInput: function (props) {
+        return (
+            <input type="text" placeholder="Tags" {...props} />
+        );
+    },
+    render: function () {
         const {
             fields: {name, description, unitOfMeasurement, siteRef, clientRef, tags},
             resetForm,
             handleSubmit
         } = this.props;
         let theme = this.getTheme();
-        // TODO fix tags component
-        tags.value = tags.value ? tags.value : [];
-
         // TODO refactor to create more field components
-
         return (
             <FullscreenModal
                 backgroundColor={theme.colors.backgroundContentModal}
@@ -83,7 +84,16 @@ var SensorForm = React.createClass({
                 renderConfirmButton={true}
                 show={this.props.showFullscreenModal}
             >
-                <form className="form-horizontal" style={{margin: "0 15% 0 15%", padding: "10px", border: "solid white 1px", borderRadius: "20px", minHeight: "600px"}}>
+                <form
+                    className="form-horizontal"
+                    style={{
+                        margin: "0 15% 0 15%",
+                        padding: "10px",
+                        border: "solid white 1px",
+                        borderRadius: "20px",
+                        minHeight: "600px"
+                    }}
+                >
                     <h3
                         className="text-center"
                         style={{
@@ -99,7 +109,9 @@ var SensorForm = React.createClass({
                     <Col md={6}>
                         <div className={"form-group" + (name.touched && name.error ? " has-error" : "")}>
                             <div className={"col-xs-" + (name.touched && name.error ? "9" : "12")}>
-                                <Input type="text" className="col-xs-12 form-control" placeholder="Nome" style={styles(theme).inputLine}
+                                <Input
+                                    type="text"
+                                    className="col-xs-12 form-control" placeholder="Nome" style={styles(theme).inputLine}
                                     {...name}
                                 />
                             </div>
@@ -142,14 +154,9 @@ var SensorForm = React.createClass({
                         <div className={"form-group col-xs-12"}>
                             <TagsInput
                                 addOnBlur={true}
-                                renderInput={(props) => {
-                                    let {...other} = props;
-                                    return (
-                                        <input type="text" placeholder="Tags" {...other} />
-                                    );
-                                }}
-                                {...tags}
-                                onBlur={() => tags.value}
+                                renderInput={this.renderTagInput}
+                                onChange={tags.onChange}
+                                value={tags.value}
                             />
                         </div>
                     </Col>
