@@ -16,7 +16,7 @@ function getBasicObject (type, id) {
     };
 }
 
-function getSensorObj(collectionItem) {
+function getSensorObj (collectionItem) {
     //TODO mettere id vero
     return {
         "id": nextSensorId,
@@ -29,10 +29,10 @@ function getSensorObj(collectionItem) {
         "tags": collectionItem.get("tags"),
         "siteId": collectionItem.get("siteId"),
         "userId": collectionItem.get("userId")
-    }
+    };
 }
 
-function insertSensor(requestBody) {
+function insertSensor (requestBody) {
     return dispatch => {
         dispatch({
             type: SENSOR_SAVING
@@ -95,5 +95,5 @@ export const selectSensor = (sensor) => {
     return {
         type: SELECT_SENSOR,
         sensor: sensor
-    }
+    };
 };

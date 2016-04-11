@@ -11,11 +11,11 @@ function cloneState (state) {
     };
 }
 
-function findSensor (sensors, id) {
-    return sensors.find(t => {
-        return t.id === id;
-    });
-}
+// function findSensor (sensors, id) {
+//     return sensors.find(t => {
+//         return t.id === id;
+//     });
+// }
 
 // function sortSensors (state) {
 //     return state.sort(function (a, b) {
@@ -51,7 +51,7 @@ function findSensor (sensors, id) {
 
 export function sensors (state = defaultState, action) {
     var newState;
-    var found;
+    // var found;
     switch (action.type) {
         // case "ADD_SENSOR": {
         //     newState = cloneState(state);
