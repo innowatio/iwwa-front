@@ -194,7 +194,7 @@ var Monitoring = React.createClass({
             return (
                 <SensorForm
                     closeForm={this.closeModal}
-                    id={this.props.selected.length == 1 ? this.props.selected[0] : null}
+                    id={this.props.selected.length == 1 ? this.props.selected[0].get("_id") : null}
                     initialValues={this.getSensorFields()}
                     onSave={this.props.selected.length == 1 ? this.props.editSensor : this.props.addSensor}
                     sensorsToAggregate={this.props.selected}

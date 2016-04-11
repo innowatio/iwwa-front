@@ -39,7 +39,7 @@ var SensorForm = React.createClass({
         fields: PropTypes.object.isRequired,
         handleSubmit: PropTypes.func.isRequired,
         id: PropTypes.string,
-        initialValues: PropTypes.object.isRequired,
+        initialValues: PropTypes.object,
         onSave: PropTypes.func.isRequired,
         resetForm: PropTypes.func.isRequired,
         sensorsToAggregate: PropTypes.array,
@@ -73,6 +73,7 @@ var SensorForm = React.createClass({
             resetForm,
             handleSubmit
         } = this.props;
+        console.log(tags);
         let theme = this.getTheme();
         // TODO refactor to create more field components
         return (
@@ -132,9 +133,10 @@ var SensorForm = React.createClass({
                                 <Select
                                     autofocus={true}
                                     name="unitOfMeasurement"
+                                    onChange={unitOfMeasurement.onChange}
                                     options={potentialUnitsOfMeasurement}
                                     placeholder="Unità di misura"
-                                    {...unitOfMeasurement}
+                                    value={unitOfMeasurement.value}
                                 />
                             </div>
                             {unitOfMeasurement.touched && unitOfMeasurement.error && <div className="col-xs-3 help-block">{unitOfMeasurement.error}</div>}
@@ -154,7 +156,7 @@ var SensorForm = React.createClass({
                                 addOnBlur={true}
                                 renderInput={this.renderTagInput}
                                 onChange={tags.onChange}
-                                value={tags.value}
+                                value={tags.value || []}
                             />
                         </div>
                     </Col>
