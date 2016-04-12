@@ -156,7 +156,7 @@ var SensorForm = React.createClass({
                                 addOnBlur={true}
                                 renderInput={this.renderTagInput}
                                 onChange={tags.onChange}
-                                value={tags.value || []}
+                                value={tags.value || tags.initialValue}
                             />
                         </div>
                     </Col>
