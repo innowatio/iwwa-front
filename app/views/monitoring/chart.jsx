@@ -1,17 +1,28 @@
 import Immutable from "immutable";
+import {merge, prop} from "ramda";
 import React, {PropTypes} from "react";
 import {Col, Input} from "react-bootstrap";
 import IPropTypes from "react-immutable-proptypes";
 import {connect} from "react-redux";
 import {Link} from "react-router";
 import {bindActionCreators} from "redux";
+import moment from "moment";
 
-import {addToFavorite, changeYAxisValues, saveChartConfig, selectChartType, selectFavoriteChart} from "actions/monitoring-chart";
+import {
+    addToFavorite,
+    changeYAxisValues,
+    saveChartConfig,
+    selectChartType,
+    selectDateRanges,
+    selectFavoriteChart,
+    setZoomExtremes,
+    resetZoom} from "actions/monitoring-chart";
 
 import {styles} from "lib/styles_restyling";
 import {defaultTheme} from "lib/theme";
+import readingsDailyAggregatesToHighchartsData from "lib/readings-daily-aggregates-to-highcharts-data";
 
-import {Button, Icon, MonitoringChart, SectionToolbar} from "components";
+import {Button, ButtonGroupSelect, Icon, MonitoringChart, SectionToolbar} from "components";
 
 const buttonStyle = ({colors}) => ({
     backgroundColor: colors.buttonPrimary,
@@ -23,6 +34,12 @@ const buttonStyle = ({colors}) => ({
     marginLeft: "10px"
 });
 
+const sourceButtonStyle = (theme) => merge(styles(theme).buttonSelectChart, {
+    minWidth: "85px",
+    height: "30px",
+    fontWeight: "300"
+});
+
 var MonitoringChartView = React.createClass({
     propTypes: {
         addToFavorite: PropTypes.func.isRequired,
@@ -30,10 +47,13 @@ var MonitoringChartView = React.createClass({
         changeYAxisValues: PropTypes.func.isRequired,
         collections: IPropTypes.map.isRequired,
         monitoringChart: PropTypes.object.isRequired,
+        resetZoom: PropTypes.func.isRequired,
         saveChartConfig: PropTypes.func.isRequired,
         selectChartType: PropTypes.func.isRequired,
+        selectDateRanges: PropTypes.func.isRequired,
         selectFavoriteChart: PropTypes.func.isRequired,
-        selected: PropTypes.array
+        selected: PropTypes.array,
+        setZoomExtremes: PropTypes.func.isRequired
     },
     contextTypes: {
         theme: PropTypes.object
@@ -44,6 +64,16 @@ var MonitoringChartView = React.createClass({
     componentDidMount: function () {
         this.subscribeToSensorsData(this.props);
     },
+    getFilters: function () {
+        return [
+            {key: "day", label: "1 gg"},
+            {key: "week", label: "1 sett"},
+            {key: "month", label: "1 mese"},
+            {key: "year", label: "1 anno"},
+            {key: "ytd", label: "YTD"},
+            {key: "all", label: "Tutto"}
+        ];
+    },
     getStateFromProps: function (props) {
         return {
             yAxisMax: props.monitoringChart.yAxis.max,
@@ -51,24 +81,41 @@ var MonitoringChartView = React.createClass({
         };
     },
     subscribeToSensorsData: function (props) {
-        console.log(props.selected);
-        props.selected[0] && props.selected.forEach((sensorId) => {
-            //TODO capire bene cosa va preso...
+        const sensors = props.selected.map(sensor => sensor.get("_id"));
+        sensors[0] && sensors.forEach((sensorId) => {
+            // last year for sensors
             props.asteroid.subscribe(
                 "dailyMeasuresBySensor",
                 sensorId,
-                "2015-01-01",
-                "2016-03-01",
+                moment.utc().subtract(1, "years").startOf("month").format("YYYY-MM-DD"),
+                moment.utc().endOf("month").format("YYYY-MM-DD"),
                 "reading",
                 "activeEnergy"
             );
         });
     },
     getChartSeries: function () {
-        let measures = this.props.collections.get("readings-daily-aggregates") || Immutable.Map();
-        console.log(measures);
-        //TODO prendere le misure
-        return this.props.selected;
+        const monitoringCharts = this.props.selected.map(sensor => {
+            return {
+                date: {
+                    start: moment.utc().startOf("month").valueOf(),
+                    end: moment.utc().endOf("month").valueOf()
+                },
+                source: {key: "reading"},
+                measurementType: {key: "activeEnergy"},
+                name: sensor.get("_id"),
+                favorites: Immutable.Map(),
+                type: "spline",
+                sensorId: sensor.get("_id"),
+                yAxis: {
+                    min: 0,
+                    max: 60
+                }
+            };
+        });
+        const readingsDailyAggregates = this.props.collections.get("readings-daily-aggregates") || Immutable.Map();
+        let measures = readingsDailyAggregatesToHighchartsData(readingsDailyAggregates, monitoringCharts);
+        return measures;
     },
     getTheme: function () {
         return this.context.theme || defaultTheme;
@@ -96,15 +143,32 @@ var MonitoringChartView = React.createClass({
         return (
             <div>
                 <SectionToolbar backUrl={"/monitoring/"} title={"Torna all'elenco sensori"} />
-
-                <MonitoringChart
-                    chartState={this.props.monitoringChart}
-                    ref="monitoringChart"
-                    saveConfig={this.props.saveChartConfig}
-                    series={this.getChartSeries()}
-                    style={{width: "75%", padding: "20px", float: "left"}}
-                />
-
+                <div style={{width: "75%", padding: "20px", float: "left"}}>
+                    <div style={{paddingBottom: "20px", paddingTop: "10px"}}>
+                        <ButtonGroupSelect
+                            allowedValues={this.getFilters()}
+                            getKey={prop("key")}
+                            getLabel={prop("label")}
+                            onChange={this.props.selectDateRanges}
+                            style={sourceButtonStyle(this.getTheme())}
+                            styleToMergeWhenActiveState={{
+                                background: theme.colors.backgroundChartSelectedButton,
+                                color: theme.colors.textSelectButton,
+                                border: `1px solid ${theme.colors.borderChartSelectedButton}`
+                            }}
+                            value={this.props.monitoringChart.dateRanges}
+                        />
+                    </div>
+                    <MonitoringChart
+                        chartState={this.props.monitoringChart}
+                        dateRanges={this.props.monitoringChart.dateRanges}
+                        ref="monitoringChart"
+                        saveConfig={this.props.saveChartConfig}
+                        series={this.getChartSeries()}
+                        setZoomExtremes={this.props.setZoomExtremes}
+                        resetZoom={this.props.resetZoom}
+                    />
+                </div>
                 <div style={{width: "25%", backgroundColor: theme.colors.primary, float: "left", minHeight: "600px"}}>
                     <div style={{padding: "20px", borderBottom: "solid 1px", borderColor: theme.colors.white}}>
                         <label style={{color: theme.colors.navText, display: "inherit"}}>
@@ -269,9 +333,12 @@ const mapDispatchToProps = (dispatch) => {
     return {
         addToFavorite: bindActionCreators(addToFavorite, dispatch),
         changeYAxisValues: bindActionCreators(changeYAxisValues, dispatch),
+        resetZoom: bindActionCreators(resetZoom, dispatch),
         saveChartConfig: bindActionCreators(saveChartConfig, dispatch),
         selectChartType: bindActionCreators(selectChartType, dispatch),
-        selectFavoriteChart: bindActionCreators(selectFavoriteChart, dispatch)
+        selectDateRanges: bindActionCreators(selectDateRanges, dispatch),
+        selectFavoriteChart: bindActionCreators(selectFavoriteChart, dispatch),
+        setZoomExtremes: bindActionCreators(setZoomExtremes, dispatch)
     };
 };
 

@@ -13,10 +13,10 @@ import Immutable from "immutable";
 
 let defaultState = {
     favorites: Immutable.Map(),
-    dateRanges: {
+    dateRanges: [{
         key: "all",
         label: "Tutto"
-    },
+    }],
     type: "spline",
     yAxis: {
         min: 0,

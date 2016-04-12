@@ -1,63 +1,24 @@
 import React, {PropTypes} from "react";
-import ReactHighstock from "react-highcharts/bundle/ReactHighstock"; // Highstock is bundled
+import components from "components";
+import moment from "moment";
 
 import {defaultTheme} from "lib/theme";
 
 var MonitoringChart = React.createClass({
     propTypes: {
         chartState: PropTypes.object.isRequired,
+        dateRanges: PropTypes.array.isRequired,
+        resetZoom: PropTypes.func.isRequired,
         saveConfig: PropTypes.func.isRequired,
         series: PropTypes.array.isRequired,
+        setZoomExtremes: PropTypes.func.isRequired,
         style: PropTypes.object
     },
     contextTypes: {
         theme: PropTypes.object
     },
-    getInitialState: function () {
-        return this.getStateFromProps(this.props);
-    },
-    componentDidMount: function () {
-        this.props.saveConfig(this.state.config);
-    },
-    componentWillReceiveProps: function (props) {
-        this.setState(this.getStateFromProps(props));
-    },
-    getStateFromProps: function (props) {
-        return {
-            config: this.getHighstockConfig(props.chartState.config)
-        };
-    },
     getTheme: function () {
         return this.context.theme || defaultTheme;
-    },
-    getRandomValue: function () {
-        return Math.floor((Math.random() * 100) + 1);
-    },
-    getHighstockCoordinate: function () {
-        var self = this;
-        var series = [];
-        var occurences = 1000;
-        var currentTime = new Date();
-
-        this.props.series.forEach (function (item) {
-            series.push({
-                name: item,
-                data: [[currentTime.getTime(), self.getRandomValue()]]
-            });
-        });
-
-        series.push();
-        for (let i = 1; i < occurences; i++) {
-            currentTime.setDate(currentTime.getDate() + 1);
-
-            this.props.series.forEach (function (item, index) {
-                series[index].data.push([currentTime.getTime(), self.getRandomValue()]);
-            });
-        }
-
-        return {
-            series: series
-        };
     },
     getCommonConfig: function () {
         const theme = this.getTheme();
@@ -102,8 +63,7 @@ var MonitoringChart = React.createClass({
             },
             tooltip: {
                 shared: true
-            },
-            yAxis: this.props.chartState.yAxis
+            }
         };
     },
     getCommonChartConfig: function () {
@@ -118,6 +78,41 @@ var MonitoringChart = React.createClass({
     },
     getColumnConfig: function () {
         return {};
+    },
+    getConfig: function () {
+        return {
+            legend: {
+                enabled: true,
+                itemStyle: {
+                    color: "#8D8D8E"
+                },
+                itemHoverStyle: {
+                    color: "#8D8D8E"
+                }
+            }
+        };
+    },
+    getDateFilter: function () {
+        // TODO always load all because filters doesnt work properly atm 
+        const rangeKey = "all";// this.props.dateRanges[0].key;
+        const standardDatesSelectors = ["day", "week", "month", "year"];
+        console.log("getDateFilter");
+        if (standardDatesSelectors.indexOf(rangeKey) >= 0) {
+            return {
+                start: moment.utc().startOf(rangeKey).format("YYYY-MM-DD"),
+                end: moment.utc().endOf(rangeKey).format("YYYY-MM-DD")
+            };
+        } else {
+            return {
+                start: moment.utc().subtract(1, "years").startOf("day").format("YYYY-MM-DD"),
+                // end of month to avoid not charging all the weekends (anyway this should happen only in dev)
+                end: moment.utc().endOf("month").format("YYYY-MM-DD")
+            };
+        }
+    },
+    getLabels: function () {
+        // TODO
+        return ["a"];
     },
     getStackedConfig: function () {
         return {
@@ -173,21 +168,18 @@ var MonitoringChart = React.createClass({
                 return this.getBasicLineConfig();
         }
     },
-    getHighstockConfig: function (configProp) {
-        if (configProp) {
-            return configProp;
-        } else {
-            return {
-                ...this.getCommonConfig(),
-                ...this.getSpecificTypeConfig(),
-                ...this.getHighstockCoordinate()
-            };
-        }
-    },
     render: function () {
         return (
             <div style={{marginBottom: "60px", ...this.props.style}}>
-                <ReactHighstock config={this.state.config} />
+                <components.HighCharts
+                    config={this.getConfig()}
+                    coordinates={this.props.series}
+                    dateFilter={this.getDateFilter()}
+                    colors={["red", "green", "cyan", "yellow", "grey", "blue"]}
+                    resetZoom={this.props.resetZoom}
+                    setZoomExtremes={this.props.setZoomExtremes}
+                    yLabel={this.getLabels()}
+                />
             </div>
         );
     }
