@@ -256,7 +256,7 @@ var Chart = React.createClass({
         });
     },
     changeDateRanges: function (goForward) {
-        const {date} = this.props.chart[0];
+        const {date} = this.props.chartState.charts[0];
         var number = goForward ? 1 : -1;
         var diff = Math.round(moment.duration(date.end - date.start).asDays());
         var dateRange = {};
