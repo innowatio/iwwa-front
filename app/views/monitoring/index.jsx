@@ -9,8 +9,17 @@ import {bindActionCreators} from "redux";
 import {defaultTheme} from "lib/theme";
 import {styles} from "lib/styles_restyling";
 import {getKeyFromCollection} from "lib/collection-utils";
-import {Button, CollectionElementsTable, DropdownButton, Icon,
-    MonitoringSearch, Popover, SectionToolbar, SensorForm} from "components";
+import {
+    Button,
+    CollectionItemList,
+    DropdownButton,
+    Icon,
+    MonitoringSearch,
+    MonitoringSensorRow,
+    Popover,
+    SectionToolbar,
+    SensorForm
+} from "components";
 import {
     addSensor,
     cloneSensors,
@@ -204,6 +213,14 @@ var Monitoring = React.createClass({
             );
         }
     },
+    renderSensorList: function (element, elementId) {
+        return (
+            <MonitoringSensorRow
+                sensor={element}
+                sensorId={elementId}
+            />
+        );
+    },
     render: function () {
         let sensors = this.getAllSensors();
         const theme = this.getTheme();
@@ -299,16 +316,10 @@ var Monitoring = React.createClass({
                             background: theme.colors.backgroundContentModal,
                             padding: 0}}
                     >
-                        <CollectionElementsTable
-                            collection={sensors}
-                            columns={this.getSensorsColumns()}
-                            getKey={getKeyFromCollection}
-                            hover={true}
-                            onRowClick={this.props.selectSensor}
-                            style={{color: "white", maxHeight: "332px", overflow: "auto", padding: 0}}
-                            width={"60%"}
+                        <CollectionItemList
+                            collections={sensors}
+                            headerComponent={this.renderSensorList}
                         />
-
                         <label style={{color: theme.colors.navText, padding: "20px", paddingRight: "50px"}}>
                             {"Seleziona tutti"}
                         </label>

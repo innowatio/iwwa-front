@@ -28,6 +28,7 @@ exports.MeasureLabel            = require("./measure-label/");
 exports.ModalOptionList         = require("./modal-option-list/");
 exports.MonitoringChart         = require("./monitoring-chart/");
 exports.MonitoringSearch        = require("./monitoring-search/");
+exports.MonitoringSensorRow     = require("./monitoring-sensor-row/");
 exports.NotificationModal       = require("./notification-modal/");
 exports.PageContainer           = require("./page-container/");
 exports.Popover                 = require("./popover/");
