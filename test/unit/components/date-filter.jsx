@@ -71,8 +71,8 @@ describe("`DateFilter` component", () => {
         calendar.trigger("change");
         expect(onChangeSpy).to.have.callCount(1);
         expect(onChangeSpy).to.have.been.calledWith({
-            start: moment.utc("2016-01-01").valueOf(),
-            end: moment.utc("2016-01-31").endOf("day").valueOf(),
+            start: moment.utc("2016-01-01").add({minutes: moment("2016-01-01").utcOffset()}).valueOf(),
+            end: moment.utc("2016-01-31").add({minutes: moment("2016-01-01").utcOffset()}).endOf("day").valueOf(),
             valueType: {label: "calendario", key: "calendar"}
         });
     });
@@ -107,8 +107,8 @@ describe("`DateFilter` component", () => {
             setMonthlyDate.call(instance, new Date());
             expect(instance.props.onChange).to.have.been.callCount(1);
             expect(instance.props.onChange).to.have.been.calledWith({
-                start: moment.utc("2016-01-01").valueOf(),
-                end: moment.utc("2016-01-31").endOf("day").valueOf(),
+                start: moment.utc("2016-01-01").add({minutes: moment("2016-01-01").utcOffset()}).valueOf(),
+                end: moment.utc("2016-01-31").add({minutes: moment("2016-01-01").utcOffset()}).endOf("day").valueOf(),
                 valueType: {label: "calendario", key: "calendar"}
             });
         });

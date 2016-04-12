@@ -3,16 +3,17 @@ var Immutable  = require("immutable");
 var IPropTypes = require("react-immutable-proptypes");
 var Radium     = require("radium");
 var React      = require("react");
+import moment from "moment";
+import {partial} from "ramda";
+import icons from "lib/icons";
 
 var components   = require("components");
-
 import {connect} from "react-redux";
 import {bindActionCreators} from "redux";
 import {defaultTheme} from "lib/theme";
 import {selectSite, selectPeriod} from "actions/consumptions";
 import {getSumBySiteAndPeriod, getTimeRangeByPeriod, tabParameters} from "lib/consumptions-utils";
-import moment from "moment";
-import {partial} from "ramda";
+
 
 var styleLeftPane  = {
     width: "70%",
@@ -21,8 +22,7 @@ var styleLeftPane  = {
 var styleContent  = ({colors}) => ({
     textAlign: "center",
     backgroundColor: colors.primary,
-    padding: "80px 0px",
-    height: "calc(100vh - 100px)"
+    height: "calc(100vh - 130px)"
 });
 var styleTabContent  = ({colors}) => ({
     backgroundColor: colors.primary
@@ -32,7 +32,7 @@ var styleH2 = ({colors}) => ({
     lineHeight: "15px",
     fontWeight: "400",
     textTransform: "uppercase",
-    color: colors.mainFontColor,
+    color: colors.white,
     padding: "0"
 });
 
@@ -41,21 +41,21 @@ var styleH3 = ({colors}) => ({
     lineHeight: "20px",
     fontWeight: "400",
     textTransform: "uppercase",
-    color: colors.mainFontColor
+    color: colors.white
 });
 var styleRoundedDiv = ({colors}) => ({
     borderRadius: "100%",
     margin: "30px auto",
     width: "300px",
     height: "300px",
-    padding: "70px 10px 0 10px",
+    padding: "70px 10px 0px 10px",
     backgroundColor: colors.secondary
 });
 var styleMeasure  = ({colors}) => ({
     fontSize: "90px",
     fontWeight: "600",
     lineHeight: "110px",
-    color: colors.mainFontColor
+    color: colors.white
 });
 var styleUnit  = ({colors}) => ({
     fontSize: "60px",
@@ -63,7 +63,19 @@ var styleUnit  = ({colors}) => ({
     lineHeight: "10px",
     margin: "0",
     padding: "0",
-    color: colors.mainFontColor
+    color: colors.white
+});
+var styleCongratMessage = ({colors}) => ({
+    color: colors.white,
+    width: "90%",
+    margin: "60px auto 20px auto",
+    minHeight: "100px",
+    height: "auto",
+    padding: "20px",
+    fontSize: "20px",
+    textAlign: "left",
+    borderRadius: "20px",
+    backgroundColor: colors.secondary
 });
 var styleRightPane  = ({colors}) => ({
     width: "30%",
@@ -109,13 +121,16 @@ var rulesProgressBar = ({colors}) => ({
         fontSize: "10px",
         padding: "0px 5px",
         lineHeight: "12px",
+        borderRadius: "20px",
         textAlign: "left"
     },
     ".progress-bar-danger": {
-        backgroundColor: colors.progressBarDanger
+        backgroundColor: colors.progressBarDanger,
+        color: colors.white
     },
     ".progress-bar-info": {
-        backgroundColor: colors.progressBarInfo
+        backgroundColor: colors.progressBarInfo,
+        color: colors.white
     }
 });
 
@@ -126,6 +141,9 @@ var SummaryConsumptions = React.createClass({
         consumptions: React.PropTypes.object.isRequired,
         selectPeriod: React.PropTypes.func.isRequired,
         selectSite: React.PropTypes.func.isRequired
+    },
+    contextTypes: {
+        theme: React.PropTypes.object
     },
     getInitialState: function () {
         return {
@@ -186,7 +204,7 @@ var SummaryConsumptions = React.createClass({
         this.setState({period: tabPeriod});
     },
     renderCustomersComparisons: function () {
-        const theme = this.getTheme();
+        const {colors} = this.getTheme();
         const title = "Confronta i tuoi consumi con quelli di attività simili alla tua";
         const selectedTab = tabParameters().find(param => param.key === this.state.period);
         const now = parseInt(selectedTab.now(
@@ -198,16 +216,18 @@ var SummaryConsumptions = React.createClass({
                 padding: "10px",
                 borderTopLeftRadius: "25px",
                 borderTopRightRadius: "25px",
-                border: "1px solid " + theme.colors.borderConsumptionSection,
-                borderBottom: "0",
-                backgroundColor: theme.colors.backgroundConsumptionSection
+                borderLeft: "1px solid " + colors.borderConsumptionSection,
+                borderRight: "1px solid " + colors.borderConsumptionSection,
+                borderTop: "1px solid " + colors.borderConsumptionSection,
+                borderBottom: "0px",
+                backgroundColor: colors.backgroundConsumptionSection
             }}
             >
                 <p style={{
                     fontSize: "16px",
                     margin: "15px 0px",
                     fontWeight: "400",
-                    color: theme.colors.mainFontColor
+                    color: colors.mainFontColor
                 }}
                 >{title}</p>
                 {this.renderStyledProgressBar(
@@ -232,7 +252,7 @@ var SummaryConsumptions = React.createClass({
         );
     },
     renderFeedbackBox: function () {
-        const theme = this.getTheme();
+        const {colors} = this.getTheme();
         const feedbackMessage = "Stai andando molto bene. Hai usato il 10% di energia in meno dei tuoi vicini.";
         return (
             <div style={{
@@ -240,9 +260,11 @@ var SummaryConsumptions = React.createClass({
                 padding: "10px",
                 borderBottomLeftRadius: "25px",
                 borderBottomRightRadius: "25px",
-                border: "1px solid " + theme.colors.borderConsumptionSection,
-                borderTop: "0",
-                backgroundColor: theme.colors.backgroundConsumptionSection
+                borderLeft: "1px solid " + colors.borderConsumptionSection,
+                borderRight: "1px solid " + colors.borderConsumptionSection,
+                borderBottom: "1px solid " + colors.borderConsumptionSection,
+                borderTop: "0px",
+                backgroundColor: colors.backgroundConsumptionSection
             }}
             >
                 <div style={{
@@ -250,7 +272,7 @@ var SummaryConsumptions = React.createClass({
                 }}
                 >
                     <components.Icon
-                        color={theme.colors.feedbackGood}
+                        color={colors.feedbackGood}
                         icon={"good"}
                         size={"50px"}
                         style={{
@@ -258,11 +280,11 @@ var SummaryConsumptions = React.createClass({
                             lineHeight: "20px"
                         }}
                     />
-                    <p style={{color: theme.colors.feedbackGood, fontSize: "20px"}}>
+                    <p style={{color: colors.feedbackGood, fontSize: "20px"}}>
                         {"GRANDE!"}
                     </p>
                 </div>
-                <p style={{color: theme.colors.mainFontColor, fontSize: "14px", fontWeight:"300"}}>{feedbackMessage}</p>
+                <p style={{color: colors.mainFontColor, fontSize: "14px", fontWeight:"300"}}>{feedbackMessage}</p>
             </div>
         );
     },
@@ -308,7 +330,7 @@ var SummaryConsumptions = React.createClass({
                 allowedValues={sites.sortBy(site => site.get("name"))}
                 onChange={this.onChangeWidgetValue}
                 path={this.state.site || this.props.consumptions.fullPath || []}
-                title={"Quale punto di misurazione vuoi visualizzare?"}
+                title={"QUALE PUNTO DI MISURAZIONE VUOI VISUALIZZARE?"}
             />
         );
     },
@@ -338,7 +360,7 @@ var SummaryConsumptions = React.createClass({
                             backgroundColor: colors.secondary
                         },
                         "ul li": {
-                            color: colors.mainFontColor,
+                            color: colors.white,
                             margin: "0 1.5%"
                         },
                         "ul li a": {
@@ -350,7 +372,7 @@ var SummaryConsumptions = React.createClass({
                         },
                         ".nav-tabs > li > a": {
                             height: "44px",
-                            color: colors.mainFontColor,
+                            color: colors.white,
                             border: "0",
                             outline: "none",
                             borderBottom: "3px solid" + colors.secondary
@@ -362,7 +384,7 @@ var SummaryConsumptions = React.createClass({
                             height: "44px",
                             fontSize: "17px",
                             fontWeight: "500",
-                            color: colors.mainFontColor,
+                            color: colors.white,
                             border: "0px",
                             borderRadius: "0px",
                             outline: "none",
@@ -388,6 +410,7 @@ var SummaryConsumptions = React.createClass({
             this.subscribeToConsumptions();
             sum = this.getSum(getTimeRangeByPeriod(tabParameters.period));
         }
+        const congratMessage = "COMPLIMENTI! Ieri hai utilizzato il 12% in meno dell’energia che utilizzi di solito.";
         return (
             <div style={styleContent(theme)}>
                 <h2 style={styleH2(theme)}>{siteName}</h2>
@@ -397,6 +420,19 @@ var SummaryConsumptions = React.createClass({
                     <span style={styleUnit(theme)}>{tabParameters.measureUnit}</span>
                 </div>
                 <p style={styleH2(theme)}>{tabParameters.periodSubtitle}</p>
+                <div style={styleCongratMessage(theme)}>
+                    <bootstrap.Col xs={12} md={8} lg={9} style={{float: "left"}}>{congratMessage}</bootstrap.Col>
+                    <bootstrap.Col xs={12} md={4} lg={3} style={{
+                        textAlign: "right",
+                        float: "right",
+                        backgroundImage: `url(${icons.iconGoGreen})`,
+                        backgroundRepeat: "none",
+                        width: "116px",
+                        height: "116px"
+                    }}
+                    ></bootstrap.Col>
+                    <div style={{clear: "both"}} />
+                </div>
             </div>
         );
     },

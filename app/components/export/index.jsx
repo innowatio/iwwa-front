@@ -34,7 +34,7 @@ var Export = React.createClass({
                     style={buttonExport(theme)}
                 >
                     <components.Icon
-                        color={theme.colors.iconDropdown}
+                        color={theme.colors.iconExport}
                         icon={"pdf"}
                         size={"200px"}
                         style={{verticalAlign: "middle"}}
@@ -51,7 +51,7 @@ var Export = React.createClass({
                     style={buttonExport(theme)}
                 >
                     <components.Icon
-                        color={theme.colors.iconDropdown}
+                        color={theme.colors.iconExport}
                         icon={"xls"}
                         size={"200px"}
                         style={{verticalAlign: "middle"}}
@@ -64,7 +64,7 @@ var Export = React.createClass({
         const theme = this.getTheme();
         return (
             <div>
-                <h3 className="text-center" style={styles(this.getTheme()).titleFullScreenModal}>
+                <h3 className="text-center" style={styles(this.getTheme()).titleFullScreenModalExport}>
                     {this.props.title}
                 </h3>
                 {this.renderExportButtonPdf(theme)}

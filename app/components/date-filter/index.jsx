@@ -11,7 +11,7 @@ import {styles} from "lib/styles_restyling";
 import icons from "lib/icons";
 
 const styleDateFilter = ({colors}) => ({
-    borderRadius: "30px",
+    borderRadius: "20px",
     outline: "0px",
     marginLeft: "30px",
     marginRight: "30px",
@@ -32,12 +32,14 @@ const styleCalendar = ({colors}) => ({
 const styleButtonGroupSelect = (theme) => R.merge(
     styles(theme).buttonSelectChart, {
         background: theme.colors.transparent,
-        border: `1px solid ${theme.colors.borderContentModal}`,
+        border: `1px solid ${theme.colors.borderButtonCalendar}`,
+        color: theme.colors.mainFontColor,
         width: "17%",
         minWidth: "200px",
         height: "41px",
         marginRight: "8px",
-        fontSize: "14px"
+        fontSize: "14px",
+        fontWeight: "400"
     }
 );
 
@@ -74,9 +76,12 @@ var DateFilter = React.createClass({
         return this.context.theme || defaultTheme;
     },
     setMonthlyDate: function (dateValue) {
-        const startDate = moment.utc(dateValue).valueOf();
+        const startDate = moment.utc(dateValue).add({minutes: moment(dateValue).utcOffset()}).valueOf();
         // Add one day to avoid to go in the past month.
-        const endDate = moment.utc(dateValue).add({day: 1}).endOf("month").valueOf();
+        const endDate = moment.utc(dateValue)
+            .add({minutes: moment(dateValue).utcOffset()})
+            .endOf("month")
+            .valueOf();
         this.props.onChange({
             start: startDate,
             end: endDate,
@@ -148,8 +153,7 @@ var DateFilter = React.createClass({
                             border: "1px solid " + colors.borderButtonCalendar,
                             boxShadow: "none",
                             WebkitBoxShadow: "none",
-                            backgroundColor: colors.backgroundContentModal,
-                            colors: colors.white
+                            backgroundColor: colors.backgroundButtonCalendar
                         },
                         ".rw-state-focus:hover": {
                             borderColor: colors.borderButtonCalendar,
@@ -163,7 +167,7 @@ var DateFilter = React.createClass({
                         },
                         ".rw-state-selected": {
                             backgroundColor: colors.buttonPrimary,
-                            color: colors.white,
+                            color: colors.white + "!important",
                             border: "none !important"
                         },
                         ".rw-calendar-grid td .rw-btn:hover": {
@@ -176,21 +180,21 @@ var DateFilter = React.createClass({
                             border: `1px solid ${colors.borderButtonCalendar}`,
                             width: "90%",
                             marginLeft: "8%",
-                            color: colors.white
+                            color: colors.mainFontColor
                         },
                         ".rw-header": {
                             marginLeft: "2%",
                             marginTop: "2%"
                         },
                         ".rw-calendar .rw-header .rw-btn-view": {
-                            backgroundColor: colors.backgroundContentModal,
+                            backgroundColor: colors.backgroundButtonCalendar,
                             borderLeft: "0px",
                             borderRight: "0px",
                             borderRadius: "0px",
                             borderTop: `1px solid ${colors.borderButtonCalendar}`,
                             borderBottom: `1px solid ${colors.borderButtonCalendar}`,
                             width: "89.3%",
-                            color: colors.white,
+                            color: colors.mainFontColor,
                             outline: "none"
                         },
                         ".rw-calendar .rw-header .rw-btn-left": {
@@ -200,6 +204,7 @@ var DateFilter = React.createClass({
                             borderRight: "0px",
                             backgroundImage: `url(${icons.iconArrowLeft})`,
                             backgroundPosition: "center",
+                            backgroundColor: colors.backgroundCalendarArrowSwitch,
                             width: "5%",
                             height: "34px",
                             backgroundSize: "42px 42px",
@@ -218,6 +223,7 @@ var DateFilter = React.createClass({
                             borderLeft: "0px",
                             backgroundImage: `url(${icons.iconArrowRightWhite})`,
                             backgroundPosition: "center",
+                            backgroundColor: colors.backgroundCalendarArrowSwitch,
                             width: "5%",
                             height: "34px",
                             backgroundSize: "45px 45px",
@@ -232,9 +238,21 @@ var DateFilter = React.createClass({
                         ".rw-calendar-grid": {
                             outline: "none"
                         },
-                        "button.btn.btn-default:hover": {
+                        ".btn.btn-default:hover": {
                             background: `${colors.buttonPrimary} !important`,
-                            border: "none !important"
+                            border: "none !important",
+                            color: colors.white + "!important"
+                        },
+                        ".rw-state-selected .btn-default": {
+                            background: `${colors.buttonPrimary} !important`,
+                            border: "none !important",
+                            color: colors.white
+                        },
+                        ".rw-widget.rw-state-focus, .rw-widget.rw-state-focus:hover": {
+                            outline: "none",
+                            border: "none",
+                            boxShadow: "none",
+                            WebkitBoxShadow: "none"
                         }
                     }}
                     scopeSelector=".date-filter"
@@ -242,7 +260,7 @@ var DateFilter = React.createClass({
                 <div style={styleDateFilter(this.getTheme())}>
                     <Calendar
                         className="centering"
-                        culture="it"
+                        culture={window.navigator.language}
                         finalView="decade"
                         format="DD MMM YYYY"
                         initialView="year"
@@ -263,7 +281,11 @@ var DateFilter = React.createClass({
                             getLabel={R.prop("label")}
                             onChange={this.setTimeInterval}
                             style={styleButtonGroupSelect(this.getTheme())}
-                            styleToMergeWhenActiveState={{background: colors.buttonPrimary, border: "none"}}
+                            styleToMergeWhenActiveState={{
+                                background: colors.buttonPrimary,
+                                color: colors.white,
+                                border: "none"
+                            }}
                             value={[this.props.value.valueType]}
                         />
                     </div>

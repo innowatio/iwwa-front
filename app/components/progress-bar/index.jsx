@@ -8,7 +8,7 @@ var ProgressBar = React.createClass({
         max: React.PropTypes.number,
         min: React.PropTypes.number,
         now: React.PropTypes.number,
-        rules: React.PropTypes.object, 
+        rules: React.PropTypes.object,
         style: React.PropTypes.object,
         styleMaxLabel: React.PropTypes.object,
         styleTitleLabel: React.PropTypes.object,

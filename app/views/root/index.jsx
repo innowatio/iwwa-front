@@ -24,7 +24,8 @@ const stylesFunction = ({colors}) => ({
         top: measures.headerHeight,
         backgroundColor: colors.background,
         height: `calc(100vh - ${measures.headerHeight})`,
-        transition: "left 0.3s ease"
+        transition: "left 0.3s ease",
+        overflow: "auto"
     },
     sidebar: {
         position: "absolute",
@@ -40,7 +41,7 @@ const stylesFunction = ({colors}) => ({
     footer: {
         position: "fixed",
         backgroundColor: colors.backgroundFooter,
-        color: colors.greySubTitle,
+        color: colors.textFooter,
         height: measures.footerHeight,
         width: "100%",
         bottom: "0px",

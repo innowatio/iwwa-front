@@ -10,6 +10,13 @@ export const styles = (theme) => ({
         fontWeight: "400",
         fontSize: "28px"
     },
+    titleFullScreenModalExport: {
+        color: theme.colors.white,
+        marginTop: "0px",
+        marginBottom: "50px",
+        fontWeight: "400",
+        fontSize: "28px"
+    },
     base: {
         display: "flex",
         justifyContent: "space-between",
@@ -30,13 +37,14 @@ export const styles = (theme) => ({
     },
     buttonSelectChart: {
         position: "relative",
-        background: theme.colors.backgroundSelectButton,
-        color: theme.colors.selectButton,
+        background: theme.colors.backgroundChartButton,
+        color: theme.colors.textChartButton,
         marginRight: "9px",
         marginTop: "6px",
         fontSize: "12px",
-        border: `1px solid ${theme.colors.borderSelectButton}`,
-        borderRadius: "30px"
+        border: `1px solid ${theme.colors.borderChartButton}`,
+        borderRadius: "30px",
+        fontWeight: "300"
     },
     colVerticalPadding: {
         paddingTop: "10px",
@@ -62,8 +70,8 @@ export const styles = (theme) => ({
     },
     titlePage: {
         width: "100%",
-        color: theme.colors.white,
-        backgroundColor: theme.colors.titlePage,
+        color: theme.colors.titlePage,
+        backgroundColor: theme.colors.backgroundTitlePage,
         paddingLeft: "10px",
         paddingRight: "10px",
         height: "56px",
@@ -107,19 +115,19 @@ export const styles = (theme) => ({
     divAlarmOpenModal: {
         height: "35px",
         width: "100%",
-        borderBottom: "1px solid" + theme.colors.white,
+        borderBottom: "1px solid" + theme.colors.borderInputSettingsAlarm,
         cursor: "pointer",
         color: theme.colors.textSelectButton,
         fontSize: "16px",
         fontWeight: "300"
     },
     titleTab: {
-        color: theme.colors.titleColor,
+        color: theme.colors.titleTabColor,
         fontSize: "16pt"
     },
     tabForm: {
         ".nav-tabs.nav > .active > a": {
-            color: theme.colors.titleColor,
+            color: theme.colors.titleTabColor,
             backgroundColor: theme.colors.white,
             width: "200px",
             textAlign: "center"
@@ -140,6 +148,47 @@ export const styles = (theme) => ({
             borderLeft: "solid 1px " + color(theme.colors.black).alpha(0.1).rgbString(),
             borderTop: "0px",
             boxShadow: "2px 2px 5px " + theme.colors.greySubTitle
+        }
+    },
+    tabsStyle: {
+        "ul": {
+            border: "0px",
+            height: "56px",
+            backgroundColor: theme.colors.secondary
+        },
+        "ul li": {
+            color: theme.colors.mainFontColor,
+            margin: "0 1.5%"
+        },
+        "ul li a": {
+            height: "55px",
+            lineHeight: "55px",
+            fontSize: "17px",
+            textTransform: "uppercase",
+            padding: "0px 4px"
+        },
+        ".nav-tabs > li > a": {
+            height: "44px",
+            color: theme.colors.white,
+            border: "0",
+            outline: "none",
+            borderBottom: "3px solid" + theme.colors.secondary
+        },
+        ".nav-tabs > li:hover > a:hover": {
+            fontWeight: "400"
+        },
+        ".nav-tabs > li.active > a, .nav-tabs > li > a:hover, .nav-tabs > li.active > a:hover, .nav-tabs > li.active > a:focus": {
+            height: "44px",
+            fontSize: "17px",
+            fontWeight: "500",
+            color: theme.colors.white,
+            border: "0px",
+            borderRadius: "0px",
+            outline: "none",
+            backgroundColor: theme.colors.secondary,
+            borderBottom: "3px solid" + theme.colors.buttonPrimary,
+            outlineStyle: "none",
+            outlineWidth: "0px"
         }
     },
     consumptionsProgressBar: {
