@@ -53,11 +53,6 @@ export function sensors (state = defaultState, action) {
     var newState;
     // var found;
     switch (action.type) {
-        // case "ADD_SENSOR": {
-        //     newState = cloneState(state);
-        //     newState.allSensors.push(sensor(undefined, action));
-        //     return newState;
-        // }
         // case "EDIT_SENSOR": {
         //     newState = cloneState(state);
         //     newState.allSensors = state.allSensors.map(t =>
