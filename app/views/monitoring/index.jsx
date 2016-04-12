@@ -8,7 +8,7 @@ import {bindActionCreators} from "redux";
 
 import {defaultTheme} from "lib/theme";
 import {styles} from "lib/styles_restyling";
-import {getKeyFromCollection} from "lib/collection-utils";
+
 import {
     Button,
     CollectionItemList,
@@ -30,6 +30,25 @@ import {
     monitorSensor,
     selectSensor
 } from "actions/sensors";
+
+const hoverStyle = ({colors}) => ({
+    backgroundColor: colors.buttonPrimary
+});
+
+const lazyLoadButtonStyle = ({colors}) => ({
+    width: "230px",
+    height: "45px",
+    lineHeight: "43px",
+    backgroundColor: colors.buttonPrimary,
+    fontSize: "14px",
+    color: colors.white,
+    textTransform: "uppercase",
+    fontWeight: "400",
+    margin: "10px auto 0 auto",
+    borderRadius: "30px",
+    cursor: "pointer",
+    textAlign: "center"
+});
 
 const buttonStyle = ({colors}) => ({
     backgroundColor: colors.buttonPrimary,
@@ -216,6 +235,7 @@ var Monitoring = React.createClass({
     renderSensorList: function (element, elementId) {
         return (
             <MonitoringSensorRow
+                onClickSelect={this.props.selectSensor}
                 sensor={element}
                 sensorId={elementId}
             />
@@ -301,49 +321,51 @@ var Monitoring = React.createClass({
 
                 <MonitoringSearch
                     filterSensors={this.props.filterSensors}
-                    style={{width: "25%", float: "left", marginTop: "2px", minHeight: "782px"}}
+                    style={{width: "25%", float: "left", marginTop: "2px", height: "calc(100vh - 120px)"}}
                 />
 
-                <div style={{float: "left", width: "75%", textAlign: "center", padding: "10px 10px 0px 20px"}}>
-                    <label style={{color: theme.colors.navText}}>
+                <div style={{float: "left", width: "75%", padding: "10px 10px 0px 20px"}}>
+                    <label style={{width: "100%", color: theme.colors.navText, textAlign: "center"}}>
                         {"Seleziona alcuni sensori per visualizzare il grafico o per creare un nuovo sensore"}
                     </label>
                     <div
                         style={{
                             color: "white",
-                            border: "grey solid 1px",
-                            borderRadius: "30px",
-                            background: theme.colors.backgroundContentModal,
-                            padding: 0}}
+                            borderRadius: "20px",
+                            height: "400px",
+                            overflow: "hidden",
+                            border: "1px solid " + theme.colors.borderContentModal,
+                            background: theme.colors.backgroundContentModal
+                        }}
                     >
-                        <CollectionItemList
-                            collections={sensors}
-                            headerComponent={this.renderSensorList}
-                        />
-                        <label style={{color: theme.colors.navText, padding: "20px", paddingRight: "50px"}}>
-                            {"Seleziona tutti"}
-                        </label>
-                        <label style={{color: theme.colors.navText, padding: "20px"}}>
-                            {"Carica tutti"}
-                        </label>
-
+                        <div style={{height: "100%", overflow: "auto"}}>
+                            <CollectionItemList
+                                collections={sensors}
+                                headerComponent={this.renderSensorList}
+                                hover={true}
+                                hoverStyle={hoverStyle(this.getTheme())}
+                                initialVisibleRow={6}
+                                lazyLoadButtonStyle={lazyLoadButtonStyle(this.getTheme())}
+                                lazyLoadLabel={"Carica altri"}
+                            />
+                        </div>
                     </div>
 
                     {this.renderSensorForm()}
 
                     <div
                         style={{
-                            border: "grey solid 1px",
-                            borderRadius: "30px",
+                            border: "1px solid " + theme.colors.borderContentModal,
+                            borderRadius: "20px",
                             background: theme.colors.backgroundContentModal,
-                            marginTop: "50px",
-                            minHeight: "300px",
+                            marginTop: "40px",
+                            minHeight: "200px",
                             overflow: "auto",
-                            padding: 0,
+                            padding: "20px 10px",
                             verticalAlign: "middle"
                         }}
                     >
-                        <label style={{color: theme.colors.navText}}>
+                        <label style={{width: "100%", color: theme.colors.navText, textAlign: "center"}}>
                             {"Trascina in questo spazio i sensori che vuoi graficare"}
                         </label>
                     </div>
