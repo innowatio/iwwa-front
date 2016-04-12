@@ -27,7 +27,7 @@ const validate = values => {
     if (!values.description) {
         errors.description = "Required";
     }
-    if (!values.unitOfMeasurement || !values.unitOfMeasurement.id) {
+    if (!values.unitOfMeasurement) {
         errors.unitOfMeasurement = "Required";
     }
     return errors;
@@ -73,7 +73,6 @@ var SensorForm = React.createClass({
             resetForm,
             handleSubmit
         } = this.props;
-        console.log(tags);
         let theme = this.getTheme();
         // TODO refactor to create more field components
         return (
@@ -132,6 +131,7 @@ var SensorForm = React.createClass({
                             <div className={"col-xs-" + (unitOfMeasurement.touched && unitOfMeasurement.error ? "9" : "12")}>
                                 <Select
                                     autofocus={true}
+                                    className="sensor-modal-select"
                                     name="unitOfMeasurement"
                                     onChange={unitOfMeasurement.onChange}
                                     options={potentialUnitsOfMeasurement}

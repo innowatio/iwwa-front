@@ -16,6 +16,7 @@ var getIp = function () {
     return R.find(function (ip) {
         return (
             ip.slice(0, 3) === "192" ||
+            ip.slice(0, 3) === "172" ||
             ip.slice(0, 2) === "10"
         );
     }, devip());
