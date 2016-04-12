@@ -16,6 +16,7 @@ import {defaultTheme} from "lib/theme";
 var HighCharts = React.createClass({
     propTypes: {
         colors: PropTypes.arrayOf(PropTypes.string),
+        config: PropTypes.object,
         coordinates: PropTypes.arrayOf(PropTypes.object),
         dateCompare: PropTypes.arrayOf(PropTypes.object),
         dateFilter: PropTypes.object,
@@ -175,7 +176,10 @@ var HighCharts = React.createClass({
             series: this.getSeries(),
             title: null,
             xAxis: this.getXAxis(),
-            yAxis: this.getYAxis()
+            yAxis: this.getYAxis(),
+
+            // Override with custom config
+            ...this.props.config
         };
     },
     render: function () {
