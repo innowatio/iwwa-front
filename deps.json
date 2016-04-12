@@ -4,7 +4,8 @@
         "node_modules/font-awesome/css/font-awesome.css",
         "node_modules/react-widgets/dist/css/react-widgets.css",
         "node_modules/intro.js/introjs.css",
-        "node_modules/iwwa-icons/css/styles.css"
+        "node_modules/iwwa-icons/css/styles.css",
+        "node_modules/react-select/dist/react-select.min.css"
     ],
     "fonts": [
         "node_modules/font-awesome/fonts/*",
@@ -38,6 +39,7 @@
         "redux",
         "redux-form",
         "redux-logger",
+        "react-select",
         "redux-storage",
         "redux-thunk",
         "react-addons-test-utils",

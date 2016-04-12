@@ -52,11 +52,7 @@ function insertSensor (requestBody) {
 }
 
 export const addSensor = (sensor) => {
-    return {
-        type: "ADD_SENSOR",
-        id: nextSensorId++,
-        fields: {...sensor}
-    };
+    insertSensor(sensor);
 };
 
 export const editSensor = (sensor, id) => {

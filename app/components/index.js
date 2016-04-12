@@ -29,7 +29,6 @@ exports.ModalOptionList         = require("./modal-option-list/");
 exports.MonitoringChart         = require("./monitoring-chart/");
 exports.MonitoringSearch        = require("./monitoring-search/");
 exports.NotificationModal       = require("./notification-modal/");
-exports.ObjectSelect            = require("./object-select/");
 exports.PageContainer           = require("./page-container/");
 exports.Popover                 = require("./popover/");
 exports.ProgressBar             = require("./progress-bar/");

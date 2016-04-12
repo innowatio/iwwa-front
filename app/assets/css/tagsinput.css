@@ -42,3 +42,14 @@
     padding: 5px;
     width: 100%;
 }
+
+.sensor-modal-select .Select-control,
+.sensor-modal-select .Select-menu-outer {
+    background-color: transparent;
+    border: none;
+    border-bottom: solid 1px white;
+}
+
+.sensor-modal-select .Select-control .Select-placeholder {
+    color: white;
+}
