@@ -43,11 +43,11 @@ var DraggableOperator = React.createClass({
         const {type, connectDragSource} = this.props;
         let theme = this.getTheme();
         return connectDragSource(
-            <div style={{width: "40px", display: "inline"}}>
+            <div style={{width: "40px", height: "40px", display: "inline-block", margin: "5px"}}>
                 <Icon
                     color={theme.colors.iconHeader}
                     icon={type}
-                    size={"46px"}
+                    size={"40px"}
                     style={{lineHeight: "20px", width: "40px", height: "40px", borderRadius: "100%", background: "green"}}
                 />
             </div>
