@@ -39,6 +39,7 @@ const styles = ({colors}) => ({
 
 var SensorRow = React.createClass({
     propTypes: {
+        isSelected: PropTypes.bool,
         onClickSelect: PropTypes.func,
         sensor: IPropTypes.map.isRequired,
         sensorId: PropTypes.any.isRequired
@@ -106,8 +107,17 @@ var SensorRow = React.createClass({
         );
     },
     render: function () {
+        let divStyle = {
+            ...styles(this.getTheme()).container
+        };
+        if (this.props.isSelected) {
+            divStyle = {
+                ...divStyle,
+                backgroundColor: this.getTheme().colors.buttonPrimary
+            }
+        }
         return (
-            <div style={styles(this.getTheme()).container}>
+            <div style={divStyle}>
                 <div onClick={partial(this.props.onClickSelect, [this.props.sensor])} style={{cursor: "pointer"}}>
                     {this.renderSensorName()}
                     <div style={styles(this.getTheme()).tagsContainer}>

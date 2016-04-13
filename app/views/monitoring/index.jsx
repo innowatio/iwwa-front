@@ -32,7 +32,7 @@ import {
 } from "actions/sensors";
 
 const hoverStyle = ({colors}) => ({
-    backgroundColor: colors.buttonPrimary
+    backgroundColor: "grey"
 });
 
 const lazyLoadButtonStyle = ({colors}) => ({
@@ -135,75 +135,6 @@ var Monitoring = React.createClass({
             return fields;
         }
     },
-    getSensorsColumns: function () {
-        const theme = this.getTheme();
-        return [
-            {
-                key: "_id",
-                style: function () {
-                    return {
-                        borderRight: "solid 1px grey",
-                        width: "10%",
-                        height: "100%",
-                        textAlign: "left"
-                    };
-                }
-            },
-            {
-                key: "tag",
-                style: function () {
-                    return {
-                        width: "80%",
-                        height: "100%",
-                        padding: "3px 0px 0px 5px",
-                        textAlign: "left"
-                    };
-                },
-                valueFormatter: () => (
-                    <div>
-                        <Icon
-                            color={theme.colors.iconHeader}
-                            icon={"tag"}
-                            size={"27px"}
-                        />
-                    </div>
-                )
-            },
-            {
-                key: "info",
-                valueFormatter: () => (
-                    <Icon
-                        color={theme.colors.iconHeader}
-                        icon={"info"}
-                        size={"27px"}
-                    />
-                )
-            },
-            {
-                key: "chart",
-                style: function () {
-                    return {
-                        backgroundColor: "grey"
-                    };
-                },
-                valueFormatter: () => (
-                    <Link to={"/monitoring/chart/"}>
-                        <Icon
-                            color={theme.colors.iconHeader}
-                            icon={"chart"}
-                            size={"27px"}
-                        />
-                    </Link>
-                )
-            },
-            {
-                key: "",
-                valueFormatter: () => (
-                    <div />
-                )
-            }
-        ];
-    },
     openModal: function () {
         this.setState({
             showFullscreenModal: true
@@ -233,8 +164,10 @@ var Monitoring = React.createClass({
         }
     },
     renderSensorList: function (element, elementId) {
+        let found = R.find((it) => {return it.get("_id") === elementId})(this.props.selected) != null;
         return (
             <MonitoringSensorRow
+                isSelected={found}
                 onClickSelect={this.props.selectSensor}
                 sensor={element}
                 sensorId={elementId}
