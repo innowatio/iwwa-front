@@ -17,6 +17,20 @@ var MonitoringChart = React.createClass({
     contextTypes: {
         theme: PropTypes.object
     },
+    getInitialState: function () {
+        return this.getStateFromProps(this.props);
+    },
+    componentDidMount: function () {
+        this.props.saveConfig(this.state.config);
+    },
+    componentWillReceiveProps: function (props) {
+        this.setState(this.getStateFromProps(props));
+    },
+    getStateFromProps: function (props) {
+        return {
+            config: this.buildConfig(props.chartState.config)
+        };
+    },
     getTheme: function () {
         return this.context.theme || defaultTheme;
     },
@@ -31,7 +45,13 @@ var MonitoringChart = React.createClass({
                 enabled: false
             },
             legend: {
-                enabled: true
+                enabled: true,
+                itemStyle: {
+                    color: "#8D8D8E"
+                },
+                itemHoverStyle: {
+                    color: "#8D8D8E"
+                }
             },
             rangeSelector: {
                 buttonTheme: { // styles for the buttons
@@ -78,19 +98,6 @@ var MonitoringChart = React.createClass({
     },
     getColumnConfig: function () {
         return {};
-    },
-    getConfig: function () {
-        return {
-            legend: {
-                enabled: true,
-                itemStyle: {
-                    color: "#8D8D8E"
-                },
-                itemHoverStyle: {
-                    color: "#8D8D8E"
-                }
-            }
-        };
     },
     getDateFilter: function () {
         // TODO always load all because filters doesnt work properly atm 
@@ -168,11 +175,22 @@ var MonitoringChart = React.createClass({
                 return this.getBasicLineConfig();
         }
     },
+    buildConfig: function (configProp) {
+        if (configProp) {
+            return configProp;
+        } else {
+            return {
+                ...this.getCommonConfig(),
+                ...this.getSpecificTypeConfig()
+            };
+        }
+    },
     render: function () {
+        console.log(this.state.config);
         return (
             <div style={{marginBottom: "60px", ...this.props.style}}>
                 <components.HighCharts
-                    config={this.getConfig()}
+                    config={this.state.config}
                     coordinates={this.props.series}
                     dateFilter={this.getDateFilter()}
                     colors={["red", "green", "cyan", "yellow", "grey", "blue"]}
