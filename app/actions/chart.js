@@ -144,8 +144,8 @@ const typeofSelectDateRanges = actionTypeValidator(
         start: Number,
         end: Number,
         valueType: struct({
-            label: String,
-            key: String
+            label: maybe(String),
+            key: maybe(String)
         })
     })
 );
