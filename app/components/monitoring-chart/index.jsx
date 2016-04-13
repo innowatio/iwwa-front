@@ -186,14 +186,14 @@ var MonitoringChart = React.createClass({
         }
     },
     render: function () {
-        console.log(this.state.config);
         return (
             <div style={{marginBottom: "60px", ...this.props.style}}>
                 <components.HighCharts
+                    colors={["red", "green", "cyan", "yellow", "grey", "blue"]}
                     config={this.state.config}
                     coordinates={this.props.series}
                     dateFilter={this.getDateFilter()}
-                    colors={["red", "green", "cyan", "yellow", "grey", "blue"]}
+                    forceUpdate={true}
                     resetZoom={this.props.resetZoom}
                     setZoomExtremes={this.props.setZoomExtremes}
                     yLabel={this.getLabels()}

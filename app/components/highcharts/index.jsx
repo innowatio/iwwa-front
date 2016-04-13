@@ -20,6 +20,7 @@ var HighCharts = React.createClass({
         coordinates: PropTypes.arrayOf(PropTypes.object),
         dateCompare: PropTypes.arrayOf(PropTypes.object),
         dateFilter: PropTypes.object,
+        forceUpdate: PropTypes.bool,
         isComparationActive: PropTypes.bool,
         isDateCompareActive: PropTypes.bool,
         resetZoom: PropTypes.func.isRequired,
@@ -48,7 +49,7 @@ var HighCharts = React.createClass({
         });
     },
     shouldComponentUpdate: function (newProps) {
-        return !(
+        return this.props.forceUpdate || !(
             equals(this.props.coordinates, newProps.coordinates)
         );
     },
@@ -137,7 +138,7 @@ var HighCharts = React.createClass({
     },
     getConfig: function () {
         const {colors} = this.getTheme();
-        return {
+        let config = {
             chart: {
                 backgroundColor: colors.background,
                 events: {
@@ -181,6 +182,7 @@ var HighCharts = React.createClass({
             // Override with custom config
             ...this.props.config
         };
+        return config;
     },
     render: function () {
         return (
