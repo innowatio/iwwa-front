@@ -43,7 +43,7 @@ const lazyLoadButtonStyle = ({colors}) => ({
     color: colors.white,
     textTransform: "uppercase",
     fontWeight: "400",
-    margin: "10px auto 0 auto",
+    margin: "10px auto 50px auto",
     borderRadius: "30px",
     cursor: "pointer",
     textAlign: "center"
@@ -272,7 +272,12 @@ var Monitoring = React.createClass({
                             background: theme.colors.backgroundContentModal
                         }}
                     >
-                        <div style={{height: "100%", overflow: "auto"}}>
+                        <div style={{
+                            height: "100%",
+                            overflow: "auto",
+                            borderRadius: "18px"
+                        }}
+                        >
                             <CollectionItemList
                                 collections={sensors}
                                 headerComponent={this.renderSensorList}

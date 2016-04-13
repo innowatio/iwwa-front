@@ -42,6 +42,7 @@ var CollectionItemList = React.createClass({
         initialVisibleRow: PropTypes.number,
         inputFilterStyle: PropTypes.object,
         lazyLoadButtonStyle: PropTypes.object,
+        lazyLoadButtonStyleContainer: PropTypes.object,
         lazyLoadLabel: PropTypes.string,
         sort: PropTypes.func,
         subListComponent: PropTypes.func
@@ -118,7 +119,6 @@ var CollectionItemList = React.createClass({
         ) : null;
     },
     render: function () {
-        const {colors} = this.getTheme();
         const collectionList = this.props.collections
             .sort(this.props.sort)
             .filter(this.filter)
@@ -130,8 +130,7 @@ var CollectionItemList = React.createClass({
                 {this.renderInputFilter()}
                 <div style={{height: "100%", overflow: "auto"}}>
                     {collectionList.slice(0, this.props.initialVisibleRow ? this.state.visibleValuesList : Infinity)}
-                    <div style={{borderTop: "1px solid " + colors.borderAlarmsRow}} />
-                    <div style={{marginBottom: "50px"}}>
+                    <div style={this.props.lazyLoadButtonStyleContainer}>
                         {this.renderLazyLoad(collectionList.length)}
                     </div>
                 </div>
