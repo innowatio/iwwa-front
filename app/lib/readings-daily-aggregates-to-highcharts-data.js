@@ -69,6 +69,7 @@ export default memoize(function readingsDailyAggregatesToHighchartsData (aggrega
     const arraysOfData = aggregates.reduce(yAxisByDate(chartState), defaultYAxis);
     return arraysOfData.map((arrayOfData, index) => ({
         data: arrayOfData,
+        name: chartState[index].name,
         pointStart: moment.utc(chartState[index].date.start).valueOf(),
         pointInterval: fiveMinutesInMs
     }));
