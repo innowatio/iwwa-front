@@ -3,7 +3,6 @@ import R from "ramda";
 import React, {PropTypes} from "react";
 import IPropTypes from "react-immutable-proptypes";
 import {connect} from "react-redux";
-import {Link} from "react-router";
 import {bindActionCreators} from "redux";
 
 import {defaultTheme} from "lib/theme";
@@ -32,7 +31,7 @@ import {
 } from "actions/sensors";
 
 const hoverStyle = ({colors}) => ({
-    backgroundColor: "grey"
+    backgroundColor: colors.greyBorder
 });
 
 const lazyLoadButtonStyle = ({colors}) => ({
@@ -164,7 +163,9 @@ var Monitoring = React.createClass({
         }
     },
     renderSensorList: function (element, elementId) {
-        let found = R.find((it) => {return it.get("_id") === elementId})(this.props.selected) != null;
+        let found = R.find((it) => {
+            return it.get("_id") === elementId;
+        })(this.props.selected) != null;
         return (
             <MonitoringSensorRow
                 isSelected={found}

@@ -114,7 +114,7 @@ var SensorRow = React.createClass({
             divStyle = {
                 ...divStyle,
                 backgroundColor: this.getTheme().colors.buttonPrimary
-            }
+            };
         }
         return (
             <div style={divStyle}>
