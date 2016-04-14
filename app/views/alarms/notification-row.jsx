@@ -19,7 +19,7 @@ const styles = ({colors}, open) => ({
         lineHeight: "15px",
         verticalAlign: "text-top",
         marginRight: "10px",
-        transform: open ? null : "rotate(180deg)"
+        transform: open ? "rotate(180deg)" : null
     },
     iconChart: {
         cursor: "pointer",

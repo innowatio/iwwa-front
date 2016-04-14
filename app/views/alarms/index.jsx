@@ -31,6 +31,10 @@ const styles = ({colors}) => ({
         clear: "both",
         backgroundColor: colors.backgroundAlarmsRowHover
     },
+    lazyLoadButtonStyleContainer: {
+        borderTop: "1px solid " + colors.borderAlarmsRow,
+        marginBottom: "50px"
+    },
     lazyLoadButtonStyle: {
         width: "230px",
         height: "45px",
@@ -254,6 +258,7 @@ var Alarms = React.createClass({
                                 hover={true}
                                 hoverStyle={styles(this.getTheme()).hoverStyle}
                                 lazyLoadButtonStyle={styles(this.getTheme()).lazyLoadButtonStyle}
+                                lazyLoadButtonStyleContainer={styles(this.getTheme()).lazyLoadButtonStyleContainer}
                                 lazyLoadLabel={"Carica altri"}
                             />
                         </bootstrap.Tab>
@@ -271,6 +276,7 @@ var Alarms = React.createClass({
                                 hover={true}
                                 hoverStyle={styles(this.getTheme()).hoverStyle}
                                 lazyLoadButtonStyle={styles(this.getTheme()).lazyLoadButtonStyle}
+                                lazyLoadButtonStyleContainer={styles(this.getTheme()).lazyLoadButtonStyleContainer}
                                 lazyLoadLabel={"Carica altri"}
                                 sort={R.partialRight(this.sortByDate, [false])}
                                 subListComponent={this.renderSubListNotification}
