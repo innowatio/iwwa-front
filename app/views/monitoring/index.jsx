@@ -3,14 +3,22 @@ import R from "ramda";
 import React, {PropTypes} from "react";
 import IPropTypes from "react-immutable-proptypes";
 import {connect} from "react-redux";
-import {Link} from "react-router";
 import {bindActionCreators} from "redux";
 
 import {defaultTheme} from "lib/theme";
 import {styles} from "lib/styles_restyling";
-import {getKeyFromCollection} from "lib/collection-utils";
-import {Button, CollectionElementsTable, DropdownButton, Icon,
-    MonitoringSearch, Popover, SectionToolbar, SensorForm} from "components";
+
+import {
+    Button,
+    CollectionItemList,
+    DropdownButton,
+    Icon,
+    MonitoringSearch,
+    MonitoringSensorRow,
+    Popover,
+    SectionToolbar,
+    SensorForm
+} from "components";
 import {
     addSensor,
     cloneSensors,
@@ -21,6 +29,25 @@ import {
     monitorSensor,
     selectSensor
 } from "actions/sensors";
+
+const hoverStyle = ({colors}) => ({
+    backgroundColor: colors.greyBorder
+});
+
+const lazyLoadButtonStyle = ({colors}) => ({
+    width: "230px",
+    height: "45px",
+    lineHeight: "43px",
+    backgroundColor: colors.buttonPrimary,
+    fontSize: "14px",
+    color: colors.white,
+    textTransform: "uppercase",
+    fontWeight: "400",
+    margin: "10px auto 50px auto",
+    borderRadius: "30px",
+    cursor: "pointer",
+    textAlign: "center"
+});
 
 const buttonStyle = ({colors}) => ({
     backgroundColor: colors.buttonPrimary,
@@ -107,75 +134,6 @@ var Monitoring = React.createClass({
             return fields;
         }
     },
-    getSensorsColumns: function () {
-        const theme = this.getTheme();
-        return [
-            {
-                key: "_id",
-                style: function () {
-                    return {
-                        borderRight: "solid 1px grey",
-                        width: "10%",
-                        height: "100%",
-                        textAlign: "left"
-                    };
-                }
-            },
-            {
-                key: "tag",
-                style: function () {
-                    return {
-                        width: "80%",
-                        height: "100%",
-                        padding: "3px 0px 0px 5px",
-                        textAlign: "left"
-                    };
-                },
-                valueFormatter: () => (
-                    <div>
-                        <Icon
-                            color={theme.colors.iconHeader}
-                            icon={"tag"}
-                            size={"27px"}
-                        />
-                    </div>
-                )
-            },
-            {
-                key: "info",
-                valueFormatter: () => (
-                    <Icon
-                        color={theme.colors.iconHeader}
-                        icon={"info"}
-                        size={"27px"}
-                    />
-                )
-            },
-            {
-                key: "chart",
-                style: function () {
-                    return {
-                        backgroundColor: "grey"
-                    };
-                },
-                valueFormatter: () => (
-                    <Link to={"/monitoring/chart/"}>
-                        <Icon
-                            color={theme.colors.iconHeader}
-                            icon={"chart"}
-                            size={"27px"}
-                        />
-                    </Link>
-                )
-            },
-            {
-                key: "",
-                valueFormatter: () => (
-                    <div />
-                )
-            }
-        ];
-    },
     openModal: function () {
         this.setState({
             showFullscreenModal: true
@@ -203,6 +161,19 @@ var Monitoring = React.createClass({
                 />
             );
         }
+    },
+    renderSensorList: function (element, elementId) {
+        let found = R.find((it) => {
+            return it.get("_id") === elementId;
+        })(this.props.selected) != null;
+        return (
+            <MonitoringSensorRow
+                isSelected={found}
+                onClickSelect={this.props.selectSensor}
+                sensor={element}
+                sensorId={elementId}
+            />
+        );
     },
     render: function () {
         let sensors = this.getAllSensors();
@@ -284,55 +255,56 @@ var Monitoring = React.createClass({
 
                 <MonitoringSearch
                     filterSensors={this.props.filterSensors}
-                    style={{width: "25%", float: "left", marginTop: "2px", minHeight: "782px"}}
+                    style={{width: "25%", float: "left", marginTop: "2px", height: "calc(100vh - 120px)"}}
                 />
 
-                <div style={{float: "left", width: "75%", textAlign: "center", padding: "10px 10px 0px 20px"}}>
-                    <label style={{color: theme.colors.navText}}>
+                <div style={{float: "left", width: "75%", padding: "10px 10px 0px 20px"}}>
+                    <label style={{width: "100%", color: theme.colors.navText, textAlign: "center"}}>
                         {"Seleziona alcuni sensori per visualizzare il grafico o per creare un nuovo sensore"}
                     </label>
                     <div
                         style={{
                             color: "white",
-                            border: "grey solid 1px",
-                            borderRadius: "30px",
-                            background: theme.colors.backgroundContentModal,
-                            padding: 0}}
+                            borderRadius: "20px",
+                            height: "400px",
+                            overflow: "hidden",
+                            border: "1px solid " + theme.colors.borderContentModal,
+                            background: theme.colors.backgroundContentModal
+                        }}
                     >
-                        <CollectionElementsTable
-                            collection={sensors}
-                            columns={this.getSensorsColumns()}
-                            getKey={getKeyFromCollection}
-                            hover={true}
-                            onRowClick={this.props.selectSensor}
-                            style={{color: "white", maxHeight: "332px", overflow: "auto", padding: 0}}
-                            width={"60%"}
-                        />
-
-                        <label style={{color: theme.colors.navText, padding: "20px", paddingRight: "50px"}}>
-                            {"Seleziona tutti"}
-                        </label>
-                        <label style={{color: theme.colors.navText, padding: "20px"}}>
-                            {"Carica tutti"}
-                        </label>
-
+                        <div style={{
+                            height: "100%",
+                            overflow: "auto",
+                            borderRadius: "18px"
+                        }}
+                        >
+                            <CollectionItemList
+                                collections={sensors}
+                                headerComponent={this.renderSensorList}
+                                hover={true}
+                                hoverStyle={hoverStyle(this.getTheme())}
+                                initialVisibleRow={6}
+                                lazyLoadButtonStyle={lazyLoadButtonStyle(this.getTheme())}
+                                lazyLoadLabel={"Carica altri"}
+                            />
+                        </div>
                     </div>
 
                     {this.renderSensorForm()}
 
                     <div
                         style={{
-                            border: "grey solid 1px",
-                            borderRadius: "30px",
+                            border: "1px solid " + theme.colors.borderContentModal,
+                            borderRadius: "20px",
                             background: theme.colors.backgroundContentModal,
-                            marginTop: "50px",
-                            minHeight: "300px",
+                            marginTop: "40px",
+                            minHeight: "200px",
                             overflow: "auto",
-                            padding: 0,
+                            padding: "20px 10px",
                             verticalAlign: "middle"
                         }}
                     >
-                        <label style={{color: theme.colors.navText}}>
+                        <label style={{width: "100%", color: theme.colors.navText, textAlign: "center"}}>
                             {"Trascina in questo spazio i sensori che vuoi graficare"}
                         </label>
                     </div>
