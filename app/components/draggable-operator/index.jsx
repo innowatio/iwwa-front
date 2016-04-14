@@ -8,8 +8,10 @@ import {Icon} from "components";
 
 const sensorSource = {
     beginDrag (props) {
-        const item = {id: props.id};
-        return item;
+        return {
+            operator: props.type,
+            type: Types.OPERATOR    
+        };
     },
 
     endDrag (props, monitor) {
