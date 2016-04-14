@@ -11,6 +11,8 @@ import {defaultTheme} from "lib/theme";
 
 var SensorAggregator = React.createClass({
     propTypes: {
+        addItemToFormula: PropTypes.func.isRequired,
+        formulaItems: PropTypes.array,
         sensors: PropTypes.array.isRequired
     },
     contextTypes: {
@@ -24,7 +26,11 @@ var SensorAggregator = React.createClass({
         return (
             <div style={{minHeight: "450px"}}>
                 <Col md={6}>
-                    <FormulaDropArea style={{...styles(theme).titlePage, borderRadius: "20px", height: "250px"}} />
+                    <FormulaDropArea
+                        addItemToFormula={this.props.addItemToFormula}
+                        formulaItems={this.props.formulaItems}
+                        style={{...styles(theme).titlePage, borderRadius: "20px", height: "250px", padding: "10px"}}
+                    />
                 </Col>
                 <Col md={6} style={{textAlign: "center"}}>
                     <label style={{color: theme.colors.navText, marginBottom: "20px"}}>

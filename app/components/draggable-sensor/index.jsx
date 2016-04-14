@@ -6,8 +6,10 @@ import {defaultTheme} from "lib/theme";
 
 const sensorSource = {
     beginDrag (props) {
-        const item = {key: props.key};
-        return item;
+        return {
+            sensor: props.sensor,
+            type: Types.SENSOR
+        };
     },
 
     endDrag (props, monitor) {

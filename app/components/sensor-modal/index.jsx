@@ -35,7 +35,9 @@ const validate = values => {
 
 var SensorForm = React.createClass({
     propTypes: {
+        addItemToFormula: PropTypes.func.isRequired,
         closeForm: PropTypes.func.isRequired,
+        currentSensor: PropTypes.object,
         fields: PropTypes.object.isRequired,
         handleSubmit: PropTypes.func.isRequired,
         id: PropTypes.string,
@@ -54,12 +56,18 @@ var SensorForm = React.createClass({
         return this.context.theme || defaultTheme;
     },
     saveForm: function (data) {
-        this.props.onSave(data, this.props.id);
+        this.props.onSave(data, this.props.currentSensor.formulaItems, this.props.id);
         this.props.closeForm();
     },
     renderSensorAggregation: function () {
         if (this.props.sensorsToAggregate && this.props.sensorsToAggregate.length > 1) {
-            return (<SensorAggregator sensors={this.props.sensorsToAggregate} />);
+            return (
+                <SensorAggregator
+                    addItemToFormula={this.props.addItemToFormula}
+                    formulaItems={this.props.currentSensor.formulaItems}
+                    sensors={this.props.sensorsToAggregate}
+                />
+            );
         }
     },
     renderTagInput: function (props) {

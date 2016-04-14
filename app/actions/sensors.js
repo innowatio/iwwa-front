@@ -1,5 +1,7 @@
 import axios from "axios";
+import {Types} from "lib/dnd-utils";
 
+export const ADD_ITEM_TO_FORMULA = "ADD_ITEM_TO_FORMULA";
 export const FILTER_SENSORS = "FILTER_SENSORS";
 export const SELECT_SENSOR = "SELECT_SENSOR";
 export const SENSOR_CREATION_FAIL = "SENSOR_CREATION_FAIL";
@@ -51,11 +53,37 @@ function insertSensor (requestBody) {
     };
 }
 
-export const addSensor = (sensor) => {
+function buildFormula (formulaItems) {
+    let formula = "";
+    formulaItems.forEach((item) => {
+        switch (item.type) {
+            case Types.SENSOR: {
+                formula += item.sensor.get("_id");
+                break;
+            }
+            case Types.OPERATOR: {
+                formula += item.operator;
+                break;
+            }
+        }
+    });
+    return formula;
+}
+
+export const addItemToFormula = (item) => {
+    return {
+        type: ADD_ITEM_TO_FORMULA,
+        payload: item
+    };
+};
+
+export const addSensor = (sensor, formulaItems) => {
+    sensor.formula = buildFormula(formulaItems);
     insertSensor(sensor);
 };
 
-export const editSensor = (sensor, id) => {
+export const editSensor = (sensor, formulaItems, id) => {
+    sensor.formula = buildFormula(formulaItems);
     return {
         type: "EDIT_SENSOR",
         id: id,

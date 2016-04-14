@@ -20,6 +20,7 @@ import {
     SensorForm
 } from "components";
 import {
+    addItemToFormula,
     addSensor,
     cloneSensors,
     deleteSensor,
@@ -84,10 +85,12 @@ let advancedOptions = function ({colors}) {
 
 var Monitoring = React.createClass({
     propTypes: {
+        addItemToFormula: PropTypes.func.isRequired,
         addSensor: PropTypes.func.isRequired,
         asteroid: PropTypes.object,
         cloneSensors: PropTypes.func.isRequired,
         collections: IPropTypes.map.isRequired,
+        currentSensor: PropTypes.object,
         deleteSensor: PropTypes.func.isRequired,
         editSensor: PropTypes.func.isRequired,
         favoriteSensor: PropTypes.func.isRequired,
@@ -151,7 +154,9 @@ var Monitoring = React.createClass({
         if (this.props.selected.length > 0) {
             return (
                 <SensorForm
+                    addItemToFormula={this.props.addItemToFormula}
                     closeForm={this.closeModal}
+                    currentSensor={this.props.currentSensor}
                     id={this.props.selected.length == 1 ? this.props.selected[0].get("_id") : null}
                     initialValues={this.getSensorFields()}
                     onSave={this.props.selected.length == 1 ? this.props.editSensor : this.props.addSensor}
@@ -318,12 +323,14 @@ var Monitoring = React.createClass({
 const mapStateToProps = (state) => {
     return {
         collections: state.collections,
+        currentSensor: state.sensors.current,
         selected: state.sensors.selectedSensors
     };
 };
 
 const mapDispatchToProps = (dispatch) => {
     return {
+        addItemToFormula: bindActionCreators(addItemToFormula, dispatch),
         addSensor: bindActionCreators(addSensor, dispatch),
         cloneSensors: bindActionCreators(cloneSensors, dispatch),
         deleteSensor: bindActionCreators(deleteSensor, dispatch),
