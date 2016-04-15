@@ -10,8 +10,6 @@ import ReactPureRender from "react-addons-pure-render-mixin";
 var components       = require("components");
 var CollectionUtils  = require("lib/collection-utils");
 var stringIt         = require("lib/string-it");
-var tutorialString   = require("assets/JSON/tutorial-string.json");
-var GetTutorialMixin = require("lib/get-tutorial-mixin");
 import {styles} from "lib/styles_restyling";
 import {defaultTheme} from "lib/theme";
 
@@ -50,8 +48,7 @@ var AlarmForm = React.createClass({
     contextTypes: {
         theme: React.PropTypes.object
     },
-    mixins: [ReactStateMixin, ReactPureRender, GetTutorialMixin(
-        "alarm-form", ["siti", "threshold", "name", "notification", "repetition"])],
+    mixins: [ReactStateMixin, ReactPureRender],
     getInitialState: function () {
         return this.getStateFromProps(this.props);
     },
@@ -113,57 +110,48 @@ var AlarmForm = React.createClass({
         const theme = this.getTheme();
         return !this.isAutomatic() ? (
             <bootstrap.Col lg={6} md={6} xs={12}>
-                <components.TutorialAnchor
-                    message={tutorialString.alarmForm.siti}
-                    order={1}
-                    position="right"
-                    ref="siti"
-                >
-                    <div>
-                        <h3 style={styleH3(theme)}>{stringIt.titleTabImpostazioniAlarm}</h3>
-                        <h4 style={styleH4(theme)}>
-                            {"Seleziona un punto da monitorare e le soglie di allarme "}
-                            <bootstrap.OverlayTrigger
-                                overlay={this.addTooltip()}
-                                placement="right"
-                                rootClose={true}
-                                trigger="click"
-                            >
-                                <components.Button  bsStyle="link">
-                                    <components.Icon
-                                        color={theme.colors.iconInfo}
-                                        icon={"info"}
-                                        size={"20px"}
-                                        style={{
-                                            float: "right",
-                                            verticalAlign: "middle",
-                                            lineHeight: "20px"
-                                        }}
-                                    />
-                                </components.Button>
-                            </bootstrap.OverlayTrigger>
-                        </h4>
-                        <div style={{minHeight: "50px"}}>
-                            {this.renderSiteButton()}
-                            <components.Popover
-                                arrow="none"
-                                hideOnChange={true}
-                                title={this.renderTitleSelectSite()}
-                            >
-                                <components.SelectTree
-                                    allowedValues={this.props.siti}
-                                    buttonCloseDefault={true}
-                                    className="site-select"
-                                    filter={CollectionUtils.sites.filter}
-                                    getKey={CollectionUtils.sites.getKey}
-                                    getLabel={CollectionUtils.sites.getLabel}
-                                    valueLink={this.linkState("sito")}
-                                />
-                            </components.Popover>
-                        </div>
-                        {this.renderAlarmName()}
-                    </div>
-                </components.TutorialAnchor>
+                <h3 style={styleH3(theme)}>{stringIt.titleTabImpostazioniAlarm}</h3>
+                <h4 style={styleH4(theme)}>
+                    {"Seleziona un punto da monitorare e le soglie di allarme "}
+                    <bootstrap.OverlayTrigger
+                        overlay={this.addTooltip()}
+                        placement="right"
+                        rootClose={true}
+                        trigger="click"
+                    >
+                        <components.Button  bsStyle="link">
+                            <components.Icon
+                                color={theme.colors.iconInfo}
+                                icon={"info"}
+                                size={"20px"}
+                                style={{
+                                    float: "right",
+                                    verticalAlign: "middle",
+                                    lineHeight: "20px"
+                                }}
+                            />
+                        </components.Button>
+                    </bootstrap.OverlayTrigger>
+                </h4>
+                <div style={{minHeight: "50px"}}>
+                    {this.renderSiteButton()}
+                    <components.Popover
+                        arrow="none"
+                        hideOnChange={true}
+                        title={this.renderTitleSelectSite()}
+                    >
+                        <components.SelectTree
+                            allowedValues={this.props.siti}
+                            buttonCloseDefault={true}
+                            className="site-select"
+                            filter={CollectionUtils.sites.filter}
+                            getKey={CollectionUtils.sites.getKey}
+                            getLabel={CollectionUtils.sites.getLabel}
+                            valueLink={this.linkState("sito")}
+                        />
+                    </components.Popover>
+                </div>
+                {this.renderAlarmName()}
             </bootstrap.Col>
         ) : null;
     },
@@ -171,85 +159,76 @@ var AlarmForm = React.createClass({
         const theme = this.getTheme();
         return !this.isAutomatic() ? (
             <bootstrap.Col lg={6} md={6} xs={12}>
-                <components.TutorialAnchor
-                    message={tutorialString.alarmForm.threshold}
-                    order={2}
-                    position="left"
-                    ref="threshold"
+                <h3 style={styleH3(theme)}>{stringIt.titleAlarmThreshold}</h3>
+                <div style={{
+                    backgroundColor: theme.colors.backgroundAlarmsSection,
+                    textAlign: "center",
+                    borderRadius: "20px",
+                    margin: "30px 0",
+                    border: `1px solid ${theme.colors.borderAlarmsSection}`,
+                    padding: "20px 5%"
+                }}
                 >
-                    <div>
-                        <h3 style={styleH3(theme)}>{stringIt.titleAlarmThreshold}</h3>
-                        <div style={{
-                            backgroundColor: theme.colors.backgroundAlarmsSection,
-                            textAlign: "center",
-                            borderRadius: "20px",
-                            margin: "30px 0",
-                            border: `1px solid ${theme.colors.borderAlarmsSection}`,
-                            padding: "20px 5%"
+                    <components.Spacer direction="v" size={3} />
+                    <h4
+                        style={{
+                            color: theme.colors.mainFontColor,
+                            fontSize: "16px",
+                            fontWeight: "300"
                         }}
-                        >
-                            <components.Spacer direction="v" size={3} />
-                            <h4
-                                style={{
-                                    color: theme.colors.mainFontColor,
-                                    fontSize: "16px",
-                                    fontWeight: "300"
-                                }}
-                            >
-                                {`Soglia (${this.state.threshold} kWh)`}
-                            </h4>
-                            <components.Spacer direction="v" size={10} />
-                            <div className="inputRangeBar">
-                                <Radium.Style
-                                    rules={styles(theme).inputRangeBar}
-                                    scopeSelector=".inputRangeBar"
-                                />
-                                <bootstrap.Input
-                                    bsStyle={"success"}
-                                    max={600}
-                                    min={0}
-                                    step={5}
-                                    style={styles(theme).inputRange}
-                                    type="range"
-                                    valueLink={this.linkState("threshold")}
-                                />
-                            </div>
-                            <div style={{
-                                width: "50%",
-                                float:"left",
-                                fontSize: "16px",
-                                textAlign: "left",
-                                fontWeight: "300",
-                                color: theme.colors.mainFontColor
-                            }}
-                            >
-                                {"0 Kwh"}
-                            </div>
-                            <div style={{
-                                width: "50%",
-                                float:"right",
-                                fontSize: "16px",
-                                textAlign: "right",
-                                fontWeight: "300",
-                                color: theme.colors.mainFontColor
-                            }}
-                            >
-                                {"600 Kwh"}
-                            </div>
-                            <p style={{
-                                marginTop: "50px",
-                                color: theme.colors.mainFontColor,
-                                fontStyle: "italic",
-                                fontSize: "16px",
-                                fontWeight: "300",
-                                textAlign: "left"
-                            }}
-                            >
-                                {"Imposta il limite massimo "}
-                            </p>
-                        </div>
+                    >
+                        {`Soglia (${this.state.threshold} kWh)`}
+                    </h4>
+                    <components.Spacer direction="v" size={10} />
+                    <div className="inputRangeBar">
+                        <Radium.Style
+                            rules={styles(theme).inputRangeBar}
+                            scopeSelector=".inputRangeBar"
+                        />
+                        <bootstrap.Input
+                            bsStyle={"success"}
+                            max={600}
+                            min={0}
+                            step={5}
+                            style={styles(theme).inputRange}
+                            type="range"
+                            valueLink={this.linkState("threshold")}
+                        />
                     </div>
-                </components.TutorialAnchor>
+                    <div style={{
+                        width: "50%",
+                        float:"left",
+                        fontSize: "16px",
+                        textAlign: "left",
+                        fontWeight: "300",
+                        color: theme.colors.mainFontColor
+                    }}
+                    >
+                        {"0 Kwh"}
+                    </div>
+                    <div style={{
+                        width: "50%",
+                        float:"right",
+                        fontSize: "16px",
+                        textAlign: "right",
+                        fontWeight: "300",
+                        color: theme.colors.mainFontColor
+                    }}
+                    >
+                        {"600 Kwh"}
+                    </div>
+                    <p style={{
+                        marginTop: "50px",
+                        color: theme.colors.mainFontColor,
+                        fontStyle: "italic",
+                        fontSize: "16px",
+                        fontWeight: "300",
+                        textAlign: "left"
+                    }}
+                    >
+                        {"Imposta il limite massimo "}
+                    </p>
+                </div>
             </bootstrap.Col>
         ) : null;
     },
@@ -257,45 +236,29 @@ var AlarmForm = React.createClass({
         const theme = this.getTheme();
         return (
             <div>
-                <components.TutorialAnchor
-                    message={tutorialString.alarmForm.name}
-                    order={3}
-                    position="right"
-                    ref="name"
-                >
-                    <div>
-                        <h3 style={styleH3(theme)}>{stringIt.titleAlarmName}</h3>
-                        {this.isAutomatic() ?
-                            <h3 style={{
-                                color: theme.colors.mainFontColor,
-                                fontSize: "20px"
-                            }}
-                            >{this.props.alarm.get("name")}</h3> :
-                            <bootstrap.Input
-                                style={styles(theme).inputLine}
-                                type="text"
-                                valueLink={this.linkState("name")}
-                            />
-                        }
-                    </div>
-                </components.TutorialAnchor>
+                <h3 style={styleH3(theme)}>{stringIt.titleAlarmName}</h3>
+                {this.isAutomatic() ?
+                    <h3 style={{
+                        color: theme.colors.mainFontColor,
+                        fontSize: "20px"
+                    }}
+                    >{this.props.alarm.get("name")}</h3> :
+                    <bootstrap.Input
+                        style={styles(theme).inputLine}
+                        type="text"
+                        valueLink={this.linkState("name")}
+                    />
+                }
             </div>
         );
     },
     renderAlarmNotification: function () {
         return (
             <bootstrap.Col lg={6} md={6} xs={12}>
-                <components.TutorialAnchor
-                    message={tutorialString.alarmForm.notification}
-                    order={5}
-                    position="right"
-                    ref="notification"
-                >
-                    <components.AlarmNotificationModal
-                        updateParentState={this.updateState}
-                        value={this.state.notification}
-                    />
-                </components.TutorialAnchor>
+                <components.AlarmNotificationModal
+                    updateParentState={this.updateState}
+                    value={this.state.notification}
+                />
             </bootstrap.Col>
         );
     },
@@ -319,17 +282,10 @@ var AlarmForm = React.createClass({
     renderAlarmRepetition: function () {
         return !this.isAutomatic() ? (
             <bootstrap.Col lg={6} md={6} xs={12}>
-                <components.TutorialAnchor
-                    message={tutorialString.alarmForm.repetition}
-                    order={4}
-                    position="left"
-                    ref="repetition"
-                >
-                    <components.AlarmRepetitionModal
-                        updateParentState={this.updateState}
-                        value={this.state.repetition}
-                    />
-                </components.TutorialAnchor>
+                <components.AlarmRepetitionModal
+                    updateParentState={this.updateState}
+                    value={this.state.repetition}
+                />
             </bootstrap.Col>
         ) : null;
     },
