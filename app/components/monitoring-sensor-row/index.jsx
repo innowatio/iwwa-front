@@ -1,11 +1,14 @@
 import React, {PropTypes} from "react";
-import IPropTypes from "react-immutable-proptypes";
 import ReactPureRender from "react-addons-pure-render-mixin";
+import {DragSource} from "react-dnd";
+import IPropTypes from "react-immutable-proptypes";
 import {Link} from "react-router";
 import {partial} from "ramda";
 
+import {Types} from "lib/dnd-utils";
 import {defaultTheme} from "lib/theme";
-import components from "components";
+
+import {Icon} from "components";
 
 const styles = ({colors}) => ({
     container: {
@@ -37,8 +40,27 @@ const styles = ({colors}) => ({
     }
 });
 
+const sensorSource = {
+    beginDrag (props) {
+        console.log("dragging");
+        return {
+            sensor: props.sensor,
+            type: Types.SENSOR_ROW
+        };
+    }
+};
+
+function collect (connect, monitor) {
+    return {
+        connectDragSource: connect.dragSource(),
+        isDragging: monitor.isDragging()
+    };
+}
+
 var SensorRow = React.createClass({
     propTypes: {
+        connectDragSource: PropTypes.func,
+        isDragging: PropTypes.bool,
         isSelected: PropTypes.bool,
         onClickSelect: PropTypes.func,
         sensor: IPropTypes.map.isRequired,
@@ -61,7 +83,7 @@ var SensorRow = React.createClass({
     renderTags: function () {
         const {colors} = this.getTheme();
         return (
-            <components.Icon
+            <Icon
                 color={colors.iconHeader}
                 icon={"tag"}
                 size={"27px"}
@@ -72,7 +94,7 @@ var SensorRow = React.createClass({
     renderInfoButton: function () {
         const {colors} = this.getTheme();
         return (
-            <components.Icon
+            <Icon
                 color={colors.iconHeader}
                 icon={"info"}
                 size={"27px"}
@@ -90,7 +112,7 @@ var SensorRow = React.createClass({
         const {colors} = this.getTheme();
         return (
             <Link to={"/monitoring/chart/"}>
-                <components.Icon
+                <Icon
                     color={colors.iconHeader}
                     icon={"chart"}
                     size={"32px"}
@@ -107,18 +129,19 @@ var SensorRow = React.createClass({
         );
     },
     render: function () {
+        const {connectDragSource, isSelected, onClickSelect, sensor} = this.props;
         let divStyle = {
             ...styles(this.getTheme()).container
         };
-        if (this.props.isSelected) {
+        if (isSelected) {
             divStyle = {
                 ...divStyle,
                 backgroundColor: this.getTheme().colors.buttonPrimary
             };
         }
-        return (
+        return connectDragSource(
             <div style={divStyle}>
-                <div onClick={partial(this.props.onClickSelect, [this.props.sensor])} style={{cursor: "pointer"}}>
+                <div onClick={partial(onClickSelect, [sensor])} style={{cursor: "pointer"}}>
                     {this.renderSensorName()}
                     <div style={styles(this.getTheme()).tagsContainer}>
                         {this.renderTags()}
@@ -133,4 +156,4 @@ var SensorRow = React.createClass({
     }
 });
 
-module.exports = SensorRow;
+module.exports = DragSource(Types.SENSOR_ROW, sensorSource, collect)(SensorRow);

@@ -10,11 +10,10 @@ import {styles} from "lib/styles_restyling";
 
 import {
     Button,
-    CollectionItemList,
     DropdownButton,
     Icon,
     MonitoringSearch,
-    MonitoringSensorRow,
+    MonitoringWorkArea,
     Popover,
     SectionToolbar,
     SensorForm
@@ -22,6 +21,7 @@ import {
 import {
     addItemToFormula,
     addSensor,
+    addSensorToWorkArea,
     cloneSensors,
     deleteSensor,
     editSensor,
@@ -30,25 +30,6 @@ import {
     monitorSensor,
     selectSensor
 } from "actions/sensors";
-
-const hoverStyle = ({colors}) => ({
-    backgroundColor: colors.greyBorder
-});
-
-const lazyLoadButtonStyle = ({colors}) => ({
-    width: "230px",
-    height: "45px",
-    lineHeight: "43px",
-    backgroundColor: colors.buttonPrimary,
-    fontSize: "14px",
-    color: colors.white,
-    textTransform: "uppercase",
-    fontWeight: "400",
-    margin: "10px auto 50px auto",
-    borderRadius: "30px",
-    cursor: "pointer",
-    textAlign: "center"
-});
 
 const buttonStyle = ({colors}) => ({
     backgroundColor: colors.buttonPrimary,
@@ -87,6 +68,7 @@ var Monitoring = React.createClass({
     propTypes: {
         addItemToFormula: PropTypes.func.isRequired,
         addSensor: PropTypes.func.isRequired,
+        addSensorToWorkArea: PropTypes.func.isRequired,
         asteroid: PropTypes.object,
         cloneSensors: PropTypes.func.isRequired,
         collections: IPropTypes.map.isRequired,
@@ -97,7 +79,8 @@ var Monitoring = React.createClass({
         filterSensors: PropTypes.func.isRequired,
         monitorSensor: PropTypes.func.isRequired,
         selectSensor: PropTypes.func.isRequired,
-        selected: PropTypes.array
+        selected: PropTypes.array,
+        workAreaSensors: PropTypes.array 
     },
     contextTypes: {
         theme: PropTypes.object
@@ -112,6 +95,9 @@ var Monitoring = React.createClass({
     },
     getTheme: function () {
         return this.context.theme || defaultTheme;
+    },
+    getAllSensors: function () {
+        return this.props.collections.get("sensors") || Immutable.Map();
     },
     getDeleteSensor: function (id) {
         return () => {
@@ -147,9 +133,6 @@ var Monitoring = React.createClass({
             showFullscreenModal: false
         });
     },
-    getAllSensors: function () {
-        return this.props.collections.get("sensors") || Immutable.Map();
-    },
     renderSensorForm: function () {
         if (this.props.selected.length > 0) {
             return (
@@ -167,21 +150,7 @@ var Monitoring = React.createClass({
             );
         }
     },
-    renderSensorList: function (element, elementId) {
-        let found = R.find((it) => {
-            return it.get("_id") === elementId;
-        })(this.props.selected) != null;
-        return (
-            <MonitoringSensorRow
-                isSelected={found}
-                onClickSelect={this.props.selectSensor}
-                sensor={element}
-                sensorId={elementId}
-            />
-        );
-    },
     render: function () {
-        let sensors = this.getAllSensors();
         const theme = this.getTheme();
         return (
             <div>
@@ -263,58 +232,15 @@ var Monitoring = React.createClass({
                     style={{width: "25%", float: "left", marginTop: "2px", height: "calc(100vh - 120px)"}}
                 />
 
-                <div style={{float: "left", width: "75%", padding: "10px 10px 0px 20px"}}>
-                    <label style={{width: "100%", color: theme.colors.navText, textAlign: "center"}}>
-                        {"Seleziona alcuni sensori per visualizzare il grafico o per creare un nuovo sensore"}
-                    </label>
-                    <div
-                        style={{
-                            color: "white",
-                            borderRadius: "20px",
-                            height: "400px",
-                            overflow: "hidden",
-                            border: "1px solid " + theme.colors.borderContentModal,
-                            background: theme.colors.backgroundContentModal
-                        }}
-                    >
-                        <div style={{
-                            height: "100%",
-                            overflow: "auto",
-                            borderRadius: "18px"
-                        }}
-                        >
-                            <CollectionItemList
-                                collections={sensors}
-                                headerComponent={this.renderSensorList}
-                                hover={true}
-                                hoverStyle={hoverStyle(this.getTheme())}
-                                initialVisibleRow={6}
-                                lazyLoadButtonStyle={lazyLoadButtonStyle(this.getTheme())}
-                                lazyLoadLabel={"Carica altri"}
-                            />
-                        </div>
-                    </div>
-
-                    {this.renderSensorForm()}
-
-                    <div
-                        style={{
-                            border: "1px solid " + theme.colors.borderContentModal,
-                            borderRadius: "20px",
-                            background: theme.colors.backgroundContentModal,
-                            marginTop: "40px",
-                            minHeight: "200px",
-                            overflow: "auto",
-                            padding: "20px 10px",
-                            verticalAlign: "middle"
-                        }}
-                    >
-                        <label style={{width: "100%", color: theme.colors.navText, textAlign: "center"}}>
-                            {"Trascina in questo spazio i sensori che vuoi graficare"}
-                        </label>
-                    </div>
-
-                </div>
+                <MonitoringWorkArea
+                    addSensorToWorkArea={this.props.addSensorToWorkArea}
+                    selectSensor={this.props.selectSensor}
+                    selected={this.props.selected}
+                    sensors={this.getAllSensors()}
+                    workAreaSensors={this.props.workAreaSensors}
+                />
+                
+                {this.renderSensorForm()}
             </div>
         );
     }
@@ -324,7 +250,8 @@ const mapStateToProps = (state) => {
     return {
         collections: state.collections,
         currentSensor: state.sensors.current,
-        selected: state.sensors.selectedSensors
+        selected: state.sensors.selectedSensors,
+        workAreaSensors: state.sensors.workAreaSensors
     };
 };
 
@@ -332,6 +259,7 @@ const mapDispatchToProps = (dispatch) => {
     return {
         addItemToFormula: bindActionCreators(addItemToFormula, dispatch),
         addSensor: bindActionCreators(addSensor, dispatch),
+        addSensorToWorkArea: bindActionCreators(addSensorToWorkArea, dispatch),
         cloneSensors: bindActionCreators(cloneSensors, dispatch),
         deleteSensor: bindActionCreators(deleteSensor, dispatch),
         editSensor: bindActionCreators(editSensor, dispatch),
