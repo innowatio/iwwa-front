@@ -83,7 +83,6 @@ var Root = React.createClass({
     },
     getMenuItems: function () {
         return [
-            {key: "dashboard", label: "DASHBOARD", url: "/dashboard/", iconClassName: "dashboard"},
             {key: "chart", label: "CONSUMI STORICI", url: "/chart/", iconClassName: "history"},
             {key: "live", label: "CONSUMI LIVE", url: "/live/", iconClassName: "gauge"},
             {key: "consumptions", label: "RIEPILOGO CONSUMI", url: "/consumptions/", iconClassName: "percentage"},
