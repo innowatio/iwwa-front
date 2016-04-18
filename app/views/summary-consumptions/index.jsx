@@ -419,7 +419,7 @@ var SummaryConsumptions = React.createClass({
                 <h2 style={styleH2(theme)}>{siteName}</h2>
                 <h3 style={styleH3(theme)}>{tabParameters.periodTitle}</h3>
                 <div style={styleRoundedDiv(theme)}>
-                    <p style={styleMeasure(theme)}>{sum >= 100 ? Math.trunc(sum) : Math.round(sum * 100, -1) / 100}</p>
+                    <p style={styleMeasure(theme)}>{sum >= 100 ? Math.trunc(sum) : Math.round(sum * 10, -1) / 10}</p>
                     <span style={styleUnit(theme)}>{tabParameters.measureUnit}</span>
                 </div>
                 <p style={styleH2(theme)}>{tabParameters.periodSubtitle}</p>
