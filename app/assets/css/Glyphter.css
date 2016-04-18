@@ -18,7 +18,6 @@
    -webkit-font-smoothing: antialiased;
    -moz-osx-font-smoothing: grayscale
 }
-.icon-Dashboard:before{content:'\0041';}
 .icon-Help:before{content:'\0042';}
 .icon-Historical_consumption:before{content:'\0043';}
 .icon-Live_consumption:before{content:'\0044';}

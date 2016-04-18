@@ -55,13 +55,13 @@ var SiteNavigator = React.createClass({
         return value.get("_id");
     },
     getLabelParent: function (value) {
-        return value.get("name");
+        return value.get("name") || value.get("_id");
     },
     getKeyChildren: function (value) {
         return value.get("id");
     },
     getLabelChildren: function (value) {
-        return value.get("id");
+        return value.get("description") || value.get("id");
     },
     getFilterCriteria: function (values) {
         const NOT_VISIBLE_SENSORS = ["CO2", "THL", "POD-ANZ"];
@@ -87,7 +87,7 @@ var SiteNavigator = React.createClass({
         *   of the path, we remove it, otherwise we just remove
         *   the selected values after it.
         */
-        
+
         const lastValue = R.last(value.filter(value => {
             return !R.isNil(value);
         }));

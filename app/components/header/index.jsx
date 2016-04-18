@@ -140,7 +140,7 @@ var Header = React.createClass({
                     style={{lineHeight: "20px"}}
                 />
                 <span style={merge(styles.base, {marginLeft: "15px"})}>
-                    <Link to="/dashboard/" >
+                    <Link to="/" >
                         <components.Icon
                             color={this.getTheme().colors.iconHeader}
                             icon={"innowatio-logo"}

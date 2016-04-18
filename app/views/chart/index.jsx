@@ -8,8 +8,6 @@ import {connect} from "react-redux";
 import {bindActionCreators} from "redux";
 
 var components         = require("components/");
-// var GetTutorialMixin   = require("lib/get-tutorial-mixin");
-// var tutorialString     = require("assets/JSON/tutorial-string.json").historicalGraph;
 import * as parameters from "./parameters";
 import {consumptionSensors} from "lib/sensors-decorators";
 import {
@@ -108,11 +106,6 @@ var Chart = React.createClass({
     contextTypes: {
         theme: React.PropTypes.object
     },
-    mixins: [
-        // GetTutorialMixin("historicalGraph",
-        //     ["valori", "export", "tipologie", "siti", "dateFilter", "compare", "graph"]
-        // )
-    ],
     getInitialState: function () {
         return {
             showFullscreenModal: false,
