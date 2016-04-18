@@ -1,6 +1,5 @@
 exports.Alarms                      = require("./alarms/");
 exports.Chart                       = require("./chart/");
-exports.Dashboard                   = require("./dashboard/");
 exports.Monitoring                  = require("./monitoring/");
 exports.MonitoringChartView         = require("./monitoring/chart");
 exports.MonitoringFavoritesCharts   = require("./monitoring/favorites-charts");
