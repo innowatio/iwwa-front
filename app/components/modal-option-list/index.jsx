@@ -53,7 +53,7 @@ var ModalOptionList = React.createClass({
                         fontSize: "16px",
                         outline: "none",
                         borderBottom: "1px solid " + colors.borderContentModal,
-                        color: active ? colors.iconFlag : colors.mainFontColor
+                        color: active ? colors.buttonPrimary : colors.mainFontColor
                     }}
                 >
                     {this.props.getLabel(value)}

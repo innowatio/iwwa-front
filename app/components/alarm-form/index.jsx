@@ -129,7 +129,7 @@ var AlarmForm = React.createClass({
                                 rootClose={true}
                                 trigger="click"
                             >
-                                <components.Button  bsStyle="link">
+                                <components.Button bsStyle="link">
                                     <components.Icon
                                         color={theme.colors.iconInfo}
                                         icon={"info"}
@@ -153,7 +153,6 @@ var AlarmForm = React.createClass({
                                 <components.SelectTree
                                     allowedValues={this.props.siti}
                                     buttonCloseDefault={true}
-                                    className="site-select"
                                     filter={CollectionUtils.sites.filter}
                                     getKey={CollectionUtils.sites.getKey}
                                     getLabel={CollectionUtils.sites.getLabel}
