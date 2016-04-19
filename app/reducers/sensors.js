@@ -1,4 +1,4 @@
-import {ADD_ITEM_TO_FORMULA, ADD_SENSOR_TO_WORK_AREA, SELECT_SENSOR} from "../actions/sensors";
+import {ADD_ITEM_TO_FORMULA, ADD_SENSOR_TO_WORK_AREA, FILTER_SENSORS, SELECT_SENSOR} from "../actions/sensors";
 import {getKeyFromCollection} from "lib/collection-utils";
 
 let defaultState = {
@@ -6,6 +6,8 @@ let defaultState = {
         formulaItems: []
     },
     selectedSensors: [],
+    tagsToFilter: [],
+    wordsToFilter: [],
     workAreaSensors: []
 };
 
@@ -15,6 +17,8 @@ function cloneState (state) {
             formulaItems: state.current.formulaItems.slice()
         },
         selectedSensors: state.selectedSensors.slice(),
+        tagsToFilter: state.tagsToFilter.slice(),
+        wordsToFilter: state.wordsToFilter.slice(),
         workAreaSensors: state.workAreaSensors.slice()
     };
 }
@@ -28,6 +32,11 @@ export function sensors (state = defaultState, action) {
         }
         case ADD_SENSOR_TO_WORK_AREA: {
             newState.workAreaSensors.push(action.payload);
+            break;
+        }
+        case FILTER_SENSORS: {
+            newState.tagsToFilter = action.payload.tagsToFilter;
+            newState.wordsToFilter = action.payload.wordsToFilter;
             break;
         }
         case SELECT_SENSOR: {

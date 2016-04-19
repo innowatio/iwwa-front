@@ -74,7 +74,6 @@ var Monitoring = React.createClass({
         asteroid: PropTypes.object,
         cloneSensors: PropTypes.func.isRequired,
         collections: IPropTypes.map.isRequired,
-        currentSensor: PropTypes.object,
         deleteSensor: PropTypes.func.isRequired,
         editSensor: PropTypes.func.isRequired,
         favoriteSensor: PropTypes.func.isRequired,
@@ -82,8 +81,7 @@ var Monitoring = React.createClass({
         monitorSensor: PropTypes.func.isRequired,
         selectSensor: PropTypes.func.isRequired,
         selectSensorsToDraw: PropTypes.func.isRequired,
-        selected: PropTypes.array,
-        workAreaSensors: PropTypes.array 
+        sensorsState: PropTypes.object.isRequired
     },
     contextTypes: {
         theme: PropTypes.object
@@ -103,6 +101,25 @@ var Monitoring = React.createClass({
     getAllSensors: function () {
         return this.props.collections.get("sensors") || Immutable.Map();
     },
+    filterSensors: function () {
+        //TODO find a better way to filter...
+        let all = this.getAllSensors();
+        let filterTags = this.props.sensorsState.tagsToFilter;
+        let filterWords = this.props.sensorsState.wordsToFilter;
+        if (filterTags.length > 0 || filterWords.length > 0) {
+            return R.filter((sensor) => {
+                if (sensor.get("tags")) {
+                    let found = false;
+                    for (let i = 0; i < filterTags.length && !found; i++) {
+                        found = R.contains(filterTags[i], sensor.get("tags"));
+                    }
+                    return found;
+                }
+            }, all);
+        } else {
+            return all;
+        }
+    },
     getDeleteSensor: function (id) {
         return () => {
             this.props.deleteSensor(id);
@@ -119,8 +136,9 @@ var Monitoring = React.createClass({
         };
     },
     getSensorFields: function () {
-        if (this.state.editSensor && this.props.selected.length == 1) {
-            var fields = this.props.selected[0].toJS();
+        const selected = this.props.sensorsState.selectedSensors;
+        if (this.state.editSensor && selected.length == 1) {
+            var fields = selected[0].toJS();
             fields.name = (fields.name ? fields.name : fields["_id"]);
             // TODO initial value for tag.
             fields.tags = [];
@@ -149,16 +167,18 @@ var Monitoring = React.createClass({
         });
     },
     renderSensorForm: function () {
-        if (this.props.selected.length > 0 || this.props.workAreaSensors.length > 0) {
+        const selected = this.props.sensorsState.selectedSensors;
+        const workAreaSensors = this.props.sensorsState.workAreaSensors;
+        if (selected.length > 0 || workAreaSensors.length > 0) {
             return (
                 <SensorForm
                     addItemToFormula={this.props.addItemToFormula}
                     closeForm={this.closeModal}
-                    currentSensor={this.props.currentSensor}
-                    id={this.props.selected.length == 1 ? this.props.selected[0].get("_id") : null}
+                    currentSensor={this.props.sensorsState.current}
+                    id={selected.length == 1 ? selected[0].get("_id") : null}
                     initialValues={this.getSensorFields()}
                     onSave={this.state.editSensor ? this.props.editSensor : this.props.addSensor}
-                    sensorsToAggregate={this.props.workAreaSensors}
+                    sensorsToAggregate={workAreaSensors}
                     showFullscreenModal={this.state.showFullscreenModal}
                     showSensorAggregator={!this.state.editSensor}
                     title={this.state.editSensor ? "MODIFICA SENSORE" : "CREA NUOVO SENSORE"}
@@ -168,13 +188,14 @@ var Monitoring = React.createClass({
     },
     render: function () {
         const theme = this.getTheme();
+        const selected = this.props.sensorsState.selectedSensors;
         return (
             <div>
                 <SectionToolbar>
                     <Button
                         style={buttonStyle(theme)}
-                        disabled={this.props.selected.length < 1}
-                        onClick={() => this.props.cloneSensors(this.props.selected)}
+                        disabled={selected.length < 1}
+                        onClick={() => this.props.cloneSensors(selected)}
                     >
                         <Icon
                             color={theme.colors.iconHeader}
@@ -185,7 +206,7 @@ var Monitoring = React.createClass({
                     </Button>
                     <Button
                         style={buttonStyle(theme)}
-                        disabled={this.props.selected.length != 1}
+                        disabled={selected.length != 1}
                         onClick={() => this.openModal(true)}
                     >
                         <Icon
@@ -197,7 +218,7 @@ var Monitoring = React.createClass({
                     </Button>
                     <Button
                         style={buttonStyle(theme)}
-                        disabled={this.props.selected.length < 1}
+                        disabled={selected.length < 1}
                         onClick={this.getDeleteSensor("todo")}
                     >
                         <Icon
@@ -241,9 +262,9 @@ var Monitoring = React.createClass({
                     onClickAggregate={() => this.openModal(false)}
                     selectSensor={this.props.selectSensor}
                     selectSensorsToDraw={this.props.selectSensorsToDraw}
-                    selected={this.props.selected}
-                    sensors={this.getAllSensors()}
-                    workAreaSensors={this.props.workAreaSensors}
+                    selected={selected}
+                    sensors={this.filterSensors()}
+                    workAreaSensors={this.props.sensorsState.workAreaSensors}
                 />
                 
                 {this.renderSensorForm()}
@@ -255,9 +276,7 @@ var Monitoring = React.createClass({
 const mapStateToProps = (state) => {
     return {
         collections: state.collections,
-        currentSensor: state.sensors.current,
-        selected: state.sensors.selectedSensors,
-        workAreaSensors: state.sensors.workAreaSensors
+        sensorsState: state.sensors
     };
 };
 

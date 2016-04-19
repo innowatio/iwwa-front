@@ -55,17 +55,17 @@ var MonitoringSearch = React.createClass({
         });
     },
     render: function () {
+        let self = this;
         let divStyle = {
-            ...styles(this.getTheme()).titlePage,
-            ...this.props.style
+            ...styles(self.getTheme()).titlePage,
+            ...self.props.style
         };
-        let theme = this.getTheme();
-
+        let theme = self.getTheme();
         return (
             <div style={divStyle}>
                 <div className="search-container" style={{paddingTop: "20px", textAlign: "center"}}>
                     <Radium.Style
-                        rules={this.getSearchStyle()}
+                        rules={self.getSearchStyle()}
                         scopeSelector=".search-container"
                     />
                     <Input
@@ -74,9 +74,12 @@ var MonitoringSearch = React.createClass({
                                 color={theme.colors.iconInputSearch}
                                 icon={"search"}
                                 onClick={() => {
-                                    let newWords = this.state.wordsToSearch.slice();
-                                    newWords.push(this.state.standardSearchFilter);
-                                    this.setState({wordsToSearch: newWords, standardSearchFilter: null});
+                                    let word = self.state.standardSearchFilter;
+                                    if (word && word.trim().length > 0) {
+                                        let newWords = self.state.wordsToSearch.slice();
+                                        newWords.push(word);
+                                        self.setState({wordsToSearch: newWords, standardSearchFilter: null});
+                                    }
                                 }}
                                 size={"34px"}
                                 style={{
@@ -86,10 +89,10 @@ var MonitoringSearch = React.createClass({
                             />
                         }
                         className="input-search"
-                        onChange={(input) => this.setState({standardSearchFilter: input.target.value})}
+                        onChange={(input) => self.setState({standardSearchFilter: input.target.value})}
                         placeholder="Cerca"
                         type="text"
-                        value={this.state.standardSearchFilter}
+                        value={self.state.standardSearchFilter}
                     />
 
                     <Input
@@ -98,9 +101,12 @@ var MonitoringSearch = React.createClass({
                                 color={theme.colors.iconInputSearch}
                                 icon={"tag"}
                                 onClick={() => {
-                                    let newTags = this.state.tagsToSearch.slice();
-                                    newTags.push(this.state.tagSearchFilter);
-                                    this.setState({tagsToSearch: newTags, tagSearchFilter: null});
+                                    let tag = self.state.tagSearchFilter;
+                                    if (tag && tag.trim().length > 0) {
+                                        let newTags = self.state.tagsToSearch.slice();
+                                        newTags.push(tag);
+                                        self.setState({tagsToSearch: newTags, tagSearchFilter: null});
+                                    }
                                 }}
                                 size={"34px"}
                                 style={{
@@ -110,10 +116,10 @@ var MonitoringSearch = React.createClass({
                             />
                         }
                         className="input-search"
-                        onChange={(input) => this.setState({tagSearchFilter: input.target.value})}
+                        onChange={(input) => self.setState({tagSearchFilter: input.target.value})}
                         placeholder="Cerca per tag"
                         type="text"
-                        value={this.state.tagSearchFilter}
+                        value={self.state.tagSearchFilter}
                     />
 
                     <label>
@@ -121,7 +127,7 @@ var MonitoringSearch = React.createClass({
                     </label>
 
                     <div style={{textAlign: "left"}}>
-                        {this.state.wordsToSearch.map(item => {
+                        {self.state.wordsToSearch.map(item => {
                             return (
                                 <label style={{marginRight: "10px"}}>
                                     {item}
@@ -131,7 +137,7 @@ var MonitoringSearch = React.createClass({
                     </div>
 
                     <div style={{textAlign: "left"}}>
-                        {this.state.tagsToSearch.map(item => {
+                        {self.state.tagsToSearch.map(item => {
                             return (
                                 <label style={{border: "solid 1px", padding: "2px 10px 2px 10px", borderRadius: "35px", marginRight: "5px"}}>
                                     {item}
@@ -142,9 +148,9 @@ var MonitoringSearch = React.createClass({
 
                     <div>
                         <Button
-                            onClick={this.filterSensors}
+                            onClick={self.filterSensors}
                             style={{
-                                ...styles(this.getTheme()).buttonSelectChart,
+                                ...styles(self.getTheme()).buttonSelectChart,
                                 width: "90px",
                                 height: "45px",
                                 lineHeight: "45px",
@@ -153,7 +159,7 @@ var MonitoringSearch = React.createClass({
                                 fontSize: "19px",
                                 marginRight: "none",
                                 border: "0px",
-                                backgroundColor: this.getTheme().colors.buttonPrimary
+                                backgroundColor: self.getTheme().colors.buttonPrimary
                             }}
                         >
                             {"OK"}
@@ -161,7 +167,7 @@ var MonitoringSearch = React.createClass({
                         <Icon
                             color={theme.colors.iconArrow}
                             icon={"reset"}
-                            onClick={() => this.setState(this.getInitialState())}
+                            onClick={() => self.setState(self.getInitialState())}
                             size={"35px"}
                             style={{
                                 verticalAlign: "middle",
