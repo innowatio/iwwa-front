@@ -60,7 +60,7 @@ var SensorsDropArea = React.createClass({
         this.props.sensors.forEach((el) => {
             sensors.push(
                 <div>
-                    {"prova: " + el}
+                    {el}
                 </div>
             );
         });

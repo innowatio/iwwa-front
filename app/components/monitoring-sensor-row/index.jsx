@@ -82,13 +82,26 @@ var SensorRow = React.createClass({
     },
     renderTags: function () {
         const {colors} = this.getTheme();
+        let tags = [];
+        if (this.props.sensor.get("tags")) {
+            this.props.sensor.get("tags").forEach((tag) => {
+                tags.push(
+                    <label style={{border: "solid 1px", padding: "2px 10px 2px 10px", borderRadius: "35px", marginRight: "5px"}}>
+                        {tag}
+                    </label>
+                );
+            });
+        }
         return (
-            <Icon
-                color={colors.iconHeader}
-                icon={"tag"}
-                size={"27px"}
-                style={{marginRight: "5px", verticalAlign: "middle", lineHeight: "50px"}}
-            />
+            <div style={styles(this.getTheme()).tagsContainer}>
+                <Icon
+                    color={colors.iconHeader}
+                    icon={"tag"}
+                    size={"27px"}
+                    style={{marginRight: "5px", verticalAlign: "middle", lineHeight: "50px"}}
+                />
+                {tags}
+            </div>
         );
     },
     renderInfoButton: function () {
@@ -143,9 +156,7 @@ var SensorRow = React.createClass({
             <div style={divStyle}>
                 <div onClick={partial(onClickSelect, [sensor])} style={{cursor: "pointer"}}>
                     {this.renderSensorName()}
-                    <div style={styles(this.getTheme()).tagsContainer}>
-                        {this.renderTags()}
-                    </div>
+                    {this.renderTags()}
                 </div>
                 <div style={styles(this.getTheme()).buttonsContainer}>
                     {this.renderChartButton()}
