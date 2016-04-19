@@ -4,9 +4,9 @@ var IPropTypes      = require("react-immutable-proptypes");
 var R               = require("ramda");
 var Radium          = require("radium");
 var React           = require("react");
-var components      = require("components");
-var defaultTheme    = require ("lib/theme");
 
+import components from "components";
+import {defaultTheme} from "lib/theme";
 import {styles} from "lib/styles_restyling";
 
 const itemsStyle = (theme) => (R.merge(styles(theme).buttonBasicStyle, {
