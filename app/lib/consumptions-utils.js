@@ -7,8 +7,8 @@ const PERIODS = ["day", "week", "month", "year"];
 export function getTimeRangeByPeriod (period) {
     const now = moment.utc();
     return {
-        start: now.startOf(period).format(),
-        end: now.endOf(period).format()
+        start: now.startOf(period).format("YYYY-MM-DDTHH:mm:ssZ"),
+        end: now.endOf(period).format("YYYY-MM-DDTHH:mm:ssZ")
     };
 }
 
@@ -44,8 +44,8 @@ export function getSumBySiteAndPeriod (period, siteId, measures) {
 
 export function getTimeRangeFromDateByPeriod (date, period) {
     return {
-        start: date.startOf(period).format(),
-        end: date.endOf(period).format()
+        start: date.startOf(period).format("YYYY-MM-DDTHH:mm:ssZ"),
+        end: date.endOf(period).format("YYYY-MM-DDTHH:mm:ssZ")
     };
 }
 
@@ -53,8 +53,8 @@ export function getAverageBySiteAndPeriod (offsetNumber, offsetPeriod, sensorId,
     const maxRange = parseInt(moment([moment().year() + 1]).diff(moment([moment().year() -1]), offsetPeriod, true) / offsetNumber);
     const sumsByPeriod = range(1, maxRange).map(index => {
         const period = {
-            start: moment.utc().subtract(index * offsetNumber, offsetPeriod).startOf(offsetPeriod).format(),
-            end: moment.utc().subtract(index * offsetNumber, offsetPeriod).endOf(offsetPeriod).format()
+            start: moment.utc().subtract(index * offsetNumber, offsetPeriod).startOf(offsetPeriod).format("YYYY-MM-DDTHH:mm:ssZ"),
+            end: moment.utc().subtract(index * offsetNumber, offsetPeriod).endOf(offsetPeriod).format("YYYY-MM-DDTHH:mm:ssZ")
         };
         return getSumBySiteAndPeriod(period, sensorId, measurements);
     });
@@ -83,8 +83,8 @@ export function tabParameters () {
 
 function getPreviousPeriod (subtractPeriod, rangePeriod) {
     return {
-        start: moment.utc().subtract(1, subtractPeriod).startOf(rangePeriod).format(),
-        end: moment.utc().subtract(1, subtractPeriod).endOf(rangePeriod).format()
+        start: moment.utc().subtract(1, subtractPeriod).startOf(rangePeriod).format("YYYY-MM-DDTHH:mm:ssZ"),
+        end: moment.utc().subtract(1, subtractPeriod).endOf(rangePeriod).format("YYYY-MM-DDTHH:mm:ssZ")
     };
 }
 

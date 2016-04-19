@@ -189,6 +189,9 @@ export const styles = (theme) => ({
             borderBottom: "3px solid" + theme.colors.buttonPrimary,
             outlineStyle: "none",
             outlineWidth: "0px"
+        },
+        ".nav > li > a:hover, .nav > li > a:focus": {
+            background: theme.colors.transparent
         }
     },
     consumptionsProgressBar: {
@@ -202,7 +205,6 @@ export const styles = (theme) => ({
         ".progress-bar": {
             fontSize: "10px",
             lineHeight: "10px",
-            backgroundColor: theme.colors.consumptionprogressBarBackground,
             height: "12px",
             borderRadius: "6px"
         },

@@ -95,11 +95,11 @@ var styleSiteButton = ({colors}) => ({
 });
 
 var styleProgressBar = ({colors}) => ({
-    backgroundColor: colors.progressBarBackground,
     height: "14px",
     margin: "auto",
     borderRadius: "35px",
-    maxWidth: "100%"
+    maxWidth: "100%",
+    backgroundColor: colors.consumptionprogressBarBackground
 });
 
 var styleProgressBarTitleLabel = ({colors}) => ({
@@ -125,11 +125,11 @@ var rulesProgressBar = ({colors}) => ({
         textAlign: "left"
     },
     ".progress-bar-danger": {
-        backgroundColor: colors.progressBarDanger,
+        backgroundColor: colors.progressBarDanger + "!important",
         color: colors.white
     },
     ".progress-bar-info": {
-        backgroundColor: colors.progressBarInfo,
+        backgroundColor: colors.progressBarInfo + "!important",
         color: colors.white
     }
 });
@@ -392,6 +392,9 @@ var SummaryConsumptions = React.createClass({
                             borderBottom: "3px solid" + colors.buttonPrimary,
                             outlineStyle: "none",
                             outlineWidth: "0px"
+                        },
+                        ".nav > li > a:hover, .nav > li > a:focus": {
+                            background: colors.transparent
                         }
                     }}
                     scopeSelector=".style-tab"
@@ -416,7 +419,7 @@ var SummaryConsumptions = React.createClass({
                 <h2 style={styleH2(theme)}>{siteName}</h2>
                 <h3 style={styleH3(theme)}>{tabParameters.periodTitle}</h3>
                 <div style={styleRoundedDiv(theme)}>
-                    <p style={styleMeasure(theme)}>{Math.trunc(sum)}</p>
+                    <p style={styleMeasure(theme)}>{sum >= 100 ? Math.trunc(sum) : Math.round(sum * 10, -1) / 10}</p>
                     <span style={styleUnit(theme)}>{tabParameters.measureUnit}</span>
                 </div>
                 <p style={styleH2(theme)}>{tabParameters.periodSubtitle}</p>
