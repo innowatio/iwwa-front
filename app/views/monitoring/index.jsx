@@ -18,6 +18,8 @@ import {
     SectionToolbar,
     SensorForm
 } from "components";
+
+import {selectSensorsToDraw} from "actions/monitoring-chart";
 import {
     addItemToFormula,
     addSensor,
@@ -79,6 +81,7 @@ var Monitoring = React.createClass({
         filterSensors: PropTypes.func.isRequired,
         monitorSensor: PropTypes.func.isRequired,
         selectSensor: PropTypes.func.isRequired,
+        selectSensorsToDraw: PropTypes.func.isRequired,
         selected: PropTypes.array,
         workAreaSensors: PropTypes.array 
     },
@@ -87,6 +90,7 @@ var Monitoring = React.createClass({
     },
     getInitialState: function () {
         return {
+            editSensor: false,
             showFullscreenModal: false
         };
     },
@@ -115,16 +119,27 @@ var Monitoring = React.createClass({
         };
     },
     getSensorFields: function () {
-        if (this.props.selected.length == 1) {
+        if (this.state.editSensor && this.props.selected.length == 1) {
             var fields = this.props.selected[0].toJS();
             fields.name = (fields.name ? fields.name : fields["_id"]);
             // TODO initial value for tag.
             fields.tags = [];
             return fields;
+        } else {
+            //TODO find how to delete initial values...
+            return {
+                name: "",
+                description: "",
+                unitOfMeasurement: "",
+                siteRef: "",
+                clientRef: "",
+                tags: []
+            };
         }
     },
-    openModal: function () {
+    openModal: function (editSensor) {
         this.setState({
+            editSensor: editSensor,
             showFullscreenModal: true
         });
     },
@@ -134,7 +149,7 @@ var Monitoring = React.createClass({
         });
     },
     renderSensorForm: function () {
-        if (this.props.selected.length > 0) {
+        if (this.props.selected.length > 0 || this.props.workAreaSensors.length > 0) {
             return (
                 <SensorForm
                     addItemToFormula={this.props.addItemToFormula}
@@ -142,10 +157,11 @@ var Monitoring = React.createClass({
                     currentSensor={this.props.currentSensor}
                     id={this.props.selected.length == 1 ? this.props.selected[0].get("_id") : null}
                     initialValues={this.getSensorFields()}
-                    onSave={this.props.selected.length == 1 ? this.props.editSensor : this.props.addSensor}
-                    sensorsToAggregate={this.props.selected}
+                    onSave={this.state.editSensor ? this.props.editSensor : this.props.addSensor}
+                    sensorsToAggregate={this.props.workAreaSensors}
                     showFullscreenModal={this.state.showFullscreenModal}
-                    title={this.props.selected.length == 1 ? "MODIFICA SENSORE" : "CREA NUOVO SENSORE"}
+                    showSensorAggregator={!this.state.editSensor}
+                    title={this.state.editSensor ? "MODIFICA SENSORE" : "CREA NUOVO SENSORE"}
                 />
             );
         }
@@ -155,18 +171,6 @@ var Monitoring = React.createClass({
         return (
             <div>
                 <SectionToolbar>
-                    <Button
-                        style={buttonStyle(theme)}
-                        disabled={this.props.selected.length < 1}
-                        onClick={this.openModal}
-                    >
-                        <Icon
-                            color={theme.colors.iconHeader}
-                            icon={"add"}
-                            size={"28px"}
-                            style={{lineHeight: "20px"}}
-                        />
-                    </Button>
                     <Button
                         style={buttonStyle(theme)}
                         disabled={this.props.selected.length < 1}
@@ -182,7 +186,7 @@ var Monitoring = React.createClass({
                     <Button
                         style={buttonStyle(theme)}
                         disabled={this.props.selected.length != 1}
-                        onClick={this.openModal}
+                        onClick={() => this.openModal(true)}
                     >
                         <Icon
                             color={theme.colors.iconHeader}
@@ -234,7 +238,9 @@ var Monitoring = React.createClass({
 
                 <MonitoringWorkArea
                     addSensorToWorkArea={this.props.addSensorToWorkArea}
+                    onClickAggregate={() => this.openModal(false)}
                     selectSensor={this.props.selectSensor}
+                    selectSensorsToDraw={this.props.selectSensorsToDraw}
                     selected={this.props.selected}
                     sensors={this.getAllSensors()}
                     workAreaSensors={this.props.workAreaSensors}
@@ -266,7 +272,8 @@ const mapDispatchToProps = (dispatch) => {
         favoriteSensor: bindActionCreators(favoriteSensor, dispatch),
         filterSensors: bindActionCreators(filterSensors, dispatch),
         monitorSensor: bindActionCreators(monitorSensor, dispatch),
-        selectSensor: bindActionCreators(selectSensor, dispatch)
+        selectSensor: bindActionCreators(selectSensor, dispatch),
+        selectSensorsToDraw: bindActionCreators(selectSensorsToDraw, dispatch)
     };
 };
 

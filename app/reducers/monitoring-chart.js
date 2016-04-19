@@ -5,6 +5,7 @@ import {
     SELECT_CHART_TYPE,
     SELECT_DATE_RANGES,
     SELECT_FAVORITE_CHART,
+    SELECT_SENSORS_TO_DRAW,
     SET_ZOOM_EXTREMES,
     RESET_ZOOM
 } from "../actions/monitoring-chart";
@@ -12,11 +13,12 @@ import {SELECT_SENSOR} from "../actions/sensors";
 import Immutable from "immutable";
 
 let defaultState = {
-    favorites: Immutable.Map(),
     dateRanges: [{
         key: "all",
         label: "Tutto"
     }],
+    favorites: Immutable.Map(),
+    sensorsToDraw: [],
     type: "spline",
     yAxis: {
         min: 0,
@@ -70,6 +72,11 @@ export function monitoringChart (state = defaultState, action) {
             return {
                 ...state,
                 config: null
+            };
+        case SELECT_SENSORS_TO_DRAW:
+            return {
+                ...state,
+                sensorsToDraw: action.payload
             };
         case SELECT_DATE_RANGES:
             return {

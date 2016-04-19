@@ -46,6 +46,7 @@ var SensorForm = React.createClass({
         resetForm: PropTypes.func.isRequired,
         sensorsToAggregate: PropTypes.array,
         showFullscreenModal: PropTypes.bool.isRequired,
+        showSensorAggregator: PropTypes.bool.isRequired,
         submitting: PropTypes.bool.isRequired,
         title: PropTypes.string
     },
@@ -60,7 +61,7 @@ var SensorForm = React.createClass({
         this.props.closeForm();
     },
     renderSensorAggregation: function () {
-        if (this.props.sensorsToAggregate && this.props.sensorsToAggregate.length > 1) {
+        if (this.props.showSensorAggregator) {
             return (
                 <SensorAggregator
                     addItemToFormula={this.props.addItemToFormula}

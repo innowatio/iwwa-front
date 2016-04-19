@@ -42,7 +42,6 @@ const styles = ({colors}) => ({
 
 const sensorSource = {
     beginDrag (props) {
-        console.log("dragging");
         return {
             sensor: props.sensor,
             type: Types.SENSOR_ROW
@@ -63,6 +62,7 @@ var SensorRow = React.createClass({
         isDragging: PropTypes.bool,
         isSelected: PropTypes.bool,
         onClickSelect: PropTypes.func,
+        selectSensorToDraw: PropTypes.func,
         sensor: IPropTypes.map.isRequired,
         sensorId: PropTypes.any.isRequired
     },
@@ -111,7 +111,7 @@ var SensorRow = React.createClass({
     renderChartButton: function () {
         const {colors} = this.getTheme();
         return (
-            <Link to={"/monitoring/chart/"}>
+            <Link to={"/monitoring/chart/"} onClick={() => this.props.selectSensorToDraw(this.props.sensor)}>
                 <Icon
                     color={colors.iconHeader}
                     icon={"chart"}

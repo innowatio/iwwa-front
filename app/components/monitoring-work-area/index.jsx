@@ -31,7 +31,9 @@ const lazyLoadButtonStyle = ({colors}) => ({
 var MonitoringWorkArea = React.createClass({
     propTypes: {
         addSensorToWorkArea: PropTypes.func.isRequired,
+        onClickAggregate: PropTypes.func.isRequired,
         selectSensor: PropTypes.func.isRequired,
+        selectSensorsToDraw: PropTypes.func.isRequired,
         selected: PropTypes.array,
         sensors: IPropTypes.map.isRequired,
         workAreaSensors: PropTypes.array
@@ -50,6 +52,7 @@ var MonitoringWorkArea = React.createClass({
             <MonitoringSensorRow
                 isSelected={found}
                 onClickSelect={this.props.selectSensor}
+                selectSensorToDraw={this.props.selectSensorsToDraw}
                 sensor={element}
                 sensorId={elementId}
             />
@@ -91,6 +94,8 @@ var MonitoringWorkArea = React.createClass({
                 
                 <SensorsDropArea
                     addSensorToWorkArea={this.props.addSensorToWorkArea}
+                    onClickAggregate={this.props.onClickAggregate}
+                    onClickChart={this.props.selectSensorsToDraw}
                     sensors={this.props.workAreaSensors}
                 />
                 

@@ -52,7 +52,6 @@ var MonitoringChartView = React.createClass({
         selectChartType: PropTypes.func.isRequired,
         selectDateRanges: PropTypes.func.isRequired,
         selectFavoriteChart: PropTypes.func.isRequired,
-        selected: PropTypes.array,
         setZoomExtremes: PropTypes.func.isRequired
     },
     contextTypes: {
@@ -81,7 +80,7 @@ var MonitoringChartView = React.createClass({
         };
     },
     subscribeToSensorsData: function (props) {
-        const sensors = props.selected.map(sensor => sensor.get("_id"));
+        const sensors = props.monitoringChart.sensorsToDraw.map(sensor => sensor.get("_id"));
         sensors[0] && sensors.forEach((sensorId) => {
             // last year for sensors
             props.asteroid.subscribe(
@@ -95,7 +94,8 @@ var MonitoringChartView = React.createClass({
         });
     },
     getChartSeries: function () {
-        const monitoringCharts = this.props.selected.map(sensor => {
+        const monitoringCharts = this.props.monitoringChart.sensorsToDraw.map(sensor => {
+            console.log(sensor);
             return {
                 date: {
                     start: moment.utc().startOf("month").valueOf(),
@@ -324,8 +324,7 @@ var MonitoringChartView = React.createClass({
 const mapStateToProps = (state) => {
     return {
         collections: state.collections,
-        monitoringChart: state.monitoringChart,
-        selected: state.sensors.selectedSensors
+        monitoringChart: state.monitoringChart
     };
 };
 
