@@ -44,6 +44,7 @@ var CollectionItemList = React.createClass({
         lazyLoadButtonStyle: PropTypes.object,
         lazyLoadButtonStyleContainer: PropTypes.object,
         lazyLoadLabel: PropTypes.string,
+        showFilterInput: PropTypes.bool,
         sort: PropTypes.func,
         subListComponent: PropTypes.func
     },
@@ -99,7 +100,7 @@ var CollectionItemList = React.createClass({
     },
     renderInputFilter: function () {
         // We use components.InputFilter because is used in many part of application.
-        return this.props.filter ? (
+        return this.props.showFilterInput ? (
             <components.InputFilter
                 onChange={this.onChangeInputFilter}
                 style={this.props.inputFilterStyle}

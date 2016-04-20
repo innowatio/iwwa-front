@@ -36,6 +36,8 @@ var MonitoringWorkArea = React.createClass({
         selectSensorsToDraw: PropTypes.func.isRequired,
         selected: PropTypes.array,
         sensors: IPropTypes.map.isRequired,
+        tagsToFilter: PropTypes.array,
+        wordsToFilter: PropTypes.array,
         workAreaSensors: PropTypes.array
     },
     contextTypes: {
@@ -43,6 +45,42 @@ var MonitoringWorkArea = React.createClass({
     },
     getTheme: function () {
         return this.context.theme || defaultTheme;
+    },
+    searchFilter: function (item) {
+        let filterTags = this.props.tagsToFilter;
+        let filterWords = this.props.wordsToFilter;
+        return (
+            (filterTags <= 0 && filterWords <= 0) ||
+            this.searchWords(item, filterWords) ||
+            this.searchTags(item, filterTags)
+        );
+    },
+    searchTags: function (item, filterTags) {
+        let found = false;
+        if (!R.isNil(item) && !R.isNil(item.get("tags"))) {
+            for (let i = 0; i < filterTags.length && !found; i++) {
+                found = this.searchTag(item.get("tags"), filterTags[i]);
+            }
+        }
+        return found;
+    },
+    searchTag: function (itemTags, tag) {
+        return (!R.isNil(itemTags) ? R.contains(tag, itemTags) : false);
+    },
+    searchWords: function (item, filterWords) {
+        let found = false;
+        if (!R.isNil(item) && filterWords.length > 0) {
+            for (let i = 0; i < filterWords.length && !found; i++) {
+                var searchRegExp = new RegExp(filterWords[i], "i");
+                found = (
+                    searchRegExp.test(item.get("_id")) ||
+                    searchRegExp.test(item.get("name")) ||
+                    searchRegExp.test(item.get("description")) ||
+                    this.searchTag(item.get("tags"), filterWords[i])
+                );
+            }
+        }
+        return found;
     },
     renderSensorList: function (element, elementId) {
         let found = R.find((it) => {
@@ -82,6 +120,7 @@ var MonitoringWorkArea = React.createClass({
                     >
                         <CollectionItemList
                             collections={this.props.sensors}
+                            filter={this.searchFilter}
                             headerComponent={this.renderSensorList}
                             hover={true}
                             hoverStyle={hoverStyle(theme)}

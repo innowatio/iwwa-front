@@ -101,25 +101,6 @@ var Monitoring = React.createClass({
     getAllSensors: function () {
         return this.props.collections.get("sensors") || Immutable.Map();
     },
-    filterSensors: function () {
-        //TODO find a better way to filter...
-        let all = this.getAllSensors();
-        let filterTags = this.props.sensorsState.tagsToFilter;
-        let filterWords = this.props.sensorsState.wordsToFilter;
-        if (filterTags.length > 0 || filterWords.length > 0) {
-            return R.filter((sensor) => {
-                if (sensor.get("tags")) {
-                    let found = false;
-                    for (let i = 0; i < filterTags.length && !found; i++) {
-                        found = R.contains(filterTags[i], sensor.get("tags"));
-                    }
-                    return found;
-                }
-            }, all);
-        } else {
-            return all;
-        }
-    },
     getDeleteSensor: function (id) {
         return () => {
             this.props.deleteSensor(id);
@@ -263,7 +244,9 @@ var Monitoring = React.createClass({
                     selectSensor={this.props.selectSensor}
                     selectSensorsToDraw={this.props.selectSensorsToDraw}
                     selected={selected}
-                    sensors={this.filterSensors()}
+                    sensors={this.getAllSensors()}
+                    tagsToFilter={this.props.sensorsState.tagsToFilter}
+                    wordsToFilter={this.props.sensorsState.wordsToFilter}
                     workAreaSensors={this.props.sensorsState.workAreaSensors}
                 />
                 
