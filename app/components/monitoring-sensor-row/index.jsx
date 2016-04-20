@@ -100,7 +100,7 @@ var SensorRow = React.createClass({
                         float: "right",
                         marginRight: "20px",
                         padding: "0px 10px",
-                        backgroundColor: colors.backgroundMonitoringRowHover
+                        backgroundColor: colors.backgroundMonitoringRowChart
                     }}
                 />
             </Link>

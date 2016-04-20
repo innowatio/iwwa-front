@@ -31,7 +31,7 @@ import {
 } from "actions/sensors";
 
 const hoverStyle = ({colors}) => ({
-    backgroundColor: colors.greyBorder
+    backgroundColor: colors.backgroundMonitoringRowHover
 });
 
 const lazyLoadButtonStyle = ({colors}) => ({
