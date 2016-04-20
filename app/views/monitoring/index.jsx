@@ -250,7 +250,7 @@ var Monitoring = React.createClass({
                     wordsToFilter={this.props.sensorsState.wordsToFilter}
                     workAreaSensors={this.props.sensorsState.workAreaSensors}
                 />
-                
+
                 {this.renderSensorForm()}
             </div>
         );

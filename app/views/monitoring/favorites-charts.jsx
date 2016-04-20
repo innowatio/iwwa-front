@@ -28,7 +28,7 @@ var MonitoringFavoritesCharts = React.createClass({
                 key: "_id",
                 style: function () {
                     return {
-                        borderRight: "solid 1px grey",
+                        borderRight: "solid 1px black",
                         width: "96%",
                         height: "100%",
                         textAlign: "left"
@@ -39,7 +39,7 @@ var MonitoringFavoritesCharts = React.createClass({
                 key: "chart",
                 style: function () {
                     return {
-                        backgroundColor: "grey",
+                        backgroundColor: "#535353",
                         width: "1%"
                     };
                 },
@@ -64,12 +64,20 @@ var MonitoringFavoritesCharts = React.createClass({
         ];
     },
     render: function () {
-        const theme = this.getTheme();
+        const {colors} = this.getTheme();
         return (
             <div>
                 <SectionToolbar backUrl={"/monitoring/chart/"} title={"Torna al monitoring"} />
-
-                <div style={{color: "white", border: "grey solid 1px", borderRadius: "30px", background: theme.colors.backgroundContentModal, padding: 0, margin: "20px", textAlign: "center"}}>
+                <div style={{
+                    color: colors.white,
+                    border: "grey solid 1px",
+                    borderRadius: "30px",
+                    background: colors.backgroundContentModal,
+                    padding: 0,
+                    margin: "20px",
+                    textAlign: "center"
+                }}
+                >
                     <CollectionElementsTable
                         collection={this.props.monitoringChart.favorites}
                         columns={this.getFavoritesChartsColumns()}
@@ -79,13 +87,10 @@ var MonitoringFavoritesCharts = React.createClass({
                         style={{color: "white", padding: "0"}}
                     />
 
-                    <label style={{color: theme.colors.navText, padding: "20px"}}>
+                    <label style={{color: colors.navText, padding: "20px"}}>
                         {"Carica tutti"}
                     </label>
-
                 </div>
-
-
             </div>
         );
     }
