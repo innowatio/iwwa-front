@@ -1,8 +1,5 @@
 import React, {PropTypes} from "react";
 import R from "ramda";
-import {DragDropContext} from "react-dnd";
-// import {default as TouchBackend} from "react-dnd-touch-backend";
-import HTML5Backend from "react-dnd-html5-backend";
 import IPropTypes from "react-immutable-proptypes";
 
 import {defaultTheme} from "lib/theme";
@@ -143,5 +140,4 @@ var MonitoringWorkArea = React.createClass({
     }
 });
 
-// module.exports = DragDropContext(TouchBackend({enableMouseEvents: true}))(MonitoringWorkArea);
-module.exports = DragDropContext(HTML5Backend)(MonitoringWorkArea);
+module.exports = MonitoringWorkArea;

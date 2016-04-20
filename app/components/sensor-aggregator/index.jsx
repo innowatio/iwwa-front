@@ -1,8 +1,5 @@
 import React, {PropTypes} from "react";
 import {Col} from "react-bootstrap";
-import {DragDropContext} from "react-dnd";
-// import {default as TouchBackend} from "react-dnd-touch-backend";
-import HTML5Backend from "react-dnd-html5-backend";
 
 import {DraggableOperator, DraggableSensor, FormulaDropArea} from "components";
 
@@ -51,5 +48,4 @@ var SensorAggregator = React.createClass({
     }
 });
 
-// module.exports = DragDropContext(TouchBackend({enableMouseEvents: true}))(SensorAggregator);
-module.exports = DragDropContext(HTML5Backend)(SensorAggregator);
+module.exports = SensorAggregator;

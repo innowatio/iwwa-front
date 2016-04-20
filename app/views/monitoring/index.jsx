@@ -5,6 +5,7 @@ import IPropTypes from "react-immutable-proptypes";
 import {connect} from "react-redux";
 import {bindActionCreators} from "redux";
 
+import {getDragDropContext} from "lib/dnd-utils";
 import {defaultTheme} from "lib/theme";
 import {styles} from "lib/styles_restyling";
 
@@ -279,4 +280,4 @@ const mapDispatchToProps = (dispatch) => {
     };
 };
 
-module.exports = connect(mapStateToProps, mapDispatchToProps)(Monitoring);
+module.exports = connect(mapStateToProps, mapDispatchToProps)(getDragDropContext(Monitoring));
