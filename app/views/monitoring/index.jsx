@@ -30,6 +30,7 @@ import {
     editSensor,
     favoriteSensor,
     filterSensors,
+    getFormulaItems,
     monitorSensor,
     selectSensor
 } from "actions/sensors";
@@ -79,6 +80,7 @@ var Monitoring = React.createClass({
         editSensor: PropTypes.func.isRequired,
         favoriteSensor: PropTypes.func.isRequired,
         filterSensors: PropTypes.func.isRequired,
+        getFormulaItems: PropTypes.func.isRequired,
         monitorSensor: PropTypes.func.isRequired,
         selectSensor: PropTypes.func.isRequired,
         selectSensorsToDraw: PropTypes.func.isRequired,
@@ -137,6 +139,10 @@ var Monitoring = React.createClass({
             };
         }
     },
+    onClickEditSensor: function () {
+        this.props.getFormulaItems();
+        this.openModal(true);
+    },
     openModal: function (editSensor) {
         this.setState({
             editSensor: editSensor,
@@ -189,7 +195,7 @@ var Monitoring = React.createClass({
                     <Button
                         style={buttonStyle(theme)}
                         disabled={selected.length != 1}
-                        onClick={() => this.openModal(true)}
+                        onClick={this.onClickEditSensor}
                     >
                         <Icon
                             color={theme.colors.iconHeader}
@@ -274,6 +280,7 @@ const mapDispatchToProps = (dispatch) => {
         editSensor: bindActionCreators(editSensor, dispatch),
         favoriteSensor: bindActionCreators(favoriteSensor, dispatch),
         filterSensors: bindActionCreators(filterSensors, dispatch),
+        getFormulaItems: bindActionCreators(getFormulaItems, dispatch),
         monitorSensor: bindActionCreators(monitorSensor, dispatch),
         selectSensor: bindActionCreators(selectSensor, dispatch),
         selectSensorsToDraw: bindActionCreators(selectSensorsToDraw, dispatch)

@@ -1,5 +1,15 @@
-import {ADD_ITEM_TO_FORMULA, ADD_SENSOR_TO_WORK_AREA, FILTER_SENSORS, SELECT_SENSOR} from "../actions/sensors";
+import R from "ramda";
+
+import {
+    ADD_ITEM_TO_FORMULA,
+    ADD_SENSOR_TO_WORK_AREA,
+    FILTER_SENSORS,
+    GET_FORMULA_ITEMS,
+    SELECT_SENSOR
+} from "../actions/sensors";
+
 import {getKeyFromCollection} from "lib/collection-utils";
+import {formulaToOperator} from "lib/sensors-utils";
 
 let defaultState = {
     current: {
@@ -23,6 +33,27 @@ function cloneState (state) {
     };
 }
 
+function parseSensorFormula (sensor) {
+    let result = {
+        formulaItems: [],
+        sensors: []
+    };
+    let sensorFormula = sensor.get("formula");
+    if (!R.isNil(sensorFormula)) {
+        let formulaElems = sensorFormula.split("|");
+        R.forEach((elem) => {
+            if (formulaToOperator[elem]) {
+                result.formulaItems.push({operator: formulaToOperator[elem], type: "operator"});
+            } else {
+                //TODO retrieve sensor by id
+                // result.formulaItems.push({sensor: , type: "sensor"})
+                // result.sensors.push()
+            }
+        }, formulaElems);
+    }
+    return result;
+}
+
 export function sensors (state = defaultState, action) {
     var newState = cloneState(state);
     switch (action.type) {
@@ -31,12 +62,19 @@ export function sensors (state = defaultState, action) {
             break;
         }
         case ADD_SENSOR_TO_WORK_AREA: {
+            console.log(action.payload);
             newState.workAreaSensors.push(action.payload);
             break;
         }
         case FILTER_SENSORS: {
             newState.tagsToFilter = action.payload.tagsToFilter;
             newState.wordsToFilter = action.payload.wordsToFilter;
+            break;
+        }
+        case GET_FORMULA_ITEMS: {
+            let result = parseSensorFormula(state.selectedSensors[0]);
+            newState.current.formulaItems = result.formulaItems;
+            newState.workAreaSensors = result.sensors;
             break;
         }
         case SELECT_SENSOR: {

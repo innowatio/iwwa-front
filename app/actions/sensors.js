@@ -4,6 +4,7 @@ import {Types} from "lib/dnd-utils";
 export const ADD_ITEM_TO_FORMULA = "ADD_ITEM_TO_FORMULA";
 export const ADD_SENSOR_TO_WORK_AREA = "ADD_SENSOR_TO_WORK_AREA";
 export const FILTER_SENSORS = "FILTER_SENSORS";
+export const GET_FORMULA_ITEMS = "GET_FORMULA_ITEMS";
 export const SELECT_SENSOR = "SELECT_SENSOR";
 export const SENSOR_CREATION_FAIL = "SENSOR_CREATION_FAIL";
 export const SENSOR_CREATION_SUCCESS = "SENSOR_CREATION_SUCCESS";
@@ -127,5 +128,11 @@ export const selectSensor = (sensor) => {
     return {
         type: SELECT_SENSOR,
         sensor: sensor
+    };
+};
+
+export const getFormulaItems = () => {
+    return {
+        type: GET_FORMULA_ITEMS
     };
 };
