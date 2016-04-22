@@ -220,14 +220,30 @@ var Chart = React.createClass({
             // All sensors under a site
             const site = this.getSitoById(fullPath[0]);
             if (site) {
-                const sensorsType = site.get("sensorsIds").map(sensorId => {
+                const sensors = site.get("sensorsIds").map(sensorId => {
                     const sensorObject = this.getSensorById(sensorId);
                     if (sensorObject) {
-                        return sensorObject.get("type");
+                        return sensorObject;
                     }
+                }).filter(sensor => {
+                    return !R.isNil(sensor);
                 });
-                return consumptionSensors(this.getTheme()).filter(consumption => {
+
+                const sensorsType = sensors.map((sensor) => {
+                    return sensor.get("type");
+                });
+                var sensorsButtonList = consumptionSensors(this.getTheme()).filter(consumption => {
                     return R.contains(consumption.type, sensorsType);
+                });
+                return sensorsButtonList.map((sensorObject) => {
+                    const sensorType = sensorObject.type;
+                    const filteredSensors = sensors.filter((sensor) => {
+                        return sensorType === sensor.get("type");
+                    });
+                    return {
+                        ...sensorObject,
+                        sensors: filteredSensors
+                    };
                 });
             }
         }
@@ -304,8 +320,7 @@ var Chart = React.createClass({
         this.changeDateRanges(true);
     },
     onChangeConsumption: function (sensorId, consumptionTypes) {
-        const selectedSensorId = this.firstSensorOfConsumptionInTheSite(consumptionTypes);
-        this.props.selectEnvironmentalSensor([selectedSensorId], [consumptionTypes]);
+        this.props.selectEnvironmentalSensor([sensorId], [consumptionTypes]);
     },
     onChangeMultiSources: function (currentValue, allowedValue) {
         const value = currentValue.map(value => value.key);
@@ -527,7 +542,7 @@ var Chart = React.createClass({
                 }}
             >
                 <components.Icon
-                    color={this.getTheme().colors.iconLogout}
+                    color={colors.iconLogout}
                     icon={"logout"}
                     size={"28px"}
                     style={{lineHeight: "20px", paddingRight: "5px"}}
@@ -547,6 +562,7 @@ var Chart = React.createClass({
             null;
         const valoriMulti = (!this.isDateCompare() && this.selectedSitesId().length < 2 && !selectedConsumptionType);
         const variables = this.getConsumptionVariablesFromFullPath(this.props.chartState.charts[0].fullPath);
+        console.log(variables);
         return (
             <div>
                 <div style={styles(this.getTheme()).titlePage}>
@@ -665,7 +681,7 @@ var Chart = React.createClass({
                         <span className="pull-left" style={{display: "flex", width: "auto"}}>
                             <components.ConsumptionButtons
                                 allowedValues={variables}
-                                onChange={consumptionTypes => this.onChangeConsumption(null, consumptionTypes)}
+                                onChange={this.onChangeConsumption}
                                 selectedValue={selectedConsumptionType}
                                 styleButton={consumptionButtonStyle(this.getTheme())}
                                 styleButtonSelected={consumptionButtonSelectedStyle(this.getTheme())}

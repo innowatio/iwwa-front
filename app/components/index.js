@@ -30,6 +30,7 @@ exports.Popover                 = require("./popover/");
 exports.ProgressBar             = require("./progress-bar/");
 exports.SelectTree              = require("./select-tree/");
 exports.SensorForm              = require("./sensor-form/");
+exports.SensorVariableSelector  = require("./sensor-variable-selector/");
 exports.SideNav                 = require("./sidenav/");
 exports.SiteNavigator           = require("./site-navigator/");
 exports.Spacer                  = require("./spacer/");

@@ -25,6 +25,7 @@ var Popover = React.createClass({
         children: PropTypes.element,
         hideOnChange: React.PropTypes.bool,
         notClosePopoverOnClick: React.PropTypes.bool,
+        placement: PropTypes.string,
         title: PropTypes.node
     },
     contextTypes: {
@@ -134,7 +135,7 @@ var Popover = React.createClass({
                 <bootstrap.Overlay
                     animation={false}
                     onHide={this.onHide}
-                    placement="bottom"
+                    placement={this.props.placement || "bottom"}
                     rootClose={true}
                     show={this.state.show}
                     target={() => ReactDOM.findDOMNode(this.refs.buttonOverlay)}

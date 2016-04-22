@@ -100,6 +100,9 @@ var DropdownButton = React.createClass({
                     lineHeight: "45px",
                     padding: "2px 20px 2px 10px !important",
                     verticalAlign: "middle",
+                    outline: "0px",
+                    outlineStyle: "none",
+                    outlineWidth: "0px",
                     // This should overwrite the style over that position.
                     ...this.props.style
                 }, itemStyle)}
