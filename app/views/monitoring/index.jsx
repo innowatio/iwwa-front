@@ -26,12 +26,11 @@ import {
     addSensor,
     addSensorToWorkArea,
     cloneSensors,
-    deleteSensor,
+    deleteSensors,
     editSensor,
     favoriteSensor,
     filterSensors,
     getFormulaItems,
-    monitorSensor,
     selectSensor
 } from "actions/sensors";
 
@@ -76,12 +75,11 @@ var Monitoring = React.createClass({
         asteroid: PropTypes.object,
         cloneSensors: PropTypes.func.isRequired,
         collections: IPropTypes.map.isRequired,
-        deleteSensor: PropTypes.func.isRequired,
+        deleteSensors: PropTypes.func.isRequired,
         editSensor: PropTypes.func.isRequired,
         favoriteSensor: PropTypes.func.isRequired,
         filterSensors: PropTypes.func.isRequired,
         getFormulaItems: PropTypes.func.isRequired,
-        monitorSensor: PropTypes.func.isRequired,
         selectSensor: PropTypes.func.isRequired,
         selectSensorsToDraw: PropTypes.func.isRequired,
         sensorsState: PropTypes.object.isRequired
@@ -103,21 +101,6 @@ var Monitoring = React.createClass({
     },
     getAllSensors: function () {
         return this.props.collections.get("sensors") || Immutable.Map();
-    },
-    getDeleteSensor: function (id) {
-        return () => {
-            this.props.deleteSensor(id);
-        };
-    },
-    getFavoriteSensor: function (id) {
-        return () => {
-            this.props.favoriteSensor(id);
-        };
-    },
-    getMonitorSensor: function (id) {
-        return () => {
-            this.props.monitorSensor(id);
-        };
     },
     getSensorFields: function () {
         const selected = this.props.sensorsState.selectedSensors;
@@ -208,7 +191,7 @@ var Monitoring = React.createClass({
                     <Button
                         style={buttonStyle(theme)}
                         disabled={selected.length < 1}
-                        onClick={this.getDeleteSensor("todo")}
+                        onClick={() => this.props.deleteSensors(selected)}
                     >
                         <Icon
                             color={theme.colors.iconHeader}
@@ -277,12 +260,11 @@ const mapDispatchToProps = (dispatch) => {
         addSensor: bindActionCreators(addSensor, dispatch),
         addSensorToWorkArea: bindActionCreators(addSensorToWorkArea, dispatch),
         cloneSensors: bindActionCreators(cloneSensors, dispatch),
-        deleteSensor: bindActionCreators(deleteSensor, dispatch),
+        deleteSensors: bindActionCreators(deleteSensors, dispatch),
         editSensor: bindActionCreators(editSensor, dispatch),
         favoriteSensor: bindActionCreators(favoriteSensor, dispatch),
         filterSensors: bindActionCreators(filterSensors, dispatch),
         getFormulaItems: bindActionCreators(getFormulaItems, dispatch),
-        monitorSensor: bindActionCreators(monitorSensor, dispatch),
         selectSensor: bindActionCreators(selectSensor, dispatch),
         selectSensorsToDraw: bindActionCreators(selectSensorsToDraw, dispatch)
     };

@@ -76,14 +76,15 @@ export function sensors (state = defaultState, action) {
             break;
         }
         case SELECT_SENSOR: {
+            let sensor = action.payload;
             if (newState.selectedSensors.find((it) => {
-                return getKeyFromCollection(it) === getKeyFromCollection(action.sensor);
+                return getKeyFromCollection(it) === getKeyFromCollection(sensor);
             })) {
                 newState.selectedSensors = newState.selectedSensors.filter(it => {
-                    return getKeyFromCollection(it) !== getKeyFromCollection(action.sensor);
+                    return getKeyFromCollection(it) !== getKeyFromCollection(sensor);
                 });
             } else {
-                newState.selectedSensors.push(action.sensor);
+                newState.selectedSensors.push(sensor);
             }
             break;
         }

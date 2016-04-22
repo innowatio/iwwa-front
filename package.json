@@ -133,7 +133,8 @@
     "redux-thunk": "^2.0.1",
     "tcomb": "^3.0.0",
     "tcomb-validation": "^3.0.0",
-    "title-case": "^1.1.2"
+    "title-case": "^1.1.2",
+    "uuid-js": "^0.7.5"
   },
   "cordova": {
     "name": "energy-coach",
