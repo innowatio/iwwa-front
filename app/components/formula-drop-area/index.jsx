@@ -1,7 +1,9 @@
 import React, {PropTypes} from "react";
 import {DropTarget} from "react-dnd";
+import IPropTypes from "react-immutable-proptypes";
 
 import {Types} from "lib/dnd-utils";
+import {findSensor} from "lib/sensors-utils";
 import {defaultTheme} from "lib/theme";
 
 import {Icon} from "components";
@@ -24,6 +26,7 @@ function collect (connect, monitor) {
 var FormulaDropArea = React.createClass({
     propTypes: {
         addItemToFormula: PropTypes.func.isRequired,
+        allSensors: IPropTypes.map,
         connectDropTarget: PropTypes.func,
         formulaItems: PropTypes.array.isRequired,
         style: PropTypes.object
@@ -46,10 +49,11 @@ var FormulaDropArea = React.createClass({
             </div>
         );
     },
-    renderSensor: function (sensor) {
+    renderSensor: function (sensorId) {
+        let sensor = findSensor(this.props.allSensors, sensorId);
         return (
             <label style={{color: this.getTheme().colors.navText, textAlign: "left", border: "1px solid", borderRadius: "10px", padding: "7px", display: "inherit"}}>
-                {(sensor.get("name") ? sensor.get("name") : sensor.get("_id"))}
+                {(sensor.get("name") ? sensor.get("name") : sensorId)}
             </label>
         );
     },

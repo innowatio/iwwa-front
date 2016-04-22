@@ -1,14 +1,17 @@
 import React, {PropTypes} from "react";
 import {Col} from "react-bootstrap";
+import IPropTypes from "react-immutable-proptypes";
 
 import {DraggableOperator, DraggableSensor, FormulaDropArea} from "components";
 
+import {findSensor} from "lib/sensors-utils";
 import {styles} from "lib/styles_restyling";
 import {defaultTheme} from "lib/theme";
 
 var SensorAggregator = React.createClass({
     propTypes: {
         addItemToFormula: PropTypes.func.isRequired,
+        allSensors: IPropTypes.map,
         formulaItems: PropTypes.array,
         sensors: PropTypes.array.isRequired
     },
@@ -25,6 +28,7 @@ var SensorAggregator = React.createClass({
                 <Col md={6}>
                     <FormulaDropArea
                         addItemToFormula={this.props.addItemToFormula}
+                        allSensors={this.props.allSensors}
                         formulaItems={this.props.formulaItems}
                         style={{...styles(theme).titlePage, borderRadius: "20px", height: "250px", padding: "10px"}}
                     />
@@ -33,9 +37,9 @@ var SensorAggregator = React.createClass({
                     <label style={{color: theme.colors.navText, marginBottom: "20px"}}>
                         {"Trascina sensori ed operatori nello spazio blu per scegliere come aggregarli"}
                     </label>
-                    {this.props.sensors.map(item => {
+                    {this.props.sensors.map(sensorId => {
                         return (
-                            <DraggableSensor key={item.get("_id")} sensor={item} />
+                            <DraggableSensor key={sensorId} sensor={findSensor(this.props.allSensors, sensorId)} />
                         );
                     })}
                     <DraggableOperator type="add" />

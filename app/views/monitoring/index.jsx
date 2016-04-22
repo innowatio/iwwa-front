@@ -161,6 +161,7 @@ var Monitoring = React.createClass({
             return (
                 <SensorForm
                     addItemToFormula={this.props.addItemToFormula}
+                    allSensors={this.getAllSensors()}
                     closeForm={this.closeModal}
                     currentSensor={this.props.sensorsState.current}
                     id={selected.length == 1 ? selected[0].get("_id") : null}

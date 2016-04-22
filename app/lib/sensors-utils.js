@@ -1,4 +1,3 @@
-
 const operatorMapping = {
     "+" : "add",
     "-" : "minus",
@@ -16,3 +15,7 @@ function swap (json) {
 
 export const formulaToOperator = operatorMapping;
 export const operatorToFormula = swap(operatorMapping);
+
+export function findSensor (sensors, sensorId) {
+    return sensors.get(sensorId);
+}

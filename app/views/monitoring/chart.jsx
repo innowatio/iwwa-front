@@ -80,7 +80,7 @@ var MonitoringChartView = React.createClass({
         };
     },
     subscribeToSensorsData: function (props) {
-        const sensors = props.monitoringChart.sensorsToDraw.map(sensor => sensor.get("_id"));
+        const sensors = props.monitoringChart.sensorsToDraw;
         sensors[0] && sensors.forEach((sensorId) => {
             // last year for sensors
             props.asteroid.subscribe(
@@ -94,8 +94,7 @@ var MonitoringChartView = React.createClass({
         });
     },
     getChartSeries: function () {
-        const monitoringCharts = this.props.monitoringChart.sensorsToDraw.map(sensor => {
-            console.log(sensor);
+        const monitoringCharts = this.props.monitoringChart.sensorsToDraw.map(sensorId => {
             return {
                 date: {
                     start: moment.utc().startOf("month").valueOf(),
@@ -103,10 +102,10 @@ var MonitoringChartView = React.createClass({
                 },
                 source: {key: "reading"},
                 measurementType: {key: "activeEnergy"},
-                name: sensor.get("_id"),
+                name: sensorId,
                 favorites: Immutable.Map(),
                 type: "spline",
-                sensorId: sensor.get("_id"),
+                sensorId: sensorId,
                 yAxis: {
                     min: 0,
                     max: 60

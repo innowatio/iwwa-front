@@ -45,9 +45,8 @@ function parseSensorFormula (sensor) {
             if (formulaToOperator[elem]) {
                 result.formulaItems.push({operator: formulaToOperator[elem], type: "operator"});
             } else {
-                //TODO retrieve sensor by id
-                // result.formulaItems.push({sensor: , type: "sensor"})
-                // result.sensors.push()
+                result.formulaItems.push({sensor: elem, type: "sensor"});
+                result.sensors.push(elem);
             }
         }, formulaElems);
     }
@@ -62,8 +61,7 @@ export function sensors (state = defaultState, action) {
             break;
         }
         case ADD_SENSOR_TO_WORK_AREA: {
-            console.log(action.payload);
-            newState.workAreaSensors.push(action.payload);
+            newState.workAreaSensors.push(getKeyFromCollection(action.payload));
             break;
         }
         case FILTER_SENSORS: {

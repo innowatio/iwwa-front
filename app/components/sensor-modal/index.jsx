@@ -1,5 +1,6 @@
 import React, {PropTypes} from "react";
 import {Col, Input} from "react-bootstrap";
+import IPropTypes from "react-immutable-proptypes";
 import Select from "react-select";
 import TagsInput from "react-tagsinput";
 import {reduxForm} from "redux-form";
@@ -36,6 +37,7 @@ const validate = values => {
 var SensorForm = React.createClass({
     propTypes: {
         addItemToFormula: PropTypes.func.isRequired,
+        allSensors: IPropTypes.map,
         closeForm: PropTypes.func.isRequired,
         currentSensor: PropTypes.object,
         fields: PropTypes.object.isRequired,
@@ -64,6 +66,7 @@ var SensorForm = React.createClass({
         if (this.props.showSensorAggregator || this.props.currentSensor.formulaItems.length > 0) {
             return (
                 <SensorAggregator
+                    allSensors={this.props.allSensors}
                     addItemToFormula={this.props.addItemToFormula}
                     formulaItems={this.props.currentSensor.formulaItems}
                     sensors={this.props.sensorsToAggregate}
