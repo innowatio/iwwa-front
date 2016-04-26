@@ -24,8 +24,11 @@ var ConsumptionButtons = React.createClass({
     },
     renderConsumptionButton: function (consumption) {
         const theme = this.getTheme();
+        console.log("AAAAAAAAAAAAAAAAAAAA");
+        console.log(consumption);
+        console.log(this.props.selectedConsumptionValue);
         var isSelected = R.equals(consumption, this.props.selectedConsumptionValue);
-        const firstSensor = consumption.sensors.first().get("_id");
+        const firstSensor = consumption.sensors[0]["_id"];
         const consumptionButtonColor = {
             backgroundColor: consumption.color
         };
@@ -43,7 +46,7 @@ var ConsumptionButtons = React.createClass({
                         width: styleButton.width,
                         transition: styleButton.transition
                     }}
-                    value={this.props.selectedSensorValue}
+                    value={isSelected ? this.props.selectedSensorValue : undefined}
                 />
                 <components.Button
                     key={consumption.key}

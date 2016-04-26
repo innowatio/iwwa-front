@@ -20,7 +20,7 @@ var SensorVariableSelector = React.createClass({
         return this.context.theme || defaultTheme;
     },
     onChangeWithSensorId: function (value) {
-        var sensorId = value.get("_id");
+        var sensorId = value["_id"];
         this.props.onChange(sensorId);
     },
     render: function () {
@@ -52,10 +52,10 @@ var SensorVariableSelector = React.createClass({
                     getHoverColor={() => {
                         return colors.buttonPrimary;
                     }}
-                    getKey={(value) => value.get("_id")}
-                    getLabel={(value) => value.get("description")}
+                    getKey={(value) => value["_id"]}
+                    getLabel={(value) => value["description"]}
                     onChange={this.onChangeWithSensorId}
-                    value={this.props.allowedValues.find((allowedValue) => allowedValue.get("_id") === this.props.value)}
+                    value={this.props.allowedValues.find((allowedValue) => allowedValue["_id"] === this.props.value)}
                 />
             </components.Popover>
         );

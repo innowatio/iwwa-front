@@ -242,7 +242,15 @@ var Chart = React.createClass({
                     });
                     return {
                         ...sensorObject,
-                        sensors: filteredSensors
+                        sensors: filteredSensors.toJS().sort((a, b) => {
+                            if (a.description > b.description) {
+                                return 1;
+                            }
+                            if (a.description < b.description) {
+                                return -1;
+                            }
+                            return 0;
+                        })
                     };
                 });
             }
