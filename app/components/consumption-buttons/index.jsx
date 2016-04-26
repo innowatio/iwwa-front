@@ -9,6 +9,7 @@ var ConsumptionButtons = React.createClass({
     propTypes: {
         allowedValues: React.PropTypes.array.isRequired,
         onChange: React.PropTypes.func.isRequired,
+        resetConsumption: React.PropTypes.func,
         selectedConsumptionValue: React.PropTypes.object,
         selectedSensorValue: React.PropTypes.string,
         style: React.PropTypes.object,
@@ -22,11 +23,14 @@ var ConsumptionButtons = React.createClass({
     getTheme: function () {
         return this.context.theme || defaultTheme;
     },
+    getButtonOnChange: function (firstSensor, consumption, isSelected) {
+        if (isSelected) {
+            return this.props.resetConsumption;
+        }
+        return R.partial(this.props.onChange, [firstSensor, consumption]);
+    },
     renderConsumptionButton: function (consumption) {
         const theme = this.getTheme();
-        console.log("AAAAAAAAAAAAAAAAAAAA");
-        console.log(consumption);
-        console.log(this.props.selectedConsumptionValue);
         var isSelected = R.equals(consumption, this.props.selectedConsumptionValue);
         const firstSensor = consumption.sensors[0]["_id"];
         const consumptionButtonColor = {
@@ -50,7 +54,7 @@ var ConsumptionButtons = React.createClass({
                 />
                 <components.Button
                     key={consumption.key}
-                    onClick={R.partial(this.props.onChange, [firstSensor, consumption])}
+                    onClick={this.getButtonOnChange(firstSensor, consumption, isSelected)}
                     style={R.merge(
                         styleButton,
                         consumptionButtonColor

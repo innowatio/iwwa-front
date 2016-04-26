@@ -690,6 +690,7 @@ var Chart = React.createClass({
                             <components.ConsumptionButtons
                                 allowedValues={variables}
                                 onChange={this.onChangeConsumption}
+                                resetConsumption={this.props.removeAllCompare}
                                 selectedConsumptionValue={selectedConsumptionType}
                                 selectedSensorValue={selectedSensor}
                                 styleButton={consumptionButtonStyle(this.getTheme())}

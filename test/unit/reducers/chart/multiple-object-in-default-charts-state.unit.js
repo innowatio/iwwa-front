@@ -472,10 +472,7 @@ describe("`chart` reducer", () => {
                     type: "REMOVE_ALL_COMPARE"
                 };
                 const ret = charts(chartState, valuePassedFromAction);
-                expect(ret).to.deep.equal([{
-                    ...defaultChartStateFirstObject,
-                    date: {}
-                }]);
+                expect(ret).to.deep.equal([defaultChartStateFirstObject]);
             });
 
         });
