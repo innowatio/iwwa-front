@@ -13,10 +13,8 @@ import {
     changeYAxisValues,
     saveChartConfig,
     selectChartType,
-    selectDateRanges,
-    selectFavoriteChart,
-    setZoomExtremes,
-    resetZoom} from "actions/monitoring-chart";
+    selectFavoriteChart
+} from "actions/monitoring-chart";
 
 import {styles} from "lib/styles_restyling";
 import {defaultTheme} from "lib/theme";
@@ -47,12 +45,9 @@ var MonitoringChartView = React.createClass({
         changeYAxisValues: PropTypes.func.isRequired,
         collections: IPropTypes.map.isRequired,
         monitoringChart: PropTypes.object.isRequired,
-        resetZoom: PropTypes.func.isRequired,
         saveChartConfig: PropTypes.func.isRequired,
         selectChartType: PropTypes.func.isRequired,
-        selectDateRanges: PropTypes.func.isRequired,
-        selectFavoriteChart: PropTypes.func.isRequired,
-        setZoomExtremes: PropTypes.func.isRequired
+        selectFavoriteChart: PropTypes.func.isRequired
     },
     contextTypes: {
         theme: PropTypes.object
@@ -94,7 +89,8 @@ var MonitoringChartView = React.createClass({
         });
     },
     getChartSeries: function () {
-        const monitoringCharts = this.props.monitoringChart.sensorsToDraw.map(sensorId => {
+        const monitoringCharts = this.props.monitoringChart.sensorsToDraw.map(sensor => {
+            let sensorId = typeof sensor === "string" ? sensor : sensor.get("_id");
             return {
                 date: {
                     start: moment.utc().startOf("month").valueOf(),
@@ -103,13 +99,7 @@ var MonitoringChartView = React.createClass({
                 source: {key: "reading"},
                 measurementType: {key: "activeEnergy"},
                 name: sensorId,
-                favorites: Immutable.Map(),
-                type: "spline",
-                sensorId: sensorId,
-                yAxis: {
-                    min: 0,
-                    max: 60
-                }
+                sensorId: sensorId
             };
         });
         const readingsDailyAggregates = this.props.collections.get("readings-daily-aggregates") || Immutable.Map();
@@ -143,29 +133,11 @@ var MonitoringChartView = React.createClass({
             <div>
                 <SectionToolbar backUrl={"/monitoring/"} title={"Torna all'elenco sensori"} />
                 <div style={{width: "75%", padding: "20px", float: "left"}}>
-                    <div style={{paddingBottom: "20px", paddingTop: "10px"}}>
-                        <ButtonGroupSelect
-                            allowedValues={this.getFilters()}
-                            getKey={prop("key")}
-                            getLabel={prop("label")}
-                            onChange={this.props.selectDateRanges}
-                            style={sourceButtonStyle(this.getTheme())}
-                            styleToMergeWhenActiveState={{
-                                background: theme.colors.backgroundChartSelectedButton,
-                                color: theme.colors.textSelectButton,
-                                border: `1px solid ${theme.colors.borderChartSelectedButton}`
-                            }}
-                            value={this.props.monitoringChart.dateRanges}
-                        />
-                    </div>
                     <MonitoringChart
                         chartState={this.props.monitoringChart}
-                        dateRanges={this.props.monitoringChart.dateRanges}
                         ref="monitoringChart"
                         saveConfig={this.props.saveChartConfig}
                         series={this.getChartSeries()}
-                        setZoomExtremes={this.props.setZoomExtremes}
-                        resetZoom={this.props.resetZoom}
                     />
                 </div>
                 <div style={{width: "25%", backgroundColor: theme.colors.primary, float: "left", minHeight: "600px"}}>
@@ -331,12 +303,9 @@ const mapDispatchToProps = (dispatch) => {
     return {
         addToFavorite: bindActionCreators(addToFavorite, dispatch),
         changeYAxisValues: bindActionCreators(changeYAxisValues, dispatch),
-        resetZoom: bindActionCreators(resetZoom, dispatch),
         saveChartConfig: bindActionCreators(saveChartConfig, dispatch),
         selectChartType: bindActionCreators(selectChartType, dispatch),
-        selectDateRanges: bindActionCreators(selectDateRanges, dispatch),
-        selectFavoriteChart: bindActionCreators(selectFavoriteChart, dispatch),
-        setZoomExtremes: bindActionCreators(setZoomExtremes, dispatch)
+        selectFavoriteChart: bindActionCreators(selectFavoriteChart, dispatch)
     };
 };
 

@@ -1,17 +1,13 @@
 import React, {PropTypes} from "react";
-import components from "components";
-import moment from "moment";
+import ReactHighstock from "react-highcharts/bundle/ReactHighstock"; // Highstock is bundled
 
 import {defaultTheme} from "lib/theme";
 
 var MonitoringChart = React.createClass({
     propTypes: {
         chartState: PropTypes.object.isRequired,
-        dateRanges: PropTypes.array.isRequired,
-        resetZoom: PropTypes.func.isRequired,
         saveConfig: PropTypes.func.isRequired,
         series: PropTypes.array.isRequired,
-        setZoomExtremes: PropTypes.func.isRequired,
         style: PropTypes.object
     },
     contextTypes: {
@@ -33,6 +29,25 @@ var MonitoringChart = React.createClass({
     },
     getTheme: function () {
         return this.context.theme || defaultTheme;
+    },
+    normalizeSeries: function () {
+        var series = [];
+        this.props.series.forEach (item => {
+            console.log(item.data);
+            let data = [];
+            let nexDate = item.pointStart - item.pointInterval;
+            item.data.forEach (dataVal => {
+                data.push([nexDate + item.pointInterval, dataVal]);
+                nexDate += item.pointInterval;
+            });
+            series.push({
+                name: item.name,
+                data: data
+            });
+        });
+        return {
+            series: series
+        }
     },
     getCommonConfig: function () {
         const theme = this.getTheme();
@@ -83,7 +98,8 @@ var MonitoringChart = React.createClass({
             },
             tooltip: {
                 shared: true
-            }
+            },
+            yAxis: this.props.chartState.yAxis
         };
     },
     getCommonChartConfig: function () {
@@ -98,24 +114,6 @@ var MonitoringChart = React.createClass({
     },
     getColumnConfig: function () {
         return {};
-    },
-    getDateFilter: function () {
-        // TODO always load all because filters doesnt work properly atm 
-        const rangeKey = "all";// this.props.dateRanges[0].key;
-        const standardDatesSelectors = ["day", "week", "month", "year"];
-        console.log("getDateFilter");
-        if (standardDatesSelectors.indexOf(rangeKey) >= 0) {
-            return {
-                start: moment.utc().startOf(rangeKey).format("YYYY-MM-DD"),
-                end: moment.utc().endOf(rangeKey).format("YYYY-MM-DD")
-            };
-        } else {
-            return {
-                start: moment.utc().subtract(1, "years").startOf("day").format("YYYY-MM-DD"),
-                // end of month to avoid not charging all the weekends (anyway this should happen only in dev)
-                end: moment.utc().endOf("month").format("YYYY-MM-DD")
-            };
-        }
     },
     getLabels: function () {
         // TODO
@@ -181,23 +179,15 @@ var MonitoringChart = React.createClass({
         } else {
             return {
                 ...this.getCommonConfig(),
-                ...this.getSpecificTypeConfig()
+                ...this.getSpecificTypeConfig(),
+                ...this.normalizeSeries()
             };
         }
     },
     render: function () {
         return (
             <div style={{marginBottom: "60px", ...this.props.style}}>
-                <components.HighCharts
-                    colors={["red", "green", "cyan", "yellow", "grey", "blue"]}
-                    config={this.state.config}
-                    coordinates={this.props.series}
-                    dateFilter={this.getDateFilter()}
-                    forceUpdate={true}
-                    resetZoom={this.props.resetZoom}
-                    setZoomExtremes={this.props.setZoomExtremes}
-                    yLabel={this.getLabels()}
-                />
+                <ReactHighstock config={this.state.config} />
             </div>
         );
     }
