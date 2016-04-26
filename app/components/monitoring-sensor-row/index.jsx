@@ -86,7 +86,13 @@ var SensorRow = React.createClass({
         if (this.props.sensor.get("tags")) {
             this.props.sensor.get("tags").forEach((tag) => {
                 tags.push(
-                    <label style={{border: "solid 1px", padding: "2px 10px 2px 10px", borderRadius: "35px", marginRight: "5px"}}>
+                    <label style={{
+                        border: "solid 1px " + colors.white,
+                        padding: "2px 10px 2px 10px",
+                        borderRadius: "35px",
+                        marginRight: "5px"
+                    }}
+                    >
                         {tag}
                     </label>
                 );

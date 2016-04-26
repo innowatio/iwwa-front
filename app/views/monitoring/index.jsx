@@ -209,7 +209,7 @@ var Monitoring = React.createClass({
                                 color={theme.colors.iconHeader}
                                 icon={"option"}
                                 size={"32px"}
-                                style={{lineHeight: "20px", verticalAlign: "middle"}}
+                                style={{lineHeight: "50px"}}
                             />
                         }
                     >

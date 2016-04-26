@@ -1,6 +1,7 @@
 import React, {PropTypes} from "react";
 import {DropTarget} from "react-dnd";
 import {Link} from "react-router";
+import R from "ramda";
 
 import {Types} from "lib/dnd-utils";
 import {defaultTheme} from "lib/theme";
@@ -8,13 +9,16 @@ import {defaultTheme} from "lib/theme";
 import {Button, Icon} from "components";
 
 const buttonStyle = ({colors}) => ({
-    backgroundColor: colors.buttonPrimary,
+    backgroundColor: colors.primary,
     border: "0px none",
     borderRadius: "100%",
-    height: "50px",
-    margin: "auto",
     width: "50px",
-    marginLeft: "10px"
+    height: "50px",
+    textAlign: "center",
+    lineHeight: "52px",
+    padding: "0px !important",
+    position: "absolute",
+    margin: "auto"
 });
 
 const sensorsTarget = {
@@ -59,31 +63,52 @@ var SensorsDropArea = React.createClass({
         let theme = this.getTheme();
         this.props.sensors.forEach((el) => {
             sensors.push(
-                <div>
+                <div style={{
+                    width:"100%",
+                    backgroundColor: theme.colors.buttonPrimary,
+                    height: "48px",
+                    lineHeight: "48px",
+                    borderTop: "1px solid " + theme.colors.white,
+                    borderBottom: "1px solid " + theme.colors.white,
+                    color: theme.colors.mainFontColor,
+                    marginBottom: "1px",
+                    padding: "0px 10px"
+                }}
+                >
                     {el}
                 </div>
             );
         });
         return (
-            <div>
+            <div style={{position: "relative"}}>
                 {sensors}
                 <Button
-                    style={buttonStyle(theme)}
+                    style={
+                        R.merge(buttonStyle(theme),
+                        {top: "20px", right: "20px"})
+                    }
                     onClick={this.props.onClickAggregate}
                 >
                     <Icon
                         color={theme.colors.iconHeader}
                         icon={"add"}
                         size={"28px"}
-                        style={{lineHeight: "20px"}}
+                        style={{verticalAlign: "middle"}}
                     />
                 </Button>
-                <Link to={"/monitoring/chart/"} onClick={() => this.props.onClickChart(this.props.sensors)}>
+                <Link
+                    to={"/monitoring/chart/"}
+                    onClick={() => this.props.onClickChart(this.props.sensors)}
+                    style={
+                        R.merge(buttonStyle(theme),
+                        {display: "block", top: "75px", right: "20px"})
+                    }
+                >
                     <Icon
                         color={theme.colors.iconHeader}
                         icon={"chart"}
                         size={"28px"}
-                        style={{lineHeight: "20px"}}
+                        style={{verticalAlign: "middle"}}
                     />
                 </Link>
             </div>
@@ -97,7 +122,7 @@ var SensorsDropArea = React.createClass({
                 border: "1px solid " + theme.colors.borderContentModal,
                 borderRadius: "20px",
                 background: theme.colors.backgroundContentModal,
-                marginTop: "40px",
+                margin: "40px 0px 80px 0px",
                 minHeight: "200px",
                 overflow: "auto",
                 padding: "20px 10px",
