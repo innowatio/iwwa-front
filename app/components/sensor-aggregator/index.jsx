@@ -30,11 +30,21 @@ var SensorAggregator = React.createClass({
                         addItemToFormula={this.props.addItemToFormula}
                         allSensors={this.props.allSensors}
                         formulaItems={this.props.formulaItems}
-                        style={{...styles(theme).titlePage, borderRadius: "20px", height: "250px", padding: "10px"}}
+                        style={{...styles(theme).titlePage,
+                            borderRadius: "20px",
+                            height: "250px",
+                            padding: "10px"
+                        }}
                     />
                 </Col>
                 <Col md={6} style={{textAlign: "center"}}>
-                    <label style={{color: theme.colors.navText, marginBottom: "20px"}}>
+                    <label style={{
+                        color: theme.colors.mainFontColor,
+                        fontSize: "16px",
+                        fontWeight: "400",
+                        marginBottom: "20px"
+                    }}
+                    >
                         {"Trascina sensori ed operatori nello spazio blu per scegliere come aggregarli"}
                     </label>
                     {this.props.sensors.map(sensorId => {

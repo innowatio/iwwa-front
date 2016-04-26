@@ -12,7 +12,7 @@ import {Icon} from "components";
 
 const styles = ({colors}) => ({
     container: {
-        borderBottom: "1px solid " + colors.white,
+        borderBottom: "1px solid " + colors.borderSensorsTable,
         width: "100%",
         height: "50px",
         margin: "0px",
@@ -24,7 +24,7 @@ const styles = ({colors}) => ({
         minWidth: "10%",
         verticalAlign: "middle",
         marginRight: "10px",
-        borderRight: "1px solid" + colors.white,
+        borderRight: "1px solid" + colors.borderSensorsTable,
         lineHeight: "50px",
         paddingLeft: "10px"
     },
@@ -101,7 +101,7 @@ var SensorRow = React.createClass({
         return (
             <div style={styles(this.getTheme()).tagsContainer}>
                 <Icon
-                    color={colors.iconHeader}
+                    color={colors.mainFontColor}
                     icon={"tag"}
                     size={"27px"}
                     style={{marginRight: "5px", verticalAlign: "middle", lineHeight: "50px"}}
@@ -114,7 +114,7 @@ var SensorRow = React.createClass({
         const {colors} = this.getTheme();
         return (
             <Icon
-                color={colors.iconHeader}
+                color={colors.mainFontColor}
                 icon={"info"}
                 size={"27px"}
                 style={{
@@ -132,7 +132,7 @@ var SensorRow = React.createClass({
         return (
             <Link to={"/monitoring/chart/"} onClick={() => this.props.selectSensorToDraw(this.props.sensor)}>
                 <Icon
-                    color={colors.iconHeader}
+                    color={colors.mainFontColor}
                     icon={"chart"}
                     size={"32px"}
                     style={{

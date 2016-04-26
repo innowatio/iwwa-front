@@ -10,7 +10,7 @@ const sensorSource = {
     beginDrag (props) {
         return {
             operator: props.type,
-            type: Types.OPERATOR    
+            type: Types.OPERATOR
         };
     },
 
@@ -45,12 +45,23 @@ var DraggableOperator = React.createClass({
         const {type, connectDragSource} = this.props;
         let theme = this.getTheme();
         return connectDragSource(
-            <div style={{width: "40px", height: "40px", display: "inline-block", margin: "5px"}}>
+            <div style={{display: "inline-block",
+                width: "50px",
+                height: "50px",
+                lineHeight: "55px",
+                textAlign: "center",
+                margin: "5px",
+                borderRadius: "100%",
+                backgroundColor: theme.colors.iconOperator
+            }}
+            >
                 <Icon
-                    color={theme.colors.iconHeader}
+                    color={theme.colors.white}
                     icon={type}
                     size={"40px"}
-                    style={{lineHeight: "20px", width: "40px", height: "40px", borderRadius: "100%", background: "green"}}
+                    style={{
+                        verticalAlign: "middle"
+                    }}
                 />
             </div>
         );

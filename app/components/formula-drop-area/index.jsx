@@ -38,21 +38,42 @@ var FormulaDropArea = React.createClass({
         return this.context.theme || defaultTheme;
     },
     renderOperator: function (operator) {
+        const theme = this.getTheme();
         return (
-            <div style={{width: "40px", height: "40px", display: "inline-block", margin: "5px"}}>
+            <div style={{display: "inline-block",
+                width: "50px",
+                height: "50px",
+                lineHeight: "55px",
+                textAlign: "center",
+                margin: "5px",
+                borderRadius: "100%",
+                backgroundColor: theme.colors.iconOperator
+            }}
+            >
                 <Icon
-                    color={this.getTheme().colors.iconHeader}
+                    color={theme.colors.white}
                     icon={operator}
                     size={"40px"}
-                    style={{lineHeight: "20px", width: "40px", height: "40px", borderRadius: "100%", background: "green"}}
+                    style={{
+                        verticalAlign: "middle"
+                    }}
                 />
             </div>
         );
     },
     renderSensor: function (sensorId) {
+        let theme = this.getTheme();
         let sensor = findSensor(this.props.allSensors, sensorId);
         return (
-            <label style={{color: this.getTheme().colors.navText, textAlign: "left", border: "1px solid", borderRadius: "10px", padding: "7px", display: "inherit"}}>
+            <label style={{
+                color: theme.colors.mainFontColor,
+                textAlign: "left",
+                border: "1px solid",
+                borderRadius: "10px",
+                padding: "7px",
+                display: "inherit"
+            }}
+            >
                 {(sensor.get("name") ? sensor.get("name") : sensorId)}
             </label>
         );

@@ -70,11 +70,12 @@ var MonitoringChart = React.createClass({
             },
             rangeSelector: {
                 buttonTheme: { // styles for the buttons
-                    fill: "blue",
+                    fill: theme.colors.buttonPrimary,
                     r: 8,
                     style: {
-                        color: "white",
-                        fontWeight: "bold"
+                        color: theme.colors.white,
+                        fontWeight: "bold",
+                        padding: "5px 10px"
                     },
                     states: {
                         hover: {},

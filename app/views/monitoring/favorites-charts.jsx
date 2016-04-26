@@ -84,7 +84,7 @@ var MonitoringFavoritesCharts = React.createClass({
                         getKey={getKeyFromCollection}
                         hover={true}
                         width={"100%"}
-                        style={{color: "white", padding: "0"}}
+                        style={{color: colors.white, padding: "0"}}
                     />
 
                     <label style={{color: colors.navText, padding: "20px"}}>

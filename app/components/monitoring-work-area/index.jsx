@@ -97,16 +97,16 @@ var MonitoringWorkArea = React.createClass({
         const theme = this.getTheme();
         return (
             <div style={{float: "left", width: "75%", padding: "10px 10px 0px 20px"}}>
-                <label style={{width: "100%", color: theme.colors.navText, textAlign: "center"}}>
+                <label style={{width: "100%", color: theme.colors.mainFontColor, textAlign: "center"}}>
                     {"Seleziona alcuni sensori per visualizzare il grafico o per creare un nuovo sensore"}
                 </label>
                 <div style={{
-                    color: "white",
+                    color: theme.colors.mainFontColor,
                     borderRadius: "20px",
                     height: "400px",
                     overflow: "hidden",
                     border: "1px solid " + theme.colors.borderContentModal,
-                    background: theme.colors.backgroundContentModal
+                    background: theme.colors.transparent
                 }}
                 >
                     <div style={{

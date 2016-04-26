@@ -71,7 +71,7 @@ var MonitoringSearch = React.createClass({
                     <Input
                         addonAfter={
                             <Icon
-                                color={theme.colors.iconInputSearch}
+                                color={theme.colors.white}
                                 icon={"search"}
                                 onClick={() => {
                                     let word = self.state.standardSearchFilter;
@@ -98,7 +98,7 @@ var MonitoringSearch = React.createClass({
                     <Input
                         addonAfter={
                             <Icon
-                                color={theme.colors.iconInputSearch}
+                                color={theme.colors.white}
                                 icon={"tag"}
                                 onClick={() => {
                                     let tag = self.state.tagSearchFilter;
@@ -122,50 +122,65 @@ var MonitoringSearch = React.createClass({
                         value={self.state.tagSearchFilter}
                     />
 
-                    <label>
+                    <label style={{fontSize: "20px", marginBottom: "10px"}}>
                         {"Riepilogo ricerca"}
                     </label>
 
-                    <div style={{textAlign: "left"}}>
-                        {self.state.wordsToSearch.map(item => {
-                            return (
-                                <label style={{marginRight: "10px"}}>
-                                    {item}
-                                </label>
-                            );
-                        })}
-                    </div>
+                    <div style={{marginBottom: "30px"}}>
+                        <div style={{textAlign: "left"}}>
+                            {self.state.wordsToSearch.map(item => {
+                                return (
+                                    <label style={{
+                                        margin:"0px 10px 10px 10px",
+                                        fontSize: "16px",
+                                        fontWeight: "300"
+                                    }}
+                                    >
+                                        {item}
+                                    </label>
+                                );
+                            })}
+                        </div>
 
-                    <div style={{textAlign: "left"}}>
-                        {self.state.tagsToSearch.map(item => {
-                            return (
-                                <label style={{border: "solid 1px", padding: "2px 10px 2px 10px", borderRadius: "35px", marginRight: "5px"}}>
-                                    {item}
-                                </label>
-                            );
-                        })}
+                        <div style={{textAlign: "left"}}>
+                            {self.state.tagsToSearch.map(item => {
+                                return (
+                                    <label style={{
+                                        border: "solid 1px",
+                                        fontSize: "16px",
+                                        fontWeight: "300",
+                                        padding: "3px 10px 3px 10px",
+                                        borderRadius: "35px",
+                                        marginRight: "5px"
+                                    }}
+                                    >
+                                        {item}
+                                    </label>
+                                );
+                            })}
+                        </div>
                     </div>
 
                     <div>
                         <Button
                             onClick={self.filterSensors}
                             style={{
-                                ...styles(self.getTheme()).buttonSelectChart,
-                                width: "90px",
+                                color: theme.colors.white,
+                                borderRadius: "30px",
+                                fontWeight: "300",
+                                width: "120px",
                                 height: "45px",
                                 lineHeight: "45px",
                                 padding: "0",
-                                marginTop: "none",
-                                fontSize: "19px",
-                                marginRight: "none",
+                                fontSize: "20px",
                                 border: "0px",
-                                backgroundColor: self.getTheme().colors.buttonPrimary
+                                backgroundColor: theme.colors.buttonPrimary
                             }}
                         >
                             {"OK"}
                         </Button>
                         <Icon
-                            color={theme.colors.iconArrow}
+                            color={theme.colors.white}
                             icon={"reset"}
                             onClick={() => self.setState(self.getInitialState())}
                             size={"35px"}
