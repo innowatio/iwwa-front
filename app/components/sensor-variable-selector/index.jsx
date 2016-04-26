@@ -10,7 +10,8 @@ var SensorVariableSelector = React.createClass({
             IPropTypes.iterable
         ]).isRequired,
         onChange: React.PropTypes.func.isRequired,
-        styleIcon: React.PropTypes.object
+        styleIcon: React.PropTypes.object,
+        value: React.PropTypes.string
     },
     contextTypes: {
         theme: React.PropTypes.object
@@ -18,7 +19,7 @@ var SensorVariableSelector = React.createClass({
     getTheme: function () {
         return this.context.theme || defaultTheme;
     },
-    getSensorId: function (value) {
+    onChangeWithSensorId: function (value) {
         var sensorId = value.get("_id");
         this.props.onChange(sensorId);
     },
@@ -53,7 +54,8 @@ var SensorVariableSelector = React.createClass({
                     }}
                     getKey={(value) => value.get("_id")}
                     getLabel={(value) => value.get("description")}
-                    onChange={this.getSensorId}
+                    onChange={this.onChangeWithSensorId}
+                    value={this.props.allowedValues.find((allowedValue) => allowedValue.get("_id") === this.props.value)}
                 />
             </components.Popover>
         );

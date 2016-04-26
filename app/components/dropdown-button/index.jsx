@@ -38,7 +38,7 @@ var DropdownButton = React.createClass({
     },
     getInitialState: function () {
         return {
-            allowedValue: {}
+            allowedValue: this.props.value || {}
         };
     },
     getTheme: function () {
@@ -46,7 +46,7 @@ var DropdownButton = React.createClass({
     },
     getColor: function (allowedValue) {
         return (
-            this.props.getHoverColor && R.equals(this.state.allowedValue, allowedValue) ?
+            this.props.getHoverColor && this.isActive(allowedValue) ?
             this.props.getHoverColor(allowedValue) :
             this.props.getColor(allowedValue)
         );
@@ -67,20 +67,23 @@ var DropdownButton = React.createClass({
             );
         }
     },
+    isActive: function (allowedValue) {
+        return R.equals(this.state.allowedValue, allowedValue);
+    },
     mouseOver: function (item) {
         this.setState({
             allowedValue: item
         });
     },
     mouseLeave: function () {
-        this.setState({allowedValue: {}});
+        this.setState({allowedValue: this.props.value || {}});
     },
     renderButtonOption: function (allowedValue, index) {
         const {colors} = this.getTheme();
         const itemStyle = {
-            backgroundColor: (R.equals(this.state.allowedValue, allowedValue) ?
+            backgroundColor: (this.isActive(allowedValue) ?
                 colors.buttonPrimary : colors.transparent),
-            color: (R.equals(this.state.allowedValue, allowedValue) ?
+            color: (this.isActive(allowedValue) ?
                 colors.white : colors.textDropdown)
         };
         return (

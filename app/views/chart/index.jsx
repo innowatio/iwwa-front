@@ -554,6 +554,7 @@ var Chart = React.createClass({
     },
     render: function () {
         const theme = this.getTheme();
+        const selectedSensor = this.props.chartState.charts[1] ? this.props.chartState.charts[1].sensorId : undefined;
         const selectedConsumptionType = (
             this.props.chartState.charts.length > 1 &&
             R.allUniq(this.props.chartState.charts.map(singleSelection => singleSelection.measurementType))
@@ -562,7 +563,6 @@ var Chart = React.createClass({
             null;
         const valoriMulti = (!this.isDateCompare() && this.selectedSitesId().length < 2 && !selectedConsumptionType);
         const variables = this.getConsumptionVariablesFromFullPath(this.props.chartState.charts[0].fullPath);
-        console.log(variables);
         return (
             <div>
                 <div style={styles(this.getTheme()).titlePage}>
@@ -682,7 +682,8 @@ var Chart = React.createClass({
                             <components.ConsumptionButtons
                                 allowedValues={variables}
                                 onChange={this.onChangeConsumption}
-                                selectedValue={selectedConsumptionType}
+                                selectedConsumptionValue={selectedConsumptionType}
+                                selectedSensorValue={selectedSensor}
                                 styleButton={consumptionButtonStyle(this.getTheme())}
                                 styleButtonSelected={consumptionButtonSelectedStyle(this.getTheme())}
                             />
