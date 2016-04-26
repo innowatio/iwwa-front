@@ -1,7 +1,3 @@
-import {Number, String, struct, list} from "tcomb";
-
-import actionTypeValidator from "../lib/action-type-validator";
-
 export const ADD_TO_FAVORITE = "ADD_TO_FAVORITE";
 export const CHANGE_Y_AXIS_VALUES = "CHANGE_Y_AXIS_VALUES";
 export const SAVE_CHART_CONFIG = "SAVE_CHART_CONFIG";
@@ -43,15 +39,6 @@ export const selectFavoriteChart = (favoriteChart) => {
         payload: favoriteChart.get("config")
     };
 };
-
-const typeofSelectDateRanges = actionTypeValidator(
-    list(
-        struct({
-            key: String,
-            label: String
-        })
-    )
-);
 
 export function selectSensorsToDraw (sensors) {
     let sensorsArray = (Array.isArray(sensors) ? sensors : [sensors]);

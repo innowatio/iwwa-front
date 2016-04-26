@@ -4,7 +4,7 @@ import {
     SAVE_CHART_CONFIG,
     SELECT_CHART_TYPE,
     SELECT_FAVORITE_CHART,
-    SELECT_SENSORS_TO_DRAW,
+    SELECT_SENSORS_TO_DRAW
 } from "../actions/monitoring-chart";
 import {SELECT_SENSOR} from "../actions/sensors";
 import Immutable from "immutable";

@@ -1,5 +1,4 @@
 import Immutable from "immutable";
-import {merge, prop} from "ramda";
 import React, {PropTypes} from "react";
 import {Col, Input} from "react-bootstrap";
 import IPropTypes from "react-immutable-proptypes";
@@ -20,7 +19,7 @@ import {styles} from "lib/styles_restyling";
 import {defaultTheme} from "lib/theme";
 import readingsDailyAggregatesToHighchartsData from "lib/readings-daily-aggregates-to-highcharts-data";
 
-import {Button, ButtonGroupSelect, Icon, MonitoringChart, SectionToolbar} from "components";
+import {Button, Icon, MonitoringChart, SectionToolbar} from "components";
 
 const buttonStyle = ({colors}) => ({
     backgroundColor: colors.buttonPrimary,
@@ -30,12 +29,6 @@ const buttonStyle = ({colors}) => ({
     margin: "auto",
     width: "50px",
     marginLeft: "10px"
-});
-
-const sourceButtonStyle = (theme) => merge(styles(theme).buttonSelectChart, {
-    minWidth: "85px",
-    height: "30px",
-    fontWeight: "300"
 });
 
 var MonitoringChartView = React.createClass({

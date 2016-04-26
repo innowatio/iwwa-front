@@ -47,7 +47,7 @@ var MonitoringChart = React.createClass({
         });
         return {
             series: series
-        }
+        };
     },
     getCommonConfig: function () {
         const theme = this.getTheme();
