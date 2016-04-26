@@ -1,6 +1,7 @@
 import * as React from "react";
 import components from "components";
 import {defaultTheme} from "lib/theme";
+
 import IPropTypes from "react-immutable-proptypes";
 
 var SensorVariableSelector = React.createClass({
@@ -24,13 +25,14 @@ var SensorVariableSelector = React.createClass({
         this.props.onChange(sensorId);
     },
     render: function () {
-        const {colors} = this.getTheme();
+        const theme = this.getTheme();
         return (
             <components.Popover
+                hideOnChange={true}
                 placement={"top"}
                 title={
                     <components.Icon
-                        color={colors.white}
+                        color={theme.colors.white}
                         icon={"option"}
                         size={"16px"}
                         style={{
@@ -47,10 +49,10 @@ var SensorVariableSelector = React.createClass({
                 <components.DropdownButton
                     allowedValues={this.props.allowedValues}
                     getColor={() => {
-                        return colors.backgroundPopover;
+                        return theme.colors.backgroundPopover;
                     }}
                     getHoverColor={() => {
-                        return colors.buttonPrimary;
+                        return theme.colors.buttonPrimary;
                     }}
                     getKey={(value) => value["_id"]}
                     getLabel={(value) => value["description"]}

@@ -101,7 +101,6 @@ var Popover = React.createClass({
                         },
                         ".arrow": {
                             display: this.props.arrow === "none" ? "none" : "",
-                            top: "-10px !important",
                             zIndex: "1000"
                         },
                         ".arrow, .arrow:after": {

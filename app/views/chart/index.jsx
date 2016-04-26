@@ -573,12 +573,12 @@ var Chart = React.createClass({
         const variables = this.getConsumptionVariablesFromFullPath(this.props.chartState.charts[0].fullPath);
         return (
             <div>
-                <div style={styles(this.getTheme()).titlePage}>
+                <div style={styles(theme).titlePage}>
                     {/* Title Page */}
                     <div style={{fontSize: "18px", marginBottom: "0px", paddingTop: "16px", width: "100%"}}>
                         {this.getTitleForChart().toUpperCase()}
                     </div>
-                    <components.Button style={alarmButtonStyle(this.getTheme())}>
+                    <components.Button style={alarmButtonStyle(theme)}>
                         <components.Icon
                             color={theme.colors.iconHeader}
                             icon={"danger"}
@@ -613,8 +613,8 @@ var Chart = React.createClass({
                 </div>
                 {/* Button Left and Right arrow */}
                 <components.Button
-                    style={R.merge(dateButtonStyle(
-                        this.getTheme()), {
+                    style={R.merge(
+                        dateButtonStyle(theme), {
                             borderRadius: "0 20px 20px 0",
                             left: "0px",
                             padding: "0"
@@ -635,13 +635,13 @@ var Chart = React.createClass({
                         {this.renderChartResetButton()}
                         <span className="pull-right" style={{display: "flex"}}>
                             <components.ButtonGroupSelect
-                                allowedValues={parameters.getSources(this.getTheme())}
+                                allowedValues={parameters.getSources(theme)}
                                 getKey={R.prop("key")}
                                 getLabel={R.prop("label")}
                                 multi={valoriMulti}
                                 onChange={this.props.selectSource}
                                 onChangeMulti={this.onChangeMultiSources}
-                                style={sourceButtonStyle(this.getTheme())}
+                                style={sourceButtonStyle(theme)}
                                 styleToMergeWhenActiveState={{
                                     background: theme.colors.backgroundChartSelectedButton,
                                     color: theme.colors.textSelectButton,
@@ -693,8 +693,8 @@ var Chart = React.createClass({
                                 resetConsumption={this.props.removeAllCompare}
                                 selectedConsumptionValue={selectedConsumptionType}
                                 selectedSensorValue={selectedSensor}
-                                styleButton={consumptionButtonStyle(this.getTheme())}
-                                styleButtonSelected={consumptionButtonSelectedStyle(this.getTheme())}
+                                styleButton={consumptionButtonStyle(theme)}
+                                styleButtonSelected={consumptionButtonSelectedStyle(theme)}
                             />
                         </span>
                         <span className="pull-right" style={{display: "flex"}}>
@@ -703,7 +703,7 @@ var Chart = React.createClass({
                                 getKey={R.prop("key")}
                                 getLabel={R.prop("label")}
                                 onChange={this.props.selectElectricalType}
-                                style={measurementTypeButtonStyle(this.getTheme())}
+                                style={measurementTypeButtonStyle(theme)}
                                 styleToMergeWhenActiveState={{
                                     background: theme.colors.backgroundChartSelectedButton,
                                     color: theme.colors.textSelectButton,
@@ -716,7 +716,7 @@ var Chart = React.createClass({
                 </div>
                 <components.Button
                     style={
-                        R.merge(dateButtonStyle(this.getTheme()),
+                        R.merge(dateButtonStyle(theme),
                         {borderRadius: "20px 0 0 20px", right: "0px", padding: "0"})
                     }
                 >
