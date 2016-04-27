@@ -31,6 +31,7 @@ import {
     favoriteSensor,
     filterSensors,
     getFormulaItems,
+    resetFormulaItems,
     selectSensor
 } from "actions/sensors";
 
@@ -80,6 +81,7 @@ var Monitoring = React.createClass({
         favoriteSensor: PropTypes.func.isRequired,
         filterSensors: PropTypes.func.isRequired,
         getFormulaItems: PropTypes.func.isRequired,
+        resetFormulaItems: PropTypes.func.isRequired,
         selectSensor: PropTypes.func.isRequired,
         selectSensorsToDraw: PropTypes.func.isRequired,
         sensorsState: PropTypes.object.isRequired
@@ -126,13 +128,20 @@ var Monitoring = React.createClass({
         this.props.getFormulaItems();
         this.openModal(true);
     },
+    resetAndOpenNew: function () {
+        this.props.resetFormulaItems(false);
+        this.openModal(false);
+    },
     openModal: function (editSensor) {
         this.setState({
             editSensor: editSensor,
             showFullscreenModal: true
         });
     },
-    closeModal: function () {
+    closeModal: function (reset) {
+        if (reset) {
+            this.props.resetFormulaItems(true);
+        }
         this.setState({
             showFullscreenModal: false
         });
@@ -145,7 +154,7 @@ var Monitoring = React.createClass({
                 <SensorForm
                     addItemToFormula={this.props.addItemToFormula}
                     allSensors={this.getAllSensors()}
-                    closeForm={this.closeModal}
+                    closeForm={() => this.closeModal(this.state.editSensor)}
                     currentSensor={this.props.sensorsState.current}
                     id={selected.length == 1 ? selected[0].get("_id") : null}
                     initialValues={this.getSensorFields()}
@@ -231,7 +240,7 @@ var Monitoring = React.createClass({
 
                 <MonitoringWorkArea
                     addSensorToWorkArea={this.props.addSensorToWorkArea}
-                    onClickAggregate={() => this.openModal(false)}
+                    onClickAggregate={this.resetAndOpenNew}
                     selectSensor={this.props.selectSensor}
                     selectSensorsToDraw={this.props.selectSensorsToDraw}
                     selected={selected}
@@ -265,6 +274,7 @@ const mapDispatchToProps = (dispatch) => {
         favoriteSensor: bindActionCreators(favoriteSensor, dispatch),
         filterSensors: bindActionCreators(filterSensors, dispatch),
         getFormulaItems: bindActionCreators(getFormulaItems, dispatch),
+        resetFormulaItems: bindActionCreators(resetFormulaItems, dispatch),
         selectSensor: bindActionCreators(selectSensor, dispatch),
         selectSensorsToDraw: bindActionCreators(selectSensorsToDraw, dispatch)
     };

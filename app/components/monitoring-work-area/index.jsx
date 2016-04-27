@@ -130,6 +130,7 @@ var MonitoringWorkArea = React.createClass({
 
                 <SensorsDropArea
                     addSensorToWorkArea={this.props.addSensorToWorkArea}
+                    allSensors={this.props.sensors}
                     onClickAggregate={this.props.onClickAggregate}
                     onClickChart={this.props.selectSensorsToDraw}
                     sensors={this.props.workAreaSensors}
