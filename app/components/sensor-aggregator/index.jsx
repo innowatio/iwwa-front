@@ -24,8 +24,8 @@ var SensorAggregator = React.createClass({
     render: function () {
         let theme = this.getTheme();
         return (
-            <div style={{minHeight: "450px"}}>
-                <Col md={6}>
+            <div style={{clear: "both", minHeight: "250px"}}>
+                <Col md={6} style={{marginTop: "20px"}}>
                     <FormulaDropArea
                         addItemToFormula={this.props.addItemToFormula}
                         allSensors={this.props.allSensors}
@@ -38,7 +38,7 @@ var SensorAggregator = React.createClass({
                         }}
                     />
                 </Col>
-                <Col md={6} style={{textAlign: "center"}}>
+                <Col md={6} style={{textAlign: "center", marginTop: "20px"}}>
                     <label style={{
                         color: theme.colors.mainFontColor,
                         fontSize: "16px",

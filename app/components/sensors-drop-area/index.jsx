@@ -57,7 +57,13 @@ var SensorsDropArea = React.createClass({
     },
     renderMessage: function (theme) {
         return (
-            <label style={{width: "100%", color: theme.colors.navText, textAlign: "center"}}>
+            <label style={{
+                width: "100%",
+                color: theme.colors.white,
+                fontSize: "14px",
+                textAlign: "center"
+            }}
+            >
                 {"Trascina in questo spazio i sensori che vuoi graficare"}
             </label>
         );
@@ -90,14 +96,22 @@ var SensorsDropArea = React.createClass({
         });
         return (
             <div style={{position: "relative"}}>
-                <h4 style={{width: "100%", color: theme.colors.navText, textAlign: "center", marginBottom: "20px"}}>
+                <h4 style={{
+                    width: "100%",
+                    color: theme.colors.navText,
+                    fontSize: "14px",
+                    textAlign: "center",
+                    margin: "0px 0px 15px 0px",
+                    padding: "0px"
+                }}
+                >
                     {"Hai selezionato: "}
                 </h4>
                 {sensors}
                 <Button
                     style={
                         R.merge(buttonStyle(theme),
-                        {top: "20px", right: "20px"})
+                        {top: "50px", right: "20px"})
                     }
                     onClick={this.props.onClickAggregate}
                 >
@@ -113,7 +127,7 @@ var SensorsDropArea = React.createClass({
                     onClick={() => this.props.onClickChart(this.props.sensors)}
                     style={
                         R.merge(buttonStyle(theme),
-                        {display: "block", top: "75px", right: "20px"})
+                        {display: "block", top: "110px", right: "20px"})
                     }
                 >
                     <Icon
@@ -134,8 +148,8 @@ var SensorsDropArea = React.createClass({
                 border: "1px solid " + theme.colors.borderContentModal,
                 borderRadius: "20px",
                 background: theme.colors.backgroundContentModal,
-                margin: "40px 0px 80px 0px",
-                minHeight: "200px",
+                margin: "40px 0px 60px 0px",
+                minHeight: "210px",
                 overflow: "auto",
                 padding: "20px 10px",
                 verticalAlign: "middle"

@@ -37,7 +37,9 @@ var MonitoringSearch = React.createClass({
                 borderTopLeftRadius: "20px",
                 borderBottomLeftRadius: "20px",
                 backgroundColor: theme.colors.iconSearchUser,
-                outline: "none !important",
+                outline: "0px",
+                outlineStyle: "none",
+                outlineWidth: "0px",
                 color: theme.colors.white
             },
             ".input-group-addon:last-child": {
@@ -122,7 +124,7 @@ var MonitoringSearch = React.createClass({
                         value={self.state.tagSearchFilter}
                     />
 
-                    <label style={{fontSize: "20px", marginBottom: "10px"}}>
+                    <label style={{fontSize: "20px", fontWeight: "400", marginBottom: "10px"}}>
                         {"Riepilogo ricerca"}
                     </label>
 

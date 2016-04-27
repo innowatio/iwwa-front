@@ -89,7 +89,7 @@ export const styles = (theme) => ({
         fontSize: "16px",
         fontWeight: "300",
         outline: "none",
-        padding: "0 10px",
+        padding: "0px",
         color: theme.colors.mainFontColor
     },
     inputRange: {

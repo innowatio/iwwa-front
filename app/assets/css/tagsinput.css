@@ -1,10 +1,8 @@
 /*TODO refactor to retrieve it dynamically*/
 
 .react-tagsinput {
-    border-bottom: 1px solid #ccc;
+    border-bottom: 1px solid white;
     overflow: hidden;
-    padding-left: 5px;
-    padding-top: 5px;
 }
 
 .react-tagsinput-tag {
@@ -13,11 +11,11 @@
     color: white;
     display: inline-block;
     font-family: sans-serif;
-    font-size: 13px;
-    font-weight: 400;
+    font-size: 16px;
+    font-weight: 300;
     margin-bottom: 5px;
     margin-right: 5px;
-    padding: 5px;
+    padding: 0px 10px 2px 10px;
 }
 
 .react-tagsinput-remove {
@@ -27,29 +25,36 @@
 
 .react-tagsinput-tag a::before {
     content: " ×";
+    color: white;
 }
-
+.react-tagsinput-tag a:hover {
+    text-decoration: none;
+}
 .react-tagsinput-input {
     background: transparent;
     border: 0;
     color: white;
     font-family: sans-serif;
-    font-size: 13px;
-    font-weight: 400;
+    font-size: 16px;
+    font-weight: 300;
     margin-bottom: 6px;
     margin-top: 1px;
     outline: none;
     padding: 5px;
     width: 100%;
 }
-
 .sensor-modal-select .Select-control,
 .sensor-modal-select .Select-menu-outer {
     background-color: transparent;
     border: none;
+    border-radius: 0px;
     border-bottom: solid 1px white;
 }
 
 .sensor-modal-select .Select-control .Select-placeholder {
-    color: white;
+    color: #999;
+    padding: 0px;
+    margin: 0px;
+    font-weight: 300;
+    font-size: 16px;
 }

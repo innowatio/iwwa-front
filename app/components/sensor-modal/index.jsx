@@ -3,6 +3,7 @@ import {Col, Input} from "react-bootstrap";
 import IPropTypes from "react-immutable-proptypes";
 import Select from "react-select";
 import Radium from "radium";
+import R from "ramda";
 import TagsInput from "react-tagsinput";
 import {reduxForm} from "redux-form";
 
@@ -93,6 +94,7 @@ var SensorForm = React.createClass({
                 show={this.props.showFullscreenModal}
             >
                 <form
+                    className="form-fields"
                     style={{
                         margin: "0 15% 0 15%",
                         border: "1px solid " + theme.colors.borderContentModal,
@@ -103,6 +105,15 @@ var SensorForm = React.createClass({
                         backgroundColor: theme.colors.backgroundContentModal
                     }}
                 >
+                    <Radium.Style
+                        rules={{
+                            ".col-xs-12": {
+                                padding: "0px",
+                                margin: "0px"
+                            }
+                        }}
+                        scopeSelector={".form-fields"}
+                    />
                     <h3
                         className="text-center"
                         style={{
@@ -122,7 +133,8 @@ var SensorForm = React.createClass({
                             <div className={"col-xs-" + (name.touched && name.error ? "9" : "12")}>
                                 <Input
                                     type="text"
-                                    className="form-control" placeholder="Nome" style={styles(theme).inputLine}
+                                    className="form-control" placeholder="Nome"
+                                    style={R.merge(styles(theme).inputLine, {color: theme.colors.buttonPrimary})}
                                     {...name}
                                 />
                             </div>
@@ -130,15 +142,21 @@ var SensorForm = React.createClass({
                         </div>
                         <div className={"form-group" + (description.touched && description.error ? " has-error" : "")}>
                             <div className={"col-xs-" + (description.touched && description.error ? "9" : "12")}>
+                                <label style={{
+                                    color: "#999",
+                                    fontSize: "16px",
+                                    fontWeight: "300"
+                                }}
+                                >
+                                    {"Descrizione"}
+                                </label>
                                 <textarea
                                     className="form-control"
-                                    placeholder="Descrizione"
                                     style={{...styles(theme).inputLine,
-                                        resize: "vertical",
+                                        resize: "none",
                                         margin: "0",
-                                        padding: "5px 10px",
-                                        minHeight: "35px",
-                                        height: "auto !important"
+                                        padding: "5px 0px",
+                                        height: "133px"
                                     }}
                                     {...description}
                                 />
@@ -166,62 +184,17 @@ var SensorForm = React.createClass({
                                 <div className="col-xs-3 help-block">{unitOfMeasurement.error}</div>
                             }
                         </div>
-                        <div className={"form-group col-xs-12"}>
+                        <div className={"form-group col-xs-12"} style={{marginBottom: "5px"}}>
                             <Input type="text" className="form-control" placeholder="Referenza sito" style={styles(theme).inputLine}
                                 {...siteRef}
                             />
                         </div>
-                        <div className={"form-group col-xs-12"}>
+                        <div className={"form-group col-xs-12"} style={{marginBottom: "5px"}}>
                             <Input type="text" className="form-control" placeholder="Referenza cliente" style={styles(theme).inputLine}
                                 {...clientRef}
                             />
                         </div>
                         <div className={"tags-wrp form-group col-xs-12"}>
-                            <Radium.Style
-                                rules={{
-                                    ".react-tagsinput": {
-                                        fontSize: "20px",
-                                        overflow: "hidden",
-                                        paddingLeft: "5px",
-                                        paddingTop: "5px"
-                                    },
-                                    ".react-tagsinput-tag": {
-                                        backgroundColor: theme.colors.transparent,
-                                        borderRadius: "20px",
-                                        border: "1px solid " + theme.colors.mainFontColor,
-                                        color: theme.colors.mainFontColor,
-                                        display: "inline-block",
-                                        fontSize: "16px",
-                                        fontWeight: "300",
-                                        marginBottom: "5px",
-                                        marginRight: "5px",
-                                        padding: "3px 5px"
-                                    },
-                                    ".react-tagsinput-remove": {
-                                        cursor: "pointer"
-                                    },
-                                    ".react-tagsinput-tag a::before": {
-                                        content: " ×",
-                                        color: theme.colors.mainFontColor
-                                    },
-                                    ".react-tagsinput-tag a:hover": {
-                                        textDecoration: "none"
-                                    },
-                                    ".react-tagsinput-input": {
-                                        background: "transparent",
-                                        border: "0px",
-                                        color: theme.colors.mainFontColor,
-                                        fontSize: "16px",
-                                        fontWeight: "300",
-                                        marginBottom: "6px",
-                                        marginTop: "1px",
-                                        outline: "none",
-                                        padding: "5px",
-                                        width: "80px"
-                                    }
-                                }}
-                                scopeSelector={".tags-wrp"}
-                            />
                             <TagsInput
                                 addOnBlur={true}
                                 renderInput={this.renderTagInput}

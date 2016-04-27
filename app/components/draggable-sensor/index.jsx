@@ -44,7 +44,17 @@ var DraggableSensor = React.createClass({
         const {connectDragSource, sensor} = this.props;
         let theme = this.getTheme();
         return connectDragSource(
-            <label style={{color: theme.colors.navText, textAlign: "left", border: "1px solid", borderRadius: "10px", padding: "7px", display: "inherit"}}>
+            <label style={{
+                color: theme.colors.white,
+                backgroundColor: theme.colors.backgroundContentModal,
+                cursor: "pointer",
+                textAlign: "left",
+                border: "1px solid",
+                borderRadius: "10px",
+                padding: "7px",
+                display: "inherit"
+            }}
+            >
                 {(sensor.get("name") ? sensor.get("name") : sensor.get("_id")) + " - " + sensor.get("description")}
             </label>
         );

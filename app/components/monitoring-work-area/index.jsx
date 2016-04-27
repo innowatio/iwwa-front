@@ -96,46 +96,48 @@ var MonitoringWorkArea = React.createClass({
     render: function () {
         const theme = this.getTheme();
         return (
-            <div style={{float: "left", width: "75%", padding: "10px 10px 0px 20px"}}>
-                <label style={{width: "100%", color: theme.colors.mainFontColor, textAlign: "center"}}>
-                    {"Seleziona alcuni sensori per visualizzare il grafico o per creare un nuovo sensore"}
-                </label>
-                <div style={{
-                    color: theme.colors.mainFontColor,
-                    borderRadius: "20px",
-                    height: "400px",
-                    overflow: "hidden",
-                    border: "1px solid " + theme.colors.borderContentModal,
-                    background: theme.colors.transparent
-                }}
-                >
+            <div style={{float: "left", overflow: "hidden", width: "75%", height: "calc(100vh - 120px)"}}>
+                <div style={{width: "auto", overflow: "auto", height: "100%", padding: "10px 15px 0px 15px"}}>
+                    <label style={{width: "100%", color: theme.colors.mainFontColor, textAlign: "center"}}>
+                        {"Seleziona alcuni sensori per visualizzare il grafico o per creare un nuovo sensore"}
+                    </label>
                     <div style={{
-                        height: "100%",
-                        overflow: "auto",
-                        borderRadius: "18px"
+                        color: theme.colors.mainFontColor,
+                        borderRadius: "20px",
+                        height: "400px",
+                        overflow: "hidden",
+                        border: "1px solid " + theme.colors.borderContentModal,
+                        background: theme.colors.transparent
                     }}
                     >
-                        <CollectionItemList
-                            collections={this.props.sensors}
-                            filter={this.searchFilter}
-                            headerComponent={this.renderSensorList}
-                            hover={true}
-                            hoverStyle={hoverStyle(theme)}
-                            initialVisibleRow={6}
-                            lazyLoadButtonStyle={lazyLoadButtonStyle(theme)}
-                            lazyLoadLabel={"Carica altri"}
-                        />
+                        <div style={{
+                            height: "100%",
+                            overflow: "auto",
+                            borderRadius: "18px"
+                        }}
+                        >
+                            <CollectionItemList
+                                collections={this.props.sensors}
+                                filter={this.searchFilter}
+                                headerComponent={this.renderSensorList}
+                                hover={true}
+                                hoverStyle={hoverStyle(theme)}
+                                initialVisibleRow={6}
+                                lazyLoadButtonStyle={lazyLoadButtonStyle(theme)}
+                                lazyLoadLabel={"Carica altri"}
+                            />
+                        </div>
                     </div>
+
+                    <SensorsDropArea
+                        addSensorToWorkArea={this.props.addSensorToWorkArea}
+                        allSensors={this.props.sensors}
+                        onClickAggregate={this.props.onClickAggregate}
+                        onClickChart={this.props.selectSensorsToDraw}
+                        sensors={this.props.workAreaSensors}
+                    />
+
                 </div>
-
-                <SensorsDropArea
-                    addSensorToWorkArea={this.props.addSensorToWorkArea}
-                    allSensors={this.props.sensors}
-                    onClickAggregate={this.props.onClickAggregate}
-                    onClickChart={this.props.selectSensorsToDraw}
-                    sensors={this.props.workAreaSensors}
-                />
-
             </div>
         );
     }
