@@ -32,6 +32,7 @@ var SensorAggregator = React.createClass({
                         formulaItems={this.props.formulaItems}
                         style={{...styles(theme).titlePage,
                             borderRadius: "20px",
+                            display: "-webkit-inline-box",
                             height: "250px",
                             padding: "10px"
                         }}

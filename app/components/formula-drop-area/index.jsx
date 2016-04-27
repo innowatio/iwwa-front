@@ -70,7 +70,10 @@ var FormulaDropArea = React.createClass({
                 textAlign: "left",
                 border: "1px solid",
                 borderRadius: "10px",
-                padding: "7px",
+                height: "50px",
+                padding: "10px",
+                paddingTop: "15px",
+                margin: "5px",
                 display: "inherit"
             }}
             >

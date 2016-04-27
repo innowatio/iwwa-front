@@ -25,7 +25,9 @@ const buttonStyle = ({colors}) => ({
 const sensorsTarget = {
     drop (props, monitor) {
         const item = monitor.getItem();
-        props.addSensorToWorkArea(item.sensor);
+        if (props.sensors.indexOf(item.sensor.get("_id")) < 0) {
+            props.addSensorToWorkArea(item.sensor);
+        }
         return {moved: true};
     }
 };
