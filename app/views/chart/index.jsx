@@ -220,14 +220,38 @@ var Chart = React.createClass({
             // All sensors under a site
             const site = this.getSitoById(fullPath[0]);
             if (site) {
-                const sensorsType = site.get("sensorsIds").map(sensorId => {
+                const sensors = site.get("sensorsIds").map(sensorId => {
                     const sensorObject = this.getSensorById(sensorId);
                     if (sensorObject) {
-                        return sensorObject.get("type");
+                        return sensorObject;
                     }
+                }).filter(sensor => {
+                    return !R.isNil(sensor);
                 });
-                return consumptionSensors(this.getTheme()).filter(consumption => {
+
+                const sensorsType = sensors.map((sensor) => {
+                    return sensor.get("type");
+                });
+                var sensorsButtonList = consumptionSensors(this.getTheme()).filter(consumption => {
                     return R.contains(consumption.type, sensorsType);
+                });
+                return sensorsButtonList.map((sensorObject) => {
+                    const sensorType = sensorObject.type;
+                    const filteredSensors = sensors.filter((sensor) => {
+                        return sensorType === sensor.get("type");
+                    });
+                    return {
+                        ...sensorObject,
+                        sensors: filteredSensors.toJS().sort((a, b) => {
+                            if (a.description > b.description) {
+                                return 1;
+                            }
+                            if (a.description < b.description) {
+                                return -1;
+                            }
+                            return 0;
+                        })
+                    };
                 });
             }
         }
@@ -304,8 +328,7 @@ var Chart = React.createClass({
         this.changeDateRanges(true);
     },
     onChangeConsumption: function (sensorId, consumptionTypes) {
-        const selectedSensorId = this.firstSensorOfConsumptionInTheSite(consumptionTypes);
-        this.props.selectEnvironmentalSensor([selectedSensorId], [consumptionTypes]);
+        this.props.selectEnvironmentalSensor([sensorId], [consumptionTypes]);
     },
     onChangeMultiSources: function (currentValue, allowedValue) {
         const value = currentValue.map(value => value.key);
@@ -527,7 +550,7 @@ var Chart = React.createClass({
                 }}
             >
                 <components.Icon
-                    color={this.getTheme().colors.iconLogout}
+                    color={colors.iconLogout}
                     icon={"logout"}
                     size={"28px"}
                     style={{lineHeight: "20px", paddingRight: "5px"}}
@@ -539,6 +562,7 @@ var Chart = React.createClass({
     },
     render: function () {
         const theme = this.getTheme();
+        const selectedSensor = this.props.chartState.charts[1] ? this.props.chartState.charts[1].sensorId : undefined;
         const selectedConsumptionType = (
             this.props.chartState.charts.length > 1 &&
             R.allUniq(this.props.chartState.charts.map(singleSelection => singleSelection.measurementType))
@@ -549,12 +573,12 @@ var Chart = React.createClass({
         const variables = this.getConsumptionVariablesFromFullPath(this.props.chartState.charts[0].fullPath);
         return (
             <div>
-                <div style={styles(this.getTheme()).titlePage}>
+                <div style={styles(theme).titlePage}>
                     {/* Title Page */}
                     <div style={{fontSize: "18px", marginBottom: "0px", paddingTop: "16px", width: "100%"}}>
                         {this.getTitleForChart().toUpperCase()}
                     </div>
-                    <components.Button style={alarmButtonStyle(this.getTheme())}>
+                    <components.Button style={alarmButtonStyle(theme)}>
                         <components.Icon
                             color={theme.colors.iconHeader}
                             icon={"danger"}
@@ -589,8 +613,8 @@ var Chart = React.createClass({
                 </div>
                 {/* Button Left and Right arrow */}
                 <components.Button
-                    style={R.merge(dateButtonStyle(
-                        this.getTheme()), {
+                    style={R.merge(
+                        dateButtonStyle(theme), {
                             borderRadius: "0 20px 20px 0",
                             left: "0px",
                             padding: "0"
@@ -611,13 +635,13 @@ var Chart = React.createClass({
                         {this.renderChartResetButton()}
                         <span className="pull-right" style={{display: "flex"}}>
                             <components.ButtonGroupSelect
-                                allowedValues={parameters.getSources(this.getTheme())}
+                                allowedValues={parameters.getSources(theme)}
                                 getKey={R.prop("key")}
                                 getLabel={R.prop("label")}
                                 multi={valoriMulti}
                                 onChange={this.props.selectSource}
                                 onChangeMulti={this.onChangeMultiSources}
-                                style={sourceButtonStyle(this.getTheme())}
+                                style={sourceButtonStyle(theme)}
                                 styleToMergeWhenActiveState={{
                                     background: theme.colors.backgroundChartSelectedButton,
                                     color: theme.colors.textSelectButton,
@@ -665,10 +689,12 @@ var Chart = React.createClass({
                         <span className="pull-left" style={{display: "flex", width: "auto"}}>
                             <components.ConsumptionButtons
                                 allowedValues={variables}
-                                onChange={consumptionTypes => this.onChangeConsumption(null, consumptionTypes)}
-                                selectedValue={selectedConsumptionType}
-                                styleButton={consumptionButtonStyle(this.getTheme())}
-                                styleButtonSelected={consumptionButtonSelectedStyle(this.getTheme())}
+                                onChange={this.onChangeConsumption}
+                                resetConsumption={this.props.removeAllCompare}
+                                selectedConsumptionValue={selectedConsumptionType}
+                                selectedSensorValue={selectedSensor}
+                                styleButton={consumptionButtonStyle(theme)}
+                                styleButtonSelected={consumptionButtonSelectedStyle(theme)}
                             />
                         </span>
                         <span className="pull-right" style={{display: "flex"}}>
@@ -677,7 +703,7 @@ var Chart = React.createClass({
                                 getKey={R.prop("key")}
                                 getLabel={R.prop("label")}
                                 onChange={this.props.selectElectricalType}
-                                style={measurementTypeButtonStyle(this.getTheme())}
+                                style={measurementTypeButtonStyle(theme)}
                                 styleToMergeWhenActiveState={{
                                     background: theme.colors.backgroundChartSelectedButton,
                                     color: theme.colors.textSelectButton,
@@ -690,7 +716,7 @@ var Chart = React.createClass({
                 </div>
                 <components.Button
                     style={
-                        R.merge(dateButtonStyle(this.getTheme()),
+                        R.merge(dateButtonStyle(theme),
                         {borderRadius: "20px 0 0 20px", right: "0px", padding: "0"})
                     }
                 >

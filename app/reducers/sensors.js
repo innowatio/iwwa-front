@@ -5,6 +5,7 @@ import {
     ADD_SENSOR_TO_WORK_AREA,
     FILTER_SENSORS,
     GET_FORMULA_ITEMS,
+    RESET_FORMULA_ITEMS,
     SELECT_SENSOR
 } from "../actions/sensors";
 
@@ -73,6 +74,13 @@ export function sensors (state = defaultState, action) {
             let result = parseSensorFormula(state.selectedSensors[0]);
             newState.current.formulaItems = result.formulaItems;
             newState.workAreaSensors = result.sensors;
+            break;
+        }
+        case RESET_FORMULA_ITEMS: {
+            newState.current.formulaItems = [];
+            if (action.payload) {
+                newState.workAreaSensors = [];
+            }
             break;
         }
         case SELECT_SENSOR: {

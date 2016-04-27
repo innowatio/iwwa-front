@@ -1,4 +1,3 @@
-import Immutable from "immutable";
 import React, {PropTypes} from "react";
 import {Col, Input} from "react-bootstrap";
 import IPropTypes from "react-immutable-proptypes";
@@ -69,8 +68,9 @@ var MonitoringChartView = React.createClass({
     },
     subscribeToSensorsData: function (props) {
         const sensors = props.monitoringChart.sensorsToDraw;
-        sensors[0] && sensors.forEach((sensorId) => {
+        sensors[0] && sensors.forEach((sensor) => {
             // last year for sensors
+            let sensorId = typeof sensor === "string" ? sensor : sensor.get("_id");
             props.asteroid.subscribe(
                 "dailyMeasuresBySensor",
                 sensorId,
@@ -95,9 +95,10 @@ var MonitoringChartView = React.createClass({
                 sensorId: sensorId
             };
         });
-        const readingsDailyAggregates = this.props.collections.get("readings-daily-aggregates") || Immutable.Map();
-        let measures = readingsDailyAggregatesToHighchartsData(readingsDailyAggregates, monitoringCharts);
-        return measures;
+        const readingsDailyAggregates = this.props.collections.get("readings-daily-aggregates");
+        if (readingsDailyAggregates) {
+            return readingsDailyAggregatesToHighchartsData(readingsDailyAggregates, monitoringCharts);
+        }
     },
     getTheme: function () {
         return this.context.theme || defaultTheme;
@@ -120,18 +121,35 @@ var MonitoringChartView = React.createClass({
             min: this.state.yAxisMin
         });
     },
+    haveNullSeries: function (series) {
+        return series.some((it) => {
+            let isNull = true;
+            for (let i = 0; i < it.data.length && isNull; i++) {
+                isNull = !it.data[i];
+            }
+            return isNull;
+        });
+    },
+    renderChart: function () {
+        let series = this.getChartSeries();
+        if (series && !this.haveNullSeries(series)) {
+            return (
+                <MonitoringChart
+                    chartState={this.props.monitoringChart}
+                    ref="monitoringChart"
+                    saveConfig={this.props.saveChartConfig}
+                    series={series}
+                />
+            );
+        }
+    },
     render: function () {
         const theme = this.getTheme();
         return (
             <div>
                 <SectionToolbar backUrl={"/monitoring/"} title={"Torna all'elenco sensori"} />
                 <div style={{width: "75%", padding: "20px", float: "left"}}>
-                    <MonitoringChart
-                        chartState={this.props.monitoringChart}
-                        ref="monitoringChart"
-                        saveConfig={this.props.saveChartConfig}
-                        series={this.getChartSeries()}
-                    />
+                    {this.renderChart()}
                 </div>
                 <div style={{width: "25%", backgroundColor: theme.colors.primary, float: "left", minHeight: "600px"}}>
                     <div style={{padding: "20px", borderBottom: "solid 1px", borderColor: theme.colors.white}}>

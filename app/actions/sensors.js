@@ -6,6 +6,7 @@ export const ADD_ITEM_TO_FORMULA = "ADD_ITEM_TO_FORMULA";
 export const ADD_SENSOR_TO_WORK_AREA = "ADD_SENSOR_TO_WORK_AREA";
 export const FILTER_SENSORS = "FILTER_SENSORS";
 export const GET_FORMULA_ITEMS = "GET_FORMULA_ITEMS";
+export const RESET_FORMULA_ITEMS = "RESET_FORMULA_ITEMS";
 export const SELECT_SENSOR = "SELECT_SENSOR";
 
 function getBasicObject (type, payload) {
@@ -131,6 +132,8 @@ export const favoriteSensor = (id) => getBasicObject("FAVORITE_SENSOR", id);
 export const filterSensors = (payload) => getBasicObject(FILTER_SENSORS, payload);
 
 export const getFormulaItems = () => getBasicObject(GET_FORMULA_ITEMS);
+
+export const resetFormulaItems = (resetWorkArea) => getBasicObject(RESET_FORMULA_ITEMS, resetWorkArea);
 
 export const monitorSensor = (id) => getBasicObject("MONITOR_SENSOR", id);
 

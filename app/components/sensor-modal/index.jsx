@@ -8,16 +8,11 @@ import {reduxForm} from "redux-form";
 
 import {FullscreenModal, SensorAggregator} from "components";
 
+import {potentialUnitsOfMeasurement} from "lib/sensors-utils";
 import {styles} from "lib/styles_restyling";
 import {defaultTheme} from "lib/theme";
 
 export const fields = ["name", "description", "unitOfMeasurement", "siteRef", "clientRef", "tags"];
-
-const potentialUnitsOfMeasurement = [
-    {value: 1, label: "Celsius"},
-    {value: 2, label: "Fahrenheit"},
-    {value: 3, label: "Watt"}
-];
 
 const validate = values => {
     const errors = {};

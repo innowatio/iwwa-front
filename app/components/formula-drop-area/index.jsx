@@ -61,20 +61,23 @@ var FormulaDropArea = React.createClass({
             </div>
         );
     },
-    renderSensor: function (sensorId) {
+    renderSensor: function (sensor) {
         let theme = this.getTheme();
-        let sensor = findSensor(this.props.allSensors, sensorId);
+        let sensorObj = typeof sensor === "string" ? findSensor(this.props.allSensors, sensor): sensor;
         return (
             <label style={{
                 color: theme.colors.mainFontColor,
                 textAlign: "left",
                 border: "1px solid",
                 borderRadius: "10px",
-                padding: "7px",
+                height: "50px",
+                padding: "10px",
+                paddingTop: "15px",
+                margin: "5px",
                 display: "inherit"
             }}
             >
-                {(sensor.get("name") ? sensor.get("name") : sensorId)}
+                {(sensorObj.get("name") ? sensorObj.get("name") : sensorObj.get("_id"))}
             </label>
         );
     },

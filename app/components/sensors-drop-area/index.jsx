@@ -1,9 +1,11 @@
 import React, {PropTypes} from "react";
 import {DropTarget} from "react-dnd";
+import IPropTypes from "react-immutable-proptypes";
 import {Link} from "react-router";
 import R from "ramda";
 
 import {Types} from "lib/dnd-utils";
+import {getUnitOfMeasurementLabel} from "lib/sensors-utils";
 import {defaultTheme} from "lib/theme";
 
 import {Button, Icon} from "components";
@@ -24,8 +26,9 @@ const buttonStyle = ({colors}) => ({
 const sensorsTarget = {
     drop (props, monitor) {
         const item = monitor.getItem();
-        console.log(item);
-        props.addSensorToWorkArea(item.sensor);
+        if (props.sensors.indexOf(item.sensor.get("_id")) < 0) {
+            props.addSensorToWorkArea(item.sensor);
+        }
         return {moved: true};
     }
 };
@@ -40,6 +43,7 @@ function collect (connect, monitor) {
 var SensorsDropArea = React.createClass({
     propTypes: {
         addSensorToWorkArea: PropTypes.func.isRequired,
+        allSensors: IPropTypes.map.isRequired,
         connectDropTarget: PropTypes.func,
         onClickAggregate: PropTypes.func.isRequired,
         onClickChart: PropTypes.func.isRequired,
@@ -61,7 +65,8 @@ var SensorsDropArea = React.createClass({
     renderSensors: function () {
         let sensors = [];
         let theme = this.getTheme();
-        this.props.sensors.forEach((el) => {
+        this.props.sensors.forEach((sensorId) => {
+            let sensor = this.props.allSensors.get(sensorId);
             sensors.push(
                 <div style={{
                     width:"100%",
@@ -75,12 +80,19 @@ var SensorsDropArea = React.createClass({
                     padding: "0px 10px"
                 }}
                 >
-                    {el}
+                    {
+                        (sensor.get("name") ? sensor.get("name") : sensorId) +
+                        (sensor.get("description") ? " - " + sensor.get("description") : "") +
+                        (sensor.get("unitOfMeasurement") ? " - " + getUnitOfMeasurementLabel(sensor.get("unitOfMeasurement")) : "")
+                    }
                 </div>
             );
         });
         return (
             <div style={{position: "relative"}}>
+                <h4 style={{width: "100%", color: theme.colors.navText, textAlign: "center", marginBottom: "20px"}}>
+                    {"Hai selezionato: "}
+                </h4>
                 {sensors}
                 <Button
                     style={

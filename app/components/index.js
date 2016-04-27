@@ -38,6 +38,7 @@ exports.SectionToolbar          = require("./section-toolbar/");
 exports.SelectTree              = require("./select-tree/");
 exports.SensorAggregator        = require("./sensor-aggregator/");
 exports.SensorForm              = require("./sensor-modal/");
+exports.SensorVariableSelector  = require("./sensor-variable-selector/");
 exports.SensorsDropArea         = require("./sensors-drop-area/");
 exports.SideNav                 = require("./sidenav/");
 exports.SiteNavigator           = require("./site-navigator/");

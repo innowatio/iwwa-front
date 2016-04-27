@@ -33,7 +33,6 @@ var MonitoringChart = React.createClass({
     normalizeSeries: function () {
         var series = [];
         this.props.series.forEach (item => {
-            console.log(item.data);
             let data = [];
             let nexDate = item.pointStart - item.pointInterval;
             item.data.forEach (dataVal => {
@@ -73,8 +72,12 @@ var MonitoringChart = React.createClass({
                     fill: theme.colors.buttonPrimary,
                     r: 8,
                     style: {
-                        color: theme.colors.white,
-                        fontWeight: "bold",
+                        background: theme.colors.backgroundChartSelectedButton,
+                        border: "1px solid "+ theme.colors.borderChartSelectedButton,
+                        color: theme.colors.textSelectButton,
+                        fontWeight: "300",
+                        height: "30px",
+                        width: "85px",
                         padding: "5px 10px"
                     },
                     states: {
