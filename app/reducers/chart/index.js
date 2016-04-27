@@ -182,7 +182,10 @@ function charts (state = defaultChartState, {type, payload}) {
             */
             return [{
                 ...state[0],
-                date: {}
+                date: {
+                    ...state[0].date,
+                    type: "dateFilter"
+                }
             }];
         }
         case DISPLAY_ALARMS_ON_CHART: {

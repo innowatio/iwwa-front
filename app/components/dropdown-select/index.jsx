@@ -58,7 +58,10 @@ var DropdownSelect = React.createClass({
                     borderTopLeftRadius: (index === 0 ? "4px" : undefined),
                     borderTopRightRadius: (index === 0 ? "4px" : undefined),
                     fontSize: "13px",
-                    textAlign: "center"
+                    textAlign: "center",
+                    outline: "0px",
+                    outlineStyle: "none",
+                    outlineWidth: "0px"
                 }}
             >
                 {this.props.getLabel(allowedValue)}
@@ -66,25 +69,6 @@ var DropdownSelect = React.createClass({
         );
     },
     render: function () {
-        // <Radium.Style
-        //     rules={{
-        //         ".arrow, .arrow:after": {
-        //             borderBottomColor: colors.borderPopover + "!important"
-        //         },
-        //         ".arrow:after": {
-        //             borderBottomColor: colors.backgroundArrowPopoverTop + "!important"
-        //         },
-        //         "button.list-group-item:focus": {
-        //             outline: "none",
-        //             boxShadow: "none",
-        //             WebkitBoxShadow: "none"
-        //         },
-        //         "button.list-group-item:hover": {
-        //             backgroundColor: colors.buttonPrimary + "!important"
-        //         }
-        //     }}
-        //     scopeSelector=".dropdown"
-        // />
         var items = this.props.allowedValues.map(this.renderButtonOption);
         return (
             <div>
