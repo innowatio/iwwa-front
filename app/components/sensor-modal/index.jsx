@@ -2,6 +2,7 @@ import React, {PropTypes} from "react";
 import {Col, Input} from "react-bootstrap";
 import IPropTypes from "react-immutable-proptypes";
 import Select from "react-select";
+import Radium from "radium";
 import TagsInput from "react-tagsinput";
 import {reduxForm} from "redux-form";
 
@@ -89,7 +90,7 @@ var SensorForm = React.createClass({
         // TODO refactor to create more field components
         return (
             <FullscreenModal
-                backgroundColor={theme.colors.backgroundContentModal}
+                backgroundColor={theme.colors.backgroundModal}
                 onConfirm={handleSubmit(this.saveForm)}
                 onHide={this.props.closeForm}
                 onReset={resetForm}
@@ -97,13 +98,14 @@ var SensorForm = React.createClass({
                 show={this.props.showFullscreenModal}
             >
                 <form
-                    className="form-horizontal"
                     style={{
                         margin: "0 15% 0 15%",
-                        padding: "10px",
-                        border: "solid white 1px",
+                        border: "1px solid " + theme.colors.borderContentModal,
                         borderRadius: "20px",
-                        minHeight: "600px"
+                        minHeight: "600px",
+                        height: "auto !important",
+                        maxHeight: "auto !important",
+                        backgroundColor: theme.colors.backgroundContentModal
                     }}
                 >
                     <h3
@@ -113,7 +115,9 @@ var SensorForm = React.createClass({
                             fontSize: "24px",
                             fontWeight: "400",
                             marginBottom: "20px",
-                            textTransform: "uppercase"
+                            textTransform: "uppercase",
+                            paddingBottom: "20px",
+                            borderBottom: "1px solid " + theme.colors.borderContentModal
                         }}
                     >
                         {this.props.title}
@@ -123,7 +127,7 @@ var SensorForm = React.createClass({
                             <div className={"col-xs-" + (name.touched && name.error ? "9" : "12")}>
                                 <Input
                                     type="text"
-                                    className="col-xs-12 form-control" placeholder="Nome" style={styles(theme).inputLine}
+                                    className="form-control" placeholder="Nome" style={styles(theme).inputLine}
                                     {...name}
                                 />
                             </div>
@@ -131,7 +135,16 @@ var SensorForm = React.createClass({
                         </div>
                         <div className={"form-group" + (description.touched && description.error ? " has-error" : "")}>
                             <div className={"col-xs-" + (description.touched && description.error ? "9" : "12")}>
-                                <textarea className="col-xs-12 form-control" placeholder="Descrizione" style={{...styles(theme).inputLine, resize: "none"}}
+                                <textarea
+                                    className="form-control"
+                                    placeholder="Descrizione"
+                                    style={{...styles(theme).inputLine,
+                                        resize: "vertical",
+                                        margin: "0",
+                                        padding: "5px 10px",
+                                        minHeight: "35px",
+                                        height: "auto !important"
+                                    }}
                                     {...description}
                                 />
                             </div>
@@ -140,7 +153,10 @@ var SensorForm = React.createClass({
                     </Col>
                     <Col md={6}>
                         <div className={"form-group" + (unitOfMeasurement.touched && unitOfMeasurement.error ? " has-error" : "")}>
-                            <div className={"col-xs-" + (unitOfMeasurement.touched && unitOfMeasurement.error ? "9" : "12")}>
+                            <div
+                                className={"col-xs-" + (unitOfMeasurement.touched && unitOfMeasurement.error ? "9" : "12")}
+                                style={{marginBottom: "25px"}}
+                            >
                                 <Select
                                     autofocus={true}
                                     className="sensor-modal-select"
@@ -151,19 +167,66 @@ var SensorForm = React.createClass({
                                     value={unitOfMeasurement.value}
                                 />
                             </div>
-                            {unitOfMeasurement.touched && unitOfMeasurement.error && <div className="col-xs-3 help-block">{unitOfMeasurement.error}</div>}
+                            {unitOfMeasurement.touched && unitOfMeasurement.error &&
+                                <div className="col-xs-3 help-block">{unitOfMeasurement.error}</div>
+                            }
                         </div>
                         <div className={"form-group col-xs-12"}>
-                            <Input type="text" className="col-xs-12 form-control" placeholder="Referenza sito" style={styles(theme).inputLine}
+                            <Input type="text" className="form-control" placeholder="Referenza sito" style={styles(theme).inputLine}
                                 {...siteRef}
                             />
                         </div>
                         <div className={"form-group col-xs-12"}>
-                            <Input type="text" className="col-xs-12 form-control" placeholder="Referenza cliente" style={styles(theme).inputLine}
+                            <Input type="text" className="form-control" placeholder="Referenza cliente" style={styles(theme).inputLine}
                                 {...clientRef}
                             />
                         </div>
-                        <div className={"form-group col-xs-12"}>
+                        <div className={"tags-wrp form-group col-xs-12"}>
+                            <Radium.Style
+                                rules={{
+                                    ".react-tagsinput": {
+                                        fontSize: "20px",
+                                        overflow: "hidden",
+                                        paddingLeft: "5px",
+                                        paddingTop: "5px"
+                                    },
+                                    ".react-tagsinput-tag": {
+                                        backgroundColor: theme.colors.transparent,
+                                        borderRadius: "20px",
+                                        border: "1px solid " + theme.colors.mainFontColor,
+                                        color: theme.colors.mainFontColor,
+                                        display: "inline-block",
+                                        fontSize: "16px",
+                                        fontWeight: "300",
+                                        marginBottom: "5px",
+                                        marginRight: "5px",
+                                        padding: "3px 5px"
+                                    },
+                                    ".react-tagsinput-remove": {
+                                        cursor: "pointer"
+                                    },
+                                    ".react-tagsinput-tag a::before": {
+                                        content: " ×",
+                                        color: theme.colors.mainFontColor
+                                    },
+                                    ".react-tagsinput-tag a:hover": {
+                                        textDecoration: "none"
+                                    },
+                                    ".react-tagsinput-input": {
+                                        background: "transparent",
+                                        border: "0px",
+                                        color: theme.colors.mainFontColor,
+                                        fontSize: "16px",
+                                        fontWeight: "300",
+                                        marginBottom: "6px",
+                                        marginTop: "1px",
+                                        outline: "none",
+                                        padding: "5px",
+                                        width: "80px"
+                                    }
+                                }}
+                                scopeSelector={".tags-wrp"}
+                            />
                             <TagsInput
                                 addOnBlur={true}
                                 renderInput={this.renderTagInput}
@@ -173,6 +236,7 @@ var SensorForm = React.createClass({
                         </div>
                     </Col>
                     {this.renderSensorAggregation()}
+                    <div style={{clear: "both", height: "20px"}}></div>
                 </form>
             </FullscreenModal>
         );
