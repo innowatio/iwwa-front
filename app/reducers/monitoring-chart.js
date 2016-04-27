@@ -1,3 +1,6 @@
+import Immutable from "immutable";
+import UUID from "uuid-js";
+
 import {
     ADD_TO_FAVORITE,
     CHANGE_Y_AXIS_VALUES,
@@ -7,7 +10,6 @@ import {
     SELECT_SENSORS_TO_DRAW
 } from "../actions/monitoring-chart";
 import {SELECT_SENSOR} from "../actions/sensors";
-import Immutable from "immutable";
 
 let defaultState = {
     dateRanges: [{
@@ -20,16 +22,14 @@ let defaultState = {
     yAxis: {}
 };
 
-let nextFavoriteId = 0;
-
 export function monitoringChart (state = defaultState, action) {
     switch (action.type) {
         case ADD_TO_FAVORITE: {
-            let favorites = state.favorites.set(nextFavoriteId, Immutable.Map({
-                _id: nextFavoriteId,
+            let id = UUID.create();
+            let favorites = state.favorites.set(id, Immutable.Map({
+                _id: id,
                 config: action.payload
             }));
-            nextFavoriteId++;
             return {
                 ...state,
                 favorites: favorites
