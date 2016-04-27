@@ -5,6 +5,7 @@ import {Link} from "react-router";
 import R from "ramda";
 
 import {Types} from "lib/dnd-utils";
+import {getUnitOfMeasurementLabel} from "lib/sensors-utils";
 import {defaultTheme} from "lib/theme";
 
 import {Button, Icon} from "components";
@@ -82,7 +83,7 @@ var SensorsDropArea = React.createClass({
                     {
                         (sensor.get("name") ? sensor.get("name") : sensorId) +
                         (sensor.get("description") ? " - " + sensor.get("description") : "") +
-                        (sensor.get("unitOfMeasurement") ? " - " + sensor.get("unitOfMeasurement") : "")
+                        (sensor.get("unitOfMeasurement") ? " - " + getUnitOfMeasurementLabel(sensor.get("unitOfMeasurement")) : "")
                     }
                 </div>
             );

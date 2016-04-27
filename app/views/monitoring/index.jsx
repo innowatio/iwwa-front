@@ -109,8 +109,6 @@ var Monitoring = React.createClass({
         if (this.state.editSensor && selected.length == 1) {
             var fields = selected[0].toJS();
             fields.name = (fields.name ? fields.name : fields["_id"]);
-            // TODO initial value for tag.
-            fields.tags = [];
             return fields;
         } else {
             //TODO find how to delete initial values...
