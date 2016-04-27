@@ -33,7 +33,6 @@ var MonitoringChart = React.createClass({
     normalizeSeries: function () {
         var series = [];
         this.props.series.forEach (item => {
-            console.log(item.data);
             let data = [];
             let nexDate = item.pointStart - item.pointInterval;
             item.data.forEach (dataVal => {
