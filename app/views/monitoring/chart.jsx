@@ -1,4 +1,3 @@
-import Immutable from "immutable";
 import React, {PropTypes} from "react";
 import {Col, Input} from "react-bootstrap";
 import IPropTypes from "react-immutable-proptypes";
