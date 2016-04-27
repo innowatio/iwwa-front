@@ -117,7 +117,7 @@ var SensorsDropArea = React.createClass({
                 >
                     <Icon
                         color={theme.colors.iconHeader}
-                        icon={"add"}
+                        icon={"merge"}
                         size={"28px"}
                         style={{verticalAlign: "middle"}}
                     />
