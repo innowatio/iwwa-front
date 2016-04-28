@@ -3,7 +3,7 @@ import * as bootstrap from "react-bootstrap";
 import ReactDOM from "react-dom";
 import {isNil} from "ramda";
 import {Style} from "radium";
-
+import {upperCaseFirst} from "change-case";
 import components from "components";
 import {defaulTheme} from "lib/theme";
 
@@ -75,6 +75,13 @@ var Popover = React.createClass({
     },
     renderOverlayChildren: function () {
         const {colors} = this.getTheme();
+        const placement = "border" + upperCaseFirst(this.props.placement || "bottom") + "Color";
+        var arrowStyle = {};
+        arrowStyle[placement] = colors.borderPopover + "!important";
+        var arrowAfterStyle = {};
+        arrowAfterStyle[placement] = this.props.arrowColor ?
+            `${this.props.arrowColor} !important` :
+            `${colors.backgroundArrowPopover} !important`;
         return (
             <bootstrap.Popover
                 animation={false}
@@ -103,14 +110,8 @@ var Popover = React.createClass({
                             display: this.props.arrow === "none" ? "none" : "",
                             zIndex: "1000"
                         },
-                        ".arrow, .arrow:after": {
-                            borderBottomColor: colors.borderPopover + "!important"
-                        },
-                        ".arrow:after": {
-                            borderBottomColor: this.props.arrowColor ?
-                            `${this.props.arrowColor} !important` :
-                            `${colors.backgroundArrowPopover} !important`
-                        },
+                        ".arrow, .arrow:after": arrowStyle,
+                        ".arrow:after": arrowAfterStyle,
                         ".rw-widget": {
                             border: "0px",
                             outline: "none"

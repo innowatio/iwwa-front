@@ -1,6 +1,6 @@
 var Immutable = require("immutable");
 var R         = require("ramda");
-var titleCase = require("title-case");
+var changeCase = require("change-case");
 var moment    = require("moment");
 
 exports.labelGraph = {
@@ -56,7 +56,7 @@ exports.sites = {
     },
     getLabel: function (sito) {
         return R.is(Immutable.Map, sito) ? (
-            titleCase(sito.get("name"))
+            changeCase.titleCase(sito.get("name"))
         ) : "";
     },
     getKey: function (sito) {

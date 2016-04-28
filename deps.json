@@ -16,6 +16,7 @@
         "asteroid-immutable-collections-mixin",
         "axios",
         "bootstrap-table-react",
+        "change-case",
         "color",
         "halogen",
         "immutable",
@@ -44,7 +45,6 @@
         "react-addons-test-utils",
         "react-widgets",
         "tcomb",
-        "tcomb-validation",
-        "title-case"
+        "tcomb-validation"
     ]
 }

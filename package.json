@@ -81,6 +81,7 @@
     "axios": "^0.9.1",
     "bootstrap": "^3.3.6",
     "bootstrap-table-react": "^1.1.1",
+    "change-case": "^2.3.1",
     "color": "^0.11.1",
     "compression": "^1.6.1",
     "express": "^4.13.4",
@@ -128,8 +129,7 @@
     "redux-storage-engine-localstorage": "^1.0.2",
     "redux-thunk": "^2.0.1",
     "tcomb": "^3.0.0",
-    "tcomb-validation": "^3.0.0",
-    "title-case": "^1.1.2"
+    "tcomb-validation": "^3.0.0"
   },
   "cordova": {
     "name": "energy-coach",

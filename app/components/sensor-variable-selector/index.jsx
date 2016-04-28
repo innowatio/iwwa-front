@@ -1,8 +1,9 @@
 import * as React from "react";
+import IPropTypes from "react-immutable-proptypes";
+
 import components from "components";
 import {defaultTheme} from "lib/theme";
-
-import IPropTypes from "react-immutable-proptypes";
+import {styles} from "lib/styles_restyling";
 
 var SensorVariableSelector = React.createClass({
     propTypes: {
@@ -58,6 +59,7 @@ var SensorVariableSelector = React.createClass({
                     getLabel={(value) => value["description"]}
                     onChange={this.onChangeWithSensorId}
                     value={this.props.allowedValues.find((allowedValue) => allowedValue["_id"] === this.props.value)}
+                    style={styles(theme).chartDropdownButton}
                 />
             </components.Popover>
         );
