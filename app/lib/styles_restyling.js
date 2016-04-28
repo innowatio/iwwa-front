@@ -116,7 +116,7 @@ export const styles = (theme) => ({
     divAlarmOpenModal: {
         height: "35px",
         width: "100%",
-        borderBottom: "1px solid" + theme.colors.borderInputSettingsAlarm,
+        borderBottom: `1px solid ${theme.colors.borderInputSettingsAlarm}`,
         cursor: "pointer",
         color: theme.colors.textSelectButton,
         fontSize: "16px",
@@ -173,7 +173,7 @@ export const styles = (theme) => ({
             color: theme.colors.white,
             border: "0",
             outline: "none",
-            borderBottom: "3px solid" + theme.colors.secondary
+            borderBottom: "3px solid " + theme.colors.secondary
         },
         ".nav-tabs > li:hover > a:hover": {
             fontWeight: "400"

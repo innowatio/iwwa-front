@@ -17,7 +17,7 @@ const buttonStyle = ({colors}) => ({
     width: "50px",
     height: "50px",
     textAlign: "center",
-    lineHeight: "52px",
+    lineHeight: "54px",
     padding: "0px !important",
     position: "absolute",
     margin: "auto"
@@ -81,7 +81,7 @@ var SensorsDropArea = React.createClass({
                     lineHeight: "48px",
                     borderTop: "1px solid " + theme.colors.white,
                     borderBottom: "1px solid " + theme.colors.white,
-                    color: theme.colors.mainFontColor,
+                    color: theme.colors.white,
                     marginBottom: "1px",
                     padding: "0px 10px"
                 }}
@@ -118,8 +118,8 @@ var SensorsDropArea = React.createClass({
                     <Icon
                         color={theme.colors.iconHeader}
                         icon={"merge"}
-                        size={"28px"}
-                        style={{verticalAlign: "middle"}}
+                        size={"34px"}
+                        style={{verticalAlign:"middle"}}
                     />
                 </Button>
                 <Link

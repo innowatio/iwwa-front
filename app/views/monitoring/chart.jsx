@@ -5,6 +5,7 @@ import {connect} from "react-redux";
 import {Link} from "react-router";
 import {bindActionCreators} from "redux";
 import moment from "moment";
+import Radium from "radium";
 
 import {
     addToFavorite,
@@ -21,13 +22,14 @@ import readingsDailyAggregatesToHighchartsData from "lib/readings-daily-aggregat
 import {Button, Icon, MonitoringChart, SectionToolbar} from "components";
 
 const buttonStyle = ({colors}) => ({
-    backgroundColor: colors.buttonPrimary,
+    backgroundColor: colors.primary,
     border: "0px none",
     borderRadius: "100%",
     height: "50px",
-    margin: "auto",
     width: "50px",
-    marginLeft: "10px"
+    padding: "0px",
+    textAlign: "center",
+    margin: "0px 5px"
 });
 
 var MonitoringChartView = React.createClass({
@@ -151,20 +153,40 @@ var MonitoringChartView = React.createClass({
                 <div style={{width: "75%", padding: "20px", float: "left"}}>
                     {this.renderChart()}
                 </div>
-                <div style={{width: "25%", backgroundColor: theme.colors.primary, float: "left", minHeight: "600px"}}>
-                    <div style={{padding: "20px", borderBottom: "solid 1px", borderColor: theme.colors.white}}>
-                        <label style={{color: theme.colors.navText, display: "inherit"}}>
+                <div style={{
+                    width: "25%",
+                    backgroundColor: theme.colors.secondary,
+                    borderTop: "2px solid " + theme.colors.black,
+                    float: "left",
+                    height: "calc(100vh - 120px)"
+                }}
+                >
+                    <div style={{
+                        padding: "20px",
+                        textAlign: "center",
+                        borderBottom: "solid 1px",
+                        borderColor: theme.colors.white
+                    }}
+                    >
+                        <label style={{
+                            color: theme.colors.white,
+                            display: "inherit",
+                            fontSize: "16px",
+                            marginBottom: "10px",
+                            textAlign: "center"
+                        }}
+                        >
                             {"SCEGLI LO STILE DEL GRAFICO"}
                         </label>
-                        <div style={{textAlign: "center"}}>
+                        <div>
                             <Button style={buttonStyle(theme)} onClick={() => {
                                 this.props.selectChartType("spline");
                             }}
                             >
                                 <Icon
                                     color={theme.colors.iconHeader}
-                                    icon={"add"}
-                                    size={"28px"}
+                                    icon={"chart-style1"}
+                                    size={"36px"}
                                     style={{lineHeight: "20px"}}
                                 />
                             </Button>
@@ -174,8 +196,8 @@ var MonitoringChartView = React.createClass({
                             >
                                 <Icon
                                     color={theme.colors.iconHeader}
-                                    icon={"add"}
-                                    size={"28px"}
+                                    icon={"chart-style2"}
+                                    size={"36px"}
                                     style={{lineHeight: "20px"}}
                                 />
                             </Button>
@@ -185,8 +207,8 @@ var MonitoringChartView = React.createClass({
                             >
                                 <Icon
                                     color={theme.colors.iconHeader}
-                                    icon={"add"}
-                                    size={"28px"}
+                                    icon={"chart-style3"}
+                                    size={"36px"}
                                     style={{lineHeight: "20px"}}
                                 />
                             </Button>
@@ -196,22 +218,60 @@ var MonitoringChartView = React.createClass({
                             >
                                 <Icon
                                     color={theme.colors.iconHeader}
-                                    icon={"add"}
-                                    size={"28px"}
+                                    icon={"chart-style4"}
+                                    size={"36px"}
                                     style={{lineHeight: "20px"}}
                                 />
                             </Button>
                         </div>
                     </div>
-                    <div style={{padding: "20px", borderBottom: "solid 1px", borderColor: theme.colors.white}}>
-                        <label style={{color: theme.colors.navText, display: "inherit"}}>
+                    <div style={{
+                        padding: "20px",
+                        borderBottom: "solid 1px",
+                        borderColor: theme.colors.white
+                    }}
+                    >
+                        <label style={{
+                            color: theme.colors.white,
+                            display: "inherit",
+                            fontSize: "16px",
+                            marginBottom: "10px",
+                            textAlign: "center"
+                        }}
+                        >
                             {"CAMBIA VALORI ASSI"}
                         </label>
-                        <Col md={6}>
+                        <Col className="input-style" md={6}>
+                            <Radium.Style
+                                rules={{
+                                    "": {
+                                        padding: "0px 5px",
+                                        margin: "0px"
+                                    },
+                                    "label.control-label": {
+                                        display: "block",
+                                        color: theme.colors.white,
+                                        fontWeight: "300",
+                                        padding: "0px",
+                                        margin: "0px"
+                                    },
+                                    "label.control-label span": {
+                                        display: "block"
+                                    },
+                                    "input": {
+                                        borderBottom: "1px solid",
+                                        borderColor: theme.colors.white + "!important"
+                                    },
+                                    "span": {
+                                        display: "none"
+                                    }
+                                }}
+                                scopeSelector=".input-style"
+                            />
                             <Input
                                 type="text"
                                 value={this.state.yAxisMin}
-                                label="Asse Y min"
+                                label="Asse Y min:"
                                 bsStyle={this.getYAxisValidationState()}
                                 hasFeedback={true}
                                 ref="yAxisMin"
@@ -219,11 +279,36 @@ var MonitoringChartView = React.createClass({
                                 style={{...styles(theme).inputLine}}
                             />
                         </Col>
-                        <Col md={6}>
+                        <Col className="input-style" md={6}>
+                            <Radium.Style
+                                rules={{
+                                    "": {
+                                        padding: "0px 5px",
+                                        margin: "0px"
+                                    },
+                                    "label.control-label": {
+                                        color: theme.colors.white,
+                                        fontWeight: "300",
+                                        padding: "0px",
+                                        margin: "0px"
+                                    },
+                                    "label.control-label span": {
+                                        display: "block"
+                                    },
+                                    "input": {
+                                        borderBottom: "1px solid",
+                                        borderColor: theme.colors.white + "!important"
+                                    },
+                                    "span": {
+                                        display: "none"
+                                    }
+                                }}
+                                scopeSelector=".input-style"
+                            />
                             <Input
                                 type="text"
                                 value={this.state.yAxisMax}
-                                label="Asse Y max"
+                                label="Asse Y max:"
                                 bsStyle={this.getYAxisValidationState()}
                                 hasFeedback={true}
                                 ref="yAxisMax"
@@ -236,13 +321,12 @@ var MonitoringChartView = React.createClass({
                                 onClick={this.changeYAxisValues}
                                 style={{
                                     ...styles(theme).buttonSelectChart,
-                                    width: "40px",
+                                    width: "120px",
                                     height: "40px",
                                     lineHeight: "40px",
                                     padding: "0",
-                                    marginTop: "none",
+                                    margin: "0px 0px 0px 30px",
                                     fontSize: "20px",
-                                    marginRight: "none",
                                     border: "0px",
                                     backgroundColor: this.getTheme().colors.buttonPrimary
                                 }}
@@ -264,7 +348,7 @@ var MonitoringChartView = React.createClass({
                         </div>
                     </div>
                     <div style={{padding: "20px", borderBottom: "solid 1px", borderColor: theme.colors.white}}>
-                        <div>
+                        <div style={{margin: "8px 0px"}}>
                             <Button style={buttonStyle(theme)}  onClick={() => {
                                 this.props.addToFavorite(this.refs.monitoringChart.state.config);
                             }}
@@ -276,24 +360,38 @@ var MonitoringChartView = React.createClass({
                                     style={{lineHeight: "20px"}}
                                 />
                             </Button>
-                            <label style={{color: theme.colors.navText}}>
+                            <label style={{
+                                marginLeft: "5px",
+                                fontSize: "16px",
+                                color: theme.colors.navText,
+                                fontWeight: "300",
+                                cursor: "pointer"
+                            }}
+                            >
                                 {"Aggiungi grafico ai preferiti"}
                             </label>
                         </div>
-                        <div>
+                        <div style={{margin: "8px 0px"}}>
                             <Link to={"/monitoring/favorites/"}>
                                 <Button style={buttonStyle(theme)}>
                                     <Icon
                                         color={theme.colors.iconHeader}
-                                        icon={"star-o"}
-                                        size={"28px"}
+                                        icon={"list-favourite"}
+                                        size={"32px"}
                                         style={{lineHeight: "20px"}}
                                     />
                                 </Button>
+                                <label style={{
+                                    marginLeft: "5px",
+                                    fontSize: "16px",
+                                    color: theme.colors.navText,
+                                    fontWeight: "300",
+                                    cursor: "pointer"
+                                }}
+                                >
+                                    {"Guarda l'elenco preferiti"}
+                                </label>
                             </Link>
-                            <label style={{color: theme.colors.navText}}>
-                                {"Guarda l'elenco preferiti"}
-                            </label>
                         </div>
                     </div>
                 </div>

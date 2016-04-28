@@ -51,18 +51,21 @@ let advancedOptions = function ({colors}) {
             label: "Allarmi",
             key: "alarms",
             iconClass: "danger",
+            hoverColor: colors.white,
             color: colors.iconDropdown
         },
         {
             label: "Guarda preferiti",
             key: "favoriteCharts",
-            iconClass: "",
+            iconClass: "list-favourite",
+            hoverColor: colors.white,
             color: colors.iconDropdown
         },
         {
             label: "Assegna",
             key: "assign",
-            iconClass: "map",
+            iconClass: "assign",
+            hoverColor: colors.white,
             color: colors.iconDropdown
         }
     ];
@@ -223,6 +226,7 @@ var Monitoring = React.createClass({
                         <DropdownButton
                             allowedValues={advancedOptions(this.getTheme())}
                             getColor={R.prop("color")}
+                            getHoverColor={R.prop("hoverColor")}
                             getIcon={R.prop("iconClass")}
                             getKey={R.prop("key")}
                             getLabel={R.prop("label")}

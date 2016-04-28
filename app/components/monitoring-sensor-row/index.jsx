@@ -104,44 +104,83 @@ var SensorRow = React.createClass({
                     color={colors.mainFontColor}
                     icon={"tag"}
                     size={"27px"}
-                    style={{marginRight: "5px", verticalAlign: "middle", lineHeight: "50px"}}
+                    style={{
+                        display: "block",
+                        margin: "8px 5px 0px 0px"
+                    }}
                 />
                 {tags}
+            </div>
+        );
+    },
+    renderFavouriteButton: function () {
+        const {colors} = this.getTheme();
+        return (
+            <div style={{
+                display: "block",
+                height: "50px",
+                width: "45px",
+                float: "right",
+                textAlign: "center",
+                cursor: "pointer"
+            }}
+            >
+                <Icon
+                    color={colors.mainFontColor}
+                    icon={"star-o"}
+                    size={"28px"}
+                    style={{
+                        lineHeight: "55px"
+                    }}
+                />
             </div>
         );
     },
     renderInfoButton: function () {
         const {colors} = this.getTheme();
         return (
-            <Icon
-                color={colors.mainFontColor}
-                icon={"info"}
-                size={"27px"}
-                style={{
-                    cursor: "pointer",
-                    marginRight: "10px",
-                    verticalAlign: "middle",
-                    lineHeight: "49px",
-                    float: "right"
-                }}
-            />
+            <div style={{
+                display: "block",
+                height: "50px",
+                width: "50px",
+                float: "right",
+                textAlign: "center",
+                cursor: "pointer"
+            }}
+            >
+                <Icon
+                    color={colors.mainFontColor}
+                    icon={"information"}
+                    size={"34px"}
+                    style={{
+                        lineHeight: "55px"
+                    }}
+                />
+            </div>
         );
     },
     renderChartButton: function () {
         const {colors} = this.getTheme();
         return (
-            <Link to={"/monitoring/chart/"} onClick={() => this.props.selectSensorToDraw(this.props.sensor)}>
+            <Link
+                to={"/monitoring/chart/"}
+                onClick={() => this.props.selectSensorToDraw(this.props.sensor)}
+                style={{
+                    display: "block",
+                    height: "50px",
+                    width: "50px",
+                    marginRight: "15px",
+                    float: "right",
+                    textAlign: "center",
+                    backgroundColor: colors.backgroundMonitoringRowChart
+                }}
+            >
                 <Icon
                     color={colors.mainFontColor}
                     icon={"chart"}
                     size={"32px"}
                     style={{
-                        verticalAlign: "middle",
-                        lineHeight: "49px",
-                        float: "right",
-                        marginRight: "20px",
-                        padding: "0px 10px",
-                        backgroundColor: colors.backgroundMonitoringRowChart
+                        lineHeight: "55px"
                     }}
                 />
             </Link>
@@ -167,6 +206,7 @@ var SensorRow = React.createClass({
                 <div style={styles(this.getTheme()).buttonsContainer}>
                     {this.renderChartButton()}
                     {this.renderInfoButton()}
+                    {this.renderFavouriteButton()}
                 </div>
             </div>
         );
