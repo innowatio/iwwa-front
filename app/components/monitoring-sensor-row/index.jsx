@@ -74,9 +74,10 @@ var SensorRow = React.createClass({
         return this.context.theme || defaultTheme;
     },
     renderSensorName: function () {
+        let {sensor} = this.props;
         return (
             <div style={styles(this.getTheme()).sensorName}>
-                {this.props.sensor.get("_id")}
+                {sensor.get("name") ? sensor.get("name") : sensor.get("_id")}
             </div>
         );
     },

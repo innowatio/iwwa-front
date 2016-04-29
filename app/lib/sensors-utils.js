@@ -31,3 +31,16 @@ export const operatorToFormula = swap(operatorMapping);
 export function findSensor (sensors, sensorId) {
     return sensors.get(sensorId);
 }
+
+//TODO capire se dev'essere ricorsiva....
+export function extractSensorsIdsFromFormula (formula) {
+    let sensorsIds = [];
+    if (formula) {
+        formula.split("|").forEach((item) => {
+            if (!formulaToOperator[item]) {
+                sensorsIds.push(item);
+            }
+        });
+    }
+    return sensorsIds;
+}
