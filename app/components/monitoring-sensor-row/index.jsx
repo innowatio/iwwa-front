@@ -105,8 +105,8 @@ var SensorRow = React.createClass({
                     icon={"tag"}
                     size={"27px"}
                     style={{
-                        display: "block",
-                        margin: "8px 5px 0px 0px"
+                        verticalAlign: "middle",
+                        lineHeight: "49px"
                     }}
                 />
                 {tags}
