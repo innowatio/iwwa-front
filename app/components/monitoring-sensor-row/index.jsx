@@ -21,7 +21,7 @@ const styles = ({colors}) => ({
     sensorName: {
         float: "left",
         width: "auto",
-        minWidth: "10%",
+        minWidth: "100px",
         verticalAlign: "middle",
         marginRight: "10px",
         borderRight: "1px solid" + colors.borderSensorsTable,
@@ -30,13 +30,12 @@ const styles = ({colors}) => ({
     },
     tagsContainer: {
         float: "left",
-        width: "auto",
-        minWidth: "70%"
+        width: "auto"
     },
     buttonsContainer: {
         float: "right",
         width: "auto",
-        minWidth: "10%"
+        minWidth: "100px"
     }
 });
 
@@ -113,34 +112,10 @@ var SensorRow = React.createClass({
             </div>
         );
     },
-    renderFavouriteButton: function () {
-        const {colors} = this.getTheme();
-        return (
-            <div style={{
-                display: "block",
-                height: "50px",
-                width: "45px",
-                float: "right",
-                textAlign: "center",
-                cursor: "pointer"
-            }}
-            >
-                <Icon
-                    color={colors.mainFontColor}
-                    icon={"star-o"}
-                    size={"28px"}
-                    style={{
-                        lineHeight: "55px"
-                    }}
-                />
-            </div>
-        );
-    },
     renderInfoButton: function () {
         const {colors} = this.getTheme();
         return (
             <div style={{
-                display: "block",
                 height: "50px",
                 width: "50px",
                 float: "right",
@@ -153,6 +128,7 @@ var SensorRow = React.createClass({
                     icon={"information"}
                     size={"34px"}
                     style={{
+                        verticalAlign: "middle",
                         lineHeight: "55px"
                     }}
                 />
@@ -166,7 +142,6 @@ var SensorRow = React.createClass({
                 to={"/monitoring/chart/"}
                 onClick={() => this.props.selectSensorToDraw(this.props.sensor)}
                 style={{
-                    display: "block",
                     height: "50px",
                     width: "50px",
                     marginRight: "15px",
@@ -180,6 +155,7 @@ var SensorRow = React.createClass({
                     icon={"chart"}
                     size={"32px"}
                     style={{
+                        verticalAlign: "middle",
                         lineHeight: "55px"
                     }}
                 />
@@ -206,7 +182,6 @@ var SensorRow = React.createClass({
                 <div style={styles(this.getTheme()).buttonsContainer}>
                     {this.renderChartButton()}
                     {this.renderInfoButton()}
-                    {this.renderFavouriteButton()}
                 </div>
             </div>
         );
