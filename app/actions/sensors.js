@@ -9,6 +9,8 @@ export const GET_FORMULA_ITEMS = "GET_FORMULA_ITEMS";
 export const RESET_FORMULA_ITEMS = "RESET_FORMULA_ITEMS";
 export const SELECT_SENSOR = "SELECT_SENSOR";
 
+const MONITORING_TYPE = "custom-monitoring";
+
 function getBasicObject (type, payload) {
     return {
         type: type,
@@ -20,7 +22,7 @@ function getSensorObj (collectionItem) {
     return {
         "id": UUID.create(),
         "name": (collectionItem.get("name") ? collectionItem.get("name") : collectionItem.get("_id")),
-        "type": "custom-monitoring",
+        "type": MONITORING_TYPE,
         "description": collectionItem.get("description"),
         "unitOfMeasurement": collectionItem.get("unitOfMeasurement"),
         "virtual": true,
@@ -109,7 +111,7 @@ export const cloneSensors = (sensors) => {
 
 export const deleteSensors = (sensors) => {
     sensors.forEach((sensor) => {
-        if (sensor.get("virtual")) {
+        if (sensor.get("type") === MONITORING_TYPE) {
             deleteSensor(sensor.get("_id"));
         }
     });
@@ -119,12 +121,17 @@ export const deleteSensors = (sensors) => {
 };
 
 export const editSensor = (sensor, formulaItems, id) => {
-    sensor.formula = buildFormula(formulaItems);
-    return {
-        type: "EDIT_SENSOR",
-        id: id,
-        fields: {...sensor}
-    };
+    if (sensor.get("type") === MONITORING_TYPE) {
+        sensor.formula = buildFormula(formulaItems);
+        return {
+            type: "EDIT_SENSOR",
+            id: id,
+            fields: {...sensor}
+        };
+    } else {
+        //TODO indagare per refenziare un sensore
+        addSensor(sensor, formulaItems);
+    }
 };
 
 export const favoriteSensor = (id) => getBasicObject("FAVORITE_SENSOR", id);
