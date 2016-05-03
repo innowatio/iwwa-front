@@ -44,7 +44,6 @@ const sourceButtonStyle = (theme) => R.merge(styles(theme).buttonSelectChart, {
 const consumptionButtonStyle = ({colors}) => ({
     color: colors.greySubTitle,
     textAlign: "center",
-    marginRight: "15px !important",
     padding: "0",
     verticalAlign: "middle",
     borderRadius: "22px",
@@ -589,7 +588,7 @@ var Chart = React.createClass({
                     <components.Popover
                         className="pull-right"
                         hideOnChange={true}
-                        style={styles(theme).chartPopover}
+                        style={{height: "56px", margin: 0}}
                         title={
                             <components.Icon
                                 color={theme.colors.iconOption}

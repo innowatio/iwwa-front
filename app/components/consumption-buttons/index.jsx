@@ -42,7 +42,13 @@ var ConsumptionButtons = React.createClass({
         );
 
         return (
-            <div key={consumption.key} style={{float:"left"}}>
+            <div key={consumption.key} style={{
+                float:"left",
+                marginLeft: "10px",
+                width: styleButton.width,
+                transition: styleButton.transition
+            }}
+            >
                 <components.SensorVariableSelector
                     allowedValues={consumption.sensors}
                     onChange={R.partialRight(this.props.onChange, [consumption])}

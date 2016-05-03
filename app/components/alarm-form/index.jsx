@@ -138,6 +138,7 @@ var AlarmForm = React.createClass({
                     <components.Popover
                         arrow="none"
                         hideOnChange={true}
+                        styleButton={{width: "400px"}}
                         title={this.renderTitleSelectSite()}
                     >
                         <components.SelectTree
