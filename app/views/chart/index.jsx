@@ -696,7 +696,7 @@ var Chart = React.createClass({
                                 styleButtonSelected={consumptionButtonSelectedStyle(theme)}
                             />
                         </span>
-                        <span className="pull-right" style={{display: "flex"}}>
+                        <span className="pull-right" style={{display: "flex", paddingTop: "33px"}}>
                             <components.ButtonGroupSelect
                                 allowedValues={parameters.getMeasurementTypes()}
                                 getKey={R.prop("key")}
