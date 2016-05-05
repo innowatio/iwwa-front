@@ -272,6 +272,7 @@ var Chart = React.createClass({
         });
     },
     changeDateRanges: function (goForward) {
+        this.props.resetZoom();
         const {date} = this.props.chartState.charts[0];
         var number = goForward ? 1 : -1;
         var diff = Math.round(moment.duration(date.end - date.start).asDays());
