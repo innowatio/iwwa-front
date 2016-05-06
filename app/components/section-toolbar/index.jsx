@@ -63,8 +63,8 @@ var SectionToolbar = React.createClass({
         const theme = this.getTheme();
         return (
             <div style={styles(theme).titlePageMonitoring}>
-                    {this.renderBackLink()}
-                    {this.props.children}
+                {this.renderBackLink()}
+                {this.props.children}
             </div>
         );
     }

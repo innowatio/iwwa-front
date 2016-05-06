@@ -4,6 +4,7 @@ import {DragSource} from "react-dnd";
 import IPropTypes from "react-immutable-proptypes";
 import {Link} from "react-router";
 import {partial} from "ramda";
+import * as bootstrap from "react-bootstrap";
 
 import {Types} from "lib/dnd-utils";
 import {defaultTheme} from "lib/theme";
@@ -20,8 +21,10 @@ const styles = ({colors}) => ({
     },
     sensorName: {
         float: "left",
-        width: "auto",
-        minWidth: "100px",
+        width: "100px",
+        overflow: "hidden",
+        textOverflow: "ellipsis",
+        whiteSpace: "nowrap",
         verticalAlign: "middle",
         marginRight: "10px",
         borderRight: "1px solid" + colors.borderSensorsTable,
@@ -30,12 +33,11 @@ const styles = ({colors}) => ({
     },
     tagsContainer: {
         float: "left",
-        width: "auto"
+        width: "calc(100% - 230px)"
     },
     buttonsContainer: {
         float: "right",
-        width: "auto",
-        minWidth: "100px"
+        maxWidth: "130px"
     }
 });
 
@@ -71,6 +73,17 @@ var SensorRow = React.createClass({
     mixin: [ReactPureRender],
     getTheme: function () {
         return this.context.theme || defaultTheme;
+    },
+    addTooltip: function (sensor) {
+        // TODO Verificare con Davide se la formula sarà sempre presente e in caso se corretto
+        // mostrare la description.
+
+        const descriptionTooltip = sensor.get("formula") || sensor.get("description");
+        return (
+            <bootstrap.Tooltip id="createChartInfo">
+                {descriptionTooltip}
+            </bootstrap.Tooltip>
+        );
     },
     renderSensorName: function () {
         return (
@@ -112,27 +125,38 @@ var SensorRow = React.createClass({
             </div>
         );
     },
-    renderInfoButton: function () {
+    renderInfoButton: function (sensor) {
         const theme = this.getTheme();
         return (
-            <div style={{
-                height: "50px",
-                width: "50px",
-                float: "right",
-                textAlign: "center",
-                cursor: "pointer"
-            }}
+            <bootstrap.OverlayTrigger
+                overlay={this.addTooltip(sensor)}
+                placement="left"
+                rootClose={true}
+                trigger="click"
             >
-                <Icon
-                    color={theme.colors.mainFontColor}
-                    icon={"information"}
-                    size={"34px"}
+                <bootstrap.Button
+                    bsStyle="link"
                     style={{
-                        verticalAlign: "middle",
-                        lineHeight: "55px"
+                        height: "50px",
+                        width: "50px",
+                        textAlign: "center",
+                        padding: "0px",
+                        outline: "0px",
+                        outlineStyle: "none",
+                        outlineWidth: "0px"
                     }}
-                />
-            </div>
+                >
+                    <Icon
+                        color={theme.colors.mainFontColor}
+                        icon={"information"}
+                        size={"34px"}
+                        style={{
+                            verticalAlign: "middle",
+                            lineHeight: "55px"
+                        }}
+                    />
+                </bootstrap.Button>
+            </bootstrap.OverlayTrigger>
         );
     },
     renderChartButton: function () {
@@ -171,8 +195,7 @@ var SensorRow = React.createClass({
         if (isSelected) {
             divStyle = {
                 ...divStyle,
-                background: theme.colors.buttonPrimary,
-                color: theme.colors.buttonPrimary
+                backgroundColor: theme.colors.buttonPrimary
             };
         }
         return connectDragSource(
@@ -183,7 +206,7 @@ var SensorRow = React.createClass({
                 </div>
                 <div style={styles(theme).buttonsContainer}>
                     {this.renderChartButton()}
-                    {this.renderInfoButton()}
+                    {this.renderInfoButton(sensor)}
                 </div>
             </div>
         );
