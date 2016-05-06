@@ -7,7 +7,8 @@ import {defaultTheme} from "lib/theme";
 import {CollectionItemList, MonitoringSensorRow, SensorsDropArea} from "components";
 
 const hoverStyle = ({colors}) => ({
-    backgroundColor: colors.backgroundMonitoringRowHover
+    backgroundColor: colors.backgroundMonitoringRowHover,
+    cursor: "pointer"
 });
 
 const lazyLoadButtonStyle = ({colors}) => ({
@@ -136,7 +137,6 @@ var MonitoringWorkArea = React.createClass({
                         onClickChart={this.props.selectSensorsToDraw}
                         sensors={this.props.workAreaSensors}
                     />
-
                 </div>
             </div>
         );

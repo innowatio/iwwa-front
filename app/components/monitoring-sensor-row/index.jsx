@@ -80,13 +80,13 @@ var SensorRow = React.createClass({
         );
     },
     renderTags: function () {
-        const {colors} = this.getTheme();
+        const theme = this.getTheme();
         let tags = [];
         if (this.props.sensor.get("tags")) {
             this.props.sensor.get("tags").forEach((tag) => {
                 tags.push(
                     <label style={{
-                        border: "solid 1px " + colors.white,
+                        border: "solid 1px " + theme.colors.white,
                         padding: "2px 10px 2px 10px",
                         borderRadius: "35px",
                         marginRight: "5px"
@@ -100,7 +100,7 @@ var SensorRow = React.createClass({
         return (
             <div style={styles(this.getTheme()).tagsContainer}>
                 <Icon
-                    color={colors.mainFontColor}
+                    color={theme.colors.mainFontColor}
                     icon={"tag"}
                     size={"27px"}
                     style={{
@@ -113,7 +113,7 @@ var SensorRow = React.createClass({
         );
     },
     renderInfoButton: function () {
-        const {colors} = this.getTheme();
+        const theme = this.getTheme();
         return (
             <div style={{
                 height: "50px",
@@ -124,7 +124,7 @@ var SensorRow = React.createClass({
             }}
             >
                 <Icon
-                    color={colors.mainFontColor}
+                    color={theme.colors.mainFontColor}
                     icon={"information"}
                     size={"34px"}
                     style={{
@@ -136,7 +136,7 @@ var SensorRow = React.createClass({
         );
     },
     renderChartButton: function () {
-        const {colors} = this.getTheme();
+        const theme = this.getTheme();
         return (
             <Link
                 to={"/monitoring/chart/"}
@@ -147,11 +147,11 @@ var SensorRow = React.createClass({
                     marginRight: "15px",
                     float: "right",
                     textAlign: "center",
-                    backgroundColor: colors.backgroundMonitoringRowChart
+                    backgroundColor: theme.colors.backgroundMonitoringRowChart
                 }}
             >
                 <Icon
-                    color={colors.mainFontColor}
+                    color={theme.colors.mainFontColor}
                     icon={"chart"}
                     size={"32px"}
                     style={{
@@ -163,14 +163,16 @@ var SensorRow = React.createClass({
         );
     },
     render: function () {
+        const theme = this.getTheme();
         const {connectDragSource, isSelected, onClickSelect, sensor} = this.props;
         let divStyle = {
-            ...styles(this.getTheme()).container
+            ...styles(theme).container
         };
         if (isSelected) {
             divStyle = {
                 ...divStyle,
-                backgroundColor: this.getTheme().colors.buttonPrimary
+                background: theme.colors.buttonPrimary,
+                color: theme.colors.buttonPrimary
             };
         }
         return connectDragSource(
@@ -179,7 +181,7 @@ var SensorRow = React.createClass({
                     {this.renderSensorName()}
                     {this.renderTags()}
                 </div>
-                <div style={styles(this.getTheme()).buttonsContainer}>
+                <div style={styles(theme).buttonsContainer}>
                     {this.renderChartButton()}
                     {this.renderInfoButton()}
                 </div>

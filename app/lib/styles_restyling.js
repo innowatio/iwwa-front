@@ -78,6 +78,14 @@ export const styles = (theme) => ({
         display: "flex",
         position: "relative"
     },
+    titlePageMonitoring: {
+        width: "100%",
+        color: theme.colors.titlePage,
+        backgroundColor: theme.colors.backgroundTitlePage,
+        paddingLeft: "10px",
+        paddingRight: "10px",
+        height: "56px"
+    },
     inputLine: {
         borderTop: "0px",
         borderLeft: "0px",

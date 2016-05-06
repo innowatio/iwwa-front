@@ -174,65 +174,69 @@ var Monitoring = React.createClass({
         return (
             <div>
                 <SectionToolbar>
-                    <Button
-                        style={buttonStyle(theme)}
-                        disabled={selected.length < 1}
-                        onClick={() => this.props.cloneSensors(selected)}
-                    >
-                        <Icon
-                            color={theme.colors.iconHeader}
-                            icon={"duplicate"}
-                            size={"28px"}
-                            style={{lineHeight: "20px"}}
-                        />
-                    </Button>
-                    <Button
-                        style={buttonStyle(theme)}
-                        disabled={selected.length != 1}
-                        onClick={this.onClickEditSensor}
-                    >
-                        <Icon
-                            color={theme.colors.iconHeader}
-                            icon={"edit"}
-                            size={"28px"}
-                            style={{lineHeight: "20px"}}
-                        />
-                    </Button>
-                    <Button
-                        style={buttonStyle(theme)}
-                        disabled={selected.length < 1}
-                        onClick={() => this.props.deleteSensors(selected)}
-                    >
-                        <Icon
-                            color={theme.colors.iconHeader}
-                            icon={"delete"}
-                            size={"28px"}
-                            style={{lineHeight: "20px"}}
-                        />
-                    </Button>
-                    <Popover
-                        className="pull-right"
-                        hideOnChange={true}
-                        style={styles(theme).chartPopover}
-                        title={
+                    <div style={{float: "right", height: "58px"}}>
+                        <Popover
+                            className="pull-right"
+                            hideOnChange={true}
+                            style={styles(theme).chartPopover}
+                            title={
+                                <Icon
+                                    color={theme.colors.iconHeader}
+                                    icon={"option"}
+                                    size={"32px"}
+                                    style={{lineHeight: "50px"}}
+                                />
+                            }
+                        >
+                            <DropdownButton
+                                allowedValues={advancedOptions(this.getTheme())}
+                                getColor={R.prop("color")}
+                                getHoverColor={R.prop("hoverColor")}
+                                getIcon={R.prop("iconClass")}
+                                getKey={R.prop("key")}
+                                getLabel={R.prop("label")}
+                                style={styles(theme).chartDropdownButton}
+                            />
+                        </Popover>
+                    </div>
+                    <div style={{float: "right", marginTop: "3px"}}>
+                        <Button
+                            style={buttonStyle(theme)}
+                            disabled={selected.length < 1}
+                            onClick={() => this.props.cloneSensors(selected)}
+                        >
                             <Icon
                                 color={theme.colors.iconHeader}
-                                icon={"option"}
-                                size={"32px"}
-                                style={{lineHeight: "50px"}}
+                                icon={"duplicate"}
+                                size={"28px"}
+                                style={{lineHeight: "20px"}}
                             />
-                        }
-                    >
-                        <DropdownButton
-                            allowedValues={advancedOptions(this.getTheme())}
-                            getColor={R.prop("color")}
-                            getHoverColor={R.prop("hoverColor")}
-                            getIcon={R.prop("iconClass")}
-                            getKey={R.prop("key")}
-                            getLabel={R.prop("label")}
-                            style={styles(theme).chartDropdownButton}
-                        />
-                    </Popover>
+                        </Button>
+                        <Button
+                            style={buttonStyle(theme)}
+                            disabled={selected.length != 1}
+                            onClick={this.onClickEditSensor}
+                        >
+                            <Icon
+                                color={theme.colors.iconHeader}
+                                icon={"edit"}
+                                size={"28px"}
+                                style={{lineHeight: "20px"}}
+                            />
+                        </Button>
+                        <Button
+                            style={buttonStyle(theme)}
+                            disabled={selected.length < 1}
+                            onClick={() => this.props.deleteSensors(selected)}
+                        >
+                            <Icon
+                                color={theme.colors.iconHeader}
+                                icon={"delete"}
+                                size={"28px"}
+                                style={{lineHeight: "20px"}}
+                            />
+                        </Button>
+                    </div>
                 </SectionToolbar>
 
                 <MonitoringSearch
