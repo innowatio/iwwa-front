@@ -4,7 +4,7 @@ import {fromJS} from "immutable";
 import moment from "moment";
 import {fromPairs, map, pipe, range, repeat} from "ramda";
 
-import readingsDailyAggregatesToHighchartsData, {numberOfDayInFilter} from "lib/readings-daily-aggregates-to-highcharts-data";
+import readingsDailyAggregatesToHighchartsData from "lib/readings-daily-aggregates-to-highcharts-data";
 
 describe("readingsDailyAggregatesToHighchartsData", () => {
 
