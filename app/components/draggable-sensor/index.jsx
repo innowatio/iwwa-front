@@ -45,13 +45,15 @@ var DraggableSensor = React.createClass({
         let theme = this.getTheme();
         return connectDragSource(
             <label style={{
+                height: "44px",
+                lineHeight: "44px",
+                padding: "0px 10px",
                 color: theme.colors.white,
                 backgroundColor: theme.colors.backgroundContentModal,
                 cursor: "pointer",
                 textAlign: "left",
                 border: "1px solid",
                 borderRadius: "10px",
-                padding: "7px",
                 display: "inherit"
             }}
             >

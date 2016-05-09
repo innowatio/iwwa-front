@@ -394,8 +394,78 @@ var MonitoringChartView = React.createClass({
                             </Link>
                         </div>
                     </div>
+                    <div style={{padding: "20px", borderBottom: "solid 1px", borderColor: theme.colors.white}}>
+                        <div style={{margin: "8px 0px"}}>
+                            <Button style={buttonStyle(theme)}  onClick={() => {
+                                this.props.addToFavorite(this.refs.monitoringChart.state.config);
+                            }}
+                            >
+                                <Icon
+                                    color={theme.colors.iconHeader}
+                                    icon={"calendar"}
+                                    size={"28px"}
+                                    style={{lineHeight: "20px"}}
+                                />
+                            </Button>
+                            <label style={{
+                                marginLeft: "5px",
+                                fontSize: "16px",
+                                color: theme.colors.navText,
+                                fontWeight: "300",
+                                cursor: "pointer"
+                            }}
+                            >
+                                {"Settimana precedente"}
+                            </label>
+                        </div>
+                        <div style={{margin: "8px 0px"}}>
+                            <Button style={buttonStyle(theme)}  onClick={() => {
+                                this.props.addToFavorite(this.refs.monitoringChart.state.config);
+                            }}
+                            >
+                                <Icon
+                                    color={theme.colors.iconHeader}
+                                    icon={"calendar"}
+                                    size={"28px"}
+                                    style={{lineHeight: "20px"}}
+                                />
+                            </Button>
+                            <label style={{
+                                marginLeft: "5px",
+                                fontSize: "16px",
+                                color: theme.colors.navText,
+                                fontWeight: "300",
+                                cursor: "pointer"
+                            }}
+                            >
+                                {"Mese precedente"}
+                            </label>
+                        </div>
+                        <div style={{margin: "8px 0px"}}>
+                            <Button style={buttonStyle(theme)}  onClick={() => {
+                                this.props.addToFavorite(this.refs.monitoringChart.state.config);
+                            }}
+                            >
+                                <Icon
+                                    color={theme.colors.iconHeader}
+                                    icon={"calendar"}
+                                    size={"28px"}
+                                    style={{lineHeight: "20px"}}
+                                />
+                            </Button>
+                            <label style={{
+                                marginLeft: "5px",
+                                fontSize: "16px",
+                                color: theme.colors.navText,
+                                fontWeight: "300",
+                                cursor: "pointer"
+                            }}
+                            >
+                                {"Anno precedente"}
+                            </label>
+                        </div>
+                    </div>
                 </div>
-
             </div>
         );
     }

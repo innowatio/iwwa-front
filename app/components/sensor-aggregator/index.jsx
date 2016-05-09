@@ -13,6 +13,7 @@ var SensorAggregator = React.createClass({
         addItemToFormula: PropTypes.func.isRequired,
         allSensors: IPropTypes.map,
         formulaItems: PropTypes.array,
+        operators: PropTypes.array,
         sensors: PropTypes.array.isRequired
     },
     contextTypes: {
@@ -30,10 +31,9 @@ var SensorAggregator = React.createClass({
                         addItemToFormula={this.props.addItemToFormula}
                         allSensors={this.props.allSensors}
                         formulaItems={this.props.formulaItems}
-                        style={{...styles(theme).titlePage,
+                        style={{...styles(theme).titlePageMonitoring,
                             borderRadius: "20px",
-                            display: "-webkit-inline-box",
-                            height: "250px",
+                            minHeight: "250px",
                             padding: "10px"
                         }}
                     />
@@ -50,13 +50,19 @@ var SensorAggregator = React.createClass({
                     </label>
                     {this.props.sensors.map(sensorId => {
                         return (
-                            <DraggableSensor key={sensorId} sensor={findSensor(this.props.allSensors, sensorId)} />
+                            <DraggableSensor
+                                key={sensorId}
+                                sensor={findSensor(this.props.allSensors, sensorId)}
+                            />
                         );
                     })}
-                    <DraggableOperator type="add" />
-                    <DraggableOperator type="minus" />
-                    <DraggableOperator type="delete" />
-                    <DraggableOperator type="divide" />
+                    {this.props.operators.map(operator => {
+                        return (
+                            <DraggableOperator
+                                {...operator}
+                            />
+                        );
+                    })}
                 </Col>
             </div>
         );

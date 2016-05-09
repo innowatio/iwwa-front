@@ -5,8 +5,7 @@ import IPropTypes from "react-immutable-proptypes";
 import {Types} from "lib/dnd-utils";
 import {findSensor} from "lib/sensors-utils";
 import {defaultTheme} from "lib/theme";
-
-import {Icon} from "components";
+import {Link} from "react-router";
 
 const formulaTarget = {
     drop (props, monitor) {
@@ -40,24 +39,53 @@ var FormulaDropArea = React.createClass({
     renderOperator: function (operator) {
         const theme = this.getTheme();
         return (
-            <div style={{display: "inline-block",
-                width: "50px",
-                height: "50px",
-                lineHeight: "55px",
-                textAlign: "center",
+            <div style={{
+                float: "left",
+                width: "auto",
+                height: "44px",
+                lineHeight: "44px",
+                padding: "0px 10px 0px 0px",
                 margin: "5px",
-                borderRadius: "100%",
-                backgroundColor: theme.colors.iconOperator
+                borderRadius: "10px",
+                border: "1px solid " + theme.colors.white
             }}
             >
-                <Icon
-                    color={theme.colors.white}
-                    icon={operator}
-                    size={"40px"}
+                <p style={{
+                    display: "inline-block",
+                    width: "30px",
+                    height: "30px",
+                    overflow: "hidden",
+                    fontWeight: "300",
+                    fontSize: "30px",
+                    lineHeight: "28px",
+                    textAlign: "center",
+                    margin: "5px",
+                    borderRadius: "100%",
+                    backgroundColor: theme.colors.iconOperator,
+                    color: theme.colors.white
+                }}
+                >
+                    {operator}
+                </p>
+                <Link
+                    to="/"
                     style={{
-                        verticalAlign: "middle"
+                        display: "block",
+                        float: "right",
+                        border: "1px solid " + theme.colors.white,
+                        width: "20px",
+                        height: "20px",
+                        overflow: "hidden",
+                        lineHeight: "15px",
+                        borderRadius: "30px",
+                        textAlign: "center",
+                        textDecoration: "none",
+                        margin: "10px 0px 0px 10px",
+                        color: theme.colors.white
                     }}
-                />
+                >
+                    {"x"}
+                </Link>
             </div>
         );
     },
@@ -65,20 +93,41 @@ var FormulaDropArea = React.createClass({
         let theme = this.getTheme();
         let sensorObj = typeof sensor === "string" ? findSensor(this.props.allSensors, sensor): sensor;
         return (
-            <label style={{
+            <div style={{
+                float: "left",
+                width: "auto",
+                height: "44px",
                 color: theme.colors.mainFontColor,
                 textAlign: "left",
                 border: "1px solid",
                 borderRadius: "10px",
-                height: "50px",
-                padding: "10px",
-                paddingTop: "15px",
-                margin: "5px",
-                display: "inherit"
+                lineHeight: "44px",
+                padding: "0px 10px",
+                margin: "5px"
             }}
             >
                 {(sensorObj.get("name") ? sensorObj.get("name") : sensorObj.get("_id"))}
-            </label>
+                <Link
+                    to="/"
+                    style={{
+                        display: "block",
+                        float: "right",
+                        border: "1px solid " + theme.colors.white,
+                        width: "20px",
+                        height: "20px",
+                        lineHeight: "15px",
+                        overflow: "hidden",
+                        borderRadius: "30px",
+                        textAlign: "center",
+                        verticalAlign: "text-bottom",
+                        textDecoration: "none",
+                        margin: "10px 0px 0px 20px",
+                        color: theme.colors.white
+                    }}
+                >
+                    {"x"}
+                </Link>
+            </div>
         );
     },
     renderItems: function () {
