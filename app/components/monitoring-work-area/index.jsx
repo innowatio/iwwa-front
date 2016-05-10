@@ -7,7 +7,8 @@ import {defaultTheme} from "lib/theme";
 import {CollectionItemList, MonitoringSensorRow, SensorsDropArea} from "components";
 
 const hoverStyle = ({colors}) => ({
-    backgroundColor: colors.backgroundMonitoringRowHover
+    backgroundColor: colors.backgroundMonitoringRowHover,
+    cursor: "pointer"
 });
 
 const lazyLoadButtonStyle = ({colors}) => ({
@@ -19,7 +20,7 @@ const lazyLoadButtonStyle = ({colors}) => ({
     color: colors.white,
     textTransform: "uppercase",
     fontWeight: "400",
-    margin: "10px auto 50px auto",
+    margin: "10px auto 40px auto",
     borderRadius: "30px",
     cursor: "pointer",
     textAlign: "center"
@@ -96,8 +97,21 @@ var MonitoringWorkArea = React.createClass({
     render: function () {
         const theme = this.getTheme();
         return (
-            <div style={{float: "left", overflow: "hidden", width: "75%", height: "calc(100vh - 120px)"}}>
-                <div style={{width: "auto", overflow: "auto", height: "100%", padding: "10px 15px 0px 15px"}}>
+            <div style={{
+                overflow: "hidden",
+                width: "74%",
+                margin: "0 auto",
+                height: "calc(100vh - 120px)"
+            }}
+            >
+                <div style={{
+                    width: "auto",
+                    overflow: "auto",
+                    height: "100%",
+                    marginRight: "-15px",
+                    padding: "10px 15px 0px 15px"
+                }}
+                >
                     <label style={{width: "100%", color: theme.colors.mainFontColor, textAlign: "center"}}>
                         {"Seleziona alcuni sensori per visualizzare il grafico o per creare un nuovo sensore"}
                     </label>
@@ -113,6 +127,8 @@ var MonitoringWorkArea = React.createClass({
                         <div style={{
                             height: "100%",
                             overflow: "auto",
+                            overflowY: "scroll",
+                            marginRight: "-15px",
                             borderRadius: "18px"
                         }}
                         >
@@ -136,7 +152,6 @@ var MonitoringWorkArea = React.createClass({
                         onClickChart={this.props.selectSensorsToDraw}
                         sensors={this.props.workAreaSensors}
                     />
-
                 </div>
             </div>
         );

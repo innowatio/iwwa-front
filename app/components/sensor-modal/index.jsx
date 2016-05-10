@@ -52,6 +52,14 @@ var SensorForm = React.createClass({
     contextTypes: {
         theme: PropTypes.object
     },
+    getSensorOperator: function () {
+        return [
+            {type: "-", key: "minus", operatorStyle: {lineHeight: "26px", fontSize: "30px"}},
+            {type: "+", key: "plus", operatorStyle: {lineHeight: "26px", fontSize: "30px"}},
+            {type: "x", key: "multiply", operatorStyle: {lineHeight: "26px", fontSize: "24px"}},
+            {type: "/", key: "divide", operatorStyle: {lineHeight: "28px", fontSize: "20px"}}
+        ];
+    },
     getTheme: function () {
         return this.context.theme || defaultTheme;
     },
@@ -66,6 +74,7 @@ var SensorForm = React.createClass({
                     allSensors={this.props.allSensors}
                     addItemToFormula={this.props.addItemToFormula}
                     formulaItems={this.props.currentSensor.formulaItems}
+                    operators={this.getSensorOperator()}
                     sensors={this.props.sensorsToAggregate}
                 />
             );

@@ -23,12 +23,38 @@ var SectionToolbar = React.createClass({
         const theme = this.getTheme();
         if (backUrl) {
             return (
-                <Link to={backUrl} style={{marginTop: "14px", marginRight: "10px"}}>
-                    <Icon
-                        color={theme.colors.iconHeader}
-                        icon={"angle-left"}
-                        size={"27px"}
-                    />
+                <Link to={backUrl} style={{textDecoration: "none"}}>
+                    <div
+                        style={{
+                            float: "left",
+                            marginTop: "6px",
+                            marginRight: "10px",
+                            backgroundColor: theme.colors.primary,
+                            width: "43px",
+                            height: "43px",
+                            lineHeight: "45px",
+                            borderRadius: "100%",
+                            textAlign: "center"
+                        }}
+                    >
+                        <Icon
+                            color={theme.colors.iconHeader}
+                            icon={"angle-left"}
+                            size={"27px"}
+                            style={{verticalAlign: "middle"}}
+                        />
+                    </div>
+                    <div style={{
+                        display: "inline",
+                        fontSize: "18px",
+                        fontWeight: "300",
+                        lineHeight: "55px",
+                        marginBottom: "0px",
+                        color: theme.colors.white
+                    }}
+                    >
+                        {this.props.title}
+                    </div>
                 </Link>
             );
         }
@@ -36,11 +62,8 @@ var SectionToolbar = React.createClass({
     render: function () {
         const theme = this.getTheme();
         return (
-            <div style={styles(theme).titlePage}>
+            <div style={styles(theme).titlePageMonitoring}>
                 {this.renderBackLink()}
-                <div style={{fontSize: "18px", marginBottom: "0px", paddingTop: "18px", width: "100%"}}>
-                    {this.props.title}
-                </div>
                 {this.props.children}
             </div>
         );

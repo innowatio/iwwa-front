@@ -74,17 +74,19 @@ var SensorsDropArea = React.createClass({
         this.props.sensors.forEach((sensorId) => {
             let sensor = this.props.allSensors.get(sensorId);
             sensors.push(
-                <div style={{
-                    width:"100%",
-                    backgroundColor: theme.colors.buttonPrimary,
-                    height: "48px",
-                    lineHeight: "48px",
-                    borderTop: "1px solid " + theme.colors.white,
-                    borderBottom: "1px solid " + theme.colors.white,
-                    color: theme.colors.white,
-                    marginBottom: "1px",
-                    padding: "0px 10px"
-                }}
+                <div
+                    key={sensorId}
+                    style={{
+                        width:"100%",
+                        backgroundColor: theme.colors.buttonPrimary,
+                        height: "48px",
+                        lineHeight: "48px",
+                        borderTop: "1px solid " + theme.colors.white,
+                        borderBottom: "1px solid " + theme.colors.white,
+                        color: theme.colors.white,
+                        marginBottom: "1px",
+                        padding: "0px 10px"
+                    }}
                 >
                     {
                         (sensor.get("name") ? sensor.get("name") : sensorId) +

@@ -4,10 +4,46 @@ import {bindActionCreators} from "redux";
 
 import {selectFavoriteChart} from "actions/monitoring-chart";
 
-import {getKeyFromCollection} from "lib/collection-utils";
+// import {getKeyFromCollection} from "lib/collection-utils";
 import {defaultTheme} from "lib/theme";
+import {Button, CollectionItemList, Icon, SectionToolbar} from "components";
 
-import {CollectionElementsTable, Icon, SectionToolbar} from "components";
+
+const styles = ({colors}) => ({
+    hoverStyle: {
+        clear: "both",
+        backgroundColor: colors.backgroundMonitoringRowChart
+    },
+    lazyLoadButtonStyleContainer: {
+        marginBottom: "50px"
+    },
+    lazyLoadButtonStyle: {
+        width: "230px",
+        height: "45px",
+        lineHeight: "43px",
+        backgroundColor: colors.buttonPrimary,
+        fontSize: "14px",
+        color: colors.white,
+        textTransform: "uppercase",
+        fontWeight: "400",
+        margin: "10px auto 0 auto",
+        borderRadius: "30px",
+        cursor: "pointer",
+        textAlign: "center"
+    },
+    sectionToolbarIcon: {
+        marginTop: "6px",
+        marginRight: "10px",
+        backgroundColor: colors.primary,
+        width: "43px",
+        height: "43px",
+        lineHeight: "45px",
+        borderRadius: "100%",
+        padding: "0px",
+        border: "0px",
+        textAlign: "center"
+    }
+});
 
 var MonitoringFavoritesCharts = React.createClass({
     propTypes: {
@@ -21,7 +57,7 @@ var MonitoringFavoritesCharts = React.createClass({
     getTheme: function () {
         return this.context.theme || defaultTheme;
     },
-    getFavoritesChartsColumns: function () {
+    renderFavoritesChartsColumns: function () {
         const theme = this.getTheme();
         return [
             {
@@ -67,29 +103,50 @@ var MonitoringFavoritesCharts = React.createClass({
         const {colors} = this.getTheme();
         return (
             <div>
-                <SectionToolbar backUrl={"/monitoring/chart/"} title={"Torna al monitoring"} />
+                <SectionToolbar
+                    backUrl={"/monitoring/chart/"}
+                    title={"Torna al monitoring"}
+                >
+                    <div style={{float:"right", width: "auto"}}>
+                        <Button style={styles(this.getTheme()).sectionToolbarIcon}>
+                            <Icon
+                                color={colors.iconAlarmAction}
+                                icon={"star-o"}
+                                size={"28px"}
+                                style={{verticalAlign: "middle"}}
+                            />
+                        </Button>
+                        <Button style={styles(this.getTheme()).sectionToolbarIcon}>
+                            <Icon
+                                color={colors.iconAlarmAction}
+                                icon={"edit"}
+                                size={"28px"}
+                                style={{verticalAlign: "middle"}}
+                            />
+                        </Button>
+                    </div>
+                </SectionToolbar>
                 <div style={{
-                    color: colors.white,
-                    border: "grey solid 1px",
+                    height: "calc(100vh - 230px)",
+                    width: "95%",
+                    margin: "20px auto",
+                    border: "1px solid " + colors.borderContentModal,
                     borderRadius: "30px",
-                    background: colors.backgroundContentModal,
-                    padding: 0,
-                    margin: "20px",
-                    textAlign: "center"
+                    background: colors.backgroundContentModal
                 }}
                 >
-                    <CollectionElementsTable
-                        collection={this.props.monitoringChart.favorites}
-                        columns={this.getFavoritesChartsColumns()}
-                        getKey={getKeyFromCollection}
+                    <CollectionItemList
+                        collections={this.props.monitoringChart.favorites}
+                        headerComponent={this.renderFavoritesChartsColumns}
+                        initialVisibleRow={16}
+                        filter={this.getSearchFilter}
                         hover={true}
-                        width={"100%"}
-                        style={{color: colors.white, padding: "0"}}
+                        hoverStyle={styles(this.getTheme()).hoverStyle}
+                        lazyLoadButtonStyle={styles(this.getTheme()).lazyLoadButtonStyle}
+                        lazyLoadButtonStyleContainer={styles(this.getTheme()).lazyLoadButtonStyleContainer}
+                        lazyLoadLabel={"Carica altri"}
+                        showFilterInput={false}
                     />
-
-                    <label style={{color: colors.navText, padding: "20px"}}>
-                        {"Carica tutti"}
-                    </label>
                 </div>
             </div>
         );

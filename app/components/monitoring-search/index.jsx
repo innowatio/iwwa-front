@@ -163,7 +163,7 @@ var MonitoringSearch = React.createClass({
                         </div>
                     </div>
 
-                    <div>
+                    <div style={{marginLeft: "20px"}}>
                         <Button
                             onClick={self.filterSensors}
                             style={{

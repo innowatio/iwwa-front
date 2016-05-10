@@ -4,6 +4,7 @@ import {DragSource} from "react-dnd";
 import IPropTypes from "react-immutable-proptypes";
 import {Link} from "react-router";
 import {partial} from "ramda";
+import * as bootstrap from "react-bootstrap";
 
 import {Types} from "lib/dnd-utils";
 import {defaultTheme} from "lib/theme";
@@ -20,8 +21,10 @@ const styles = ({colors}) => ({
     },
     sensorName: {
         float: "left",
-        width: "auto",
-        minWidth: "100px",
+        width: "100px",
+        overflow: "hidden",
+        textOverflow: "ellipsis",
+        whiteSpace: "nowrap",
         verticalAlign: "middle",
         marginRight: "10px",
         borderRight: "1px solid" + colors.borderSensorsTable,
@@ -30,12 +33,11 @@ const styles = ({colors}) => ({
     },
     tagsContainer: {
         float: "left",
-        width: "auto"
+        width: "calc(100% - 230px)"
     },
     buttonsContainer: {
         float: "right",
-        width: "auto",
-        minWidth: "100px"
+        maxWidth: "130px"
     }
 });
 
@@ -72,6 +74,17 @@ var SensorRow = React.createClass({
     getTheme: function () {
         return this.context.theme || defaultTheme;
     },
+    addTooltip: function (sensor) {
+        // TODO Verificare con Davide se la formula sarà sempre presente e in caso se corretto
+        // mostrare la description.
+
+        const descriptionTooltip = sensor.get("formula") || sensor.get("description");
+        return (
+            <bootstrap.Tooltip id="createChartInfo">
+                {descriptionTooltip}
+            </bootstrap.Tooltip>
+        );
+    },
     renderSensorName: function () {
         let {sensor} = this.props;
         return (
@@ -81,13 +94,13 @@ var SensorRow = React.createClass({
         );
     },
     renderTags: function () {
-        const {colors} = this.getTheme();
+        const theme = this.getTheme();
         let tags = [];
         if (this.props.sensor.get("tags")) {
             this.props.sensor.get("tags").forEach((tag) => {
                 tags.push(
                     <label style={{
-                        border: "solid 1px " + colors.white,
+                        border: "solid 1px " + theme.colors.white,
                         padding: "2px 10px 2px 10px",
                         borderRadius: "35px",
                         marginRight: "5px"
@@ -101,7 +114,7 @@ var SensorRow = React.createClass({
         return (
             <div style={styles(this.getTheme()).tagsContainer}>
                 <Icon
-                    color={colors.mainFontColor}
+                    color={theme.colors.mainFontColor}
                     icon={"tag"}
                     size={"27px"}
                     style={{
@@ -113,31 +126,42 @@ var SensorRow = React.createClass({
             </div>
         );
     },
-    renderInfoButton: function () {
-        const {colors} = this.getTheme();
+    renderInfoButton: function (sensor) {
+        const theme = this.getTheme();
         return (
-            <div style={{
-                height: "50px",
-                width: "50px",
-                float: "right",
-                textAlign: "center",
-                cursor: "pointer"
-            }}
+            <bootstrap.OverlayTrigger
+                overlay={this.addTooltip(sensor)}
+                placement="left"
+                rootClose={true}
+                trigger="click"
             >
-                <Icon
-                    color={colors.mainFontColor}
-                    icon={"information"}
-                    size={"34px"}
+                <bootstrap.Button
+                    bsStyle="link"
                     style={{
-                        verticalAlign: "middle",
-                        lineHeight: "55px"
+                        height: "50px",
+                        width: "50px",
+                        textAlign: "center",
+                        padding: "0px",
+                        outline: "0px",
+                        outlineStyle: "none",
+                        outlineWidth: "0px"
                     }}
-                />
-            </div>
+                >
+                    <Icon
+                        color={theme.colors.mainFontColor}
+                        icon={"information"}
+                        size={"34px"}
+                        style={{
+                            verticalAlign: "middle",
+                            lineHeight: "55px"
+                        }}
+                    />
+                </bootstrap.Button>
+            </bootstrap.OverlayTrigger>
         );
     },
     renderChartButton: function () {
-        const {colors} = this.getTheme();
+        const theme = this.getTheme();
         return (
             <Link
                 to={"/monitoring/chart/"}
@@ -148,11 +172,11 @@ var SensorRow = React.createClass({
                     marginRight: "15px",
                     float: "right",
                     textAlign: "center",
-                    backgroundColor: colors.backgroundMonitoringRowChart
+                    backgroundColor: theme.colors.backgroundMonitoringRowChart
                 }}
             >
                 <Icon
-                    color={colors.mainFontColor}
+                    color={theme.colors.mainFontColor}
                     icon={"chart"}
                     size={"32px"}
                     style={{
@@ -164,14 +188,15 @@ var SensorRow = React.createClass({
         );
     },
     render: function () {
+        const theme = this.getTheme();
         const {connectDragSource, isSelected, onClickSelect, sensor} = this.props;
         let divStyle = {
-            ...styles(this.getTheme()).container
+            ...styles(theme).container
         };
         if (isSelected) {
             divStyle = {
                 ...divStyle,
-                backgroundColor: this.getTheme().colors.buttonPrimary
+                backgroundColor: theme.colors.buttonPrimary
             };
         }
         return connectDragSource(
@@ -180,9 +205,9 @@ var SensorRow = React.createClass({
                     {this.renderSensorName()}
                     {this.renderTags()}
                 </div>
-                <div style={styles(this.getTheme()).buttonsContainer}>
+                <div style={styles(theme).buttonsContainer}>
                     {this.renderChartButton()}
-                    {this.renderInfoButton()}
+                    {this.renderInfoButton(sensor)}
                 </div>
             </div>
         );

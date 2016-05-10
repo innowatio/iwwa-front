@@ -9,9 +9,7 @@ import {defaulTheme} from "lib/theme";
 
 const styles = ({colors}) => ({
     button: {
-        width: "400px",
         whiteSpace: "normal",
-        marginTop: "8px",
         border: `1px solid ${colors.borderSelectButton}`,
         color: colors.mainFontColor,
         backgroundColor: colors.backgroundSelectButton
@@ -26,6 +24,8 @@ var Popover = React.createClass({
         hideOnChange: React.PropTypes.bool,
         notClosePopoverOnClick: React.PropTypes.bool,
         placement: PropTypes.string,
+        style: PropTypes.object,
+        styleButton: PropTypes.object,
         title: PropTypes.node
     },
     contextTypes: {
@@ -63,12 +63,15 @@ var Popover = React.createClass({
     },
     renderButton: function () {
         const theme = this.getTheme();
-        return this.props.arrow === "none" ? (
-            <components.Button onClick={this.onOpenOverlay} style={styles(theme).button} >
-                {this.props.title}
-            </components.Button>
-        ) : (
-            <components.Button bsStyle="link" onClick={this.onOpenOverlay} >
+        return (
+            <components.Button
+                bsStyle="link"
+                onClick={this.onOpenOverlay}
+                style={{
+                    ...styles(theme).button,
+                    ...this.props.styleButton
+                }}
+            >
                 {this.props.title}
             </components.Button>
         );
@@ -128,7 +131,11 @@ var Popover = React.createClass({
     },
     render: function () {
         return (
-            <div style={{position: "relative"}}>
+            <div style={{
+                ...this.props.style,
+                position: "relative"
+            }}
+            >
                 <div ref="buttonOverlay">
                     {this.renderButton()}
                 </div>
