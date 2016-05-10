@@ -36,14 +36,14 @@ var SensorForm = React.createClass({
         addItemToFormula: PropTypes.func.isRequired,
         allSensors: IPropTypes.map,
         closeForm: PropTypes.func.isRequired,
-        currentSensor: PropTypes.object,
+        currentSensor: IPropTypes.map,
         fields: PropTypes.object.isRequired,
         handleSubmit: PropTypes.func.isRequired,
-        id: PropTypes.string,
         initialValues: PropTypes.object,
         onSave: PropTypes.func.isRequired,
         removeItemFromFormula: PropTypes.func.isRequired,
         resetForm: PropTypes.func.isRequired,
+        sensorState: PropTypes.object,
         sensorsToAggregate: PropTypes.array,
         showFullscreenModal: PropTypes.bool.isRequired,
         showSensorAggregator: PropTypes.bool.isRequired,
@@ -65,16 +65,16 @@ var SensorForm = React.createClass({
         return this.context.theme || defaultTheme;
     },
     saveForm: function (data) {
-        this.props.onSave(data, this.props.currentSensor.formulaItems, this.props.id);
+        this.props.onSave(data, this.props.sensorState.formulaItems, this.props.currentSensor);
         this.props.closeForm();
     },
     renderSensorAggregation: function () {
-        if (this.props.showSensorAggregator || this.props.currentSensor.formulaItems.length > 0) {
+        if (this.props.showSensorAggregator || this.props.sensorState.formulaItems.length > 0) {
             return (
                 <SensorAggregator
                     allSensors={this.props.allSensors}
                     addItemToFormula={this.props.addItemToFormula}
-                    formulaItems={this.props.currentSensor.formulaItems}
+                    formulaItems={this.props.sensorState.formulaItems}
                     operators={this.getSensorOperator()}
                     removeItemFromFormula={this.props.removeItemFromFormula}
                     sensors={this.props.sensorsToAggregate}

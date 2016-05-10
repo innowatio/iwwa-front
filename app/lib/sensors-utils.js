@@ -9,9 +9,9 @@ const operatorMapping = {
 };
 
 export const potentialUnitsOfMeasurement = [
-    {value: 1, label: "Celsius"},
-    {value: 2, label: "Fahrenheit"},
-    {value: 3, label: "Watt"}
+    {value: "cls", label: "Celsius"},
+    {value: "far", label: "Fahrenheit"},
+    {value: "wtt", label: "Watt"}
 ];
 
 export function getUnitOfMeasurementLabel (val) {

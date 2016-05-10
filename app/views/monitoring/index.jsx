@@ -158,11 +158,11 @@ var Monitoring = React.createClass({
                     addItemToFormula={this.props.addItemToFormula}
                     allSensors={this.getAllSensors()}
                     closeForm={() => this.closeModal(this.state.editSensor)}
-                    currentSensor={this.props.sensorsState.current}
-                    id={selected.length == 1 ? selected[0].get("_id") : null}
+                    currentSensor={selected.length == 1 ? selected[0] : null}
                     initialValues={this.getSensorFields()}
                     onSave={this.state.editSensor ? this.props.editSensor : this.props.addSensor}
                     removeItemFromFormula={this.props.removeItemFromFormula}
+                    sensorState={this.props.sensorsState.current}
                     sensorsToAggregate={workAreaSensors}
                     showFullscreenModal={this.state.showFullscreenModal}
                     showSensorAggregator={!this.state.editSensor}
