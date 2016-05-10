@@ -86,6 +86,7 @@ var MonitoringChartView = React.createClass({
             let sensorFormula = sensorObj.get("formula");
             let sensorsIds = sensorFormula ? extractSensorsIdsFromFormula(sensorFormula) : [sensorObj.get("_id")];
             sensorsIds.forEach((sensorId) => {
+                console.log(sensorId);
                 // last year for sensors
                 props.asteroid.subscribe(
                     "dailyMeasuresBySensor",
@@ -103,7 +104,7 @@ var MonitoringChartView = React.createClass({
             let sensorObj = this.getSensorObj(sensor);
             return {
                 date: {
-                    start: moment.utc().startOf("month").valueOf(),
+                    start: moment.utc().startOf("year").valueOf(),
                     end: moment.utc().endOf("month").valueOf()
                 },
                 formula: sensorObj.get("formula"),
@@ -114,6 +115,7 @@ var MonitoringChartView = React.createClass({
             };
         });
         const readingsDailyAggregates = this.props.collections.get("readings-daily-aggregates");
+        console.log(readingsDailyAggregates);
         if (readingsDailyAggregates) {
             return readingsDailyAggregatesToHighchartsData(readingsDailyAggregates, monitoringCharts);
         }
