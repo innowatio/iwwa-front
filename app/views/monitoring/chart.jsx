@@ -1,4 +1,3 @@
-import Immutable from "immutable";
 import React, {PropTypes} from "react";
 import {Col, Input} from "react-bootstrap";
 import IPropTypes from "react-immutable-proptypes";
@@ -16,7 +15,7 @@ import {
     selectFavoriteChart
 } from "actions/monitoring-chart";
 
-import {extractSensorsIdsFromFormula} from "lib/sensors-utils";
+import {extractSensorsIdsFromFormula, getAllSensors} from "lib/sensors-utils";
 import {styles} from "lib/styles_restyling";
 import {defaultTheme} from "lib/theme";
 import readingsDailyAggregatesToHighchartsData from "lib/readings-daily-aggregates-to-highcharts-data";
@@ -59,7 +58,7 @@ var MonitoringChartView = React.createClass({
         return this.context.theme || defaultTheme;
     },
     getAllSensors: function () {
-        return this.props.collections.get("sensors") || Immutable.Map();
+        return getAllSensors(this.props.collections.get("sensors"));
     },
     getFilters: function () {
         return [

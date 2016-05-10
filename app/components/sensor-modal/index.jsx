@@ -13,7 +13,7 @@ import {potentialUnitsOfMeasurement} from "lib/sensors-utils";
 import {styles} from "lib/styles_restyling";
 import {defaultTheme} from "lib/theme";
 
-export const fields = ["name", "description", "unitOfMeasurement", "siteRef", "clientRef", "tags"];
+export const fields = ["name", "description", "unitOfMeasurement", "siteId", "userId", "tags"];
 
 const validate = values => {
     const errors = {};
@@ -89,7 +89,7 @@ var SensorForm = React.createClass({
     },
     render: function () {
         const {
-            fields: {name, description, unitOfMeasurement, siteRef, clientRef, tags},
+            fields: {name, description, unitOfMeasurement, siteId, userId, tags},
             resetForm,
             handleSubmit
         } = this.props;
@@ -197,12 +197,12 @@ var SensorForm = React.createClass({
                         </div>
                         <div className={"form-group col-xs-12"} style={{marginBottom: "5px"}}>
                             <Input type="text" className="form-control" placeholder="Referenza sito" style={styles(theme).inputLine}
-                                {...siteRef}
+                                {...siteId}
                             />
                         </div>
                         <div className={"form-group col-xs-12"} style={{marginBottom: "5px"}}>
                             <Input type="text" className="form-control" placeholder="Referenza cliente" style={styles(theme).inputLine}
-                                {...clientRef}
+                                {...userId}
                             />
                         </div>
                         <div className={"tags-wrp form-group col-xs-12"}>

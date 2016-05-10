@@ -39,39 +39,16 @@ function addMonitoringAttrs (sensor) {
     return sensor;
 }
 
-function insertSensor (requestBody) {
-    return dispatch => {
-        dispatch({
-            type: "SENSOR_SAVING"
-        });
-        var endpoint = "http://" + WRITE_API_HOST + "/sensors";
-        let sensor = addMonitoringAttrs(requestBody);
-        axios.post(endpoint, sensor)
-            .then(() => dispatch({
-                type: "SENSOR_CREATION_SUCCESS"
-            }))
-            .catch(() => dispatch({
-                type: "SENSOR_CREATION_FAIL"
-            }));
-    };
-}
-
-function deleteSensor (sensorId) {
-    return dispatch => {
-        dispatch({
-            type: "SENSOR_DELETING"
-        });
-        var endpoint = "http://" + WRITE_API_HOST + "/sensors/$" + sensorId;
-        console.log("endpoint: ");
-        console.log(endpoint);
-        axios.delete(endpoint)
-            .then(() => dispatch({
-                type: "SENSOR_DELETE_SUCCESS"
-            }))
-            .catch(() => dispatch({
-                type: "SENSOR_DELETE_FAIL"
-            }));
-    };
+function insertSensor (requestBody, dispatch) {
+    var endpoint = "http://" + WRITE_API_HOST + "/sensors";
+    let sensor = addMonitoringAttrs(requestBody);
+    axios.post(endpoint, sensor)
+        .then(() => dispatch({
+            type: "SENSOR_CREATION_SUCCESS"
+        }))
+        .catch(() => dispatch({
+            type: "SENSOR_CREATION_FAIL"
+        }));
 }
 
 function buildFormula (formulaItems) {
@@ -100,28 +77,46 @@ export const addSensorToWorkArea = (sensor) => getBasicObject(ADD_SENSOR_TO_WORK
 
 export const addSensor = (sensor, formulaItems) => {
     sensor.formula = buildFormula(formulaItems);
-    return insertSensor(sensor);
+    return dispatch => {
+        dispatch({
+            type: "ADDING_SENSOR"
+        });
+        insertSensor(sensor, dispatch);
+    };
 };
 
 export const cloneSensors = (sensors) => {
-    sensors.forEach((el) => {
-        var sensor = getSensorObj(el);
-        sensor.name = "Copia di " + sensor.name;
-        return insertSensor(sensor);
-    });
-    return {
-        type: "CLONING_SENSORS"
+    return dispatch => {
+        dispatch({
+            type: "CLONING_SENSORS"
+        });
+        sensors.forEach((el) => {
+            var sensor = getSensorObj(el);
+            sensor.name = "Copia di " + sensor.name;
+            insertSensor(sensor, dispatch);
+        });
     };
 };
 
 export const deleteSensors = (sensors) => {
-    sensors.forEach((sensor) => {
-        if (sensor.get("type") === MONITORING_TYPE) {
-            return deleteSensor(sensor.get("_id"));
-        }
-    });
-    return {
-        type: "DELETING_SENSORS"
+    return dispatch => {
+        dispatch({
+            type: "DELETING_SENSORS"
+        });
+        sensors.forEach((sensor) => {
+            if (sensor.get("type") === MONITORING_TYPE) {
+                var endpoint = "http://" + WRITE_API_HOST + "/sensors/" + sensor.get("_id");
+                console.log("endpoint: ");
+                console.log(endpoint);
+                axios.delete(endpoint)
+                    .then(() => dispatch({
+                        type: "SENSOR_DELETE_SUCCESS"
+                    }))
+                    .catch(() => dispatch({
+                        type: "SENSOR_DELETE_FAIL"
+                    }));
+            }
+        });
     };
 };
 

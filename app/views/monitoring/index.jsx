@@ -1,4 +1,3 @@
-import Immutable from "immutable";
 import R from "ramda";
 import React, {PropTypes} from "react";
 import IPropTypes from "react-immutable-proptypes";
@@ -7,6 +6,7 @@ import {bindActionCreators} from "redux";
 
 import {getDragDropContext} from "lib/dnd-utils";
 import {defaultTheme} from "lib/theme";
+import {getAllSensors} from "lib/sensors-utils";
 import {styles} from "lib/styles_restyling";
 
 import {
@@ -107,7 +107,7 @@ var Monitoring = React.createClass({
         return this.context.theme || defaultTheme;
     },
     getAllSensors: function () {
-        return this.props.collections.get("sensors") || Immutable.Map();
+        return getAllSensors(this.props.collections.get("sensors"));
     },
     getSensorFields: function () {
         const selected = this.props.sensorsState.selectedSensors;
@@ -121,8 +121,8 @@ var Monitoring = React.createClass({
                 name: "",
                 description: "",
                 unitOfMeasurement: "",
-                siteRef: "",
-                clientRef: "",
+                siteId: "",
+                userId: "",
                 tags: []
             };
         }

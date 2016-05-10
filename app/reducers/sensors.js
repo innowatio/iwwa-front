@@ -41,7 +41,8 @@ function parseSensorFormula (sensor) {
         sensors: []
     };
     let sensorFormula = sensor.get("formula");
-    if (!R.isNil(sensorFormula)) {
+    console.log(sensorFormula);
+    if (!R.isNil(sensorFormula) && !R.isEmpty(sensorFormula)) {
         let formulaElems = sensorFormula.split("|");
         R.forEach((elem) => {
             if (formulaToOperator[elem]) {

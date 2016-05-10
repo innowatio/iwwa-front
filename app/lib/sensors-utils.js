@@ -50,5 +50,6 @@ export function getAllSensors (sensorsCollection) {
     if (!sensorsCollection) {
         return Immutable.Map();
     }
+    return sensorsCollection.filter(sensor => !sensor.get("isDeleted"));
     //TODO filter for personal...
 }
