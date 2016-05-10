@@ -45,7 +45,7 @@ const consumptionButtonStyle = ({colors}) => ({
     color: colors.greySubTitle,
     textAlign: "center",
     marginRight: "15px !important",
-    padding: "0px",
+    padding: "0",
     verticalAlign: "middle",
     borderRadius: "22px",
     width: "45px",
@@ -273,6 +273,7 @@ var Chart = React.createClass({
         });
     },
     changeDateRanges: function (goForward) {
+        this.props.resetZoom();
         const {date} = this.props.chartState.charts[0];
         var number = goForward ? 1 : -1;
         var diff = Math.round(moment.duration(date.end - date.start).asDays());
@@ -589,7 +590,7 @@ var Chart = React.createClass({
                     <components.Popover
                         className="pull-right"
                         hideOnChange={true}
-                        style={styles(theme).chartPopover}
+                        style={{height: "56px", margin: 0}}
                         title={
                             <components.Icon
                                 color={theme.colors.iconOption}
@@ -697,7 +698,7 @@ var Chart = React.createClass({
                                 styleButtonSelected={consumptionButtonSelectedStyle(theme)}
                             />
                         </span>
-                        <span className="pull-right" style={{display: "flex"}}>
+                        <span className="pull-right" style={{display: "flex", paddingTop: "33px"}}>
                             <components.ButtonGroupSelect
                                 allowedValues={parameters.getMeasurementTypes()}
                                 getKey={R.prop("key")}

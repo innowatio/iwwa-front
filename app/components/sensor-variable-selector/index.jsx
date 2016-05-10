@@ -31,18 +31,21 @@ var SensorVariableSelector = React.createClass({
             <components.Popover
                 hideOnChange={true}
                 placement={"top"}
+                style={{
+                    float: "right",
+                    margin: 0,
+                    padding: 0,
+                    width: "45px"
+                }}
+                styleButton={{width: "45px"}}
                 title={
                     <components.Icon
                         color={theme.colors.white}
-                        icon={"option"}
+                        icon={"option-horizontal"}
                         size={"16px"}
                         style={{
                             ...this.props.styleIcon,
-                            float: "right",
-                            lineHeight: "10px",
-                            WebkitTransform: "rotate(90deg)",
-                            MsTransform: "rotate(90deg)",
-                            transform: "rotate(90deg)"
+                            lineHeight: "10px"
                         }}
                     />
                 }
