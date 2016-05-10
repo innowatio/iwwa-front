@@ -1,3 +1,4 @@
+import Immutable from "immutable";
 import R from "ramda";
 
 const operatorMapping = {
@@ -43,4 +44,11 @@ export function extractSensorsIdsFromFormula (formula) {
         });
     }
     return sensorsIds;
+}
+
+export function getAllSensors (sensorsCollection) {
+    if (!sensorsCollection) {
+        return Immutable.Map();
+    }
+    //TODO filter for personal...
 }

@@ -29,7 +29,8 @@ function getSensorObj (collectionItem) {
         "formula": collectionItem.get("formula"),
         "tags": collectionItem.get("tags"),
         "siteId": collectionItem.get("siteId"),
-        "userId": collectionItem.get("userId")
+        "userId": collectionItem.get("userId"), 
+        "parentSensorId": collectionItem.get("parentSensorId")
     };
 }
 
@@ -129,7 +130,7 @@ export const editSensor = (sensor, formulaItems, id) => {
             fields: {...sensor}
         };
     } else {
-        //TODO indagare per refenziare un sensore
+        sensor.parentSensorId = id;
         addSensor(sensor, formulaItems);
     }
 };
