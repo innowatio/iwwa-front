@@ -116,9 +116,32 @@ var SensorForm = React.createClass({
                 >
                     <Radium.Style
                         rules={{
+                            ".form-group": {
+                                marginBottom: "0px"
+                            },
                             ".col-xs-12": {
                                 padding: "0px",
                                 margin: "0px"
+                            },
+                            ".form-control:focus": {
+                                outline: "0px",
+                                outlineStyle: "none",
+                                outlineWidth: "0px",
+                                borderColor: theme.colors.textGrey
+                            },
+                            ".has-error .help-block": {
+                                width: "auto",
+                                float: "right",
+                                borderRadius: "5px",
+                                fontSize: "12px",
+                                fontWeight: "300",
+                                backgroundColor: theme.colors.textError,
+                                padding: "5px",
+                                marginTop: "5px",
+                                color: theme.colors.white
+                            },
+                            ".has-error .form-control": {
+                                borderColor: theme.colors.textError
                             }
                         }}
                         scopeSelector={".form-fields"}
@@ -138,8 +161,8 @@ var SensorForm = React.createClass({
                         {this.props.title}
                     </h3>
                     <Col md={6}>
-                        <div className={"form-group" + (name.touched && name.error ? " has-error" : "")}>
-                            <div className={"col-xs-" + (name.touched && name.error ? "9" : "12")}>
+                        <div className={"form-group" + (name.touched && name.error ? " has-error" : "")} style={{marginBottom: "15px", padding:"1px"}}>
+                            <div className={"col-xs-12"}>
                                 <Input
                                     type="text"
                                     className="form-control" placeholder="Nome"
@@ -147,14 +170,16 @@ var SensorForm = React.createClass({
                                     {...name}
                                 />
                             </div>
-                            {name.touched && name.error && <div className="col-xs-3 help-block">{name.error}</div>}
+                            {name.touched && name.error && <div className="col-xs-12 help-block">{name.error}</div>}
                         </div>
                         <div className={"form-group" + (description.touched && description.error ? " has-error" : "")}>
-                            <div className={"col-xs-" + (description.touched && description.error ? "9" : "12")}>
+                            <div className={"col-xs-12"}>
                                 <label style={{
-                                    color: "#999",
+                                    width: "100%",
+                                    color: theme.colors.textGrey,
                                     fontSize: "16px",
-                                    fontWeight: "300"
+                                    fontWeight: "300",
+                                    marginTop: "10px"
                                 }}
                                 >
                                     {"Descrizione"}
@@ -170,15 +195,106 @@ var SensorForm = React.createClass({
                                     {...description}
                                 />
                             </div>
-                            {description.touched && description.error && <div className="col-xs-3 help-block">{description.error}</div>}
+                            {description.touched && description.error && <div className="col-xs-12 help-block">{description.error}</div>}
                         </div>
                     </Col>
                     <Col md={6}>
                         <div className={"form-group" + (unitOfMeasurement.touched && unitOfMeasurement.error ? " has-error" : "")}>
                             <div
-                                className={"col-xs-" + (unitOfMeasurement.touched && unitOfMeasurement.error ? "9" : "12")}
-                                style={{marginBottom: "25px"}}
+                                className={"col-xs-12"}
+                                style={{marginBottom: "20px"}}
                             >
+                                <Radium.Style
+                                    rules={{
+                                        "": {
+                                            cursor: "pointer",
+                                            borderColor: theme.colors.textGrey,
+                                            outline: "0px",
+                                            outlineStyle: "none",
+                                            outlineWidth: "0px",
+                                            color: theme.colors.textGrey
+                                        },
+                                        ".Select-control": {
+                                            outline: "0px",
+                                            outlineStyle: "none",
+                                            outlineWidth: "0px",
+                                            overflow: "hidden",
+                                            position: "relative",
+                                            width: "100%",
+                                            color: theme.colors.white,
+                                            fontSize: "16px",
+                                            fontWeight: "300",
+                                            padding: "0px"
+                                        },
+                                        ".Select-noresults": {
+                                            boxSizing: "border-box",
+                                            color: theme.colors.white,
+                                            fontSize: "16px",
+                                            fontWeight: "300",
+                                            cursor: "default",
+                                            display: "block",
+                                            padding: "8px 10px"
+                                        },
+                                        ".Select-control:not(.is-searchable) > .Select-input": {
+                                            outline: "0px",
+                                            outlineStyle: "none",
+                                            outlineWidth: "0px",
+                                            borderColor: theme.colors.textGrey,
+                                            boxShadow: "none"
+                                        },
+                                        ".is-focused:not(.is-open)>.Select-control": {
+                                            outline: "0px",
+                                            outlineStyle: "none",
+                                            outlineWidth: "0px",
+                                            borderColor: theme.colors.textGrey,
+                                            boxShadow: "none"
+                                        },
+                                        ".Select-menu-outer": {
+                                            boxShadow: "none",
+                                            boxSizing: "border-box",
+                                            marginTop: "-1px",
+                                            maxHeight: "200px",
+                                            position: "absolute",
+                                            top: "100%",
+                                            width: "100%",
+                                            zIndex: "1",
+                                            WebkitOverflowScrolling: "touch",
+                                            backgroundColor: theme.colors.backgroundMenuSelect,
+                                            border: "1px solid " + theme.colors.textGrey,
+                                            borderBottomRightRadius: "10px",
+                                            borderBottomLeftRadius: "10px",
+                                            color: theme.colors.mainFontColor
+                                        },
+                                        ".Select-menu": {
+                                            maxHeight: "198px",
+                                            overflowY: "auto"
+                                        },
+                                        ".Select-input": {
+                                            padding: "0px"
+                                        },
+                                        ".Select-option": {
+                                            boxSizing: "border-box",
+                                            backgroundColor: theme.colors.backgroundMenuSelect,
+                                            borderBottom: "1px solid " + theme.colors.textGrey,
+                                            color: theme.colors.mainFontColor + "!important",
+                                            fontSize: "16px",
+                                            fontWeight: "300",
+                                            cursor: "pointer",
+                                            display: "block",
+                                            padding: "8px 10px"
+                                        },
+                                        ".Select-option:last-child": {
+                                            borderBottomRightRadius: "10px",
+                                            borderBottomLeftRadius: "10px",
+                                            borderBottom: "0px"
+                                        },
+                                        ".Select-option.is-selected, .Select-option:hover": {
+                                            backgroundColor: theme.colors.buttonPrimary,
+                                            color: theme.colors.white
+                                        }
+                                    }}
+                                    scopeSelector=".sensor-modal-select"
+                                />
                                 <Select
                                     autofocus={true}
                                     className="sensor-modal-select"
@@ -188,22 +304,23 @@ var SensorForm = React.createClass({
                                     placeholder="Unità di misura"
                                     value={unitOfMeasurement.value}
                                 />
+                                {unitOfMeasurement.touched && unitOfMeasurement.error &&
+                                    <div className="col-xs-12 help-block">{unitOfMeasurement.error}</div>
+                                }
                             </div>
-                            {unitOfMeasurement.touched && unitOfMeasurement.error &&
-                                <div className="col-xs-3 help-block">{unitOfMeasurement.error}</div>
-                            }
+
                         </div>
-                        <div className={"form-group col-xs-12"} style={{marginBottom: "5px"}}>
+                        <div className={"form-group col-xs-12"} style={{marginBottom: "20px"}}>
                             <Input type="text" className="form-control" placeholder="Referenza sito" style={styles(theme).inputLine}
                                 {...siteRef}
                             />
                         </div>
-                        <div className={"form-group col-xs-12"} style={{marginBottom: "5px"}}>
+                        <div className={"form-group col-xs-12"} style={{marginBottom: "20px"}}>
                             <Input type="text" className="form-control" placeholder="Referenza cliente" style={styles(theme).inputLine}
                                 {...clientRef}
                             />
                         </div>
-                        <div className={"tags-wrp form-group col-xs-12"}>
+                        <div className={"tags-wrp form-group col-xs-12"} style={{marginBottom: "15px"}}>
                             <TagsInput
                                 addOnBlur={true}
                                 renderInput={this.renderTagInput}
