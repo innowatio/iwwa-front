@@ -178,7 +178,6 @@ var Monitoring = React.createClass({
                         <Popover
                             className="pull-right"
                             hideOnChange={true}
-                            style={styles(theme).chartPopover}
                             title={
                                 <Icon
                                     color={theme.colors.iconHeader}

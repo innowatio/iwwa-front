@@ -14,12 +14,14 @@ const buttonStyle = ({colors}) => ({
     backgroundColor: colors.primary,
     border: "0px none",
     borderRadius: "100%",
-    width: "50px",
-    height: "50px",
+    display: "block",
+    width: "45px",
+    height: "45px",
     textAlign: "center",
-    lineHeight: "54px",
+    lineHeight: "48px",
     padding: "0px !important",
     position: "absolute",
+    top: "-15px",
     margin: "auto"
 });
 
@@ -93,6 +95,25 @@ var SensorsDropArea = React.createClass({
                         (sensor.get("description") ? " - " + sensor.get("description") : "") +
                         (sensor.get("unitOfMeasurement") ? " - " + getUnitOfMeasurementLabel(sensor.get("unitOfMeasurement")) : "")
                     }
+                    <Link
+                        to="/"
+                        style={{
+                            display: "block",
+                            float: "right",
+                            border: "1px solid " + theme.colors.white,
+                            width: "20px",
+                            height: "20px",
+                            lineHeight: "15px",
+                            overflow: "hidden",
+                            borderRadius: "30px",
+                            textAlign: "center",
+                            textDecoration: "none",
+                            marginTop: "13px",
+                            color: theme.colors.white
+                        }}
+                    >
+                        {"x"}
+                    </Link>
                 </div>
             );
         });
@@ -103,7 +124,7 @@ var SensorsDropArea = React.createClass({
                     color: theme.colors.navText,
                     fontSize: "14px",
                     textAlign: "center",
-                    margin: "0px 0px 15px 0px",
+                    margin: "0px 0px 25px 0px",
                     padding: "0px"
                 }}
                 >
@@ -113,14 +134,14 @@ var SensorsDropArea = React.createClass({
                 <Button
                     style={
                         R.merge(buttonStyle(theme),
-                        {top: "50px", right: "20px"})
+                        {right: "50px"})
                     }
                     onClick={this.props.onClickAggregate}
                 >
                     <Icon
                         color={theme.colors.iconHeader}
                         icon={"merge"}
-                        size={"34px"}
+                        size={"30px"}
                         style={{verticalAlign:"middle"}}
                     />
                 </Button>
@@ -129,13 +150,13 @@ var SensorsDropArea = React.createClass({
                     onClick={() => this.props.onClickChart(this.props.sensors)}
                     style={
                         R.merge(buttonStyle(theme),
-                        {display: "block", top: "110px", right: "20px"})
+                        {right: "0px"})
                     }
                 >
                     <Icon
                         color={theme.colors.iconHeader}
                         icon={"chart"}
-                        size={"28px"}
+                        size={"24px"}
                         style={{verticalAlign: "middle"}}
                     />
                 </Link>
@@ -150,7 +171,7 @@ var SensorsDropArea = React.createClass({
                 border: "1px solid " + theme.colors.borderContentModal,
                 borderRadius: "20px",
                 background: theme.colors.backgroundContentModal,
-                margin: "40px 0px 60px 0px",
+                margin: "30px 0px 40px 0px",
                 minHeight: "210px",
                 overflow: "auto",
                 padding: "20px 10px",
