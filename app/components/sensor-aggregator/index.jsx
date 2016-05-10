@@ -14,6 +14,7 @@ var SensorAggregator = React.createClass({
         allSensors: IPropTypes.map,
         formulaItems: PropTypes.array,
         operators: PropTypes.array,
+        removeItemFromFormula: PropTypes.func.isRequired,
         sensors: PropTypes.array.isRequired
     },
     contextTypes: {
@@ -31,6 +32,7 @@ var SensorAggregator = React.createClass({
                         addItemToFormula={this.props.addItemToFormula}
                         allSensors={this.props.allSensors}
                         formulaItems={this.props.formulaItems}
+                        removeItemFromFormula={this.props.removeItemFromFormula}
                         style={{...styles(theme).titlePageMonitoring,
                             borderRadius: "20px",
                             minHeight: "250px",

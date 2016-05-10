@@ -6,6 +6,7 @@ export const ADD_ITEM_TO_FORMULA = "ADD_ITEM_TO_FORMULA";
 export const ADD_SENSOR_TO_WORK_AREA = "ADD_SENSOR_TO_WORK_AREA";
 export const FILTER_SENSORS = "FILTER_SENSORS";
 export const GET_FORMULA_ITEMS = "GET_FORMULA_ITEMS";
+export const REMOVE_ITEM_FROM_FORMULA = "REMOVE_ITEM_FROM_FORMULA";
 export const RESET_FORMULA_ITEMS = "RESET_FORMULA_ITEMS";
 export const SELECT_SENSOR = "SELECT_SENSOR";
 
@@ -91,6 +92,8 @@ function buildFormula (formulaItems) {
 }
 
 export const addItemToFormula = (item) => getBasicObject(ADD_ITEM_TO_FORMULA, item);
+
+export const removeItemFromFormula = (index) => getBasicObject(REMOVE_ITEM_FROM_FORMULA, index);
 
 export const addSensorToWorkArea = (sensor) => getBasicObject(ADD_SENSOR_TO_WORK_AREA, sensor);
 

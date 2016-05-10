@@ -5,7 +5,6 @@ import IPropTypes from "react-immutable-proptypes";
 import {Types} from "lib/dnd-utils";
 import {findSensor} from "lib/sensors-utils";
 import {defaultTheme} from "lib/theme";
-import {Link} from "react-router";
 
 const formulaTarget = {
     drop (props, monitor) {
@@ -28,6 +27,7 @@ var FormulaDropArea = React.createClass({
         allSensors: IPropTypes.map,
         connectDropTarget: PropTypes.func,
         formulaItems: PropTypes.array.isRequired,
+        removeItemFromFormula: PropTypes.func.isRequired,
         style: PropTypes.object
     },
     contextTypes: {
@@ -36,7 +36,7 @@ var FormulaDropArea = React.createClass({
     getTheme: function () {
         return this.context.theme || defaultTheme;
     },
-    renderOperator: function (operator) {
+    renderOperator: function (operator, index) {
         const theme = this.getTheme();
         return (
             <div style={{
@@ -67,29 +67,11 @@ var FormulaDropArea = React.createClass({
                 >
                     {operator}
                 </p>
-                <Link
-                    to="/"
-                    style={{
-                        display: "block",
-                        float: "right",
-                        border: "1px solid " + theme.colors.white,
-                        width: "20px",
-                        height: "20px",
-                        overflow: "hidden",
-                        lineHeight: "15px",
-                        borderRadius: "30px",
-                        textAlign: "center",
-                        textDecoration: "none",
-                        margin: "10px 0px 0px 10px",
-                        color: theme.colors.white
-                    }}
-                >
-                    {"x"}
-                </Link>
+                {this.renderRemoveButton(index)}
             </div>
         );
     },
-    renderSensor: function (sensor) {
+    renderSensor: function (sensor, index) {
         let theme = this.getTheme();
         let sensorObj = typeof sensor === "string" ? findSensor(this.props.allSensors, sensor): sensor;
         return (
@@ -107,40 +89,47 @@ var FormulaDropArea = React.createClass({
             }}
             >
                 {(sensorObj.get("name") ? sensorObj.get("name") : sensorObj.get("_id"))}
-                <Link
-                    to="/"
-                    style={{
-                        display: "block",
-                        float: "right",
-                        border: "1px solid " + theme.colors.white,
-                        width: "20px",
-                        height: "20px",
-                        lineHeight: "15px",
-                        overflow: "hidden",
-                        borderRadius: "30px",
-                        textAlign: "center",
-                        verticalAlign: "text-bottom",
-                        textDecoration: "none",
-                        margin: "10px 0px 0px 20px",
-                        color: theme.colors.white
-                    }}
-                >
-                    {"x"}
-                </Link>
+                {this.renderRemoveButton(index)}
+            </div>
+        );
+    },
+    renderRemoveButton: function (index) {
+        let theme = this.getTheme();
+        return (
+            <div
+                onClick={() => this.props.removeItemFromFormula(index)}
+                style={{
+                    display: "block",
+                    float: "right",
+                    border: "1px solid " + theme.colors.white,
+                    width: "20px",
+                    height: "20px",
+                    lineHeight: "15px",
+                    overflow: "hidden",
+                    borderRadius: "30px",
+                    textAlign: "center",
+                    verticalAlign: "text-bottom",
+                    textDecoration: "none",
+                    margin: "10px 0px 0px 20px",
+                    color: theme.colors.white,
+                    cursor: "pointer"
+                }}
+            >
+                {"x"}
             </div>
         );
     },
     renderItems: function () {
         let items = [];
-        this.props.formulaItems.forEach((el) => {
+        this.props.formulaItems.forEach((el, index) => {
             let item;
             switch (el.type) {
                 case Types.SENSOR: {
-                    item = this.renderSensor(el.sensor);
+                    item = this.renderSensor(el.sensor, index);
                     break;
                 }
                 case Types.OPERATOR: {
-                    item = this.renderOperator(el.operator);
+                    item = this.renderOperator(el.operator, index);
                     break;
                 }
             }

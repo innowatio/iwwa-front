@@ -42,6 +42,7 @@ var SensorForm = React.createClass({
         id: PropTypes.string,
         initialValues: PropTypes.object,
         onSave: PropTypes.func.isRequired,
+        removeItemFromFormula: PropTypes.func.isRequired,
         resetForm: PropTypes.func.isRequired,
         sensorsToAggregate: PropTypes.array,
         showFullscreenModal: PropTypes.bool.isRequired,
@@ -75,6 +76,7 @@ var SensorForm = React.createClass({
                     addItemToFormula={this.props.addItemToFormula}
                     formulaItems={this.props.currentSensor.formulaItems}
                     operators={this.getSensorOperator()}
+                    removeItemFromFormula={this.props.removeItemFromFormula}
                     sensors={this.props.sensorsToAggregate}
                 />
             );

@@ -31,6 +31,7 @@ import {
     favoriteSensor,
     filterSensors,
     getFormulaItems,
+    removeItemFromFormula,
     resetFormulaItems,
     selectSensor
 } from "actions/sensors";
@@ -84,6 +85,7 @@ var Monitoring = React.createClass({
         favoriteSensor: PropTypes.func.isRequired,
         filterSensors: PropTypes.func.isRequired,
         getFormulaItems: PropTypes.func.isRequired,
+        removeItemFromFormula: PropTypes.func.isRequired,
         resetFormulaItems: PropTypes.func.isRequired,
         selectSensor: PropTypes.func.isRequired,
         selectSensorsToDraw: PropTypes.func.isRequired,
@@ -160,6 +162,7 @@ var Monitoring = React.createClass({
                     id={selected.length == 1 ? selected[0].get("_id") : null}
                     initialValues={this.getSensorFields()}
                     onSave={this.state.editSensor ? this.props.editSensor : this.props.addSensor}
+                    removeItemFromFormula={this.props.removeItemFromFormula}
                     sensorsToAggregate={workAreaSensors}
                     showFullscreenModal={this.state.showFullscreenModal}
                     showSensorAggregator={!this.state.editSensor}
@@ -280,6 +283,7 @@ const mapDispatchToProps = (dispatch) => {
         favoriteSensor: bindActionCreators(favoriteSensor, dispatch),
         filterSensors: bindActionCreators(filterSensors, dispatch),
         getFormulaItems: bindActionCreators(getFormulaItems, dispatch),
+        removeItemFromFormula: bindActionCreators(removeItemFromFormula, dispatch),
         resetFormulaItems: bindActionCreators(resetFormulaItems, dispatch),
         selectSensor: bindActionCreators(selectSensor, dispatch),
         selectSensorsToDraw: bindActionCreators(selectSensorsToDraw, dispatch)
