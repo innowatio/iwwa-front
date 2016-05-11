@@ -103,7 +103,7 @@ var SensorsDropArea = React.createClass({
                             border: "1px solid " + theme.colors.white,
                             width: "20px",
                             height: "20px",
-                            lineHeight: "15px",
+                            lineHeight: "18px",
                             overflow: "hidden",
                             borderRadius: "30px",
                             textAlign: "center",
@@ -112,7 +112,14 @@ var SensorsDropArea = React.createClass({
                             color: theme.colors.white
                         }}
                     >
-                        {"x"}
+                        <Icon
+                            color={theme.colors.mainFontColor}
+                            icon={"delete"}
+                            size={"15px"}
+                            style={{
+                                verticalAlign: "middle"
+                            }}
+                        />
                     </Link>
                 </div>
             );

@@ -6,6 +6,7 @@ import {Types} from "lib/dnd-utils";
 import {findSensor} from "lib/sensors-utils";
 import {defaultTheme} from "lib/theme";
 import {Link} from "react-router";
+import {Icon} from "components";
 
 const formulaTarget = {
     drop (props, monitor) {
@@ -76,7 +77,7 @@ var FormulaDropArea = React.createClass({
                         width: "20px",
                         height: "20px",
                         overflow: "hidden",
-                        lineHeight: "15px",
+                        lineHeight: "18px",
                         borderRadius: "30px",
                         textAlign: "center",
                         textDecoration: "none",
@@ -84,7 +85,14 @@ var FormulaDropArea = React.createClass({
                         color: theme.colors.white
                     }}
                 >
-                    {"x"}
+                    <Icon
+                        color={theme.colors.mainFontColor}
+                        icon={"delete"}
+                        size={"15px"}
+                        style={{
+                            verticalAlign: "middle"
+                        }}
+                    />
                 </Link>
             </div>
         );
@@ -115,7 +123,7 @@ var FormulaDropArea = React.createClass({
                         border: "1px solid " + theme.colors.white,
                         width: "20px",
                         height: "20px",
-                        lineHeight: "15px",
+                        lineHeight: "18px",
                         overflow: "hidden",
                         borderRadius: "30px",
                         textAlign: "center",
@@ -125,7 +133,14 @@ var FormulaDropArea = React.createClass({
                         color: theme.colors.white
                     }}
                 >
-                    {"x"}
+                    <Icon
+                        color={theme.colors.mainFontColor}
+                        icon={"delete"}
+                        size={"15px"}
+                        style={{
+                            verticalAlign: "middle"
+                        }}
+                    />
                 </Link>
             </div>
         );
