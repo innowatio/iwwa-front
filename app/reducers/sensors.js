@@ -6,6 +6,7 @@ import {
     FILTER_SENSORS,
     GET_FORMULA_ITEMS,
     REMOVE_ITEM_FROM_FORMULA,
+    REMOVE_SENSOR_FROM_WORK_AREA,
     RESET_FORMULA_ITEMS,
     SELECT_SENSOR
 } from "../actions/sensors";
@@ -80,6 +81,10 @@ export function sensors (state = defaultState, action) {
         }
         case REMOVE_ITEM_FROM_FORMULA: {
             newState.current.formulaItems.splice(action.payload, 1);
+            break;
+        }
+        case REMOVE_SENSOR_FROM_WORK_AREA: {
+            newState.workAreaSensors.splice(action.payload, 1);
             break;
         }
         case RESET_FORMULA_ITEMS: {
