@@ -6,7 +6,7 @@ var reactMixin = require("./asteroid-react.js");
 var Asteroid = createClass([reactMixin, collectionMixin]);
 
 var asteroid = new Asteroid({
-    endpoint: "wss://" + READ_BACKEND_HOST + "/websocket"
+    endpoint: READ_BACKEND_ENDPOINT
 });
 
 

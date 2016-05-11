@@ -29,7 +29,7 @@ var getIp = function () {
 
 var ENVIRONMENT  = process.env.ENVIRONMENT || "dev";
 var WRITE_BACKEND_HOST = process.env.WRITE_BACKEND_HOST || getIp() + ":3000";
-var READ_BACKEND_HOST = process.env.READ_BACKEND_HOST || getIp() + ":3000";
+var READ_BACKEND_ENDPOINT = process.env.READ_BACKEND_ENDPOINT || `ws://${getIp()}:3000/websocket`;
 var MINIFY_FILES = (process.env.MINIFY_FILES === "true") || false;
 
 var deps = JSON.parse(fs.readFileSync("deps.json", "utf8"));
@@ -78,7 +78,7 @@ proGulp.task("buildAppScripts", (function () {
         plugins: [
             new webpack.DefinePlugin({
                 ENVIRONMENT: JSON.stringify(ENVIRONMENT),
-                READ_BACKEND_HOST: JSON.stringify(READ_BACKEND_HOST),
+                READ_BACKEND_ENDPOINT: JSON.stringify(READ_BACKEND_ENDPOINT),
                 WRITE_BACKEND_HOST: JSON.stringify(WRITE_BACKEND_HOST)
             }),
             new webpack.optimize.CommonsChunkPlugin(
