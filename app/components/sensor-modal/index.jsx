@@ -104,48 +104,9 @@ var SensorForm = React.createClass({
                 renderConfirmButton={true}
                 show={this.props.showFullscreenModal}
             >
-                <form
-                    className="form-fields"
-                    style={{
-                        margin: "0 15% 0 15%",
-                        border: "1px solid " + theme.colors.borderContentModal,
-                        borderRadius: "20px",
-                        minHeight: "600px",
-                        height: "auto !important",
-                        maxHeight: "auto !important",
-                        backgroundColor: theme.colors.backgroundContentModal
-                    }}
-                >
+                <form className="form-fields">
                     <Radium.Style
-                        rules={{
-                            ".form-group": {
-                                marginBottom: "0px"
-                            },
-                            ".col-xs-12": {
-                                padding: "0px",
-                                margin: "0px"
-                            },
-                            ".form-control:focus": {
-                                outline: "0px",
-                                outlineStyle: "none",
-                                outlineWidth: "0px",
-                                borderColor: theme.colors.textGrey
-                            },
-                            ".has-error .help-block": {
-                                width: "auto",
-                                float: "right",
-                                borderRadius: "5px",
-                                fontSize: "12px",
-                                fontWeight: "300",
-                                backgroundColor: theme.colors.textError,
-                                padding: "5px",
-                                marginTop: "5px",
-                                color: theme.colors.white
-                            },
-                            ".has-error .form-control": {
-                                borderColor: theme.colors.textError
-                            }
-                        }}
+                        rules={styles(theme).formFields}
                         scopeSelector={".form-fields"}
                     />
                     <h3
@@ -207,94 +168,7 @@ var SensorForm = React.createClass({
                                 style={{marginBottom: "20px"}}
                             >
                                 <Radium.Style
-                                    rules={{
-                                        "": {
-                                            cursor: "pointer",
-                                            borderColor: theme.colors.textGrey,
-                                            outline: "0px",
-                                            outlineStyle: "none",
-                                            outlineWidth: "0px",
-                                            color: theme.colors.textGrey
-                                        },
-                                        ".Select-control": {
-                                            outline: "0px",
-                                            outlineStyle: "none",
-                                            outlineWidth: "0px",
-                                            overflow: "hidden",
-                                            position: "relative",
-                                            width: "100%",
-                                            color: theme.colors.white,
-                                            fontSize: "16px",
-                                            fontWeight: "300",
-                                            padding: "0px"
-                                        },
-                                        ".Select-noresults": {
-                                            boxSizing: "border-box",
-                                            color: theme.colors.white,
-                                            fontSize: "16px",
-                                            fontWeight: "300",
-                                            cursor: "default",
-                                            display: "block",
-                                            padding: "8px 10px"
-                                        },
-                                        ".Select-control:not(.is-searchable) > .Select-input": {
-                                            outline: "0px",
-                                            outlineStyle: "none",
-                                            outlineWidth: "0px",
-                                            borderColor: theme.colors.textGrey,
-                                            boxShadow: "none"
-                                        },
-                                        ".is-focused:not(.is-open)>.Select-control": {
-                                            outline: "0px",
-                                            outlineStyle: "none",
-                                            outlineWidth: "0px",
-                                            borderColor: theme.colors.textGrey,
-                                            boxShadow: "none"
-                                        },
-                                        ".Select-menu-outer": {
-                                            boxShadow: "none",
-                                            boxSizing: "border-box",
-                                            marginTop: "-1px",
-                                            maxHeight: "200px",
-                                            position: "absolute",
-                                            top: "100%",
-                                            width: "100%",
-                                            zIndex: "1",
-                                            WebkitOverflowScrolling: "touch",
-                                            backgroundColor: theme.colors.backgroundMenuSelect,
-                                            border: "1px solid " + theme.colors.textGrey,
-                                            borderBottomRightRadius: "10px",
-                                            borderBottomLeftRadius: "10px",
-                                            color: theme.colors.mainFontColor
-                                        },
-                                        ".Select-menu": {
-                                            maxHeight: "198px",
-                                            overflowY: "auto"
-                                        },
-                                        ".Select-input": {
-                                            padding: "0px"
-                                        },
-                                        ".Select-option": {
-                                            boxSizing: "border-box",
-                                            backgroundColor: theme.colors.backgroundMenuSelect,
-                                            borderBottom: "1px solid " + theme.colors.textGrey,
-                                            color: theme.colors.mainFontColor + "!important",
-                                            fontSize: "16px",
-                                            fontWeight: "300",
-                                            cursor: "pointer",
-                                            display: "block",
-                                            padding: "8px 10px"
-                                        },
-                                        ".Select-option:last-child": {
-                                            borderBottomRightRadius: "10px",
-                                            borderBottomLeftRadius: "10px",
-                                            borderBottom: "0px"
-                                        },
-                                        ".Select-option.is-selected, .Select-option:hover": {
-                                            backgroundColor: theme.colors.buttonPrimary,
-                                            color: theme.colors.white
-                                        }
-                                    }}
+                                    rules={styles(theme).sensorModalSelect}
                                     scopeSelector=".sensor-modal-select"
                                 />
                                 <Select
