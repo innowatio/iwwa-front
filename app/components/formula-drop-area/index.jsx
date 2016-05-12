@@ -38,7 +38,7 @@ var FormulaDropArea = React.createClass({
     getTheme: function () {
         return this.context.theme || defaultTheme;
     },
-    renderOperator: function (operator, index) {
+    renderOperator: function (operator, index, showRemove) {
         const theme = this.getTheme();
         return (
             <div style={{
@@ -69,11 +69,11 @@ var FormulaDropArea = React.createClass({
                 >
                     {operator}
                 </p>
-                {this.renderRemoveButton(index)}
+                {showRemove ? this.renderRemoveButton(index) : null}
             </div>
         );
     },
-    renderSensor: function (sensor, index) {
+    renderSensor: function (sensor, index, showRemove) {
         let theme = this.getTheme();
         let sensorObj = typeof sensor === "string" ? findSensor(this.props.allSensors, sensor): sensor;
         return (
@@ -91,7 +91,7 @@ var FormulaDropArea = React.createClass({
             }}
             >
                 {(sensorObj.get("name") ? sensorObj.get("name") : sensorObj.get("_id"))}
-                {this.renderRemoveButton(index)}
+                {showRemove ? this.renderRemoveButton(index) : null}
             </div>
         );
     },
@@ -130,15 +130,16 @@ var FormulaDropArea = React.createClass({
     },
     renderItems: function () {
         let items = [];
+        let lastItemIndex = this.props.formulaItems.length - 1;
         this.props.formulaItems.forEach((el, index) => {
             let item;
             switch (el.type) {
                 case Types.SENSOR: {
-                    item = this.renderSensor(el.sensor, index);
+                    item = this.renderSensor(el.sensor, index, lastItemIndex === index);
                     break;
                 }
                 case Types.OPERATOR: {
-                    item = this.renderOperator(el.operator, index);
+                    item = this.renderOperator(el.operator, index, lastItemIndex === index);
                     break;
                 }
             }
