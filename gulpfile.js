@@ -35,7 +35,7 @@ var WRITE_API_HOST = "iwwa-write-api-development.eu-west-1.elasticbeanstalk.com"
 // var WRITE_API_HOST = process.env.WRITE_API_HOST || getIp() + ":3000";
 var WRITE_BACKEND_HOST = process.env.WRITE_BACKEND_HOST || getIp() + ":3000";
 var READ_BACKEND_HOST = "iwwa-back-development.eu-west-1.elasticbeanstalk.com" || getIp() + ":3000";
-// var READ_BACKEND_HOST = process.env.READ_BACKEND_HOST || getIp() + ":3000";
+// var READ_BACKEND_ENDPOINT = process.env.READ_BACKEND_ENDPOINT || `ws://${getIp()}:3000/websocket`;
 var MINIFY_FILES = (process.env.MINIFY_FILES === "true") || false;
 
 var deps = JSON.parse(fs.readFileSync("deps.json", "utf8"));
@@ -85,7 +85,6 @@ proGulp.task("buildAppScripts", (function () {
             new webpack.DefinePlugin({
                 ENVIRONMENT: JSON.stringify(ENVIRONMENT),
                 READ_BACKEND_HOST: JSON.stringify(READ_BACKEND_HOST),
-                WRITE_API_HOST: JSON.stringify(WRITE_API_HOST),
                 WRITE_BACKEND_HOST: JSON.stringify(WRITE_BACKEND_HOST)
             }),
             new webpack.optimize.CommonsChunkPlugin(

@@ -8,7 +8,6 @@ import * as bootstrap from "react-bootstrap";
 
 import {Types} from "lib/dnd-utils";
 import {defaultTheme} from "lib/theme";
-
 import {Icon} from "components";
 
 const styles = ({colors}) => ({
