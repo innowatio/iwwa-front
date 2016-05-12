@@ -2,6 +2,8 @@ import React, {PropTypes} from "react";
 import {DropTarget} from "react-dnd";
 import IPropTypes from "react-immutable-proptypes";
 
+import {Icon} from "components";
+
 import {Types} from "lib/dnd-utils";
 import {findSensor} from "lib/sensors-utils";
 import {defaultTheme} from "lib/theme";
@@ -115,7 +117,14 @@ var FormulaDropArea = React.createClass({
                     cursor: "pointer"
                 }}
             >
-                {"x"}
+                <Icon
+                    color={theme.colors.mainFontColor}
+                    icon={"delete"}
+                    size={"15px"}
+                    style={{
+                        verticalAlign: "middle"
+                    }}
+                />
             </div>
         );
     },

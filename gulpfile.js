@@ -34,7 +34,7 @@ var ENVIRONMENT  = process.env.ENVIRONMENT || "dev";
 var WRITE_API_HOST = "iwwa-write-api-development.eu-west-1.elasticbeanstalk.com" || getIp() + ":3000";
 // var WRITE_API_HOST = process.env.WRITE_API_HOST || getIp() + ":3000";
 var WRITE_BACKEND_HOST = process.env.WRITE_BACKEND_HOST || getIp() + ":3000";
-var READ_BACKEND_HOST = "iwwa-back-development.eu-west-1.elasticbeanstalk.com" || getIp() + ":3000";
+var READ_BACKEND_ENDPOINT = "iwwa-back-development.eu-west-1.elasticbeanstalk.com" || getIp() + ":3000";
 // var READ_BACKEND_ENDPOINT = process.env.READ_BACKEND_ENDPOINT || `ws://${getIp()}:3000/websocket`;
 var MINIFY_FILES = (process.env.MINIFY_FILES === "true") || false;
 
