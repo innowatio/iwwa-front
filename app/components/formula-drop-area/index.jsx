@@ -37,36 +37,40 @@ var FormulaDropArea = React.createClass({
     getTheme: function () {
         return this.context.theme || defaultTheme;
     },
-    renderOperator: function (operator, last) {
+    renderOperator: function (operator, index, last) {
         const theme = this.getTheme();
         return (
-            <div style={{
-                float: "left",
-                width: "auto",
-                height: "44px",
-                lineHeight: "44px",
-                padding: "0px",
-                margin: "5px",
-                borderRadius: "10px",
-                border: "1px solid " + theme.colors.white
-            }}
+            <div
+                key={index}
+                style={{
+                    float: "left",
+                    width: "auto",
+                    height: "44px",
+                    lineHeight: "44px",
+                    padding: "0px",
+                    margin: "5px",
+                    borderRadius: "10px",
+                    border: "1px solid " + theme.colors.white
+                }}
             >
                 <p style={{
                     display: "inline-block",
-                    width: "30px",
-                    height: "30px",
+                    width: "36px",
+                    height: "36px",
                     overflow: "hidden",
-                    fontWeight: "300",
-                    fontSize: "30px",
-                    lineHeight: "28px",
                     textAlign: "center",
-                    margin: "5px",
+                    margin: "3px",
                     borderRadius: "100%",
                     backgroundColor: theme.colors.iconOperator,
                     color: theme.colors.white
                 }}
                 >
-                    {operator}
+                    <Icon
+                        color={theme.colors.white}
+                        icon={operator}
+                        size={"28px"}
+                        style={{lineHeight: "42px"}}
+                    />
                 </p>
                 {last ? (
                     <Link
@@ -100,22 +104,24 @@ var FormulaDropArea = React.createClass({
             </div>
         );
     },
-    renderSensor: function (sensor, last) {
+    renderSensor: function (sensor, index, last) {
         let theme = this.getTheme();
         let sensorObj = typeof sensor === "string" ? findSensor(this.props.allSensors, sensor): sensor;
         return (
-            <div style={{
-                float: "left",
-                width: "auto",
-                height: "44px",
-                color: theme.colors.mainFontColor,
-                textAlign: "left",
-                border: "1px solid",
-                borderRadius: "10px",
-                lineHeight: "44px",
-                padding: "0px 10px",
-                margin: "5px"
-            }}
+            <div
+                key={index}
+                style={{
+                    float: "left",
+                    width: "auto",
+                    height: "44px",
+                    color: theme.colors.mainFontColor,
+                    textAlign: "left",
+                    border: "1px solid",
+                    borderRadius: "10px",
+                    lineHeight: "44px",
+                    padding: "0px 10px",
+                    margin: "5px"
+                }}
             >
                 {(sensorObj.get("name") ? sensorObj.get("name") : sensorObj.get("_id"))}
                 {last ? (
@@ -158,11 +164,11 @@ var FormulaDropArea = React.createClass({
             var last = (index === this.props.formulaItems.length - 1);
             switch (el.type) {
                 case Types.SENSOR: {
-                    item = this.renderSensor(el.sensor, last);
+                    item = this.renderSensor(el.sensor, index, last);
                     break;
                 }
                 case Types.OPERATOR: {
-                    item = this.renderOperator(el.operator, last);
+                    item = this.renderOperator(el.operator, index, last);
                     break;
                 }
             }

@@ -1,3 +1,4 @@
+import Immutable from "immutable";
 import R from "ramda";
 
 const operatorMapping = {
@@ -8,9 +9,9 @@ const operatorMapping = {
 };
 
 export const potentialUnitsOfMeasurement = [
-    {value: 1, label: "Celsius"},
-    {value: 2, label: "Fahrenheit"},
-    {value: 3, label: "Watt"}
+    {value: "cls", label: "Celsius"},
+    {value: "far", label: "Fahrenheit"},
+    {value: "wtt", label: "Watt"}
 ];
 
 export function getUnitOfMeasurementLabel (val) {
@@ -30,4 +31,25 @@ export const operatorToFormula = swap(operatorMapping);
 
 export function findSensor (sensors, sensorId) {
     return sensors.get(sensorId);
+}
+
+//TODO capire se dev'essere ricorsiva....
+export function extractSensorsIdsFromFormula (formula) {
+    let sensorsIds = [];
+    if (formula) {
+        formula.split("|").forEach((item) => {
+            if (!formulaToOperator[item]) {
+                sensorsIds.push(item);
+            }
+        });
+    }
+    return sensorsIds;
+}
+
+export function getAllSensors (sensorsCollection) {
+    if (!sensorsCollection) {
+        return Immutable.Map();
+    }
+    return sensorsCollection.filter(sensor => !sensor.get("isDeleted"));
+    //TODO filter for personal...
 }

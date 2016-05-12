@@ -54,10 +54,10 @@ var SensorForm = React.createClass({
     },
     getSensorOperator: function () {
         return [
-            {type: "-", key: "minus", operatorStyle: {lineHeight: "26px", fontSize: "30px"}},
-            {type: "+", key: "plus", operatorStyle: {lineHeight: "26px", fontSize: "30px"}},
-            {type: "x", key: "multiply", operatorStyle: {lineHeight: "26px", fontSize: "24px"}},
-            {type: "/", key: "divide", operatorStyle: {lineHeight: "28px", fontSize: "20px"}}
+            {type: "add", key: "plus"},
+            {type: "minus", key: "minus"},
+            {type: "delete", key: "multiply"},
+            {type: "divide", key: "divide"}
         ];
     },
     getTheme: function () {
