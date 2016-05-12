@@ -109,8 +109,6 @@ export const deleteSensors = (sensors) => {
         sensors.forEach((sensor) => {
             if (sensor.get("type") === MONITORING_TYPE) {
                 var endpoint = "http://" + WRITE_API_HOST + "/sensors/" + sensor.get("_id");
-                console.log("endpoint: ");
-                console.log(endpoint);
                 axios.delete(endpoint)
                     .then(() => dispatch({
                         type: "SENSOR_DELETE_SUCCESS"
