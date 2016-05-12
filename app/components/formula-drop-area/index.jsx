@@ -37,7 +37,7 @@ var FormulaDropArea = React.createClass({
     getTheme: function () {
         return this.context.theme || defaultTheme;
     },
-    renderOperator: function (operator) {
+    renderOperator: function (operator, last) {
         const theme = this.getTheme();
         return (
             <div style={{
@@ -45,7 +45,7 @@ var FormulaDropArea = React.createClass({
                 width: "auto",
                 height: "44px",
                 lineHeight: "44px",
-                padding: "0px 10px 0px 0px",
+                padding: "0px",
                 margin: "5px",
                 borderRadius: "10px",
                 border: "1px solid " + theme.colors.white
@@ -68,36 +68,39 @@ var FormulaDropArea = React.createClass({
                 >
                     {operator}
                 </p>
-                <Link
-                    to="/"
-                    style={{
-                        display: "block",
-                        float: "right",
-                        border: "1px solid " + theme.colors.white,
-                        width: "20px",
-                        height: "20px",
-                        overflow: "hidden",
-                        lineHeight: "18px",
-                        borderRadius: "30px",
-                        textAlign: "center",
-                        textDecoration: "none",
-                        margin: "10px 0px 0px 10px",
-                        color: theme.colors.white
-                    }}
-                >
-                    <Icon
-                        color={theme.colors.mainFontColor}
-                        icon={"delete"}
-                        size={"15px"}
+                {last ? (
+                    <Link
+                        to="/"
                         style={{
-                            verticalAlign: "middle"
+                            display: "block",
+                            float: "right",
+                            border: "1px solid " + theme.colors.white,
+                            width: "20px",
+                            height: "20px",
+                            overflow: "hidden",
+                            lineHeight: "18px",
+                            borderRadius: "30px",
+                            textAlign: "center",
+                            textDecoration: "none",
+                            margin: "10px 10px 0px 10px",
+                            color: theme.colors.white
                         }}
-                    />
-                </Link>
+                    >
+                        <Icon
+                            color={theme.colors.mainFontColor}
+                            icon={"delete"}
+                            size={"15px"}
+                            style={{
+                                verticalAlign: "middle"
+                            }}
+                        />
+                    </Link>) :
+                    undefined
+                }
             </div>
         );
     },
-    renderSensor: function (sensor) {
+    renderSensor: function (sensor, last) {
         let theme = this.getTheme();
         let sensorObj = typeof sensor === "string" ? findSensor(this.props.allSensors, sensor): sensor;
         return (
@@ -115,47 +118,51 @@ var FormulaDropArea = React.createClass({
             }}
             >
                 {(sensorObj.get("name") ? sensorObj.get("name") : sensorObj.get("_id"))}
-                <Link
-                    to="/"
-                    style={{
-                        display: "block",
-                        float: "right",
-                        border: "1px solid " + theme.colors.white,
-                        width: "20px",
-                        height: "20px",
-                        lineHeight: "18px",
-                        overflow: "hidden",
-                        borderRadius: "30px",
-                        textAlign: "center",
-                        verticalAlign: "text-bottom",
-                        textDecoration: "none",
-                        margin: "10px 0px 0px 20px",
-                        color: theme.colors.white
-                    }}
-                >
-                    <Icon
-                        color={theme.colors.mainFontColor}
-                        icon={"delete"}
-                        size={"15px"}
+                {last ? (
+                    <Link
+                        to="/"
                         style={{
-                            verticalAlign: "middle"
+                            display: "block",
+                            float: "right",
+                            border: "1px solid " + theme.colors.white,
+                            width: "20px",
+                            height: "20px",
+                            lineHeight: "18px",
+                            overflow: "hidden",
+                            borderRadius: "30px",
+                            textAlign: "center",
+                            verticalAlign: "text-bottom",
+                            textDecoration: "none",
+                            margin: "10px 0px 0px 20px",
+                            color: theme.colors.white
                         }}
-                    />
-                </Link>
+                    >
+                        <Icon
+                            color={theme.colors.mainFontColor}
+                            icon={"delete"}
+                            size={"15px"}
+                            style={{
+                                verticalAlign: "middle"
+                            }}
+                        />
+                    </Link>) :
+                    undefined
+                }
             </div>
         );
     },
     renderItems: function () {
         let items = [];
-        this.props.formulaItems.forEach((el) => {
+        this.props.formulaItems.forEach((el, index) => {
             let item;
+            var last = (index === this.props.formulaItems.length - 1);
             switch (el.type) {
                 case Types.SENSOR: {
-                    item = this.renderSensor(el.sensor);
+                    item = this.renderSensor(el.sensor, last);
                     break;
                 }
                 case Types.OPERATOR: {
-                    item = this.renderOperator(el.operator);
+                    item = this.renderOperator(el.operator, last);
                     break;
                 }
             }
