@@ -225,7 +225,7 @@ gulp.task("default", function () {
     gp.util.log("  " + gp.util.colors.green("dev") + "     set up dev environment with auto-recompiling");
     gp.util.log("");
     gp.util.log("Environment variables for configuration:");
-    gp.util.log("  " + gp.util.colors.cyan("READ_BACKEND_ENDPOINT") + "    (defaults to `" + getIp() + ":3000`)");
+    gp.util.log("  " + gp.util.colors.cyan("READ_BACKEND_ENDPOINT") + "    (defaults to `ws://" + getIp() + ":3000/websocket`)");
     gp.util.log("  " + gp.util.colors.cyan("WRITE_API_HOST") + "    (defaults to `" + getIp() + ":3000`)");
     gp.util.log("  " + gp.util.colors.cyan("WRITE_BACKEND_HOST") + "    (defaults to `" + getIp() + ":3000`)");
     gp.util.log("  " + gp.util.colors.cyan("ENVIRONMENT") + "     (defaults to `dev`)");

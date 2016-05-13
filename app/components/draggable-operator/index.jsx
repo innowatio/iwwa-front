@@ -3,6 +3,7 @@ import {DragSource} from "react-dnd";
 
 import {Types} from "lib/dnd-utils";
 import {defaultTheme} from "lib/theme";
+import {Icon} from "components";
 
 const sensorSource = {
     beginDrag (props) {
@@ -32,7 +33,6 @@ var DraggableOperator = React.createClass({
         connectDragSource: PropTypes.func,
         isDragging: PropTypes.bool,
         key: PropTypes.string,
-        operatorStyle: PropTypes.object,
         type: PropTypes.string
     },
     contextTypes: {
@@ -68,11 +68,15 @@ var DraggableOperator = React.createClass({
                     margin: "5px",
                     borderRadius: "100%",
                     backgroundColor: theme.colors.iconOperator,
-                    color: theme.colors.white,
-                    ...this.props.operatorStyle
+                    color: theme.colors.white
                 }}
                 >
-                    {type}
+                    <Icon
+                        color={theme.colors.white}
+                        icon={type}
+                        size={"28px"}
+                        style={{lineHeight: "42px"}}
+                    />
                 </p>
             </div>
         );
