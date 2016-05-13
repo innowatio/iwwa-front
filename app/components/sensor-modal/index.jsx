@@ -56,8 +56,16 @@ var SensorForm = React.createClass({
         return [
             {type: "add", key: "plus"},
             {type: "minus", key: "minus"},
-            {type: "delete", key: "multiply"},
-            {type: "divide", key: "divide"}
+            {type: "multiply", key: "multiply"},
+            {type: "divide", key: "divide"},
+            {type: "open-braket", key: "open-braket"},
+            {type: "close-braket", key: "close-braket"},
+            {type: "circumflex", key: "circumflex"},
+            {type: "square-root", key: "square-root"},
+            {type: "1y", key: "plus-1y"},
+            {type: "1m", key: "plus-1m"},
+            {type: "1w", key: "plus-1w"},
+            {type: "15m", key: "plus-15m"}
         ];
     },
     getTheme: function () {

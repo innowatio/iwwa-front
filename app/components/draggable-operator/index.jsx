@@ -60,12 +60,11 @@ var DraggableOperator = React.createClass({
             >
                 <p style={{
                     display: "inline-block",
-                    width: "30px",
-                    height: "30px",
+                    width: "36px",
+                    height: "36px",
                     overflow: "hidden",
-                    fontWeight: "300",
                     textAlign: "center",
-                    margin: "5px",
+                    margin: "3px",
                     borderRadius: "100%",
                     backgroundColor: theme.colors.iconOperator,
                     color: theme.colors.white

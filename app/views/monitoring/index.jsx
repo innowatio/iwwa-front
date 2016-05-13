@@ -208,7 +208,7 @@ var Monitoring = React.createClass({
                                 color={theme.colors.iconHeader}
                                 icon={"duplicate"}
                                 size={"28px"}
-                                style={{lineHeight: "20px"}}
+                                style={{lineHeight: "45px"}}
                             />
                         </Button>
                         <Button
@@ -220,7 +220,7 @@ var Monitoring = React.createClass({
                                 color={theme.colors.iconHeader}
                                 icon={"edit"}
                                 size={"28px"}
-                                style={{lineHeight: "20px"}}
+                                style={{lineHeight: "45px"}}
                             />
                         </Button>
                         <Button
@@ -230,9 +230,9 @@ var Monitoring = React.createClass({
                         >
                             <Icon
                                 color={theme.colors.iconHeader}
-                                icon={"delete"}
+                                icon={"close"}
                                 size={"28px"}
-                                style={{lineHeight: "20px"}}
+                                style={{lineHeight: "45px"}}
                             />
                         </Button>
                     </div>
