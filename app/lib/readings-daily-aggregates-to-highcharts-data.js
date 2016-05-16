@@ -40,8 +40,6 @@ function numberOfDayInFilter (chartState) {
 export function yAxisByDate (chartState) {
     const findAggregateFilterIndex = getFindAggregateFilterIndex(chartState);
     return (yAxis, aggregate) => {
-        console.log("aggregate");
-        console.log(aggregate);
         var indexes = findAggregateFilterIndex(aggregate);
         if (indexes === -1 || isEmpty(indexes)) {
             return yAxis;
@@ -60,8 +58,6 @@ export function yAxisByDate (chartState) {
                     yAxis[index][offsetInArray] = isNaN(value) ? null : value;
                 });
         });
-        console.log("yAxis");
-        console.log(yAxis);
         return yAxis;
     };
 }

@@ -34,7 +34,7 @@ var ENVIRONMENT  = process.env.ENVIRONMENT || "dev";
 var WRITE_API_HOST = "iwwa-write-api-development.eu-west-1.elasticbeanstalk.com" || getIp() + ":3000";
 // var WRITE_API_HOST = process.env.WRITE_API_HOST || getIp() + ":3000";
 var WRITE_BACKEND_HOST = process.env.WRITE_BACKEND_HOST || getIp() + ":3000";
-var READ_BACKEND_ENDPOINT = "iwwa-back-development.eu-west-1.elasticbeanstalk.com" || getIp() + ":3000";
+var READ_BACKEND_ENDPOINT = "wss://iwwa-back-development.innowatio-aws.com/websocket" || getIp() + ":3000";
 // var READ_BACKEND_ENDPOINT = process.env.READ_BACKEND_ENDPOINT || `ws://${getIp()}:3000/websocket`;
 var MINIFY_FILES = (process.env.MINIFY_FILES === "true") || false;
 
@@ -84,7 +84,7 @@ proGulp.task("buildAppScripts", (function () {
         plugins: [
             new webpack.DefinePlugin({
                 ENVIRONMENT: JSON.stringify(ENVIRONMENT),
-                READ_BACKEND_HOST: JSON.stringify(READ_BACKEND_HOST),
+                READ_BACKEND_ENDPOINT: JSON.stringify(READ_BACKEND_ENDPOINT),
                 WRITE_BACKEND_HOST: JSON.stringify(WRITE_BACKEND_HOST)
             }),
             new webpack.optimize.CommonsChunkPlugin(
@@ -225,7 +225,7 @@ gulp.task("default", function () {
     gp.util.log("  " + gp.util.colors.green("dev") + "     set up dev environment with auto-recompiling");
     gp.util.log("");
     gp.util.log("Environment variables for configuration:");
-    gp.util.log("  " + gp.util.colors.cyan("READ_BACKEND_HOST") + "    (defaults to `" + getIp() + ":3000`)");
+    gp.util.log("  " + gp.util.colors.cyan("READ_BACKEND_ENDPOINT") + "    (defaults to `ws://" + getIp() + ":3000/websocket`)");
     gp.util.log("  " + gp.util.colors.cyan("WRITE_API_HOST") + "    (defaults to `" + getIp() + ":3000`)");
     gp.util.log("  " + gp.util.colors.cyan("WRITE_BACKEND_HOST") + "    (defaults to `" + getIp() + ":3000`)");
     gp.util.log("  " + gp.util.colors.cyan("ENVIRONMENT") + "     (defaults to `dev`)");

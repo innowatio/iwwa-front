@@ -3,6 +3,7 @@ import {DragSource} from "react-dnd";
 
 import {Types} from "lib/dnd-utils";
 import {defaultTheme} from "lib/theme";
+import {Icon} from "components";
 
 const styles = (theme) => ({
     operatorStyle: {
@@ -46,7 +47,6 @@ var DraggableOperator = React.createClass({
         connectDragSource: PropTypes.func,
         isDragging: PropTypes.bool,
         key: PropTypes.string,
-        operatorStyle: PropTypes.object,
         type: PropTypes.string
     },
     contextTypes: {
@@ -83,15 +83,24 @@ var DraggableOperator = React.createClass({
                     margin: "5px",
                     borderRadius: "100%",
                     backgroundColor: theme.colors.iconOperator,
+<<<<<<< HEAD
                     color: theme.colors.white,
                     ...this.props.operatorStyle
 =======
                     backgroundColor: this.props.backgroundColor || theme.colors.iconOperatorBg1,
                     ...styles(theme).operatorStyle
 >>>>>>> Stashed changes
+=======
+                    color: theme.colors.white
+>>>>>>> bedabcadfe7777528d5074eb1b59007164fbade5
                 }}
                 >
-                    {type}
+                    <Icon
+                        color={theme.colors.white}
+                        icon={type}
+                        size={"28px"}
+                        style={{lineHeight: "42px"}}
+                    />
                 </p>
             </div>
         );

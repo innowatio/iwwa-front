@@ -38,60 +38,66 @@ var FormulaDropArea = React.createClass({
     getTheme: function () {
         return this.context.theme || defaultTheme;
     },
-    renderOperator: function (operator, index) {
+    renderOperator: function (operator, index, showRemove) {
         const theme = this.getTheme();
         return (
-            <div style={{
-                float: "left",
-                width: "auto",
-                height: "44px",
-                lineHeight: "44px",
-                padding: "0px 10px 0px 0px",
-                margin: "5px",
-                borderRadius: "10px",
-                border: "1px solid " + theme.colors.white
-            }}
+            <div
+                key={index}
+                style={{
+                    float: "left",
+                    width: "auto",
+                    height: "44px",
+                    lineHeight: "44px",
+                    padding: "0px",
+                    margin: "5px",
+                    borderRadius: "10px",
+                    border: "1px solid " + theme.colors.white
+                }}
             >
                 <p style={{
                     display: "inline-block",
-                    width: "30px",
-                    height: "30px",
+                    width: "36px",
+                    height: "36px",
                     overflow: "hidden",
-                    fontWeight: "300",
-                    fontSize: "30px",
-                    lineHeight: "28px",
                     textAlign: "center",
-                    margin: "5px",
+                    margin: "3px",
                     borderRadius: "100%",
                     backgroundColor: operator.backgroundColor || theme.colors.iconOperatorBg1,
                     color: theme.colors.white
                 }}
                 >
-                    {operator}
+                    <Icon
+                        color={theme.colors.white}
+                        icon={operator}
+                        size={"28px"}
+                        style={{lineHeight: "42px"}}
+                    />
                 </p>
-                {this.renderRemoveButton(index)}
+                {showRemove ? this.renderRemoveButton(index) : null}
             </div>
         );
     },
-    renderSensor: function (sensor, index) {
+    renderSensor: function (sensor, index, showRemove) {
         let theme = this.getTheme();
         let sensorObj = typeof sensor === "string" ? findSensor(this.props.allSensors, sensor): sensor;
         return (
-            <div style={{
-                float: "left",
-                width: "auto",
-                height: "44px",
-                color: theme.colors.mainFontColor,
-                textAlign: "left",
-                border: "1px solid",
-                borderRadius: "10px",
-                lineHeight: "44px",
-                padding: "0px 10px",
-                margin: "5px"
-            }}
+            <div
+                key={index}
+                style={{
+                    float: "left",
+                    width: "auto",
+                    height: "44px",
+                    color: theme.colors.mainFontColor,
+                    textAlign: "left",
+                    border: "1px solid",
+                    borderRadius: "10px",
+                    lineHeight: "44px",
+                    padding: "0px 10px",
+                    margin: "5px"
+                }}
             >
                 {(sensorObj.get("name") ? sensorObj.get("name") : sensorObj.get("_id"))}
-                {this.renderRemoveButton(index)}
+                {showRemove ? this.renderRemoveButton(index) : null}
             </div>
         );
     },
@@ -106,7 +112,7 @@ var FormulaDropArea = React.createClass({
                     border: "1px solid " + theme.colors.white,
                     width: "20px",
                     height: "20px",
-                    lineHeight: "15px",
+                    lineHeight: "18px",
                     overflow: "hidden",
                     borderRadius: "30px",
                     textAlign: "center",
@@ -132,13 +138,14 @@ var FormulaDropArea = React.createClass({
         let items = [];
         this.props.formulaItems.forEach((el, index) => {
             let item;
+            var last = (index === this.props.formulaItems.length - 1);
             switch (el.type) {
                 case Types.SENSOR: {
-                    item = this.renderSensor(el.sensor, index);
+                    item = this.renderSensor(el.sensor, index, last);
                     break;
                 }
                 case Types.OPERATOR: {
-                    item = this.renderOperator(el.operator, index);
+                    item = this.renderOperator(el.operator, index, last);
                     break;
                 }
             }

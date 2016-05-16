@@ -107,6 +107,7 @@
     "react-addons-linked-state-mixin": "^0.14.8",
     "react-addons-pure-render-mixin": "^0.14.8",
     "react-addons-test-utils": "^0.14.8",
+    "react-addons-shallow-compare": "^0.14.8",
     "react-bootstrap": "^0.28.5",
     "react-dnd": "^2.1.2",
     "react-dnd-html5-backend": "^2.1.2",
