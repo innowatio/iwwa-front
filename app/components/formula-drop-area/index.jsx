@@ -16,6 +16,26 @@ const formulaTarget = {
     }
 };
 
+const styles = (theme) => ({
+    removeStyle: {
+        display: "inline-block",
+        float: "right",
+        border: "1px solid " + theme.colors.white,
+        width: "20px",
+        height: "20px",
+        lineHeight: "18px",
+        overflow: "hidden",
+        borderRadius: "30px",
+        textAlign: "center",
+        verticalAlign: "text-bottom",
+        textDecoration: "none",
+        marginTop: "10px",
+        color: theme.colors.white,
+        cursor: "pointer"
+    }
+});
+
+
 function collect (connect, monitor) {
     return {
         connectDropTarget: connect.dropTarget(),
@@ -73,7 +93,7 @@ var FormulaDropArea = React.createClass({
                         style={{lineHeight: "42px"}}
                     />
                 </p>
-                {showRemove ? this.renderRemoveButton(index) : null}
+                {showRemove ? this.renderRemoveButtonOperator(index) : null}
             </div>
         );
     },
@@ -97,30 +117,39 @@ var FormulaDropArea = React.createClass({
                 }}
             >
                 {(sensorObj.get("name") ? sensorObj.get("name") : sensorObj.get("_id"))}
-                {showRemove ? this.renderRemoveButton(index) : null}
+                {showRemove ? this.renderRemoveButtonSensor(index) : null}
             </div>
         );
     },
-    renderRemoveButton: function (index) {
+    renderRemoveButtonSensor: function (index) {
         let theme = this.getTheme();
         return (
             <div
                 onClick={() => this.props.removeItemFromFormula(index)}
                 style={{
-                    display: "block",
-                    float: "right",
-                    border: "1px solid " + theme.colors.white,
-                    width: "20px",
-                    height: "20px",
-                    lineHeight: "18px",
-                    overflow: "hidden",
-                    borderRadius: "30px",
-                    textAlign: "center",
-                    verticalAlign: "text-bottom",
-                    textDecoration: "none",
-                    margin: "10px 0px 0px 20px",
-                    color: theme.colors.white,
-                    cursor: "pointer"
+                    marginLeft: "15px",
+                    ...styles(theme).removeStyle
+                }}
+            >
+                <Icon
+                    color={theme.colors.mainFontColor}
+                    icon={"delete"}
+                    size={"15px"}
+                    style={{
+                        verticalAlign: "middle"
+                    }}
+                />
+            </div>
+        );
+    },
+    renderRemoveButtonOperator: function (index) {
+        let theme = this.getTheme();
+        return (
+            <div
+                onClick={() => this.props.removeItemFromFormula(index)}
+                style={{
+                    margin: "0px 10px",
+                    ...styles(theme).removeStyle
                 }}
             >
                 <Icon

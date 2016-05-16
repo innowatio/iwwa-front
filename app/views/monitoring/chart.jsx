@@ -415,9 +415,9 @@ var MonitoringChartView = React.createClass({
                             >
                                 <Icon
                                     color={theme.colors.iconHeader}
-                                    icon={"calendar"}
-                                    size={"28px"}
-                                    style={{lineHeight: "20px"}}
+                                    icon={"week"}
+                                    size={"32px"}
+                                    style={{lineHeight: "20px", verticalAlign: "middle"}}
                                 />
                             </Button>
                             <label style={{
@@ -438,9 +438,9 @@ var MonitoringChartView = React.createClass({
                             >
                                 <Icon
                                     color={theme.colors.iconHeader}
-                                    icon={"calendar"}
-                                    size={"28px"}
-                                    style={{lineHeight: "20px"}}
+                                    icon={"month"}
+                                    size={"32px"}
+                                    style={{lineHeight: "20px", verticalAlign: "middle"}}
                                 />
                             </Button>
                             <label style={{
@@ -461,9 +461,9 @@ var MonitoringChartView = React.createClass({
                             >
                                 <Icon
                                     color={theme.colors.iconHeader}
-                                    icon={"calendar"}
-                                    size={"28px"}
-                                    style={{lineHeight: "20px"}}
+                                    icon={"year"}
+                                    size={"32px"}
+                                    style={{lineHeight: "20px", verticalAlign: "middle"}}
                                 />
                             </Button>
                             <label style={{

@@ -20,7 +20,7 @@ const styles = ({colors}) => ({
     },
     sensorName: {
         float: "left",
-        width: "100px",
+        width: "150px",
         overflow: "hidden",
         textOverflow: "ellipsis",
         whiteSpace: "nowrap",
@@ -32,7 +32,7 @@ const styles = ({colors}) => ({
     },
     tagsContainer: {
         float: "left",
-        width: "calc(100% - 230px)"
+        width: "calc(100% - 280px)"
     },
     buttonsContainer: {
         float: "right",

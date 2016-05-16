@@ -73,26 +73,8 @@ var DraggableOperator = React.createClass({
                 }}
             >
                 <p style={{
-<<<<<<< Updated upstream
-                    display: "inline-block",
-                    width: "30px",
-                    height: "30px",
-                    overflow: "hidden",
-                    fontWeight: "300",
-                    textAlign: "center",
-                    margin: "5px",
-                    borderRadius: "100%",
-                    backgroundColor: theme.colors.iconOperator,
-<<<<<<< HEAD
-                    color: theme.colors.white,
-                    ...this.props.operatorStyle
-=======
                     backgroundColor: this.props.backgroundColor || theme.colors.iconOperatorBg1,
                     ...styles(theme).operatorStyle
->>>>>>> Stashed changes
-=======
-                    color: theme.colors.white
->>>>>>> bedabcadfe7777528d5074eb1b59007164fbade5
                 }}
                 >
                     <Icon

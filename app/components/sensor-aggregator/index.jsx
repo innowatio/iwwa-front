@@ -1,28 +1,26 @@
 import React, {PropTypes} from "react";
 import {Col} from "react-bootstrap";
 import IPropTypes from "react-immutable-proptypes";
+import {Input} from "react-bootstrap";
 
 import {DraggableOperator, DraggableSensor, FormulaDropArea} from "components";
 
 import {findSensor} from "lib/sensors-utils";
 import {styles} from "lib/styles_restyling";
 import {defaultTheme} from "lib/theme";
+import {Icon} from "components";
 
 var SensorAggregator = React.createClass({
     propTypes: {
         addItemToFormula: PropTypes.func.isRequired,
         allSensors: IPropTypes.map,
         formulaItems: PropTypes.array,
-<<<<<<< Updated upstream
-        operators: PropTypes.array,
-        removeItemFromFormula: PropTypes.func.isRequired,
-=======
         operators: PropTypes.arrayOf(PropTypes.shape({
             type: PropTypes.string.isRequired,
             key: PropTypes.string.isRequired,
             backgroundColor: PropTypes.string
         })),
->>>>>>> Stashed changes
+        removeItemFromFormula: PropTypes.func.isRequired,
         sensors: PropTypes.array.isRequired
     },
     contextTypes: {
@@ -49,13 +47,7 @@ var SensorAggregator = React.createClass({
                     />
                 </Col>
                 <Col md={6} style={{textAlign: "center", marginTop: "20px"}}>
-                    <label style={{
-                        color: theme.colors.mainFontColor,
-                        fontSize: "16px",
-                        fontWeight: "400",
-                        marginBottom: "20px"
-                    }}
-                    >
+                    <label style={styles(theme).labelStyle}>
                         {"Trascina sensori ed operatori nello spazio blu per scegliere come aggregarli"}
                     </label>
                     {this.props.sensors.map(sensorId => {
@@ -73,6 +65,41 @@ var SensorAggregator = React.createClass({
                             />
                         );
                     })}
+                    <label style={styles(theme).labelStyle}>
+                        {"Inserisci la cifra e aggiungila tra gli operatori:"}
+                    </label>
+
+
+                    <Input
+                        addonAfter={
+                            <Icon
+                                color={theme.colors.white}
+                                icon={"add"}
+                                onClick={""}
+                                size={"20px"}
+                                style={{
+                                    lineHeight: "10px",
+                                    verticalAlign: "middle"
+                                }}
+                            />
+                        }
+                        className="input-search"
+                        onChange={(input) => self.setState({addNumber: input.target.value})}
+                        placeholder="Aggiungi numero all'area"
+                        type="text"
+                        value={self.state.addNumber}
+                        style={{
+                            fontSize: "12px",
+                            color: theme.colors.white,
+                            height: "44px",
+                            padding: "0px 10px",
+                            margin: "0px",
+                            border: "1px solid " + theme.colors.white,
+                            borderTopLeftRadius: "10px",
+                            borderBottomLeftRadius: "10px",
+                            backgroundColor: theme.colors.backgroundContentModal
+                        }}
+                    />
                 </Col>
             </div>
         );

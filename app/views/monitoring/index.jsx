@@ -235,7 +235,7 @@ var Monitoring = React.createClass({
                         >
                             <Icon
                                 color={theme.colors.iconHeader}
-                                icon={"delete"}
+                                icon={"close"}
                                 size={"28px"}
                                 style={{lineHeight: "20px"}}
                             />
