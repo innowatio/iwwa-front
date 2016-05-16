@@ -54,11 +54,22 @@ var SensorForm = React.createClass({
         theme: PropTypes.object
     },
     getSensorOperator: function () {
+        const theme = this.getTheme();
         return [
-            {type: "-", key: "minus", operatorStyle: {lineHeight: "26px", fontSize: "30px"}},
-            {type: "+", key: "plus", operatorStyle: {lineHeight: "26px", fontSize: "30px"}},
-            {type: "x", key: "multiply", operatorStyle: {lineHeight: "26px", fontSize: "24px"}},
-            {type: "/", key: "divide", operatorStyle: {lineHeight: "28px", fontSize: "20px"}}
+            {type: "add", key: "plus", backgroundColor: theme.colors.iconOperatorBg1},
+            {type: "minus", key: "minus", backgroundColor: theme.colors.iconOperatorBg1},
+            {type: "multiply", key: "multiply", backgroundColor: theme.colors.iconOperatorBg1},
+            {type: "divide", key: "divide", backgroundColor: theme.colors.iconOperatorBg1},
+            {type: "percentage", key: "percentage", backgroundColor: theme.colors.iconOperatorBg1},
+            {type: "open-braket", key: "open-braket", backgroundColor: theme.colors.iconOperatorBg2},
+            {type: "close-braket", key: "close-braket", backgroundColor: theme.colors.iconOperatorBg2},
+            {type: "circumflex", key: "circumflex", backgroundColor: theme.colors.iconOperatorBg2},
+            {type: "square-root", key: "square-root", backgroundColor: theme.colors.iconOperatorBg2},
+            {type: "1y", key: "plus-1y", backgroundColor: theme.colors.iconOperatorBg3},
+            {type: "1m", key: "plus-1m", backgroundColor: theme.colors.iconOperatorBg3},
+            {type: "1w", key: "plus-1w", backgroundColor: theme.colors.iconOperatorBg3},
+            {type: "1d", key: "plus-1d", backgroundColor: theme.colors.iconOperatorBg3},
+            {type: "15m", key: "plus-15m", backgroundColor: theme.colors.iconOperatorBg3}
         ];
     },
     getTheme: function () {

@@ -13,8 +13,16 @@ var SensorAggregator = React.createClass({
         addItemToFormula: PropTypes.func.isRequired,
         allSensors: IPropTypes.map,
         formulaItems: PropTypes.array,
+<<<<<<< Updated upstream
         operators: PropTypes.array,
         removeItemFromFormula: PropTypes.func.isRequired,
+=======
+        operators: PropTypes.arrayOf(PropTypes.shape({
+            type: PropTypes.string.isRequired,
+            key: PropTypes.string.isRequired,
+            backgroundColor: PropTypes.string
+        })),
+>>>>>>> Stashed changes
         sensors: PropTypes.array.isRequired
     },
     contextTypes: {

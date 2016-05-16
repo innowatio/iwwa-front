@@ -4,6 +4,19 @@ import {DragSource} from "react-dnd";
 import {Types} from "lib/dnd-utils";
 import {defaultTheme} from "lib/theme";
 
+const styles = (theme) => ({
+    operatorStyle: {
+        display: "inline-block",
+        width: "36px",
+        height: "36px",
+        overflow: "hidden",
+        textAlign: "center",
+        margin: "3px",
+        borderRadius: "100%",
+        color: theme.colors.white
+    }
+});
+
 const sensorSource = {
     beginDrag (props) {
         return {
@@ -29,6 +42,7 @@ function collect (connect, monitor) {
 
 var DraggableOperator = React.createClass({
     propTypes: {
+        backgroundColor: PropTypes.string,
         connectDragSource: PropTypes.func,
         isDragging: PropTypes.bool,
         key: PropTypes.string,
@@ -59,6 +73,7 @@ var DraggableOperator = React.createClass({
                 }}
             >
                 <p style={{
+<<<<<<< Updated upstream
                     display: "inline-block",
                     width: "30px",
                     height: "30px",
@@ -70,6 +85,10 @@ var DraggableOperator = React.createClass({
                     backgroundColor: theme.colors.iconOperator,
                     color: theme.colors.white,
                     ...this.props.operatorStyle
+=======
+                    backgroundColor: this.props.backgroundColor || theme.colors.iconOperatorBg1,
+                    ...styles(theme).operatorStyle
+>>>>>>> Stashed changes
                 }}
                 >
                     {type}

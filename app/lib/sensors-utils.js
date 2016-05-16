@@ -4,8 +4,8 @@ import R from "ramda";
 const operatorMapping = {
     "+" : "add",
     "-" : "minus",
-    "x" : "delete",
-    "%" : "divide"
+    "x" : "multiply",
+    "/" : "divide"
 };
 
 export const potentialUnitsOfMeasurement = [

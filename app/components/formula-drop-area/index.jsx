@@ -63,7 +63,7 @@ var FormulaDropArea = React.createClass({
                     textAlign: "center",
                     margin: "5px",
                     borderRadius: "100%",
-                    backgroundColor: theme.colors.iconOperator,
+                    backgroundColor: operator.backgroundColor || theme.colors.iconOperatorBg1,
                     color: theme.colors.white
                 }}
                 >
