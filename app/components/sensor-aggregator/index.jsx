@@ -1,8 +1,8 @@
 import React, {PropTypes} from "react";
-import {Col} from "react-bootstrap";
+import Radium from "radium";
+import {Input, Col} from "react-bootstrap";
 import IPropTypes from "react-immutable-proptypes";
-
-import {DraggableOperator, DraggableSensor, FormulaDropArea} from "components";
+import {DraggableOperator, DraggableSensor, FormulaDropArea, Icon} from "components";
 
 import {findSensor} from "lib/sensors-utils";
 import {styles} from "lib/styles_restyling";
@@ -13,7 +13,13 @@ var SensorAggregator = React.createClass({
         addItemToFormula: PropTypes.func.isRequired,
         allSensors: IPropTypes.map,
         formulaItems: PropTypes.array,
-        operators: PropTypes.array,
+        numbers: PropTypes.string,
+        operators: PropTypes.arrayOf(PropTypes.shape({
+            type: PropTypes.string.isRequired,
+            key: PropTypes.string.isRequired,
+            backgroundColor: PropTypes.string
+        })),
+        removeItemFromFormula: PropTypes.func.isRequired,
         sensors: PropTypes.array.isRequired
     },
     contextTypes: {
@@ -22,8 +28,41 @@ var SensorAggregator = React.createClass({
     getTheme: function () {
         return this.context.theme || defaultTheme;
     },
-    render: function () {
+    getInputAddStyle: function () {
         let theme = this.getTheme();
+        return {
+            ".input-add:focus": {
+                boxShadow: "none",
+                WebkitBoxShadow: "none",
+                borderColor: theme.colors.white
+            },
+            ".input-add": {
+                fontSize: "15px",
+                color: theme.colors.white,
+                width: "100%",
+                height: "40px",
+                lineHeight: "40px",
+                padding: "0px 10px",
+                margin: "0px",
+                border: "1px solid " + theme.colors.white,
+                borderTopLeftRadius: "10px",
+                borderBottomLeftRadius: "10px",
+                backgroundColor: theme.colors.backgroundContentModal,
+                outline: "0px",
+                outlineStyle: "none",
+                outlineWidth: "0px"
+            },
+            ".input-group-addon:last-child": {
+                backgroundColor: theme.colors.buttonPrimary,
+                borderTopRightRadius: "10px",
+                borderBottomRightRadius: "10px",
+                cursor: "pointer"
+            }
+        };
+    },
+    render: function () {
+        let self = this;
+        let theme = self.getTheme();
         return (
             <div style={{clear: "both", minHeight: "250px"}}>
                 <Col md={6} style={{marginTop: "20px"}}>
@@ -38,14 +77,8 @@ var SensorAggregator = React.createClass({
                         }}
                     />
                 </Col>
-                <Col md={6} style={{textAlign: "center", marginTop: "20px"}}>
-                    <label style={{
-                        color: theme.colors.mainFontColor,
-                        fontSize: "16px",
-                        fontWeight: "400",
-                        marginBottom: "20px"
-                    }}
-                    >
+                <Col md={6} style={{marginTop: "20px"}}>
+                    <label style={styles(theme).labelStyle}>
                         {"Trascina sensori ed operatori nello spazio blu per scegliere come aggregarli"}
                     </label>
                     {this.props.sensors.map(sensorId => {
@@ -63,6 +96,35 @@ var SensorAggregator = React.createClass({
                             />
                         );
                     })}
+                    <label style={styles(theme).labelStyle}>
+                        {"Inserisci la cifra e aggiungila tra gli operatori:"}
+                    </label>
+                    <div className="row">
+                        <Col md={7}>
+                            <div className="add-container">
+                                <Radium.Style
+                                    rules={self.getInputAddStyle()}
+                                    scopeSelector=".add-container"
+                                />
+                                <Input
+                                    addonAfter={
+                                        <Icon
+                                            color={theme.colors.white}
+                                            icon={"add"}
+                                            size={"20px"}
+                                            style={{
+                                                lineHeight: "10px",
+                                                verticalAlign: "middle"
+                                            }}
+                                        />
+                                    }
+                                    className="input-add"
+                                    placeholder="Aggiungi numero all'area"
+                                    type="text"
+                                />
+                            </div>
+                        </Col>
+                    </div>
                 </Col>
             </div>
         );

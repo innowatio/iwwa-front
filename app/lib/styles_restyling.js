@@ -86,6 +86,13 @@ export const styles = (theme) => ({
         paddingRight: "10px",
         height: "56px"
     },
+    labelStyle: {
+        width: "100%",
+        color: theme.colors.mainFontColor,
+        fontSize: "16px",
+        fontWeight: "400",
+        margin: "10px 0px 20px 0px"
+    },
     inputLine: {
         borderTop: "0px",
         borderLeft: "0px",

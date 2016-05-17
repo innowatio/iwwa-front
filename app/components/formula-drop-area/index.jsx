@@ -5,8 +5,17 @@ import IPropTypes from "react-immutable-proptypes";
 import {Types} from "lib/dnd-utils";
 import {findSensor} from "lib/sensors-utils";
 import {defaultTheme} from "lib/theme";
-import {Link} from "react-router";
 import {Icon} from "components";
+
+const styles = (theme) => ({
+    removeStyle: {
+        border: "1px solid " + theme.colors.white,
+        height: "20px",
+        width: "20px",
+        lineHeight: "18px",
+        textAlign: "center"
+    }
+});
 
 const formulaTarget = {
     drop (props, monitor) {
@@ -29,6 +38,7 @@ var FormulaDropArea = React.createClass({
         allSensors: IPropTypes.map,
         connectDropTarget: PropTypes.func,
         formulaItems: PropTypes.array.isRequired,
+        removeItemFromFormula: PropTypes.func,
         style: PropTypes.object
     },
     contextTypes: {
@@ -37,7 +47,7 @@ var FormulaDropArea = React.createClass({
     getTheme: function () {
         return this.context.theme || defaultTheme;
     },
-    renderOperator: function (operator, index, last) {
+    renderOperator: function (operator, index, showRemove) {
         const theme = this.getTheme();
         return (
             <div
@@ -71,40 +81,12 @@ var FormulaDropArea = React.createClass({
                         size={"28px"}
                         style={{lineHeight: "42px"}}
                     />
+                    {showRemove ? this.renderRemoveButtonOperator(index) : null}
                 </p>
-                {last ? (
-                    <Link
-                        to="/"
-                        style={{
-                            display: "block",
-                            float: "right",
-                            border: "1px solid " + theme.colors.white,
-                            width: "20px",
-                            height: "20px",
-                            overflow: "hidden",
-                            lineHeight: "18px",
-                            borderRadius: "30px",
-                            textAlign: "center",
-                            textDecoration: "none",
-                            margin: "10px 10px 0px 10px",
-                            color: theme.colors.white
-                        }}
-                    >
-                        <Icon
-                            color={theme.colors.mainFontColor}
-                            icon={"delete"}
-                            size={"15px"}
-                            style={{
-                                verticalAlign: "middle"
-                            }}
-                        />
-                    </Link>) :
-                    undefined
-                }
             </div>
         );
     },
-    renderSensor: function (sensor, index, last) {
+    renderSensor: function (sensor, index, showRemove) {
         let theme = this.getTheme();
         let sensorObj = typeof sensor === "string" ? findSensor(this.props.allSensors, sensor): sensor;
         return (
@@ -124,36 +106,72 @@ var FormulaDropArea = React.createClass({
                 }}
             >
                 {(sensorObj.get("name") ? sensorObj.get("name") : sensorObj.get("_id"))}
-                {last ? (
-                    <Link
-                        to="/"
-                        style={{
-                            display: "block",
-                            float: "right",
-                            border: "1px solid " + theme.colors.white,
-                            width: "20px",
-                            height: "20px",
-                            lineHeight: "18px",
-                            overflow: "hidden",
-                            borderRadius: "30px",
-                            textAlign: "center",
-                            verticalAlign: "text-bottom",
-                            textDecoration: "none",
-                            margin: "10px 0px 0px 20px",
-                            color: theme.colors.white
-                        }}
-                    >
-                        <Icon
-                            color={theme.colors.mainFontColor}
-                            icon={"delete"}
-                            size={"15px"}
-                            style={{
-                                verticalAlign: "middle"
-                            }}
-                        />
-                    </Link>) :
-                    undefined
-                }
+                {showRemove ? this.renderRemoveButton(index) : null}
+            </div>
+        );
+    },
+    renderNumber: function (number, index, showRemove) {
+        let theme = this.getTheme();
+        return (
+            <div
+                key={index}
+                style={{
+                    float: "left",
+                    width: "auto",
+                    height: "44px",
+                    color: theme.colors.mainFontColor,
+                    textAlign: "left",
+                    border: "1px solid",
+                    borderRadius: "10px",
+                    lineHeight: "44px",
+                    padding: "0px 10px",
+                    margin: "5px"
+                }}
+            >
+                {"number"}
+                {showRemove ? this.renderRemoveButton(index) : null}
+            </div>
+        );
+    },
+    renderRemoveButton: function (index) {
+        let theme = this.getTheme();
+        return (
+            <div
+                onClick={() => this.props.removeItemFromFormula(index)}
+                style={{
+                    marginLeft: "15px",
+                    ...styles(theme).removeStyle
+                }}
+            >
+                <Icon
+                    color={theme.colors.mainFontColor}
+                    icon={"delete"}
+                    size={"15px"}
+                    style={{
+                        verticalAlign: "middle"
+                    }}
+                />
+            </div>
+        );
+    },
+    renderRemoveButtonOperator: function (index) {
+        let theme = this.getTheme();
+        return (
+            <div
+                onClick={() => this.props.removeItemFromFormula(index)}
+                style={{
+                    margin: "0px 10px",
+                    ...styles(theme).removeStyle
+                }}
+            >
+                <Icon
+                    color={theme.colors.mainFontColor}
+                    icon={"delete"}
+                    size={"15px"}
+                    style={{
+                        verticalAlign: "middle"
+                    }}
+                />
             </div>
         );
     },
