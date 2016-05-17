@@ -29,6 +29,9 @@ var SensorAggregator = React.createClass({
     getTheme: function () {
         return this.context.theme || defaultTheme;
     },
+    getInitialState: function () {
+        return {};
+    },
     render: function () {
         let theme = this.getTheme();
         return (
@@ -75,7 +78,6 @@ var SensorAggregator = React.createClass({
                             <Icon
                                 color={theme.colors.white}
                                 icon={"add"}
-                                onClick={""}
                                 size={"20px"}
                                 style={{
                                     lineHeight: "10px",
@@ -84,10 +86,10 @@ var SensorAggregator = React.createClass({
                             />
                         }
                         className="input-search"
-                        onChange={(input) => self.setState({addNumber: input.target.value})}
+                        onChange={(input) => this.setState({addNumber: input.target.value})}
                         placeholder="Aggiungi numero all'area"
                         type="text"
-                        value={self.state.addNumber}
+                        value={this.state.addNumber}
                         style={{
                             fontSize: "12px",
                             color: theme.colors.white,
