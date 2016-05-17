@@ -26,11 +26,11 @@ var SensorAggregator = React.createClass({
     contextTypes: {
         theme: PropTypes.object
     },
-    getTheme: function () {
-        return this.context.theme || defaultTheme;
-    },
     getInitialState: function () {
         return {};
+    },
+    getTheme: function () {
+        return this.context.theme || defaultTheme;
     },
     render: function () {
         let theme = this.getTheme();
