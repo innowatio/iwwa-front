@@ -34,7 +34,6 @@ const styles = (theme) => ({
     }
 });
 
-
 function collect (connect, monitor) {
     return {
         connectDropTarget: connect.dropTarget(),
@@ -91,8 +90,8 @@ var FormulaDropArea = React.createClass({
                         size={"28px"}
                         style={{lineHeight: "42px"}}
                     />
-                    {showRemove ? this.renderRemoveButtonOperator(index) : null}
                 </p>
+                {showRemove ? this.renderRemoveButtonOperator(index) : null}
             </div>
         );
     },
