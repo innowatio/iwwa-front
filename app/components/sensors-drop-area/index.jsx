@@ -49,6 +49,7 @@ var SensorsDropArea = React.createClass({
         connectDropTarget: PropTypes.func,
         onClickAggregate: PropTypes.func.isRequired,
         onClickChart: PropTypes.func.isRequired,
+        removeSensorFromWorkArea: PropTypes.func.isRequired,
         sensors: PropTypes.array.isRequired
     },
     contextTypes: {
@@ -73,7 +74,7 @@ var SensorsDropArea = React.createClass({
     renderSensors: function () {
         let sensors = [];
         let theme = this.getTheme();
-        this.props.sensors.forEach((sensorId) => {
+        this.props.sensors.forEach((sensorId, index) => {
             let sensor = this.props.allSensors.get(sensorId);
             sensors.push(
                 <div
@@ -95,21 +96,22 @@ var SensorsDropArea = React.createClass({
                         (sensor.get("description") ? " - " + sensor.get("description") : "") +
                         (sensor.get("unitOfMeasurement") ? " - " + getUnitOfMeasurementLabel(sensor.get("unitOfMeasurement")) : "")
                     }
-                    <Link
-                        to="/"
+                    <div
+                        onClick={() => this.props.removeSensorFromWorkArea(index)}
                         style={{
                             display: "block",
                             float: "right",
                             border: "1px solid " + theme.colors.white,
                             width: "20px",
                             height: "20px",
-                            lineHeight: "18px",
+                            lineHeight: "15px",
                             overflow: "hidden",
                             borderRadius: "30px",
                             textAlign: "center",
                             textDecoration: "none",
                             marginTop: "13px",
-                            color: theme.colors.white
+                            color: theme.colors.white,
+                            cursor: "pointer"
                         }}
                     >
                         <Icon
@@ -120,7 +122,7 @@ var SensorsDropArea = React.createClass({
                                 verticalAlign: "middle"
                             }}
                         />
-                    </Link>
+                    </div>
                 </div>
             );
         });

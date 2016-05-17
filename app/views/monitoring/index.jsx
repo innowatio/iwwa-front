@@ -1,4 +1,3 @@
-import Immutable from "immutable";
 import R from "ramda";
 import React, {PropTypes} from "react";
 import IPropTypes from "react-immutable-proptypes";
@@ -7,6 +6,7 @@ import {bindActionCreators} from "redux";
 
 import {getDragDropContext} from "lib/dnd-utils";
 import {defaultTheme} from "lib/theme";
+import {getAllSensors} from "lib/sensors-utils";
 import {styles} from "lib/styles_restyling";
 
 import {
@@ -31,6 +31,8 @@ import {
     favoriteSensor,
     filterSensors,
     getFormulaItems,
+    removeItemFromFormula,
+    removeSensorFromWorkArea,
     resetFormulaItems,
     selectSensor
 } from "actions/sensors";
@@ -84,6 +86,8 @@ var Monitoring = React.createClass({
         favoriteSensor: PropTypes.func.isRequired,
         filterSensors: PropTypes.func.isRequired,
         getFormulaItems: PropTypes.func.isRequired,
+        removeItemFromFormula: PropTypes.func.isRequired,
+        removeSensorFromWorkArea: PropTypes.func.isRequired,
         resetFormulaItems: PropTypes.func.isRequired,
         selectSensor: PropTypes.func.isRequired,
         selectSensorsToDraw: PropTypes.func.isRequired,
@@ -105,7 +109,7 @@ var Monitoring = React.createClass({
         return this.context.theme || defaultTheme;
     },
     getAllSensors: function () {
-        return this.props.collections.get("sensors") || Immutable.Map();
+        return getAllSensors(this.props.collections.get("sensors"));
     },
     getSensorFields: function () {
         const selected = this.props.sensorsState.selectedSensors;
@@ -119,8 +123,8 @@ var Monitoring = React.createClass({
                 name: "",
                 description: "",
                 unitOfMeasurement: "",
-                siteRef: "",
-                clientRef: "",
+                siteId: "",
+                userId: "",
                 tags: []
             };
         }
@@ -156,10 +160,11 @@ var Monitoring = React.createClass({
                     addItemToFormula={this.props.addItemToFormula}
                     allSensors={this.getAllSensors()}
                     closeForm={() => this.closeModal(this.state.editSensor)}
-                    currentSensor={this.props.sensorsState.current}
-                    id={selected.length == 1 ? selected[0].get("_id") : null}
+                    currentSensor={selected.length == 1 ? selected[0] : null}
                     initialValues={this.getSensorFields()}
                     onSave={this.state.editSensor ? this.props.editSensor : this.props.addSensor}
+                    removeItemFromFormula={this.props.removeItemFromFormula}
+                    sensorState={this.props.sensorsState.current}
                     sensorsToAggregate={workAreaSensors}
                     showFullscreenModal={this.state.showFullscreenModal}
                     showSensorAggregator={!this.state.editSensor}
@@ -246,6 +251,7 @@ var Monitoring = React.createClass({
                 <MonitoringWorkArea
                     addSensorToWorkArea={this.props.addSensorToWorkArea}
                     onClickAggregate={this.resetAndOpenNew}
+                    removeSensorFromWorkArea={this.props.removeSensorFromWorkArea}
                     selectSensor={this.props.selectSensor}
                     selectSensorsToDraw={this.props.selectSensorsToDraw}
                     selected={selected}
@@ -279,6 +285,8 @@ const mapDispatchToProps = (dispatch) => {
         favoriteSensor: bindActionCreators(favoriteSensor, dispatch),
         filterSensors: bindActionCreators(filterSensors, dispatch),
         getFormulaItems: bindActionCreators(getFormulaItems, dispatch),
+        removeItemFromFormula: bindActionCreators(removeItemFromFormula, dispatch),
+        removeSensorFromWorkArea: bindActionCreators(removeSensorFromWorkArea, dispatch),
         resetFormulaItems: bindActionCreators(resetFormulaItems, dispatch),
         selectSensor: bindActionCreators(selectSensor, dispatch),
         selectSensorsToDraw: bindActionCreators(selectSensorsToDraw, dispatch)

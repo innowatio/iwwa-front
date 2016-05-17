@@ -15,6 +15,7 @@ import {
     selectFavoriteChart
 } from "actions/monitoring-chart";
 
+import {extractSensorsIdsFromFormula, getAllSensors} from "lib/sensors-utils";
 import {styles} from "lib/styles_restyling";
 import {defaultTheme} from "lib/theme";
 import readingsDailyAggregatesToHighchartsData from "lib/readings-daily-aggregates-to-highcharts-data";
@@ -50,7 +51,14 @@ var MonitoringChartView = React.createClass({
         return this.getStateFromProps(this.props);
     },
     componentDidMount: function () {
+        this.props.asteroid.subscribe("sensors");
         this.subscribeToSensorsData(this.props);
+    },
+    getTheme: function () {
+        return this.context.theme || defaultTheme;
+    },
+    getAllSensors: function () {
+        return getAllSensors(this.props.collections.get("sensors"));
     },
     getFilters: function () {
         return [
@@ -68,42 +76,47 @@ var MonitoringChartView = React.createClass({
             yAxisMin: props.monitoringChart.yAxis.min
         };
     },
+    getSensorObj: function (sensor) {
+        return typeof sensor === "string" ? this.getAllSensors().get(sensor) : sensor;
+    },
     subscribeToSensorsData: function (props) {
         const sensors = props.monitoringChart.sensorsToDraw;
         sensors[0] && sensors.forEach((sensor) => {
-            // last year for sensors
-            let sensorId = typeof sensor === "string" ? sensor : sensor.get("_id");
-            props.asteroid.subscribe(
-                "dailyMeasuresBySensor",
-                sensorId,
-                moment.utc().subtract(1, "years").startOf("month").format("YYYY-MM-DD"),
-                moment.utc().endOf("month").format("YYYY-MM-DD"),
-                "reading",
-                "activeEnergy"
-            );
+            let sensorObj = this.getSensorObj(sensor);
+            let sensorFormula = sensorObj.get("formula");
+            let sensorsIds = sensorFormula ? extractSensorsIdsFromFormula(sensorFormula) : [sensorObj.get("_id")];
+            sensorsIds.forEach((sensorId) => {
+                // last year for sensors
+                props.asteroid.subscribe(
+                    "dailyMeasuresBySensor",
+                    sensorId,
+                    moment.utc().subtract(1, "years").startOf("month").format("YYYY-MM-DD"),
+                    moment.utc().endOf("month").format("YYYY-MM-DD"),
+                    "reading",
+                    "activeEnergy"
+                );
+            });
         });
     },
     getChartSeries: function () {
         const monitoringCharts = this.props.monitoringChart.sensorsToDraw.map(sensor => {
-            let sensorId = typeof sensor === "string" ? sensor : sensor.get("_id");
+            let sensorObj = this.getSensorObj(sensor);
             return {
                 date: {
-                    start: moment.utc().startOf("month").valueOf(),
+                    start: moment.utc().startOf("year").valueOf(),
                     end: moment.utc().endOf("month").valueOf()
                 },
-                source: {key: "reading"},
+                formula: sensorObj.get("formula"),
                 measurementType: {key: "activeEnergy"},
-                name: sensorId,
-                sensorId: sensorId
+                name: sensorObj.get("name") ? sensorObj.get("name") : sensorObj.get("_id"),
+                sensorId: sensorObj.get("_id"),
+                source: {key: "reading"}
             };
         });
         const readingsDailyAggregates = this.props.collections.get("readings-daily-aggregates");
         if (readingsDailyAggregates) {
             return readingsDailyAggregatesToHighchartsData(readingsDailyAggregates, monitoringCharts);
         }
-    },
-    getTheme: function () {
-        return this.context.theme || defaultTheme;
     },
     handleAxisChange: function () {
         this.setState({
@@ -402,9 +415,9 @@ var MonitoringChartView = React.createClass({
                             >
                                 <Icon
                                     color={theme.colors.iconHeader}
-                                    icon={"calendar"}
-                                    size={"28px"}
-                                    style={{lineHeight: "20px"}}
+                                    icon={"week"}
+                                    size={"32px"}
+                                    style={{lineHeight: "20px", verticalAlign: "middle"}}
                                 />
                             </Button>
                             <label style={{
@@ -425,9 +438,9 @@ var MonitoringChartView = React.createClass({
                             >
                                 <Icon
                                     color={theme.colors.iconHeader}
-                                    icon={"calendar"}
-                                    size={"28px"}
-                                    style={{lineHeight: "20px"}}
+                                    icon={"month"}
+                                    size={"32px"}
+                                    style={{lineHeight: "20px", verticalAlign: "middle"}}
                                 />
                             </Button>
                             <label style={{
@@ -448,9 +461,9 @@ var MonitoringChartView = React.createClass({
                             >
                                 <Icon
                                     color={theme.colors.iconHeader}
-                                    icon={"calendar"}
-                                    size={"28px"}
-                                    style={{lineHeight: "20px"}}
+                                    icon={"year"}
+                                    size={"32px"}
+                                    style={{lineHeight: "20px", verticalAlign: "middle"}}
                                 />
                             </Button>
                             <label style={{

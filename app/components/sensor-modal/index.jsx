@@ -13,7 +13,7 @@ import {potentialUnitsOfMeasurement} from "lib/sensors-utils";
 import {styles} from "lib/styles_restyling";
 import {defaultTheme} from "lib/theme";
 
-export const fields = ["name", "description", "unitOfMeasurement", "siteRef", "clientRef", "tags"];
+export const fields = ["name", "description", "unitOfMeasurement", "siteId", "userId", "tags"];
 
 const validate = values => {
     const errors = {};
@@ -36,13 +36,14 @@ var SensorForm = React.createClass({
         addItemToFormula: PropTypes.func.isRequired,
         allSensors: IPropTypes.map,
         closeForm: PropTypes.func.isRequired,
-        currentSensor: PropTypes.object,
+        currentSensor: IPropTypes.map,
         fields: PropTypes.object.isRequired,
         handleSubmit: PropTypes.func.isRequired,
-        id: PropTypes.string,
         initialValues: PropTypes.object,
         onSave: PropTypes.func.isRequired,
+        removeItemFromFormula: PropTypes.func.isRequired,
         resetForm: PropTypes.func.isRequired,
+        sensorState: PropTypes.object,
         sensorsToAggregate: PropTypes.array,
         showFullscreenModal: PropTypes.bool.isRequired,
         showSensorAggregator: PropTypes.bool.isRequired,
@@ -53,36 +54,40 @@ var SensorForm = React.createClass({
         theme: PropTypes.object
     },
     getSensorOperator: function () {
+        const theme = this.getTheme();
         return [
-            {type: "add", key: "plus"},
-            {type: "minus", key: "minus"},
-            {type: "multiply", key: "multiply"},
-            {type: "divide", key: "divide"},
-            {type: "open-braket", key: "open-braket"},
-            {type: "close-braket", key: "close-braket"},
-            {type: "circumflex", key: "circumflex"},
-            {type: "square-root", key: "square-root"},
-            {type: "1y", key: "plus-1y"},
-            {type: "1m", key: "plus-1m"},
-            {type: "1w", key: "plus-1w"},
-            {type: "15m", key: "plus-15m"}
+            {type: "add", key: "plus", backgroundColor: theme.colors.iconOperatorBg1},
+            {type: "minus", key: "minus", backgroundColor: theme.colors.iconOperatorBg1},
+            {type: "multiply", key: "multiply", backgroundColor: theme.colors.iconOperatorBg1},
+            {type: "divide", key: "divide", backgroundColor: theme.colors.iconOperatorBg1},
+            {type: "percentage", key: "percentage", backgroundColor: theme.colors.iconOperatorBg1},
+            {type: "open-braket", key: "open-braket", backgroundColor: theme.colors.iconOperatorBg2},
+            {type: "close-braket", key: "close-braket", backgroundColor: theme.colors.iconOperatorBg2},
+            {type: "circumflex", key: "circumflex", backgroundColor: theme.colors.iconOperatorBg2},
+            {type: "square-root", key: "square-root", backgroundColor: theme.colors.iconOperatorBg2},
+            {type: "1y", key: "plus-1y", backgroundColor: theme.colors.iconOperatorBg3},
+            {type: "1m", key: "plus-1m", backgroundColor: theme.colors.iconOperatorBg3},
+            {type: "1w", key: "plus-1w", backgroundColor: theme.colors.iconOperatorBg3},
+            {type: "1d", key: "plus-1d", backgroundColor: theme.colors.iconOperatorBg3},
+            {type: "15m", key: "plus-15m", backgroundColor: theme.colors.iconOperatorBg3}
         ];
     },
     getTheme: function () {
         return this.context.theme || defaultTheme;
     },
     saveForm: function (data) {
-        this.props.onSave(data, this.props.currentSensor.formulaItems, this.props.id);
+        this.props.onSave(data, this.props.sensorState.formulaItems, this.props.currentSensor);
         this.props.closeForm();
     },
     renderSensorAggregation: function () {
-        if (this.props.showSensorAggregator || this.props.currentSensor.formulaItems.length > 0) {
+        if (this.props.showSensorAggregator || this.props.sensorState.formulaItems.length > 0) {
             return (
                 <SensorAggregator
                     allSensors={this.props.allSensors}
                     addItemToFormula={this.props.addItemToFormula}
-                    formulaItems={this.props.currentSensor.formulaItems}
+                    formulaItems={this.props.sensorState.formulaItems}
                     operators={this.getSensorOperator()}
+                    removeItemFromFormula={this.props.removeItemFromFormula}
                     sensors={this.props.sensorsToAggregate}
                 />
             );
@@ -95,7 +100,7 @@ var SensorForm = React.createClass({
     },
     render: function () {
         const {
-            fields: {name, description, unitOfMeasurement, siteRef, clientRef, tags},
+            fields: {name, description, unitOfMeasurement, siteId, userId, tags},
             resetForm,
             handleSubmit
         } = this.props;
@@ -194,12 +199,12 @@ var SensorForm = React.createClass({
                         </div>
                         <div className={"form-group col-xs-12"} style={{marginBottom: "20px"}}>
                             <Input type="text" className="form-control" placeholder="Referenza sito" style={styles(theme).inputLine}
-                                {...siteRef}
+                                {...siteId}
                             />
                         </div>
                         <div className={"form-group col-xs-12"} style={{marginBottom: "20px"}}>
                             <Input type="text" className="form-control" placeholder="Referenza cliente" style={styles(theme).inputLine}
-                                {...clientRef}
+                                {...userId}
                             />
                         </div>
                         <div className={"tags-wrp form-group col-xs-12"} style={{marginBottom: "15px"}}>

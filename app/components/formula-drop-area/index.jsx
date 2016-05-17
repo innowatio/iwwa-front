@@ -7,16 +7,6 @@ import {findSensor} from "lib/sensors-utils";
 import {defaultTheme} from "lib/theme";
 import {Icon} from "components";
 
-const styles = (theme) => ({
-    removeStyle: {
-        border: "1px solid " + theme.colors.white,
-        height: "20px",
-        width: "20px",
-        lineHeight: "18px",
-        textAlign: "center"
-    }
-});
-
 const formulaTarget = {
     drop (props, monitor) {
         const item = monitor.getItem();
@@ -24,6 +14,26 @@ const formulaTarget = {
         return {moved: true};
     }
 };
+
+const styles = (theme) => ({
+    removeStyle: {
+        display: "inline-block",
+        float: "right",
+        border: "1px solid " + theme.colors.white,
+        width: "20px",
+        height: "20px",
+        lineHeight: "18px",
+        overflow: "hidden",
+        borderRadius: "30px",
+        textAlign: "center",
+        verticalAlign: "text-bottom",
+        textDecoration: "none",
+        marginTop: "10px",
+        color: theme.colors.white,
+        cursor: "pointer"
+    }
+});
+
 
 function collect (connect, monitor) {
     return {
@@ -38,7 +48,7 @@ var FormulaDropArea = React.createClass({
         allSensors: IPropTypes.map,
         connectDropTarget: PropTypes.func,
         formulaItems: PropTypes.array.isRequired,
-        removeItemFromFormula: PropTypes.func,
+        removeItemFromFormula: PropTypes.func.isRequired,
         style: PropTypes.object
     },
     contextTypes: {
@@ -71,7 +81,7 @@ var FormulaDropArea = React.createClass({
                     textAlign: "center",
                     margin: "3px",
                     borderRadius: "100%",
-                    backgroundColor: theme.colors.iconOperator,
+                    backgroundColor: operator.backgroundColor || theme.colors.iconOperatorBg1,
                     color: theme.colors.white
                 }}
                 >

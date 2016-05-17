@@ -20,7 +20,7 @@ const styles = ({colors}) => ({
     },
     sensorName: {
         float: "left",
-        width: "100px",
+        width: "150px",
         overflow: "hidden",
         textOverflow: "ellipsis",
         whiteSpace: "nowrap",
@@ -32,7 +32,7 @@ const styles = ({colors}) => ({
     },
     tagsContainer: {
         float: "left",
-        width: "calc(100% - 230px)"
+        width: "calc(100% - 280px)"
     },
     buttonsContainer: {
         float: "right",
@@ -85,9 +85,10 @@ var SensorRow = React.createClass({
         );
     },
     renderSensorName: function () {
+        let {sensor} = this.props;
         return (
             <div style={styles(this.getTheme()).sensorName}>
-                {this.props.sensor.get("_id")}
+                {sensor.get("name") ? sensor.get("name") : sensor.get("_id")}
             </div>
         );
     },

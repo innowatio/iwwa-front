@@ -30,6 +30,7 @@ var MonitoringWorkArea = React.createClass({
     propTypes: {
         addSensorToWorkArea: PropTypes.func.isRequired,
         onClickAggregate: PropTypes.func.isRequired,
+        removeSensorFromWorkArea: PropTypes.func.isRequired,
         selectSensor: PropTypes.func.isRequired,
         selectSensorsToDraw: PropTypes.func.isRequired,
         selected: PropTypes.array,
@@ -150,6 +151,7 @@ var MonitoringWorkArea = React.createClass({
                         allSensors={this.props.sensors}
                         onClickAggregate={this.props.onClickAggregate}
                         onClickChart={this.props.selectSensorsToDraw}
+                        removeSensorFromWorkArea={this.props.removeSensorFromWorkArea}
                         sensors={this.props.workAreaSensors}
                     />
                 </div>

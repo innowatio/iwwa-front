@@ -91,7 +91,11 @@ export const styles = (theme) => ({
         color: theme.colors.mainFontColor,
         fontSize: "16px",
         fontWeight: "400",
+<<<<<<< HEAD
         margin: "10px 0px 20px 0px"
+=======
+        marginBottom: "20px"
+>>>>>>> d0d1098ff2e62cac6d3a719f1db9ca098b684eb7
     },
     inputLine: {
         borderTop: "0px",
