@@ -132,7 +132,7 @@ var MonitoringSearch = React.createClass({
                         <div style={{textAlign: "left"}}>
                             {self.state.wordsToSearch.map(item => {
                                 return (
-                                    <label style={{
+                                    <label key={item} style={{
                                         margin:"0px 10px 10px 10px",
                                         fontSize: "16px",
                                         fontWeight: "300"
@@ -147,7 +147,7 @@ var MonitoringSearch = React.createClass({
                         <div style={{textAlign: "left"}}>
                             {self.state.tagsToSearch.map(item => {
                                 return (
-                                    <label style={{
+                                    <label key={item} style={{
                                         border: "solid 1px",
                                         fontSize: "16px",
                                         fontWeight: "300",

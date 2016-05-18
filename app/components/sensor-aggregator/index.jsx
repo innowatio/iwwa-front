@@ -17,7 +17,7 @@ var SensorAggregator = React.createClass({
             type: PropTypes.string.isRequired,
             key: PropTypes.string.isRequired,
             backgroundColor: PropTypes.string
-        })),
+        })).isRequired,
         removeItemFromFormula: PropTypes.func.isRequired,
         sensors: PropTypes.array.isRequired
     },
@@ -72,6 +72,7 @@ var SensorAggregator = React.createClass({
                         addItemToFormula={this.props.addItemToFormula}
                         allSensors={this.props.allSensors}
                         formulaItems={this.props.formulaItems}
+                        operators={this.props.operators}
                         removeItemFromFormula={this.props.removeItemFromFormula}
                         style={{...styles(theme).titlePageMonitoring,
                             borderRadius: "20px",

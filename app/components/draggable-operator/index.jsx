@@ -8,11 +8,11 @@ import {Icon} from "components";
 const styles = (theme) => ({
     operatorStyle: {
         display: "inline-block",
-        width: "36px",
-        height: "36px",
+        width: "38px",
+        height: "38px",
         overflow: "hidden",
         textAlign: "center",
-        margin: "3px",
+        margin: "2px",
         borderRadius: "100%",
         color: theme.colors.white
     }
@@ -80,8 +80,8 @@ var DraggableOperator = React.createClass({
                     <Icon
                         color={theme.colors.white}
                         icon={type}
-                        size={"28px"}
-                        style={{lineHeight: "42px"}}
+                        size={"30px"}
+                        style={{lineHeight: "44px"}}
                     />
                 </p>
             </div>

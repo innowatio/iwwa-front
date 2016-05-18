@@ -362,7 +362,7 @@ var MonitoringChartView = React.createClass({
                     </div>
                     <div style={{padding: "20px", borderBottom: "solid 1px", borderColor: theme.colors.white}}>
                         <div style={{margin: "8px 0px"}}>
-                            <Button style={buttonStyle(theme)}  onClick={() => {
+                            <Button style={buttonStyle(theme)} onClick={() => {
                                 this.props.addToFavorite(this.refs.monitoringChart.state.config);
                             }}
                             >
@@ -409,10 +409,7 @@ var MonitoringChartView = React.createClass({
                     </div>
                     <div style={{padding: "20px", borderBottom: "solid 1px", borderColor: theme.colors.white}}>
                         <div style={{margin: "8px 0px"}}>
-                            <Button style={buttonStyle(theme)}  onClick={() => {
-                                this.props.addToFavorite(this.refs.monitoringChart.state.config);
-                            }}
-                            >
+                            <Button style={buttonStyle(theme)}>
                                 <Icon
                                     color={theme.colors.iconHeader}
                                     icon={"week"}
@@ -432,10 +429,7 @@ var MonitoringChartView = React.createClass({
                             </label>
                         </div>
                         <div style={{margin: "8px 0px"}}>
-                            <Button style={buttonStyle(theme)}  onClick={() => {
-                                this.props.addToFavorite(this.refs.monitoringChart.state.config);
-                            }}
-                            >
+                            <Button style={buttonStyle(theme)}>
                                 <Icon
                                     color={theme.colors.iconHeader}
                                     icon={"month"}
@@ -455,10 +449,7 @@ var MonitoringChartView = React.createClass({
                             </label>
                         </div>
                         <div style={{margin: "8px 0px"}}>
-                            <Button style={buttonStyle(theme)}  onClick={() => {
-                                this.props.addToFavorite(this.refs.monitoringChart.state.config);
-                            }}
-                            >
+                            <Button style={buttonStyle(theme)}>
                                 <Icon
                                     color={theme.colors.iconHeader}
                                     icon={"year"}

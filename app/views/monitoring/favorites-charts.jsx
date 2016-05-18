@@ -129,10 +129,7 @@ var MonitoringFavoritesCharts = React.createClass({
                 <div style={{
                     height: "calc(100vh - 230px)",
                     width: "95%",
-                    margin: "20px auto",
-                    border: "1px solid " + colors.borderContentModal,
-                    borderRadius: "30px",
-                    background: colors.backgroundContentModal
+                    margin: "20px auto"
                 }}
                 >
                     <CollectionItemList
@@ -145,7 +142,7 @@ var MonitoringFavoritesCharts = React.createClass({
                         lazyLoadButtonStyle={styles(this.getTheme()).lazyLoadButtonStyle}
                         lazyLoadButtonStyleContainer={styles(this.getTheme()).lazyLoadButtonStyleContainer}
                         lazyLoadLabel={"Carica altri"}
-                        showFilterInput={false}
+                        showFilterInput={true}
                     />
                 </div>
             </div>

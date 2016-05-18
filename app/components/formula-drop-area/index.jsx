@@ -31,6 +31,16 @@ const styles = (theme) => ({
         marginTop: "10px",
         color: theme.colors.white,
         cursor: "pointer"
+    },
+    operatorStyle: {
+        display: "inline-block",
+        width: "38px",
+        height: "38px",
+        overflow: "hidden",
+        textAlign: "center",
+        margin: "2px",
+        borderRadius: "100%",
+        color: theme.colors.white
     }
 });
 
@@ -47,6 +57,11 @@ var FormulaDropArea = React.createClass({
         allSensors: IPropTypes.map,
         connectDropTarget: PropTypes.func,
         formulaItems: PropTypes.array.isRequired,
+        operators: PropTypes.arrayOf(PropTypes.shape({
+            type: PropTypes.string.isRequired,
+            key: PropTypes.string.isRequired,
+            backgroundColor: PropTypes.string
+        })).isRequired,
         removeItemFromFormula: PropTypes.func.isRequired,
         style: PropTypes.object
     },
@@ -56,7 +71,11 @@ var FormulaDropArea = React.createClass({
     getTheme: function () {
         return this.context.theme || defaultTheme;
     },
-    renderOperator: function (operator, index, showRemove) {
+    getOperatorBackgroundColor: function (operatorType) {
+        const draggedOperator = this.props.operators.find(operator => operator.type === operatorType);
+        return draggedOperator.backgroundColor;
+    },
+    renderOperator: function (operatorType, index, showRemove) {
         const theme = this.getTheme();
         return (
             <div
@@ -73,22 +92,15 @@ var FormulaDropArea = React.createClass({
                 }}
             >
                 <p style={{
-                    display: "inline-block",
-                    width: "36px",
-                    height: "36px",
-                    overflow: "hidden",
-                    textAlign: "center",
-                    margin: "3px",
-                    borderRadius: "100%",
-                    backgroundColor: operator.backgroundColor || theme.colors.iconOperatorBg1,
-                    color: theme.colors.white
+                    backgroundColor: this.getOperatorBackgroundColor(operatorType) || theme.colors.iconOperatorBg1,
+                    ...styles(theme).operatorStyle
                 }}
                 >
                     <Icon
                         color={theme.colors.white}
-                        icon={operator}
-                        size={"28px"}
-                        style={{lineHeight: "42px"}}
+                        icon={operatorType}
+                        size={"30px"}
+                        style={{lineHeight: "44px"}}
                     />
                 </p>
                 {showRemove ? this.renderRemoveButtonOperator(index) : null}
@@ -115,29 +127,6 @@ var FormulaDropArea = React.createClass({
                 }}
             >
                 {(sensorObj.get("name") ? sensorObj.get("name") : sensorObj.get("_id"))}
-                {showRemove ? this.renderRemoveButton(index) : null}
-            </div>
-        );
-    },
-    renderNumber: function (number, index, showRemove) {
-        let theme = this.getTheme();
-        return (
-            <div
-                key={index}
-                style={{
-                    float: "left",
-                    width: "auto",
-                    height: "44px",
-                    color: theme.colors.mainFontColor,
-                    textAlign: "left",
-                    border: "1px solid",
-                    borderRadius: "10px",
-                    lineHeight: "44px",
-                    padding: "0px 10px",
-                    margin: "5px"
-                }}
-            >
-                {"number"}
                 {showRemove ? this.renderRemoveButton(index) : null}
             </div>
         );

@@ -60,16 +60,21 @@ var SensorForm = React.createClass({
             {type: "minus", key: "minus", backgroundColor: theme.colors.iconOperatorBg1},
             {type: "multiply", key: "multiply", backgroundColor: theme.colors.iconOperatorBg1},
             {type: "divide", key: "divide", backgroundColor: theme.colors.iconOperatorBg1},
-            {type: "percentage", key: "percentage", backgroundColor: theme.colors.iconOperatorBg1},
             {type: "open-braket", key: "open-braket", backgroundColor: theme.colors.iconOperatorBg2},
             {type: "close-braket", key: "close-braket", backgroundColor: theme.colors.iconOperatorBg2},
             {type: "circumflex", key: "circumflex", backgroundColor: theme.colors.iconOperatorBg2},
             {type: "square-root", key: "square-root", backgroundColor: theme.colors.iconOperatorBg2},
-            {type: "1y", key: "plus-1y", backgroundColor: theme.colors.iconOperatorBg3},
-            {type: "1m", key: "plus-1m", backgroundColor: theme.colors.iconOperatorBg3},
-            {type: "1w", key: "plus-1w", backgroundColor: theme.colors.iconOperatorBg3},
-            {type: "1d", key: "plus-1d", backgroundColor: theme.colors.iconOperatorBg3},
-            {type: "15m", key: "plus-15m", backgroundColor: theme.colors.iconOperatorBg3}
+            {type: "delta", key: "delta", backgroundColor: theme.colors.iconOperatorBg2},
+            {type: "add-1y", key: "add-1y", backgroundColor: theme.colors.iconOperatorBg3},
+            {type: "add-1m", key: "add-1m", backgroundColor: theme.colors.iconOperatorBg3},
+            {type: "add-1w", key: "add-1w", backgroundColor: theme.colors.iconOperatorBg3},
+            {type: "add-1d", key: "add-1d", backgroundColor: theme.colors.iconOperatorBg3},
+            {type: "add-15m", key: "add-15m", backgroundColor: theme.colors.iconOperatorBg3},
+            {type: "remove-1y", key: "remove-1y", backgroundColor: theme.colors.iconOperatorBg3},
+            {type: "remove-1m", key: "remove-1m", backgroundColor: theme.colors.iconOperatorBg3},
+            {type: "remove-1w", key: "remove-1w", backgroundColor: theme.colors.iconOperatorBg3},
+            {type: "remove-1d", key: "remove-1d", backgroundColor: theme.colors.iconOperatorBg3},
+            {type: "remove-15m", key: "remove-15m", backgroundColor: theme.colors.iconOperatorBg3}
         ];
     },
     getTheme: function () {
