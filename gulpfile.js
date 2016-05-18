@@ -85,6 +85,7 @@ proGulp.task("buildAppScripts", (function () {
             new webpack.DefinePlugin({
                 ENVIRONMENT: JSON.stringify(ENVIRONMENT),
                 READ_BACKEND_ENDPOINT: JSON.stringify(READ_BACKEND_ENDPOINT),
+                WRITE_API_HOST: JSON.stringify(WRITE_API_HOST),
                 WRITE_BACKEND_HOST: JSON.stringify(WRITE_BACKEND_HOST)
             }),
             new webpack.optimize.CommonsChunkPlugin(

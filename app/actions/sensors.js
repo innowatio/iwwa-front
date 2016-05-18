@@ -10,6 +10,7 @@ export const REMOVE_ITEM_FROM_FORMULA = "REMOVE_ITEM_FROM_FORMULA";
 export const REMOVE_SENSOR_FROM_WORK_AREA = "REMOVE_SENSOR_FROM_WORK_AREA";
 export const RESET_FORMULA_ITEMS = "RESET_FORMULA_ITEMS";
 export const SELECT_SENSOR = "SELECT_SENSOR";
+export const SENSOR_DELETE_SUCCESS = "SENSOR_DELETE_SUCCESS";
 
 const MONITORING_TYPE = "custom-monitoring";
 
@@ -53,7 +54,6 @@ function insertSensor (requestBody, dispatch) {
 }
 
 function buildFormula (formulaItems) {
-    //TODO
     let formula = "";
     formulaItems.forEach((item) => {
         switch (item.type) {
@@ -108,10 +108,12 @@ export const deleteSensors = (sensors) => {
         });
         sensors.forEach((sensor) => {
             if (sensor.get("type") === MONITORING_TYPE) {
-                var endpoint = "http://" + WRITE_API_HOST + "/sensors/" + sensor.get("_id");
+                let id = sensor.get("_id");
+                var endpoint = "http://" + WRITE_API_HOST + "/sensors/" + id;
                 axios.delete(endpoint)
                     .then(() => dispatch({
-                        type: "SENSOR_DELETE_SUCCESS"
+                        type: SENSOR_DELETE_SUCCESS,
+                        payload: id
                     }))
                     .catch(() => dispatch({
                         type: "SENSOR_DELETE_FAIL"
@@ -121,16 +123,33 @@ export const deleteSensors = (sensors) => {
     };
 };
 
+function callEditSensor (sensorData, sensorId) {
+    return dispatch => {
+        dispatch({
+            type: "UPDATING_SENSOR"
+        });
+        var endpoint = "http://" + WRITE_API_HOST + "/sensors/" + sensorId;
+        axios.put(endpoint, sensorData)
+            .then(() => dispatch({
+                type: "SENSOR_UPDATE_SUCCESS"
+            }))
+            .catch(() => dispatch({
+                type: "SENSOR_UPDATE_FAIL"
+            }));
+    };
+}
+
 export const editSensor = (sensorData, formulaItems, sensor) => {
     let id = sensor.get("_id");
-    if (sensor.get("type") === MONITORING_TYPE) {
+    let type = sensor.get("type");
+    if (type === MONITORING_TYPE) {
         sensorData.formula = buildFormula(formulaItems);
-        //TODO
-        return {
-            type: "EDIT_SENSOR",
-            id: id,
-            fields: {...sensorData}
-        };
+        sensorData.id = id;
+        sensorData.type = type;
+        sensorData.virtual = true;
+        sensorData.parentSensorId = sensor.get("parentSensorId");
+        console.log(sensorData);
+        return callEditSensor(sensorData, id);
     } else {
         sensorData.parentSensorId = id;
         return addSensor(sensorData, formulaItems);
