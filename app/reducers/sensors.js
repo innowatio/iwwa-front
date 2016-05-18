@@ -8,7 +8,8 @@ import {
     REMOVE_ITEM_FROM_FORMULA,
     REMOVE_SENSOR_FROM_WORK_AREA,
     RESET_FORMULA_ITEMS,
-    SELECT_SENSOR
+    SELECT_SENSOR,
+    SENSOR_DELETE_SUCCESS
 } from "../actions/sensors";
 
 import {getKeyFromCollection} from "lib/collection-utils";
@@ -56,6 +57,12 @@ function parseSensorFormula (sensor) {
     return result;
 }
 
+function removeFromSelected (selectedSensors, sensorId) {
+    return selectedSensors.filter(it => {
+        return getKeyFromCollection(it) !== sensorId;
+    });
+}
+
 export function sensors (state = defaultState, action) {
     var newState = cloneState(state);
     switch (action.type) {
@@ -98,12 +105,14 @@ export function sensors (state = defaultState, action) {
             if (newState.selectedSensors.find((it) => {
                 return getKeyFromCollection(it) === getKeyFromCollection(sensor);
             })) {
-                newState.selectedSensors = newState.selectedSensors.filter(it => {
-                    return getKeyFromCollection(it) !== getKeyFromCollection(sensor);
-                });
+                newState.selectedSensors = removeFromSelected(newState.selectedSensors, getKeyFromCollection(sensor));
             } else {
                 newState.selectedSensors.push(sensor);
             }
+            break;
+        }
+        case SENSOR_DELETE_SUCCESS: {
+            newState.selectedSensors = removeFromSelected(newState.selectedSensors, action.payload);
             break;
         }
     }
