@@ -50,6 +50,12 @@ export function getAllSensors (sensorsCollection) {
     if (!sensorsCollection) {
         return Immutable.Map();
     }
-    return sensorsCollection.filter(sensor => !sensor.get("isDeleted"));
-    //TODO filter for personal...
+    let originalToHide = [];
+    sensorsCollection.forEach(sensor => {
+        let parentId = sensor.get("parentSensorId");
+        if (!sensor.get("isDeleted") && parentId) {
+            originalToHide.push(parentId);
+        }
+    });
+    return sensorsCollection.filter(sensor => !sensor.get("isDeleted") && originalToHide.indexOf(sensor.get("_id")) < 0);
 }

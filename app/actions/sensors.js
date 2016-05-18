@@ -146,7 +146,8 @@ export const editSensor = (sensorData, formulaItems, sensor) => {
         sensorData.formula = buildFormula(formulaItems);
         sensorData.id = id;
         sensorData.type = type;
-        sensor.virtual = true;
+        sensorData.virtual = true;
+        sensorData.parentSensorId = sensor.get("parentSensorId");
         console.log(sensorData);
         return callEditSensor(sensorData, id);
     } else {
