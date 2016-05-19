@@ -57,7 +57,7 @@ var DraggableSensor = React.createClass({
                 display: "inherit"
             }}
             >
-                {(sensor.get("name") ? sensor.get("name") : sensor.get("_id")) + " - " + sensor.get("description")}
+                {sensor ? (sensor.get("name") ? sensor.get("name") : sensor.get("_id")) + " - " + sensor.get("description") : "undefined sensor"}
             </label>
         );
     }

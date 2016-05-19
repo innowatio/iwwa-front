@@ -160,6 +160,7 @@ var MonitoringChartView = React.createClass({
     },
     render: function () {
         const theme = this.getTheme();
+        let self = this;
         return (
             <div>
                 <SectionToolbar backUrl={"/monitoring/"} title={"Torna all'elenco sensori"} />
@@ -363,7 +364,9 @@ var MonitoringChartView = React.createClass({
                     <div style={{padding: "20px", borderBottom: "solid 1px", borderColor: theme.colors.white}}>
                         <div style={{margin: "8px 0px"}}>
                             <Button style={buttonStyle(theme)} onClick={() => {
-                                this.props.addToFavorite(this.refs.monitoringChart.state.config);
+                                if (self.refs.monitoringChart) {
+                                    self.props.addToFavorite(self.refs.monitoringChart.state.config);
+                                }
                             }}
                             >
                                 <Icon

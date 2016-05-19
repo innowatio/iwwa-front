@@ -95,6 +95,7 @@ export const cloneSensors = (sensors) => {
         });
         sensors.forEach((el) => {
             var sensor = getSensorObj(el);
+            //TODO iniettare una finta formula altrimenti si perde l'id del sensore vero (farlo anche per l'edit sensore originale)
             sensor.name = "Copia di " + sensor.name;
             insertSensor(sensor, dispatch);
         });

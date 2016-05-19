@@ -110,26 +110,28 @@ var FormulaDropArea = React.createClass({
     renderSensor: function (sensor, index, showRemove) {
         let theme = this.getTheme();
         let sensorObj = typeof sensor === "string" ? findSensor(this.props.allSensors, sensor): sensor;
-        return (
-            <div
-                key={index}
-                style={{
-                    float: "left",
-                    width: "auto",
-                    height: "44px",
-                    color: theme.colors.mainFontColor,
-                    textAlign: "left",
-                    border: "1px solid",
-                    borderRadius: "10px",
-                    lineHeight: "44px",
-                    padding: "0px 10px",
-                    margin: "5px"
-                }}
-            >
-                {(sensorObj.get("name") ? sensorObj.get("name") : sensorObj.get("_id"))}
-                {showRemove ? this.renderRemoveButton(index) : null}
-            </div>
-        );
+        if (sensorObj) {
+            return (
+                <div
+                    key={index}
+                    style={{
+                        float: "left",
+                        width: "auto",
+                        height: "44px",
+                        color: theme.colors.mainFontColor,
+                        textAlign: "left",
+                        border: "1px solid",
+                        borderRadius: "10px",
+                        lineHeight: "44px",
+                        padding: "0px 10px",
+                        margin: "5px"
+                    }}
+                >
+                    {(sensorObj.get("name") ? sensorObj.get("name") : sensorObj.get("_id"))}
+                    {showRemove ? this.renderRemoveButton(index) : null}
+                </div>
+            );
+        }
     },
     renderRemoveButton: function (index) {
         let theme = this.getTheme();
