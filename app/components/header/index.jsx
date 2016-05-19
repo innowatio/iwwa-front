@@ -1,10 +1,10 @@
 import React, {PropTypes} from "react";
-import {Map, List} from "immutable";
 import {Link} from "react-router";
 import {merge, prop} from "ramda";
 
 import {defaultTheme} from "lib/theme";
 import components from "components";
+import {isAdmin} from "lib/roles-utils";
 
 var stylesFunction = ({colors}) => ({
     base: {
@@ -47,11 +47,6 @@ var Header = React.createClass({
     logout: function () {
         this.props.asteroid.logout();
     },
-    userIsAdmin: function () {
-        const users = this.props.asteroid.collections.get("users") || Map();
-        const roles = users.getIn([this.props.asteroid.userId, "roles"]) || List();
-        return roles.includes("admin");
-    },
     getUserSettings: function () {
         return [
             {label: "Tema scuro", key: "dark"},
@@ -87,7 +82,7 @@ var Header = React.createClass({
         );
     },
     renderAdminPage: function () {
-        return this.userIsAdmin() && ENVIRONMENT !== "cordova" ? (
+        return isAdmin(this.props.asteroid) && ENVIRONMENT !== "cordova" ? (
             <span style={{marginRight: "15px"}}>
                 <Link to="/users/" >
                     <components.Icon
