@@ -131,6 +131,29 @@ var FormulaDropArea = React.createClass({
             </div>
         );
     },
+    renderNumber: function (number, index, showRemove) {
+        let theme = this.getTheme();
+        return (
+            <div
+                key={index}
+                style={{
+                    float: "left",
+                    width: "auto",
+                    height: "44px",
+                    color: theme.colors.mainFontColor,
+                    textAlign: "left",
+                    border: "1px solid",
+                    borderRadius: "10px",
+                    lineHeight: "44px",
+                    padding: "0px 10px",
+                    margin: "5px"
+                }}
+            >
+                {number}
+                {showRemove ? this.renderRemoveButton(index) : null}
+            </div>
+        );
+    },
     renderRemoveButton: function (index) {
         let theme = this.getTheme();
         return (
@@ -185,6 +208,10 @@ var FormulaDropArea = React.createClass({
                 }
                 case Types.OPERATOR: {
                     item = this.renderOperator(el.operator, index, last);
+                    break;
+                }
+                case Types.NUMBER: {
+                    item = this.renderNumber(el.number, index, last);
                     break;
                 }
             }
