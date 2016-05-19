@@ -83,16 +83,20 @@ var Root = React.createClass({
         return theme.getStyle(colorTheme) || defaultTheme;
     },
     getMenuItems: function () {
-        var items = [
-            {key: "chart", label: "CONSUMI STORICI", url: "/chart/", iconClassName: "history"},
-            {key: "live", label: "CONSUMI LIVE", url: "/live/", iconClassName: "gauge"},
-            {key: "consumptions", label: "RIEPILOGO CONSUMI", url: "/consumptions/", iconClassName: "percentage"},
-            {key: "alarms", label: "ALLARMI", url: "/alarms/", iconClassName: "alarms"}
-        ];
+        var items = [];
+        // user yousave => solo yousave
+        // admin tutto
+        if (!isYousaveUser(asteroid)) {
+            items = items.concat([
+                {key: "chart", label: "CONSUMI STORICI", url: "/chart/", iconClassName: "history"},
+                {key: "live", label: "CONSUMI LIVE", url: "/live/", iconClassName: "gauge"},
+                {key: "consumptions", label: "RIEPILOGO CONSUMI", url: "/consumptions/", iconClassName: "percentage"},
+                {key: "alarms", label: "ALLARMI", url: "/alarms/", iconClassName: "alarms"}
+            ]);
+        }
         if (isYousaveUser(asteroid) || isAdmin(asteroid)) {
             items.push({key: "monitoring", label: "MONITORING", url: "/monitoring/", iconClassName: "monitoring"});
         }
-
         return items;
     },
     toggleSidebar: function () {

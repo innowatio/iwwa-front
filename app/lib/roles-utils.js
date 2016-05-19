@@ -1,5 +1,4 @@
 import {Map, List} from "immutable";
-import {contains} from "ramda";
 
 const ROLE_ADMIN = "admin";
 const ROLE_YOUSAVE = "yousave";
@@ -10,9 +9,9 @@ export function getRoles (asteroid) {
 }
 
 export function isAdmin (asteroid) {
-    return contains(getRoles(asteroid), ROLE_ADMIN);
+    return getRoles(asteroid).indexOf(ROLE_ADMIN) > -1;
 }
 
 export function isYousaveUser (asteroid) {
-    return contains(getRoles(asteroid), ROLE_YOUSAVE);
+    return getRoles(asteroid).indexOf(ROLE_YOUSAVE) > -1;
 }
