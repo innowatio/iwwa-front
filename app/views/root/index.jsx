@@ -12,6 +12,7 @@ var measures          = require("lib/measures");
 import {theme, defaultTheme} from "lib/theme";
 import {selectThemeColor} from "actions/user-setting";
 import {closeNotificationModal} from "actions/notifications";
+import {isAdmin, isYousaveUser} from "lib/roles-utils";
 
 const stylesFunction = ({colors}) => ({
     header: {
@@ -82,13 +83,17 @@ var Root = React.createClass({
         return theme.getStyle(colorTheme) || defaultTheme;
     },
     getMenuItems: function () {
-        return [
+        var items = [
             {key: "chart", label: "CONSUMI STORICI", url: "/chart/", iconClassName: "history"},
             {key: "live", label: "CONSUMI LIVE", url: "/live/", iconClassName: "gauge"},
             {key: "consumptions", label: "RIEPILOGO CONSUMI", url: "/consumptions/", iconClassName: "percentage"},
-            {key: "alarms", label: "ALLARMI", url: "/alarms/", iconClassName: "alarms"},
-            {key: "monitoring", label: "MONITORING", url: "/monitoring/", iconClassName: "monitoring"}
+            {key: "alarms", label: "ALLARMI", url: "/alarms/", iconClassName: "alarms"}
         ];
+        if (isYousaveUser(asteroid) || isAdmin(asteroid)) {
+            items.push({key: "monitoring", label: "MONITORING", url: "/monitoring/", iconClassName: "monitoring"});
+        }
+
+        return items;
     },
     toggleSidebar: function () {
         this.setState({
