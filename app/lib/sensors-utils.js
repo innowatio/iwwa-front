@@ -5,8 +5,23 @@ import {allSensorsDecorator} from "lib/sensors-decorators";
 const operatorMapping = {
     "+" : "add",
     "-" : "minus",
-    "x" : "multiply",
-    "/" : "divide"
+    "*" : "multiply",
+    "/" : "divide",
+    "(" : "open-braket",
+    ")" : "close-braket",
+    "^" : "circumflex",
+    "sqrt" : "square-root",
+    "TODO1" : "delta",
+    "TODO2" : "add-1y",
+    "TODO3" : "add-1m",
+    "TODO4" : "add-1w",
+    "TODO5" : "add-1d",
+    "TODO6" : "add-15m",
+    "TODO7" : "remove-1y",
+    "TODO8" : "remove-1m",
+    "TODO9" : "remove-1w",
+    "TODO10" : "remove-1d",
+    "TODO11" : "remove-15m"
 };
 
 export const potentialUnitsOfMeasurement = [

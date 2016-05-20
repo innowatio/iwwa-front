@@ -2,6 +2,7 @@ import React, {PropTypes} from "react";
 import {DragSource} from "react-dnd";
 
 import {Types} from "lib/dnd-utils";
+import {getSensorLabel} from "lib/sensors-utils";
 import {defaultTheme} from "lib/theme";
 
 const sensorSource = {
@@ -57,7 +58,7 @@ var DraggableSensor = React.createClass({
                 display: "inherit"
             }}
             >
-                {sensor ? (sensor.get("name") ? sensor.get("name") : sensor.get("_id")) + " - " + sensor.get("description") : "undefined sensor"}
+                {sensor ? getSensorLabel(sensor) + " - " + sensor.get("description") : "undefined sensor"}
             </label>
         );
     }

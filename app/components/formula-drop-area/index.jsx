@@ -3,7 +3,7 @@ import {DropTarget} from "react-dnd";
 import IPropTypes from "react-immutable-proptypes";
 
 import {Types} from "lib/dnd-utils";
-import {findSensor} from "lib/sensors-utils";
+import {findSensor, getSensorLabel} from "lib/sensors-utils";
 import {defaultTheme} from "lib/theme";
 import {Icon} from "components";
 
@@ -127,7 +127,7 @@ var FormulaDropArea = React.createClass({
                         margin: "5px"
                     }}
                 >
-                    {(sensorObj.get("name") ? sensorObj.get("name") : sensorObj.get("_id"))}
+                    {getSensorLabel(sensorObj)}
                     {showRemove ? this.renderRemoveButton(index) : null}
                 </div>
             );
