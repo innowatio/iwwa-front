@@ -15,7 +15,7 @@ import {
     selectFavoriteChart
 } from "actions/monitoring-chart";
 
-import {extractSensorsIdsFromFormula, getAllSensors} from "lib/sensors-utils";
+import {extractSensorsFromFormula, getAllSensors, getSensorLabel} from "lib/sensors-utils";
 import {styles} from "lib/styles_restyling";
 import {defaultTheme} from "lib/theme";
 import readingsDailyAggregatesToHighchartsData from "lib/readings-daily-aggregates-to-highcharts-data";
@@ -76,39 +76,41 @@ var MonitoringChartView = React.createClass({
             yAxisMin: props.monitoringChart.yAxis.min
         };
     },
-    getSensorObj: function (sensor) {
-        return typeof sensor === "string" ? this.getAllSensors().get(sensor) : sensor;
+    getSensorObj: function (sensor, allSensor) {
+        return typeof sensor === "string" ? allSensor.get(sensor) : sensor;
     },
     subscribeToSensorsData: function (props) {
         const sensors = props.monitoringChart.sensorsToDraw;
+        let allSensors = this.getAllSensors();
         sensors[0] && sensors.forEach((sensor) => {
-            let sensorObj = this.getSensorObj(sensor);
+            let sensorObj = this.getSensorObj(sensor, allSensors);
             let sensorFormula = sensorObj.get("formula");
-            let sensorsIds = sensorFormula ? extractSensorsIdsFromFormula(sensorFormula) : [sensorObj.get("_id")];
-            sensorsIds.forEach((sensorId) => {
+            let sensors = sensorFormula ? extractSensorsFromFormula(sensorFormula, allSensors) : [sensorObj];
+            sensors.forEach((sensor) => {
                 // last year for sensors
                 props.asteroid.subscribe(
                     "dailyMeasuresBySensor",
-                    sensorId,
+                    sensor.get("_id"),
                     moment.utc().subtract(1, "years").startOf("month").format("YYYY-MM-DD"),
                     moment.utc().endOf("month").format("YYYY-MM-DD"),
                     "reading",
-                    "activeEnergy"
+                    sensor.get("measurementType")
                 );
             });
         });
     },
     getChartSeries: function () {
+        let allSensors = this.getAllSensors();
         const monitoringCharts = this.props.monitoringChart.sensorsToDraw.map(sensor => {
-            let sensorObj = this.getSensorObj(sensor);
+            let sensorObj = this.getSensorObj(sensor, allSensors);
             return {
                 date: {
                     start: moment.utc().startOf("year").valueOf(),
                     end: moment.utc().endOf("month").valueOf()
                 },
                 formula: sensorObj.get("formula"),
-                measurementType: {key: "activeEnergy"},
-                name: sensorObj.get("name") ? sensorObj.get("name") : sensorObj.get("_id"),
+                measurementType: {key: sensorObj.get("measurementType")},
+                name: getSensorLabel(sensorObj),
                 sensorId: sensorObj.get("_id"),
                 source: {key: "reading"}
             };

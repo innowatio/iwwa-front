@@ -1,5 +1,6 @@
 import Immutable from "immutable";
 import R from "ramda";
+import {allSensorsDecorator} from "lib/sensors-decorators";
 
 const operatorMapping = {
     "+" : "add",
@@ -33,13 +34,17 @@ export function findSensor (sensors, sensorId) {
     return sensors.get(sensorId);
 }
 
+export function getSensorLabel (sensor) {
+    return sensor.get("name") ? sensor.get("name") : sensor.get("_id") + " - " + sensor.get("measurementType");
+}
+
 //TODO capire se dev'essere ricorsiva....
-export function extractSensorsIdsFromFormula (formula) {
+export function extractSensorsFromFormula (formula, allSensors) {
     let sensorsIds = [];
     if (formula) {
         formula.split("|").forEach((item) => {
             if (!formulaToOperator[item]) {
-                sensorsIds.push(item);
+                sensorsIds.push(allSensors.get(item));
             }
         });
     }
@@ -57,9 +62,25 @@ export function getAllSensors (sensorsCollection) {
             originalToHide.push(parentId);
         }
     });
-    return sensorsCollection.filter(
+    return decorateWithMeasurementType(sensorsCollection.filter(
         sensor => !sensor.get("isDeleted") &&
         originalToHide.indexOf(sensor.get("_id")) < 0 &&
         sensor.get("type") !== "pod"
-    );
+    ));
+}
+
+function decorateWithMeasurementType (sensors) {
+    let items = {};
+    let fakeTheme = {
+        colors: {}
+    };
+    sensors.forEach(sensor => {
+        let types = R.filter(R.propEq("type", sensor.get("type")))(allSensorsDecorator(fakeTheme));
+        types.forEach(type => {
+            let measurementType = type.key;
+            let itemKey = sensor.get("_id") + "-" + measurementType;
+            items[itemKey] = sensor.set("measurementType", measurementType);
+        });
+    });
+    return Immutable.fromJS(items);
 }
