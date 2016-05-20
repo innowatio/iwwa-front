@@ -63,3 +63,7 @@ exports.sites = {
         return R.is(Immutable.Map, sito) ? sito.get("_id") : "";
     }
 };
+
+exports.getKeyFromCollection = function (collection) {
+    return collection.get("_id");
+};

@@ -18,8 +18,8 @@ module.exports = (
             <Route component={views.SummaryConsumptions} name="consumptions" path="/consumptions/" titleView="Riepilogo Consumi" />
             <Route component={views.RealTime} name="live" path="/live/" titleView="Consumi live" />
             <Route component={views.Monitoring} name="monitoring" path="/monitoring/" titleView="Monitoring" />
-            <Route component={views.Sensor} name="new-sensor" path="/monitoring/sensor/" titleView="Add sensor" />
-            <Route component={views.Sensor} name="edit-sensor" path="/monitoring/sensor/:id" titleView="Edit sensor" />
+            <Route component={views.MonitoringChartView} name="monitoring-chart" path="/monitoring/chart/" titleView="Monitoring chart" />
+            <Route component={views.MonitoringFavoritesCharts} name="monitoring-favorites-charts" path="/monitoring/favorites/" titleView="Favorites charts" />
         </Route>
     </Router>
 );

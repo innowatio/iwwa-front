@@ -30,6 +30,7 @@ var Row = React.createClass({
     propTypes: {
         columns: columnsType,
         item: IPropTypes.map,
+        onClick: React.PropTypes.func,
         width: React.PropTypes.string
     },
     renderCellElement: function (columnElement) {
@@ -60,7 +61,7 @@ var Row = React.createClass({
     },
     render: function () {
         return (
-            <tr>
+            <tr onClick={this.props.onClick} style={{cursor: this.props.onClick ? "pointer" : ""}}>
                 {this.props.columns.map(this.renderCell)}
             </tr>
         );
@@ -98,6 +99,7 @@ var CollectionElementsTable = React.createClass({
         headColumn: React.PropTypes.array,
         headStyle: React.PropTypes.object,
         hover: React.PropTypes.bool,
+        onRowClick: React.PropTypes.func,
         siti: IPropTypes.map,
         striped: React.PropTypes.bool,
         style: React.PropTypes.object,
@@ -133,6 +135,7 @@ var CollectionElementsTable = React.createClass({
                             columns={this.props.columns}
                             item={item}
                             key={key}
+                            onClick={() => this.props.onRowClick(item)}
                             width={this.props.width}
                         />
                     );
@@ -142,8 +145,14 @@ var CollectionElementsTable = React.createClass({
     },
     render: function () {
         const {colors} = this.getTheme();
+        let divStyle = {
+            overflow: "auto",
+            paddingTop: "10px",
+            width: "100%",
+            ...this.props.style
+        };
         return (
-            <div style={[this.props.style, {overflow: "auto", paddingTop: "10px", width: "100%"}]}>
+            <div style={divStyle}>
                 <bootstrap.Table
                     bordered={this.props.bordered}
                     condensed={this.props.condensed}

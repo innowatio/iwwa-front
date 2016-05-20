@@ -105,7 +105,7 @@ describe("readingsDailyAggregatesToHighchartsData", () => {
 
     describe("`readingsDailyAggregatesToHighchartsData` function", () => {
 
-        it("readings-daily-aggtregates -> highcharts data structure [CASE: sources-and-sensors-compare & sites-compare]", () => {
+        it("readings-daily-aggregates -> highcharts data structure [CASE: sources-and-sensors-compare & sites-compare]", () => {
             const start = Date.now();
             const res = readingsDailyAggregatesToHighchartsData(
                 readingsDailyAggregates,
@@ -115,7 +115,7 @@ describe("readingsDailyAggregatesToHighchartsData", () => {
             expect(res).to.be.an("array");
             res.map((objectResult, index) => {
                 expect(res[index]).to.be.an("object");
-                expect(res[index]).to.have.all.keys(["data", "pointStart", "pointInterval"]);
+                expect(res[index]).to.have.all.keys(["data", "name", "pointStart", "pointInterval"]);
                 expect(objectResult.data).to.be.an("array");
                 expect(objectResult.pointStart).to.equal(
                     moment.utc(filtersSitesCompare[index].date.start).valueOf()
@@ -124,7 +124,7 @@ describe("readingsDailyAggregatesToHighchartsData", () => {
             });
         });
 
-        it("readings-daily-aggtregates -> highcharts data structure [CASE: date-compare]", () => {
+        it("readings-daily-aggregates -> highcharts data structure [CASE: date-compare]", () => {
             const start = Date.now();
             const res = readingsDailyAggregatesToHighchartsData(
                 readingsDailyAggregates,
@@ -134,7 +134,7 @@ describe("readingsDailyAggregatesToHighchartsData", () => {
             expect(res).to.be.an("array");
             res.map((objectResult, index) => {
                 expect(res[index]).to.be.an("object");
-                expect(res[index]).to.have.all.keys(["data", "pointStart", "pointInterval"]);
+                expect(res[index]).to.have.all.keys(["data", "name", "pointStart", "pointInterval"]);
                 expect(objectResult.data).to.be.an("array");
                 expect(objectResult.pointStart).to.equal(
                     moment.utc(filtersDateCompare[index].date.start).valueOf()

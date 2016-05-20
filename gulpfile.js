@@ -16,6 +16,7 @@ var getIp = function () {
     return R.find(function (ip) {
         return (
             ip.slice(0, 3) === "192" ||
+            ip.slice(0, 3) === "172" ||
             ip.slice(0, 2) === "10"
         );
     }, devip());
@@ -27,9 +28,14 @@ var getIp = function () {
 *   Constants
 */
 
+//TODO REVERT ONCE ENVIROMENTS ARE DONE
+
 var ENVIRONMENT  = process.env.ENVIRONMENT || "dev";
+var WRITE_API_HOST = "iwwa-write-api-development.eu-west-1.elasticbeanstalk.com" || getIp() + ":3000";
+// var WRITE_API_HOST = process.env.WRITE_API_HOST || getIp() + ":3000";
 var WRITE_BACKEND_HOST = process.env.WRITE_BACKEND_HOST || getIp() + ":3000";
-var READ_BACKEND_ENDPOINT = process.env.READ_BACKEND_ENDPOINT || `ws://${getIp()}:3000/websocket`;
+var READ_BACKEND_ENDPOINT = "wss://iwwa-back-development.innowatio-aws.com/websocket" || getIp() + ":3000";
+// var READ_BACKEND_ENDPOINT = process.env.READ_BACKEND_ENDPOINT || `ws://${getIp()}:3000/websocket`;
 var MINIFY_FILES = (process.env.MINIFY_FILES === "true") || false;
 
 var deps = JSON.parse(fs.readFileSync("deps.json", "utf8"));
@@ -79,6 +85,7 @@ proGulp.task("buildAppScripts", (function () {
             new webpack.DefinePlugin({
                 ENVIRONMENT: JSON.stringify(ENVIRONMENT),
                 READ_BACKEND_ENDPOINT: JSON.stringify(READ_BACKEND_ENDPOINT),
+                WRITE_API_HOST: JSON.stringify(WRITE_API_HOST),
                 WRITE_BACKEND_HOST: JSON.stringify(WRITE_BACKEND_HOST)
             }),
             new webpack.optimize.CommonsChunkPlugin(
@@ -219,7 +226,8 @@ gulp.task("default", function () {
     gp.util.log("  " + gp.util.colors.green("dev") + "     set up dev environment with auto-recompiling");
     gp.util.log("");
     gp.util.log("Environment variables for configuration:");
-    gp.util.log("  " + gp.util.colors.cyan("READ_BACKEND_HOST") + "    (defaults to `" + getIp() + ":3000`)");
+    gp.util.log("  " + gp.util.colors.cyan("READ_BACKEND_ENDPOINT") + "    (defaults to `ws://" + getIp() + ":3000/websocket`)");
+    gp.util.log("  " + gp.util.colors.cyan("WRITE_API_HOST") + "    (defaults to `" + getIp() + ":3000`)");
     gp.util.log("  " + gp.util.colors.cyan("WRITE_BACKEND_HOST") + "    (defaults to `" + getIp() + ":3000`)");
     gp.util.log("  " + gp.util.colors.cyan("ENVIRONMENT") + "     (defaults to `dev`)");
     gp.util.log("  " + gp.util.colors.cyan("MINIFY_FILES") + "    (defaults to `false`)");

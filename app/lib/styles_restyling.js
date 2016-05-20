@@ -78,6 +78,21 @@ export const styles = (theme) => ({
         display: "flex",
         position: "relative"
     },
+    titlePageMonitoring: {
+        width: "100%",
+        color: theme.colors.titlePage,
+        backgroundColor: theme.colors.backgroundTitlePage,
+        paddingLeft: "10px",
+        paddingRight: "10px",
+        height: "56px"
+    },
+    labelStyle: {
+        width: "100%",
+        color: theme.colors.mainFontColor,
+        fontSize: "16px",
+        fontWeight: "400",
+        margin: "10px 0px 20px 0px"
+    },
     inputLine: {
         borderTop: "0px",
         borderLeft: "0px",
@@ -87,8 +102,9 @@ export const styles = (theme) => ({
         boxShadow: "none",
         background: "none",
         fontSize: "16px",
+        fontWeight: "300",
         outline: "none",
-        padding: "0 5px",
+        padding: "0px",
         color: theme.colors.mainFontColor
     },
     inputRange: {
@@ -115,7 +131,7 @@ export const styles = (theme) => ({
     divAlarmOpenModal: {
         height: "35px",
         width: "100%",
-        borderBottom: "1px solid" + theme.colors.borderInputSettingsAlarm,
+        borderBottom: `1px solid ${theme.colors.borderInputSettingsAlarm}`,
         cursor: "pointer",
         color: theme.colors.textSelectButton,
         fontSize: "16px",
@@ -172,7 +188,7 @@ export const styles = (theme) => ({
             color: theme.colors.white,
             border: "0",
             outline: "none",
-            borderBottom: "3px solid" + theme.colors.secondary
+            borderBottom: "3px solid " + theme.colors.secondary
         },
         ".nav-tabs > li:hover > a:hover": {
             fontWeight: "400"
@@ -221,6 +237,132 @@ export const styles = (theme) => ({
         ".progress-max": {
             fontSize: "16px",
             color: theme.colors.consumptionsText
+        }
+    },
+    formFields: {
+        "": {
+            margin: "0 15% 0 15%",
+            border: "1px solid " + theme.colors.borderContentModal,
+            borderRadius: "20px",
+            minHeight: "400px",
+            height: "auto !important",
+            maxHeight: "auto !important",
+            backgroundColor: theme.colors.backgroundContentModal
+        },
+        ".form-group": {
+            marginBottom: "0px"
+        },
+        ".col-xs-12": {
+            padding: "0px",
+            margin: "0px"
+        },
+        ".form-control:focus": {
+            outline: "0px",
+            outlineStyle: "none",
+            outlineWidth: "0px",
+            borderColor: theme.colors.textGrey
+        },
+        ".has-error .help-block": {
+            width: "auto",
+            float: "right",
+            borderRadius: "5px",
+            fontSize: "12px",
+            fontWeight: "300",
+            backgroundColor: theme.colors.textError,
+            padding: "5px",
+            marginTop: "5px",
+            color: theme.colors.white
+        },
+        ".has-error .form-control": {
+            borderColor: theme.colors.textError
+        }
+    },
+    sensorModalSelect: {
+        "": {
+            cursor: "pointer",
+            borderColor: theme.colors.textGrey,
+            outline: "0px",
+            outlineStyle: "none",
+            outlineWidth: "0px",
+            color: theme.colors.textGrey
+        },
+        ".Select-control": {
+            outline: "0px",
+            outlineStyle: "none",
+            outlineWidth: "0px",
+            overflow: "hidden",
+            position: "relative",
+            width: "100%",
+            color: theme.colors.white,
+            fontSize: "16px",
+            fontWeight: "300",
+            padding: "0px"
+        },
+        ".Select-noresults": {
+            boxSizing: "border-box",
+            color: theme.colors.white,
+            fontSize: "15px",
+            fontWeight: "300",
+            cursor: "default",
+            display: "block",
+            padding: "8px 10px"
+        },
+        ".Select-control:not(.is-searchable) > .Select-input": {
+            outline: "0px",
+            outlineStyle: "none",
+            outlineWidth: "0px",
+            borderColor: theme.colors.textGrey,
+            boxShadow: "none"
+        },
+        ".is-focused:not(.is-open)>.Select-control": {
+            outline: "0px",
+            outlineStyle: "none",
+            outlineWidth: "0px",
+            borderColor: theme.colors.textGrey,
+            boxShadow: "none"
+        },
+        ".Select-menu-outer": {
+            boxShadow: "none",
+            boxSizing: "border-box",
+            marginTop: "-1px",
+            maxHeight: "200px",
+            position: "absolute",
+            top: "100%",
+            width: "100%",
+            zIndex: "1",
+            WebkitOverflowScrolling: "touch",
+            backgroundColor: theme.colors.backgroundMenuSelect,
+            border: "1px solid " + theme.colors.textGrey,
+            borderBottomRightRadius: "10px",
+            borderBottomLeftRadius: "10px",
+            color: theme.colors.mainFontColor
+        },
+        ".Select-menu": {
+            maxHeight: "198px",
+            overflowY: "auto"
+        },
+        ".Select-input": {
+            padding: "0px"
+        },
+        ".Select-option": {
+            boxSizing: "border-box",
+            backgroundColor: theme.colors.backgroundMenuSelect,
+            borderBottom: "1px solid " + theme.colors.textGrey,
+            color: theme.colors.mainFontColor + "!important",
+            fontSize: "15px",
+            fontWeight: "300",
+            cursor: "pointer",
+            display: "block",
+            padding: "8px 10px"
+        },
+        ".Select-option:last-child": {
+            borderBottomRightRadius: "9px",
+            borderBottomLeftRadius: "9px",
+            borderBottom: "0px"
+        },
+        ".Select-option.is-selected, .Select-option:hover": {
+            backgroundColor: theme.colors.buttonPrimary,
+            color: theme.colors.white
         }
     }
 });

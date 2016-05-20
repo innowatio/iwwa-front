@@ -44,6 +44,7 @@ const sourceButtonStyle = (theme) => R.merge(styles(theme).buttonSelectChart, {
 const consumptionButtonStyle = ({colors}) => ({
     color: colors.greySubTitle,
     textAlign: "center",
+    marginRight: "15px !important",
     padding: "0",
     verticalAlign: "middle",
     borderRadius: "22px",

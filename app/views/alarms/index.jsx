@@ -260,6 +260,7 @@ var Alarms = React.createClass({
                                 lazyLoadButtonStyle={styles(this.getTheme()).lazyLoadButtonStyle}
                                 lazyLoadButtonStyleContainer={styles(this.getTheme()).lazyLoadButtonStyleContainer}
                                 lazyLoadLabel={"Carica altri"}
+                                showFilterInput={true}
                             />
                         </bootstrap.Tab>
                         <bootstrap.Tab
@@ -278,6 +279,7 @@ var Alarms = React.createClass({
                                 lazyLoadButtonStyle={styles(this.getTheme()).lazyLoadButtonStyle}
                                 lazyLoadButtonStyleContainer={styles(this.getTheme()).lazyLoadButtonStyleContainer}
                                 lazyLoadLabel={"Carica altri"}
+                                showFilterInput={true}
                                 sort={R.partialRight(this.sortByDate, [false])}
                                 subListComponent={this.renderSubListNotification}
                             />
