@@ -3,12 +3,28 @@ var IPropTypes      = require("react-immutable-proptypes");
 var R               = require("ramda");
 var Radium          = require("radium");
 var React           = require("react");
-var ReactLink       = require("react/lib/ReactLink");
 var ReactPureRender = require("react-addons-pure-render-mixin");
 var Waypoint        = require("react-waypoint");
 
 var components = require("components");
 import {defaultTheme} from "lib/theme";
+
+const formControlStyle = ({colors}) => ({
+    position: "relative",
+    borderBottomLeftRadius: "4px",
+    borderBottomRightRadius: "0px",
+    borderTopRightRadius: "0px",
+    borderTop: "1px solid " + colors.borderSelectSearch,
+    borderLeft: "1px solid " + colors.borderSelectSearch,
+    borderBottom: "1px solid " + colors.borderSelectSearch,
+    borderRight: "0px",
+    outline: "0px",
+    boxShadow: "none",
+    height: "45px",
+    fontSize: "14px",
+    color: colors.mainFontColor,
+    backgroundColor: colors.backgroundSelectSearch
+});
 
 var SelectTree = React.createClass({
     propTypes: {
@@ -25,8 +41,7 @@ var SelectTree = React.createClass({
         value: React.PropTypes.oneOfType([
             React.PropTypes.array,
             React.PropTypes.object
-        ]),
-        valueLink: ReactLink.PropTypes.link()
+        ])
     },
     contextTypes: {
         theme: React.PropTypes.object
@@ -53,14 +68,10 @@ var SelectTree = React.createClass({
     },
     getValue: function () {
         return (
-            this.props.valueLink ?
-            this.props.valueLink.value :
-            (
-                R.is(Array, this.props.value) ?
+            R.is(Array, this.props.value) ?
                 this.props.value[0] :
                 this.props.value
-            )
-        );
+            );
     },
     onClickActiveSite: function (allowedValue) {
         this.setState({
@@ -68,9 +79,6 @@ var SelectTree = React.createClass({
         });
         if (this.props.onChange) {
             this.props.onChange([allowedValue.get("_id")]);
-        }
-        if (this.props.valueLink) {
-            this.props.valueLink.requestChange(allowedValue);
         }
     },
     onClickOpenPanel: function (allowedValue) {
@@ -199,47 +207,36 @@ var SelectTree = React.createClass({
                             borderRadius: "0px",
                             border: "0px"
                         },
-                        ".input-search": {
-                            position: "relative",
-                            borderBottomLeftRadius: "0px",
-                            borderTop: "1px solid " + colors.borderSelectSearch,
-                            borderLeft: "1px solid " + colors.borderSelectSearch,
-                            borderBottom: "1px solid " + colors.borderSelectSearch,
-                            borderRight: "0",
-                            outline: "0px",
-                            boxShadow: "none",
-                            height: "45px",
-                            fontSize: "14px",
-                            color: colors.mainFontColor,
-                            backgroundColor: colors.backgroundSelectSearch
-                        },
                         ".form-control:focus": {
                             borderColor: colors.greyBorder
-                        },
-                        ".input-group-addon": {
-                            borderBottomRightRadius: "0px",
-                            backgroundColor: colors.backgroundSelectSearch,
-                            borderTop: "1px solid " + colors.borderSelectSearch,
-                            borderRight: "1px solid " + colors.borderSelectSearch,
-                            borderBottom: "1px solid " + colors.borderSelectSearch
                         }
                     }}
                     scopeSelector=".site-selector"
                 />
-                <bootstrap.Input
-                    addonAfter={
+                <bootstrap.FormGroup style={{display: "table"}}>
+                    <bootstrap.FormControl
+                        onChange={input => this.setState({inputFilter: input.target.value})}
+                        placeholder="Ricerca"
+                        style={formControlStyle(this.getTheme())}
+                        type="text"
+                    />
+                    <bootstrap.InputGroup.Addon
+                        style={{
+                            borderBottomRightRadius: "4px",
+                            backgroundColor: colors.backgroundSelectSearch,
+                            borderTop: "1px solid " + colors.borderSelectSearch,
+                            borderRight: "1px solid " + colors.borderSelectSearch,
+                            borderBottom: "1px solid " + colors.borderSelectSearch
+                        }}
+                    >
                         <components.Icon
                             color={this.getTheme().colors.iconInputSearch}
                             icon={"search"}
                             size={"28px"}
-                            style={{lineHeight: "20px", margin: "0", padding: "0"}}
+                            style={{lineHeight: "20px", margin: "0px", padding: "0px"}}
                         />
-                    }
-                    className="input-search"
-                    onChange={(input) => this.setState({inputFilter: input.target.value})}
-                    placeholder="Ricerca"
-                    type="text"
-                />
+                    </bootstrap.InputGroup.Addon>
+                </bootstrap.FormGroup>
                 <bootstrap.PanelGroup
                     accordion={true}
                     activeKey={this.state.activeKey}

@@ -74,8 +74,8 @@ var ConsumptionButtons = React.createClass({
                             float:"left",
                             width: "45px",
                             textAlign: "center",
-                            margin: "0",
-                            padding: "0",
+                            margin: "0px",
+                            padding: "0px",
                             verticalAlign: "middle"
                         }}
                     />

@@ -32,7 +32,7 @@ var ProgressBar = React.createClass({
                 />
                 <bootstrap.ProgressBar
                     bsStyle={isDanger ? "danger" : "info"}
-                    label="%(percent)s%"
+                    label={`${now}%`}
                     max={max}
                     min={min}
                     now={now}

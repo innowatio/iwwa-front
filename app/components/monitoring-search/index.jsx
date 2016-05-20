@@ -1,6 +1,6 @@
 import Radium from "radium";
 import React, {PropTypes} from "react";
-import {Input} from "react-bootstrap";
+import {FormControl, FormGroup, InputGroup} from "react-bootstrap";
 
 import {Button, Icon} from "components";
 
@@ -18,8 +18,8 @@ var MonitoringSearch = React.createClass({
     },
     getInitialState: function () {
         return {
-            standardSearchFilter: null,
-            tagSearchFilter: null,
+            standardSearchFilter: "",
+            tagSearchFilter: "",
             tagsToSearch: [],
             wordsToSearch: []
         };
@@ -36,6 +36,8 @@ var MonitoringSearch = React.createClass({
                 borderRight: "0px",
                 borderTopLeftRadius: "20px",
                 borderBottomLeftRadius: "20px",
+                borderTopRightRadius: "0px",
+                borderBottomRightRadius: "0px",
                 backgroundColor: theme.colors.iconSearchUser,
                 outline: "0px",
                 outlineStyle: "none",
@@ -65,13 +67,20 @@ var MonitoringSearch = React.createClass({
         let theme = self.getTheme();
         return (
             <div style={divStyle}>
-                <div className="search-container" style={{paddingTop: "20px", textAlign: "center"}}>
+                <div className="search-container" style={{paddingTop: "20px", textAlign: "center", width: "100%"}}>
                     <Radium.Style
                         rules={self.getSearchStyle()}
                         scopeSelector=".search-container"
                     />
-                    <Input
-                        addonAfter={
+                    <FormGroup style={{display: "inline-table"}}>
+                        <FormControl
+                            className="input-search"
+                            onChange={(input) => self.setState({standardSearchFilter: input.target.value})}
+                            placeholder="Cerca"
+                            type="text"
+                            value={self.state.standardSearchFilter}
+                        />
+                        <InputGroup.Addon>
                             <Icon
                                 color={theme.colors.white}
                                 icon={"search"}
@@ -80,7 +89,7 @@ var MonitoringSearch = React.createClass({
                                     if (word && word.trim().length > 0) {
                                         let newWords = self.state.wordsToSearch.slice();
                                         newWords.push(word);
-                                        self.setState({wordsToSearch: newWords, standardSearchFilter: null});
+                                        self.setState({wordsToSearch: newWords, standardSearchFilter: ""});
                                     }
                                 }}
                                 size={"34px"}
@@ -89,16 +98,18 @@ var MonitoringSearch = React.createClass({
                                     verticalAlign: "middle"
                                 }}
                             />
-                        }
-                        className="input-search"
-                        onChange={(input) => self.setState({standardSearchFilter: input.target.value})}
-                        placeholder="Cerca"
-                        type="text"
-                        value={self.state.standardSearchFilter}
-                    />
+                        </InputGroup.Addon>
+                    </FormGroup>
 
-                    <Input
-                        addonAfter={
+                    <FormGroup style={{display: "inline-table"}}>
+                        <FormControl
+                            className="input-search"
+                            onChange={(input) => self.setState({tagSearchFilter: input.target.value})}
+                            placeholder="Cerca per tag"
+                            type="text"
+                            value={self.state.tagSearchFilter}
+                        />
+                        <InputGroup.Addon>
                             <Icon
                                 color={theme.colors.white}
                                 icon={"tag"}
@@ -107,7 +118,7 @@ var MonitoringSearch = React.createClass({
                                     if (tag && tag.trim().length > 0) {
                                         let newTags = self.state.tagsToSearch.slice();
                                         newTags.push(tag);
-                                        self.setState({tagsToSearch: newTags, tagSearchFilter: null});
+                                        self.setState({tagsToSearch: newTags, tagSearchFilter: ""});
                                     }
                                 }}
                                 size={"34px"}
@@ -116,13 +127,8 @@ var MonitoringSearch = React.createClass({
                                     verticalAlign: "middle"
                                 }}
                             />
-                        }
-                        className="input-search"
-                        onChange={(input) => self.setState({tagSearchFilter: input.target.value})}
-                        placeholder="Cerca per tag"
-                        type="text"
-                        value={self.state.tagSearchFilter}
-                    />
+                        </InputGroup.Addon>
+                    </FormGroup>
 
                     <label style={{fontSize: "20px", fontWeight: "400", marginBottom: "10px"}}>
                         {"Riepilogo ricerca"}
@@ -173,7 +179,7 @@ var MonitoringSearch = React.createClass({
                                 width: "120px",
                                 height: "45px",
                                 lineHeight: "45px",
-                                padding: "0",
+                                padding: "0px",
                                 fontSize: "20px",
                                 border: "0px",
                                 backgroundColor: theme.colors.buttonPrimary

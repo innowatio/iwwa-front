@@ -1,5 +1,5 @@
 import React, {PropTypes} from "react";
-import {Col, Input} from "react-bootstrap";
+import {Col, FormControl} from "react-bootstrap";
 import IPropTypes from "react-immutable-proptypes";
 import Select from "react-select";
 import Radium from "radium";
@@ -142,7 +142,7 @@ var SensorForm = React.createClass({
                     <Col md={6}>
                         <div className={"form-group" + (name.touched && name.error ? " has-error" : "")} style={{marginBottom: "15px", padding:"1px"}}>
                             <div className={"col-xs-12"}>
-                                <Input
+                                <FormControl
                                     type="text"
                                     className="form-control" placeholder="Nome"
                                     style={R.merge(styles(theme).inputLine, {color: theme.colors.buttonPrimary})}
@@ -167,7 +167,7 @@ var SensorForm = React.createClass({
                                     className="form-control"
                                     style={{...styles(theme).inputLine,
                                         resize: "none",
-                                        margin: "0",
+                                        margin: "0px",
                                         padding: "5px 0px",
                                         height: "133px"
                                     }}
@@ -203,12 +203,12 @@ var SensorForm = React.createClass({
 
                         </div>
                         <div className={"form-group col-xs-12"} style={{marginBottom: "20px"}}>
-                            <Input type="text" className="form-control" placeholder="Referenza sito" style={styles(theme).inputLine}
+                            <FormControl type="text" className="form-control" placeholder="Referenza sito" style={styles(theme).inputLine}
                                 {...siteId}
                             />
                         </div>
                         <div className={"form-group col-xs-12"} style={{marginBottom: "20px"}}>
-                            <Input type="text" className="form-control" placeholder="Referenza cliente" style={styles(theme).inputLine}
+                            <FormControl type="text" className="form-control" placeholder="Referenza cliente" style={styles(theme).inputLine}
                                 {...userId}
                             />
                         </div>

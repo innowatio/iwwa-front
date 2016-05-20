@@ -152,7 +152,9 @@ var Alarms = React.createClass({
         this.props.numberOfSelectedTabs(1);
     },
     activeKey: function (key) {
-        this.props.numberOfSelectedTabs(key);
+        if (key) {
+            this.props.numberOfSelectedTabs(key);
+        }
     },
     sortByDate: function (a, b, asc) {
         if (asc) {
@@ -228,8 +230,9 @@ var Alarms = React.createClass({
                 />
                 <div className="tabbed-area">
                     <bootstrap.Tabs
-                        activeKey={this.props.alarms.selectedTab}
+                        activeKey={this.props.alarms.selectedTab || 1}
                         animation={false}
+                        id={"alarm"}
                         bsStyle={"tabs"}
                         onSelect={this.activeKey}
                     >

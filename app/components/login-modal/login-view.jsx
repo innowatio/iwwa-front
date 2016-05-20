@@ -1,6 +1,7 @@
 import color from "color";
 import Radium, {Style} from "radium";
 import React, {PropTypes} from "react";
+import ReactDOM from "react-dom";
 import * as bootstrap from "react-bootstrap";
 
 import components from "components";
@@ -112,8 +113,8 @@ var LoginView = React.createClass({
     },
     login: function () {
         var credentials = {
-            email: this.refs.email.getValue(),
-            password: this.refs.password.getValue()
+            email: ReactDOM.findDOMNode(this.refs.email).value,
+            password: ReactDOM.findDOMNode(this.refs.password).value
         };
         this.setLoginError(null);
         this.props.asteroid.loginWithPassword(credentials).catch(this.setLoginError);
@@ -138,38 +139,42 @@ var LoginView = React.createClass({
                         scopeSelector=".ac-login-modal-inputs"
                     />
                     <div className="input-usr">
-                        <bootstrap.Input
-                            addonBefore={
+                        <bootstrap.FormGroup style={{display: "table"}}>
+                            <bootstrap.InputGroup.Addon>
                                 <components.Icon
                                     color={this.getTheme().colors.iconLogin}
                                     icon={"user"}
                                     size={"45px"}
                                     style={{lineHeight: "20px", verticalAlign: "middle"}}
                                 />
-                            }
-                            bsSize="large"
-                            placeholder={string.email}
-                            ref="email"
-                            style={styles.inputs}
-                            type="email"
-                        />
+                            </bootstrap.InputGroup.Addon>
+                            <bootstrap.FormControl
+                                bsSize="large"
+                                placeholder={string.email}
+                                ref="email"
+                                style={styles.inputs}
+                                type="email"
+                            />
+                        </bootstrap.FormGroup>
                     </div>
                     <div className="input-psw">
-                        <bootstrap.Input
-                            addonBefore={
+                        <bootstrap.FormGroup style={{display: "table"}}>
+                            <bootstrap.InputGroup.Addon>
                                 <components.Icon
                                     color={this.getTheme().colors.iconLogin}
                                     icon={"lock"}
                                     size={"45px"}
                                     style={{lineHeight: "20px", verticalAlign: "middle"}}
                                 />
-                            }
-                            bsSize="large"
-                            placeholder={string.password}
-                            ref="password"
-                            style={styles.inputs}
-                            type="password"
-                        />
+                            </bootstrap.InputGroup.Addon>
+                            <bootstrap.FormControl
+                                bsSize="large"
+                                placeholder={string.password}
+                                ref="password"
+                                style={styles.inputs}
+                                type="password"
+                            />
+                        </bootstrap.FormGroup>
                     </div>
                 </div>
                 <components.Spacer direction="v" size={16} />

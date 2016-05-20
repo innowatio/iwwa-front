@@ -22,8 +22,6 @@ var getIp = function () {
     }, devip());
 };
 
-
-
 /*
 *   Constants
 */

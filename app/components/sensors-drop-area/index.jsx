@@ -126,7 +126,7 @@ var SensorsDropArea = React.createClass({
                         </div>
                     </div>
                 );
-            } 
+            }
         });
         return (
             <div style={{position: "relative"}}>
@@ -144,8 +144,10 @@ var SensorsDropArea = React.createClass({
                 {sensors}
                 <Button
                     style={
-                        R.merge(buttonStyle(theme),
-                        {right: "50px"})
+                        R.merge(buttonStyle(theme), {
+                            right: "50px",
+                            padding: "1px 8px"
+                        })
                     }
                     onClick={this.props.onClickAggregate}
                 >

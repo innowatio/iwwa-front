@@ -28,7 +28,6 @@
         "radium",
         "ramda",
         "react",
-        "react-addons-linked-state-mixin",
         "react-addons-pure-render-mixin",
         "react-addons-test-utils",
         "react-bootstrap",

@@ -7,9 +7,9 @@ import {defaultTheme} from "lib/theme";
 const styles = ({colors}) => ({
     panel: {
         backgroundColor: colors.backgroundAlarmsPanel,
-        margin: "0",
-        padding: "0",
-        border: "0",
+        margin: "0px",
+        padding: "0px",
+        border: "0px",
         borderRadius: "0px"
     }
 });

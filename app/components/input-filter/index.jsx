@@ -17,6 +17,8 @@ const defaultStyles = ({colors}) => ({
         borderRight: "0px",
         borderTopLeftRadius: "20px",
         borderBottomLeftRadius: "20px",
+        borderTopRightRadius: "0px",
+        borderBottomRightRadius: "0px",
         borderColor: colors.borderInputSearch,
         backgroundColor: colors.backgroundInputSearch,
         color: colors.mainFontColor
@@ -66,8 +68,15 @@ var InputFilter = React.createClass({
                     rules={searchStyle}
                     scopeSelector=".search-container"
                 />
-                <bootstrap.Input
-                    addonAfter={
+                <bootstrap.FormGroup style={{display: "table"}}>
+                    <bootstrap.FormControl
+                        className="input-search"
+                        onChange={this.onChangeValue}
+                        placeholder="Ricerca"
+                        type="text"
+                        value={this.state.inputValue}
+                    />
+                    <bootstrap.InputGroup.Addon>
                         <components.Icon
                             color={colors.iconInputSearch}
                             icon={"search"}
@@ -77,13 +86,8 @@ var InputFilter = React.createClass({
                                 verticalAlign: "middle"
                             }}
                         />
-                    }
-                    className="input-search"
-                    onChange={this.onChangeValue}
-                    placeholder="Ricerca"
-                    type="text"
-                    value={this.state.inputValue}
-                />
+                    </bootstrap.InputGroup.Addon>
+                </bootstrap.FormGroup>
             </div>
         );
     }

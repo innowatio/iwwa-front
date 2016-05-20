@@ -1,5 +1,5 @@
 import React, {PropTypes} from "react";
-import {Col, Input} from "react-bootstrap";
+import {Col, FormControl} from "react-bootstrap";
 import IPropTypes from "react-immutable-proptypes";
 import {connect} from "react-redux";
 import {Link} from "react-router";
@@ -72,8 +72,8 @@ var MonitoringChartView = React.createClass({
     },
     getStateFromProps: function (props) {
         return {
-            yAxisMax: props.monitoringChart.yAxis.max,
-            yAxisMin: props.monitoringChart.yAxis.min
+            yAxisMax: props.monitoringChart.yAxis.max || "",
+            yAxisMin: props.monitoringChart.yAxis.min || ""
         };
     },
     getSensorObj: function (sensor) {
@@ -117,12 +117,6 @@ var MonitoringChartView = React.createClass({
         if (readingsDailyAggregates) {
             return readingsDailyAggregatesToHighchartsData(readingsDailyAggregates, monitoringCharts);
         }
-    },
-    handleAxisChange: function () {
-        this.setState({
-            yAxisMax: this.refs.yAxisMax.getValue(),
-            yAxisMin: this.refs.yAxisMin.getValue()
-        });
     },
     getYAxisValidationState: function () {
         let {yAxisMin, yAxisMax} = this.state;
@@ -282,15 +276,15 @@ var MonitoringChartView = React.createClass({
                                 }}
                                 scopeSelector=".input-style"
                             />
-                            <Input
+                            <FormControl
                                 type="text"
-                                value={this.state.yAxisMin}
                                 label="Asse Y min:"
                                 bsStyle={this.getYAxisValidationState()}
                                 hasFeedback={true}
                                 ref="yAxisMin"
-                                onChange={this.handleAxisChange}
+                                onChange={input => this.setState({yAxisMin: input.target.value})}
                                 style={{...styles(theme).inputLine}}
+                                value={this.state.yAxisMin}
                             />
                         </Col>
                         <Col className="input-style" md={6}>
@@ -319,15 +313,15 @@ var MonitoringChartView = React.createClass({
                                 }}
                                 scopeSelector=".input-style"
                             />
-                            <Input
+                            <FormControl
                                 type="text"
-                                value={this.state.yAxisMax}
                                 label="Asse Y max:"
                                 bsStyle={this.getYAxisValidationState()}
                                 hasFeedback={true}
                                 ref="yAxisMax"
-                                onChange={this.handleAxisChange}
+                                onChange={input => this.setState({yAxisMax: input.target.value})}
                                 style={{...styles(theme).inputLine}}
+                                value={this.state.yAxisMax}
                             />
                         </Col>
                         <div style={{textAlign: "center"}}>
@@ -338,7 +332,7 @@ var MonitoringChartView = React.createClass({
                                     width: "120px",
                                     height: "40px",
                                     lineHeight: "40px",
-                                    padding: "0",
+                                    padding: "0px",
                                     margin: "0px 0px 0px 30px",
                                     fontSize: "20px",
                                     border: "0px",
