@@ -10,6 +10,7 @@ import Radium from "radium";
 import {
     addToFavorite,
     changeYAxisValues,
+    resetYAxisValues,
     saveChartConfig,
     selectChartType,
     selectFavoriteChart
@@ -40,6 +41,7 @@ var MonitoringChartView = React.createClass({
         changeYAxisValues: PropTypes.func.isRequired,
         collections: IPropTypes.map.isRequired,
         monitoringChart: PropTypes.object.isRequired,
+        resetYAxisValues: PropTypes.func.isRequired,
         saveChartConfig: PropTypes.func.isRequired,
         selectChartType: PropTypes.func.isRequired,
         selectFavoriteChart: PropTypes.func.isRequired
@@ -349,7 +351,10 @@ var MonitoringChartView = React.createClass({
                             >
                                 {"OK"}
                             </Button>
-                            <Button bsStyle={"link"}>
+                            <Button 
+                                bsStyle={"link"}
+                                onClick={this.props.resetYAxisValues}
+                            >
                                 <Icon
                                     color={theme.colors.iconArrow}
                                     icon={"reset"}
@@ -491,6 +496,7 @@ const mapDispatchToProps = (dispatch) => {
     return {
         addToFavorite: bindActionCreators(addToFavorite, dispatch),
         changeYAxisValues: bindActionCreators(changeYAxisValues, dispatch),
+        resetYAxisValues: bindActionCreators(resetYAxisValues, dispatch),
         saveChartConfig: bindActionCreators(saveChartConfig, dispatch),
         selectChartType: bindActionCreators(selectChartType, dispatch),
         selectFavoriteChart: bindActionCreators(selectFavoriteChart, dispatch)
