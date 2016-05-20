@@ -25,7 +25,9 @@ var SensorAggregator = React.createClass({
         theme: PropTypes.object
     },
     getInitialState: function () {
-        return {};
+        return {
+            addNumber: undefined
+        };
     },
     getTheme: function () {
         return this.context.theme || defaultTheme;
@@ -62,9 +64,11 @@ var SensorAggregator = React.createClass({
             }
         };
     },
+    addNumberToFormula: function () {
+        this.props.addItemToFormula({type: "number", number: this.state.addNumber});
+    },
     render: function () {
-        let self = this;
-        let theme = self.getTheme();
+        let theme = this.getTheme();
         return (
             <div style={{clear: "both", minHeight: "250px"}}>
                 <Col md={6} style={{marginTop: "20px"}}>
@@ -107,7 +111,7 @@ var SensorAggregator = React.createClass({
                         <Col md={7}>
                             <div className="add-container">
                                 <Radium.Style
-                                    rules={self.getInputAddStyle()}
+                                    rules={this.getInputAddStyle()}
                                     scopeSelector=".add-container"
                                 />
                                 <Input
@@ -115,6 +119,7 @@ var SensorAggregator = React.createClass({
                                         <Icon
                                             color={theme.colors.white}
                                             icon={"add"}
+                                            onClick={this.addNumberToFormula}
                                             size={"20px"}
                                             style={{
                                                 lineHeight: "10px",
@@ -123,8 +128,15 @@ var SensorAggregator = React.createClass({
                                         />
                                     }
                                     className="input-add"
+                                    onChange={(event) => this.setState({addNumber: event.target.value})}
+                                    onKeyPress={(event) =>{
+                                        if (event.key === "Enter") {
+                                            this.addNumberToFormula();
+                                        }
+                                    }}
                                     placeholder="Aggiungi numero all'area"
-                                    type="text"
+                                    type="number"
+                                    value={this.state.addNumber}
                                 />
                             </div>
                         </Col>

@@ -29,7 +29,7 @@ function getSensorObj (collectionItem) {
         "formula": collectionItem.get("formula"),
         "tags": collectionItem.get("tags"),
         "siteId": collectionItem.get("siteId"),
-        "userId": collectionItem.get("userId"), 
+        "userId": collectionItem.get("userId"),
         "parentSensorId": collectionItem.get("parentSensorId")
     });
 }
