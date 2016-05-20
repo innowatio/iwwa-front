@@ -6,7 +6,7 @@ import {bindActionCreators} from "redux";
 
 import {getDragDropContext} from "lib/dnd-utils";
 import {defaultTheme} from "lib/theme";
-import {getAllSensors} from "lib/sensors-utils";
+import {getAllSensors, getSensorLabel} from "lib/sensors-utils";
 import {styles} from "lib/styles_restyling";
 
 import {
@@ -115,7 +115,7 @@ var Monitoring = React.createClass({
         const selected = this.props.sensorsState.selectedSensors;
         if (this.state.editSensor && selected.length == 1) {
             var fields = selected[0].toJS();
-            fields.name = (fields.name ? fields.name : fields["_id"]);
+            fields.name = (getSensorLabel(selected[0]));
             return fields;
         } else {
             //TODO find how to delete initial values...

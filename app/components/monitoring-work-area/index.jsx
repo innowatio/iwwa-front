@@ -3,6 +3,7 @@ import R from "ramda";
 import IPropTypes from "react-immutable-proptypes";
 
 import {defaultTheme} from "lib/theme";
+import {getSensorId} from "lib/sensors-utils";
 
 import {CollectionItemList, MonitoringSensorRow, SensorsDropArea} from "components";
 
@@ -83,7 +84,7 @@ var MonitoringWorkArea = React.createClass({
     },
     renderSensorList: function (element, elementId) {
         let found = R.find((it) => {
-            return it.get("_id") === elementId;
+            return getSensorId(it) === elementId;
         })(this.props.selected) != null;
         return (
             <MonitoringSensorRow
