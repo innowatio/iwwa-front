@@ -5,7 +5,7 @@ import {Link} from "react-router";
 import R from "ramda";
 
 import {Types} from "lib/dnd-utils";
-import {getUnitOfMeasurementLabel} from "lib/sensors-utils";
+import {getSensorId, getUnitOfMeasurementLabel} from "lib/sensors-utils";
 import {defaultTheme} from "lib/theme";
 
 import {Button, Icon} from "components";
@@ -28,7 +28,7 @@ const buttonStyle = ({colors}) => ({
 const sensorsTarget = {
     drop (props, monitor) {
         const item = monitor.getItem();
-        if (props.sensors.indexOf(item.sensor.get("_id")) < 0) {
+        if (props.sensors.indexOf(getSensorId(item.sensor)) < 0) {
             props.addSensorToWorkArea(item.sensor);
         }
         return {moved: true};

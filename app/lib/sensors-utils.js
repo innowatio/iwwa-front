@@ -35,7 +35,11 @@ export function findSensor (sensors, sensorId) {
 }
 
 export function getSensorLabel (sensor) {
-    return sensor.get("name") ? sensor.get("name") : sensor.get("_id") + " - " + sensor.get("measurementType");
+    return sensor.get("name") ? sensor.get("name") : getSensorId(sensor);
+}
+
+export function getSensorId (sensor) {
+    return sensor.get("_id") + "-" + sensor.get("measurementType");
 }
 
 //TODO capire se dev'essere ricorsiva....

@@ -13,7 +13,7 @@ import {
 } from "../actions/sensors";
 
 import {getKeyFromCollection} from "lib/collection-utils";
-import {formulaToOperator} from "lib/sensors-utils";
+import {formulaToOperator, getSensorId} from "lib/sensors-utils";
 
 let defaultState = {
     current: {
@@ -71,7 +71,7 @@ export function sensors (state = defaultState, action) {
             break;
         }
         case ADD_SENSOR_TO_WORK_AREA: {
-            newState.workAreaSensors.push(getKeyFromCollection(action.payload));
+            newState.workAreaSensors.push(getSensorId(action.payload));
             break;
         }
         case FILTER_SENSORS: {

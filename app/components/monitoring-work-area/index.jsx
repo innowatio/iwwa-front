@@ -72,7 +72,7 @@ var MonitoringWorkArea = React.createClass({
             for (let i = 0; i < filterWords.length && !found; i++) {
                 var searchRegExp = new RegExp(filterWords[i], "i");
                 found = (
-                    searchRegExp.test(item.get("_id")) ||
+                    searchRegExp.test(item.get("_id")+item.get("measurementType")) ||
                     searchRegExp.test(item.get("name")) ||
                     searchRegExp.test(item.get("description")) ||
                     this.searchTag(item.get("tags"), filterWords[i])

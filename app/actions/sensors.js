@@ -1,6 +1,8 @@
 import axios from "axios";
 import UUID from "uuid-js";
+
 import {Types} from "lib/dnd-utils";
+import {getSensorId} from "lib/sensors-utils";
 
 export const ADD_ITEM_TO_FORMULA = "ADD_ITEM_TO_FORMULA";
 export const ADD_SENSOR_TO_WORK_AREA = "ADD_SENSOR_TO_WORK_AREA";
@@ -141,9 +143,9 @@ function callEditSensor (sensorData, sensorId) {
 }
 
 export const editSensor = (sensorData, formulaItems, sensor) => {
-    let id = sensor.get("_id");
     let type = sensor.get("type");
     if (type === MONITORING_TYPE) {
+        let id = sensor.get("_id");
         sensorData.formula = buildFormula(formulaItems);
         sensorData.id = id;
         sensorData.type = type;
@@ -152,7 +154,7 @@ export const editSensor = (sensorData, formulaItems, sensor) => {
         console.log(sensorData);
         return callEditSensor(sensorData, id);
     } else {
-        sensorData.parentSensorId = id;
+        sensorData.parentSensorId = getSensorId(sensor);
         return addSensor(sensorData, formulaItems);
     }
 };
