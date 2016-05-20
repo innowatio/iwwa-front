@@ -244,7 +244,7 @@ export const styles = (theme) => ({
             margin: "0 15% 0 15%",
             border: "1px solid " + theme.colors.borderContentModal,
             borderRadius: "20px",
-            minHeight: "600px",
+            minHeight: "400px",
             height: "auto !important",
             maxHeight: "auto !important",
             backgroundColor: theme.colors.backgroundContentModal

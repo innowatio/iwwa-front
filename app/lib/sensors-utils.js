@@ -57,5 +57,9 @@ export function getAllSensors (sensorsCollection) {
             originalToHide.push(parentId);
         }
     });
-    return sensorsCollection.filter(sensor => !sensor.get("isDeleted") && originalToHide.indexOf(sensor.get("_id")) < 0);
+    return sensorsCollection.filter(
+        sensor => !sensor.get("isDeleted") &&
+        originalToHide.indexOf(sensor.get("_id")) < 0 &&
+        sensor.get("type") !== "pod"
+    );
 }
