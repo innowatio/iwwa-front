@@ -223,7 +223,7 @@ var MonitoringChartView = React.createClass({
                             >
                                 <Icon
                                     color={theme.colors.iconHeader}
-                                    icon={"chart-style3"}
+                                    icon={"chart-style4"}
                                     size={"36px"}
                                     style={{lineHeight: "20px"}}
                                 />
@@ -234,7 +234,7 @@ var MonitoringChartView = React.createClass({
                             >
                                 <Icon
                                     color={theme.colors.iconHeader}
-                                    icon={"chart-style4"}
+                                    icon={"chart-style3"}
                                     size={"36px"}
                                     style={{lineHeight: "20px"}}
                                 />

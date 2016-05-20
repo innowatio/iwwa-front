@@ -24,7 +24,7 @@ var MonitoringChart = React.createClass({
     },
     getStateFromProps: function (props) {
         return {
-            config: this.buildConfig(props.chartState.config)
+            config: this.buildConfig(props)
         };
     },
     getTheme: function () {
@@ -48,12 +48,12 @@ var MonitoringChart = React.createClass({
             series: series
         };
     },
-    getCommonConfig: function () {
+    getCommonConfig: function (props) {
         const theme = this.getTheme();
         return {
             chart: {
                 ...this.getCommonChartConfig(),
-                type: this.props.chartState.type
+                type: props.chartState.type
             },
             credits: {
                 enabled: false
@@ -103,7 +103,7 @@ var MonitoringChart = React.createClass({
             tooltip: {
                 shared: true
             },
-            yAxis: this.props.chartState.yAxis
+            yAxis: props.chartState.yAxis
         };
     },
     getCommonChartConfig: function () {
@@ -123,14 +123,14 @@ var MonitoringChart = React.createClass({
         // TODO
         return ["a"];
     },
-    getStackedConfig: function () {
+    getStackedConfig: function (props) {
         return {
             chart: {
                 ...this.getCommonChartConfig(),
                 type: "column"
             },
             yAxis: {
-                ...this.props.chartState.yAxis,
+                ...props.chartState.yAxis,
                 stackLabels: {
                     enabled: true,
                     style: {
@@ -164,12 +164,12 @@ var MonitoringChart = React.createClass({
             }
         };
     },
-    getSpecificTypeConfig: function () {
-        switch (this.props.chartState.type) {
+    getSpecificTypeConfig: function (props) {
+        switch (props.chartState.type) {
             case "column":
                 return this.getColumnConfig();
             case "stacked":
-                return this.getStackedConfig();
+                return this.getStackedConfig(props);
             case "percent":
                 return this.getPercentConfig();
             case "line":
@@ -177,13 +177,13 @@ var MonitoringChart = React.createClass({
                 return this.getBasicLineConfig();
         }
     },
-    buildConfig: function (configProp) {
-        if (configProp) {
-            return configProp;
+    buildConfig: function (props) {
+        if (props.chartState.config) {
+            return props.chartState.config;
         } else {
             return {
-                ...this.getCommonConfig(),
-                ...this.getSpecificTypeConfig(),
+                ...this.getCommonConfig(props),
+                ...this.getSpecificTypeConfig(props),
                 ...this.normalizeSeries()
             };
         }
