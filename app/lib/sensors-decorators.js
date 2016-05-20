@@ -1,3 +1,5 @@
+import R from "ramda";
+
 export function allSensorsDecorator (theme) {
     return consumptionSensors(theme).concat(electricalSensors);
 }
@@ -69,3 +71,10 @@ export const electricalSensors = [
         unit: "kVARh"
     }
 ];
+
+export function getUnitOfMeasurement (sensorKey) {
+    let fakeTheme = {
+        colors: {}
+    };
+    return R.prop("unit", R.find(R.propEq("key", sensorKey))(allSensorsDecorator(fakeTheme)));
+}

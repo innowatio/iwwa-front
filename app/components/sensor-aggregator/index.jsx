@@ -65,7 +65,6 @@ var SensorAggregator = React.createClass({
         };
     },
     addNumberToFormula: function () {
-        console.log(this.state.addNumber);
         if (this.state.addNumber) {
             this.props.addItemToFormula({type: "number", number: this.state.addNumber});
         }

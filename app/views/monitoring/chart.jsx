@@ -16,6 +16,7 @@ import {
     selectFavoriteChart
 } from "actions/monitoring-chart";
 
+import {getUnitOfMeasurement} from "lib/sensors-decorators";
 import {extractSensorsFromFormula, getAllSensors, getSensorLabel} from "lib/sensors-utils";
 import {styles} from "lib/styles_restyling";
 import {defaultTheme} from "lib/theme";
@@ -105,6 +106,7 @@ var MonitoringChartView = React.createClass({
         let allSensors = this.getAllSensors();
         const monitoringCharts = this.props.monitoringChart.sensorsToDraw.map(sensor => {
             let sensorObj = this.getSensorObj(sensor, allSensors);
+            let unit = sensorObj.get("unitOfMeasurement") ? sensorObj.get("unitOfMeasurement") : getUnitOfMeasurement(sensorObj.get("measurementType"));
             return {
                 date: {
                     start: moment.utc().startOf("year").valueOf(),
@@ -114,7 +116,8 @@ var MonitoringChartView = React.createClass({
                 measurementType: {key: sensorObj.get("measurementType")},
                 name: getSensorLabel(sensorObj),
                 sensorId: sensorObj.get("_id"),
-                source: {key: "reading"}
+                source: {key: "reading"},
+                unitOfMeasurement: unit
             };
         });
         const readingsDailyAggregates = this.props.collections.get("readings-daily-aggregates");

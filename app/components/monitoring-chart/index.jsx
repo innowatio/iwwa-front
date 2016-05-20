@@ -1,3 +1,4 @@
+import R from "ramda";
 import React, {PropTypes} from "react";
 import ReactHighstock from "react-highcharts/bundle/ReactHighstock"; // Highstock is bundled
 
@@ -30,9 +31,9 @@ var MonitoringChart = React.createClass({
     getTheme: function () {
         return this.context.theme || defaultTheme;
     },
-    normalizeSeries: function () {
+    normalizeSeries: function (props, yAxis) {
         var series = [];
-        this.props.series.forEach (item => {
+        props.series.forEach (item => {
             let data = [];
             let nexDate = item.pointStart - item.pointInterval;
             item.data.forEach (dataVal => {
@@ -41,14 +42,30 @@ var MonitoringChart = React.createClass({
             });
             series.push({
                 name: item.name,
-                data: data
+                data: data,
+                yAxis: R.findIndex(R.propEq("key", item.unitOfMeasurement))(yAxis)
             });
         });
         return {
             series: series
         };
     },
-    getCommonConfig: function (props) {
+    getYAxis: function (props) {
+        let yAxis = [];
+        props.series.forEach (item => {
+            if (!R.find(R.propEq("key", item.unitOfMeasurement))(yAxis)) {
+                yAxis.push({
+                    key: item.unitOfMeasurement,
+                    labels: {
+                        format: "{value} " + item.unitOfMeasurement
+                    },
+                    opposite: yAxis.length > 0
+                });
+            }
+        });
+        return yAxis;
+    },
+    getCommonConfig: function (props, yAxis) {
         const theme = this.getTheme();
         return {
             chart: {
@@ -103,9 +120,10 @@ var MonitoringChart = React.createClass({
             tooltip: {
                 shared: true
             },
-            yAxis: props.chartState.yAxis
+            yAxis: yAxis
         };
     },
+    
     getCommonChartConfig: function () {
         const theme = this.getTheme();
         return {
@@ -181,10 +199,11 @@ var MonitoringChart = React.createClass({
         if (props.chartState.config) {
             return props.chartState.config;
         } else {
+            let yAxis = this.getYAxis(props);
             return {
-                ...this.getCommonConfig(props),
+                ...this.getCommonConfig(props, yAxis),
                 ...this.getSpecificTypeConfig(props),
-                ...this.normalizeSeries()
+                ...this.normalizeSeries(props, yAxis)
             };
         }
     },
