@@ -54,7 +54,7 @@ export function getSensorLabel (sensor) {
 }
 
 export function getSensorId (sensor) {
-    return sensor.get("_id") + "-" + sensor.get("measurementType");
+    return sensor.get("_id") + (sensor.get("measurementType") ? "-" + sensor.get("measurementType") : "");
 }
 
 //TODO capire se dev'essere ricorsiva....
@@ -83,23 +83,28 @@ export function getAllSensors (sensorsCollection) {
     });
     return decorateWithMeasurementType(sensorsCollection.filter(
         sensor => !sensor.get("isDeleted") &&
-        originalToHide.indexOf(sensor.get("_id")) < 0 &&
         sensor.get("type") !== "pod"
-    ));
+    ), originalToHide);
 }
 
-function decorateWithMeasurementType (sensors) {
+function decorateWithMeasurementType (sensors, originalToHide) {
     let items = {};
     let fakeTheme = {
         colors: {}
     };
     sensors.forEach(sensor => {
         let types = R.filter(R.propEq("type", sensor.get("type")))(allSensorsDecorator(fakeTheme));
-        types.forEach(type => {
-            let measurementType = type.key;
-            let itemKey = sensor.get("_id") + "-" + measurementType;
-            items[itemKey] = sensor.set("measurementType", measurementType);
-        });
+        if (types.length > 0) {
+            types.forEach(type => {
+                let measurementType = type.key;
+                let itemKey = sensor.get("_id") + "-" + measurementType;
+                if (originalToHide.indexOf(itemKey) < 0) {
+                    items[itemKey] = sensor.set("measurementType", measurementType);
+                }
+            });
+        } else {
+            items[sensor.get("_id")] = sensor;
+        }
     });
     return Immutable.fromJS(items);
 }
