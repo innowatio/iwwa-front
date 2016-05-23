@@ -43,18 +43,3 @@ exports.getControllerViewMixin = function getControllerViewMixin () {
         }
     };
 };
-
-exports.getSubscriptionMixin = function getSubscriptionMixin () {
-    var self = this;
-    return {
-        asteroidSubscribe: function (/* subscription arguments */) {
-            var sub = self.subscribe.apply(self, arguments);
-            this.asteroidSubscriptions.push(sub);
-        },
-        componentWillUnmount: function () {
-            this.asteroidSubscriptions.forEach(function (subscription) {
-                self.unsubscribe(subscription.id);
-            });
-        }
-    };
-};

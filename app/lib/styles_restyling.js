@@ -30,7 +30,8 @@ export const styles = (theme) => ({
         color: theme.colors.white,
         outline: "none",
         fontSize: "15px",
-        fontWeight: "300"
+        fontWeight: "300",
+        padding: "3px 10px"
     },
     chartPopover:{
         background: theme.colors.backgroundDropdown
@@ -186,7 +187,7 @@ export const styles = (theme) => ({
         ".nav-tabs > li > a": {
             height: "44px",
             color: theme.colors.white,
-            border: "0",
+            border: "0px",
             outline: "none",
             borderBottom: "3px solid " + theme.colors.secondary
         },

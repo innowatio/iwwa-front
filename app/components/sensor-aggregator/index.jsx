@@ -1,6 +1,6 @@
 import React, {PropTypes} from "react";
 import Radium from "radium";
-import {Input, Col} from "react-bootstrap";
+import {FormGroup, FormControl, InputGroup, Col} from "react-bootstrap";
 import IPropTypes from "react-immutable-proptypes";
 import {DraggableOperator, DraggableSensor, FormulaDropArea, Icon} from "components";
 
@@ -26,7 +26,7 @@ var SensorAggregator = React.createClass({
     },
     getInitialState: function () {
         return {
-            addNumber: undefined
+            addNumber: ""
         };
     },
     getTheme: function () {
@@ -51,6 +51,8 @@ var SensorAggregator = React.createClass({
                 border: "1px solid " + theme.colors.white,
                 borderTopLeftRadius: "10px",
                 borderBottomLeftRadius: "10px",
+                borderTopRightRadius: "0px",
+                borderBottomRightRadius: "0px",
                 backgroundColor: theme.colors.backgroundContentModal,
                 outline: "0px",
                 outlineStyle: "none",
@@ -116,8 +118,20 @@ var SensorAggregator = React.createClass({
                                     rules={this.getInputAddStyle()}
                                     scopeSelector=".add-container"
                                 />
-                                <Input
-                                    addonAfter={
+                                <FormGroup style={{display: "inline-table"}}>
+                                    <FormControl
+                                        className="input-add"
+                                        onChange={(event) => this.setState({addNumber: event.target.value})}
+                                        onKeyPress={(event) =>{
+                                            if (event.key === "Enter") {
+                                                this.addNumberToFormula();
+                                            }
+                                        }}
+                                        placeholder="Aggiungi numero all'area"
+                                        type="number"
+                                        value={this.state.addNumber}
+                                    />
+                                    <InputGroup.Addon>
                                         <Icon
                                             color={theme.colors.white}
                                             icon={"add"}
@@ -128,18 +142,8 @@ var SensorAggregator = React.createClass({
                                                 verticalAlign: "middle"
                                             }}
                                         />
-                                    }
-                                    className="input-add"
-                                    onChange={(event) => this.setState({addNumber: event.target.value})}
-                                    onKeyPress={(event) =>{
-                                        if (event.key === "Enter") {
-                                            this.addNumberToFormula();
-                                        }
-                                    }}
-                                    placeholder="Aggiungi numero all'area"
-                                    type="number"
-                                    value={this.state.addNumber}
-                                />
+                                    </InputGroup.Addon>
+                                </FormGroup>
                             </div>
                         </Col>
                     </div>

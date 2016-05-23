@@ -205,7 +205,7 @@ var User = React.createClass({
         return (
             <bootstrap.Tab eventKey={2} title="Password" >
                 {/* Automatic change of the password */}
-                <bootstrap.Col style={{height: "calc(100vh - 200px)", paddingRight: "0px"}} xs={6} >
+                <bootstrap.Col style={{height: "calc(100vh - 200px)", paddingRight: "0px"}} xs={6}>
                     <div style={{
                         borderRight: `1px solid ${theme.colors.greyBorder}`,
                         marginTop: "40px",
@@ -237,8 +237,8 @@ var User = React.createClass({
                         </span>
                         <h4 style={{color: theme.colors.primary}}>{stringIt.newPassword}</h4>
                         <div style={{textAlign: "center"}}>
-                            <bootstrap.Input
-                                onChange={(input) => this.setState({inputPassword: input.target.value})}
+                            <bootstrap.FormControl
+                                onChange={input => this.setState({inputPassword: input.target.value})}
                                 style={R.merge(styles(theme).inputLine, {width: "95%", display: "inline"})}
                                 type="text"
                             />
@@ -277,27 +277,29 @@ var User = React.createClass({
                 <h4 style={R.merge(styles(theme).titleTab, {fontSize: "14pt", marginTop: "20px", marginBottom: "20px"})} >
                     {stringIt.getSitiOfUser}
                 </h4>
-                <div style={{display: "flex"}}>
-                    <bootstrap.Input
-                        addonBefore={
+                <div>
+                    <bootstrap.FormGroup style={{display: "table"}}>
+                        <bootstrap.InputGroup.Addon>
                             <components.Icon
                                 color={this.getTheme().colors.iconSearchUser}
                                 icon={"search"}
                                 size={"18px"}
                                 style={{lineHeight: "14px"}}
                             />
-                        }
-                        onChange={(input) => this.setState({inputFilter: input.target.value})}
-                        placeholder={stringIt.filterUserSite}
-                        style={{
-                            borderRadius: "0px",
-                            width: "40%",
-                            borderLeft: "0px",
-                            WebkitBoxShadow: "none",
-                            boxShadow: "none"
-                        }}
-                        type="text"
-                    />
+                        </bootstrap.InputGroup.Addon>
+                        <bootstrap.FormControl
+                            onChange={input => this.setState({inputFilter: input.target.value})}
+                            placeholder={stringIt.filterUserSite}
+                            style={{
+                                borderRadius: "0px",
+                                width: "40%",
+                                borderLeft: "0px",
+                                WebkitBoxShadow: "none",
+                                boxShadow: "none"
+                            }}
+                            type="text"
+                        />
+                    </bootstrap.FormGroup>
                     <div style={{display: "flex", marginRight: "12px"}}>
                         <span style={{paddingTop: "5px", fontStyle: "italic", fontSize: "12pt", width: "125px"}} >
                             {stringIt.removeAllSites}
@@ -337,7 +339,7 @@ var User = React.createClass({
             <div className="users-admin">
                 <div style={styles(theme).titlePage}>
                     <Router.Link style={{float: "left", paddingTop: "6px"}} to="/users/">
-                        <bootstrap.Button bsStyle="link" style={{height: "40px", outline: "0px", padding: "0"}}>
+                        <bootstrap.Button bsStyle="link" style={{height: "40px", outline: "0px", padding: "0px"}}>
                             <components.Icon
                                 color={theme.colors.iconHeader}
                                 icon={"arrow-left"}
@@ -385,6 +387,7 @@ var User = React.createClass({
                         activeKey={this.state.key}
                         animation={false}
                         bsStyle={"tabs"}
+                        id={"user"}
                         onSelect={this.activeKey}
                     >
                         {this.renderRolesTab()}

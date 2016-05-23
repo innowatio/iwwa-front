@@ -33,7 +33,7 @@ var styleH2 = ({colors}) => ({
     fontWeight: "400",
     textTransform: "uppercase",
     color: colors.white,
-    padding: "0"
+    padding: "0px"
 });
 
 var styleH3 = ({colors}) => ({
@@ -61,8 +61,8 @@ var styleUnit  = ({colors}) => ({
     fontSize: "60px",
     fontWeight: "600",
     lineHeight: "10px",
-    margin: "0",
-    padding: "0",
+    margin: "0px",
+    padding: "0px",
     color: colors.white
 });
 var styleCongratMessage = ({colors}) => ({
@@ -86,8 +86,8 @@ var styleRightPane  = ({colors}) => ({
 var styleSiteButton = ({colors}) => ({
     width: "50px",
     height: "50px",
-    padding: "0",
-    border: "0",
+    padding: "0px",
+    border: "0px",
     borderRadius: "100%",
     clear: "both",
     margin: "12px 12px 0 0",
@@ -350,6 +350,7 @@ var SummaryConsumptions = React.createClass({
             <bootstrap.Tabs
                 activeKey={this.state.period}
                 className="style-tab"
+                id={"summary-consumptions"}
                 onSelect={this.onChangeTabValue}
             >
                 <Radium.Style
@@ -373,7 +374,7 @@ var SummaryConsumptions = React.createClass({
                         ".nav-tabs > li > a": {
                             height: "44px",
                             color: colors.white,
-                            border: "0",
+                            border: "0px",
                             outline: "none",
                             borderBottom: "3px solid" + colors.secondary
                         },
