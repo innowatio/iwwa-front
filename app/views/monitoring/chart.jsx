@@ -1,5 +1,5 @@
 import React, {PropTypes} from "react";
-import {Col, FormControl} from "react-bootstrap";
+import {Col, ControlLabel, FormControl} from "react-bootstrap";
 import IPropTypes from "react-immutable-proptypes";
 import {connect} from "react-redux";
 import {Link} from "react-router";
@@ -33,6 +33,30 @@ const buttonStyle = ({colors}) => ({
     padding: "0px",
     textAlign: "center",
     margin: "0px 5px"
+});
+
+const inputStyleRules = ({colors}) => ({
+    "": {
+        padding: "0px 5px",
+        margin: "0px 0px 20px 0px"
+    },
+    "label.control-label": {
+        display: "block",
+        color: colors.white,
+        fontWeight: "300",
+        padding: "0px",
+        margin: "0px"
+    },
+    "label.control-label span": {
+        display: "block"
+    },
+    "input": {
+        borderBottom: "1px solid",
+        borderColor: colors.white + "!important"
+    },
+    "span": {
+        display: "none"
+    }
 });
 
 var MonitoringChartView = React.createClass({
@@ -146,6 +170,18 @@ var MonitoringChartView = React.createClass({
             return isNull;
         });
     },
+    getYAxis: function () {
+        let yAxis = [];
+        let series = this.getChartSeries();
+        if (series && !this.haveNullSeries(series)) {
+            series.forEach (item => {
+                if (yAxis.indexOf(item.unitOfMeasurement) < 0) {
+                    yAxis.push(item.unitOfMeasurement);
+                }
+            });
+        }
+        return yAxis;
+    },
     renderChart: function () {
         let series = this.getChartSeries();
         if (series && !this.haveNullSeries(series)) {
@@ -155,9 +191,133 @@ var MonitoringChartView = React.createClass({
                     ref="monitoringChart"
                     saveConfig={this.props.saveChartConfig}
                     series={series}
+                    yAxis={this.getYAxis()}
                 />
             );
         }
+    },
+    renderYAxisValuesChange: function (theme) {
+        return (
+            <div style={{
+                padding: "20px",
+                borderBottom: "solid 1px",
+                borderColor: theme.colors.white
+            }}
+            >
+                <label style={{
+                    color: theme.colors.white,
+                    display: "inherit",
+                    fontSize: "16px",
+                    marginBottom: "10px",
+                    textAlign: "center"
+                }}
+                >
+                    {"CAMBIA VALORI ASSI Y"}
+                </label>
+                {this.renderYAxisInputs(theme)}
+                <div style={{textAlign: "center"}}>
+                    <Button
+                        onClick={this.changeYAxisValues}
+                        style={{
+                            ...styles(theme).buttonSelectChart,
+                            width: "120px",
+                            height: "40px",
+                            lineHeight: "40px",
+                            padding: "0px",
+                            margin: "0px 0px 0px 30px",
+                            fontSize: "20px",
+                            border: "0px",
+                            backgroundColor: this.getTheme().colors.buttonPrimary
+                        }}
+                    >
+                        {"OK"}
+                    </Button>
+                    <Button
+                        bsStyle={"link"}
+                        onClick={this.props.resetYAxisValues}
+                    >
+                        <Icon
+                            color={theme.colors.iconArrow}
+                            icon={"reset"}
+                            size={"35px"}
+                            style={{
+                                float: "right",
+                                verticalAlign: "middle",
+                                lineHeight: "20px"
+                            }}
+                        />
+                    </Button>
+                </div>
+            </div>
+        );
+    },
+    renderYAxisInputs: function (theme) {
+        let yAxis = this.getYAxis();
+        let components = [];
+        yAxis.forEach((y) => {
+            let yMinField = "yAxisMin" + y;
+            let yMaxField = "yAxisMax" + y;
+            components.push(
+                <div>
+                    <Col className="input-style" md={6}>
+                        <Radium.Style
+                            rules={inputStyleRules(theme)}
+                            scopeSelector=".input-style"
+                        />
+                        <ControlLabel>{y +" min:"}</ControlLabel>
+                        <FormControl
+                            type="number"
+                            bsStyle={this.getYAxisValidationState()}
+                            hasFeedback={true}
+                            ref={yMinField}
+                            onChange={input => {
+                                let newState = {};
+                                newState[yMinField] = input.target.value;
+                                this.setState(newState);
+                            }}
+                            style={{...styles(theme).inputLine}}
+                            value={this.state[yMinField]}
+                        />
+                    </Col>
+                    <Col className="input-style" md={6}>
+                        <Radium.Style
+                            rules={inputStyleRules(theme)}
+                            scopeSelector=".input-style"
+                        />
+                        <ControlLabel>{y + " max:"}</ControlLabel>
+                        <FormControl
+                            type="number"
+                            bsStyle={this.getYAxisValidationState()}
+                            hasFeedback={true}
+                            ref={yMaxField}
+                            onChange={input => {
+                                let newState = {};
+                                newState[yMaxField] = input.target.value;
+                                this.setState(newState)
+                            }}
+                            style={{...styles(theme).inputLine}}
+                            value={this.state[yMaxField]}
+                    />
+                    </Col>
+                </div>
+            );
+        });
+        return components;
+    },
+    renderChartStyleButton: function (theme, chartType, icon) {
+        return (
+            <Button style={buttonStyle(theme)} onClick={() => {
+                this.props.selectChartType(chartType);
+            }}
+            >
+                <Icon
+                    color={theme.colors.iconHeader}
+                    icon={icon}
+                    size={"36px"}
+                    style={{lineHeight: "20px"}}
+                />
+            </Button>
+        );
     },
     render: function () {
         const theme = this.getTheme();
@@ -194,177 +354,13 @@ var MonitoringChartView = React.createClass({
                             {"SCEGLI LO STILE DEL GRAFICO"}
                         </label>
                         <div>
-                            <Button style={buttonStyle(theme)} onClick={() => {
-                                this.props.selectChartType("spline");
-                            }}
-                            >
-                                <Icon
-                                    color={theme.colors.iconHeader}
-                                    icon={"chart-style1"}
-                                    size={"36px"}
-                                    style={{lineHeight: "20px"}}
-                                />
-                            </Button>
-                            <Button style={buttonStyle(theme)} onClick={() => {
-                                this.props.selectChartType("column");
-                            }}
-                            >
-                                <Icon
-                                    color={theme.colors.iconHeader}
-                                    icon={"chart-style2"}
-                                    size={"36px"}
-                                    style={{lineHeight: "20px"}}
-                                />
-                            </Button>
-                            <Button style={buttonStyle(theme)} onClick={() => {
-                                this.props.selectChartType("stacked");
-                            }}
-                            >
-                                <Icon
-                                    color={theme.colors.iconHeader}
-                                    icon={"chart-style4"}
-                                    size={"36px"}
-                                    style={{lineHeight: "20px"}}
-                                />
-                            </Button>
-                            <Button style={buttonStyle(theme)} onClick={() => {
-                                this.props.selectChartType("percent");
-                            }}
-                            >
-                                <Icon
-                                    color={theme.colors.iconHeader}
-                                    icon={"chart-style3"}
-                                    size={"36px"}
-                                    style={{lineHeight: "20px"}}
-                                />
-                            </Button>
+                            {this.renderChartStyleButton(theme, "spline", "chart-style1")}
+                            {this.renderChartStyleButton(theme, "column", "chart-style2")}
+                            {this.renderChartStyleButton(theme, "stacked", "chart-style4")}
+                            {this.renderChartStyleButton(theme, "percent", "chart-style3")}
                         </div>
                     </div>
-                    <div style={{
-                        padding: "20px",
-                        borderBottom: "solid 1px",
-                        borderColor: theme.colors.white
-                    }}
-                    >
-                        <label style={{
-                            color: theme.colors.white,
-                            display: "inherit",
-                            fontSize: "16px",
-                            marginBottom: "10px",
-                            textAlign: "center"
-                        }}
-                        >
-                            {"CAMBIA VALORI ASSI"}
-                        </label>
-                        <Col className="input-style" md={6}>
-                            <Radium.Style
-                                rules={{
-                                    "": {
-                                        padding: "0px 5px",
-                                        margin: "0px"
-                                    },
-                                    "label.control-label": {
-                                        display: "block",
-                                        color: theme.colors.white,
-                                        fontWeight: "300",
-                                        padding: "0px",
-                                        margin: "0px"
-                                    },
-                                    "label.control-label span": {
-                                        display: "block"
-                                    },
-                                    "input": {
-                                        borderBottom: "1px solid",
-                                        borderColor: theme.colors.white + "!important"
-                                    },
-                                    "span": {
-                                        display: "none"
-                                    }
-                                }}
-                                scopeSelector=".input-style"
-                            />
-                            <FormControl
-                                type="text"
-                                label="Asse Y min:"
-                                bsStyle={this.getYAxisValidationState()}
-                                hasFeedback={true}
-                                ref="yAxisMin"
-                                onChange={input => this.setState({yAxisMin: input.target.value})}
-                                style={{...styles(theme).inputLine}}
-                                value={this.state.yAxisMin}
-                            />
-                        </Col>
-                        <Col className="input-style" md={6}>
-                            <Radium.Style
-                                rules={{
-                                    "": {
-                                        padding: "0px 5px",
-                                        margin: "0px"
-                                    },
-                                    "label.control-label": {
-                                        color: theme.colors.white,
-                                        fontWeight: "300",
-                                        padding: "0px",
-                                        margin: "0px"
-                                    },
-                                    "label.control-label span": {
-                                        display: "block"
-                                    },
-                                    "input": {
-                                        borderBottom: "1px solid",
-                                        borderColor: theme.colors.white + "!important"
-                                    },
-                                    "span": {
-                                        display: "none"
-                                    }
-                                }}
-                                scopeSelector=".input-style"
-                            />
-                            <FormControl
-                                type="text"
-                                label="Asse Y max:"
-                                bsStyle={this.getYAxisValidationState()}
-                                hasFeedback={true}
-                                ref="yAxisMax"
-                                onChange={input => this.setState({yAxisMax: input.target.value})}
-                                style={{...styles(theme).inputLine}}
-                                value={this.state.yAxisMax}
-                            />
-                        </Col>
-                        <div style={{textAlign: "center"}}>
-                            <Button
-                                onClick={this.changeYAxisValues}
-                                style={{
-                                    ...styles(theme).buttonSelectChart,
-                                    width: "120px",
-                                    height: "40px",
-                                    lineHeight: "40px",
-                                    padding: "0px",
-                                    margin: "0px 0px 0px 30px",
-                                    fontSize: "20px",
-                                    border: "0px",
-                                    backgroundColor: this.getTheme().colors.buttonPrimary
-                                }}
-                            >
-                                {"OK"}
-                            </Button>
-                            <Button 
-                                bsStyle={"link"}
-                                onClick={this.props.resetYAxisValues}
-                            >
-                                <Icon
-                                    color={theme.colors.iconArrow}
-                                    icon={"reset"}
-                                    size={"35px"}
-                                    style={{
-                                        float: "right",
-                                        verticalAlign: "middle",
-                                        lineHeight: "20px"
-                                    }}
-                                />
-                            </Button>
-                        </div>
-                    </div>
+                    {this.renderYAxisValuesChange(theme)}
                     <div style={{padding: "20px", borderBottom: "solid 1px", borderColor: theme.colors.white}}>
                         <div style={{margin: "8px 0px"}}>
                             <Button style={buttonStyle(theme)} onClick={() => {
