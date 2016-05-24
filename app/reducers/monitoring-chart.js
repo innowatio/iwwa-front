@@ -34,7 +34,7 @@ const defaultNullConfig = (state, object) => {
 export function monitoringChart (state = defaultState, action) {
     switch (action.type) {
         case ADD_TO_FAVORITE: {
-            let id = UUID.create();
+            let id = UUID.create().hex;
             let favorites = state.favorites.set(id, Immutable.Map({
                 _id: id,
                 config: action.payload
