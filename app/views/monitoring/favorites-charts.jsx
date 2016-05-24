@@ -58,7 +58,7 @@ var MonitoringFavoritesCharts = React.createClass({
         return this.context.theme || defaultTheme;
     },
     renderFavoritesChartsColumns: function (element) {
-        const theme = this.getTheme();
+        // const theme = this.getTheme();
         return (
             <div>
                 {element.get("_id")}
