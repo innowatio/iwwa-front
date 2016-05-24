@@ -9,7 +9,8 @@ var MonitoringChart = React.createClass({
         chartState: PropTypes.object.isRequired,
         saveConfig: PropTypes.func.isRequired,
         series: PropTypes.array.isRequired,
-        style: PropTypes.object
+        style: PropTypes.object,
+        yAxis: PropTypes.array.isRequired
     },
     contextTypes: {
         theme: PropTypes.object
@@ -52,16 +53,22 @@ var MonitoringChart = React.createClass({
     },
     getYAxis: function (props) {
         let yAxis = [];
-        props.series.forEach (item => {
-            if (!R.find(R.propEq("key", item.unitOfMeasurement))(yAxis)) {
-                yAxis.push({
-                    key: item.unitOfMeasurement,
-                    labels: {
-                        format: "{value} " + item.unitOfMeasurement
-                    },
-                    opposite: yAxis.length > 0
-                });
+        props.yAxis.forEach (item => {
+            let {min, max} = props.chartState.yAxis[item];
+            let config = {
+                key: item,
+                labels: {
+                    format: "{value} " + item
+                },
+                opposite: yAxis.length > 0
+            };
+            if (min) {
+                config.min = min;
             }
+            if (max) {
+                config.max = max;
+            }
+            yAxis.push(config);
         });
         return yAxis;
     },
