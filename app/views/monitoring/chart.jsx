@@ -81,6 +81,9 @@ var MonitoringChartView = React.createClass({
         this.props.asteroid.subscribe("sensors");
         this.subscribeToSensorsData(this.props);
     },
+    componentWillReceiveProps: function (props) {
+        this.setState(this.getStateFromProps(props));
+    },
     getTheme: function () {
         return this.context.theme || defaultTheme;
     },
@@ -98,10 +101,19 @@ var MonitoringChartView = React.createClass({
         ];
     },
     getStateFromProps: function (props) {
-        return {
-            yAxisMax: props.monitoringChart.yAxis.max || "",
-            yAxisMin: props.monitoringChart.yAxis.min || ""
+        let state = {
+            yAxis: props.monitoringChart.yAxis
         };
+        let yAxis = this.getYAxis(props);
+        yAxis.forEach(y => {
+            if (!state.yAxis[y]) {
+                state.yAxis[y] = {
+                    min: "",
+                    max: ""
+                };
+            }
+        });
+        return state;
     },
     getSensorObj: function (sensor, allSensor) {
         return typeof sensor === "string" ? allSensor.get(sensor) : sensor;
@@ -126,9 +138,9 @@ var MonitoringChartView = React.createClass({
             });
         });
     },
-    getChartSeries: function () {
+    getChartSeries: function (props) {
         let allSensors = this.getAllSensors();
-        const monitoringCharts = this.props.monitoringChart.sensorsToDraw.map(sensor => {
+        const monitoringCharts = props.monitoringChart.sensorsToDraw.map(sensor => {
             let sensorObj = this.getSensorObj(sensor, allSensors);
             let unit = sensorObj.get("unitOfMeasurement") ? sensorObj.get("unitOfMeasurement") : getUnitOfMeasurement(sensorObj.get("measurementType"));
             return {
@@ -144,22 +156,22 @@ var MonitoringChartView = React.createClass({
                 unitOfMeasurement: unit
             };
         });
-        const readingsDailyAggregates = this.props.collections.get("readings-daily-aggregates");
+        const readingsDailyAggregates = props.collections.get("readings-daily-aggregates");
         if (readingsDailyAggregates) {
             return readingsDailyAggregatesToHighchartsData(readingsDailyAggregates, monitoringCharts);
         }
     },
     getYAxisValidationState: function () {
-        let {yAxisMin, yAxisMax} = this.state;
-        if (isNaN(yAxisMin) || isNaN(yAxisMax)) return "error";
-        if (parseInt(yAxisMin) > parseInt(yAxisMax)) return "warning";
-        return "success";
+        let yAxis = this.getYAxis(this.props);
+        let success = true;
+        yAxis.forEach((y) => {
+            let {min, max} = this.state.yAxis[y];
+            success = success && (parseInt(min) < parseInt(max));
+        });
+        return success ? "success" : "error";
     },
     changeYAxisValues: function () {
-        this.props.changeYAxisValues({
-            max: this.state.yAxisMax,
-            min: this.state.yAxisMin
-        });
+        this.props.changeYAxisValues(this.state.yAxis);
     },
     haveNullSeries: function (series) {
         return series.some((it) => {
@@ -170,9 +182,9 @@ var MonitoringChartView = React.createClass({
             return isNull;
         });
     },
-    getYAxis: function () {
+    getYAxis: function (props) {
         let yAxis = [];
-        let series = this.getChartSeries();
+        let series = this.getChartSeries(props);
         if (series && !this.haveNullSeries(series)) {
             series.forEach (item => {
                 if (yAxis.indexOf(item.unitOfMeasurement) < 0) {
@@ -183,7 +195,7 @@ var MonitoringChartView = React.createClass({
         return yAxis;
     },
     renderChart: function () {
-        let series = this.getChartSeries();
+        let series = this.getChartSeries(this.props);
         if (series && !this.haveNullSeries(series)) {
             return (
                 <MonitoringChart
@@ -191,7 +203,7 @@ var MonitoringChartView = React.createClass({
                     ref="monitoringChart"
                     saveConfig={this.props.saveChartConfig}
                     series={series}
-                    yAxis={this.getYAxis()}
+                    yAxis={this.getYAxis(this.props)}
                 />
             );
         }
@@ -252,11 +264,9 @@ var MonitoringChartView = React.createClass({
         );
     },
     renderYAxisInputs: function (theme) {
-        let yAxis = this.getYAxis();
+        let yAxis = this.getYAxis(this.props);
         let components = [];
         yAxis.forEach((y) => {
-            let yMinField = "yAxisMin" + y;
-            let yMaxField = "yAxisMax" + y;
             components.push(
                 <div>
                     <Col className="input-style" md={6}>
@@ -269,14 +279,13 @@ var MonitoringChartView = React.createClass({
                             type="number"
                             bsStyle={this.getYAxisValidationState()}
                             hasFeedback={true}
-                            ref={yMinField}
                             onChange={input => {
-                                let newState = {};
-                                newState[yMinField] = input.target.value;
+                                let newState = JSON.parse(JSON.stringify(this.state));
+                                newState.yAxis[y].min = input.target.value;
                                 this.setState(newState);
                             }}
                             style={{...styles(theme).inputLine}}
-                            value={this.state[yMinField]}
+                            value={this.state.yAxis[y].min}
                         />
                     </Col>
                     <Col className="input-style" md={6}>
@@ -289,15 +298,14 @@ var MonitoringChartView = React.createClass({
                             type="number"
                             bsStyle={this.getYAxisValidationState()}
                             hasFeedback={true}
-                            ref={yMaxField}
                             onChange={input => {
-                                let newState = {};
-                                newState[yMaxField] = input.target.value;
-                                this.setState(newState)
+                                let newState = JSON.parse(JSON.stringify(this.state));
+                                newState.yAxis[y].max = input.target.value;
+                                this.setState(newState);
                             }}
                             style={{...styles(theme).inputLine}}
-                            value={this.state[yMaxField]}
-                    />
+                            value={this.state.yAxis[y].max}
+                        />
                     </Col>
                 </div>
             );
