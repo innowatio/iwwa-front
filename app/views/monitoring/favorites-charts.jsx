@@ -10,6 +10,22 @@ import {Button, CollectionItemList, Icon, SectionToolbar} from "components";
 
 
 const styles = ({colors}) => ({
+    headerContainer: {
+        height: "50px",
+        borderTop: "1px solid " + colors.borderAlarmsRow,
+        clear: "both",
+        padding: "0px"
+    },
+    favouriteNameStyle: {
+        width: "50%",
+        float: "left",
+        margin: "0px",
+        padding: "0px 5px",
+        fontSize: "18px",
+        lineHeight: "45px",
+        fontWeight: "300",
+        color:colors.mainFontColor
+    },
     hoverStyle: {
         clear: "both",
         backgroundColor: colors.backgroundMonitoringRowChart
@@ -57,11 +73,32 @@ var MonitoringFavoritesCharts = React.createClass({
     getTheme: function () {
         return this.context.theme || defaultTheme;
     },
-    renderFavoritesChartsColumns: function (element) {
-        // const theme = this.getTheme();
+    renderFavoritesChartsColumns: function (element, item) {
+        const theme = this.getTheme();
         return (
-            <div>
-                {element.get("_id")}
+            <div style={styles(theme).headerContainer}>
+                <div style={styles(theme).favouriteNameStyle}>
+                    <p>{element.get("_id")}</p>
+                </div>
+                <Button
+                    className="pull-right"
+                    style={{
+                        backgroundColor: theme.colors.transparent,
+                        border: "0px",
+                        width: "71px"
+                    }}
+                >
+                    <Icon
+                        color={theme.colors.iconHeader}
+                        icon={"chart"}
+                        onClick={() => {
+                            this.props.selectFavoriteChart(item);
+                            this.context.router.push("/monitoring/chart/");
+                        }}
+                        size={"34px"}
+                        style={{verticalAlign: "middle", lineHeight: "40px"}}
+                    />
+                </Button>
             </div>
         );
         // [
@@ -113,7 +150,11 @@ var MonitoringFavoritesCharts = React.createClass({
                     title={"Torna al monitoring"}
                 >
                     <div style={{float:"right", width: "auto"}}>
-                        <Button style={styles(theme).sectionToolbarIcon}>
+                        <Button
+                            style={styles(theme).sectionToolbarIcon}
+                            overStyle={{background:"blue"}}
+                            activeStyle={{background:"red"}}
+                        >
                             <Icon
                                 color={theme.colors.iconAlarmAction}
                                 icon={"star-o"}
