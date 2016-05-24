@@ -105,7 +105,7 @@ var SensorsDropArea = React.createClass({
                                 border: "1px solid " + theme.colors.white,
                                 width: "20px",
                                 height: "20px",
-                                lineHeight: "15px",
+                                lineHeight: "18px",
                                 overflow: "hidden",
                                 borderRadius: "30px",
                                 textAlign: "center",

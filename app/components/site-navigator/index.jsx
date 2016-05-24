@@ -66,7 +66,7 @@ var SiteNavigator = React.createClass({
     getFilterCriteria: function (values) {
         const NOT_VISIBLE_SENSORS = ["CO2", "THL", "POD-ANZ"];
         return values.filter((value) => {
-            return NOT_VISIBLE_SENSORS.indexOf(value.get("type").toUpperCase()) < 0;
+            return NOT_VISIBLE_SENSORS.indexOf((value.get("type") || "").toUpperCase()) < 0;
         });
     },
     getFilteredValues: function () {

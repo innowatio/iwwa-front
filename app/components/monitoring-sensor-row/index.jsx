@@ -37,7 +37,8 @@ const styles = ({colors}) => ({
     },
     buttonsContainer: {
         float: "right",
-        maxWidth: "130px"
+        maxWidth: "130px",
+        overflow: "hidden"
     }
 });
 

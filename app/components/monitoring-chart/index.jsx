@@ -78,34 +78,47 @@ var MonitoringChart = React.createClass({
             legend: {
                 enabled: true,
                 itemStyle: {
-                    color: "#8D8D8E"
+                    color: theme.colors.mainFontColor
                 },
                 itemHoverStyle: {
-                    color: "#8D8D8E"
+                    color: theme.colors.mainFontColor
                 }
             },
             rangeSelector: {
                 buttonTheme: { // styles for the buttons
-                    fill: theme.colors.buttonPrimary,
-                    r: 8,
+                    fill: "none",
+                    r: 12,
+                    stroke: theme.colors.mainFontColor,
+                    "stroke-width": 1,
+                    width: 50,
                     style: {
-                        background: theme.colors.backgroundChartSelectedButton,
-                        border: "1px solid "+ theme.colors.borderChartSelectedButton,
-                        color: theme.colors.textSelectButton,
-                        fontWeight: "300",
-                        height: "30px",
-                        width: "85px",
-                        padding: "5px 10px"
+                        color: theme.colors.mainFontColor
                     },
                     states: {
-                        hover: {},
+                        hover: {
+                            fill: theme.colors.buttonPrimary,
+                            stroke: theme.colors.buttonPrimary,
+                            style: {
+                                color: theme.colors.white
+                            }
+                        },
                         select: {
+                            stroke: theme.colors.buttonPrimary,
                             fill: theme.colors.buttonPrimary,
                             style: {
-                                color: "white"
+                                color: theme.colors.white
                             }
                         }
                     }
+                },
+                inputBoxBorderColor:  theme.colors.mainFontColor,
+                inputStyle: {
+                    color: theme.colors.buttonPrimary,
+                    fontWeight: "600"
+                },
+                labelStyle: {
+                    color: theme.colors.mainFontColor,
+                    fontWeight: "600"
                 },
                 buttons: [
                     {type: "day", count: 1, text: "1 gg"},
@@ -115,7 +128,7 @@ var MonitoringChart = React.createClass({
                     {type: "ytd", text: "YTD"},
                     {type: "all", text: "Tutto"}
                 ],
-                selected: 2
+                selected: 1
             },
             tooltip: {
                 shared: true
@@ -123,7 +136,7 @@ var MonitoringChart = React.createClass({
             yAxis: yAxis
         };
     },
-    
+
     getCommonChartConfig: function () {
         const theme = this.getTheme();
         return {
@@ -152,7 +165,7 @@ var MonitoringChart = React.createClass({
                 stackLabels: {
                     enabled: true,
                     style: {
-                        fontWeight: "bold"
+                        fontWeight: "600"
                     }
                 }
             },
