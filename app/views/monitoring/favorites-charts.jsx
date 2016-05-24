@@ -57,50 +57,55 @@ var MonitoringFavoritesCharts = React.createClass({
     getTheme: function () {
         return this.context.theme || defaultTheme;
     },
-    renderFavoritesChartsColumns: function () {
+    renderFavoritesChartsColumns: function (element) {
         const theme = this.getTheme();
-        return [
-            {
-                key: "_id",
-                style: function () {
-                    return {
-                        borderRight: "solid 1px black",
-                        width: "96%",
-                        height: "100%",
-                        textAlign: "left"
-                    };
-                }
-            },
-            {
-                key: "chart",
-                style: function () {
-                    return {
-                        backgroundColor: "#535353",
-                        width: "1%"
-                    };
-                },
-                valueFormatter: (value, item) => (
-                    <Icon
-                        color={theme.colors.iconHeader}
-                        icon={"chart"}
-                        onClick={() => {
-                            this.props.selectFavoriteChart(item);
-                            this.context.router.push("/monitoring/chart/");
-                        }}
-                        size={"27px"}
-                    />
-                )
-            },
-            {
-                key: "",
-                valueFormatter: () => (
-                    <div />
-                )
-            }
-        ];
+        return (
+            <div>
+                {element.get("_id")}
+            </div>
+        );
+        // [
+        //     {
+        //         key: "_id",
+        //         style: function () {
+        //             return {
+        //                 borderRight: "solid 1px black",
+        //                 width: "96%",
+        //                 height: "100%",
+        //                 textAlign: "left"
+        //             };
+        //         }
+        //     },
+        //     {
+        //         key: "chart",
+        //         style: function () {
+        //             return {
+        //                 backgroundColor: "#535353",
+        //                 width: "1%"
+        //             };
+        //         },
+        //         valueFormatter: (value, item) => (
+        //             <Icon
+        //                 color={theme.colors.iconHeader}
+        //                 icon={"chart"}
+        //                 onClick={() => {
+        //                     this.props.selectFavoriteChart(item);
+        //                     this.context.router.push("/monitoring/chart/");
+        //                 }}
+        //                 size={"27px"}
+        //             />
+        //         )
+        //     },
+        //     {
+        //         key: "",
+        //         valueFormatter: () => (
+        //             <div />
+        //         )
+        //     }
+        // ];
     },
     render: function () {
-        const {colors} = this.getTheme();
+        const theme = this.getTheme();
         return (
             <div>
                 <SectionToolbar
@@ -108,17 +113,17 @@ var MonitoringFavoritesCharts = React.createClass({
                     title={"Torna al monitoring"}
                 >
                     <div style={{float:"right", width: "auto"}}>
-                        <Button style={styles(this.getTheme()).sectionToolbarIcon}>
+                        <Button style={styles(theme).sectionToolbarIcon}>
                             <Icon
-                                color={colors.iconAlarmAction}
+                                color={theme.colors.iconAlarmAction}
                                 icon={"star-o"}
                                 size={"28px"}
                                 style={{verticalAlign: "middle"}}
                             />
                         </Button>
-                        <Button style={styles(this.getTheme()).sectionToolbarIcon}>
+                        <Button style={styles(theme).sectionToolbarIcon}>
                             <Icon
-                                color={colors.iconAlarmAction}
+                                color={theme.colors.iconAlarmAction}
                                 icon={"edit"}
                                 size={"28px"}
                                 style={{verticalAlign: "middle"}}
@@ -136,11 +141,10 @@ var MonitoringFavoritesCharts = React.createClass({
                         collections={this.props.monitoringChart.favorites}
                         headerComponent={this.renderFavoritesChartsColumns}
                         initialVisibleRow={16}
-                        filter={this.getSearchFilter}
                         hover={true}
-                        hoverStyle={styles(this.getTheme()).hoverStyle}
-                        lazyLoadButtonStyle={styles(this.getTheme()).lazyLoadButtonStyle}
-                        lazyLoadButtonStyleContainer={styles(this.getTheme()).lazyLoadButtonStyleContainer}
+                        hoverStyle={styles(theme).hoverStyle}
+                        lazyLoadButtonStyle={styles(theme).lazyLoadButtonStyle}
+                        lazyLoadButtonStyleContainer={styles(theme).lazyLoadButtonStyleContainer}
                         lazyLoadLabel={"Carica altri"}
                         showFilterInput={true}
                     />

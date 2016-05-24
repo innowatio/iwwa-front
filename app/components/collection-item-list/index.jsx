@@ -120,7 +120,6 @@ var CollectionItemList = React.createClass({
         ) : null;
     },
     render: function () {
-        console.log();
         const collectionList = this.props.collections
             .sort(this.props.sort)
             .filter(this.filter)
