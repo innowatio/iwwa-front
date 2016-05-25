@@ -1,5 +1,5 @@
 import React, {PropTypes} from "react";
-import {Col, ControlLabel, FormControl} from "react-bootstrap";
+import {Col, Clearfix, Row, ControlLabel, FormControl} from "react-bootstrap";
 import IPropTypes from "react-immutable-proptypes";
 import {connect} from "react-redux";
 import {Link} from "react-router";
@@ -228,7 +228,7 @@ var MonitoringChartView = React.createClass({
                     {"CAMBIA VALORI ASSI Y"}
                 </label>
                 {this.renderYAxisInputs(theme)}
-                <div style={{textAlign: "center"}}>
+                <div style={{textAlign: "center", marginRight: "20px"}}>
                     <Button
                         onClick={this.changeYAxisValues}
                         style={{
@@ -269,7 +269,7 @@ var MonitoringChartView = React.createClass({
         let components = [];
         yAxis.forEach((y) => {
             components.push(
-                <div>
+                <Row>
                     <Col className="input-style" md={6}>
                         <Radium.Style
                             rules={inputStyleRules(theme)}
@@ -308,7 +308,7 @@ var MonitoringChartView = React.createClass({
                             value={this.state.yAxis[y].max}
                         />
                     </Col>
-                </div>
+                </Row>
             );
         });
         return components;
@@ -320,10 +320,22 @@ var MonitoringChartView = React.createClass({
             }}
             >
                 <Icon
-                    color={theme.colors.iconHeader}
+                    color={theme.colors.white}
                     icon={icon}
                     size={"36px"}
                     style={{lineHeight: "20px"}}
+                />
+            </Button>
+        );
+    },
+    renderTemporalButton:  function (theme, icon) {
+        return (
+            <Button style={buttonStyle(theme)}>
+                <Icon
+                    color={theme.colors.white}
+                    icon={icon}
+                    size={"32px"}
+                    style={{lineHeight: "20px", verticalAlign: "middle"}}
                 />
             </Button>
         );
@@ -370,8 +382,8 @@ var MonitoringChartView = React.createClass({
                         </div>
                     </div>
                     {this.renderYAxisValuesChange(theme)}
-                    <div style={{padding: "20px", borderBottom: "solid 1px", borderColor: theme.colors.white}}>
-                        <div style={{margin: "8px 0px"}}>
+                    <div style={{textAlign: "center", marginTop: "25px", borderBottom: "solid 1px", borderColor: theme.colors.white}}>
+                        <Col lg={6} md={6} xs={12}>
                             <Button style={buttonStyle(theme)} onClick={() => {
                                 if (self.refs.monitoringChart) {
                                     self.props.addToFavorite(self.refs.monitoringChart.state.config);
@@ -385,18 +397,18 @@ var MonitoringChartView = React.createClass({
                                     style={{lineHeight: "20px"}}
                                 />
                             </Button>
-                            <label style={{
-                                marginLeft: "5px",
+                            <p style={{
+                                marginBottom: "25px",
                                 fontSize: "16px",
                                 color: theme.colors.navText,
                                 fontWeight: "300",
                                 cursor: "pointer"
                             }}
                             >
-                                {"Aggiungi grafico ai preferiti"}
-                            </label>
-                        </div>
-                        <div style={{margin: "8px 0px"}}>
+                                {"Aggiungi ai preferiti"}
+                            </p>
+                        </Col>
+                        <Col lg={6} md={6} xs={12}>
                             <Link to={"/monitoring/favorites/"}>
                                 <Button style={buttonStyle(theme)}>
                                     <Icon
@@ -406,79 +418,35 @@ var MonitoringChartView = React.createClass({
                                         style={{lineHeight: "20px"}}
                                     />
                                 </Button>
-                                <label style={{
-                                    marginLeft: "5px",
+                                <p style={{
+                                    marginBottom: "25px",
                                     fontSize: "16px",
                                     color: theme.colors.navText,
                                     fontWeight: "300",
                                     cursor: "pointer"
                                 }}
                                 >
-                                    {"Guarda l'elenco preferiti"}
-                                </label>
+                                    {"Visualizza elenco"}
+                                </p>
                             </Link>
-                        </div>
+                        </Col>
+                        <Clearfix>{}</Clearfix>
                     </div>
-                    <div style={{padding: "20px", borderBottom: "solid 1px", borderColor: theme.colors.white}}>
-                        <div style={{margin: "8px 0px"}}>
-                            <Button style={buttonStyle(theme)}>
-                                <Icon
-                                    color={theme.colors.iconHeader}
-                                    icon={"week"}
-                                    size={"32px"}
-                                    style={{lineHeight: "20px", verticalAlign: "middle"}}
-                                />
-                            </Button>
-                            <label style={{
-                                marginLeft: "5px",
-                                fontSize: "16px",
-                                color: theme.colors.navText,
-                                fontWeight: "300",
-                                cursor: "pointer"
-                            }}
-                            >
-                                {"Settimana precedente"}
-                            </label>
-                        </div>
-                        <div style={{margin: "8px 0px"}}>
-                            <Button style={buttonStyle(theme)}>
-                                <Icon
-                                    color={theme.colors.iconHeader}
-                                    icon={"month"}
-                                    size={"32px"}
-                                    style={{lineHeight: "20px", verticalAlign: "middle"}}
-                                />
-                            </Button>
-                            <label style={{
-                                marginLeft: "5px",
-                                fontSize: "16px",
-                                color: theme.colors.navText,
-                                fontWeight: "300",
-                                cursor: "pointer"
-                            }}
-                            >
-                                {"Mese precedente"}
-                            </label>
-                        </div>
-                        <div style={{margin: "8px 0px"}}>
-                            <Button style={buttonStyle(theme)}>
-                                <Icon
-                                    color={theme.colors.iconHeader}
-                                    icon={"year"}
-                                    size={"32px"}
-                                    style={{lineHeight: "20px", verticalAlign: "middle"}}
-                                />
-                            </Button>
-                            <label style={{
-                                marginLeft: "5px",
-                                fontSize: "16px",
-                                color: theme.colors.navText,
-                                fontWeight: "300",
-                                cursor: "pointer"
-                            }}
-                            >
-                                {"Anno precedente"}
-                            </label>
+                    <div style={{textAlign: "center", padding: "20px", borderBottom: "solid 1px", borderColor: theme.colors.white}}>
+                        <label style={{
+                            color: theme.colors.white,
+                            display: "inherit",
+                            fontSize: "16px",
+                            marginBottom: "10px",
+                            textAlign: "center"
+                        }}
+                        >
+                            {"VEDI SETTIMANA/MESE/ANNO PRECEDENTE:"}
+                        </label>
+                        <div>
+                            {this.renderTemporalButton(theme, "week", "week")}
+                            {this.renderTemporalButton(theme, "month", "month")}
+                            {this.renderTemporalButton(theme, "year", "year")}
                         </div>
                     </div>
                 </div>
