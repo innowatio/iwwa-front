@@ -1,5 +1,3 @@
-require("unit-setup.js");
-
 import {fromJS} from "immutable";
 
 import {getRoles, isAdmin, isYousaveUser} from "lib/roles-utils";

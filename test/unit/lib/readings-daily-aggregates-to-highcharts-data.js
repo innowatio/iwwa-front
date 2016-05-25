@@ -1,5 +1,3 @@
-import "unit-setup.js";
-
 import {fromJS} from "immutable";
 import moment from "moment";
 import {fromPairs, map, pipe, range, repeat} from "ramda";

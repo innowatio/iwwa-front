@@ -1,5 +1,4 @@
-require("unit-setup.js");
-import * as R from "ramda";
+import R from "ramda";
 import moment from "moment";
 
 import Button from "components/button";
