@@ -4,6 +4,19 @@ import ReactHighstock from "react-highcharts/bundle/ReactHighstock"; // Highstoc
 
 import {defaultTheme} from "lib/theme";
 
+const chartColors = [
+    "#D500F9",
+    "#FBC02E",
+    "#6EB1E2",
+    "#B388FF",
+    "#81C9C3",
+    "#ED6D47",
+    "#CCD73F",
+    "#15B0C4",
+    "#4E64AC",
+    "#E94581"
+];
+
 var MonitoringChart = React.createClass({
     propTypes: {
         chartState: PropTypes.object.isRequired,
@@ -41,10 +54,12 @@ var MonitoringChart = React.createClass({
                 data.push([nexDate + item.pointInterval, dataVal]);
                 nexDate += item.pointInterval;
             });
+            let yAxisIndex = R.findIndex(R.propEq("key", item.unitOfMeasurement))(yAxis);
             series.push({
-                name: item.name,
+                color: yAxis[yAxisIndex].labels.style.color,
                 data: data,
-                yAxis: R.findIndex(R.propEq("key", item.unitOfMeasurement))(yAxis)
+                name: item.name,
+                yAxis: yAxisIndex
             });
         });
         return {
@@ -53,12 +68,16 @@ var MonitoringChart = React.createClass({
     },
     getYAxis: function (props) {
         let yAxis = [];
-        props.yAxis.forEach (item => {
+        props.yAxis.forEach ((item, index) => {
             let {min, max} = props.chartState.yAxis[item];
+            let color = index < chartColors.length ? chartColors[index] : null;
             let config = {
                 key: item,
                 labels: {
-                    format: "{value} " + item
+                    format: "{value} " + item,
+                    style: {
+                        color: color
+                    }
                 },
                 opposite: yAxis.length > 0
             };
@@ -143,7 +162,6 @@ var MonitoringChart = React.createClass({
             yAxis: yAxis
         };
     },
-
     getCommonChartConfig: function () {
         const theme = this.getTheme();
         return {
@@ -156,10 +174,6 @@ var MonitoringChart = React.createClass({
     },
     getColumnConfig: function () {
         return {};
-    },
-    getLabels: function () {
-        // TODO
-        return ["a"];
     },
     getStackedConfig: function (props) {
         return {
