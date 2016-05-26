@@ -474,9 +474,9 @@ var SummaryConsumptions = React.createClass({
                         </components.FullscreenModal>
                     </div>
                     <div style={{margin: "5px 20px"}}>
-                        {this.props.consumptions.fullPath ? this.renderPeriodComparisons() : undefined}
-                        {this.props.consumptions.fullPath ? this.renderCustomersComparisons() : undefined}
-                        {this.props.consumptions.fullPath ? this.renderFeedbackBox() : undefined}
+                        {this.props.consumptions.fullPath ? this.renderPeriodComparisons() : null}
+                        {this.props.consumptions.fullPath ? this.renderCustomersComparisons() : null}
+                        {this.props.consumptions.fullPath ? this.renderFeedbackBox() : null}
                     </div>
                 </div>
             </div>

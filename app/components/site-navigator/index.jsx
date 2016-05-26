@@ -7,7 +7,7 @@ var React           = require("react");
 
 import components from "components";
 import {defaultTheme} from "lib/theme";
-import {styles} from "lib/styles_restyling";
+import {styles} from "lib/styles";
 
 const itemsStyle = (theme) => (R.merge(styles(theme).buttonBasicStyle, {
     background: theme.colors.primary,

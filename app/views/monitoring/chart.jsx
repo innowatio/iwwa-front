@@ -18,7 +18,7 @@ import {
 
 import {getUnitOfMeasurement} from "lib/sensors-decorators";
 import {extractSensorsFromFormula, getAllSensors, getSensorLabel} from "lib/sensors-utils";
-import {styles} from "lib/styles_restyling";
+import {styles} from "lib/styles";
 import {defaultTheme} from "lib/theme";
 import readingsDailyAggregatesToHighchartsData from "lib/readings-daily-aggregates-to-highcharts-data";
 

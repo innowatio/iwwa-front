@@ -9,7 +9,7 @@ import ReactPureRender from "react-addons-pure-render-mixin";
 var components       = require("components");
 var CollectionUtils  = require("lib/collection-utils");
 var stringIt         = require("lib/string-it");
-import {styles} from "lib/styles_restyling";
+import {styles} from "lib/styles";
 import {defaultTheme} from "lib/theme";
 
 var styleH3 = ({colors}) => ({

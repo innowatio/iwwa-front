@@ -22,7 +22,7 @@ import {
     resetZoom,
     setZoomExtremes
 } from "actions/chart";
-import {styles} from "lib/styles_restyling";
+import {styles} from "lib/styles";
 import {defaultTheme} from "lib/theme";
 import {getTitleForSingleSensor, getStringPeriod, getSensorName} from "lib/page-header-utils";
 

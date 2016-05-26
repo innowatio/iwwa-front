@@ -5,7 +5,7 @@ import Radium from "radium";
 import moment from "moment";
 import components from "components";
 import {defaultTheme} from "lib/theme";
-import {styles} from "lib/styles_restyling";
+import {styles} from "lib/styles";
 
 const stylesFunction = (theme) => ({
     buttonsWrap: {

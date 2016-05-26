@@ -3,7 +3,7 @@ import React, {PropTypes} from "react";
 
 import components from "components";
 import stringIt from "lib/string-it";
-import {styles} from "lib/styles_restyling";
+import {styles} from "lib/styles";
 import {defaultTheme} from "lib/theme";
 
 var styleH3 = ({colors}) => ({

@@ -9,7 +9,7 @@ import {bindActionCreators} from "redux";
 import components from "components";
 import {decorateMeasure, addValueToMeasures} from "./utils";
 import * as sensorsDecorators from "lib/sensors-decorators";
-import {styles} from "lib/styles_restyling";
+import {styles} from "lib/styles";
 import {selectRealTimeSite} from "actions/real-time";
 import {defaultTheme} from "lib/theme";
 import {getTitleForSingleSensor} from "lib/page-header-utils";

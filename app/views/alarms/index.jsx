@@ -22,7 +22,7 @@ import {
 import {defaultTheme} from "lib/theme";
 import NotificationRow from "./notification-row";
 import AlarmRow from "./alarm-row";
-import {styles as stylesLib} from "lib/styles_restyling";
+import {styles as stylesLib} from "lib/styles";
 import CollectionUtils from "lib/collection-utils";
 import SubListNotification from "./sub-list-notification.jsx";
 
