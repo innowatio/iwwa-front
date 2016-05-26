@@ -13,7 +13,8 @@ import {
     resetYAxisValues,
     saveChartConfig,
     selectChartType,
-    selectFavoriteChart
+    selectFavoriteChart,
+    toggleComparisonChart
 } from "actions/monitoring-chart";
 
 import {getUnitOfMeasurement} from "lib/sensors-decorators";
@@ -47,7 +48,8 @@ const inputStyleRules = (theme) => ({
         display: "none"
     }
 });
-const stylesFunction = (theme) => ({
+
+const stylesFunction = (theme, active) => ({
     inputs: {
         width: "90%",
         margin: "0px auto",
@@ -76,7 +78,7 @@ const stylesFunction = (theme) => ({
         fontSize: "28px"
     },
     buttonIconStyle: {
-        backgroundColor: theme.colors.primary,
+        backgroundColor: active ? theme.colors.buttonPrimary : theme.colors.primary,
         border: "0px none",
         borderRadius: "100%",
         height: "50px",
@@ -98,7 +100,8 @@ var MonitoringChartView = React.createClass({
         saveChartConfig: PropTypes.func.isRequired,
         selectChartType: PropTypes.func.isRequired,
         selectFavoriteChart: PropTypes.func.isRequired,
-        title: React.PropTypes.string
+        title: React.PropTypes.string,
+        toggleComparisonChart: PropTypes.func.isRequired
     },
     contextTypes: {
         theme: PropTypes.object
@@ -350,9 +353,9 @@ var MonitoringChartView = React.createClass({
     },
     renderChartStyleButton: function (theme, chartType, icon) {
         return (
-            <Button style={stylesFunction(theme).buttonIconStyle} onClick={() => {
-                this.props.selectChartType(chartType);
-            }}
+            <Button
+                onClick={() => this.props.selectChartType(chartType)}
+                style={stylesFunction(theme, this.props.monitoringChart.type === chartType).buttonIconStyle}
             >
                 <Icon
                     color={theme.colors.white}
@@ -363,9 +366,12 @@ var MonitoringChartView = React.createClass({
             </Button>
         );
     },
-    renderTemporalButton:  function (theme, icon) {
+    renderComparisonButton:  function (theme, icon) {
         return (
-            <Button style={stylesFunction(theme).buttonIconStyle}>
+            <Button
+                onClick={() => this.props.toggleComparisonChart(icon)}
+                style={stylesFunction(theme, this.props.monitoringChart.comparisonCharts[icon]).buttonIconStyle}
+            >
                 <Icon
                     color={theme.colors.white}
                     icon={icon}
@@ -507,9 +513,9 @@ var MonitoringChartView = React.createClass({
                             {"VEDI SETTIMANA/MESE/ANNO PRECEDENTE:"}
                         </label>
                         <div>
-                            {this.renderTemporalButton(theme, "week", "week")}
-                            {this.renderTemporalButton(theme, "month", "month")}
-                            {this.renderTemporalButton(theme, "year", "year")}
+                            {this.renderComparisonButton(theme, "week")}
+                            {this.renderComparisonButton(theme, "month")}
+                            {this.renderComparisonButton(theme, "year")}
                         </div>
                     </div>
                 </div>
@@ -532,7 +538,8 @@ const mapDispatchToProps = (dispatch) => {
         resetYAxisValues: bindActionCreators(resetYAxisValues, dispatch),
         saveChartConfig: bindActionCreators(saveChartConfig, dispatch),
         selectChartType: bindActionCreators(selectChartType, dispatch),
-        selectFavoriteChart: bindActionCreators(selectFavoriteChart, dispatch)
+        selectFavoriteChart: bindActionCreators(selectFavoriteChart, dispatch),
+        toggleComparisonChart: bindActionCreators(toggleComparisonChart, dispatch)
     };
 };
 module.exports = connect(mapStateToProps, mapDispatchToProps)(MonitoringChartView);

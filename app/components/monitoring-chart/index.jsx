@@ -241,10 +241,25 @@ var MonitoringChart = React.createClass({
             };
         }
     },
+    renderComparisonCharts: function () {
+        let components = [];
+        //TODO
+        if (this.props.chartState.comparisonCharts.year) {
+            components.push(<ReactHighstock config={this.state.config} />);
+        }
+        if (this.props.chartState.comparisonCharts.month) {
+            components.push(<ReactHighstock config={this.state.config} />);
+        }
+        if (this.props.chartState.comparisonCharts.week) {
+            components.push(<ReactHighstock config={this.state.config} />);
+        }
+        return components;
+    },
     render: function () {
         return (
             <div style={{marginBottom: "60px", ...this.props.style}}>
                 <ReactHighstock config={this.state.config} />
+                {this.renderComparisonCharts()}
             </div>
         );
     }

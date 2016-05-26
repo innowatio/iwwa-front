@@ -8,11 +8,17 @@ import {
     SAVE_CHART_CONFIG,
     SELECT_CHART_TYPE,
     SELECT_FAVORITE_CHART,
-    SELECT_SENSORS_TO_DRAW
+    SELECT_SENSORS_TO_DRAW,
+    TOGGLE_COMPARISON_CHART
 } from "../actions/monitoring-chart";
 import {SELECT_SENSOR} from "../actions/sensors";
 
 let defaultState = {
+    comparisonCharts: {
+        "year": false,
+        "month": false,
+        "week": false
+    },
     dateRanges: [{
         key: "all",
         label: "Tutto"
@@ -72,6 +78,13 @@ export function monitoringChart (state = defaultState, action) {
             return defaultNullConfig(state);
         case SELECT_SENSORS_TO_DRAW:
             return defaultNullConfig(state, {sensorsToDraw: action.payload});
+        case TOGGLE_COMPARISON_CHART: {
+            let newState = {
+                ...state
+            };
+            newState.comparisonCharts[action.payload] = !newState.comparisonCharts[action.payload];
+            return newState;
+        }
         default:
             return state;
     }
