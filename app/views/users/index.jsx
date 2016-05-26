@@ -7,7 +7,7 @@ var R          = require("ramda");
 var Radium              = require("radium");
 
 var components = require("components");
-import {styles} from "lib/styles_restyling";
+import {styles} from "lib/styles";
 import {defaultTheme} from "lib/theme";
 
 var Users = React.createClass({

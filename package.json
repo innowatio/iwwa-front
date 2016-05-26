@@ -13,7 +13,7 @@
     "dev:sd-builder": "sd-builder dev",
     "emulate-ios": "cd build-cordova && cordova emulate ios --target=\"iPad-Air\"",
     "lint": "sd-builder lint",
-    "predeploy": "NODE_ENV=production sd-builder config && NODE_ENV=production npm run build",
+    "predeploy": "NODE_ENV=production sd-builder build",
     "prestart": "npm run build",
     "run-ios": "cd build-cordova && cordova run ios",
     "start": "node scripts/server.js",

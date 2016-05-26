@@ -10,7 +10,7 @@ import {reduxForm} from "redux-form";
 import {FullscreenModal, SensorAggregator} from "components";
 
 import {potentialUnitsOfMeasurement} from "lib/sensors-utils";
-import {styles} from "lib/styles_restyling";
+import {styles} from "lib/styles";
 import {defaultTheme} from "lib/theme";
 
 export const fields = ["name", "description", "unitOfMeasurement", "siteId", "userId", "tags"];

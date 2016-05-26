@@ -4,7 +4,7 @@ import {FormControl, FormGroup, InputGroup} from "react-bootstrap";
 
 import {Button, Icon} from "components";
 
-import {styles} from "lib/styles_restyling";
+import {styles} from "lib/styles";
 import {defaultTheme} from "lib/theme";
 
 var MonitoringSearch = React.createClass({

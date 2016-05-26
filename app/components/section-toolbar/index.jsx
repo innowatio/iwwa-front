@@ -3,7 +3,7 @@ import {Link} from "react-router";
 
 import {Icon} from "components";
 
-import {styles} from "lib/styles_restyling";
+import {styles} from "lib/styles";
 import {defaultTheme} from "lib/theme";
 
 var SectionToolbar = React.createClass({

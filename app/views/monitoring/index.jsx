@@ -7,7 +7,7 @@ import {bindActionCreators} from "redux";
 import {getDragDropContext} from "lib/dnd-utils";
 import {defaultTheme} from "lib/theme";
 import {getAllSensors} from "lib/sensors-utils";
-import {styles} from "lib/styles_restyling";
+import {styles} from "lib/styles";
 
 import {
     Button,

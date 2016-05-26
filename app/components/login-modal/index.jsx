@@ -29,7 +29,7 @@ const stylesFunction = ({colors}) => ({
         width: "100%",
         zIndex: 100000000000,
         overflowY: "scroll",
-        backgroundImage: `url(${assetsPathTo("restyling/images/logo_big.png")})`,
+        backgroundImage: `url(${assetsPathTo("images/logo_big.png")})`,
         backgroundSize: "cover"
     },
     overlay: {

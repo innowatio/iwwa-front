@@ -5,7 +5,7 @@ import IPropTypes from "react-immutable-proptypes";
 import {DraggableOperator, DraggableSensor, FormulaDropArea, Icon} from "components";
 
 import {findSensor} from "lib/sensors-utils";
-import {styles} from "lib/styles_restyling";
+import {styles} from "lib/styles";
 import {defaultTheme} from "lib/theme";
 
 var SensorAggregator = React.createClass({

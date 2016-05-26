@@ -9,7 +9,7 @@ var Router     = require("react-router");
 var CollectionUtils = require("lib/collection-utils");
 var components      = require("components");
 var stringIt        = require("lib/string-it");
-import {styles} from "lib/styles_restyling";
+import {styles} from "lib/styles";
 import {defaultTheme} from "lib/theme";
 
 const buttonStyle = ({colors}) => ({
