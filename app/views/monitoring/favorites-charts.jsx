@@ -12,6 +12,7 @@ import {Button, CollectionItemList, Icon, SectionToolbar} from "components";
 const styles = ({colors}) => ({
     headerContainer: {
         height: "50px",
+        cursor: "pointer",
         borderTop: "1px solid " + colors.borderAlarmsRow,
         clear: "both",
         padding: "0px"
@@ -22,7 +23,7 @@ const styles = ({colors}) => ({
         margin: "0px",
         padding: "0px 5px",
         fontSize: "18px",
-        lineHeight: "45px",
+        lineHeight: "48px",
         fontWeight: "300",
         color:colors.mainFontColor
     },
@@ -31,7 +32,8 @@ const styles = ({colors}) => ({
         backgroundColor: colors.backgroundMonitoringRowChart
     },
     lazyLoadButtonStyleContainer: {
-        marginBottom: "50px"
+        marginBottom: "50px",
+        borderTop: "1px solid " + colors.mainFontColor
     },
     lazyLoadButtonStyle: {
         width: "230px",
@@ -78,14 +80,16 @@ var MonitoringFavoritesCharts = React.createClass({
         return (
             <div style={styles(theme).headerContainer}>
                 <div style={styles(theme).favouriteNameStyle}>
-                    <p>{element.get("_id")}</p>
+                    {element.get("_id")}
                 </div>
                 <Button
                     className="pull-right"
                     style={{
                         backgroundColor: theme.colors.transparent,
                         border: "0px",
-                        width: "71px"
+                        width: "60px",
+                        height: "50px",
+                        padding: "0px"
                     }}
                 >
                     <Icon
@@ -96,7 +100,7 @@ var MonitoringFavoritesCharts = React.createClass({
                             this.context.router.push("/monitoring/chart/");
                         }}
                         size={"34px"}
-                        style={{verticalAlign: "middle", lineHeight: "40px"}}
+                        style={{verticalAlign: "middle", lineHeight: "55px"}}
                     />
                 </Button>
             </div>
@@ -117,7 +121,7 @@ var MonitoringFavoritesCharts = React.createClass({
         //         key: "chart",
         //         style: function () {
         //             return {
-        //                 backgroundColor: "#535353",
+        //                 backgroundColor: theme.colors.black,
         //                 width: "1%"
         //             };
         //         },

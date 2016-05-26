@@ -22,7 +22,6 @@ exports.Header                  = require("./header/");
 exports.HighCharts              = require("./highcharts/");
 exports.HistoricalGraph         = require("./historical-graph/");
 exports.Icon                    = require("./icon/");
-exports.Input                   = require("./input/");
 exports.InputFilter             = require("./input-filter/");
 exports.LoginModal              = require("./login-modal/");
 exports.MeasureLabel            = require("./measure-label/");
