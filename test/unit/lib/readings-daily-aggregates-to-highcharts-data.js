@@ -113,7 +113,7 @@ describe("readingsDailyAggregatesToHighchartsData", () => {
             expect(res).to.be.an("array");
             res.map((objectResult, index) => {
                 expect(res[index]).to.be.an("object");
-                expect(res[index]).to.have.all.keys(["data", "name", "pointStart", "pointInterval"]);
+                expect(res[index]).to.have.all.keys(["data", "name", "pointStart", "pointInterval", "unitOfMeasurement"]);
                 expect(objectResult.data).to.be.an("array");
                 expect(objectResult.pointStart).to.equal(
                     moment.utc(filtersSitesCompare[index].date.start).valueOf()
@@ -132,7 +132,7 @@ describe("readingsDailyAggregatesToHighchartsData", () => {
             expect(res).to.be.an("array");
             res.map((objectResult, index) => {
                 expect(res[index]).to.be.an("object");
-                expect(res[index]).to.have.all.keys(["data", "name", "pointStart", "pointInterval"]);
+                expect(res[index]).to.have.all.keys(["data", "name", "pointStart", "pointInterval", "unitOfMeasurement"]);
                 expect(objectResult.data).to.be.an("array");
                 expect(objectResult.pointStart).to.equal(
                     moment.utc(filtersDateCompare[index].date.start).valueOf()

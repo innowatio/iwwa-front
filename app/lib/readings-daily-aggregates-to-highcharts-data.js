@@ -71,6 +71,7 @@ export default memoize(function readingsDailyAggregatesToHighchartsData (aggrega
         data: arrayOfData,
         name: chartState[index].name,
         pointStart: moment.utc(chartState[index].date.start).valueOf(),
-        pointInterval: fiveMinutesInMs
+        pointInterval: fiveMinutesInMs,
+        unitOfMeasurement: chartState[index].unitOfMeasurement
     }));
 });

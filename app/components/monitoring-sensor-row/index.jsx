@@ -7,6 +7,7 @@ import {partial} from "ramda";
 import * as bootstrap from "react-bootstrap";
 
 import {Types} from "lib/dnd-utils";
+import {getSensorLabel} from "lib/sensors-utils";
 import {defaultTheme} from "lib/theme";
 import {Icon} from "components";
 
@@ -20,7 +21,7 @@ const styles = ({colors}) => ({
     },
     sensorName: {
         float: "left",
-        width: "150px",
+        width: "200px",
         overflow: "hidden",
         textOverflow: "ellipsis",
         whiteSpace: "nowrap",
@@ -32,11 +33,12 @@ const styles = ({colors}) => ({
     },
     tagsContainer: {
         float: "left",
-        width: "calc(100% - 280px)"
+        width: "calc(100% - 330px)"
     },
     buttonsContainer: {
         float: "right",
-        maxWidth: "130px"
+        maxWidth: "130px",
+        overflow: "hidden"
     }
 });
 
@@ -88,7 +90,7 @@ var SensorRow = React.createClass({
         let {sensor} = this.props;
         return (
             <div style={styles(this.getTheme()).sensorName}>
-                {sensor.get("name") ? sensor.get("name") : sensor.get("_id")}
+                {getSensorLabel(sensor)}
             </div>
         );
     },

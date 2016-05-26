@@ -4,6 +4,7 @@ import UUID from "uuid-js";
 import {
     ADD_TO_FAVORITE,
     CHANGE_Y_AXIS_VALUES,
+    RESET_Y_AXIS_VALUES,
     SAVE_CHART_CONFIG,
     SELECT_CHART_TYPE,
     SELECT_FAVORITE_CHART,
@@ -22,13 +23,21 @@ let defaultState = {
     yAxis: {}
 };
 
+const defaultNullConfig = (state, object) => {
+    return {
+        ...state,
+        config: null,
+        ...object
+    };
+};
+
 export function monitoringChart (state = defaultState, action) {
     switch (action.type) {
         case ADD_TO_FAVORITE: {
-            let id = UUID.create();
+            let id = action.payload.id || UUID.create().hex;
             let favorites = state.favorites.set(id, Immutable.Map({
                 _id: id,
-                config: action.payload
+                config: action.payload.config
             }));
             return {
                 ...state,
@@ -36,26 +45,23 @@ export function monitoringChart (state = defaultState, action) {
             };
         }
         case CHANGE_Y_AXIS_VALUES:
-            return {
-                ...state,
-                config: null,
+            return defaultNullConfig(state, {
                 yAxis: {
                     ...state.yAxis,
-                    ...action.values
+                    ...action.payload
                 }
-            };
+            });
+        case RESET_Y_AXIS_VALUES:
+            return defaultNullConfig(state, {yAxis: {}});
         case SAVE_CHART_CONFIG:
             return {
                 ...state,
                 config: action.payload
             };
         case SELECT_CHART_TYPE:
-            return {
-                ...state,
-                config: null,
-                type: action.payload
-            };
+            return defaultNullConfig(state, {type: action.payload});
         case SELECT_FAVORITE_CHART:
+            //TODO verificare yAxis
             return {
                 ...state,
                 config: action.payload,
@@ -63,16 +69,9 @@ export function monitoringChart (state = defaultState, action) {
                 yAxis: action.payload.yAxis
             };
         case SELECT_SENSOR:
-            return {
-                ...state,
-                config: null
-            };
+            return defaultNullConfig(state);
         case SELECT_SENSORS_TO_DRAW:
-            return {
-                ...state,
-                config: null,
-                sensorsToDraw: action.payload
-            };
+            return defaultNullConfig(state, {sensorsToDraw: action.payload});
         default:
             return state;
     }
