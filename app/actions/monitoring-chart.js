@@ -13,7 +13,7 @@ function getBasicObject (type, payload) {
     };
 }
 
-export const addToFavorite = (config) => getBasicObject(ADD_TO_FAVORITE, config);
+export const addToFavorite = (config, id) => getBasicObject(ADD_TO_FAVORITE, {config, id});
 
 export const changeYAxisValues = (values) => getBasicObject(CHANGE_Y_AXIS_VALUES, values);
 

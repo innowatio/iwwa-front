@@ -1,5 +1,5 @@
 import React, {PropTypes} from "react";
-import {Col, Clearfix, Row, ControlLabel, FormControl} from "react-bootstrap";
+import {Col, Clearfix, ControlLabel, FormControl} from "react-bootstrap";
 import IPropTypes from "react-immutable-proptypes";
 import {connect} from "react-redux";
 import {Link} from "react-router";
@@ -22,27 +22,16 @@ import {styles} from "lib/styles_restyling";
 import {defaultTheme} from "lib/theme";
 import readingsDailyAggregatesToHighchartsData from "lib/readings-daily-aggregates-to-highcharts-data";
 
-import {Button, Icon, MonitoringChart, SectionToolbar} from "components";
+import {Button, Icon, MonitoringChart, SectionToolbar, FullscreenModal} from "components";
 
-const buttonStyle = ({colors}) => ({
-    backgroundColor: colors.primary,
-    border: "0px none",
-    borderRadius: "100%",
-    height: "50px",
-    width: "50px",
-    padding: "0px",
-    textAlign: "center",
-    margin: "0px 5px"
-});
-
-const inputStyleRules = ({colors}) => ({
+const inputStyleRules = (theme) => ({
     "": {
         padding: "0px 5px",
         margin: "0px 0px 20px 0px"
     },
     "label.control-label": {
         display: "block",
-        color: colors.white,
+        color: theme.colors.white,
         fontWeight: "300",
         padding: "0px",
         margin: "0px"
@@ -52,10 +41,49 @@ const inputStyleRules = ({colors}) => ({
     },
     "input": {
         borderBottom: "1px solid",
-        borderColor: colors.white + "!important"
+        borderColor: theme.colors.white + "!important"
     },
     "span": {
         display: "none"
+    }
+});
+const stylesFunction = (theme) => ({
+    inputs: {
+        width: "90%",
+        margin: "0px auto",
+        height: "60px",
+        fontSize: "20px",
+        fontWeight: "300",
+        borderRadius: "20px",
+        borderColor: theme.colors.borderInputSearch,
+        backgroundColor: theme.colors.backgroundInputSearch,
+        color: theme.colors.mainFontColor
+    },
+    labelStyle: {
+        color: theme.colors.white,
+        display: "inherit",
+        marginBottom: "10px",
+        textAlign: "center",
+        fontWeight: "400",
+        fontSize: "16px"
+    },
+    modalTitleStyle: {
+        color: theme.colors.white,
+        display: "inherit",
+        marginBottom: "50px",
+        textAlign: "center",
+        fontWeight: "400",
+        fontSize: "28px"
+    },
+    buttonIconStyle: {
+        backgroundColor: theme.colors.primary,
+        border: "0px none",
+        borderRadius: "100%",
+        height: "50px",
+        width: "50px",
+        padding: "0px",
+        textAlign: "center",
+        margin: "0px 5px"
     }
 });
 
@@ -103,7 +131,8 @@ var MonitoringChartView = React.createClass({
     },
     getStateFromProps: function (props) {
         let state = {
-            yAxis: props.monitoringChart.yAxis
+            yAxis: props.monitoringChart.yAxis,
+            favoriteId: null
         };
         let yAxis = this.getYAxis(props);
         yAxis.forEach(y => {
@@ -118,6 +147,19 @@ var MonitoringChartView = React.createClass({
     },
     getSensorObj: function (sensor, allSensor) {
         return typeof sensor === "string" ? allSensor.get(sensor) : sensor;
+    },
+    openModal: function () {
+        this.setState({showModal:true});
+    },
+    closeModal: function () {
+        this.setState({
+            showModal: false,
+            value: null
+        });
+    },
+    onConfirmFullscreenModal: function () {
+        this.props.addToFavorite(this.refs.monitoringChart.state.config, this.state.favoriteId);
+        this.closeModal();
     },
     subscribeToSensorsData: function (props) {
         const sensors = props.monitoringChart.sensorsToDraw;
@@ -217,18 +259,11 @@ var MonitoringChartView = React.createClass({
                 borderColor: theme.colors.white
             }}
             >
-                <label style={{
-                    color: theme.colors.white,
-                    display: "inherit",
-                    fontSize: "16px",
-                    marginBottom: "10px",
-                    textAlign: "center"
-                }}
-                >
+                <label style={stylesFunction(theme).labelStyle}>
                     {"CAMBIA VALORI ASSI Y"}
                 </label>
                 {this.renderYAxisInputs(theme)}
-                <div style={{textAlign: "center", marginRight: "20px"}}>
+                <div style={{textAlign: "center", marginLeft: "25px"}}>
                     <Button
                         onClick={this.changeYAxisValues}
                         style={{
@@ -267,9 +302,9 @@ var MonitoringChartView = React.createClass({
     renderYAxisInputs: function (theme) {
         let yAxis = this.getYAxis(this.props);
         let components = [];
-        yAxis.forEach((y) => {
+        yAxis.forEach((y, index) => {
             components.push(
-                <Row>
+                <div key={index}>
                     <Col className="input-style" md={6}>
                         <Radium.Style
                             rules={inputStyleRules(theme)}
@@ -308,14 +343,14 @@ var MonitoringChartView = React.createClass({
                             value={this.state.yAxis[y].max}
                         />
                     </Col>
-                </Row>
+                </div>
             );
         });
         return components;
     },
     renderChartStyleButton: function (theme, chartType, icon) {
         return (
-            <Button style={buttonStyle(theme)} onClick={() => {
+            <Button style={stylesFunction(theme).buttonIconStyle} onClick={() => {
                 this.props.selectChartType(chartType);
             }}
             >
@@ -330,7 +365,7 @@ var MonitoringChartView = React.createClass({
     },
     renderTemporalButton:  function (theme, icon) {
         return (
-            <Button style={buttonStyle(theme)}>
+            <Button style={stylesFunction(theme).buttonIconStyle}>
                 <Icon
                     color={theme.colors.white}
                     icon={icon}
@@ -340,9 +375,61 @@ var MonitoringChartView = React.createClass({
             </Button>
         );
     },
+    renderFavouriteButton: function () {
+        const theme = this.getTheme();
+        return (
+            <div>
+                <Button onClick={this.openModal} style={stylesFunction(theme).buttonIconStyle}>
+                    <Icon
+                        color={theme.colors.iconHeader}
+                        icon={"star-o"}
+                        size={"28px"}
+                        style={{lineHeight: "20px"}}
+                    />
+                </Button>
+                <p style={{
+                    marginBottom: "25px",
+                    fontSize: "16px",
+                    color: theme.colors.navText,
+                    fontWeight: "300",
+                    cursor: "pointer"
+                }}
+                >
+                    {"Aggiungi ai preferiti"}
+                </p>
+                <FullscreenModal
+                    onConfirm={this.onConfirmFullscreenModal}
+                    onHide={this.closeModal}
+                    onReset={this.closeModal}
+                    renderConfirmButton={true}
+                    show={this.state.showModal}
+                >
+                    {this.renderModalBody()}
+                </FullscreenModal>
+            </div>
+        );
+    },
+    renderModalBody: function () {
+        const theme = this.getTheme();
+        return (
+            <div style={{textAlign: "center"}}>
+                <div>
+                    <label style={stylesFunction(theme).modalTitleStyle}>
+                        {"AGGIUNGI GRAFICO AI PREFERITI"}
+                    </label>
+                </div>
+                <FormControl
+                    bsSize="small"
+                    onChange={input => this.setState({favoriteId: input.target.value})}
+                    placeholder={"Inserisci il nome per il tuo grafico"}
+                    style={stylesFunction(theme).inputs}
+                    type="text"
+                />
+            </div>
+        );
+    },
     render: function () {
         const theme = this.getTheme();
-        let self = this;
         return (
             <div>
                 <SectionToolbar backUrl={"/monitoring/"} title={"Torna all'elenco sensori"} />
@@ -364,14 +451,7 @@ var MonitoringChartView = React.createClass({
                         borderColor: theme.colors.white
                     }}
                     >
-                        <label style={{
-                            color: theme.colors.white,
-                            display: "inherit",
-                            fontSize: "16px",
-                            marginBottom: "10px",
-                            textAlign: "center"
-                        }}
-                        >
+                        <label style={stylesFunction(theme).labelStyle}>
                             {"SCEGLI LO STILE DEL GRAFICO"}
                         </label>
                         <div>
@@ -384,33 +464,22 @@ var MonitoringChartView = React.createClass({
                     {this.renderYAxisValuesChange(theme)}
                     <div style={{textAlign: "center", marginTop: "25px", borderBottom: "solid 1px", borderColor: theme.colors.white}}>
                         <Col lg={6} md={6} xs={12}>
-                            <Button style={buttonStyle(theme)} onClick={() => {
-                                if (self.refs.monitoringChart) {
-                                    self.props.addToFavorite(self.refs.monitoringChart.state.config);
-                                }
-                            }}
-                            >
-                                <Icon
-                                    color={theme.colors.iconHeader}
-                                    icon={"star-o"}
-                                    size={"28px"}
-                                    style={{lineHeight: "20px"}}
-                                />
-                            </Button>
-                            <p style={{
-                                marginBottom: "25px",
-                                fontSize: "16px",
-                                color: theme.colors.navText,
-                                fontWeight: "300",
-                                cursor: "pointer"
-                            }}
-                            >
-                                {"Aggiungi ai preferiti"}
-                            </p>
+                            {this.renderFavouriteButton()}
                         </Col>
-                        <Col lg={6} md={6} xs={12}>
+                        <Col className="link" lg={6} md={6} xs={12}>
+                            <Radium.Style
+                                rules={{
+                                    ":hover": {
+                                        textDecoration: "none"
+                                    },
+                                    ".btn-default:hover": {
+                                        backgroundColor: theme.colors.buttonPrimary + "!important"
+                                    }
+                                }}
+                                scopeSelector=".link"
+                            />
                             <Link to={"/monitoring/favorites/"}>
-                                <Button style={buttonStyle(theme)}>
+                                <Button style={stylesFunction(theme).buttonIconStyle}>
                                     <Icon
                                         color={theme.colors.iconHeader}
                                         icon={"list-favourite"}
@@ -423,7 +492,8 @@ var MonitoringChartView = React.createClass({
                                     fontSize: "16px",
                                     color: theme.colors.navText,
                                     fontWeight: "300",
-                                    cursor: "pointer"
+                                    cursor: "pointer",
+                                    textDecoratio: "none"
                                 }}
                                 >
                                     {"Visualizza elenco"}
@@ -433,14 +503,7 @@ var MonitoringChartView = React.createClass({
                         <Clearfix>{}</Clearfix>
                     </div>
                     <div style={{textAlign: "center", padding: "20px", borderBottom: "solid 1px", borderColor: theme.colors.white}}>
-                        <label style={{
-                            color: theme.colors.white,
-                            display: "inherit",
-                            fontSize: "16px",
-                            marginBottom: "10px",
-                            textAlign: "center"
-                        }}
-                        >
+                        <label style={stylesFunction(theme).labelStyle}>
                             {"VEDI SETTIMANA/MESE/ANNO PRECEDENTE:"}
                         </label>
                         <div>
@@ -472,5 +535,4 @@ const mapDispatchToProps = (dispatch) => {
         selectFavoriteChart: bindActionCreators(selectFavoriteChart, dispatch)
     };
 };
-
 module.exports = connect(mapStateToProps, mapDispatchToProps)(MonitoringChartView);
