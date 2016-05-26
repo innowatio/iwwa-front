@@ -1,5 +1,3 @@
-require("unit-setup.js");
-
 import * as chart from "actions/chart";
 
 describe("`chart` actions", () => {

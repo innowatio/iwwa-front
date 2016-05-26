@@ -5,6 +5,7 @@ import {merge, prop} from "ramda";
 import {defaultTheme} from "lib/theme";
 import components from "components";
 import {isAdmin} from "lib/roles-utils";
+import {EXEC_ENV} from "lib/config";
 
 var stylesFunction = ({colors}) => ({
     base: {
@@ -82,7 +83,7 @@ var Header = React.createClass({
         );
     },
     renderAdminPage: function () {
-        return isAdmin(this.props.asteroid) && ENVIRONMENT !== "cordova" ? (
+        return isAdmin(this.props.asteroid) && EXEC_ENV !== "cordova" ? (
             <span style={{marginRight: "15px"}}>
                 <Link to="/users/" >
                     <components.Icon

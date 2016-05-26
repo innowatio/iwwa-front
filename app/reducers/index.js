@@ -1,8 +1,6 @@
 import {combineReducers} from "redux";
 import {reducer as form} from "redux-form";
 import storage from "redux-storage";
-//TODO ricordarsi di toglierla!!
-import {routeReducer as routing} from "react-router-redux";
 
 import {collections} from "./collections";
 import {chart} from "./chart";
@@ -23,7 +21,6 @@ const rootReducer = storage.reducer(combineReducers({
     realTime,
     userSetting,
     form,
-    routing,
     sensors,
     notifications
 }));

@@ -1,6 +1,5 @@
 import {String, Number, tuple, struct, maybe, list} from "tcomb";
-
-import actionTypeValidator from "../lib/action-type-validator";
+import actionTypeValidator from "redux-action-type-validator";
 
 export const SELECT_SINGLE_ELECTRICAL_SENSOR_CHART = "SELECT_SINGLE_ELECTRICAL_SENSOR_CHART";
 export const SELECT_ELECTRICAL_TYPE = "SELECT_ELECTRICAL_TYPE";

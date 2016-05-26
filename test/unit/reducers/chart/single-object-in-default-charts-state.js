@@ -1,4 +1,3 @@
-require("unit-setup.js");
 import moment from "moment";
 
 import chartReducer from "reducers/chart";

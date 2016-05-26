@@ -1,5 +1,8 @@
 node_modules/
-builds/
+build/
+build-cordova/
+.env
+.env-cordova
 npm-debug.log
 .publish/
 .DS_Store

@@ -1,5 +1,3 @@
-require("unit-setup.js");
-
 var TreeView = proxyquire("components/tree-view/", {});
 
 describe("The `TreeView` component ", function () {

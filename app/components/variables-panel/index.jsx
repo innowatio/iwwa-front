@@ -3,6 +3,7 @@ var components = require("components");
 
 var MeasureLabel = require("components/").MeasureLabel;
 import {defaultTheme} from "lib/theme";
+import {EXEC_ENV} from "lib/config";
 
 var style = (variableColor) => ({
     box: {
@@ -36,7 +37,7 @@ var VariablesPanel = React.createClass({
                     key={variable.get("key")}
                     style={{
                         width: (
-                            ENVIRONMENT === "cordova" ?
+                            EXEC_ENV === "cordova" ?
                             (this.props.numberOfConsumptionSensor > 3 ? "30%" : "33%") :
                             (this.props.numberOfConsumptionSensor > 3 ? "23%" : "25%")
                         ),
@@ -47,10 +48,10 @@ var VariablesPanel = React.createClass({
                         <components.Icon
                             color={this.getTheme().colors.iconConsumptionVariable}
                             icon={variable.get("icon")}
-                            size={ENVIRONMENT === "cordova" ? "48px" : "60px"}
+                            size={EXEC_ENV === "cordova" ? "48px" : "60px"}
                             style={{
-                                lineHeight: ENVIRONMENT === "cordova" ? "70px" : "20px",
-                                width: ENVIRONMENT === "cordova" ? "30px" : "45px",
+                                lineHeight: EXEC_ENV === "cordova" ? "70px" : "20px",
+                                width: EXEC_ENV === "cordova" ? "30px" : "45px",
                                 verticalAlign: "middle"
                             }}
                         />
@@ -59,7 +60,7 @@ var VariablesPanel = React.createClass({
                             style={{
                                 paddingLeft: "16px",
                                 verticalAlign: "text-top",
-                                minWidth: ENVIRONMENT === "cordova" ? "40px" : "45px"
+                                minWidth: EXEC_ENV === "cordova" ? "40px" : "45px"
                             }}
                             unit={variable.get("unit")}
                             value={variable.get("value")}

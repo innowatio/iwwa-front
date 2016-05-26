@@ -1,4 +1,3 @@
-require("unit-setup.js");
 import {Calendar} from "react-widgets";
 import moment from "moment";
 

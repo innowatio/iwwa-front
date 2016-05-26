@@ -1,5 +1,3 @@
-require("unit-setup.js");
-
 import {
     getTimeRangeByPeriod,
     getSumBySiteAndPeriod,

@@ -1,5 +1,3 @@
-require("unit-setup.js");
-
 import {Map} from "immutable";
 
 import {changeCollections} from "actions/collections";

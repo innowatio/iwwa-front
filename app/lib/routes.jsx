@@ -1,10 +1,10 @@
 import React from "react";
 import {Router, Route, hashHistory, browserHistory} from "react-router";
 
-
+import {EXEC_ENV} from "lib/config";
 import * as views from "views";
 
-const history = (ENVIRONMENT === "cordova" ? hashHistory : browserHistory);
+const history = (EXEC_ENV === "cordova" ? hashHistory : browserHistory);
 
 module.exports = (
     <Router history={history}>

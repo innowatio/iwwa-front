@@ -2,21 +2,22 @@ var R      = require("ramda");
 var Radium = require("radium");
 var React  = require("react");
 
+import {EXEC_ENV} from "lib/config";
 import {defaultTheme} from "lib/theme";
 
 var styleLabelValue = ({colors}) => ({
     color: colors.labelAmbientalSurveys,
-    fontSize: ENVIRONMENT === "cordova" ? "36px" : "48px",
+    fontSize: EXEC_ENV === "cordova" ? "36px" : "48px",
     fontWeight: "500",
     lineHeight: "56px",
-    margin: ENVIRONMENT === "cordova" ? "0px 5px 0px 0px" : "0px 6px"
+    margin: EXEC_ENV === "cordova" ? "0px 5px 0px 0px" : "0px 6px"
 });
 
 var styleLabelUnit = ({colors}) => ({
     color: colors.labelAmbientalSurveys,
-    fontSize: ENVIRONMENT === "cordova" ? "20px" : "30px",
-    marginTop: ENVIRONMENT === "cordova" ? "5px" : "0px",
-    lineHeight: ENVIRONMENT === "cordova" ? "30px" : "40px",
+    fontSize: EXEC_ENV === "cordova" ? "20px" : "30px",
+    marginTop: EXEC_ENV === "cordova" ? "5px" : "0px",
+    lineHeight: EXEC_ENV === "cordova" ? "30px" : "40px",
     display: "inline-block",
     verticalAlign: "text-bottom",
     fontWeight: "500"
