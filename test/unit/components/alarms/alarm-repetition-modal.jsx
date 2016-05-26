@@ -1,5 +1,3 @@
-import "unit-setup.js";
-
 import AlarmRepetitionModal from "components/alarm-repetition-modal/";
 
 describe("The `onClickConfirm` function of the `AlarmRepetitionModal` component ", function () {

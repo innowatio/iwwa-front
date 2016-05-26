@@ -13,6 +13,7 @@ import {theme, defaultTheme} from "lib/theme";
 import {selectThemeColor} from "actions/user-setting";
 import {closeNotificationModal} from "actions/notifications";
 import {isAdmin, isYousaveUser} from "lib/roles-utils";
+import {EXEC_ENV} from "lib/config";
 
 const stylesFunction = ({colors}) => ({
     header: {
@@ -119,7 +120,7 @@ var Root = React.createClass({
         });
     },
     renderFooter: function (styles) {
-        return ENVIRONMENT !== "cordova" ? (
+        return EXEC_ENV !== "cordova" ? (
             <div style={styles.footer}>
                 {"Copyright 2015 - Innowatio"}
             </div>

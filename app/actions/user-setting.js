@@ -1,6 +1,5 @@
 import {String, struct} from "tcomb";
-
-import actionTypeValidator from "../lib/action-type-validator";
+import actionTypeValidator from "redux-action-type-validator";
 
 export const SELECT_THEME_COLOR = "SELECT_THEME_COLOR";
 

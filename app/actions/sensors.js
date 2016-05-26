@@ -4,6 +4,8 @@ import UUID from "uuid-js";
 import {Types} from "lib/dnd-utils";
 import {getSensorId} from "lib/sensors-utils";
 
+import {WRITE_API_ENDPOINT} from "lib/config";
+
 export const ADD_ITEM_TO_FORMULA = "ADD_ITEM_TO_FORMULA";
 export const ADD_SENSOR_TO_WORK_AREA = "ADD_SENSOR_TO_WORK_AREA";
 export const FILTER_SENSORS = "FILTER_SENSORS";
@@ -44,7 +46,7 @@ function addMonitoringAttrs (sensor) {
 }
 
 function insertSensor (requestBody, dispatch) {
-    var endpoint = "http://" + WRITE_API_HOST + "/sensors";
+    var endpoint = "http://" + WRITE_API_ENDPOINT + "/sensors";
     let sensor = addMonitoringAttrs(requestBody);
     axios.post(endpoint, sensor)
         .then(() => dispatch({
@@ -112,7 +114,7 @@ export const deleteSensors = (sensors) => {
         sensors.forEach((sensor) => {
             if (sensor.get("type") === MONITORING_TYPE) {
                 let id = sensor.get("_id");
-                var endpoint = "http://" + WRITE_API_HOST + "/sensors/" + id;
+                var endpoint = "http://" + WRITE_API_ENDPOINT + "/sensors/" + id;
                 axios.delete(endpoint)
                     .then(() => dispatch({
                         type: SENSOR_DELETE_SUCCESS,
@@ -131,7 +133,7 @@ function callEditSensor (sensorData, sensorId) {
         dispatch({
             type: "UPDATING_SENSOR"
         });
-        var endpoint = "http://" + WRITE_API_HOST + "/sensors/" + sensorId;
+        var endpoint = "http://" + WRITE_API_ENDPOINT + "/sensors/" + sensorId;
         axios.put(endpoint, sensorData)
             .then(() => dispatch({
                 type: "SENSOR_UPDATE_SUCCESS"

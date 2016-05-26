@@ -1,5 +1,3 @@
-import "unit-setup.js";
-
 import R from "ramda";
 import sinon from "sinon";
 

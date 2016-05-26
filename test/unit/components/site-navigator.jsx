@@ -1,4 +1,3 @@
-require("unit-setup.js");
 import {fromJS} from "immutable";
 import {Col, FormControl} from "react-bootstrap";
 

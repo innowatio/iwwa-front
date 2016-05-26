@@ -1,5 +1,3 @@
-import "unit-setup.js";
-
 import chartReducer from "reducers/chart";
 
 describe("`chart` reducer", () => {

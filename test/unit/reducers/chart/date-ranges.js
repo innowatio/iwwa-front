@@ -1,4 +1,3 @@
-import "unit-setup.js";
 import moment from "moment";
 import {flatten, range} from "ramda";
 

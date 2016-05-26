@@ -1,4 +1,3 @@
-require("unit-setup.js");
 import {fromJS} from "immutable";
 import moment from "moment";
 

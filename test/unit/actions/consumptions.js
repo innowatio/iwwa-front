@@ -1,5 +1,3 @@
-require("unit-setup.js");
-
 import * as realTime from "actions/consumptions";
 
 describe("`consumptions` actions", () => {

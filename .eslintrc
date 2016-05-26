@@ -8,10 +8,6 @@
         "node": true
     },
     "globals": {
-        "ENVIRONMENT": true,
-        "WRITE_API_HOST": true,
-        "WRITE_BACKEND_HOST": true,
-        "READ_BACKEND_ENDPOINT": true,
         "PushNotification": true,
         "device": true,
         "expect": true,

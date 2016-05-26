@@ -6,6 +6,7 @@ var minimist = require("minimist");
 var semver   = require("semver");
 var path     = require("path");
 var xml2js   = require("xml2js");
+var dotenv   = require("dotenv");
 
 var bin = {
     cordova: path.join(__dirname, "../node_modules/.bin/cordova")
@@ -38,34 +39,47 @@ var log = function (message, task) {
     };
 };
 
-var clean = function () {
-    sh("rm -rf builds/cordova-app/");
-    sh("rm -rf builds/cordova/");
-};
+function clean () {
+    sh("rm -rf build-cordova/");
+    sh("rm -rf build/");
+}
 
-var compile = function () {
-    sh("env ENVIRONMENT=\"cordova\" npm run build");
-};
+function appConfig () {
+    var config = {};
+    try {
+        const env = fs.readFileSync(".env-cordova");
+        config = dotenv.parse(env);
+    } catch (ignore) {
+        console.log("Failed to read configuration from file `.env`");
+    }
+    const code = `window.APP_CONFIG = ${JSON.stringify(config, null, 4)};`;
+    fs.writeFileSync("build/app-config.js", code);
+}
 
-var createCordovaApp = function () {
-    sh(`${bin.cordova} create builds/cordova-app ${this.package} ${this.name}`);
-};
+function compile () {
+    const NODE_ENV = process.env.NODE_ENV || "development";
+    sh(`env EXEC_ENV="cordova" env NODE_ENV="${NODE_ENV}" npm run build`);
+}
 
-var installCordovaPlugins = function () {
-    this.plugins.forEach(function (plugin) {
-        sh(`cd builds/cordova-app && ${bin.cordova} plugin add ${plugin}`);
+function createCordovaApp () {
+    sh(`${bin.cordova} create build-cordova ${this.package} ${this.name}`);
+}
+
+function installCordovaPlugins () {
+    this.plugins.forEach(plugin => {
+        sh(`cd build-cordova && ${bin.cordova} plugin add ${plugin}`);
     });
-};
+}
 
-var installCordovaPlatforms = function () {
-    sh(`cd builds/cordova-app && ${bin.cordova} platform add ${this.platform}`);
-};
+function installCordovaPlatforms () {
+    sh(`cd build-cordova && ${bin.cordova} platform add ${this.platform}`);
+}
 
-var configureCordovaApp = function () {
+function configureCordovaApp () {
     if (semver.valid(this.version) === null) {
         throw new Error("Invalid version");
     }
-    var appConfig = fs.readFileSync("builds/cordova-app/config.xml", "utf8");
+    var appConfig = fs.readFileSync("build-cordova/config.xml", "utf8");
     var parser = new xml2js.Parser();
     return BPromise.promisify(parser.parseString, parser)(appConfig)
         .bind(this)
@@ -175,16 +189,16 @@ var configureCordovaApp = function () {
 
             var builder = new xml2js.Builder();
             var xmlString = builder.buildObject(xml);
-            fs.writeFileSync("builds/cordova-app/config.xml", xmlString, "utf8");
+            fs.writeFileSync("build-cordova/config.xml", xmlString, "utf8");
 
         });
-};
+}
 
-var buildCordovaApp = function () {
-    sh("rm -rf builds/cordova-app/www");
-    sh("mv builds/cordova builds/cordova-app/www");
-    sh(`cd builds/cordova-app && ${bin.cordova} build ${this.platform}`);
-};
+function buildCordovaApp () {
+    sh("rm -rf build-cordova/www");
+    sh("mv build/ build-cordova/www");
+    sh(`cd build-cordova && ${bin.cordova} build ${this.platform}`);
+}
 
 var pkg = require(path.join(__dirname, "../package.json"));
 
@@ -212,6 +226,7 @@ BPromise.bind(config)
     })
     .then(log("Cleaning workspace", clean))
     .then(log("Compiling project", compile))
+    .then(log("Create app-config file", appConfig))
     .then(log("Creating Cordova app", createCordovaApp))
     .then(log("Installing Cordova plugins", installCordovaPlugins))
     .then(log("Installing Cordova platforms", installCordovaPlatforms))
