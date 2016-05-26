@@ -20,6 +20,7 @@ var ProgressBar = React.createClass({
         const min = this.props.min || 0;
         const now = this.props.now || 0;
         const isDanger = (now / max) >= DANGER_PERCENTAGE;
+        const consumptionPercent = ((now / max) * 100).toFixed(0);
 
         return (
             <div className="progress-bar-main-div" >
@@ -32,7 +33,7 @@ var ProgressBar = React.createClass({
                 />
                 <bootstrap.ProgressBar
                     bsStyle={isDanger ? "danger" : "info"}
-                    label={`${now}%`}
+                    label={`${consumptionPercent}%`}
                     max={max}
                     min={min}
                     now={now}
