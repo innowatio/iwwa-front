@@ -241,18 +241,52 @@ var MonitoringChart = React.createClass({
             };
         }
     },
+    getComparisonChartConfig: function (period) {
+        let chartTitle;
+        const theme = this.getTheme();
+        switch (period) {
+            case "year": {
+                chartTitle = "Anno precedente";
+                break;
+            }
+            case "month": {
+                chartTitle = "Mese precedente";
+                break;
+            }
+            case "week": {
+                chartTitle = "Settimana precedente";
+                break;
+            }
+        }
+        let basicConfig = {
+            ...this.state.config,
+            legend: {
+                enabled: false
+            },
+            navigator: {
+                enabled: false
+            },
+            rangeSelector: {
+                enabled: false
+            },
+            scrollbar: {
+                enabled: false
+            },
+            title: {
+                style: {
+                    color: theme.colors.white
+                },
+                text: chartTitle
+            }
+        };
+        return basicConfig;
+    },
     renderComparisonCharts: function () {
         let components = [];
-        //TODO
-        if (this.props.chartState.comparisonCharts.year) {
-            components.push(<ReactHighstock config={this.state.config} />);
-        }
-        if (this.props.chartState.comparisonCharts.month) {
-            components.push(<ReactHighstock config={this.state.config} />);
-        }
-        if (this.props.chartState.comparisonCharts.week) {
-            components.push(<ReactHighstock config={this.state.config} />);
-        }
+        let {year, month, week} = this.props.chartState.comparisonCharts;
+        components.push(week ? <ReactHighstock config={this.getComparisonChartConfig("week")} key="week" /> : null);
+        components.push(month ? <ReactHighstock config={this.getComparisonChartConfig("month")} key="month" /> : null);
+        components.push(year ? <ReactHighstock config={this.getComparisonChartConfig("year")} key="year" /> : null);
         return components;
     },
     render: function () {
