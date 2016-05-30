@@ -80,9 +80,7 @@ export function monitoringChart (state = defaultState, action) {
         case SELECT_SENSORS_TO_DRAW:
             return defaultNullConfig(state, {sensorsToDraw: action.payload});
         case TOGGLE_COMPARISON_CHART: {
-            let newState = {
-                ...state
-            };
+            let newState = defaultNullConfig(state, {});
             newState.comparisonCharts[action.payload] = !newState.comparisonCharts[action.payload];
             return newState;
         }

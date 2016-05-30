@@ -95,7 +95,7 @@ var MonitoringChart = React.createClass({
         const theme = this.getTheme();
         return {
             chart: {
-                ...this.getCommonChartConfig(),
+                ...this.getCommonChartConfig(props),
                 type: props.chartState.type
             },
             credits: {
@@ -162,12 +162,17 @@ var MonitoringChart = React.createClass({
             yAxis: yAxis
         };
     },
-    getCommonChartConfig: function () {
+    getCommonChartConfig: function (props) {
         const theme = this.getTheme();
         return {
             backgroundColor: theme.colors.background,
-            height: 600
+            height: this.getChartHeight(props)
         };
+    },
+    getChartHeight: function (props) {
+        let {year, month, week} = props.chartState.comparisonCharts;
+        let chartCount = year + month + week;
+        return 600 - (chartCount * 100);
     },
     getBasicLineConfig: function () {
         return {};
@@ -178,7 +183,7 @@ var MonitoringChart = React.createClass({
     getStackedConfig: function (props) {
         return {
             chart: {
-                ...this.getCommonChartConfig(),
+                ...this.getCommonChartConfig(props),
                 type: "column"
             },
             yAxis: {
@@ -203,10 +208,10 @@ var MonitoringChart = React.createClass({
             }
         };
     },
-    getPercentConfig: function () {
+    getPercentConfig: function (props) {
         return {
             chart: {
-                ...this.getCommonChartConfig(),
+                ...this.getCommonChartConfig(props),
                 type: "column"
             },
             plotOptions: {
@@ -223,7 +228,7 @@ var MonitoringChart = React.createClass({
             case "stacked":
                 return this.getStackedConfig(props);
             case "percent":
-                return this.getPercentConfig();
+                return this.getPercentConfig(props);
             case "line":
             default:
                 return this.getBasicLineConfig();
@@ -258,7 +263,7 @@ var MonitoringChart = React.createClass({
                 break;
             }
         }
-        let basicConfig = {
+        return {
             ...this.state.config,
             legend: {
                 enabled: false
@@ -279,7 +284,6 @@ var MonitoringChart = React.createClass({
                 text: chartTitle
             }
         };
-        return basicConfig;
     },
     renderComparisonCharts: function () {
         let components = [];
