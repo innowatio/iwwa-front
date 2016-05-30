@@ -268,6 +268,7 @@ var MonitoringChartView = React.createClass({
                 {this.renderYAxisInputs(theme)}
                 <div style={{textAlign: "center", marginLeft: "25px"}}>
                     <Button
+                        disabled={!this.refs.monitoringChart}
                         onClick={this.changeYAxisValues}
                         style={{
                             ...styles(theme).buttonSelectChart,
@@ -285,6 +286,7 @@ var MonitoringChartView = React.createClass({
                     </Button>
                     <Button
                         bsStyle={"link"}
+                        disabled={!this.refs.monitoringChart}
                         onClick={this.props.resetYAxisValues}
                     >
                         <Icon
@@ -354,6 +356,7 @@ var MonitoringChartView = React.createClass({
     renderChartStyleButton: function (theme, chartType, icon) {
         return (
             <Button
+                disabled={!this.refs.monitoringChart}
                 onClick={() => this.props.selectChartType(chartType)}
                 style={stylesFunction(theme, this.props.monitoringChart.type === chartType).buttonIconStyle}
             >
@@ -369,6 +372,7 @@ var MonitoringChartView = React.createClass({
     renderComparisonButton:  function (theme, icon) {
         return (
             <Button
+                disabled={!this.refs.monitoringChart}
                 onClick={() => this.props.toggleComparisonChart(icon)}
                 style={stylesFunction(theme, this.props.monitoringChart.comparisonCharts[icon]).buttonIconStyle}
             >
@@ -385,7 +389,11 @@ var MonitoringChartView = React.createClass({
         const theme = this.getTheme();
         return (
             <div>
-                <Button onClick={this.openModal} style={stylesFunction(theme).buttonIconStyle}>
+                <Button
+                    disabled={!this.refs.monitoringChart}
+                    onClick={this.openModal}
+                    style={stylesFunction(theme).buttonIconStyle}
+                >
                     <Icon
                         color={theme.colors.iconHeader}
                         icon={"star-o"}
@@ -397,8 +405,7 @@ var MonitoringChartView = React.createClass({
                     marginBottom: "25px",
                     fontSize: "16px",
                     color: theme.colors.navText,
-                    fontWeight: "300",
-                    cursor: "pointer"
+                    fontWeight: "300"
                 }}
                 >
                     {"Aggiungi ai preferiti"}
@@ -493,18 +500,17 @@ var MonitoringChartView = React.createClass({
                                         style={{lineHeight: "20px"}}
                                     />
                                 </Button>
-                                <p style={{
-                                    marginBottom: "25px",
-                                    fontSize: "16px",
-                                    color: theme.colors.navText,
-                                    fontWeight: "300",
-                                    cursor: "pointer",
-                                    textDecoratio: "none"
-                                }}
-                                >
-                                    {"Visualizza elenco"}
-                                </p>
                             </Link>
+                            <p style={{
+                                marginBottom: "25px",
+                                fontSize: "16px",
+                                color: theme.colors.navText,
+                                fontWeight: "300",
+                                textDecoratio: "none"
+                            }}
+                            >
+                                {"Visualizza elenco"}
+                            </p>
                         </Col>
                         <Clearfix>{}</Clearfix>
                     </div>
