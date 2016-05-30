@@ -135,7 +135,7 @@ var MonitoringChartView = React.createClass({
     getStateFromProps: function (props) {
         let state = {
             yAxis: props.monitoringChart.yAxis,
-            favoriteId: null
+            favoriteName: null
         };
         let yAxis = this.getYAxis(props);
         yAxis.forEach(y => {
@@ -161,7 +161,7 @@ var MonitoringChartView = React.createClass({
         });
     },
     onConfirmFullscreenModal: function () {
-        this.props.addToFavorite(this.refs.monitoringChart.state.config, this.state.favoriteId);
+        this.props.addToFavorite(this.refs.monitoringChart.state.config, this.state.favoriteName);
         this.closeModal();
     },
     subscribeToSensorsData: function (props) {
@@ -433,7 +433,7 @@ var MonitoringChartView = React.createClass({
                 </div>
                 <FormControl
                     bsSize="small"
-                    onChange={input => this.setState({favoriteId: input.target.value})}
+                    onChange={input => this.setState({favoriteName: input.target.value})}
                     placeholder={"Inserisci il nome per il tuo grafico"}
                     style={stylesFunction(theme).inputs}
                     type="text"

@@ -75,12 +75,12 @@ var MonitoringFavoritesCharts = React.createClass({
     getTheme: function () {
         return this.context.theme || defaultTheme;
     },
-    renderFavoritesChartsColumns: function (element, item) {
+    renderFavoritesChartsColumns: function (element) {
         const theme = this.getTheme();
         return (
             <div style={styles(theme).headerContainer}>
                 <div style={styles(theme).favouriteNameStyle}>
-                    {element.get("_id")}
+                    {element.get("name")}
                 </div>
                 <Button
                     className="pull-right"
@@ -96,7 +96,7 @@ var MonitoringFavoritesCharts = React.createClass({
                         color={theme.colors.iconHeader}
                         icon={"chart"}
                         onClick={() => {
-                            this.props.selectFavoriteChart(item);
+                            this.props.selectFavoriteChart(element);
                             this.context.router.push("/monitoring/chart/");
                         }}
                         size={"34px"}
@@ -105,45 +105,6 @@ var MonitoringFavoritesCharts = React.createClass({
                 </Button>
             </div>
         );
-        // [
-        //     {
-        //         key: "_id",
-        //         style: function () {
-        //             return {
-        //                 borderRight: "solid 1px black",
-        //                 width: "96%",
-        //                 height: "100%",
-        //                 textAlign: "left"
-        //             };
-        //         }
-        //     },
-        //     {
-        //         key: "chart",
-        //         style: function () {
-        //             return {
-        //                 backgroundColor: theme.colors.black,
-        //                 width: "1%"
-        //             };
-        //         },
-        //         valueFormatter: (value, item) => (
-        //             <Icon
-        //                 color={theme.colors.iconHeader}
-        //                 icon={"chart"}
-        //                 onClick={() => {
-        //                     this.props.selectFavoriteChart(item);
-        //                     this.context.router.push("/monitoring/chart/");
-        //                 }}
-        //                 size={"27px"}
-        //             />
-        //         )
-        //     },
-        //     {
-        //         key: "",
-        //         valueFormatter: () => (
-        //             <div />
-        //         )
-        //     }
-        // ];
     },
     render: function () {
         const theme = this.getTheme();
