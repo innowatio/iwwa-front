@@ -32,7 +32,6 @@ var DraggableSensor = React.createClass({
     propTypes: {
         connectDragSource: PropTypes.func,
         isDragging: PropTypes.bool,
-        key: PropTypes.string,
         sensor: PropTypes.object
     },
     contextTypes: {

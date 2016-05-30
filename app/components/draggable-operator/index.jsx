@@ -46,7 +46,6 @@ var DraggableOperator = React.createClass({
         backgroundColor: PropTypes.string,
         connectDragSource: PropTypes.func,
         isDragging: PropTypes.bool,
-        key: PropTypes.string,
         type: PropTypes.string
     },
     contextTypes: {
@@ -60,7 +59,6 @@ var DraggableOperator = React.createClass({
         let theme = this.getTheme();
         return connectDragSource(
             <div
-                key={this.props.key}
                 style={{
                     display: "inline-block",
                     width: "44px",
