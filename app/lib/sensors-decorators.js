@@ -73,8 +73,10 @@ export const electricalSensors = [
 ];
 
 export function getUnitOfMeasurement (sensorKey) {
-    let fakeTheme = {
-        colors: {}
-    };
-    return R.prop("unit", R.find(R.propEq("key", sensorKey))(allSensorsDecorator(fakeTheme)));
+    if (sensorKey) {
+        let fakeTheme = {
+            colors: {}
+        };
+        return R.prop("unit", R.find(R.propEq("key", sensorKey))(allSensorsDecorator(fakeTheme)));
+    }
 }
