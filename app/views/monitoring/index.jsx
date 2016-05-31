@@ -12,6 +12,7 @@ import {styles} from "lib/styles";
 import {
     Button,
     DropdownButton,
+    FullscreenModal,
     Icon,
     MonitoringSearch,
     MonitoringWorkArea,
@@ -37,14 +38,27 @@ import {
     selectSensor
 } from "actions/sensors";
 
-const buttonStyle = ({colors}) => ({
-    backgroundColor: colors.buttonPrimary,
-    border: "0px none",
-    borderRadius: "100%",
-    height: "50px",
-    margin: "auto",
-    width: "50px",
-    marginLeft: "10px"
+const stylesFunction = (theme) => ({
+    buttonIconStyle: {
+        backgroundColor: theme.colors.buttonPrimary,
+        border: "0px none",
+        borderRadius: "100%",
+        height: "50px",
+        margin: "auto",
+        width: "50px",
+        marginLeft: "10px"
+    },
+    modalTitleStyle: {
+        color: theme.colors.white,
+        display: "inherit",
+        marginBottom: "50px",
+        textAlign: "center",
+        fontWeight: "400",
+        fontSize: "28px"
+    },
+    buttonConfirmStyle: {
+        margin: "0px"
+    }
 });
 
 let advancedOptions = function ({colors}) {
@@ -99,7 +113,9 @@ var Monitoring = React.createClass({
     getInitialState: function () {
         return {
             editSensor: false,
-            showFullscreenModal: false
+            deleteSensors: false,
+            showFullscreenModal: false,
+            showDeleteFullscreenModal: false
         };
     },
     componentDidMount: function () {
@@ -143,13 +159,26 @@ var Monitoring = React.createClass({
             showFullscreenModal: true
         });
     },
+    openDeleteModal: function (deleteSensors) {
+        this.setState({
+            deleteSensors: deleteSensors,
+            showDeleteFullscreenModal: true
+        });
+    },
     closeModal: function (reset) {
         if (reset) {
             this.props.resetFormulaItems(true);
         }
         this.setState({
-            showFullscreenModal: false
+            showFullscreenModal: false,
+            showDeleteFullscreenModal: false
         });
+    },
+    onConfirmFullscreenModal: function () {
+        const selected = this.props.sensorsState.selectedSensors;
+
+        this.props.deleteSensors(selected);
+        this.closeModal();
     },
     renderSensorForm: function () {
         const selected = this.props.sensorsState.selectedSensors;
@@ -172,6 +201,46 @@ var Monitoring = React.createClass({
                 />
             );
         }
+    },
+    renderDeleteButton: function () {
+        const theme = this.getTheme();
+        const selected = this.props.sensorsState.selectedSensors;
+        return (
+            <div style={{display: "inline"}}>
+                <Button
+                    disabled={selected.length < 1}
+                    onClick={this.openDeleteModal}
+                    style={stylesFunction(theme).buttonIconStyle}
+                >
+                    <Icon
+                        color={theme.colors.iconHeader}
+                        icon={"close"}
+                        size={"28px"}
+                        style={{lineHeight: "45px"}}
+                    />
+                </Button>
+                <FullscreenModal
+                    onConfirm={this.onConfirmFullscreenModal}
+                    onHide={this.closeModal}
+                    renderConfirmButton={true}
+                    show={this.state.showDeleteFullscreenModal}
+                >
+                    {this.renderDeleteModalBody()}
+                </FullscreenModal>
+            </div>
+        );
+    },
+    renderDeleteModalBody: function () {
+        const theme = this.getTheme();
+        return (
+            <div style={{textAlign: "center"}}>
+                <div>
+                    <label style={stylesFunction(theme).modalTitleStyle}>
+                        {"Sei sicuro di voler cancellare questo elemento?"}
+                    </label>
+                </div>
+            </div>
+        );
     },
     render: function () {
         const theme = this.getTheme();
@@ -205,7 +274,7 @@ var Monitoring = React.createClass({
                     </div>
                     <div style={{float: "right", marginTop: "3px"}}>
                         <Button
-                            style={buttonStyle(theme)}
+                            style={stylesFunction(theme).buttonIconStyle}
                             disabled={selected.length < 1}
                             onClick={() => this.props.cloneSensors(selected)}
                         >
@@ -217,7 +286,7 @@ var Monitoring = React.createClass({
                             />
                         </Button>
                         <Button
-                            style={buttonStyle(theme)}
+                            style={stylesFunction(theme).buttonIconStyle}
                             disabled={selected.length != 1}
                             onClick={this.onClickEditSensor}
                         >
@@ -228,18 +297,7 @@ var Monitoring = React.createClass({
                                 style={{lineHeight: "45px"}}
                             />
                         </Button>
-                        <Button
-                            style={buttonStyle(theme)}
-                            disabled={selected.length < 1}
-                            onClick={() => this.props.deleteSensors(selected)}
-                        >
-                            <Icon
-                                color={theme.colors.iconHeader}
-                                icon={"close"}
-                                size={"28px"}
-                                style={{lineHeight: "45px"}}
-                            />
-                        </Button>
+                        {this.renderDeleteButton()}
                     </div>
                 </SectionToolbar>
 
