@@ -185,7 +185,7 @@ var MonitoringFavoritesCharts = React.createClass({
                     <CollectionItemList
                         collections={this.props.monitoringChart.favorites}
                         headerComponent={this.renderFavoritesChartsColumns}
-                        initialVisibleRow={16}
+                        initialVisibleRow={10}
                         hover={true}
                         hoverStyle={styles(theme).hoverStyle}
                         lazyLoadButtonStyle={styles(theme).lazyLoadButtonStyle}
