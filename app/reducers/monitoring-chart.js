@@ -1,8 +1,4 @@
-import Immutable from "immutable";
-import UUID from "uuid-js";
-
 import {
-    ADD_TO_FAVORITE,
     CHANGE_Y_AXIS_VALUES,
     RESET_Y_AXIS_VALUES,
     SAVE_CHART_CONFIG,
@@ -23,7 +19,6 @@ let defaultState = {
         key: "all",
         label: "Tutto"
     }],
-    favorites: Immutable.Map(),
     sensorsToDraw: [],
     type: "spline",
     yAxis: {}
@@ -39,18 +34,6 @@ const defaultNullConfig = (state, object) => {
 
 export function monitoringChart (state = defaultState, action) {
     switch (action.type) {
-        case ADD_TO_FAVORITE: {
-            let id = UUID.create().hex;
-            let favorites = state.favorites.set(id, Immutable.Map({
-                _id: id,
-                config: action.payload.config,
-                name: action.payload.name
-            }));
-            return {
-                ...state,
-                favorites: favorites
-            };
-        }
         case CHANGE_Y_AXIS_VALUES:
             return defaultNullConfig(state, {
                 yAxis: {

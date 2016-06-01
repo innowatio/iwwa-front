@@ -1,10 +1,11 @@
+import Immutable from "immutable";
 import React, {PropTypes} from "react";
+import IPropTypes from "react-immutable-proptypes";
 import {connect} from "react-redux";
 import {bindActionCreators} from "redux";
 
-import {selectFavoriteChart} from "actions/monitoring-chart";
+import {MONITORING_CHART_TYPE, selectFavoriteChart} from "actions/monitoring-chart";
 
-// import {getKeyFromCollection} from "lib/collection-utils";
 import {defaultTheme} from "lib/theme";
 import {Button, CollectionItemList, Icon, SectionToolbar} from "components";
 
@@ -65,15 +66,22 @@ const styles = ({colors}) => ({
 
 var MonitoringFavoritesCharts = React.createClass({
     propTypes: {
-        monitoringChart: PropTypes.object.isRequired,
+        asteroid: PropTypes.object,
+        collections: IPropTypes.map.isRequired,
         selectFavoriteChart: PropTypes.func.isRequired
     },
     contextTypes: {
         router: React.PropTypes.object,
         theme: PropTypes.object
     },
+    componentDidMount: function () {
+        this.props.asteroid.subscribe("favoriteChartsByType", MONITORING_CHART_TYPE);
+    },
     getTheme: function () {
         return this.context.theme || defaultTheme;
+    },
+    getFavorites: function () {
+        return this.props.collections.get("favorite-charts") || Immutable.Map();
     },
     renderFavoritesChartsColumns: function (element) {
         const theme = this.getTheme();
@@ -144,7 +152,7 @@ var MonitoringFavoritesCharts = React.createClass({
                 }}
                 >
                     <CollectionItemList
-                        collections={this.props.monitoringChart.favorites}
+                        collections={this.getFavorites()}
                         headerComponent={this.renderFavoritesChartsColumns}
                         initialVisibleRow={10}
                         hover={true}
@@ -162,7 +170,7 @@ var MonitoringFavoritesCharts = React.createClass({
 
 const mapStateToProps = (state) => {
     return {
-        monitoringChart: state.monitoringChart
+        collections: state.collections
     };
 };
 

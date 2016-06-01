@@ -1,4 +1,10 @@
-export const ADD_TO_FAVORITE = "ADD_TO_FAVORITE";
+import axios from "axios";
+import UUID from "uuid-js";
+
+import {WRITE_API_ENDPOINT} from "lib/config";
+
+export const MONITORING_CHART_TYPE = "monitoring";
+
 export const CHANGE_Y_AXIS_VALUES = "CHANGE_Y_AXIS_VALUES";
 export const RESET_Y_AXIS_VALUES = "RESET_Y_AXIS_VALUES";
 export const SAVE_CHART_CONFIG = "SAVE_CHART_CONFIG";
@@ -14,7 +20,29 @@ function getBasicObject (type, payload) {
     };
 }
 
-export const addToFavorite = (config, name) => getBasicObject(ADD_TO_FAVORITE, {config, name});
+export const addToFavorite = (config, name) => {
+    return dispatch => {
+        dispatch({
+            type: "ADDING_TO_FAVORITE"
+        });
+        var endpoint = "http://" + WRITE_API_ENDPOINT + "/sensors";
+        //TODO l'utente?
+        let favorite = {
+            id: UUID.create().hex,
+            name: name,
+            type: MONITORING_CHART_TYPE,
+            config: config
+        };
+        axios.post(endpoint, favorite)
+            .then(() => dispatch({
+                type: "FAVORITE_INSERTION_SUCCESS"
+            }))
+            .catch(() => dispatch({
+                type: "FAVORITE_INSERTION_FAIL"
+            }));
+    };
+
+};
 
 export const changeYAxisValues = (values) => getBasicObject(CHANGE_Y_AXIS_VALUES, values);
 
