@@ -17,6 +17,13 @@ const chartColors = [
     "#E94581"
 ];
 
+const charts = [
+    "DEFAULT",
+    "WEEK",
+    "MONTH",
+    "YEAR"
+];
+
 var MonitoringChart = React.createClass({
     propTypes: {
         chartState: PropTypes.object.isRequired,
@@ -33,6 +40,30 @@ var MonitoringChart = React.createClass({
     },
     componentDidMount: function () {
         this.props.saveConfig(this.state.config);
+
+        ReactHighstock.Highcharts.Pointer.prototype.reset = function () {
+            return undefined;
+        };
+
+        ReactHighstock.Highcharts.Point.prototype.highlight = function (event) {
+            this.onMouseOver(); // Show the hover marker
+            this.series.chart.tooltip.refresh(this); // Show the tooltip TODO verify error on category
+            this.series.chart.xAxis[0].drawCrosshair(event, this); // Show the crosshair
+        };
+    },
+    highlightCharts: function (e) {
+        charts.forEach(chart => {
+            let chartRef = this.refs[chart];
+            if (chartRef) {
+                let hsChart = chartRef.getChart();
+                let event = hsChart.pointer.normalize(e.originalEvent);
+                let point = hsChart.series[0].searchPoint(event, true); //TODO for every series
+
+                if (point) {
+                    point.highlight(e);
+                }
+            }
+        });
     },
     componentWillReceiveProps: function (props) {
         this.setState(this.getStateFromProps(props));
@@ -288,15 +319,15 @@ var MonitoringChart = React.createClass({
     renderComparisonCharts: function () {
         let components = [];
         let {year, month, week} = this.props.chartState.comparisonCharts;
-        components.push(week ? <ReactHighstock config={this.getComparisonChartConfig("week")} key="week" /> : null);
-        components.push(month ? <ReactHighstock config={this.getComparisonChartConfig("month")} key="month" /> : null);
-        components.push(year ? <ReactHighstock config={this.getComparisonChartConfig("year")} key="year" /> : null);
+        components.push(week ? <ReactHighstock config={this.getComparisonChartConfig("week")} key="week" ref={charts[1]} /> : null);
+        components.push(month ? <ReactHighstock config={this.getComparisonChartConfig("month")} key="month" ref={charts[2]} /> : null);
+        components.push(year ? <ReactHighstock config={this.getComparisonChartConfig("year")} key="year" ref={charts[3]} /> : null);
         return components;
     },
     render: function () {
         return (
-            <div style={{marginBottom: "60px", ...this.props.style}}>
-                <ReactHighstock config={this.state.config} />
+            <div style={{marginBottom: "60px", ...this.props.style}} ref="chartsContainer" onMouseMove={this.highlightCharts}>
+                <ReactHighstock config={this.state.config} ref={charts[0]} />
                 {this.renderComparisonCharts()}
             </div>
         );
