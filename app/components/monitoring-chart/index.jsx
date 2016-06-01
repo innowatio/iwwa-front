@@ -51,20 +51,6 @@ var MonitoringChart = React.createClass({
             this.series.chart.xAxis[0].drawCrosshair(event, this); // Show the crosshair
         };
     },
-    highlightCharts: function (e) {
-        charts.forEach(chart => {
-            let chartRef = this.refs[chart];
-            if (chartRef) {
-                let hsChart = chartRef.getChart();
-                let event = hsChart.pointer.normalize(e.originalEvent);
-                let point = hsChart.series[0].searchPoint(event, true); //TODO for every series
-
-                if (point) {
-                    point.highlight(e);
-                }
-            }
-        });
-    },
     componentWillReceiveProps: function (props) {
         this.setState(this.getStateFromProps(props));
     },
@@ -315,6 +301,20 @@ var MonitoringChart = React.createClass({
                 text: chartTitle
             }
         };
+    },
+    highlightCharts: function (e) {
+        charts.forEach(chart => {
+            let chartRef = this.refs[chart];
+            if (chartRef) {
+                let hsChart = chartRef.getChart();
+                let event = hsChart.pointer.normalize(e.originalEvent);
+                let point = hsChart.series[0].searchPoint(event, true); //TODO for every series
+
+                if (point) {
+                    point.highlight(e);
+                }
+            }
+        });
     },
     renderComparisonCharts: function () {
         let components = [];
