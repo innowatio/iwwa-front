@@ -6,6 +6,7 @@ import {WRITE_API_ENDPOINT} from "lib/config";
 export const MONITORING_CHART_TYPE = "monitoring";
 
 export const CHANGE_Y_AXIS_VALUES = "CHANGE_Y_AXIS_VALUES";
+export const FAVORITE_INSERTION_SUCCESS = "FAVORITE_INSERTION_SUCCESS";
 export const RESET_Y_AXIS_VALUES = "RESET_Y_AXIS_VALUES";
 export const SAVE_CHART_CONFIG = "SAVE_CHART_CONFIG";
 export const SELECT_CHART_TYPE = "SELECT_CHART_TYPE";
@@ -26,7 +27,7 @@ export const addToFavorite = (config, name) => {
             type: "ADDING_TO_FAVORITE"
         });
         var endpoint = "http://" + WRITE_API_ENDPOINT + "/sensors";
-        //TODO l'utente?
+        //TODO need to pass logged user for now until there is authentication on write-api
         let favorite = {
             id: UUID.create().hex,
             name: name,
@@ -35,7 +36,8 @@ export const addToFavorite = (config, name) => {
         };
         axios.post(endpoint, favorite)
             .then(() => dispatch({
-                type: "FAVORITE_INSERTION_SUCCESS"
+                type: FAVORITE_INSERTION_SUCCESS,
+                payload: favorite
             }))
             .catch(() => dispatch({
                 type: "FAVORITE_INSERTION_FAIL"
