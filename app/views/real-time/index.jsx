@@ -9,7 +9,7 @@ import {bindActionCreators} from "redux";
 import components from "components";
 import {decorateMeasure, addValueToMeasures} from "./utils";
 import * as sensorsDecorators from "lib/sensors-decorators";
-import {styles} from "lib/styles_restyling";
+import {styles} from "lib/styles";
 import {selectRealTimeSite} from "actions/real-time";
 import {defaultTheme} from "lib/theme";
 import {getTitleForSingleSensor} from "lib/page-header-utils";
@@ -17,8 +17,8 @@ import {getTitleForSingleSensor} from "lib/page-header-utils";
 const styleSiteButton = ({colors}) => ({
     width: "50px",
     height: "50px",
-    padding: "0",
-    border: "0",
+    padding: "0px",
+    border: "0px",
     borderRadius: "100%",
     margin: "3px 0 0 0",
     backgroundColor: colors.primary
@@ -396,9 +396,9 @@ var RealTime = React.createClass({
                             style={{
                                 overflow: "auto",
                                 position: "absolute",
-                                top: "0",
-                                bottom: "0",
-                                left: "0",
+                                top: "0px",
+                                bottom: "0px",
+                                left: "0px",
                                 right: "-20px"
                             }}
                         >

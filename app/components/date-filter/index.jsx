@@ -7,7 +7,7 @@ var momentLocalizer = require("react-widgets/lib/localizers/moment");
 
 import {ButtonGroupSelect} from "components";
 import {defaultTheme} from "lib/theme";
-import {styles} from "lib/styles_restyling";
+import {styles} from "lib/styles";
 import icons from "lib/icons";
 
 const styleDateFilter = ({colors}) => ({
@@ -117,6 +117,7 @@ var DateFilter = React.createClass({
                     end: moment.utc().endOf("isoWeek").valueOf(),
                     valueType: temporalFilter
                 });
+                break;
         }
     },
     getTemporalFilter: function () {

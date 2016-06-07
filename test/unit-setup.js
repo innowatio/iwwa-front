@@ -32,7 +32,11 @@ global.React = React;
 global.ReactDOM = ReactDOM;
 global.TestUtils = ReactTestUtils;
 
-// Avoid `ENVIRONMENT is not defined` when running tests
-global.ENVIRONMENT = "";
+// Avoid `EXEC_ENV is not defined` when running tests
+window.APP_CONFIG = {
+    EXEC_ENV: "",
+    READ_BACKEND_ENDPOINT: "",
+    WRITE_API_ENDPOINT: ""
+};
 // empty localStorage for tests
 global.localStorage = new MockStorage();

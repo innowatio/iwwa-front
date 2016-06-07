@@ -7,13 +7,13 @@ var React           = require("react");
 
 import components from "components";
 import {defaultTheme} from "lib/theme";
-import {styles} from "lib/styles_restyling";
+import {styles} from "lib/styles";
 
 const itemsStyle = (theme) => (R.merge(styles(theme).buttonBasicStyle, {
     background: theme.colors.primary,
     color: theme.colors.white,
     fontSize: "22px",
-    border: "0",
+    border: "0px",
     marginTop: "10px",
     width: "95%",
     padding: "14px",
@@ -66,7 +66,7 @@ var SiteNavigator = React.createClass({
     getFilterCriteria: function (values) {
         const NOT_VISIBLE_SENSORS = ["CO2", "THL", "POD-ANZ"];
         return values.filter((value) => {
-            return NOT_VISIBLE_SENSORS.indexOf(value.get("type").toUpperCase()) < 0;
+            return NOT_VISIBLE_SENSORS.indexOf((value.get("type") || "").toUpperCase()) < 0;
         });
     },
     getFilteredValues: function () {
@@ -167,6 +167,8 @@ var SiteNavigator = React.createClass({
                                     borderRight: "0px",
                                     borderTopLeftRadius: "20px",
                                     borderBottomLeftRadius: "20px",
+                                    borderBottomRightRadius: "0px",
+                                    borderTopRightRadius: "0px",
                                     borderColor: theme.colors.borderInputSearch,
                                     backgroundColor: theme.colors.backgroundInputSearch,
                                     color: theme.colors.mainFontColor
@@ -187,8 +189,15 @@ var SiteNavigator = React.createClass({
                             }}
                             scopeSelector=".search-container"
                         />
-                        <bootstrap.Input
-                            addonAfter={
+                        <bootstrap.FormGroup style={{display: "table"}}>
+                            <bootstrap.FormControl
+                                className="input-search"
+                                onChange={input => this.setState({inputFilter: input.target.value})}
+                                placeholder="Ricerca"
+                                type="text"
+                                value={this.state.inputFilter}
+                            />
+                            <bootstrap.InputGroup.Addon>
                                 <components.Icon
                                     color={theme.colors.iconInputSearch}
                                     icon={"search"}
@@ -198,13 +207,8 @@ var SiteNavigator = React.createClass({
                                         verticalAlign: "middle"
                                     }}
                                 />
-                            }
-                            className="input-search"
-                            onChange={(input) => this.setState({inputFilter: input.target.value})}
-                            placeholder="Ricerca"
-                            type="text"
-                            value={this.state.inputFilter}
-                        />
+                            </bootstrap.InputGroup.Addon>
+                        </bootstrap.FormGroup>
                     </div>
                 </bootstrap.Col>
                 <bootstrap.Col
@@ -223,9 +227,9 @@ var SiteNavigator = React.createClass({
                             rules={{
                                 ".btn-group-vertical": {
                                     position: "absolute",
-                                    top: "0",
-                                    bottom: "0",
-                                    left: "0",
+                                    top: "0px",
+                                    bottom: "0px",
+                                    left: "0px",
                                     right: "-20px",
                                     overflow: "auto",
                                     padding: "15px",

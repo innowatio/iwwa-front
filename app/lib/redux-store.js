@@ -31,17 +31,3 @@ export const load = storage.createLoader(storageEngine);
 load(store);
 
 export default store;
-
-
-// TODO differenze da capire
-//import {hashHistory} from "react-router";
-//import {syncHistory} from "react-router-redux";
-
-
-//const reduxRouterMiddleware = syncHistory(hashHistory);
-
-//const middleware = applyMiddleware(
-//    reduxRouterMiddleware,
-//    thunk,
-//    logger({collapsed: true})
-//);

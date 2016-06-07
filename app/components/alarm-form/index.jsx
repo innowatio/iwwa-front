@@ -4,33 +4,33 @@ var IPropTypes      = require("react-immutable-proptypes");
 var R               = require("ramda");
 var Radium          = require("radium");
 var React           = require("react");
-var ReactStateMixin = require("react-addons-linked-state-mixin");
 import ReactPureRender from "react-addons-pure-render-mixin";
 
 var components       = require("components");
 var CollectionUtils  = require("lib/collection-utils");
 var stringIt         = require("lib/string-it");
-import {styles} from "lib/styles_restyling";
+import {styles} from "lib/styles";
 import {defaultTheme} from "lib/theme";
 
 var styleH3 = ({colors}) => ({
     fontSize: "20px",
     lineHeight: "20px",
     fontWeight: "400",
+    margin: "0px",
     color: colors.mainFontColor
 });
 var styleH4 = ({colors}) => ({
     color: colors.mainFontColor,
     fontSize: "16px",
-    margin: "0",
-    padding: "0"
+    margin: "0px",
+    padding: "0px"
 });
 
 var styleSiteButton = ({colors}) => ({
     width: "50px",
     height: "50px",
-    padding: "0",
-    border: "0",
+    padding: "0px",
+    border: "0px",
     marginRight: "20px",
     borderRadius: "100%",
     backgroundColor: colors.secondary
@@ -48,7 +48,7 @@ var AlarmForm = React.createClass({
     contextTypes: {
         theme: React.PropTypes.object
     },
-    mixins: [ReactStateMixin, ReactPureRender],
+    mixins: [ReactPureRender],
     getInitialState: function () {
         return this.getStateFromProps(this.props);
     },
@@ -67,7 +67,7 @@ var AlarmForm = React.createClass({
     getStateFromProps: function (props) {
         return {
             active: props.alarm.get("active") || true,
-            name: props.alarm.get("name"),
+            name: props.alarm.get("name") || "",
             notification: props.alarm.get("notification") || ["mail"],
             sito: this.getSitoFromProps(props),
             repetition: {
@@ -105,6 +105,13 @@ var AlarmForm = React.createClass({
     },
     getNotificationFromState: function () {
         return this.state.notification;
+    },
+    getSensorsFromId: function (selectedSite) {
+        return this.props.siti.find(site => site.get("_id") === selectedSite);
+    },
+    onChangeSelectTree: function ([value]) {
+        const sito = this.getSensorsFromId(value);
+        this.setState({sito});
     },
     renderAlarmSelectSite: function () {
         const theme = this.getTheme();
@@ -148,7 +155,8 @@ var AlarmForm = React.createClass({
                             filter={CollectionUtils.sites.filter}
                             getKey={CollectionUtils.sites.getKey}
                             getLabel={CollectionUtils.sites.getLabel}
-                            valueLink={this.linkState("sito")}
+                            onChange={this.onChangeSelectTree}
+                            value={this.state.value}
                         />
                     </components.Popover>
                 </div>
@@ -186,14 +194,15 @@ var AlarmForm = React.createClass({
                             rules={styles(theme).inputRangeBar}
                             scopeSelector=".inputRangeBar"
                         />
-                        <bootstrap.Input
+                        <bootstrap.FormControl
                             bsStyle={"success"}
                             max={600}
                             min={0}
                             step={5}
                             style={styles(theme).inputRange}
                             type="range"
-                            valueLink={this.linkState("threshold")}
+                            onChange={input => this.setState({threshold: input.target.value})}
+                            value={this.state.threshold}
                         />
                     </div>
                     <div style={{
@@ -244,10 +253,11 @@ var AlarmForm = React.createClass({
                         fontSize: "20px"
                     }}
                     >{this.props.alarm.get("name")}</h3> :
-                    <bootstrap.Input
+                    <bootstrap.FormControl
                         style={styles(theme).inputLine}
                         type="text"
-                        valueLink={this.linkState("name")}
+                        onChange={input => this.setState({name: input.target.value})}
+                        value={this.state.name}
                     />
                 }
             </div>
@@ -268,14 +278,13 @@ var AlarmForm = React.createClass({
         return (
             <bootstrap.Col lg={6} md={6} xs={12}>
                 <div style={{display: this.props.type === "update" ? "block" : "none"}}>
-                    <components.Spacer direction="v" size={30} />
-                    <bootstrap.Input
-                        checkedLink={this.linkState("active")}
-                        label={
-                            <h3 style={styleH3(theme)}>{stringIt.titleAlarmActive}</h3>
-                        }
-                        type="checkbox"
-                    />
+                    <components.Spacer direction="v" size={50} />
+                    <bootstrap.Checkbox
+                        onChange={() => this.setState({active: !this.state.active})}
+                        value={this.state.active}
+                    >
+                        <h3 style={styleH3(theme)}>{stringIt.titleAlarmActive}</h3>
+                    </bootstrap.Checkbox>
                 </div>
             </bootstrap.Col>
         );
@@ -324,7 +333,7 @@ var AlarmForm = React.createClass({
                     width: "230px",
                     height: "45px",
                     borderRadius: "30px",
-                    border: "0"
+                    border: "0px"
                 }}
             >
                 {this.props.type === "update" ? "SALVA" : "CREA"}
@@ -407,10 +416,10 @@ var AlarmForm = React.createClass({
                         rules={{
                             ".input-group-addon": {
                                 backgroundColor: theme.colors.backgroundSelectSearch,
-                                borderTop: "0",
-                                borderRight: "0",
+                                borderTop: "0px",
+                                borderRight: "0px",
                                 borderBottomRightRadius: "0",
-                                padding: "0"
+                                padding: "0px"
                             }
                         }}
                         scopeSelector=".alarm-form"

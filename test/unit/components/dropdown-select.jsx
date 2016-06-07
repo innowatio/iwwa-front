@@ -1,5 +1,3 @@
-require("unit-setup.js");
-
 var R         = require("ramda");
 var bootstrap = require("react-bootstrap");
 

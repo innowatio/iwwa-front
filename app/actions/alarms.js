@@ -11,8 +11,9 @@ import {
 } from "tcomb";
 import {isEmpty} from "ramda";
 import moment from "moment";
+import actionTypeValidator from "redux-action-type-validator";
 
-import actionTypeValidator from "../lib/action-type-validator";
+import {WRITE_BACKEND_ENDPOINT} from "../lib/config";
 
 export const DISPLAY_ALARMS_ON_CHART = "DISPLAY_ALARMS_ON_CHART";
 export const MODIFY_EXISTENT_ALARM = "MODIFY_EXISTENT_ALARM";
@@ -115,7 +116,7 @@ export function submitAlarmCreationOrChange ({active, name, repetition, sito, th
                 params: [alarm]
             };
         }
-        var endpoint = WRITE_BACKEND_HOST + "/alarms";
+        var endpoint = WRITE_BACKEND_ENDPOINT + "/alarms";
         axios.post(endpoint, requestBody)
             .then(() => dispatch({
                 type: CREATION_ALARM_STOP

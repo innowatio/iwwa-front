@@ -1,10 +1,9 @@
-require("unit-setup.js");
 import {Calendar} from "react-widgets";
 import moment from "moment";
 
 import DateFilter from "components/date-filter";
 import {defaultTheme} from "lib/theme";
-import {styles} from "lib/styles_restyling";
+import {styles} from "lib/styles";
 import ButtonGroupSelect from "components/button-group-select";
 import Button from "components/button";
 

@@ -1,8 +1,4 @@
-require("unit-setup.js");
-
-// import * as  from "reducers/real-time";
 var realTimeReducer = require("reducers/real-time");
-
 
 describe("`real-time` reducer", () => {
 

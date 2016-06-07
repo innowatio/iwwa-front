@@ -8,7 +8,7 @@ var Calendar       = ReactWidgets.Calendar;
 
 var components = require("components");
 var stringIt   = require("lib/string-it");
-import {styles} from "lib/styles_restyling";
+import {styles} from "lib/styles";
 import {defaultTheme} from "lib/theme";
 import icons from "lib/icons";
 

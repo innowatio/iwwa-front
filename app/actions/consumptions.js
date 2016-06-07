@@ -1,6 +1,5 @@
 import {list, String} from "tcomb";
-
-import actionTypeValidator from "lib/action-type-validator";
+import actionTypeValidator from "redux-action-type-validator";
 
 export const SELECT_SINGLE_ELECTRICAL_SENSOR_CONSUMPTION = "SELECT_SINGLE_ELECTRICAL_SENSOR_CONSUMPTION";
 export const SELECT_CONSUMPTIONS_PERIOD = "SELECT_CONSUMPTIONS_PERIOD";

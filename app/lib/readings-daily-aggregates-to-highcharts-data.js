@@ -38,3 +38,12 @@ export default memoize(function readingsDailyAggregatesToHighchartsData (aggrega
 
     return chartData.map(data => ({data}));
 });
+
+//TODO add name and unitOfMeasurement to result
+// return arraysOfData.map((arrayOfData, index) => ({
+//     data: arrayOfData,
+//     name: chartState[index].name,
+//     pointStart: moment.utc(chartState[index].date.start).valueOf(),
+//     pointInterval: fiveMinutesInMs,
+//     unitOfMeasurement: chartState[index].unitOfMeasurement
+// }));

@@ -22,7 +22,7 @@ import {
     resetZoom,
     setZoomExtremes
 } from "actions/chart";
-import {styles} from "lib/styles_restyling";
+import {styles} from "lib/styles";
 import {defaultTheme} from "lib/theme";
 import {getTitleForSingleSensor, getStringPeriod, getSensorName} from "lib/page-header-utils";
 
@@ -32,7 +32,7 @@ const measurementTypeButtonStyle = (theme) => R.merge(styles(theme).buttonSelect
     fontSize: "15px",
     fontWeight: "300",
     margin: "0 0 0 10px",
-    padding: "0"
+    padding: "0px"
 });
 
 const sourceButtonStyle = (theme) => R.merge(styles(theme).buttonSelectChart, {
@@ -44,7 +44,8 @@ const sourceButtonStyle = (theme) => R.merge(styles(theme).buttonSelectChart, {
 const consumptionButtonStyle = ({colors}) => ({
     color: colors.greySubTitle,
     textAlign: "center",
-    padding: "0",
+    marginRight: "15px !important",
+    padding: "0px",
     verticalAlign: "middle",
     borderRadius: "22px",
     width: "45px",
@@ -617,7 +618,7 @@ var Chart = React.createClass({
                         dateButtonStyle(theme), {
                             borderRadius: "0 20px 20px 0",
                             left: "0px",
-                            padding: "0"
+                            padding: "0px"
                         })
                     }
                 >
@@ -717,7 +718,7 @@ var Chart = React.createClass({
                 <components.Button
                     style={
                         R.merge(dateButtonStyle(theme),
-                        {borderRadius: "20px 0 0 20px", right: "0px", padding: "0"})
+                        {borderRadius: "20px 0 0 20px", right: "0px", padding: "0px"})
                     }
                 >
                     <components.Icon

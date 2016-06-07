@@ -22,7 +22,7 @@ import {
 import {defaultTheme} from "lib/theme";
 import NotificationRow from "./notification-row";
 import AlarmRow from "./alarm-row";
-import {styles as stylesLib} from "lib/styles_restyling";
+import {styles as stylesLib} from "lib/styles";
 import CollectionUtils from "lib/collection-utils";
 import SubListNotification from "./sub-list-notification.jsx";
 
@@ -152,7 +152,9 @@ var Alarms = React.createClass({
         this.props.numberOfSelectedTabs(1);
     },
     activeKey: function (key) {
-        this.props.numberOfSelectedTabs(key);
+        if (key) {
+            this.props.numberOfSelectedTabs(key);
+        }
     },
     sortByDate: function (a, b, asc) {
         if (asc) {
@@ -228,8 +230,9 @@ var Alarms = React.createClass({
                 />
                 <div className="tabbed-area">
                     <bootstrap.Tabs
-                        activeKey={this.props.alarms.selectedTab}
+                        activeKey={this.props.alarms.selectedTab || 1}
                         animation={false}
+                        id={"alarm"}
                         bsStyle={"tabs"}
                         onSelect={this.activeKey}
                     >
@@ -260,6 +263,7 @@ var Alarms = React.createClass({
                                 lazyLoadButtonStyle={styles(this.getTheme()).lazyLoadButtonStyle}
                                 lazyLoadButtonStyleContainer={styles(this.getTheme()).lazyLoadButtonStyleContainer}
                                 lazyLoadLabel={"Carica altri"}
+                                showFilterInput={true}
                             />
                         </bootstrap.Tab>
                         <bootstrap.Tab
@@ -278,6 +282,7 @@ var Alarms = React.createClass({
                                 lazyLoadButtonStyle={styles(this.getTheme()).lazyLoadButtonStyle}
                                 lazyLoadButtonStyleContainer={styles(this.getTheme()).lazyLoadButtonStyleContainer}
                                 lazyLoadLabel={"Carica altri"}
+                                showFilterInput={true}
                                 sort={R.partialRight(this.sortByDate, [false])}
                                 subListComponent={this.renderSubListNotification}
                             />

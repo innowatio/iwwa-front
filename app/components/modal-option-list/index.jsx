@@ -45,11 +45,11 @@ var ModalOptionList = React.createClass({
                     onClick={R.partial(value.action, [this.props.getKey(value)])}
                     style={{
                         backgroundColor: colors.transparent,
-                        borderTop: "0",
-                        borderRight: "0",
-                        borderLeft: "0",
+                        borderTop: "0px",
+                        borderRight: "0px",
+                        borderLeft: "0px",
                         textAlign: "left",
-                        borderRadius: "0",
+                        borderRadius: "0px",
                         fontSize: "16px",
                         outline: "none",
                         borderBottom: "1px solid " + colors.borderContentModal,

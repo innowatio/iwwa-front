@@ -3,7 +3,7 @@ import IPropTypes from "react-immutable-proptypes";
 
 import components from "components";
 import {defaultTheme} from "lib/theme";
-import {styles} from "lib/styles_restyling";
+import {styles} from "lib/styles";
 
 var SensorVariableSelector = React.createClass({
     propTypes: {

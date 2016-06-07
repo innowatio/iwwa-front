@@ -1,5 +1,3 @@
-import "unit-setup.js";
-
 import {fromJS} from "immutable";
 import moment from "moment";
 import {fromPairs, map, pipe, range, repeat} from "ramda";
@@ -109,7 +107,7 @@ describe("readingsDailyAggregatesToHighchartsData", () => {
 
     describe("`readingsDailyAggregatesToHighchartsData` function", () => {
 
-        it("readings-daily-aggtregates -> highcharts data structure [CASE: sources-and-sensors-compare & sites-compare]", () => {
+        it("readings-daily-aggregates -> highcharts data structure [CASE: sources-and-sensors-compare & sites-compare]", () => {
             const start = Date.now();
             const res = readingsDailyAggregatesToHighchartsData(
                 readingsDailyAggregates,
@@ -119,12 +117,12 @@ describe("readingsDailyAggregatesToHighchartsData", () => {
             expect(res).to.be.an("array");
             res.map((objectResult, index) => {
                 expect(res[index]).to.be.an("object");
-                expect(res[index]).to.have.all.keys(["data"]);
+                expect(res[index]).to.have.all.keys(["data", "name", "unitOfMeasurement"]);
                 expect(objectResult.data).to.be.an("array");
             });
         });
 
-        it("readings-daily-aggtregates -> highcharts data structure [CASE: date-compare]", () => {
+        it("readings-daily-aggregates -> highcharts data structure [CASE: date-compare]", () => {
             const start = Date.now();
             const res = readingsDailyAggregatesToHighchartsData(
                 readingsDailyAggregates,
@@ -134,7 +132,7 @@ describe("readingsDailyAggregatesToHighchartsData", () => {
             expect(res).to.be.an("array");
             res.map((objectResult, index) => {
                 expect(res[index]).to.be.an("object");
-                expect(res[index]).to.have.all.keys(["data"]);
+                expect(res[index]).to.have.all.keys(["data", "name", "unitOfMeasurement"]);
                 expect(objectResult.data).to.be.an("array");
             });
         });

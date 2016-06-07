@@ -120,7 +120,7 @@ var ButtonGroupSelect = React.createClass({
                 onClick={R.partial(this.onChange, [allowedValue])}
                 style={active ? this.getActiveStyle() : this.props.style}
             >
-                <p style={{overflow: "hidden", margin: "0", padding: "0", whiteSpace: "nowrap", textOverflow: "ellipsis"}}>
+                <p style={{overflow: "hidden", margin: "0px", padding: "0px", whiteSpace: "nowrap", textOverflow: "ellipsis"}}>
                     {this.props.getLabel(allowedValue)}
                 </p>
                 {active && this.props.showArrowActive ? this.renderButtonArrow() : undefined}
