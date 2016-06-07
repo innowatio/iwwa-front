@@ -9,10 +9,10 @@ import {
     REMOVE_SENSOR_FROM_WORK_AREA,
     RESET_FORMULA_ITEMS,
     SELECT_SENSOR,
+    SENSOR_CREATION_SUCCESS,
     SENSOR_DELETE_SUCCESS
 } from "../actions/sensors";
 
-import {getKeyFromCollection} from "lib/collection-utils";
 import {formulaToOperator, getSensorId} from "lib/sensors-utils";
 
 let defaultState = {
@@ -59,7 +59,7 @@ function parseSensorFormula (sensor) {
 
 function removeFromSelected (selectedSensors, sensorId) {
     return selectedSensors.filter(it => {
-        return getKeyFromCollection(it) !== sensorId;
+        return getSensorId(it) !== sensorId;
     });
 }
 
@@ -103,12 +103,16 @@ export function sensors (state = defaultState, action) {
         case SELECT_SENSOR: {
             let sensor = action.payload;
             if (newState.selectedSensors.find((it) => {
-                return getKeyFromCollection(it) === getKeyFromCollection(sensor);
+                return getSensorId(it) === getSensorId(sensor);
             })) {
-                newState.selectedSensors = removeFromSelected(newState.selectedSensors, getKeyFromCollection(sensor));
+                newState.selectedSensors = removeFromSelected(newState.selectedSensors, getSensorId(sensor));
             } else {
                 newState.selectedSensors.push(sensor);
             }
+            break;
+        }
+        case SENSOR_CREATION_SUCCESS: {
+            newState.selectedSensors = removeFromSelected(newState.selectedSensors, action.payload.parentSensorId);
             break;
         }
         case SENSOR_DELETE_SUCCESS: {
