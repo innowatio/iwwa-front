@@ -3,7 +3,7 @@ import R from "ramda";
 import IPropTypes from "react-immutable-proptypes";
 
 import {defaultTheme} from "lib/theme";
-import {getSensorId} from "lib/sensors-utils";
+import {getSensorId, getSensorLabel} from "lib/sensors-utils";
 
 import {CollectionItemList, MonitoringSensorRow, SensorsDropArea} from "components";
 
@@ -82,6 +82,12 @@ var MonitoringWorkArea = React.createClass({
         }
         return found;
     },
+    sortByLabel: function (a, b, asc) {
+        if (asc) {
+            return getSensorLabel(a) > getSensorLabel(b) ? 1 : -1;
+        }
+        return getSensorLabel(a) > getSensorLabel(b) ? -1 : 1;
+    },
     renderSensorList: function (element, elementId) {
         let found = R.find((it) => {
             return getSensorId(it) === elementId;
@@ -143,6 +149,7 @@ var MonitoringWorkArea = React.createClass({
                                 initialVisibleRow={6}
                                 lazyLoadButtonStyle={lazyLoadButtonStyle(theme)}
                                 lazyLoadLabel={"Carica altri"}
+                                sort={R.partialRight(this.sortByLabel, [true])}
                             />
                         </div>
                     </div>
