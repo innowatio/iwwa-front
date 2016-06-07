@@ -14,7 +14,9 @@ export const REMOVE_ITEM_FROM_FORMULA = "REMOVE_ITEM_FROM_FORMULA";
 export const REMOVE_SENSOR_FROM_WORK_AREA = "REMOVE_SENSOR_FROM_WORK_AREA";
 export const RESET_FORMULA_ITEMS = "RESET_FORMULA_ITEMS";
 export const SELECT_SENSOR = "SELECT_SENSOR";
+export const SENSOR_CREATION_SUCCESS = "SENSOR_CREATION_SUCCESS";
 export const SENSOR_DELETE_SUCCESS = "SENSOR_DELETE_SUCCESS";
+export const SENSOR_UPDATE_SUCCESS = "SENSOR_UPDATE_SUCCESS";
 
 const MONITORING_TYPE = "custom-monitoring";
 
@@ -30,7 +32,8 @@ function getSensorObj (collectionItem) {
         "name": (collectionItem.get("name") ? collectionItem.get("name") : collectionItem.get("_id")),
         "description": collectionItem.get("description"),
         "unitOfMeasurement": collectionItem.get("unitOfMeasurement"),
-        "formula": collectionItem.get("formula"),
+        //TODO treat new formula format
+        // "formula": collectionItem.get("formula"),
         "tags": collectionItem.get("tags"),
         "siteId": collectionItem.get("siteId"),
         "userId": collectionItem.get("userId"),
@@ -50,7 +53,8 @@ function insertSensor (requestBody, dispatch) {
     let sensor = addMonitoringAttrs(requestBody);
     axios.post(endpoint, sensor)
         .then(() => dispatch({
-            type: "SENSOR_CREATION_SUCCESS"
+            type: SENSOR_CREATION_SUCCESS,
+            payload: requestBody
         }))
         .catch(() => dispatch({
             type: "SENSOR_CREATION_FAIL"
@@ -83,7 +87,9 @@ export const addSensorToWorkArea = (sensor) => getBasicObject(ADD_SENSOR_TO_WORK
 export const removeSensorFromWorkArea = (index) => getBasicObject(REMOVE_SENSOR_FROM_WORK_AREA, index);
 
 export const addSensor = (sensor, formulaItems) => {
-    sensor.formula = buildFormula(formulaItems);
+    //TODO treat new formula format
+    // sensor.formula = buildFormula(formulaItems);
+    console.log(buildFormula(formulaItems)); //TODO treat linting...
     return dispatch => {
         dispatch({
             type: "ADDING_SENSOR"
@@ -136,7 +142,8 @@ function callEditSensor (sensorData, sensorId) {
         var endpoint = "http://" + WRITE_API_ENDPOINT + "/sensors/" + sensorId;
         axios.put(endpoint, sensorData)
             .then(() => dispatch({
-                type: "SENSOR_UPDATE_SUCCESS"
+                type: SENSOR_UPDATE_SUCCESS,
+                payload: {sensorData, sensorId}
             }))
             .catch(() => dispatch({
                 type: "SENSOR_UPDATE_FAIL"
@@ -148,7 +155,8 @@ export const editSensor = (sensorData, formulaItems, sensor) => {
     let type = sensor.get("type");
     if (type === MONITORING_TYPE) {
         let id = sensor.get("_id");
-        sensorData.formula = buildFormula(formulaItems);
+        //TODO treat new formula format
+        // sensorData.formula = buildFormula(formulaItems);
         sensorData.id = id;
         sensorData.type = type;
         sensorData.virtual = true;
