@@ -223,7 +223,8 @@ var MonitoringChartView = React.createClass({
         return series.some((it) => {
             let isNull = true;
             for (let i = 0; i < it.data.length && isNull; i++) {
-                isNull = !it.data[i];
+                let val = it.data[i][1];
+                isNull = !val || val == 0;
             }
             return isNull;
         });
