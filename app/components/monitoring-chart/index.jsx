@@ -65,16 +65,10 @@ var MonitoringChart = React.createClass({
     normalizeSeries: function (props, yAxis) {
         var series = [];
         props.series.forEach (item => {
-            let data = [];
-            let nexDate = item.pointStart - item.pointInterval;
-            item.data.forEach (dataVal => {
-                data.push([nexDate + item.pointInterval, dataVal]);
-                nexDate += item.pointInterval;
-            });
             let yAxisIndex = R.findIndex(R.propEq("key", item.unitOfMeasurement))(yAxis);
             series.push({
                 color: yAxis[yAxisIndex].labels.style.color,
-                data: data,
+                data: item.data,
                 name: item.name,
                 yAxis: yAxisIndex
             });

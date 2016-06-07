@@ -36,14 +36,9 @@ export default memoize(function readingsDailyAggregatesToHighchartsData (aggrega
         return data;
     }, chartsState);
 
-    return chartData.map(data => ({data}));
+    return chartData.map((arrayOfData, index) => ({
+        data: arrayOfData,
+        name: chartsState[index].name,
+        unitOfMeasurement: chartsState[index].unitOfMeasurement
+    }));
 });
-
-//TODO add name and unitOfMeasurement to result
-// return arraysOfData.map((arrayOfData, index) => ({
-//     data: arrayOfData,
-//     name: chartState[index].name,
-//     pointStart: moment.utc(chartState[index].date.start).valueOf(),
-//     pointInterval: fiveMinutesInMs,
-//     unitOfMeasurement: chartState[index].unitOfMeasurement
-// }));
