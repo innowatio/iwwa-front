@@ -42,20 +42,31 @@ function parseSensorFormula (sensor) {
         formulaItems: [],
         sensors: []
     };
-    let sensorFormula = sensor.get("formula");
-    if (!R.isNil(sensorFormula) && !R.isEmpty(sensorFormula)) {
-        let formulaElems = sensorFormula.split("|");
-        R.forEach((elem) => {
-            if (formulaToOperator[elem]) {
-                result.formulaItems.push({operator: formulaToOperator[elem], type: "operator"});
-            } else {
-                result.formulaItems.push({sensor: elem, type: "sensor"});
-                result.sensors.push(elem);
-            }
-        }, formulaElems);
+    let sensorFormulas = sensor.get("formulas");
+    if (!R.isNil(sensorFormulas) && sensorFormulas.size == 1) {
+        let formula = sensorFormulas.first();
+        result.formulaItems = populateFormulaItems(formula.get("formula"), formula.get("variables"), []);
+        result.sensors = formula.get("variables").toArray();
     }
     return result;
 }
+
+function populateFormulaItems (formula, variables, formulaItems) {
+    variables.forEach(sensor => {
+        if (formula.indexOf(sensor) == 0) {
+            formulaItems.push({sensor: sensor, type: "sensor"});
+            populateFormulaItems(formula.replace(sensor, ""), variables, formulaItems);
+        }
+    });
+    R.keys(formulaToOperator).forEach(key => {
+        if (formula.indexOf(key) == 0) {
+            formulaItems.push({operator: formulaToOperator[key], type: "operator"});
+            populateFormulaItems(formula.replace(key, ""), variables, formulaItems);
+        }
+    });
+    return formulaItems;
+}
+
 
 function removeFromSelected (selectedSensors, sensorId) {
     return selectedSensors.filter(it => {

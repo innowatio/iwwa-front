@@ -169,7 +169,7 @@ var MonitoringChartView = React.createClass({
         let allSensors = this.getAllSensors();
         sensors[0] && sensors.forEach((sensor) => {
             let sensorObj = this.getSensorObj(sensor, allSensors);
-            let sensorFormula = sensorObj.get("formula");
+            let sensorFormula = sensorObj.get("formulas").first();
             let sensors = sensorFormula ? extractSensorsFromFormula(sensorFormula, allSensors) : [sensorObj];
             sensors.forEach((sensor) => {
                 // last year for sensors
@@ -223,7 +223,8 @@ var MonitoringChartView = React.createClass({
         return series.some((it) => {
             let isNull = true;
             for (let i = 0; i < it.data.length && isNull; i++) {
-                isNull = !it.data[i];
+                let val = it.data[i][1];
+                isNull = !val || val == 0;
             }
             return isNull;
         });

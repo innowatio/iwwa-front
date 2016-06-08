@@ -59,15 +59,13 @@ export function getSensorId (sensor) {
 
 //TODO capire se dev'essere ricorsiva....
 export function extractSensorsFromFormula (formula, allSensors) {
-    let sensorsIds = [];
+    let sensors = [];
     if (formula) {
-        formula.split("|").forEach((item) => {
-            if (!formulaToOperator[item]) {
-                sensorsIds.push(allSensors.get(item));
-            }
+        formula.get("variables").forEach(item => {
+            sensors.push(allSensors.get(item));
         });
     }
-    return sensorsIds;
+    return sensors;
 }
 
 export function getAllSensors (sensorsCollection) {
