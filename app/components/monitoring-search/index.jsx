@@ -190,7 +190,11 @@ var MonitoringSearch = React.createClass({
                         <Icon
                             color={theme.colors.white}
                             icon={"reset"}
-                            onClick={() => self.setState(self.getInitialState())}
+                            onClick={() => {
+                                self.setState(self.getInitialState(), function () {
+                                    self.filterSensors();
+                                }.bind(self));
+                            }}
                             size={"35px"}
                             style={{
                                 verticalAlign: "middle",
