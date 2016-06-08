@@ -2,7 +2,7 @@ import axios from "axios";
 import UUID from "uuid-js";
 
 import {Types} from "lib/dnd-utils";
-import {getSensorId} from "lib/sensors-utils";
+import {getSensorId, operatorToFormula} from "lib/sensors-utils";
 
 import {WRITE_API_ENDPOINT} from "lib/config";
 
@@ -32,8 +32,7 @@ function getSensorObj (collectionItem) {
         "name": (collectionItem.get("name") ? collectionItem.get("name") : collectionItem.get("_id")),
         "description": collectionItem.get("description"),
         "unitOfMeasurement": collectionItem.get("unitOfMeasurement"),
-        //TODO treat new formula format
-        // "formula": collectionItem.get("formula"),
+        "formulas": collectionItem.get("formulas"),
         "tags": collectionItem.get("tags"),
         "siteId": collectionItem.get("siteId"),
         "userId": collectionItem.get("userId"),
@@ -61,21 +60,31 @@ function insertSensor (requestBody, dispatch) {
         }));
 }
 
-function buildFormula (formulaItems) {
-    let formula = "";
-    formulaItems.forEach((item) => {
-        switch (item.type) {
-            case Types.SENSOR: {
-                formula += item.sensor.get("_id");
-                break;
+function buildFormulas (formulaItems) {
+    if (formulaItems && formulaItems.length > 0) {
+        let formula = "";
+        let variables = new Set();
+        formulaItems.forEach((item) => {
+            switch (item.type) {
+                case Types.SENSOR: {
+                    formula += getSensorId(item.sensor);
+                    variables.add(getSensorId(item.sensor));
+                    break;
+                }
+                case Types.OPERATOR: {
+                    formula += operatorToFormula[item.operator];
+                    break;
+                }
             }
-            case Types.OPERATOR: {
-                formula += item.operator;
-                break;
-            }
-        }
-    });
-    return formula;
+        });
+        return [{
+            formula: formula,
+            start: "1970-01-01T00:00:00.000Z",
+            end: "3000-01-01T00:00:00.000Z",
+            variables: Array.from(variables),
+            measurementType: []
+        }];
+    }
 }
 
 export const addItemToFormula = (item) => getBasicObject(ADD_ITEM_TO_FORMULA, item);
@@ -87,9 +96,7 @@ export const addSensorToWorkArea = (sensor) => getBasicObject(ADD_SENSOR_TO_WORK
 export const removeSensorFromWorkArea = (index) => getBasicObject(REMOVE_SENSOR_FROM_WORK_AREA, index);
 
 export const addSensor = (sensor, formulaItems) => {
-    //TODO treat new formula format
-    // sensor.formula = buildFormula(formulaItems);
-    console.log(buildFormula(formulaItems)); //TODO treat linting...
+    sensor.formulas = buildFormulas(formulaItems);
     return dispatch => {
         dispatch({
             type: "ADDING_SENSOR"
@@ -155,8 +162,7 @@ export const editSensor = (sensorData, formulaItems, sensor) => {
     let type = sensor.get("type");
     if (type === MONITORING_TYPE) {
         let id = sensor.get("_id");
-        //TODO treat new formula format
-        // sensorData.formula = buildFormula(formulaItems);
+        sensorData.formulas = buildFormulas(formulaItems);
         sensorData.id = id;
         sensorData.type = type;
         sensorData.virtual = true;

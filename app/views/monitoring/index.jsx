@@ -132,6 +132,9 @@ var Monitoring = React.createClass({
         if (this.state.editSensor && selected.length == 1) {
             var fields = selected[0].toJS();
             fields.name = (getSensorLabel(selected[0]));
+            if (!fields.tags) {
+                fields.tags = [];
+            }
             return fields;
         } else {
             //TODO find how to delete initial values...

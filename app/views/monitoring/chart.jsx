@@ -169,7 +169,7 @@ var MonitoringChartView = React.createClass({
         let allSensors = this.getAllSensors();
         sensors[0] && sensors.forEach((sensor) => {
             let sensorObj = this.getSensorObj(sensor, allSensors);
-            let sensorFormula = sensorObj.get("formula");
+            let sensorFormula = sensorObj.get("formulas").first();
             let sensors = sensorFormula ? extractSensorsFromFormula(sensorFormula, allSensors) : [sensorObj];
             sensors.forEach((sensor) => {
                 // last year for sensors
