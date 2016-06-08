@@ -83,10 +83,12 @@ var MonitoringWorkArea = React.createClass({
         return found;
     },
     sortByLabel: function (a, b, asc) {
+        let aLabel = getSensorLabel(a).toLowerCase();
+        let bLabel = getSensorLabel(b).toLowerCase();
         if (asc) {
-            return getSensorLabel(a) > getSensorLabel(b) ? 1 : -1;
+            return aLabel > bLabel ? 1 : -1;
         }
-        return getSensorLabel(a) > getSensorLabel(b) ? -1 : 1;
+        return aLabel > bLabel ? -1 : 1;
     },
     renderSensorList: function (element, elementId) {
         let found = R.find((it) => {
