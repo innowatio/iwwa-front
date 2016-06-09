@@ -1,6 +1,5 @@
-require("unit-setup.js");
 import {fromJS} from "immutable";
-import {Col, Input} from "react-bootstrap";
+import {Col, FormControl} from "react-bootstrap";
 
 import SiteNavigator from "components/site-navigator";
 
@@ -227,7 +226,7 @@ describe("`SiteNavigator` component", () => {
     ).shallowRender();
 
     it("have at least one input box", () => {
-        expect($siteNavigator.find(Input).length).to.equal(1);
+        expect($siteNavigator.find(FormControl).length).to.equal(1);
     });
 
     it("have 3 children for filter, sites and sensors", () => {
@@ -236,7 +235,7 @@ describe("`SiteNavigator` component", () => {
 
     it("save search into state", () => {
         var $colFilter = $($siteNavigator.find(Col)[0]);
-        var $input = $colFilter.find(Input);
+        var $input = $colFilter.find(FormControl);
         $input.trigger("change", {
             target: {
                 value: "Test 2"

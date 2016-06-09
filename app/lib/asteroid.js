@@ -2,11 +2,12 @@ import {createClass} from "asteroid";
 var collectionMixin = require("asteroid-immutable-collections-mixin");
 
 var reactMixin = require("./asteroid-react.js");
+import {READ_BACKEND_ENDPOINT} from "./config";
 
 var Asteroid = createClass([reactMixin, collectionMixin]);
 
 var asteroid = new Asteroid({
-    endpoint: "ws://" + READ_BACKEND_HOST + "/websocket"
+    endpoint: READ_BACKEND_ENDPOINT
 });
 
 

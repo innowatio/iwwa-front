@@ -7,9 +7,9 @@ import {defaultTheme} from "lib/theme";
 const styles = ({colors}) => ({
     panel: {
         backgroundColor: colors.backgroundAlarmsPanel,
-        margin: "0",
-        padding: "0",
-        border: "0",
+        margin: "0px",
+        padding: "0px",
+        border: "0px",
         borderRadius: "0px"
     }
 });
@@ -38,7 +38,7 @@ var SubListNotification = React.createClass({
                 expanded={this.props.isExpanded}
                 style={styles(this.getTheme()).panel}
             >
-                {"Consumi maggiori del 41% rispetto alla media - 2 anomalie simili (15.5.15, 08.06.15)"}
+                {"Consumi maggiori del 41% rispetto alla media - 2 anomalie simili (15.04.16, 08.05.16)"}
             </bootstrap.Panel>
         );
     }

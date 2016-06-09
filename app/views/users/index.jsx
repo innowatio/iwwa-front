@@ -7,7 +7,7 @@ var R          = require("ramda");
 var Radium              = require("radium");
 
 var components = require("components");
-import {styles} from "lib/styles_restyling";
+import {styles} from "lib/styles";
 import {defaultTheme} from "lib/theme";
 
 var Users = React.createClass({
@@ -143,7 +143,7 @@ var Users = React.createClass({
                             fontSize: "18px",
                             fontWeight: "400",
                             padding: "10px 6px",
-                            margin: "0",
+                            margin: "0px",
                             backgroundColor: theme.colors.backgroundUserRowHover
                         }}
                         hover={true}

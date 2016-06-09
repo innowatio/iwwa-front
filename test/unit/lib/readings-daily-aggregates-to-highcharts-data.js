@@ -1,5 +1,3 @@
-import "unit-setup.js";
-
 import {fromJS} from "immutable";
 import moment from "moment";
 import {fromPairs, map, pipe, range, repeat} from "ramda";
@@ -109,7 +107,7 @@ describe("readingsDailyAggregatesToHighchartsData", () => {
 
     describe("`readingsDailyAggregatesToHighchartsData` function", () => {
 
-        it("readings-daily-aggtregates -> highcharts data structure [CASE: sources-and-sensors-compare & sites-compare]", () => {
+        it("readings-daily-aggregates -> highcharts data structure [CASE: sources-and-sensors-compare & sites-compare]", () => {
             const start = Date.now();
             const res = readingsDailyAggregatesToHighchartsData(
                 readingsDailyAggregates,
@@ -124,7 +122,7 @@ describe("readingsDailyAggregatesToHighchartsData", () => {
             });
         });
 
-        it("readings-daily-aggtregates -> highcharts data structure [CASE: date-compare]", () => {
+        it("readings-daily-aggregates -> highcharts data structure [CASE: date-compare]", () => {
             const start = Date.now();
             const res = readingsDailyAggregatesToHighchartsData(
                 readingsDailyAggregates,
@@ -140,13 +138,13 @@ describe("readingsDailyAggregatesToHighchartsData", () => {
         });
 
         describe("`data` array", () => {
-            
+
             it("should be an array of correct values", () => {
                 const res = readingsDailyAggregatesToHighchartsData(
                     readingsDailyAggregates,
                     filtersSourcesAndSensors
                 );
-                
+
                 res.forEach((resource, resIndex) => {
                     const startTime = filtersSourcesAndSensors[resIndex].date.start;
                     const endTime = filtersSourcesAndSensors[resIndex].date.end;

@@ -44,6 +44,7 @@ var CollectionItemList = React.createClass({
         lazyLoadButtonStyle: PropTypes.object,
         lazyLoadButtonStyleContainer: PropTypes.object,
         lazyLoadLabel: PropTypes.string,
+        showFilterInput: PropTypes.bool,
         sort: PropTypes.func,
         subListComponent: PropTypes.func
     },
@@ -99,15 +100,30 @@ var CollectionItemList = React.createClass({
     },
     renderInputFilter: function () {
         // We use components.InputFilter because is used in many part of application.
-        return this.props.filter ? (
+        return this.props.showFilterInput ? (
             <components.InputFilter
                 onChange={this.onChangeInputFilter}
                 style={this.props.inputFilterStyle}
             />
         ) : null;
     },
+    renderEmptyMessage: function () {
+        const theme = this.getTheme();
+        return (
+            <div style={{
+                textAlign: "center",
+                color: theme.colors.buttonPrimary,
+                fontSize: "20px",
+                fontWeight: 600,
+                padding: "20px 0px"
+            }}
+            >
+                {"Non ci sono elementi disponibili"}
+            </div>
+        );
+    },
     renderLazyLoad: function (collectionSize) {
-        return this.props.initialVisibleRow && (this.state.visibleValuesList <= collectionSize) ? (
+        return this.props.initialVisibleRow && (collectionSize > this.state.visibleValuesList) ? (
             <div
                 onClick={() => this.setState({
                     visibleValuesList: this.state.visibleValuesList + this.props.initialVisibleRow})
@@ -129,7 +145,11 @@ var CollectionItemList = React.createClass({
             <div>
                 {this.renderInputFilter()}
                 <div style={{height: "100%", overflow: "auto"}}>
-                    {collectionList.slice(0, this.props.initialVisibleRow ? this.state.visibleValuesList : Infinity)}
+                    {
+                        collectionList.length > 0 ?
+                        collectionList.slice(0, this.props.initialVisibleRow ? this.state.visibleValuesList : Infinity) :
+                        this.renderEmptyMessage()
+                    }
                     <div style={this.props.lazyLoadButtonStyleContainer}>
                         {this.renderLazyLoad(collectionList.length)}
                     </div>

@@ -9,4 +9,17 @@
 After cloning the repository, run `npm install` to install all dependencies, and
 `npm run dev` to start the development server.
 
-**N.B.** Frontend application need backend service ([`iwwa-back`](https://github.com/innowatio/iwwa-back)) running on local 3000 port.
+To run the development server with custom environment variables use
+
+```sh
+env VARIABLE="" npm run dev
+```
+
+**N.B.** Frontend application need backend service ([`iwwa-back`]
+    (https://github.com/innowatio/iwwa-back)) running on local 3000 port.
+
+## Production environment setup
+
+For the production setup, are read the environment variables prefixed by
+__APP_CONFIG__ file when `NODE_ENV=production` (see
+    [sd-builder](https://git.io/vr1Bf)).

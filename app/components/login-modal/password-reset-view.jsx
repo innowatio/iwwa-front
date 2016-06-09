@@ -1,6 +1,7 @@
 import color from "color";
 import Radium, {Style} from "radium";
 import React, {PropTypes} from "react";
+import ReactDOM from "react-dom";
 import * as bootstrap from "react-bootstrap";
 
 import components from "components";
@@ -13,7 +14,10 @@ const stylesFunction = ({colors}) => ({
             marginBottom: "0px"
         },
         ".form-group div, .form-group span, .form-group input": {
-            border: "0px",
+            borderTop: "0px",
+            borderBottom: "0px",
+            borderRight: "0px",
+            borderLeft: "0px",
             height: "88px",
             fontSize: "26px",
             borderTopLeftRadius: "20px !important",
@@ -43,8 +47,12 @@ const stylesFunction = ({colors}) => ({
         borderRadius: "20px",
         fontWeight: "300",
         overflow: "hidden",
-        border: "solid 1px",
+        borderTop: "1px",
+        borderBottom: "1px",
+        borderRight: "1px",
+        borderLeft: "1px",
         borderColor: color(colors.white).alpha(0.3).rgbString(),
+        borderStyle: "solid",
         color: colors.white,
         backgroundColor: color(colors.black).alpha(0.15).rgbString()
     },
@@ -92,18 +100,18 @@ var PasswordResetView = React.createClass({
     },
     passwordReset: function () {
         var credentials = {
-            email: this.refs.email.getValue()
+            email: ReactDOM.findDOMNode(this.refs.email).value
         };
         this.setError(null);
         this.props.asteroid.call("forgotPassword", credentials)
             .then(this.setEmailSent)
             .catch(this.setError);
     },
-    renderError: function (styles) {
+    renderError: function () {
         return this.state.error ? (
             <bootstrap.Alert
                 bsStyle="danger"
-                style={styles.errorAlert}
+                style={stylesFunction(this.getTheme()).errorAlert}
             >
                 {"Alla mail non corrisponde alcun untente"}
             </bootstrap.Alert>
@@ -124,20 +132,22 @@ var PasswordResetView = React.createClass({
                         rules={styles.radiumStylePasswordReset}
                         scopeSelector=".ac-login-modal-inputs"
                     />
-                    <bootstrap.Input
-                        addonBefore={
+                    <bootstrap.FormGroup style={{display: "table"}}>
+                        <bootstrap.InputGroup.Addon>
                             <components.Icon
                                 color={this.getTheme().colors.iconLogin}
                                 icon={"user"}
                                 size={"45px"}
                                 style={{lineHeight: "20px", verticalAlign: "middle"}}
                             />
-                        }
-                        bsSize="large"
-                        placeholder="Email"
-                        ref="email"
-                        type="email"
-                    />
+                        </bootstrap.InputGroup.Addon>
+                        <bootstrap.FormControl
+                            bsSize="large"
+                            placeholder="Email"
+                            ref="email"
+                            type="email"
+                        />
+                    </bootstrap.FormGroup>
                 </div>
                 <components.Spacer direction="v" size={16} />
                 <components.Button

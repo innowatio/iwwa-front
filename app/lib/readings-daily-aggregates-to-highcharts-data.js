@@ -4,7 +4,7 @@ import moment from "moment";
 const mapIndexed = addIndex(map);
 
 export default memoize(function readingsDailyAggregatesToHighchartsData (aggregates, chartsState) {
-    
+
     if (aggregates.isEmpty()) {
         return [{
             data: []

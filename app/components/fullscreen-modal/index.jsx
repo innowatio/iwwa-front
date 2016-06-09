@@ -9,7 +9,7 @@ const buttonConfirmStyle = ({colors}) => ({
     width: "275px",
     height: "50px",
     lineHeight: "45px",
-    padding: "0",
+    padding: "0px",
     margin: "0 0 0 20px",
     fontSize: "20px",
     border: "0px",
@@ -83,11 +83,11 @@ var FullscreenModal = React.createClass({
 
                         },
                         ".modal-dialog": {
-                            bottom: "0",
-                            left: "0",
-                            top: "0",
+                            bottom: "0px",
+                            left: "0px",
+                            top: "0px",
                             right: "0",
-                            margin: "0",
+                            margin: "0px",
                             overflow: "hidden",
                             position: "fixed",
                             height: "100%",
@@ -96,7 +96,7 @@ var FullscreenModal = React.createClass({
                         ".modal-content": {
                             backgroundColor: this.props.backgroundColor || colors.backgroundModal,
                             border: "none",
-                            borderRadius: "0",
+                            borderRadius: "0px",
                             height: "100%",
                             width: "100%",
                             overflow: "auto"

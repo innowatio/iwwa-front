@@ -1,5 +1,3 @@
-require("unit-setup.js");
-
 var alarmsReducer = require("reducers/alarms");
 
 describe("`alarms` reducer", () => {

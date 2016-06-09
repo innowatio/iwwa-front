@@ -1,172 +1,120 @@
-let aSensor = {
-    id: -1,
-    fields: {
-        name: "primo sensore",
-        description: "descrizione",
-        unitOfMeasurement: {
-            id: 2,
-            label: "Fahrenheit"
-        },
-        tags: ["temperature", "italy"]
-    },
-    monitoring: true
-};
+import R from "ramda";
 
-let bSensor = {
-    id: -2,
-    fields: {
-        name: "secondo sensore",
-        description: "descrizione",
-        unitOfMeasurement: {
-            id: 2,
-            label: "Fahrenheit"
-        },
-        tags: []
-    },
-    favorite: true,
-    monitoring: false
-};
+import {
+    ADD_ITEM_TO_FORMULA,
+    ADD_SENSOR_TO_WORK_AREA,
+    FILTER_SENSORS,
+    GET_FORMULA_ITEMS,
+    REMOVE_ITEM_FROM_FORMULA,
+    REMOVE_SENSOR_FROM_WORK_AREA,
+    RESET_FORMULA_ITEMS,
+    SELECT_SENSOR,
+    SENSOR_DELETE_SUCCESS
+} from "../actions/sensors";
+
+import {getKeyFromCollection} from "lib/collection-utils";
+import {formulaToOperator, getSensorId} from "lib/sensors-utils";
 
 let defaultState = {
-    allSensors: [aSensor, bSensor],
-    //allSensors: [],
-    selectedSensors: []
+    current: {
+        formulaItems: []
+    },
+    selectedSensors: [],
+    tagsToFilter: [],
+    wordsToFilter: [],
+    workAreaSensors: []
 };
 
 function cloneState (state) {
     return {
-        allSensors: state.allSensors.slice(),
-        selectedSensors: state.selectedSensors.slice()
+        current: {
+            formulaItems: state.current.formulaItems.slice()
+        },
+        selectedSensors: state.selectedSensors.slice(),
+        tagsToFilter: state.tagsToFilter.slice(),
+        wordsToFilter: state.wordsToFilter.slice(),
+        workAreaSensors: state.workAreaSensors.slice()
     };
 }
 
-function findSensor (sensors, id) {
-    return sensors.find(t => {
-        return t.id === id;
-    });
-}
-
-function sortSensors (state) {
-    return state.sort(function (a, b) {
-        if (a.favorite)
-            return -1;
-        if (b.favorite)
-            return 1;
-        return 0;
-    });
-}
-
-function sensor (state = null, {type, fields, id}) {
-    switch (type) {
-        case "ADD_SENSOR":
-            return {
-                id: id,
-                fields: fields
-            };
-        case "EDIT_SENSOR":
-            if (state.id !== id) {
-                return state;
+function parseSensorFormula (sensor) {
+    let result = {
+        formulaItems: [],
+        sensors: []
+    };
+    let sensorFormula = sensor.get("formula");
+    if (!R.isNil(sensorFormula) && !R.isEmpty(sensorFormula)) {
+        let formulaElems = sensorFormula.split("|");
+        R.forEach((elem) => {
+            if (formulaToOperator[elem]) {
+                result.formulaItems.push({operator: formulaToOperator[elem], type: "operator"});
+            } else {
+                result.formulaItems.push({sensor: elem, type: "sensor"});
+                result.sensors.push(elem);
             }
-            return {
-                fields: fields,
-                id: id,
-                favorite: state.favorite,
-                monitoring: state.monitoring
-            };
-        default:
-            return state;
+        }, formulaElems);
     }
+    return result;
+}
+
+function removeFromSelected (selectedSensors, sensorId) {
+    return selectedSensors.filter(it => {
+        return getKeyFromCollection(it) !== sensorId;
+    });
 }
 
 export function sensors (state = defaultState, action) {
-    var newState;
-    var found;
+    var newState = cloneState(state);
     switch (action.type) {
-        case "ADD_SENSOR": {
-            newState = cloneState(state);
-            newState.allSensors.push(sensor(undefined, action));
-            return newState;
+        case ADD_ITEM_TO_FORMULA: {
+            newState.current.formulaItems.push(action.payload);
+            break;
         }
-        case "EDIT_SENSOR": {
-            newState = cloneState(state);
-            newState.allSensors = state.allSensors.map(t =>
-                sensor(t, action)
-            );
-            return newState;
+        case ADD_SENSOR_TO_WORK_AREA: {
+            newState.workAreaSensors.push(getSensorId(action.payload));
+            break;
         }
-        case "DELETE_SENSOR": {
-            newState = cloneState(state);
-            newState.allSensors = state.allSensors.filter(t => {
-                return t.id !== action.id;
-            });
-            return newState;
+        case FILTER_SENSORS: {
+            newState.tagsToFilter = action.payload.tagsToFilter;
+            newState.wordsToFilter = action.payload.wordsToFilter;
+            break;
         }
-        case "CLONE_SENSOR": {
-            newState = cloneState(state);
-            var toClone = findSensor(newState.allSensors, action.id);
-            var cloned = {
-                id: action.newId,
-                fields: {
-                    ...toClone.fields
-                }
-            };
-            cloned.fields.name += " (cloned)";
-            newState.allSensors.push(cloned);
-            return newState;
+        case GET_FORMULA_ITEMS: {
+            let result = parseSensorFormula(state.selectedSensors[0]);
+            newState.current.formulaItems = result.formulaItems;
+            newState.workAreaSensors = result.sensors;
+            break;
         }
-        case "FAVORITE_SENSOR": {
-            newState = cloneState(state);
-            found = findSensor(newState.allSensors, action.id);
-            found.favorite = !found.favorite;
-            newState.allSensors = sortSensors(newState.allSensors);
-            return newState;
+        case REMOVE_ITEM_FROM_FORMULA: {
+            newState.current.formulaItems.splice(action.payload, 1);
+            break;
         }
-        case "MONITOR_SENSOR": {
-            newState = cloneState(state);
-            found = findSensor(newState.allSensors, action.id);
-            found.monitoring = !found.monitoring;
-            newState.allSensors = sortSensors(newState.allSensors);
-            return newState;
+        case REMOVE_SENSOR_FROM_WORK_AREA: {
+            newState.workAreaSensors.splice(action.payload, 1);
+            break;
         }
-        case "SELECT_SENSOR": {
-            newState = cloneState(state);
-            var foundSelected = findSensor(newState.selectedSensors, action.id);
-            if (foundSelected) {
-                newState.selectedSensors = newState.selectedSensors.filter(t => {
-                    return t.id !== action.id;
-                });
-            } else {
-                found = findSensor(newState.allSensors, action.id);
-                newState.selectedSensors.push(found);
+        case RESET_FORMULA_ITEMS: {
+            newState.current.formulaItems = [];
+            if (action.payload) {
+                newState.workAreaSensors = [];
             }
-            return newState;
+            break;
         }
-        case "COMBINE_SENSOR": {
-            newState = cloneState(state);
-            var mergedTitles = newState.selectedSensors.reduce(function (prev, curr) {
-                return prev.fields.name + ", " + curr.fields.name;
-            });
-            newState.selectedSensors = [];
-            var combinedSensor = {
-                id: action.newId,
-                fields: {
-                    name: "combined (" + mergedTitles + ")",
-                    description: "",
-                    unitOfMeasurement: "",
-                    aggregationType: "",
-                    prefGranularity: "",
-                    siteRef: "",
-                    clientRef: "",
-                    tags: []
-                }
-            };
-            newState.allSensors.push(combinedSensor);
-            return newState;
+        case SELECT_SENSOR: {
+            let sensor = action.payload;
+            if (newState.selectedSensors.find((it) => {
+                return getKeyFromCollection(it) === getKeyFromCollection(sensor);
+            })) {
+                newState.selectedSensors = removeFromSelected(newState.selectedSensors, getKeyFromCollection(sensor));
+            } else {
+                newState.selectedSensors.push(sensor);
+            }
+            break;
         }
-        default: {
-            newState = cloneState(state);
-            newState.allSensors = sortSensors(newState.allSensors);
-            return newState;
+        case SENSOR_DELETE_SUCCESS: {
+            newState.selectedSensors = removeFromSelected(newState.selectedSensors, action.payload);
+            break;
         }
     }
+    return newState;
 }

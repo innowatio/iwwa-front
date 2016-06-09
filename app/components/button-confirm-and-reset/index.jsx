@@ -3,7 +3,7 @@ import ReactPureRender from "react-addons-pure-render-mixin";
 
 import components from "components";
 import {defaultTheme} from "lib/theme";
-import {styles} from "lib/styles_restyling";
+import {styles} from "lib/styles";
 
 const stylesContainer = {
     clear: "both",

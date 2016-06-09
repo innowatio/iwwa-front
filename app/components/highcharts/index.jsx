@@ -16,9 +16,11 @@ import {defaultTheme} from "lib/theme";
 var HighCharts = React.createClass({
     propTypes: {
         colors: PropTypes.arrayOf(PropTypes.string),
+        config: PropTypes.object,
         coordinates: PropTypes.arrayOf(PropTypes.object),
         dateCompare: PropTypes.arrayOf(PropTypes.object),
         dateFilter: PropTypes.object,
+        forceUpdate: PropTypes.bool,
         isComparationActive: PropTypes.bool,
         isDateCompareActive: PropTypes.bool,
         resetZoom: PropTypes.func.isRequired,
@@ -47,7 +49,7 @@ var HighCharts = React.createClass({
         });
     },
     shouldComponentUpdate: function (newProps) {
-        return !(
+        return this.props.forceUpdate || !(
             equals(this.props.coordinates, newProps.coordinates)
         );
     },
@@ -136,7 +138,7 @@ var HighCharts = React.createClass({
     },
     getConfig: function () {
         const {colors} = this.getTheme();
-        return {
+        let config = {
             chart: {
                 backgroundColor: colors.background,
                 events: {
@@ -175,8 +177,12 @@ var HighCharts = React.createClass({
             series: this.getSeries(),
             title: null,
             xAxis: this.getXAxis(),
-            yAxis: this.getYAxis()
+            yAxis: this.getYAxis(),
+
+            // Override with custom config
+            ...this.props.config
         };
+        return config;
     },
     render: function () {
         return (

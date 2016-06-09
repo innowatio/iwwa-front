@@ -1,5 +1,3 @@
-require("unit-setup.js");
-
 import moment from "moment";
 import {range} from "ramda";
 

@@ -5,14 +5,16 @@
         <title>iwwa-front</title>
         <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, maximum-scale=1.0">
         <meta charset="utf-8">
-        <!-- @if ENVIRONMENT=='cordova' -->
+        <!-- @if EXEC_ENV=='cordova' -->
         <link rel="stylesheet" type="text/css" href="_assets/css/vendor.css" />
         <link rel="stylesheet" type="text/css" href="_assets/css/Glyphter.css" />
+        <link rel="stylesheet" type="text/css" href="_assets/css/tagsinput.css" />
         <link href="https://fonts.googleapis.com/css?family=Lato:300,400,700,300italic,400italic,700italic" rel="stylesheet" type="text/css">
         <!-- @endif -->
-        <!-- @if ENVIRONMENT!='cordova' -->
+        <!-- @if EXEC_ENV!='cordova' -->
         <link rel="stylesheet" type="text/css" href="/_assets/css/vendor.css" />
         <link rel="stylesheet" type="text/css" href="/_assets/css/Glyphter.css" />
+        <link rel="stylesheet" type="text/css" href="/_assets/css/tagsinput.css" />
         <link href="https://fonts.googleapis.com/css?family=Lato:300,400,700,300italic,400italic,700italic" rel="stylesheet" type="text/css">
         <!-- @endif -->
         <style>
@@ -34,12 +36,14 @@
 
     <body>
         <div id="root" />
-        <!-- @if ENVIRONMENT=='cordova' -->
+        <!-- @if EXEC_ENV=='cordova' -->
+        <script src="app-config.js"></script>
         <script src="cordova.js"></script>
         <script src="_assets/js/vendor.js"></script>
         <script src="_assets/js/app.js"></script>
         <!-- @endif -->
-        <!-- @if ENVIRONMENT!='cordova' -->
+        <!-- @if EXEC_ENV!='cordova' -->
+        <script src="/app-config.js"></script>
         <script src="/_assets/js/vendor.js"></script>
         <script src="/_assets/js/app.js"></script>
         <!-- @endif -->

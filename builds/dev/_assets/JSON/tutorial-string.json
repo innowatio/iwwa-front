@@ -1,0 +1,25 @@
+{
+    "historicalGraph": {
+
+        "valori": "Scegli che dati mostrare.",
+        "export": "Esporta l'immagine del grafico o il CSV con i dati.",
+        "tipologie": "Scegli il tipo di dato da mostrare tra: <ul type='disc'> <li>Energia Attiva</li> <li>Energia Reattiva</li> <li>Potenza Massima</li> <ul>",
+        "siti": "Scegli il punto di misura.",
+        "dateFilter": "Specifica il periodo temporale.",
+        "compare": "Compara 2 siti o 2 periodi temporali per uno stesso sito.",
+        "appGraph": "Puoi fare zoom <img src='../_assets/icons/tutorial/tutorial_pinch.svg'/> e scroll <img src='../_assets/icons/tutorial/tutorial_swipe.svg'/>",
+        "webGraph": "Puoi fare lo zoom cliccando e muovendo il mouse. <br /> Puoi fare lo scroll premendo il tasto SHIFT e scrollando."
+    },
+
+    "alarmForm": {
+
+        "siti": "Scegli il sito per il quale impostare l'allarme.",
+        "threshold": "Imposta la soglia alla quale far scattare l'allarme.",
+        "name": "Dai un nome all'allarme.",
+        "notification": "Imposta come vuoi essere notificato.",
+        "active": "Attiva / disattiva l'allarme",
+        "repetition": "Imposta quando l'allarme è attivo."
+
+    }
+
+}
