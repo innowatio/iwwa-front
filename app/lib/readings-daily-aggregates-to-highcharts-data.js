@@ -1,3 +1,4 @@
+import Immutable from "immutable";
 import {evaluateFormula} from "iwwa-formula-resolver";
 import {addIndex, map, memoize} from "ramda";
 import moment from "moment";
@@ -40,43 +41,46 @@ function buildSimpleData (day, chartState, sortedAggregate, data) {
     const aggregate = sortedAggregate.get(
         `${sensorId}-${day.format("YYYY-MM-DD")}-${source.key}-${measurementType.key}`
     );
-    if (aggregate) {
-        const times = aggregate.get("measurementTimes").split(",");
-        const values = aggregate.get("measurementValues").split(",");
-        const measurement = mapIndexed((value, valueIndex) => {
-            return [parseInt(times[valueIndex]), parseFloat(value)];
-        }, values);
-        data.push(...measurement);
+    populateData(data, day, aggregate, () => {
+        return getMeasurement(aggregate);
+    });
+}
+
+function buildFormulaData (day, chartState, sortedAggregate, data, allSensors) {
+    const {source, formula} = chartState;
+    let sensorsData = [];
+    let hasSomeAggregates = false;
+    formula.get("variables").forEach(sensorId => {
+        let sensor = allSensors.get(sensorId);
+        const aggregate = sortedAggregate.get(
+            `${sensor.get("_id")}-${day.format("YYYY-MM-DD")}-${source.key}-${sensor.get("measurementType")}`
+        );
+        sensorsData.push({
+            sensorId: sensorId,
+            measurementTimes: aggregate ? aggregate.get("measurementTimes") : "",
+            measurementValues: aggregate ? aggregate.get("measurementValues"): ""
+        });
+        hasSomeAggregates = hasSomeAggregates || aggregate;
+    });
+    populateData(data, day, hasSomeAggregates, () => {
+        let result = evaluateFormula({formula: formula.get("formula")}, sensorsData);
+        return getMeasurement(Immutable.fromJS(result));
+    });
+}
+
+function populateData (data, day, condition, populateFunc) {
+    if (condition) {
+        data.push(...populateFunc());
     } else if (day.isBefore(moment.utc())) {
         data.push([day.startOf("day").valueOf(), 0]);
         data.push([day.endOf("day").valueOf(), 0]);
     }
 }
 
-function buildFormulaData (day, chartState, sortedAggregate, data, allSensors) {
-    const {source, formula} = chartState;
-    let sensorsData = [];
-    formula.get("variables").forEach(sensorId => {
-        let sensor = allSensors.get(sensorId);
-        const aggregate = sortedAggregate.get(
-            `${sensor.get("_id")}-${day.format("YYYY-MM-DD")}-${source.key}-${sensor.get("measurementType")}`
-        );
-        if (aggregate) {
-            sensorsData.push({
-                sensorId: sensorId,
-                measurementTimes: aggregate.get("measurementTimes"),
-                measurementValues: aggregate.get("measurementValues")
-            });
-        }
-        //TODO what when there's no aggregate?
-        // else if (day.isBefore(moment.utc())) {
-        //     data.push([day.startOf("day").valueOf(), 0]);
-        //     data.push([day.endOf("day").valueOf(), 0]);
-        // }
-
-    });
-    console.log(formula.get("formula"));
-    console.log(sensorsData);
-    let result = evaluateFormula({formula: formula.get("formula")}, sensorsData);
-    console.log(result);
+function getMeasurement (aggregate) {
+    const times = aggregate.get("measurementTimes").split(",");
+    const values = aggregate.get("measurementValues").split(",");
+    return mapIndexed((value, valueIndex) => {
+        return [parseInt(times[valueIndex]), parseFloat(value)];
+    }, values);
 }
