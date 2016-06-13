@@ -73,6 +73,7 @@
     "highcharts-offline-exporting": "^0.1.2",
     "immutable": "^3.8.1",
     "intro.js": "^2.1.0",
+    "iwwa-formula-resolver": "^1.2.0",
     "iwwa-icons": "^1.0.7",
     "lodash.debounce": "^4.0.6",
     "lodash.get": "^4.3.0",

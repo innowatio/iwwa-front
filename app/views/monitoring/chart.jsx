@@ -169,7 +169,7 @@ var MonitoringChartView = React.createClass({
         let allSensors = this.getAllSensors();
         sensors[0] && sensors.forEach((sensor) => {
             let sensorObj = this.getSensorObj(sensor, allSensors);
-            let sensorFormula = sensorObj.get("formulas").first();
+            let sensorFormula = sensorObj.get("formulas") ? sensorObj.get("formulas").first() : null;
             let sensors = sensorFormula ? extractSensorsFromFormula(sensorFormula, allSensors) : [sensorObj];
             sensors.forEach((sensor) => {
                 // last year for sensors
@@ -194,7 +194,7 @@ var MonitoringChartView = React.createClass({
                     start: moment.utc().startOf("year").valueOf(),
                     end: moment.utc().endOf("month").valueOf()
                 },
-                formula: sensorObj.get("formula"),
+                formula: sensorObj.get("formulas") ? sensorObj.get("formulas").first() : null,
                 measurementType: {key: sensorObj.get("measurementType")},
                 name: getSensorLabel(sensorObj),
                 sensorId: sensorObj.get("_id"),
@@ -204,7 +204,7 @@ var MonitoringChartView = React.createClass({
         });
         const readingsDailyAggregates = props.collections.get("readings-daily-aggregates");
         if (readingsDailyAggregates) {
-            return readingsDailyAggregatesToHighchartsData(readingsDailyAggregates, monitoringCharts);
+            return readingsDailyAggregatesToHighchartsData(readingsDailyAggregates, monitoringCharts, allSensors);
         }
     },
     getYAxisValidationState: function () {
