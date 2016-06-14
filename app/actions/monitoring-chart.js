@@ -21,16 +21,16 @@ function getBasicObject (type, payload) {
     };
 }
 
-export const addToFavorite = (config, name) => {
+export const addToFavorite = (config, name, userId) => {
     return dispatch => {
         dispatch({
             type: "ADDING_TO_FAVORITE"
         });
-        var endpoint = "http://" + WRITE_API_ENDPOINT + "/sensors";
-        //TODO need to pass logged user for now until there is authentication on write-api
+        var endpoint = "http://" + WRITE_API_ENDPOINT + "/favorite-charts";
         let favorite = {
             id: UUID.create().hex,
             name: name,
+            owner: userId,
             type: MONITORING_CHART_TYPE,
             config: config
         };

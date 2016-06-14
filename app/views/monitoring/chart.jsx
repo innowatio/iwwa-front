@@ -161,7 +161,7 @@ var MonitoringChartView = React.createClass({
         });
     },
     onConfirmFullscreenModal: function () {
-        this.props.addToFavorite(this.refs.monitoringChart.state.config, this.state.favoriteName);
+        this.props.addToFavorite(this.refs.monitoringChart.state.config, this.state.favoriteName, this.props.asteroid.userId);
         this.closeModal();
     },
     subscribeToSensorsData: function (props) {
