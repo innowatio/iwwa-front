@@ -21,18 +21,19 @@ function getBasicObject (type, payload) {
     };
 }
 
-export const addToFavorite = (config, name, userId) => {
+export const addToFavorite = (state, name, userId) => {
     return dispatch => {
         dispatch({
             type: "ADDING_TO_FAVORITE"
         });
+        state.config = null;
         var endpoint = "http://" + WRITE_API_ENDPOINT + "/favorite-charts";
         let favorite = {
             id: UUID.create().hex,
             name: name,
             owner: userId,
             type: MONITORING_CHART_TYPE,
-            config: config
+            state: state
         };
         axios.post(endpoint, favorite)
             .then(() => dispatch({
@@ -60,7 +61,7 @@ export const saveChartConfig = (config, yAxisDisabled) =>  {
 
 export const selectChartType = (chartType) => getBasicObject(SELECT_CHART_TYPE, chartType);
 
-export const selectFavoriteChart = (favoriteChart) => getBasicObject(SELECT_FAVORITE_CHART, favoriteChart.get("config"));
+export const selectFavoriteChart = (favoriteChart) => getBasicObject(SELECT_FAVORITE_CHART, favoriteChart.get("state"));
 
 export function selectSensorsToDraw (sensors) {
     let sensorsArray = (Array.isArray(sensors) ? sensors : [sensors]);

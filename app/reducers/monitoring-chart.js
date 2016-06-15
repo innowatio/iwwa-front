@@ -57,13 +57,7 @@ export function monitoringChart (state = defaultState, action) {
         case SELECT_CHART_TYPE:
             return defaultNullConfig(state, {type: action.payload});
         case SELECT_FAVORITE_CHART:
-            //TODO verificare yAxis
-            return {
-                ...state,
-                config: action.payload,
-                type: action.payload.chart.type,
-                yAxis: action.payload.yAxis
-            };
+            return action.payload;
         case SELECT_SENSOR:
             return defaultNullConfig(state);
         case SELECT_SENSORS_TO_DRAW:
