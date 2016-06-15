@@ -14,14 +14,18 @@ describe("readingsDailyAggregatesToHighchartsData", () => {
             const sensorId = `sensor_${idx % 5}`;
             const day = `2015-${padLeft((idx % 3) + 1)}-${padLeft((idx % 28) + 1)}`;
             const _id = `${sensorId}-${day}-reading-activeEnergy`;
+            const values = measurementsString(idx % 5 + 1);
+            const times = values.split(",").map((value, index) => {
+                return moment.utc(day).add({minutes: index}).valueOf();
+            });
             return [_id, {
                 _id,
                 sensorId,
                 day,
                 source: "reading",
                 measurementType: "activeEnergy",
-                measurementValues: measurementsString(idx%5 + 1),
-                measurementsDeltaInMs: 300000
+                measurementValues: measurementsString(idx % 5 + 1),
+                measurementTimes: times.join(",")
             }];
         }),
         fromPairs,
@@ -103,7 +107,7 @@ describe("readingsDailyAggregatesToHighchartsData", () => {
 
     describe("`readingsDailyAggregatesToHighchartsData` function", () => {
 
-        it("readings-daily-aggtregates -> highcharts data structure [CASE: sources-and-sensors-compare & sites-compare]", () => {
+        it("readings-daily-aggregates -> highcharts data structure [CASE: sources-and-sensors-compare & sites-compare]", () => {
             const start = Date.now();
             const res = readingsDailyAggregatesToHighchartsData(
                 readingsDailyAggregates,
@@ -113,16 +117,12 @@ describe("readingsDailyAggregatesToHighchartsData", () => {
             expect(res).to.be.an("array");
             res.map((objectResult, index) => {
                 expect(res[index]).to.be.an("object");
-                expect(res[index]).to.have.all.keys(["data", "pointStart", "pointInterval"]);
+                expect(res[index]).to.have.all.keys(["data"]);
                 expect(objectResult.data).to.be.an("array");
-                expect(objectResult.pointStart).to.equal(
-                    moment.utc(filtersSitesCompare[index].date.start).valueOf()
-                );
-                expect(objectResult.pointInterval).to.equal(300000);
             });
         });
 
-        it("readings-daily-aggtregates -> highcharts data structure [CASE: date-compare]", () => {
+        it("readings-daily-aggregates -> highcharts data structure [CASE: date-compare]", () => {
             const start = Date.now();
             const res = readingsDailyAggregatesToHighchartsData(
                 readingsDailyAggregates,
@@ -132,12 +132,8 @@ describe("readingsDailyAggregatesToHighchartsData", () => {
             expect(res).to.be.an("array");
             res.map((objectResult, index) => {
                 expect(res[index]).to.be.an("object");
-                expect(res[index]).to.have.all.keys(["data", "pointStart", "pointInterval"]);
+                expect(res[index]).to.have.all.keys(["data"]);
                 expect(objectResult.data).to.be.an("array");
-                expect(objectResult.pointStart).to.equal(
-                    moment.utc(filtersDateCompare[index].date.start).valueOf()
-                );
-                expect(objectResult.pointInterval).to.be.equal(300000);
             });
         });
 
@@ -148,84 +144,16 @@ describe("readingsDailyAggregatesToHighchartsData", () => {
                     readingsDailyAggregates,
                     filtersSourcesAndSensors
                 );
-                expect(res[0].data).to.deep.equal(repeat(2, 864));
+
+                res.forEach((resource, resIndex) => {
+                    const startTime = filtersSourcesAndSensors[resIndex].date.start;
+                    const endTime = filtersSourcesAndSensors[resIndex].date.end;
+                    resource.data.forEach((data) => {
+                        expect(data[0]).to.be.within(moment.utc(startTime).valueOf(), moment.utc(endTime).endOf("day").valueOf());
+                        expect(data[1]).to.equal(2);
+                    });
+                });
             });
-
         });
-
     });
-
-    describe("`numberOfDayInFilter` function", () => {
-
-        const numberOfDayInFilter = readingsDailyAggregatesToHighchartsData.__get__("numberOfDayInFilter");
-
-        it("should return 0 if there is no date filter", () => {
-            const dateFilter = [{date: {}}, {date: {}}];
-            const ret = numberOfDayInFilter(dateFilter);
-            expect(ret).to.equal(0);
-        });
-
-        it("should return the max number of day in date filter", () => {
-            const dateFilter = [{
-                date: {
-                    start: moment("2016-01-01").startOf("day").valueOf(),
-                    end: moment("2016-01-03").endOf("day").valueOf()
-                }
-            }, {
-                date: {
-                    start: moment("2016-01-01").startOf("day").valueOf(),
-                    end: moment("2016-01-31").endOf("day").valueOf()
-                }
-            }, {
-                date: {
-                    start: moment("2016-01-01").startOf("day").valueOf(),
-                    end: moment("2016-02-16").endOf("day").valueOf()
-                }
-            }];
-            const ret = numberOfDayInFilter(dateFilter);
-            expect(ret).to.equal(47);
-        });
-
-    });
-
-    describe("`getFindAggregateFilterIndex` function", () => {
-
-        const getFindAggregateFilterIndex = readingsDailyAggregatesToHighchartsData.__get__("getFindAggregateFilterIndex");
-        const getReadingsDailyAggregate = (sensorId, _id, day) => fromJS({
-            _id,
-            sensorId,
-            day,
-            source: "reading",
-            measurementType: "activeEnergy",
-            measurementValues: measurementsString(4),
-            measurementsDeltaInMs: 300000
-        });
-
-        it("should return the index of the filters [CASE: `filters[0].date.type !== 'dateCompare'`]", () => {
-            const sensorId = "sensor_1";
-            const day = "2016-03-11";
-            const _id = "sensor_1-2016-03-11-reading-activeEnergy";
-            const readingsDailyAggregate = getReadingsDailyAggregate(sensorId, _id, day);
-            const findAggregateFilterIndex = getFindAggregateFilterIndex([{
-                ...filtersDateCompare[0],
-                date: {}
-            }]);
-            const ret = findAggregateFilterIndex(readingsDailyAggregate);
-            expect(ret).to.be.a("number");
-            expect(ret).to.equal(0);
-        });
-
-        it("should return the index of the filters [CASE: `filters[0].date.type === 'dateCompare'`]", () => {
-            const sensorId = "sensor_1";
-            const day = "2015-02-28";
-            const _id = "sensor_1-2015-03-11-reading-activeEnergy";
-            const readingsDailyAggregate = getReadingsDailyAggregate(sensorId, _id, day);
-            const findAggregateFilterIndex = getFindAggregateFilterIndex(filtersDateCompare);
-            const ret = findAggregateFilterIndex(readingsDailyAggregate);
-            expect(ret).to.be.an("array");
-            expect(ret).to.deep.equal([0, 1]);
-        });
-
-    });
-
 });
