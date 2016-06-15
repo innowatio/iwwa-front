@@ -319,6 +319,7 @@ var MonitoringChartView = React.createClass({
                         <ControlLabel>{y +" min:"}</ControlLabel>
                         <FormControl
                             type="number"
+                            disabled={this.props.monitoringChart.yAxis.disabled}
                             bsStyle={this.getYAxisValidationState()}
                             hasFeedback={true}
                             onChange={input => {
@@ -338,6 +339,7 @@ var MonitoringChartView = React.createClass({
                         <ControlLabel>{y + " max:"}</ControlLabel>
                         <FormControl
                             type="number"
+                            disabled={this.props.monitoringChart.yAxis.disabled}
                             bsStyle={this.getYAxisValidationState()}
                             hasFeedback={true}
                             onChange={input => {

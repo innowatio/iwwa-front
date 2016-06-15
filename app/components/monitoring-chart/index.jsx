@@ -39,8 +39,6 @@ var MonitoringChart = React.createClass({
         return this.getStateFromProps(this.props);
     },
     componentDidMount: function () {
-        this.props.saveConfig(this.state.config);
-
         ReactHighstock.Highcharts.Pointer.prototype.reset = function () {
             return undefined;
         };
@@ -64,14 +62,17 @@ var MonitoringChart = React.createClass({
     },
     normalizeSeries: function (props, yAxis) {
         var series = [];
-        props.series.forEach (item => {
+        props.series.forEach ((item, index) => {
             let yAxisIndex = R.findIndex(R.propEq("key", item.unitOfMeasurement))(yAxis);
-            series.push({
-                color: yAxis[yAxisIndex].labels.style.color,
+            let config = {
                 data: item.data,
                 name: item.name,
                 yAxis: yAxisIndex
-            });
+            };
+            if (chartColors.length > index) {
+                config.color = chartColors[index];
+            }
+            series.push(config);
         });
         return {
             series: series
@@ -79,16 +80,12 @@ var MonitoringChart = React.createClass({
     },
     getYAxis: function (props) {
         let yAxis = [];
-        props.yAxis.forEach ((item, index) => {
+        props.yAxis.forEach ((item) => {
             let {min, max} = props.chartState.yAxis[item];
-            let color = index < chartColors.length ? chartColors[index] : null;
             let config = {
                 key: item,
                 labels: {
-                    format: "{value} " + item,
-                    style: {
-                        color: color
-                    }
+                    format: "{value} " + item
                 },
                 opposite: yAxis.length > 0
             };
@@ -235,26 +232,32 @@ var MonitoringChart = React.createClass({
     getSpecificTypeConfig: function (props) {
         switch (props.chartState.type) {
             case "column":
-                return this.getColumnConfig();
+                return this.getColumnConfig(props);
             case "stacked":
                 return this.getStackedConfig(props);
             case "percent":
                 return this.getPercentConfig(props);
             case "line":
             default:
-                return this.getBasicLineConfig();
+                return this.getBasicLineConfig(props);
         }
     },
     buildConfig: function (props) {
         if (props.chartState.config) {
             return props.chartState.config;
         } else {
-            let yAxis = this.getYAxis(props);
-            return {
+            const yAxis = this.getYAxis(props);
+            const config = {
                 ...this.getCommonConfig(props, yAxis),
                 ...this.getSpecificTypeConfig(props),
                 ...this.normalizeSeries(props, yAxis)
             };
+            // this line cause:
+            // warning.js:44 Warning: setState(...): Cannot update during an existing state transition
+            // (such as within `render` or another component's constructor). Render methods should be a pure function of props and state;
+            // constructor side-effects are an anti-pattern, but can be moved to `componentWillMount`.
+            props.saveConfig(config, props.chartState.type == "percent");
+            return config;
         }
     },
     getComparisonChartConfig: function (period) {

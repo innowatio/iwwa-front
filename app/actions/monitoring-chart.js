@@ -50,7 +50,13 @@ export const changeYAxisValues = (values) => getBasicObject(CHANGE_Y_AXIS_VALUES
 
 export const resetYAxisValues = () => getBasicObject(RESET_Y_AXIS_VALUES);
 
-export const saveChartConfig = (config) => getBasicObject(SAVE_CHART_CONFIG, config);
+export const saveChartConfig = (config, yAxisDisabled) =>  {
+    return {
+        type: SAVE_CHART_CONFIG,
+        config: config,
+        yAxisDisabled: yAxisDisabled
+    };
+};
 
 export const selectChartType = (chartType) => getBasicObject(SELECT_CHART_TYPE, chartType);
 

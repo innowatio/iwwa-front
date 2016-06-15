@@ -21,7 +21,9 @@ let defaultState = {
     }],
     sensorsToDraw: [],
     type: "spline",
-    yAxis: {}
+    yAxis: {
+        disabled: false
+    }
 };
 
 const defaultNullConfig = (state, object) => {
@@ -46,7 +48,11 @@ export function monitoringChart (state = defaultState, action) {
         case SAVE_CHART_CONFIG:
             return {
                 ...state,
-                config: action.payload
+                config: action.config,
+                yAxis: {
+                    ...state.yAxis,
+                    disabled: action.yAxisDisabled
+                }
             };
         case SELECT_CHART_TYPE:
             return defaultNullConfig(state, {type: action.payload});
