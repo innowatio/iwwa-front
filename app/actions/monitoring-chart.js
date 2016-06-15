@@ -1,4 +1,6 @@
 import axios from "axios";
+import Immutable from "immutable";
+import {map} from "ramda";
 import UUID from "uuid-js";
 
 import {WRITE_API_ENDPOINT} from "lib/config";
@@ -61,7 +63,11 @@ export const saveChartConfig = (config, yAxisDisabled) =>  {
 
 export const selectChartType = (chartType) => getBasicObject(SELECT_CHART_TYPE, chartType);
 
-export const selectFavoriteChart = (favoriteChart) => getBasicObject(SELECT_FAVORITE_CHART, favoriteChart.get("state"));
+export function selectFavoriteChart (favoriteChart) {
+    let state = favoriteChart.get("state").toJS();
+    state.sensorsToDraw = map(sensor => typeof sensor === "string" ? sensor : Immutable.fromJS(sensor), state.sensorsToDraw);
+    return getBasicObject(SELECT_FAVORITE_CHART, state);
+}
 
 export function selectSensorsToDraw (sensors) {
     let sensorsArray = (Array.isArray(sensors) ? sensors : [sensors]);
