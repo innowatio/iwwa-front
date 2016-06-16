@@ -43,9 +43,9 @@ var MonitoringChart = React.createClass({
             return undefined;
         };
 
-        ReactHighstock.Highcharts.Point.prototype.highlight = function (event) {
+        ReactHighstock.Highcharts.Point.prototype.highlight = function (event, points) {
             this.onMouseOver(); // Show the hover marker
-            this.series.chart.tooltip.refresh(this); // Show the tooltip TODO verify error on category
+            this.series.chart.tooltip.refresh(points); // Show the tooltip
             this.series.chart.xAxis[0].drawCrosshair(event, this); // Show the crosshair
         };
     },
@@ -301,15 +301,20 @@ var MonitoringChart = React.createClass({
     },
     highlightCharts: function (e) {
         charts.forEach(chart => {
-            let chartRef = this.refs[chart];
+            const chartRef = this.refs[chart];
             if (chartRef) {
-                let hsChart = chartRef.getChart();
-                let event = hsChart.pointer.normalize(e.originalEvent);
-                let point = hsChart.series[0].searchPoint(event, true); //TODO for every series
-
-                if (point) {
-                    point.highlight(e);
-                }
+                const hsChart = chartRef.getChart();
+                const event = hsChart.pointer.normalize(e.nativeEvent);
+                let points = [];
+                hsChart.series.forEach((s, index) => {
+                    const point = s.searchPoint(event, true);
+                    if (point && index < hsChart.series.length - 1) { // need to skip the navigator
+                        points.push(point);
+                    }
+                });
+                points.forEach(point => {
+                    point.highlight(e.nativeEvent, points);
+                });
             }
         });
     },
