@@ -142,8 +142,7 @@ var MonitoringSearch = React.createClass({
                                         margin:"0px 10px 10px 10px",
                                         fontSize: "16px",
                                         fontWeight: "300"
-                                    }}
-                                    >
+                                    }}>
                                         {item}
                                     </label>
                                 );
@@ -160,8 +159,7 @@ var MonitoringSearch = React.createClass({
                                         padding: "3px 10px 3px 10px",
                                         borderRadius: "35px",
                                         marginRight: "5px"
-                                    }}
-                                    >
+                                    }}>
                                         {item}
                                     </label>
                                 );

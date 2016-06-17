@@ -149,8 +149,7 @@ var MonitoringFavoritesCharts = React.createClass({
                     height: "calc(100vh - 230px)",
                     width: "95%",
                     margin: "20px auto"
-                }}
-                >
+                }}>
                     <CollectionItemList
                         collections={this.getFavorites()}
                         headerComponent={this.renderFavoritesChartsColumns}

@@ -176,8 +176,7 @@ var AlarmForm = React.createClass({
                     margin: "30px 0",
                     border: `1px solid ${theme.colors.borderAlarmsSection}`,
                     padding: "20px 5%"
-                }}
-                >
+                }}>
                     <components.Spacer direction="v" size={3} />
                     <h4
                         style={{
@@ -212,8 +211,7 @@ var AlarmForm = React.createClass({
                         textAlign: "left",
                         fontWeight: "300",
                         color: theme.colors.mainFontColor
-                    }}
-                    >
+                    }}>
                         {"0 Kwh"}
                     </div>
                     <div style={{
@@ -223,8 +221,7 @@ var AlarmForm = React.createClass({
                         textAlign: "right",
                         fontWeight: "300",
                         color: theme.colors.mainFontColor
-                    }}
-                    >
+                    }}>
                         {"600 Kwh"}
                     </div>
                     <p style={{
@@ -234,8 +231,7 @@ var AlarmForm = React.createClass({
                         fontSize: "16px",
                         fontWeight: "300",
                         textAlign: "left"
-                    }}
-                    >
+                    }}>
                         {"Imposta il limite massimo "}
                     </p>
                 </div>
@@ -251,8 +247,9 @@ var AlarmForm = React.createClass({
                     <h3 style={{
                         color: theme.colors.mainFontColor,
                         fontSize: "20px"
-                    }}
-                    >{this.props.alarm.get("name")}</h3> :
+                    }}>
+                        {this.props.alarm.get("name")}
+                    </h3> :
                     <bootstrap.FormControl
                         style={styles(theme).inputLine}
                         type="text"

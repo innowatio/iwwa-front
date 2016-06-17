@@ -164,8 +164,7 @@ var User = React.createClass({
                         fontSize: "30px",
                         fontWeight: "900",
                         lineHeight: "12px"
-                    }}
-                    >
+                    }}>
                         {"–"}
                     </p>
                 </td>
@@ -210,8 +209,7 @@ var User = React.createClass({
                         borderRight: `1px solid ${theme.colors.greyBorder}`,
                         marginTop: "40px",
                         height: "calc(100vh - 260px)"
-                    }}
-                    >
+                    }}>
                         <h4 style={styles(theme).titleTab}>{stringIt.automaticReset}</h4>
                         <components.Spacer direction="v" size={20} />
                         <span>{stringIt.automaticEmail}</span>
@@ -316,8 +314,7 @@ var User = React.createClass({
                                 fontSize: "28px",
                                 fontWeight: "900",
                                 lineHeight: "28px"
-                            }}
-                            >
+                            }}>
                                 {"–"}
                             </p>
                         </div>
@@ -354,8 +351,7 @@ var User = React.createClass({
                         paddingTop: "18px",
                         width: "100%",
                         textAlign: "center"
-                    }}
-                    >
+                    }}>
                         {`Modifica utente: ${this.getUserEmail()}`}
                     </div>
                 </div>

@@ -116,8 +116,7 @@ var CollectionItemList = React.createClass({
                 fontSize: "20px",
                 fontWeight: 600,
                 padding: "20px 0px"
-            }}
-            >
+            }}>
                 {"Non ci sono elementi disponibili"}
             </div>
         );

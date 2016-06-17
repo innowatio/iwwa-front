@@ -112,16 +112,14 @@ var MonitoringWorkArea = React.createClass({
                 width: "74%",
                 margin: "0 auto",
                 height: "calc(100vh - 120px)"
-            }}
-            >
+            }}>
                 <div style={{
                     width: "auto",
                     overflow: "auto",
                     height: "100%",
                     marginRight: "-15px",
                     padding: "10px 15px 0px 15px"
-                }}
-                >
+                }}>
                     <label style={{width: "100%", color: theme.colors.mainFontColor, textAlign: "center"}}>
                         {"Seleziona alcuni sensori per visualizzare il grafico o per creare un nuovo sensore"}
                     </label>
@@ -132,16 +130,14 @@ var MonitoringWorkArea = React.createClass({
                         overflow: "hidden",
                         border: "1px solid " + theme.colors.borderContentModal,
                         background: theme.colors.transparent
-                    }}
-                    >
+                    }}>
                         <div style={{
                             height: "100%",
                             overflow: "auto",
                             overflowY: "scroll",
                             marginRight: "-15px",
                             borderRadius: "18px"
-                        }}
-                        >
+                        }}>
                             <CollectionItemList
                                 collections={this.props.sensors}
                                 filter={this.searchFilter}

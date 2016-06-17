@@ -128,8 +128,7 @@ var Users = React.createClass({
                         marginBottom: "0px",
                         paddingTop: "18px",
                         width: "100%"
-                    }}
-                    >
+                    }}>
                         {""}
                     </div>
                 </div>

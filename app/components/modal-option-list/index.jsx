@@ -81,16 +81,14 @@ var ModalOptionList = React.createClass({
                 border: "1px solid " + colors.borderContentModal,
                 backgroundColor: colors.backgroundContentModal,
                 borderRadius: "20px"
-            }}
-            >
+            }}>
                 <h4 style={{
                     color: colors.mainFontColor,
                     textAlign: "center",
                     padding: "20px 0px",
                     margin: "0px",
                     borderBottom: "1px solid " + colors.borderContentModal
-                }}
-                >{this.props.header}</h4>
+                }}>{this.props.header}</h4>
                 <bootstrap.ListGroup>
                     {repetitionItems.toArray ? repetitionItems.toArray() : repetitionItems}
                 </bootstrap.ListGroup>
@@ -101,8 +99,7 @@ var ModalOptionList = React.createClass({
         return (
             <div style={{
                 margin: "38px"
-            }}
-            >
+            }}>
                 <components.FullscreenModal
                     children={this.renderModalBody()}
                     container={this}

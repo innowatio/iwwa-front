@@ -134,8 +134,7 @@ var Popover = React.createClass({
             <div style={{
                 ...this.props.style,
                 position: "relative"
-            }}
-            >
+            }}>
                 <div ref="buttonOverlay">
                     {this.renderButton()}
                 </div>
