@@ -172,11 +172,11 @@ var MonitoringChartView = React.createClass({
             let sensorFormula = sensorObj.get("formulas") ? sensorObj.get("formulas").first() : null;
             let sensors = sensorFormula ? extractSensorsFromFormula(sensorFormula, allSensors) : [sensorObj];
             sensors.forEach((sensor) => {
-                // last year for sensors
+                //TODO dynamic time to be implemented
                 props.asteroid.subscribe(
                     "dailyMeasuresBySensor",
                     sensor.get("_id"),
-                    moment.utc().subtract(1, "years").startOf("month").format("YYYY-MM-DD"),
+                    moment.utc().subtract(3, "years").startOf("month").format("YYYY-MM-DD"),
                     moment.utc().endOf("month").format("YYYY-MM-DD"),
                     "reading",
                     sensor.get("measurementType")
