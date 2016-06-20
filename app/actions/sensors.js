@@ -112,8 +112,11 @@ export const cloneSensors = (sensors) => {
         });
         sensors.forEach((el) => {
             var sensor = getSensorObj(el);
-            //TODO iniettare una finta formula altrimenti si perde l'id del sensore vero (farlo anche per l'edit sensore originale)
             sensor.name = "Copia di " + sensor.name;
+            sensor.formulas = buildFormulas([{
+                type: Types.SENSOR,
+                sensor: el
+            }]);
             insertSensor(sensor, dispatch);
         });
     };
@@ -167,10 +170,13 @@ export const editSensor = (sensorData, formulaItems, sensor) => {
         sensorData.type = type;
         sensorData.virtual = true;
         sensorData.parentSensorId = sensor.get("parentSensorId");
-        console.log(sensorData);
         return callEditSensor(sensorData, id);
     } else {
         sensorData.parentSensorId = getSensorId(sensor);
+        sensorData.formulas = buildFormulas([{
+            type: Types.SENSOR,
+            sensor: sensor
+        }]);
         return addSensor(sensorData, formulaItems);
     }
 };
