@@ -2,6 +2,7 @@ import R from "ramda";
 import React, {PropTypes} from "react";
 import IPropTypes from "react-immutable-proptypes";
 import {connect} from "react-redux";
+import {browserHistory} from "react-router";
 import {bindActionCreators} from "redux";
 
 import {getDragDropContext} from "lib/dnd-utils";
@@ -62,28 +63,32 @@ const stylesFunction = (theme) => ({
 });
 
 let advancedOptions = function ({colors}) {
+    // TODO other advanced options not available in first release.
     return [
-        {
-            label: "Allarmi",
-            key: "alarms",
-            iconClass: "danger",
-            hoverColor: colors.white,
-            color: colors.iconDropdown
-        },
+        // {
+        //     label: "Allarmi",
+        //     key: "alarms",
+        //     iconClass: "danger",
+        //     hoverColor: colors.white,
+        //     color: colors.iconDropdown
+        // },
         {
             label: "Guarda preferiti",
             key: "favoriteCharts",
             iconClass: "list-favourite",
             hoverColor: colors.white,
-            color: colors.iconDropdown
-        },
-        {
-            label: "Assegna",
-            key: "assign",
-            iconClass: "assign",
-            hoverColor: colors.white,
-            color: colors.iconDropdown
+            color: colors.iconDropdown,
+            onClick: () => {
+                browserHistory.push("/monitoring/favorites/");
+            }
         }
+        // {
+        //     label: "Assegna",
+        //     key: "assign",
+        //     iconClass: "assign",
+        //     hoverColor: colors.white,
+        //     color: colors.iconDropdown
+        // }
     ];
 };
 
@@ -271,6 +276,7 @@ var Monitoring = React.createClass({
                                 getIcon={R.prop("iconClass")}
                                 getKey={R.prop("key")}
                                 getLabel={R.prop("label")}
+                                onChange={menuItem => menuItem.onClick()}
                                 style={styles(theme).chartDropdownButton}
                             />
                         </Popover>
