@@ -128,7 +128,7 @@ export function extractSensorsFromFormula (sensor, allSensors, extractedSensors 
             formula.get("variables").forEach(item => {
                 extractSensorsFromFormula(allSensors.get(item), allSensors, extractedSensors);
             });
-        })
+        });
     } else {
         extractedSensors.push(sensor);
     }
@@ -157,7 +157,7 @@ function reduceFormulaData (sensor, allSensors, variables = [], formula) {
         sensorFormula.get("variables").forEach(item => {
             const reduced = reduceFormulaData(allSensors.get(item), allSensors, variables, formula);
             if (reduced.formula) {
-                formula = sensorFormula.get("formula").replace(new RegExp(item, 'g'), reduced.formula)
+                formula = sensorFormula.get("formula").replace(new RegExp(item, "g"), reduced.formula);
             }
         });
     } else {
