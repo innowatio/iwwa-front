@@ -122,18 +122,62 @@ export function getSensorId (sensor) {
     return sensor.get("_id") + (sensor.get("measurementType") ? "-" + sensor.get("measurementType") : "");
 }
 
-//TODO capire se dev'essere ricorsiva....
-export function extractSensorsFromFormula (formula, allSensors) {
-    let sensors = [];
-    if (formula) {
-        formula.get("variables").forEach(item => {
-            sensors.push(allSensors.get(item));
-        });
+export function extractSensorsFromFormula (sensor, allSensors, extractedSensors = []) {
+    if (sensor.get("formulas") && sensor.get("formulas").size > 0) {
+        sensor.get("formulas").forEach(formula => {
+            formula.get("variables").forEach(item => {
+                extractSensorsFromFormula(allSensors.get(item), allSensors, extractedSensors);
+            });
+        })
+    } else {
+        extractedSensors.push(sensor);
     }
-    return sensors;
+    return extractedSensors;
+}
+
+export function reduceFormula (sensor, allSensors) {
+    if (!sensor.get("formulas")) {
+        return null;
+    }
+    const result = reduceFormulaData(sensor, allSensors);
+    const formula = sensor.get("formulas").first();
+    return Immutable.Map({
+        formula: result.formula,
+        variables: result.variables,
+        start: formula.get("start"),
+        end: formula.get("end"),
+        measurementType: formula.get("measurementType")
+    });
+}
+
+function reduceFormulaData (sensor, allSensors, variables = [], formula) {
+    const sensorFormula = sensor.get("formulas") ? sensor.get("formulas").first() : null;
+    if (sensorFormula) {
+        formula = sensorFormula.get("formula");
+        sensorFormula.get("variables").forEach(item => {
+            const reduced = reduceFormulaData(allSensors.get(item), allSensors, variables, formula);
+            if (reduced.formula) {
+                formula = sensorFormula.get("formula").replace(new RegExp(item, 'g'), reduced.formula)
+            }
+        });
+    } else {
+        formula = null;
+        variables.push(getSensorId(sensor));
+    }
+    return {
+        variables,
+        formula
+    };
 }
 
 export function getAllSensors (sensorsCollection) {
+    if (!sensorsCollection) {
+        return Immutable.Map();
+    }
+    return decorateWithMeasurementType(sensorsCollection, []);
+}
+
+export function getMonitoringSensors (sensorsCollection) {
     if (!sensorsCollection) {
         return Immutable.Map();
     }

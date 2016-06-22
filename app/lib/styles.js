@@ -345,6 +345,9 @@ export const styles = (theme) => ({
         ".Select-input": {
             padding: "0px"
         },
+        ".Select-value-label": {
+            color: theme.colors.white + "!important"
+        },
         ".Select-option": {
             boxSizing: "border-box",
             backgroundColor: theme.colors.backgroundMenuSelect,

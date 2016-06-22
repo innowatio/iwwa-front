@@ -7,7 +7,7 @@ import {bindActionCreators} from "redux";
 
 import {getDragDropContext} from "lib/dnd-utils";
 import {defaultTheme} from "lib/theme";
-import {getAllSensors, getSensorLabel} from "lib/sensors-utils";
+import {getAllSensors, getMonitoringSensors, getSensorLabel} from "lib/sensors-utils";
 import {styles} from "lib/styles";
 
 import {
@@ -131,6 +131,9 @@ var Monitoring = React.createClass({
     },
     getAllSensors: function () {
         return getAllSensors(this.props.collections.get("sensors"));
+    },
+    getMonitoringSensors: function () {
+        return getMonitoringSensors(this.props.collections.get("sensors"));
     },
     getSensorFields: function () {
         const selected = this.props.sensorsState.selectedSensors;
@@ -322,7 +325,7 @@ var Monitoring = React.createClass({
                     selectSensor={this.props.selectSensor}
                     selectSensorsToDraw={this.props.selectSensorsToDraw}
                     selected={selected}
-                    sensors={this.getAllSensors()}
+                    sensors={this.getMonitoringSensors()}
                     tagsToFilter={this.props.sensorsState.tagsToFilter}
                     wordsToFilter={this.props.sensorsState.wordsToFilter}
                     workAreaSensors={this.props.sensorsState.workAreaSensors}

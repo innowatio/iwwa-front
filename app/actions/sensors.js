@@ -177,7 +177,12 @@ export const editSensor = (sensorData, formulaItems, sensor) => {
             type: Types.SENSOR,
             sensor: sensor
         }]);
-        return addSensor(sensorData, formulaItems);
+        return dispatch => {
+            dispatch({
+                type: "OVERRIDING_SENSOR"
+            });
+            insertSensor(sensorData, dispatch);
+        };
     }
 };
 

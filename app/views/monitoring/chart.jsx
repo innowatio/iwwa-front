@@ -18,7 +18,7 @@ import {
 } from "actions/monitoring-chart";
 
 import {getUnitOfMeasurement} from "lib/sensors-decorators";
-import {extractSensorsFromFormula, getAllSensors, getSensorLabel} from "lib/sensors-utils";
+import {extractSensorsFromFormula, getAllSensors, getSensorLabel, reduceFormula} from "lib/sensors-utils";
 import {styles} from "lib/styles";
 import {defaultTheme} from "lib/theme";
 import readingsDailyAggregatesToHighchartsData from "lib/readings-daily-aggregates-to-highcharts-data";
@@ -169,8 +169,7 @@ var MonitoringChartView = React.createClass({
         let allSensors = this.getAllSensors();
         sensors[0] && sensors.forEach((sensor) => {
             let sensorObj = this.getSensorObj(sensor, allSensors);
-            let sensorFormula = sensorObj.get("formulas") ? sensorObj.get("formulas").first() : null;
-            let sensors = sensorFormula ? extractSensorsFromFormula(sensorFormula, allSensors) : [sensorObj];
+            let sensors = extractSensorsFromFormula(sensorObj, allSensors);
             sensors.forEach((sensor) => {
                 //TODO dynamic time to be implemented
                 props.asteroid.subscribe(
@@ -185,16 +184,16 @@ var MonitoringChartView = React.createClass({
         });
     },
     getChartSeries: function (props) {
-        let allSensors = this.getAllSensors();
+        const allSensors = this.getAllSensors();
         const monitoringCharts = props.monitoringChart.sensorsToDraw.map(sensor => {
-            let sensorObj = this.getSensorObj(sensor, allSensors);
-            let unit = sensorObj.get("unitOfMeasurement") ? sensorObj.get("unitOfMeasurement") : getUnitOfMeasurement(sensorObj.get("measurementType"));
+            const sensorObj = this.getSensorObj(sensor, allSensors);
+            const unit = sensorObj.get("unitOfMeasurement") ? sensorObj.get("unitOfMeasurement") : getUnitOfMeasurement(sensorObj.get("measurementType"));
             return {
                 date: {
                     start: moment.utc().startOf("year").valueOf(),
                     end: moment.utc().endOf("month").valueOf()
                 },
-                formula: sensorObj.get("formulas") ? sensorObj.get("formulas").first() : null,
+                formula: reduceFormula(sensorObj, allSensors),
                 measurementType: {key: sensorObj.get("measurementType")},
                 name: getSensorLabel(sensorObj),
                 sensorId: sensorObj.get("_id"),
@@ -231,14 +230,14 @@ var MonitoringChartView = React.createClass({
     },
     getYAxis: function (props) {
         let yAxis = [];
-        let series = this.getChartSeries(props);
-        if (series && !this.haveNullSeries(series)) {
-            series.forEach (item => {
-                if (yAxis.indexOf(item.unitOfMeasurement) < 0) {
-                    yAxis.push(item.unitOfMeasurement);
-                }
-            });
-        }
+        const allSensors = this.getAllSensors();
+        props.monitoringChart.sensorsToDraw.forEach(sensor => {
+            const sensorObj = this.getSensorObj(sensor, allSensors);
+            const unit = sensorObj.get("unitOfMeasurement") ? sensorObj.get("unitOfMeasurement") : getUnitOfMeasurement(sensorObj.get("measurementType"));
+            if (yAxis.indexOf(unit) < 0) {
+                yAxis.push(unit);
+            }
+        });
         return yAxis;
     },
     renderChart: function () {

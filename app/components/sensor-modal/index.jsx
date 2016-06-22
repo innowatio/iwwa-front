@@ -188,7 +188,6 @@ var SensorForm = React.createClass({
                                     scopeSelector=".sensor-modal-select"
                                 />
                                 <Select
-                                    autofocus={true}
                                     className="sensor-modal-select"
                                     name="unitOfMeasurement"
                                     onChange={unitOfMeasurement.onChange}
