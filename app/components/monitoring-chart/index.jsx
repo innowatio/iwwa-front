@@ -40,6 +40,7 @@ var MonitoringChart = React.createClass({
         chartState: PropTypes.object.isRequired,
         saveConfig: PropTypes.func.isRequired,
         series: PropTypes.array.isRequired,
+        setXAxisExtremes: PropTypes.func.isRequired,
         style: PropTypes.object,
         yAxis: PropTypes.array.isRequired
     },
@@ -210,23 +211,11 @@ var MonitoringChart = React.createClass({
                 type: "column"
             },
             yAxis: {
-                ...props.chartState.yAxis,
-                stackLabels: {
-                    enabled: true,
-                    style: {
-                        fontWeight: "600"
-                    }
-                }
+                ...props.chartState.yAxis
             },
             plotOptions: {
                 column: {
-                    stacking: "normal",
-                    dataLabels: {
-                        enabled: true,
-                        style: {
-                            textShadow: "0 0 3px black"
-                        }
-                    }
+                    stacking: "normal"
                 }
             }
         };
@@ -316,6 +305,8 @@ var MonitoringChart = React.createClass({
         };
     },
     synchronizeXAxis: function (xAxis) {
+        console.log("set extremes");
+        // this.props.setXAxisExtremes(xAxis); TODO find a way to keep xAxis
         this.doForEveryChart((hsChart, chart) => {
             if (chart.key !== "DEFAULT") {
                 hsChart.xAxis[0].setExtremes(xAxis.min + chart.timeShifter, xAxis.max + chart.timeShifter);

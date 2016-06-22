@@ -6,6 +6,7 @@ import {
     SELECT_CHART_TYPE,
     SELECT_FAVORITE_CHART,
     SELECT_SENSORS_TO_DRAW,
+    SET_X_AXIS_EXTREMES,
     TOGGLE_COMPARISON_CHART
 } from "../actions/monitoring-chart";
 import {SELECT_SENSOR} from "../actions/sensors";
@@ -64,6 +65,11 @@ export function monitoringChart (state = defaultState, action) {
             return defaultNullConfig(state);
         case SELECT_SENSORS_TO_DRAW:
             return defaultNullConfig(state, {sensorsToDraw: action.payload});
+        case SET_X_AXIS_EXTREMES:
+            return {
+                ...state,
+                xAxis: action.payload
+            };
         case TOGGLE_COMPARISON_CHART: {
             let newState = defaultNullConfig(state, {});
             newState.comparisonCharts[action.payload] = !newState.comparisonCharts[action.payload];

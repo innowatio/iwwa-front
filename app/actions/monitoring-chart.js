@@ -14,6 +14,7 @@ export const SAVE_CHART_CONFIG = "SAVE_CHART_CONFIG";
 export const SELECT_CHART_TYPE = "SELECT_CHART_TYPE";
 export const SELECT_FAVORITE_CHART = "SELECT_FAVORITE_CHART";
 export const SELECT_SENSORS_TO_DRAW = "SELECT_SENSORS_TO_DRAW";
+export const SET_X_AXIS_EXTREMES = "SET_X_AXIS_EXTREMES";
 export const TOGGLE_COMPARISON_CHART = "TOGGLE_COMPARISON_CHART";
 
 function getBasicObject (type, payload) {
@@ -73,5 +74,7 @@ export function selectSensorsToDraw (sensors) {
     let sensorsArray = (Array.isArray(sensors) ? sensors : [sensors]);
     return getBasicObject(SELECT_SENSORS_TO_DRAW, sensorsArray);
 }
+
+export const setXAxisExtremes = (xAxis) => getBasicObject(SET_X_AXIS_EXTREMES, xAxis);
 
 export const toggleComparisonChart = (comparisonChart) => getBasicObject(TOGGLE_COMPARISON_CHART, comparisonChart);
