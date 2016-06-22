@@ -123,14 +123,16 @@ export function getSensorId (sensor) {
 }
 
 export function extractSensorsFromFormula (sensor, allSensors, extractedSensors = []) {
-    if (sensor.get("formulas") && sensor.get("formulas").size > 0) {
-        sensor.get("formulas").forEach(formula => {
-            formula.get("variables").forEach(item => {
-                extractSensorsFromFormula(allSensors.get(item), allSensors, extractedSensors);
+    if (sensor) {
+        if (sensor.get("formulas") && sensor.get("formulas").size > 0) {
+            sensor.get("formulas").forEach(formula => {
+                formula.get("variables").forEach(item => {
+                    extractSensorsFromFormula(allSensors.get(item), allSensors, extractedSensors);
+                });
             });
-        });
-    } else {
-        extractedSensors.push(sensor);
+        } else {
+            extractedSensors.push(sensor);
+        }
     }
     return extractedSensors;
 }
@@ -151,18 +153,20 @@ export function reduceFormula (sensor, allSensors) {
 }
 
 function reduceFormulaData (sensor, allSensors, variables = [], formula) {
-    const sensorFormula = sensor.get("formulas") ? sensor.get("formulas").first() : null;
-    if (sensorFormula) {
-        formula = sensorFormula.get("formula");
-        sensorFormula.get("variables").forEach(item => {
-            const reduced = reduceFormulaData(allSensors.get(item), allSensors, variables, formula);
-            if (reduced.formula) {
-                formula = sensorFormula.get("formula").replace(new RegExp(item, "g"), reduced.formula);
-            }
-        });
-    } else {
-        formula = null;
-        variables.push(getSensorId(sensor));
+    if (sensor) {
+        const sensorFormula = sensor.get("formulas") ? sensor.get("formulas").first() : null;
+        if (sensorFormula) {
+            formula = sensorFormula.get("formula");
+            sensorFormula.get("variables").forEach(item => {
+                const reduced = reduceFormulaData(allSensors.get(item), allSensors, variables, formula);
+                if (reduced.formula) {
+                    formula = sensorFormula.get("formula").replace(new RegExp(item, "g"), reduced.formula);
+                }
+            });
+        } else {
+            formula = null;
+            variables.push(getSensorId(sensor));
+        }
     }
     return {
         variables,
