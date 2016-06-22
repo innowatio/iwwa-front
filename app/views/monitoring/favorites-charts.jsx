@@ -9,7 +9,6 @@ import {MONITORING_CHART_TYPE, selectFavoriteChart} from "actions/monitoring-cha
 import {defaultTheme} from "lib/theme";
 import {Button, CollectionItemList, Icon, SectionToolbar} from "components";
 
-
 const styles = ({colors}) => ({
     headerContainer: {
         height: "50px",
@@ -83,6 +82,9 @@ var MonitoringFavoritesCharts = React.createClass({
     getFavorites: function () {
         return this.props.collections.get("favorite-charts") || Immutable.Map();
     },
+    searchFilter: function (item, search) {
+        return item.get("name").toLowerCase().indexOf(search.toLowerCase()) >= 0;
+    },
     renderFavoritesChartsColumns: function (element) {
         const theme = this.getTheme();
         return (
@@ -118,33 +120,7 @@ var MonitoringFavoritesCharts = React.createClass({
         const theme = this.getTheme();
         return (
             <div>
-                <SectionToolbar
-                    backUrl={"/monitoring/chart/"}
-                    title={"Torna al monitoring"}
-                >
-                    <div style={{float:"right", width: "auto"}}>
-                        <Button
-                            style={styles(theme).sectionToolbarIcon}
-                            overStyle={{background:"blue"}}
-                            activeStyle={{background:"red"}}
-                        >
-                            <Icon
-                                color={theme.colors.iconAlarmAction}
-                                icon={"star-o"}
-                                size={"28px"}
-                                style={{verticalAlign: "middle"}}
-                            />
-                        </Button>
-                        <Button style={styles(theme).sectionToolbarIcon}>
-                            <Icon
-                                color={theme.colors.iconAlarmAction}
-                                icon={"edit"}
-                                size={"28px"}
-                                style={{verticalAlign: "middle"}}
-                            />
-                        </Button>
-                    </div>
-                </SectionToolbar>
+                <SectionToolbar backLink={true} title={"Torna al monitoring"} />
                 <div style={{
                     height: "calc(100vh - 230px)",
                     width: "95%",
@@ -154,6 +130,7 @@ var MonitoringFavoritesCharts = React.createClass({
                         collections={this.getFavorites()}
                         headerComponent={this.renderFavoritesChartsColumns}
                         initialVisibleRow={10}
+                        filter={this.searchFilter}
                         hover={true}
                         hoverStyle={styles(theme).hoverStyle}
                         lazyLoadButtonStyle={styles(theme).lazyLoadButtonStyle}

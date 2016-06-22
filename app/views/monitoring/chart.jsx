@@ -445,7 +445,7 @@ var MonitoringChartView = React.createClass({
         const theme = this.getTheme();
         return (
             <div>
-                <SectionToolbar backUrl={"/monitoring/"} title={"Torna all'elenco sensori"} />
+                <SectionToolbar backLink={true} title={"Torna all'elenco sensori"} />
                 <div style={{width: "75%", padding: "20px", float: "left"}}>
                     {this.renderChart()}
                 </div>
