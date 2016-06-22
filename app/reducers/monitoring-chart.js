@@ -1,3 +1,4 @@
+import {COLLECTIONS_CHANGE} from "../actions/collections";
 import {
     CHANGE_Y_AXIS_VALUES,
     RESET_Y_AXIS_VALUES,
@@ -58,6 +59,7 @@ export function monitoringChart (state = defaultState, action) {
             return defaultNullConfig(state, {type: action.payload});
         case SELECT_FAVORITE_CHART:
             return action.payload;
+        case COLLECTIONS_CHANGE:
         case SELECT_SENSOR:
             return defaultNullConfig(state);
         case SELECT_SENSORS_TO_DRAW:
