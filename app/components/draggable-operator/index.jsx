@@ -73,8 +73,7 @@ var DraggableOperator = React.createClass({
                 <p style={{
                     backgroundColor: this.props.backgroundColor || theme.colors.iconOperatorBg1,
                     ...styles(theme).operatorStyle
-                }}
-                >
+                }}>
                     <Icon
                         color={theme.colors.white}
                         icon={type}

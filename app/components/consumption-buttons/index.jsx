@@ -47,8 +47,7 @@ var ConsumptionButtons = React.createClass({
                 marginLeft: "10px",
                 width: styleButton.width,
                 transition: styleButton.transition
-            }}
-            >
+            }}>
                 <components.SensorVariableSelector
                     allowedValues={consumption.sensors}
                     onChange={R.partialRight(this.props.onChange, [consumption])}
@@ -87,8 +86,7 @@ var ConsumptionButtons = React.createClass({
                         opacity: isSelected ? "1" : "0",
                         color: theme.colors.white,
                         transition: "opacity 0.8s ease-in-out"
-                    }}
-                    >
+                    }}>
                         {isSelected ? consumption.label : ""}
                     </div>
                 </components.Button>

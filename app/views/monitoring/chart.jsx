@@ -261,8 +261,7 @@ var MonitoringChartView = React.createClass({
                 padding: "20px",
                 borderBottom: "solid 1px",
                 borderColor: theme.colors.white
-            }}
-            >
+            }}>
                 <label style={stylesFunction(theme).labelStyle}>
                     {"CAMBIA VALORI ASSI Y"}
                 </label>
@@ -407,8 +406,7 @@ var MonitoringChartView = React.createClass({
                     fontSize: "16px",
                     color: theme.colors.navText,
                     fontWeight: "300"
-                }}
-                >
+                }}>
                     {"Aggiungi ai preferiti"}
                 </p>
                 <FullscreenModal
@@ -456,15 +454,13 @@ var MonitoringChartView = React.createClass({
                     borderTop: "2px solid " + theme.colors.black,
                     float: "left",
                     height: "calc(100vh - 120px)"
-                }}
-                >
+                }}>
                     <div style={{
                         padding: "20px",
                         textAlign: "center",
                         borderBottom: "solid 1px",
                         borderColor: theme.colors.white
-                    }}
-                    >
+                    }}>
                         <label style={stylesFunction(theme).labelStyle}>
                             {"SCEGLI LO STILE DEL GRAFICO"}
                         </label>
@@ -508,8 +504,7 @@ var MonitoringChartView = React.createClass({
                                 color: theme.colors.navText,
                                 fontWeight: "300",
                                 textDecoratio: "none"
-                            }}
-                            >
+                            }}>
                                 {"Visualizza elenco"}
                             </p>
                         </Col>

@@ -106,8 +106,7 @@ var ButtonGroupSelect = React.createClass({
                 marginLeft: "-1px",
                 borderStyle: "solid",
                 borderWidth: "8px 0 8px 18px",
-                borderColor: "transparent transparent transparent " + this.getTheme().colors.buttonPrimary}}
-            />
+                borderColor: "transparent transparent transparent " + this.getTheme().colors.buttonPrimary}} />
         );
     },
     renderButtonOption: function (allowedValue) {

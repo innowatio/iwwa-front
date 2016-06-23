@@ -65,8 +65,7 @@ var SensorsDropArea = React.createClass({
                 color: theme.colors.white,
                 fontSize: "14px",
                 textAlign: "center"
-            }}
-            >
+            }}>
                 {"Trascina in questo spazio i sensori che vuoi graficare"}
             </label>
         );
@@ -137,8 +136,7 @@ var SensorsDropArea = React.createClass({
                     textAlign: "center",
                     margin: "0px 0px 25px 0px",
                     padding: "0px"
-                }}
-                >
+                }}>
                     {"Hai selezionato: "}
                 </h4>
                 {sensors}
@@ -189,8 +187,7 @@ var SensorsDropArea = React.createClass({
                 overflow: "auto",
                 padding: "20px 10px",
                 verticalAlign: "middle"
-            }}
-            >
+            }}>
                 {this.props.sensors.length > 0 ? this.renderSensors() : this.renderMessage(theme)}
             </div>
         );

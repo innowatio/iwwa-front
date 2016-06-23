@@ -160,8 +160,7 @@ var SensorForm = React.createClass({
                                     fontSize: "16px",
                                     fontWeight: "300",
                                     marginTop: "10px"
-                                }}
-                                >
+                                }}>
                                     {"Descrizione"}
                                 </label>
                                 <textarea

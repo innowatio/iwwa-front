@@ -105,8 +105,7 @@ var SensorRow = React.createClass({
                         padding: "2px 10px 2px 10px",
                         borderRadius: "35px",
                         marginRight: "5px"
-                    }}
-                    >
+                    }}>
                         {tag}
                     </label>
                 );

@@ -84,8 +84,7 @@ var RadioButton = React.createClass({
             <div onClick={this.onClick} style={{
                 padding: "2px 0px",
                 borderBottom: "1px solid " + colors.borderDropdown
-            }}
-            >
+            }}>
                 <div className="radio-style">
                     <Radium.Style
                         rules={{

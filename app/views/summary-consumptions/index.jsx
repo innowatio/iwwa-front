@@ -221,15 +221,13 @@ var SummaryConsumptions = React.createClass({
                 borderTop: "1px solid " + colors.borderConsumptionSection,
                 borderBottom: "0px",
                 backgroundColor: colors.backgroundConsumptionSection
-            }}
-            >
+            }}>
                 <p style={{
                     fontSize: "16px",
                     margin: "15px 0px",
                     fontWeight: "400",
                     color: colors.mainFontColor
-                }}
-                >{title}</p>
+                }}>{title}</p>
                 {this.renderStyledProgressBar(
                     "neighbors-efficient",
                     parseInt((now * 1.1).toFixed(0)),
@@ -265,12 +263,10 @@ var SummaryConsumptions = React.createClass({
                 borderBottom: "1px solid " + colors.borderConsumptionSection,
                 borderTop: "0px",
                 backgroundColor: colors.backgroundConsumptionSection
-            }}
-            >
+            }}>
                 <div style={{
                     textAlign: "center"
-                }}
-                >
+                }}>
                     <components.Icon
                         color={colors.feedbackGood}
                         icon={"good"}
@@ -433,8 +429,7 @@ var SummaryConsumptions = React.createClass({
                         backgroundRepeat: "none",
                         width: "116px",
                         height: "116px"
-                    }}
-                    ></bootstrap.Col>
+                    }}></bootstrap.Col>
                     <div style={{clear: "both"}} />
                 </div>
             </div>

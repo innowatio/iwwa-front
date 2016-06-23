@@ -51,8 +51,7 @@ var SectionToolbar = React.createClass({
                         lineHeight: "55px",
                         marginBottom: "0px",
                         color: theme.colors.white
-                    }}
-                    >
+                    }}>
                         {this.props.title}
                     </div>
                 </Link>

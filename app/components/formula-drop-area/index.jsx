@@ -94,8 +94,7 @@ var FormulaDropArea = React.createClass({
                 <p style={{
                     backgroundColor: this.getOperatorBackgroundColor(operatorType) || theme.colors.iconOperatorBg1,
                     ...styles(theme).operatorStyle
-                }}
-                >
+                }}>
                     <Icon
                         color={theme.colors.white}
                         icon={operatorType}
