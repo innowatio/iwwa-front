@@ -28,6 +28,9 @@ export default memoize(function readingsDailyAggregatesToHighchartsData (aggrega
                     return [parseInt(times[valueIndex]), parseFloat(value)];
                 }, values);
                 data.push(...measurement);
+            } else if (day.isAfter(moment.utc())) {
+                data.push([day.startOf("day").valueOf(), null]);
+                data.push([day.endOf("day").valueOf(), null]);
             }
         }
         return data;
