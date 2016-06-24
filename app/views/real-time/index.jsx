@@ -212,17 +212,6 @@ var RealTime = React.createClass({
             null
         );
     },
-    getMeasuresBySite: function () {
-        var selectedSiteId = this.props.realTime.site ?
-            this.getSite(this.props.realTime.fullPath[0]).get("_id") :
-            null;
-        var selectSite = this.getMeasures().find(function (measure) {
-            return measure.get("_id") === selectedSiteId;
-        });
-        return selectSite ?
-        selectSite.get("sensors") :
-        Immutable.Map();
-    },
     getGaugeLabel: function (params) {
         return (
             <components.MeasureLabel {...params} />
