@@ -267,13 +267,33 @@ var RealTime = React.createClass({
             }, 0));
         });
     },
-    findLatestMeasuresForVariables: function () {
-        return this.findLatestMeasuresWithCriteria(decorator => {
-            return (
-                decorator.get("type") !== "pod" &&
-                decorator.get("type") !== "pod-anz"
-            );
-        });
+    // findLatestMeasuresForVariables: function () {
+    //     return this.findLatestMeasuresWithCriteria(decorator => {
+    //         return (
+    //             decorator.get("type") !== "pod" &&
+    //             decorator.get("type") !== "pod-anz"
+    //         );
+    //     });
+    // },
+    findFilteredReadingsRealtime (criteria) {
+        const decorators = R.unnest(sensorsDecorators.allSensorsDecorator(this.getTheme()));
+        const results = this.getMeasures().map(measure => {
+            const decorator = decorators.find(x => (x.key === measure.get("measurementType") && !!x.icon));
+            if (decorator) {
+                measure = measure.set("key", decorator.key);
+                measure = measure.set("color", decorator.color);
+                measure = measure.set("icon", decorator.icon);
+                measure = measure.set("id", measure.get("sensorId"));
+                measure = measure.set("unit", measure.get("unitOfMeasurement"));
+                measure = measure.set("value", measure.get("measurementValue"));
+                return measure;
+            }
+        }).filter(criteria).sortBy(x => x.get("sensorId"));
+        return results;
+    },
+    findReadingsRealtime () {
+        const result = this.findFilteredReadingsRealtime(x => x && (x.get("type") !== "pod" && x.get("type") !== "pod-anz"));
+        return result.sortBy(x => x.get("sensorId"));
     },
     getSitoById: function (sitoId) {
         const sites = this.props.collections.get("sites") || Immutable.Map();
@@ -359,7 +379,7 @@ var RealTime = React.createClass({
                 </h3>
                 <components.VariablesPanel
                     numberOfConsumptionSensor={numberOfConsumptionSensor}
-                    values={this.findLatestMeasuresForVariables()}
+                    values={this.findReadingsRealtime()}
                 />
             </div>
         ) : null;
