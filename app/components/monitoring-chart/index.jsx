@@ -176,6 +176,7 @@ var MonitoringChart = React.createClass({
                 selected: 1
             },
             tooltip: {
+                pointFormat: "<span style=\"color:{point.color}\">\u25CF</span> {series.name}: <b>{point.y:.2f}</b><br/>",
                 shared: true
             },
             xAxis: {
