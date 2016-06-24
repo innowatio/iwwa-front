@@ -117,7 +117,7 @@ describe("readingsDailyAggregatesToHighchartsData", () => {
             expect(res).to.be.an("array");
             res.map((objectResult, index) => {
                 expect(res[index]).to.be.an("object");
-                expect(res[index]).to.have.all.keys(["data", "name", "unitOfMeasurement"]);
+                expect(res[index]).to.have.all.keys(["data"]);
                 expect(objectResult.data).to.be.an("array");
             });
         });
@@ -132,19 +132,19 @@ describe("readingsDailyAggregatesToHighchartsData", () => {
             expect(res).to.be.an("array");
             res.map((objectResult, index) => {
                 expect(res[index]).to.be.an("object");
-                expect(res[index]).to.have.all.keys(["data", "name", "unitOfMeasurement"]);
+                expect(res[index]).to.have.all.keys(["data"]);
                 expect(objectResult.data).to.be.an("array");
             });
         });
 
         describe("`data` array", () => {
-            
+
             it("should be an array of correct values", () => {
                 const res = readingsDailyAggregatesToHighchartsData(
                     readingsDailyAggregates,
                     filtersSourcesAndSensors
                 );
-                
+
                 res.forEach((resource, resIndex) => {
                     const startTime = filtersSourcesAndSensors[resIndex].date.start;
                     const endTime = filtersSourcesAndSensors[resIndex].date.end;
