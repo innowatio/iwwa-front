@@ -59,6 +59,13 @@ var MonitoringChart = React.createClass({
             this.series.chart.tooltip.refresh(points); // Show the tooltip
             this.series.chart.xAxis[0].drawCrosshair(event, this); // Show the crosshair
         };
+        ReactHighstock.Highcharts.Chart.prototype.resetHighlight = function () {
+            if (this.hoverPoint) {
+                this.hoverPoint.setState(null);
+            }
+            this.tooltip.hide();
+            this.xAxis[0].hideCrosshair();
+        };
     },
     componentWillReceiveProps: function (props) {
         this.setState(this.getStateFromProps(props));
@@ -127,6 +134,13 @@ var MonitoringChart = React.createClass({
                 },
                 itemHoverStyle: {
                     color: theme.colors.mainFontColor
+                }
+            },
+            plotOptions: {
+                series: {
+                    events: {
+                        legendItemClick: this.synchronizeSeries
+                    }
                 }
             },
             rangeSelector: {
@@ -290,6 +304,10 @@ var MonitoringChart = React.createClass({
             navigator: {
                 enabled: false
             },
+            plotOptions: {
+                ...this.state.config.plotOptions,
+                series: null
+            },
             rangeSelector: {
                 enabled: false
             },
@@ -305,6 +323,18 @@ var MonitoringChart = React.createClass({
             xAxis: null
         };
     },
+    synchronizeSeries: function (event) {
+        this.doForEveryChart((hsChart, chart) => {
+            if (chart.key !== "DEFAULT") {
+                hsChart.series.forEach(series => {
+                    if (series.name === event.target.name) {
+                        !event.target.visible ? series.show() : series.hide();
+                    }
+                });
+            }
+            hsChart.resetHighlight();
+        });
+    },
     synchronizeXAxis: function (xAxis) {
         console.log("set extremes");
         // this.props.setXAxisExtremes(xAxis); TODO find a way to keep xAxis
@@ -319,11 +349,13 @@ var MonitoringChart = React.createClass({
             const event = hsChart.pointer.normalize(e.nativeEvent);
             let points = [];
             hsChart.series.forEach((s, index) => {
-                const point = s.searchPoint(event, true);
-                if (point &&
-                    (chart.key !== "DEFAULT" ||
-                    (chart.key === "DEFAULT" && index < hsChart.series.length - 1))) { // need to skip the navigator
-                    points.push(point);
+                if (s.visible) {
+                    const point = s.searchPoint(event, true);
+                    if (point &&
+                        (chart.key !== "DEFAULT" ||
+                        (chart.key === "DEFAULT" && index < hsChart.series.length - 1))) { // need to skip the navigator
+                        points.push(point);
+                    }
                 }
             });
             points.forEach(point => {
