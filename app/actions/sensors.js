@@ -67,12 +67,17 @@ function buildFormulas (formulaItems) {
         formulaItems.forEach((item) => {
             switch (item.type) {
                 case Types.SENSOR: {
-                    formula += getSensorId(item.sensor);
-                    variables.add(getSensorId(item.sensor));
+                    const sensorId = typeof item.sensor === "string" ? item.sensor : getSensorId(item.sensor);
+                    formula += sensorId;
+                    variables.add(sensorId);
                     break;
                 }
                 case Types.OPERATOR: {
                     formula += operatorToFormula[item.operator];
+                    break;
+                }
+                case Types.NUMBER: {
+                    formula += item.number;
                     break;
                 }
             }

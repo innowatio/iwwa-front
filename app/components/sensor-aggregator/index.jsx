@@ -4,6 +4,7 @@ import {FormGroup, FormControl, InputGroup, Col} from "react-bootstrap";
 import IPropTypes from "react-immutable-proptypes";
 import {DraggableOperator, DraggableSensor, FormulaDropArea, Icon} from "components";
 
+import {Types} from "lib/dnd-utils";
 import {findSensor} from "lib/sensors-utils";
 import {styles} from "lib/styles";
 import {defaultTheme} from "lib/theme";
@@ -68,7 +69,7 @@ var SensorAggregator = React.createClass({
     },
     addNumberToFormula: function () {
         if (this.state.addNumber) {
-            this.props.addItemToFormula({type: "number", number: this.state.addNumber});
+            this.props.addItemToFormula({number: this.state.addNumber, type: Types.NUMBER});
         }
     },
     render: function () {

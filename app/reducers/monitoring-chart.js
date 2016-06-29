@@ -23,6 +23,7 @@ let defaultState = {
     }],
     sensorsToDraw: [],
     type: "spline",
+    xAxis: {},
     yAxis: {
         disabled: false
     }
@@ -66,10 +67,7 @@ export function monitoringChart (state = defaultState, action) {
         case SELECT_SENSORS_TO_DRAW:
             return defaultNullConfig(state, {sensorsToDraw: action.payload});
         case SET_X_AXIS_EXTREMES:
-            return {
-                ...state,
-                xAxis: action.payload
-            };
+            return defaultNullConfig(state, {xAxis: action.payload});
         case TOGGLE_COMPARISON_CHART: {
             let newState = defaultNullConfig(state, {});
             newState.comparisonCharts[action.payload] = !newState.comparisonCharts[action.payload];

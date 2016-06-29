@@ -1,3 +1,4 @@
+import {decomposeFormula} from "iwwa-formula-resolver";
 import R from "ramda";
 
 import {
@@ -13,6 +14,7 @@ import {
     SENSOR_DELETE_SUCCESS
 } from "../actions/sensors";
 
+import {Types} from "lib/dnd-utils";
 import {formulaToOperator, getSensorId} from "lib/sensors-utils";
 
 let defaultState = {
@@ -44,29 +46,38 @@ function parseSensorFormula (sensor) {
     };
     let sensorFormulas = sensor.get("formulas");
     if (!R.isNil(sensorFormulas) && sensorFormulas.size == 1) {
-        let formula = sensorFormulas.first();
-        result.formulaItems = populateFormulaItems(formula.get("formula"), formula.get("variables"), []);
-        result.sensors = formula.get("variables").toArray();
+        const formulaObj = sensorFormulas.first();
+        const formula = {formula: formulaObj.get("formula")};
+        result.sensors = formulaObj.get("variables").toArray();
+        const sensors = R.map(v => {
+            return {sensorId: v};
+        }, result.sensors);
+        result.formulaItems = populateFormulaItems(formula, sensors);
     }
     return result;
 }
 
-function populateFormulaItems (formula, variables, formulaItems) {
-    variables.forEach(sensor => {
-        if (formula.indexOf(sensor) == 0) {
-            formulaItems.push({sensor: sensor, type: "sensor"});
-            populateFormulaItems(formula.replace(sensor, ""), variables, formulaItems);
+function populateFormulaItems (formula, sensors) {
+    let decomposed = decomposeFormula(formula, sensors);
+    return R.map(el => {
+        if (formulaToOperator[el]) {
+            return {
+                operator: formulaToOperator[el],
+                type: Types.OPERATOR
+            };
         }
-    });
-    R.keys(formulaToOperator).forEach(key => {
-        if (formula.indexOf(key) == 0) {
-            formulaItems.push({operator: formulaToOperator[key], type: "operator"});
-            populateFormulaItems(formula.replace(key, ""), variables, formulaItems);
+        if (!isNaN(el)) {
+            return {
+                number: el,
+                type: Types.NUMBER
+            };
         }
-    });
-    return formulaItems;
+        return {
+            sensor: el,
+            type: Types.SENSOR
+        };
+    }, decomposed);
 }
-
 
 function removeFromSelected (selectedSensors, sensorId) {
     return selectedSensors.filter(it => {
