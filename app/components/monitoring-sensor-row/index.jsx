@@ -76,13 +76,12 @@ var SensorRow = React.createClass({
         return this.context.theme || defaultTheme;
     },
     addTooltip: function (sensor) {
-        // TODO Verificare con Davide se la formula sarà sempre presente e in caso se corretto
-        // mostrare la description.
-
-        const descriptionTooltip = sensor.get("formula") || sensor.get("description");
+        const sensorFormula = sensor.get("formulas") ? sensor.get("formulas").first().get("formula") : null;
         return (
             <bootstrap.Tooltip id="createChartInfo">
-                {descriptionTooltip}
+                {sensor.get("description")}
+                <br />
+                {sensorFormula ? sensorFormula : null}
             </bootstrap.Tooltip>
         );
     },
