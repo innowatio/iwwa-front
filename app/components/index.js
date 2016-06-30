@@ -27,6 +27,7 @@ exports.LoginModal              = require("./login-modal/");
 exports.MeasureLabel            = require("./measure-label/");
 exports.ModalOptionList         = require("./modal-option-list/");
 exports.MonitoringChart         = require("./monitoring-chart/");
+exports.MonitoringChartToolbar  = require("./monitoring-chart-toolbar/");
 exports.MonitoringSearch        = require("./monitoring-search/");
 exports.MonitoringSensorRow     = require("./monitoring-sensor-row/");
 exports.MonitoringWorkArea      = require("./monitoring-work-area/");

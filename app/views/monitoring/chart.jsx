@@ -1,11 +1,8 @@
 import React, {PropTypes} from "react";
-import {Col, Clearfix, ControlLabel, FormControl} from "react-bootstrap";
 import IPropTypes from "react-immutable-proptypes";
 import {connect} from "react-redux";
-import {Link} from "react-router";
 import {bindActionCreators} from "redux";
 import moment from "moment";
-import Radium from "radium";
 
 import {
     addToFavorite,
@@ -19,75 +16,10 @@ import {
 
 import {getUnitOfMeasurement} from "lib/sensors-decorators";
 import {extractSensorsFromFormula, getAllSensors, getSensorLabel, reduceFormula} from "lib/sensors-utils";
-import {styles} from "lib/styles";
 import {defaultTheme} from "lib/theme";
 import readingsDailyAggregatesToHighchartsData from "lib/readings-daily-aggregates-to-highcharts-data";
 
-import {Button, Icon, MonitoringChart, SectionToolbar, FullscreenModal} from "components";
-
-const inputStyleRules = (theme) => ({
-    "": {
-        padding: "0px 5px",
-        margin: "0px 0px 20px 0px"
-    },
-    "label.control-label": {
-        display: "block",
-        color: theme.colors.white,
-        fontWeight: "300",
-        padding: "0px",
-        margin: "0px"
-    },
-    "label.control-label span": {
-        display: "block"
-    },
-    "input": {
-        borderBottom: "1px solid",
-        borderColor: theme.colors.white + "!important"
-    },
-    "span": {
-        display: "none"
-    }
-});
-
-const stylesFunction = (theme, active) => ({
-    inputs: {
-        width: "90%",
-        margin: "0px auto",
-        height: "60px",
-        fontSize: "20px",
-        fontWeight: "300",
-        borderRadius: "20px",
-        borderColor: theme.colors.borderInputSearch,
-        backgroundColor: theme.colors.backgroundInputSearch,
-        color: theme.colors.mainFontColor
-    },
-    labelStyle: {
-        color: theme.colors.white,
-        display: "inherit",
-        marginBottom: "10px",
-        textAlign: "center",
-        fontWeight: "400",
-        fontSize: "16px"
-    },
-    modalTitleStyle: {
-        color: theme.colors.white,
-        display: "inherit",
-        marginBottom: "50px",
-        textAlign: "center",
-        fontWeight: "400",
-        fontSize: "28px"
-    },
-    buttonIconStyle: {
-        backgroundColor: active ? theme.colors.buttonPrimary : theme.colors.primary,
-        border: "0px none",
-        borderRadius: "100%",
-        height: "50px",
-        width: "50px",
-        padding: "0px",
-        textAlign: "center",
-        margin: "0px 5px"
-    }
-});
+import {MonitoringChart, MonitoringChartToolbar, SectionToolbar} from "components";
 
 var MonitoringChartView = React.createClass({
     propTypes: {
@@ -100,21 +32,14 @@ var MonitoringChartView = React.createClass({
         saveChartConfig: PropTypes.func.isRequired,
         selectChartType: PropTypes.func.isRequired,
         setXAxisExtremes: PropTypes.func.isRequired,
-        title: React.PropTypes.string,
         toggleComparisonChart: PropTypes.func.isRequired
     },
     contextTypes: {
         theme: PropTypes.object
     },
-    getInitialState: function () {
-        return this.getStateFromProps(this.props);
-    },
     componentDidMount: function () {
         this.props.asteroid.subscribe("sensors");
         this.subscribeToSensorsData(this.props);
-    },
-    componentWillReceiveProps: function (props) {
-        this.setState(this.getStateFromProps(props));
     },
     getTheme: function () {
         return this.context.theme || defaultTheme;
@@ -122,47 +47,8 @@ var MonitoringChartView = React.createClass({
     getAllSensors: function () {
         return getAllSensors(this.props.collections.get("sensors"));
     },
-    getFilters: function () {
-        return [
-            {key: "day", label: "1 gg"},
-            {key: "week", label: "1 sett"},
-            {key: "month", label: "1 mese"},
-            {key: "year", label: "1 anno"},
-            {key: "ytd", label: "YTD"},
-            {key: "all", label: "Tutto"}
-        ];
-    },
-    getStateFromProps: function (props) {
-        let state = {
-            yAxis: props.monitoringChart.yAxis,
-            favoriteName: null
-        };
-        let yAxis = this.getYAxis(props);
-        yAxis.forEach(y => {
-            if (!state.yAxis[y]) {
-                state.yAxis[y] = {
-                    min: "",
-                    max: ""
-                };
-            }
-        });
-        return state;
-    },
     getSensorObj: function (sensor, allSensor) {
         return typeof sensor === "string" ? allSensor.get(sensor) : sensor;
-    },
-    openModal: function () {
-        this.setState({showModal:true});
-    },
-    closeModal: function () {
-        this.setState({
-            showModal: false,
-            value: null
-        });
-    },
-    onConfirmFullscreenModal: function () {
-        this.props.addToFavorite(this.props.monitoringChart, this.state.favoriteName, this.props.asteroid.userId);
-        this.closeModal();
     },
     subscribeToSensorsData: function (props) {
         const sensors = props.monitoringChart.sensorsToDraw;
@@ -206,18 +92,6 @@ var MonitoringChartView = React.createClass({
             return readingsDailyAggregatesToHighchartsData(readingsDailyAggregates, monitoringCharts, allSensors);
         }
     },
-    getYAxisValidationState: function () {
-        let yAxis = this.getYAxis(this.props);
-        let success = true;
-        yAxis.forEach((y) => {
-            let {min, max} = this.state.yAxis[y];
-            success = success && (parseInt(min) < parseInt(max));
-        });
-        return success ? "success" : "error";
-    },
-    changeYAxisValues: function () {
-        this.props.changeYAxisValues(this.state.yAxis);
-    },
     haveNullSeries: function (series) {
         return series.some((it) => {
             let isNull = true;
@@ -255,193 +129,6 @@ var MonitoringChartView = React.createClass({
             );
         }
     },
-    renderYAxisValuesChange: function (theme) {
-        return (
-            <div style={{
-                padding: "20px",
-                borderBottom: "solid 1px",
-                borderColor: theme.colors.white
-            }}>
-                <label style={stylesFunction(theme).labelStyle}>
-                    {"CAMBIA VALORI ASSI Y"}
-                </label>
-                {this.renderYAxisInputs(theme)}
-                <div style={{textAlign: "center", marginLeft: "25px"}}>
-                    <Button
-                        disabled={!this.refs.monitoringChart}
-                        onClick={this.changeYAxisValues}
-                        style={{
-                            ...styles(theme).buttonSelectChart,
-                            width: "120px",
-                            height: "40px",
-                            lineHeight: "40px",
-                            padding: "0px",
-                            margin: "0px 0px 0px 30px",
-                            fontSize: "20px",
-                            border: "0px",
-                            backgroundColor: this.getTheme().colors.buttonPrimary
-                        }}
-                    >
-                        {"OK"}
-                    </Button>
-                    <Button
-                        bsStyle={"link"}
-                        disabled={!this.refs.monitoringChart}
-                        onClick={this.props.resetYAxisValues}
-                    >
-                        <Icon
-                            color={theme.colors.iconArrow}
-                            icon={"reset"}
-                            size={"35px"}
-                            style={{
-                                float: "right",
-                                verticalAlign: "middle",
-                                lineHeight: "20px"
-                            }}
-                        />
-                    </Button>
-                </div>
-            </div>
-        );
-    },
-    renderYAxisInputs: function (theme) {
-        let yAxis = this.getYAxis(this.props);
-        let components = [];
-        yAxis.forEach((y, index) => {
-            components.push(
-                <div key={index}>
-                    <Col className="input-style" md={6}>
-                        <Radium.Style
-                            rules={inputStyleRules(theme)}
-                            scopeSelector=".input-style"
-                        />
-                        <ControlLabel>{y +" min:"}</ControlLabel>
-                        <FormControl
-                            type="number"
-                            disabled={this.props.monitoringChart.yAxis.disabled}
-                            bsStyle={this.getYAxisValidationState()}
-                            hasFeedback={true}
-                            onChange={input => {
-                                let newState = JSON.parse(JSON.stringify(this.state));
-                                newState.yAxis[y].min = input.target.value;
-                                this.setState(newState);
-                            }}
-                            style={{...styles(theme).inputLine}}
-                            value={this.state.yAxis[y].min}
-                        />
-                    </Col>
-                    <Col className="input-style" md={6}>
-                        <Radium.Style
-                            rules={inputStyleRules(theme)}
-                            scopeSelector=".input-style"
-                        />
-                        <ControlLabel>{y + " max:"}</ControlLabel>
-                        <FormControl
-                            type="number"
-                            disabled={this.props.monitoringChart.yAxis.disabled}
-                            bsStyle={this.getYAxisValidationState()}
-                            hasFeedback={true}
-                            onChange={input => {
-                                let newState = JSON.parse(JSON.stringify(this.state));
-                                newState.yAxis[y].max = input.target.value;
-                                this.setState(newState);
-                            }}
-                            style={{...styles(theme).inputLine}}
-                            value={this.state.yAxis[y].max}
-                        />
-                    </Col>
-                </div>
-            );
-        });
-        return components;
-    },
-    renderChartStyleButton: function (theme, chartType, icon) {
-        return (
-            <Button
-                disabled={!this.refs.monitoringChart}
-                onClick={() => this.props.selectChartType(chartType)}
-                style={stylesFunction(theme, this.props.monitoringChart.type === chartType).buttonIconStyle}
-            >
-                <Icon
-                    color={theme.colors.white}
-                    icon={icon}
-                    size={"36px"}
-                    style={{lineHeight: "20px"}}
-                />
-            </Button>
-        );
-    },
-    renderComparisonButton:  function (theme, icon) {
-        return (
-            <Button
-                disabled={!this.refs.monitoringChart}
-                onClick={() => this.props.toggleComparisonChart(icon)}
-                style={stylesFunction(theme, this.props.monitoringChart.comparisonCharts[icon]).buttonIconStyle}
-            >
-                <Icon
-                    color={theme.colors.white}
-                    icon={icon}
-                    size={"32px"}
-                    style={{lineHeight: "20px", verticalAlign: "middle"}}
-                />
-            </Button>
-        );
-    },
-    renderFavouriteButton: function () {
-        const theme = this.getTheme();
-        return (
-            <div>
-                <Button
-                    disabled={!this.refs.monitoringChart}
-                    onClick={this.openModal}
-                    style={stylesFunction(theme).buttonIconStyle}
-                >
-                    <Icon
-                        color={theme.colors.iconHeader}
-                        icon={"star-o"}
-                        size={"28px"}
-                        style={{lineHeight: "20px"}}
-                    />
-                </Button>
-                <p style={{
-                    marginBottom: "25px",
-                    fontSize: "16px",
-                    color: theme.colors.navText,
-                    fontWeight: "300"
-                }}>
-                    {"Aggiungi ai preferiti"}
-                </p>
-                <FullscreenModal
-                    onConfirm={this.onConfirmFullscreenModal}
-                    onHide={this.closeModal}
-                    onReset={this.closeModal}
-                    renderConfirmButton={true}
-                    show={this.state.showModal}
-                >
-                    {this.renderModalBody()}
-                </FullscreenModal>
-            </div>
-        );
-    },
-    renderModalBody: function () {
-        const theme = this.getTheme();
-        return (
-            <div style={{textAlign: "center"}}>
-                <div>
-                    <label style={stylesFunction(theme).modalTitleStyle}>
-                        {"AGGIUNGI GRAFICO AI PREFERITI"}
-                    </label>
-                </div>
-                <FormControl
-                    bsSize="small"
-                    onChange={input => this.setState({favoriteName: input.target.value})}
-                    placeholder={"Inserisci il nome per il tuo grafico"}
-                    style={stylesFunction(theme).inputs}
-                    type="text"
-                />
-            </div>
-        );
-    },
     render: function () {
         const theme = this.getTheme();
         return (
@@ -457,71 +144,18 @@ var MonitoringChartView = React.createClass({
                     float: "left",
                     height: "calc(100vh - 120px)"
                 }}>
-                    <div style={{
-                        padding: "20px",
-                        textAlign: "center",
-                        borderBottom: "solid 1px",
-                        borderColor: theme.colors.white
-                    }}>
-                        <label style={stylesFunction(theme).labelStyle}>
-                            {"SCEGLI LO STILE DEL GRAFICO"}
-                        </label>
-                        <div>
-                            {this.renderChartStyleButton(theme, "spline", "chart-style1")}
-                            {this.renderChartStyleButton(theme, "column", "chart-style2")}
-                            {this.renderChartStyleButton(theme, "stacked", "chart-style4")}
-                            {this.renderChartStyleButton(theme, "percent", "chart-style3")}
-                        </div>
-                    </div>
-                    {this.renderYAxisValuesChange(theme)}
-                    <div style={{textAlign: "center", marginTop: "25px", borderBottom: "solid 1px", borderColor: theme.colors.white}}>
-                        <Col lg={6} md={6} xs={12}>
-                            {this.renderFavouriteButton()}
-                        </Col>
-                        <Col className="link" lg={6} md={6} xs={12}>
-                            <Radium.Style
-                                rules={{
-                                    ":hover": {
-                                        textDecoration: "none"
-                                    },
-                                    ".btn-default:hover": {
-                                        backgroundColor: theme.colors.buttonPrimary + "!important"
-                                    }
-                                }}
-                                scopeSelector=".link"
-                            />
-                            <Link to={"/monitoring/favorites/"}>
-                                <Button style={stylesFunction(theme).buttonIconStyle}>
-                                    <Icon
-                                        color={theme.colors.iconHeader}
-                                        icon={"list-favourite"}
-                                        size={"32px"}
-                                        style={{lineHeight: "20px"}}
-                                    />
-                                </Button>
-                            </Link>
-                            <p style={{
-                                marginBottom: "25px",
-                                fontSize: "16px",
-                                color: theme.colors.navText,
-                                fontWeight: "300",
-                                textDecoratio: "none"
-                            }}>
-                                {"Visualizza elenco"}
-                            </p>
-                        </Col>
-                        <Clearfix>{}</Clearfix>
-                    </div>
-                    <div style={{textAlign: "center", padding: "20px", borderBottom: "solid 1px", borderColor: theme.colors.white}}>
-                        <label style={stylesFunction(theme).labelStyle}>
-                            {"VEDI SETTIMANA/MESE/ANNO PRECEDENTE:"}
-                        </label>
-                        <div>
-                            {this.renderComparisonButton(theme, "week")}
-                            {this.renderComparisonButton(theme, "month")}
-                            {this.renderComparisonButton(theme, "year")}
-                        </div>
-                    </div>
+                    <MonitoringChartToolbar
+                        addToFavorite={this.props.addToFavorite}
+                        asteroid={this.props.asteroid}
+                        changeYAxisValues={this.props.changeYAxisValues}
+                        getYAxis={this.getYAxis}
+                        monitoringChart={this.props.monitoringChart}
+                        monitoringChartRef={this.refs.monitoringChart}
+                        resetYAxisValues={this.props.resetYAxisValues}
+                        selectChartType={this.props.selectChartType}
+                        setXAxisExtremes={this.props.setXAxisExtremes}
+                        toggleComparisonChart={this.props.toggleComparisonChart}
+                    />
                 </div>
             </div>
         );
@@ -546,4 +180,5 @@ const mapDispatchToProps = (dispatch) => {
         toggleComparisonChart: bindActionCreators(toggleComparisonChart, dispatch)
     };
 };
+
 module.exports = connect(mapStateToProps, mapDispatchToProps)(MonitoringChartView);
