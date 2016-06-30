@@ -14,7 +14,6 @@ export const SAVE_CHART_CONFIG = "SAVE_CHART_CONFIG";
 export const SELECT_CHART_TYPE = "SELECT_CHART_TYPE";
 export const SELECT_FAVORITE_CHART = "SELECT_FAVORITE_CHART";
 export const SELECT_SENSORS_TO_DRAW = "SELECT_SENSORS_TO_DRAW";
-export const SET_X_AXIS_EXTREMES = "SET_X_AXIS_EXTREMES";
 export const TOGGLE_COMPARISON_CHART = "TOGGLE_COMPARISON_CHART";
 
 function getBasicObject (type, payload) {
@@ -50,7 +49,13 @@ export const addToFavorite = (state, name, userId) => {
 
 };
 
-export const changeYAxisValues = (values) => getBasicObject(CHANGE_Y_AXIS_VALUES, values);
+export const changeYAxisValues = (values, xAxisPeriod) => {
+    return {
+        type: CHANGE_Y_AXIS_VALUES,
+        yAxisValues: values,
+        xAxisPeriod: xAxisPeriod
+    };
+};
 
 export const resetYAxisValues = () => getBasicObject(RESET_Y_AXIS_VALUES);
 
@@ -62,7 +67,13 @@ export const saveChartConfig = (config, yAxisDisabled) =>  {
     };
 };
 
-export const selectChartType = (chartType) => getBasicObject(SELECT_CHART_TYPE, chartType);
+export const selectChartType = (chartType, xAxisPeriod) => {
+    return {
+        type: SELECT_CHART_TYPE,
+        chartType: chartType,
+        xAxisPeriod: xAxisPeriod
+    };
+};
 
 export function selectFavoriteChart (favoriteChart) {
     let state = favoriteChart.get("state").toJS();
@@ -75,6 +86,10 @@ export function selectSensorsToDraw (sensors) {
     return getBasicObject(SELECT_SENSORS_TO_DRAW, sensorsArray);
 }
 
-export const setXAxisExtremes = (xAxis) => getBasicObject(SET_X_AXIS_EXTREMES, xAxis);
-
-export const toggleComparisonChart = (comparisonChart) => getBasicObject(TOGGLE_COMPARISON_CHART, comparisonChart);
+export const toggleComparisonChart = (comparisonChart, xAxisPeriod) => {
+    return {
+        type: TOGGLE_COMPARISON_CHART,
+        comparisonChart: comparisonChart,
+        xAxisPeriod: xAxisPeriod
+    };
+};

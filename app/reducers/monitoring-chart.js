@@ -6,12 +6,11 @@ import {
     SELECT_CHART_TYPE,
     SELECT_FAVORITE_CHART,
     SELECT_SENSORS_TO_DRAW,
-    SET_X_AXIS_EXTREMES,
     TOGGLE_COMPARISON_CHART
 } from "../actions/monitoring-chart";
 import {SELECT_SENSOR} from "../actions/sensors";
 
-let defaultState = {
+const defaultState = {
     comparisonCharts: {
         "year": false,
         "month": false,
@@ -41,9 +40,12 @@ export function monitoringChart (state = defaultState, action) {
     switch (action.type) {
         case CHANGE_Y_AXIS_VALUES:
             return defaultNullConfig(state, {
+                xAxis: {
+                    ...action.xAxisPeriod
+                },
                 yAxis: {
                     ...state.yAxis,
-                    ...action.payload
+                    ...action.yAxisValues
                 }
             });
         case RESET_Y_AXIS_VALUES:
@@ -58,20 +60,33 @@ export function monitoringChart (state = defaultState, action) {
                 }
             };
         case SELECT_CHART_TYPE:
-            return defaultNullConfig(state, {type: action.payload});
+            return defaultNullConfig(state, {
+                type: action.chartType,
+                xAxis: {
+                    ...action.xAxisPeriod
+                }
+            });
         case SELECT_FAVORITE_CHART:
             return action.payload;
         case COLLECTIONS_CHANGE:
         case SELECT_SENSOR:
             return defaultNullConfig(state);
         case SELECT_SENSORS_TO_DRAW:
-            return defaultNullConfig(state, {sensorsToDraw: action.payload});
-        case SET_X_AXIS_EXTREMES:
-            return defaultNullConfig(state, {xAxis: action.payload});
+            return defaultNullConfig(defaultState, {sensorsToDraw: action.payload});
         case TOGGLE_COMPARISON_CHART: {
-            let newState = defaultNullConfig(state, {});
-            newState.comparisonCharts[action.payload] = !newState.comparisonCharts[action.payload];
-            return newState;
+            let newComparison = {
+                comparisonCharts: {}
+            };
+            newComparison.comparisonCharts[action.comparisonChart] = !state.comparisonCharts[action.comparisonChart];
+            return defaultNullConfig(state, {
+                comparisonCharts: {
+                    ...state.comparisonCharts,
+                    ...newComparison.comparisonCharts
+                },
+                xAxis: {
+                    ...action.xAxisPeriod
+                }
+            });
         }
         default:
             return state;

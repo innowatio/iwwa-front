@@ -82,7 +82,6 @@ var MonitoringChartToolbar = React.createClass({
         monitoringChartRef: PropTypes.any,
         resetYAxisValues: PropTypes.func.isRequired,
         selectChartType: PropTypes.func.isRequired,
-        setXAxisExtremes: PropTypes.func.isRequired,
         toggleComparisonChart: PropTypes.func.isRequired
     },
     contextTypes: {
@@ -122,8 +121,15 @@ var MonitoringChartToolbar = React.createClass({
         });
         return success ? "success" : "error";
     },
+    getChartPeriod: function () {
+        const xAxis = this.props.monitoringChartRef.refs.DEFAULT.getChart().xAxis[0];
+        return {
+            max: xAxis.max,
+            min: xAxis.min
+        }
+    },
     changeYAxisValues: function () {
-        this.props.changeYAxisValues(this.state.yAxis);
+        this.props.changeYAxisValues(this.state.yAxis, this.getChartPeriod());
     },
     openModal: function () {
         this.setState({showModal:true});
@@ -142,7 +148,7 @@ var MonitoringChartToolbar = React.createClass({
         return (
             <Button
                 disabled={!this.props.monitoringChartRef}
-                onClick={() => this.props.selectChartType(chartType)}
+                onClick={() => this.props.selectChartType(chartType, this.getChartPeriod())}
                 style={stylesFunction(theme, this.props.monitoringChart.type === chartType).buttonIconStyle}
             >
                 <Icon
@@ -158,7 +164,7 @@ var MonitoringChartToolbar = React.createClass({
         return (
             <Button
                 disabled={!this.props.monitoringChartRef}
-                onClick={() => this.props.toggleComparisonChart(icon)}
+                onClick={() => this.props.toggleComparisonChart(icon, this.getChartPeriod())}
                 style={stylesFunction(theme, this.props.monitoringChart.comparisonCharts[icon]).buttonIconStyle}
             >
                 <Icon

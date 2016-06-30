@@ -40,7 +40,6 @@ var MonitoringChart = React.createClass({
         chartState: PropTypes.object.isRequired,
         saveConfig: PropTypes.func.isRequired,
         series: PropTypes.array.isRequired,
-        setXAxisExtremes: PropTypes.func.isRequired,
         style: PropTypes.object,
         yAxis: PropTypes.array.isRequired
     },
@@ -338,12 +337,6 @@ var MonitoringChart = React.createClass({
         });
     },
     synchronizeXAxis: function (xAxis) {
-        console.log("set extremes");
-        console.log(xAxis);
-        // TODO find a way to keep period selection
-        // if (xAxis.type !== "afterSetExtremes") {
-        //     this.props.setXAxisExtremes(xAxis);
-        // }
         this.doForEveryChart((hsChart, chart) => {
             if (chart.key !== "DEFAULT") {
                 hsChart.xAxis[0].setExtremes(xAxis.min + chart.timeShifter, xAxis.max + chart.timeShifter);
