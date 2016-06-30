@@ -126,7 +126,7 @@ var MonitoringChartToolbar = React.createClass({
         return {
             max: xAxis.max,
             min: xAxis.min
-        }
+        };
     },
     changeYAxisValues: function () {
         this.props.changeYAxisValues(this.state.yAxis, this.getChartPeriod());
