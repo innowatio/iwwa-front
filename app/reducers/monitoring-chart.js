@@ -1,5 +1,6 @@
 import {COLLECTIONS_CHANGE} from "../actions/collections";
 import {
+    ADD_MORE_DATA,
     CHANGE_Y_AXIS_VALUES,
     RESET_Y_AXIS_VALUES,
     SAVE_CHART_CONFIG,
@@ -16,10 +17,10 @@ const defaultState = {
         "month": false,
         "week": false
     },
-    dateRanges: [{
-        key: "all",
-        label: "Tutto"
-    }],
+    dataMonthsSpan: {
+        backward: 3,
+        forward: 0
+    },
     sensorsToDraw: [],
     type: "spline",
     xAxis: {},
@@ -38,6 +39,18 @@ const defaultNullConfig = (state, object) => {
 
 export function monitoringChart (state = defaultState, action) {
     switch (action.type) {
+        case ADD_MORE_DATA: {
+            const direction = action.payload ? "backward" : "forward";
+            let newMonthsSpan = {};
+            newMonthsSpan[direction] = state.dataMonthsSpan[direction] + 3;
+            return {
+                ...state,
+                dataMonthsSpan: {
+                    ...state.dataMonthsSpan,
+                    ...newMonthsSpan
+                }
+            };
+        }
         case CHANGE_Y_AXIS_VALUES:
             return defaultNullConfig(state, {
                 xAxis: {

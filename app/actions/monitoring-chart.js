@@ -7,6 +7,7 @@ import {WRITE_API_ENDPOINT} from "lib/config";
 
 export const MONITORING_CHART_TYPE = "monitoring";
 
+export const ADD_MORE_DATA = "ADD_MORE_DATA";
 export const CHANGE_Y_AXIS_VALUES = "CHANGE_Y_AXIS_VALUES";
 export const FAVORITE_INSERTION_SUCCESS = "FAVORITE_INSERTION_SUCCESS";
 export const RESET_Y_AXIS_VALUES = "RESET_Y_AXIS_VALUES";
@@ -22,6 +23,8 @@ function getBasicObject (type, payload) {
         payload: payload
     };
 }
+
+export const addMoreData = (backward) => getBasicObject(ADD_MORE_DATA, backward);
 
 export const addToFavorite = (state, name, userId) => {
     return dispatch => {

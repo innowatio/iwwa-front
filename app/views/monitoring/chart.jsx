@@ -1,3 +1,4 @@
+import R from "ramda";
 import React, {PropTypes} from "react";
 import IPropTypes from "react-immutable-proptypes";
 import {connect} from "react-redux";
@@ -5,6 +6,7 @@ import {bindActionCreators} from "redux";
 import moment from "moment";
 
 import {
+    addMoreData,
     addToFavorite,
     changeYAxisValues,
     resetYAxisValues,
@@ -18,10 +20,20 @@ import {extractSensorsFromFormula, getAllSensors, getSensorLabel, reduceFormula}
 import {defaultTheme} from "lib/theme";
 import readingsDailyAggregatesToHighchartsData from "lib/readings-daily-aggregates-to-highcharts-data";
 
-import {MonitoringChart, MonitoringChartToolbar, SectionToolbar} from "components";
+import {Button, Icon, MonitoringChart, MonitoringChartToolbar, SectionToolbar} from "components";
+
+const dateButtonStyle = ({colors}) => ({
+    backgroundColor: colors.primary,
+    border: "0px none",
+    height: "35px",
+    width: "auto",
+    position: "absolute",
+    top: "50%"
+});
 
 var MonitoringChartView = React.createClass({
     propTypes: {
+        addMoreData: PropTypes.func.isRequired,
         addToFavorite: PropTypes.func.isRequired,
         asteroid: PropTypes.object,
         changeYAxisValues: PropTypes.func.isRequired,
@@ -39,6 +51,9 @@ var MonitoringChartView = React.createClass({
         this.props.asteroid.subscribe("sensors");
         this.subscribeToSensorsData(this.props);
     },
+    componentWillReceiveProps: function (props) {
+        this.subscribeToSensorsData(props);
+    },
     getTheme: function () {
         return this.context.theme || defaultTheme;
     },
@@ -55,12 +70,11 @@ var MonitoringChartView = React.createClass({
             let sensorObj = this.getSensorObj(sensor, allSensors);
             let sensors = extractSensorsFromFormula(sensorObj, allSensors);
             sensors.forEach((sensor) => {
-                //TODO dynamic time to be implemented
                 props.asteroid.subscribe(
                     "dailyMeasuresBySensor",
                     sensor.get("_id"),
-                    moment.utc().subtract(3, "years").startOf("month").format("YYYY-MM-DD"),
-                    moment.utc().endOf("month").format("YYYY-MM-DD"),
+                    moment.utc().subtract(props.monitoringChart.dataMonthsSpan.backward, "months").startOf("month").format("YYYY-MM-DD"),
+                    moment.utc().add(props.monitoringChart.dataMonthsSpan.forward, "months").endOf("month").format("YYYY-MM-DD"),
                     "reading",
                     sensor.get("measurementType")
                 );
@@ -112,6 +126,27 @@ var MonitoringChartView = React.createClass({
         });
         return yAxis;
     },
+    renderMoreDataButton: function (theme, backward) {
+        let buttonStyle = {
+            borderRadius: backward ? "0 20px 20px 0" : "20px 0 0 20px",
+            padding: "0px"
+        };
+        buttonStyle[backward ? "left" : "right"] = "0px";
+        return (
+            <Button
+                disabled={!this.refs.monitoringChart}
+                onClick={() => this.props.addMoreData(backward)}
+                style={R.merge(dateButtonStyle(theme), buttonStyle)}
+            >
+                <Icon
+                    color={theme.colors.iconArrowSwitch}
+                    icon={"add"}
+                    size={"20px"}
+                    style={{lineHeight: "20px"}}
+                />
+            </Button>
+        );
+    },
     renderChart: function () {
         let series = this.getChartSeries(this.props);
         if (series && !this.haveNullSeries(series)) {
@@ -132,7 +167,9 @@ var MonitoringChartView = React.createClass({
             <div>
                 <SectionToolbar backLink={true} title={"Torna all'elenco sensori"} />
                 <div style={{width: "75%", padding: "20px", float: "left"}}>
+                    {this.renderMoreDataButton(theme, true)}
                     {this.renderChart()}
+                    {this.renderMoreDataButton(theme, false)}
                 </div>
                 <div style={{
                     width: "25%",
@@ -167,6 +204,7 @@ const mapStateToProps = (state) => {
 
 const mapDispatchToProps = (dispatch) => {
     return {
+        addMoreData: bindActionCreators(addMoreData, dispatch),
         addToFavorite: bindActionCreators(addToFavorite, dispatch),
         changeYAxisValues: bindActionCreators(changeYAxisValues, dispatch),
         resetYAxisValues: bindActionCreators(resetYAxisValues, dispatch),
