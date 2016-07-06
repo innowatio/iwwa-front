@@ -1,4 +1,3 @@
-import R from "ramda";
 import React, {PropTypes} from "react";
 import IPropTypes from "react-immutable-proptypes";
 import {connect} from "react-redux";
@@ -20,16 +19,7 @@ import {extractSensorsFromFormula, getAllSensors, getSensorLabel, reduceFormula}
 import {defaultTheme} from "lib/theme";
 import readingsDailyAggregatesToHighchartsData from "lib/readings-daily-aggregates-to-highcharts-data";
 
-import {Button, Icon, MonitoringChart, MonitoringChartToolbar, SectionToolbar} from "components";
-
-const dateButtonStyle = ({colors}) => ({
-    backgroundColor: colors.primary,
-    border: "0px none",
-    height: "35px",
-    width: "auto",
-    position: "absolute",
-    top: "50%"
-});
+import {MonitoringChart, MonitoringChartToolbar, SectionToolbar} from "components";
 
 var MonitoringChartView = React.createClass({
     propTypes: {
@@ -126,38 +116,20 @@ var MonitoringChartView = React.createClass({
         });
         return yAxis;
     },
-    renderMoreDataButton: function (theme, backward) {
-        let buttonStyle = {
-            borderRadius: backward ? "0 20px 20px 0" : "20px 0 0 20px",
-            padding: "0px"
-        };
-        buttonStyle[backward ? "left" : "right"] = "0px";
-        return (
-            <Button
-                disabled={!this.refs.monitoringChart}
-                onClick={() => this.props.addMoreData(backward)}
-                style={R.merge(dateButtonStyle(theme), buttonStyle)}
-            >
-                <Icon
-                    color={theme.colors.iconArrowSwitch}
-                    icon={"add"}
-                    size={"20px"}
-                    style={{lineHeight: "20px"}}
-                />
-            </Button>
-        );
-    },
     renderChart: function () {
         let series = this.getChartSeries(this.props);
         if (series && !this.haveNullSeries(series)) {
             return (
-                <MonitoringChart
-                    chartState={this.props.monitoringChart}
-                    ref="monitoringChart"
-                    saveConfig={this.props.saveChartConfig}
-                    series={series}
-                    yAxis={this.getYAxis(this.props)}
-                />
+                <div style={{width: "100%", height: "100%", overflow: "scroll"}}>
+                    <MonitoringChart
+                        addMoreData={this.props.addMoreData}
+                        chartState={this.props.monitoringChart}
+                        ref="monitoringChart"
+                        saveConfig={this.props.saveChartConfig}
+                        series={series}
+                        yAxis={this.getYAxis(this.props)}
+                    />
+                </div>
             );
         }
     },
@@ -166,18 +138,17 @@ var MonitoringChartView = React.createClass({
         return (
             <div>
                 <SectionToolbar backLink={true} title={"Torna all'elenco sensori"} />
-                <div style={{width: "75%", padding: "20px", float: "left"}}>
-                    {this.renderMoreDataButton(theme, true)}
+                <div style={{overflow: "hidden", width: "75%", float: "left", height: "calc(100vh - 120px)"}}>
                     {this.renderChart()}
-                    {this.renderMoreDataButton(theme, false)}
                 </div>
                 <div style={{
                     width: "25%",
                     backgroundColor: theme.colors.secondary,
                     borderTop: "2px solid " + theme.colors.black,
-                    float: "left",
+                    float: "right",
                     height: "calc(100vh - 120px)"
-                }}>
+                }}
+                >
                     <MonitoringChartToolbar
                         addToFavorite={this.props.addToFavorite}
                         asteroid={this.props.asteroid}

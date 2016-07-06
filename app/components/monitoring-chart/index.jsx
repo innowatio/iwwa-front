@@ -3,6 +3,7 @@ import React, {PropTypes} from "react";
 import ReactHighstock from "react-highcharts/bundle/ReactHighstock"; // Highstock is bundled
 
 import {defaultTheme} from "lib/theme";
+import {Button, Icon} from "components";
 
 const chartColors = [
     "#D500F9",
@@ -37,6 +38,7 @@ const charts = [
 
 var MonitoringChart = React.createClass({
     propTypes: {
+        addMoreData: PropTypes.func.isRequired,
         chartState: PropTypes.object.isRequired,
         saveConfig: PropTypes.func.isRequired,
         series: PropTypes.array.isRequired,
@@ -379,14 +381,52 @@ var MonitoringChart = React.createClass({
         components.push(year ? <ReactHighstock config={this.getComparisonChartConfig("year")} key="year" ref={charts[3].key} /> : null);
         return components;
     },
-    render: function () {
+    renderMoreDataButton: function (theme, backward) {
+        let buttonStyle = {
+            borderRadius: backward ? "0 20px 20px 0" : "20px 0 0 20px",
+            padding: "0px 3px",
+            backgroundColor: theme.colors.primary,
+            border: "0px",
+            height: "35px",
+            position: "absolute",
+            top: "35%",
+            zIndex: 1
+        };
+        buttonStyle[backward ? "left" : "right"] = "0px";
         return (
-            <div
-                style={{marginBottom: "60px", ...this.props.style}}
-                onMouseMove={this.highlightCharts}
+            <Button
+                onClick={() => this.props.addMoreData(backward)}
+                style={buttonStyle}
             >
-                <ReactHighstock config={this.state.config} ref={charts[0].key} />
-                {this.renderComparisonCharts()}
+                <Icon
+                    color={theme.colors.iconArrowSwitch}
+                    icon={"add"}
+                    size={"24px"}
+                    style={{lineHeight: "20px", verticalAlign: "middle"}}
+                />
+            </Button>
+        );
+    },
+    render: function () {
+        const theme = this.getTheme();
+        return (
+            <div>
+                <div
+                    style={{position: "relative", padding: "0px 3%", margin: "40px 0px", ...this.props.style}}
+                    onMouseMove={this.highlightCharts}
+                >
+                    <div>
+                        {this.renderMoreDataButton(theme, true)}
+                        {this.renderMoreDataButton(theme, false)}
+                    </div>
+                    <ReactHighstock config={this.state.config} ref={charts[0].key} />
+                </div>
+                <div
+                    style={{padding: "0px 3%", margin: "40px 0px", ...this.props.style}}
+                    onMouseMove={this.highlightCharts}
+                >
+                    {this.renderComparisonCharts()}
+                </div>
             </div>
         );
     }
