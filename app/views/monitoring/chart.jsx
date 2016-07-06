@@ -147,8 +147,7 @@ var MonitoringChartView = React.createClass({
                     borderTop: "2px solid " + theme.colors.black,
                     float: "right",
                     height: "calc(100vh - 120px)"
-                }}
-                >
+                }}>
                     <MonitoringChartToolbar
                         addToFavorite={this.props.addToFavorite}
                         asteroid={this.props.asteroid}
