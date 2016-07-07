@@ -123,7 +123,8 @@ var MonitoringChart = React.createClass({
         return {
             chart: {
                 ...this.getCommonChartConfig(props),
-                type: props.chartState.type
+                type: props.chartState.type,
+                zoomType: "x"
             },
             credits: {
                 enabled: false
@@ -301,6 +302,10 @@ var MonitoringChart = React.createClass({
         }
         return {
             ...this.state.config,
+            chart: {
+                ...this.state.config.chart,
+                zoomType: null
+            },
             legend: {
                 enabled: false
             },
