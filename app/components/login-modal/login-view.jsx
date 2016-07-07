@@ -93,7 +93,8 @@ const stylesFunction = ({colors}) => ({
 
 var LoginView = React.createClass({
     propTypes: {
-        asteroid: PropTypes.object.isRequired
+        asteroid: PropTypes.object.isRequired,
+        ssoLogin: PropTypes.func.isRequired
     },
     contextTypes: {
         theme: PropTypes.object
@@ -112,12 +113,14 @@ var LoginView = React.createClass({
         });
     },
     login: function () {
+        //TODO email have to became username
         var credentials = {
             email: ReactDOM.findDOMNode(this.refs.email).value,
             password: ReactDOM.findDOMNode(this.refs.password).value
         };
-        this.setLoginError(null);
-        this.props.asteroid.loginWithPassword(credentials).catch(this.setLoginError);
+        this.props.ssoLogin(credentials);
+        // this.setLoginError(null);
+        // this.props.asteroid.loginWithPassword(credentials).catch(this.setLoginError);
     },
     renderError: function (styles) {
         return this.state.loginError ? (

@@ -10,6 +10,7 @@ import {monitoringChart} from "./monitoring-chart";
 import {realTime} from "./real-time";
 import {userSetting} from "./user-setting";
 import {sensors} from "./sensors";
+import {ssoAuth} from "./sso-auth";
 import {notifications} from "./notifications";
 
 const rootReducer = storage.reducer(combineReducers({
@@ -22,6 +23,7 @@ const rootReducer = storage.reducer(combineReducers({
     userSetting,
     form,
     sensors,
+    ssoAuth,
     notifications
 }));
 

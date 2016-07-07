@@ -5,15 +5,18 @@ import {connect} from "react-redux";
 import {bindActionCreators} from "redux";
 import get from "lodash.get";
 
-var asteroid          = require("lib/asteroid");
-var components        = require("components");
-var LocalStorageMixin = require("lib/localstorage-mixin");
-var measures          = require("lib/measures");
-import {theme, defaultTheme} from "lib/theme";
-import {selectThemeColor} from "actions/user-setting";
-import {closeNotificationModal} from "actions/notifications";
-import {isAdmin, isYousaveUser} from "lib/roles-utils";
+import components from "components";
+
+import asteroid from "lib/asteroid";
 import {EXEC_ENV} from "lib/config";
+import LocalStorageMixin from "lib/localstorage-mixin";
+import measures from "lib/measures";
+import {isAdmin, isYousaveUser} from "lib/roles-utils";
+import {theme, defaultTheme} from "lib/theme";
+
+import {closeNotificationModal} from "actions/notifications";
+import {selectThemeColor} from "actions/user-setting";
+import {login} from "actions/sso-auth";
 
 const stylesFunction = ({colors}) => ({
     header: {
@@ -56,6 +59,7 @@ var Root = React.createClass({
     propTypes: {
         children: PropTypes.node,
         closeNotificationModal: PropTypes.func,
+        login: PropTypes.func.isRequired,
         reduxState: PropTypes.object,
         selectThemeColor: PropTypes.func
     },
@@ -166,6 +170,7 @@ var Root = React.createClass({
                     <components.LoginModal
                         asteroid={asteroid}
                         isOpen={!this.state.userId}
+                        ssoLogin={this.props.login}
                     />
                 </div>
             </StyleRoot>
@@ -181,6 +186,7 @@ function mapStateToProps (state) {
 function mapDispatchToProps (dispatch) {
     return {
         closeNotificationModal: bindActionCreators(closeNotificationModal, dispatch),
+        login: bindActionCreators(login, dispatch),
         selectThemeColor: bindActionCreators(selectThemeColor, dispatch)
     };
 }
