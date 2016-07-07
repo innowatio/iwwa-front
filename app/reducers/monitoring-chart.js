@@ -43,13 +43,12 @@ export function monitoringChart (state = defaultState, action) {
             const direction = action.payload ? "backward" : "forward";
             let newMonthsSpan = {};
             newMonthsSpan[direction] = state.dataMonthsSpan[direction] + 3;
-            return {
-                ...state,
+            return defaultNullConfig(state, {
                 dataMonthsSpan: {
                     ...state.dataMonthsSpan,
                     ...newMonthsSpan
                 }
-            };
+            });
         }
         case CHANGE_Y_AXIS_VALUES:
             return defaultNullConfig(state, {

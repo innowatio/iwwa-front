@@ -53,6 +53,12 @@ var MonitoringChartView = React.createClass({
     getSensorObj: function (sensor, allSensor) {
         return typeof sensor === "string" ? allSensor.get(sensor) : sensor;
     },
+    getStartDate: function (props) {
+        return moment.utc().subtract(props.monitoringChart.dataMonthsSpan.backward, "months").startOf("month");
+    },
+    getEndDate: function (props) {
+        return moment.utc().add(props.monitoringChart.dataMonthsSpan.forward, "months").endOf("month");
+    },
     subscribeToSensorsData: function (props) {
         const sensors = props.monitoringChart.sensorsToDraw;
         let allSensors = this.getAllSensors();
@@ -63,8 +69,8 @@ var MonitoringChartView = React.createClass({
                 props.asteroid.subscribe(
                     "dailyMeasuresBySensor",
                     sensor.get("_id"),
-                    moment.utc().subtract(props.monitoringChart.dataMonthsSpan.backward, "months").startOf("month").format("YYYY-MM-DD"),
-                    moment.utc().add(props.monitoringChart.dataMonthsSpan.forward, "months").endOf("month").format("YYYY-MM-DD"),
+                    this.getStartDate(props).format("YYYY-MM-DD"),
+                    this.getEndDate(props).format("YYYY-MM-DD"),
                     "reading",
                     sensor.get("measurementType")
                 );
@@ -78,8 +84,8 @@ var MonitoringChartView = React.createClass({
             const unit = sensorObj.get("unitOfMeasurement") ? sensorObj.get("unitOfMeasurement") : getUnitOfMeasurement(sensorObj.get("measurementType"));
             return {
                 date: {
-                    start: moment.utc().startOf("year").valueOf(),
-                    end: moment.utc().endOf("month").valueOf()
+                    start: this.getStartDate(props).valueOf(),
+                    end: this.getEndDate(props).valueOf()
                 },
                 formula: reduceFormula(sensorObj, allSensors),
                 measurementType: {key: sensorObj.get("measurementType")},
