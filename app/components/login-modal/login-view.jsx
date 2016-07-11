@@ -94,36 +94,25 @@ const stylesFunction = ({colors}) => ({
 var LoginView = React.createClass({
     propTypes: {
         asteroid: PropTypes.object.isRequired,
+        loginError: PropTypes.string,
         ssoLogin: PropTypes.func.isRequired
     },
     contextTypes: {
         theme: PropTypes.object
     },
-    getInitialState: function () {
-        return {
-            loginError: null
-        };
-    },
     getTheme: function () {
         return this.context.theme || defaultTheme;
     },
-    setLoginError: function (error) {
-        this.setState({
-            loginError: error
-        });
-    },
     login: function () {
-        //TODO email have to became username
         var credentials = {
-            email: ReactDOM.findDOMNode(this.refs.email).value,
+            username: ReactDOM.findDOMNode(this.refs.username).value,
             password: ReactDOM.findDOMNode(this.refs.password).value
         };
         this.props.ssoLogin(credentials);
-        // this.setLoginError(null);
         // this.props.asteroid.loginWithPassword(credentials).catch(this.setLoginError);
     },
     renderError: function (styles) {
-        return this.state.loginError ? (
+        return this.props.loginError ? (
             <bootstrap.Alert
                 bsStyle="danger"
                 style={styles.errorAlert}
@@ -153,10 +142,10 @@ var LoginView = React.createClass({
                             </bootstrap.InputGroup.Addon>
                             <bootstrap.FormControl
                                 bsSize="large"
-                                placeholder={string.email}
-                                ref="email"
+                                placeholder={string.username}
+                                ref="username"
                                 style={styles.inputs}
-                                type="email"
+                                type="text"
                             />
                         </bootstrap.FormGroup>
                     </div>

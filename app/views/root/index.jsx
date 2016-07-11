@@ -170,6 +170,7 @@ var Root = React.createClass({
                     <components.LoginModal
                         asteroid={asteroid}
                         isOpen={!this.state.userId}
+                        loginState={this.props.reduxState.ssoAuth}
                         ssoLogin={this.props.login}
                     />
                 </div>

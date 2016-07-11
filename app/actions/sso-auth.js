@@ -13,8 +13,10 @@ export const login = (credentials) => {
         var endpoint = "https://sso.innowatio.it/openam/json/authenticate";
         var config = {
             headers: {
-                "X-OpenAM-Username": credentials.email,
-                "X-OpenAM-Password": credentials.password
+                "X-OpenAM-Username": credentials.username,
+                "X-OpenAM-Password": credentials.password,
+                "Authorization": "Basic ZGVtbzpjaGFuZ2VpdA==",
+                "Content-Type": "application/json"
             }
         };
         axios.post(endpoint, {}, config)

@@ -4,7 +4,9 @@ import {
     LOGIN_SUCCESS
 } from "../actions/sso-auth";
 
-const defaultState = {};
+const defaultState = {
+    loginError: null
+};
 
 export const ssoAuth = (state = defaultState, action) => {
     switch (action.type) {
@@ -14,7 +16,10 @@ export const ssoAuth = (state = defaultState, action) => {
         case LOGIN_FAIL: {
             console.log("fail");
             console.log(action.payload);
-            break;
+            return {
+                ...state,
+                loginError: action.payload.message
+            };
         }
         case LOGIN_SUCCESS: {
             console.log("success");
