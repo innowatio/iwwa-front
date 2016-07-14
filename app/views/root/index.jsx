@@ -16,7 +16,7 @@ import {theme, defaultTheme} from "lib/theme";
 
 import {closeNotificationModal} from "actions/notifications";
 import {selectThemeColor} from "actions/user-setting";
-import {login} from "actions/sso-auth";
+import {login, logout} from "actions/sso-auth";
 
 const stylesFunction = ({colors}) => ({
     header: {
@@ -60,6 +60,7 @@ var Root = React.createClass({
         children: PropTypes.node,
         closeNotificationModal: PropTypes.func,
         login: PropTypes.func.isRequired,
+        logout: PropTypes.func.isRequired,
         reduxState: PropTypes.object,
         selectThemeColor: PropTypes.func
     },
@@ -82,6 +83,13 @@ var Root = React.createClass({
     },
     componentDidMount: function () {
         asteroid.subscribe("users");
+    },
+    componentWillReceiveProps: function (nextProps) {
+        const tokenId = nextProps.reduxState.ssoAuth.tokenId;
+        if (tokenId) {
+            console.log("there is a token");
+            //TODO save on cookie
+        }
     },
     getTheme: function () {
         const colorTheme = this.props.reduxState.userSetting.theme.color || "dark";
@@ -146,6 +154,7 @@ var Root = React.createClass({
                     <div style={styles.header}>
                         <components.Header
                             asteroid={asteroid}
+                            logout={this.props.logout}
                             menuClickAction={this.toggleSidebar}
                             selectThemeColor={this.props.selectThemeColor}
                             title={titleView}
@@ -169,8 +178,8 @@ var Root = React.createClass({
                     {this.renderFooter(styles)}
                     <components.LoginModal
                         asteroid={asteroid}
-                        isOpen={!this.state.userId}
-                        loginState={this.props.reduxState.ssoAuth}
+                        isOpen={!this.props.reduxState.ssoAuth.tokenId}
+                        loginError={this.props.reduxState.ssoAuth.loginError}
                         ssoLogin={this.props.login}
                     />
                 </div>
@@ -188,6 +197,7 @@ function mapDispatchToProps (dispatch) {
     return {
         closeNotificationModal: bindActionCreators(closeNotificationModal, dispatch),
         login: bindActionCreators(login, dispatch),
+        logout: bindActionCreators(logout, dispatch),
         selectThemeColor: bindActionCreators(selectThemeColor, dispatch)
     };
 }

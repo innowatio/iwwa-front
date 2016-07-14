@@ -92,7 +92,7 @@ var LoginModal = React.createClass({
     propTypes: {
         asteroid: PropTypes.object.isRequired,
         isOpen: PropTypes.bool.isRequired,
-        loginState: PropTypes.object.isRequired,
+        loginError: PropTypes.string,
         ssoLogin: PropTypes.func.isRequired
     },
     contextTypes: {
@@ -132,7 +132,7 @@ var LoginModal = React.createClass({
         return (this.state.activeView === "login" ?
             <LoginView 
                 asteroid={this.props.asteroid}
-                loginError={this.props.loginState.loginError}
+                loginError={this.props.loginError}
                 ssoLogin={this.props.ssoLogin}
             /> :
             <PasswordResetView asteroid={this.props.asteroid} />

@@ -34,6 +34,7 @@ var stylesFunction = ({colors}) => ({
 var Header = React.createClass({
     propTypes: {
         asteroid: PropTypes.object.isRequired,
+        logout: PropTypes.func.isRequired,
         menuClickAction: PropTypes.func,
         selectThemeColor: PropTypes.func,
         title: PropTypes.string,
@@ -44,9 +45,6 @@ var Header = React.createClass({
     },
     getTheme: function () {
         return this.context.theme || defaultTheme;
-    },
-    logout: function () {
-        this.props.asteroid.logout();
     },
     getUserSettings: function () {
         return [
@@ -152,7 +150,7 @@ var Header = React.createClass({
                 {this.renderAdminPage()}
                 {this.renderInboxPage()}
                 {this.renderAlarmPage()}
-                <span onClick={this.logout} style={styles.icon}>
+                <span onClick={this.props.logout} style={styles.icon}>
                     <components.Icon
                         color={this.getTheme().colors.iconHeader}
                         icon={"logout"}
