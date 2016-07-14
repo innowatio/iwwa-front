@@ -21,8 +21,8 @@ export const login = (credentials) => {
             }
         };
         axios.post(endpoint, {}, config)
-            .then((result) => validateToken(result.tokenId))
-            .catch((error) => dispatch(
+            .then(result => validateToken(result.tokenId))
+            .catch(() => dispatch(
                 //TODO remove when authenticate API is fixed
                 validateToken("AQIC5wM2LY4SfcyOxGB50j79ClWq1gZUQIqC7oXwzfQ_yFo.*AAJTSQACMDEAAlNLABMzNzM3MjMxNTY5NTI1NTg3Mjc0AAJTMQAA*")
                 // {
@@ -38,7 +38,7 @@ export const logout = () => {
     //TODO do right things...
     return {
         type: LOGOUT
-    }
+    };
 };
 
 const validateToken = (tokenId) => {
@@ -54,7 +54,7 @@ const validateToken = (tokenId) => {
             }
         };
         axios.post(endpoint, {}, config)
-            .then((result) => {
+            .then(result => {
                 if (result.data.valid) {
                     setTokenOnInnowatioSSO(tokenId);
                     dispatch({
@@ -67,7 +67,7 @@ const validateToken = (tokenId) => {
                     });
                 }
             })
-            .catch((error) => dispatch({
+            .catch(error => dispatch({
                 type: "INVALID_TOKEN",
                 payload: error
             }));
@@ -80,8 +80,8 @@ const setTokenOnInnowatioSSO = (tokenId) => {
     axios.post(endpoint, {
         tokenId: tokenId
     })
-        .then(result => console.log("success"))
-        .catch(error => console.log("error"));
+        .then(() => console.log("success"))
+        .catch(() => console.log("error"));
 };
 
 
