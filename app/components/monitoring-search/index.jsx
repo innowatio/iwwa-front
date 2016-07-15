@@ -18,9 +18,11 @@ var MonitoringSearch = React.createClass({
     },
     getInitialState: function () {
         return {
-            standardSearchFilter: "",
+            primaryTagSearchFilter: "",
+            primaryTagsToSearch: [],
             tagSearchFilter: "",
             tagsToSearch: [],
+            wordsSearchFilter: "",
             wordsToSearch: []
         };
     },
@@ -54,9 +56,70 @@ var MonitoringSearch = React.createClass({
     },
     filterSensors: function () {
         this.props.filterSensors({
+            primaryTagsToFilter: this.state.primaryTagsToSearch,
             tagsToFilter: this.state.tagsToSearch,
             wordsToFilter: this.state.wordsToSearch
         });
+    },
+    renderSearchInput: function (theme, inputPlaceholder, filterField, searchValuesField) {
+        let self = this;
+        return (
+            <FormGroup style={{display: "inline-table"}}>
+                <FormControl
+                    className="input-search"
+                    onChange={input => {
+                        let obj = {};
+                        obj[filterField] = input.target.value;
+                        self.setState(obj);
+                    }}
+                    placeholder={inputPlaceholder}
+                    type="text"
+                    value={self.state[filterField]}
+                />
+                <InputGroup.Addon>
+                    <Icon
+                        color={theme.colors.white}
+                        icon={"search"}
+                        onClick={() => {
+                            let word = self.state[filterField];
+                            if (word && word.trim().length > 0) {
+                                let newWords = self.state[searchValuesField].slice();
+                                newWords.push(word);
+                                let obj = {};
+                                obj[filterField] = "";
+                                obj[searchValuesField] = newWords;
+                                self.setState(obj);
+                            }
+                        }}
+                        size={"34px"}
+                        style={{
+                            lineHeight: "10px",
+                            verticalAlign: "middle"
+                        }}
+                    />
+                </InputGroup.Addon>
+            </FormGroup>
+        );
+    },
+    renderSearchValuesTag: function (searchValuesField) {
+        return (
+            <div style={{textAlign: "left"}}>
+                {this.state[searchValuesField].map(item => {
+                    return (
+                        <label key={item} style={{
+                            border: "solid 1px",
+                            fontSize: "16px",
+                            fontWeight: "300",
+                            padding: "3px 10px 3px 10px",
+                            borderRadius: "35px",
+                            marginRight: "5px"
+                        }}>
+                            {item}
+                        </label>
+                    );
+                })}
+            </div>
+        );
     },
     render: function () {
         let self = this;
@@ -72,69 +135,17 @@ var MonitoringSearch = React.createClass({
                         rules={self.getSearchStyle()}
                         scopeSelector=".search-container"
                     />
-                    <FormGroup style={{display: "inline-table"}}>
-                        <FormControl
-                            className="input-search"
-                            onChange={(input) => self.setState({standardSearchFilter: input.target.value})}
-                            placeholder="Cerca"
-                            type="text"
-                            value={self.state.standardSearchFilter}
-                        />
-                        <InputGroup.Addon>
-                            <Icon
-                                color={theme.colors.white}
-                                icon={"search"}
-                                onClick={() => {
-                                    let word = self.state.standardSearchFilter;
-                                    if (word && word.trim().length > 0) {
-                                        let newWords = self.state.wordsToSearch.slice();
-                                        newWords.push(word);
-                                        self.setState({wordsToSearch: newWords, standardSearchFilter: ""});
-                                    }
-                                }}
-                                size={"34px"}
-                                style={{
-                                    lineHeight: "10px",
-                                    verticalAlign: "middle"
-                                }}
-                            />
-                        </InputGroup.Addon>
-                    </FormGroup>
-
-                    <FormGroup style={{display: "inline-table"}}>
-                        <FormControl
-                            className="input-search"
-                            onChange={(input) => self.setState({tagSearchFilter: input.target.value})}
-                            placeholder="Cerca per tag"
-                            type="text"
-                            value={self.state.tagSearchFilter}
-                        />
-                        <InputGroup.Addon>
-                            <Icon
-                                color={theme.colors.white}
-                                icon={"tag"}
-                                onClick={() => {
-                                    let tag = self.state.tagSearchFilter;
-                                    if (tag && tag.trim().length > 0) {
-                                        let newTags = self.state.tagsToSearch.slice();
-                                        newTags.push(tag);
-                                        self.setState({tagsToSearch: newTags, tagSearchFilter: ""});
-                                    }
-                                }}
-                                size={"34px"}
-                                style={{
-                                    lineHeight: "10px",
-                                    verticalAlign: "middle"
-                                }}
-                            />
-                        </InputGroup.Addon>
-                    </FormGroup>
+                    {this.renderSearchInput(theme, "Cerca per tag primari", "primaryTagSearchFilter", "primaryTagsToSearch")}
+                    {this.renderSearchInput(theme, "Cerca per tag", "tagSearchFilter", "tagsToSearch")}
+                    {this.renderSearchInput(theme, "Cerca testo", "wordsSearchFilter", "wordsToSearch")}
 
                     <label style={{fontSize: "20px", fontWeight: "400", marginBottom: "10px"}}>
                         {"Riepilogo ricerca"}
                     </label>
 
                     <div style={{marginBottom: "30px"}}>
+                        {this.renderSearchValuesTag("primaryTagsToSearch")}
+                        {this.renderSearchValuesTag("tagsToSearch")}
                         <div style={{textAlign: "left"}}>
                             {self.state.wordsToSearch.map(item => {
                                 return (
@@ -142,23 +153,6 @@ var MonitoringSearch = React.createClass({
                                         margin:"0px 10px 10px 10px",
                                         fontSize: "16px",
                                         fontWeight: "300"
-                                    }}>
-                                        {item}
-                                    </label>
-                                );
-                            })}
-                        </div>
-
-                        <div style={{textAlign: "left"}}>
-                            {self.state.tagsToSearch.map(item => {
-                                return (
-                                    <label key={item} style={{
-                                        border: "solid 1px",
-                                        fontSize: "16px",
-                                        fontWeight: "300",
-                                        padding: "3px 10px 3px 10px",
-                                        borderRadius: "35px",
-                                        marginRight: "5px"
                                     }}>
                                         {item}
                                     </label>

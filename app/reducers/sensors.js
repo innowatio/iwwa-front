@@ -22,6 +22,7 @@ let defaultState = {
         formulaItems: []
     },
     selectedSensors: [],
+    primaryTagsToFilter: [],
     tagsToFilter: [],
     wordsToFilter: [],
     workAreaSensors: []
@@ -33,6 +34,7 @@ function cloneState (state) {
             formulaItems: state.current.formulaItems.slice()
         },
         selectedSensors: state.selectedSensors.slice(),
+        primaryTagsToFilter: state.primaryTagsToFilter.slice(),
         tagsToFilter: state.tagsToFilter.slice(),
         wordsToFilter: state.wordsToFilter.slice(),
         workAreaSensors: state.workAreaSensors.slice()
@@ -97,6 +99,7 @@ export function sensors (state = defaultState, action) {
             break;
         }
         case FILTER_SENSORS: {
+            newState.primaryTagsToFilter = action.payload.primaryTagsToFilter;
             newState.tagsToFilter = action.payload.tagsToFilter;
             newState.wordsToFilter = action.payload.wordsToFilter;
             break;
