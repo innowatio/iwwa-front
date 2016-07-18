@@ -321,6 +321,7 @@ var Monitoring = React.createClass({
                 <MonitoringWorkArea
                     addSensorToWorkArea={this.props.addSensorToWorkArea}
                     onClickAggregate={this.resetAndOpenNew}
+                    primaryTagsToFilter={this.props.sensorsState.primaryTagsToFilter}
                     removeSensorFromWorkArea={this.props.removeSensorFromWorkArea}
                     selectSensor={this.props.selectSensor}
                     selectSensorsToDraw={this.props.selectSensorsToDraw}

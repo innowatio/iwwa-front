@@ -31,6 +31,7 @@ var MonitoringWorkArea = React.createClass({
     propTypes: {
         addSensorToWorkArea: PropTypes.func.isRequired,
         onClickAggregate: PropTypes.func.isRequired,
+        primaryTagsToFilter: PropTypes.array,
         removeSensorFromWorkArea: PropTypes.func.isRequired,
         selectSensor: PropTypes.func.isRequired,
         selectSensorsToDraw: PropTypes.func.isRequired,
@@ -47,40 +48,53 @@ var MonitoringWorkArea = React.createClass({
         return this.context.theme || defaultTheme;
     },
     searchFilter: function (item) {
-        let filterTags = this.props.tagsToFilter;
-        let filterWords = this.props.wordsToFilter;
+        const {primaryTagsToFilter, tagsToFilter, wordsToFilter} = this.props;
         return (
-            (filterTags <= 0 && filterWords <= 0) ||
-            this.searchWords(item, filterWords) ||
-            this.searchTags(item, filterTags)
+            (primaryTagsToFilter <= 0 && tagsToFilter <= 0 && wordsToFilter <= 0) ||
+            (this.searchPrimaryTags(item, primaryTagsToFilter) &&
+            this.searchTags(item, tagsToFilter) &&
+            this.searchWords(item, wordsToFilter))
         );
     },
-    searchTags: function (item, filterTags) {
+    searchPrimaryTags: function (item, filterPrimaryTags) {
+        if (filterPrimaryTags.length == 0) {
+            return true;
+        }
         let found = false;
-        if (!R.isNil(item) && !R.isNil(item.get("tags"))) {
-            for (let i = 0; i < filterTags.length && !found; i++) {
+        if (!R.isNil(item)) {
+            for (let i = 0; i < filterPrimaryTags.length && !found; i++) {
+                found = this.searchTag(item.get("primaryTags"), filterPrimaryTags[i]);
+            }
+        }
+        return found;
+    },
+    searchTags: function (item, filterTags) {
+        let found = true;
+        if (!R.isNil(item)) {
+            for (let i = 0; i < filterTags.length && found; i++) {
                 found = this.searchTag(item.get("tags"), filterTags[i]);
+            }
+        }
+        return found;
+    },
+    searchWords: function (item, filterWords) {
+        let found = true;
+        if (!R.isNil(item) && filterWords.length > 0) {
+            for (let i = 0; i < filterWords.length && found; i++) {
+                var searchRegExp = new RegExp(filterWords[i], "i");
+                found = (
+                    searchRegExp.test(item.get("_id")+item.get("measurementType")) ||
+                    searchRegExp.test(item.get("name")) ||
+                    searchRegExp.test(item.get("description")) ||
+                    this.searchTag(item.get("primaryTags"), filterWords[i]) ||
+                    this.searchTag(item.get("tags"), filterWords[i])
+                );
             }
         }
         return found;
     },
     searchTag: function (itemTags, tag) {
         return (!R.isNil(itemTags) ? R.contains(tag, itemTags) : false);
-    },
-    searchWords: function (item, filterWords) {
-        let found = false;
-        if (!R.isNil(item) && filterWords.length > 0) {
-            for (let i = 0; i < filterWords.length && !found; i++) {
-                var searchRegExp = new RegExp(filterWords[i], "i");
-                found = (
-                    searchRegExp.test(item.get("_id")+item.get("measurementType")) ||
-                    searchRegExp.test(item.get("name")) ||
-                    searchRegExp.test(item.get("description")) ||
-                    this.searchTag(item.get("tags"), filterWords[i])
-                );
-            }
-        }
-        return found;
     },
     sortByLabel: function (a, b, asc) {
         let aLabel = getSensorLabel(a).toLowerCase();
