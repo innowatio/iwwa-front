@@ -93,26 +93,35 @@ const stylesFunction = ({colors}) => ({
 
 var LoginView = React.createClass({
     propTypes: {
-        asteroid: PropTypes.object.isRequired,
-        loginError: PropTypes.string,
-        ssoLogin: PropTypes.func.isRequired
+        asteroid: PropTypes.object.isRequired
     },
     contextTypes: {
         theme: PropTypes.object
     },
+    getInitialState: function () {
+        return {
+            loginError: null
+        };
+    },
     getTheme: function () {
         return this.context.theme || defaultTheme;
     },
+    setLoginError: function (error) {
+        this.setState({
+            loginError: error
+        });
+    },
     login: function () {
         var credentials = {
-            username: ReactDOM.findDOMNode(this.refs.username).value,
-            password: ReactDOM.findDOMNode(this.refs.password).value
+            sso: {
+                username: ReactDOM.findDOMNode(this.refs.username).value,
+                password: ReactDOM.findDOMNode(this.refs.password).value
+            }
         };
-        this.props.ssoLogin(credentials);
-        // this.props.asteroid.loginWithPassword(credentials).catch(this.setLoginError);
+        this.props.asteroid.login(credentials).catch(this.setLoginError);
     },
     renderError: function (styles) {
-        return this.props.loginError ? (
+        return this.state.loginError ? (
             <bootstrap.Alert
                 bsStyle="danger"
                 style={styles.errorAlert}

@@ -91,9 +91,7 @@ const stylesFunction = ({colors}) => ({
 var LoginModal = React.createClass({
     propTypes: {
         asteroid: PropTypes.object.isRequired,
-        isOpen: PropTypes.bool.isRequired,
-        loginError: PropTypes.string,
-        ssoLogin: PropTypes.func.isRequired
+        isOpen: PropTypes.bool.isRequired
     },
     contextTypes: {
         theme: PropTypes.object
@@ -130,11 +128,7 @@ var LoginModal = React.createClass({
     },
     renderActiveView: function () {
         return (this.state.activeView === "login" ?
-            <LoginView 
-                asteroid={this.props.asteroid}
-                loginError={this.props.loginError}
-                ssoLogin={this.props.ssoLogin}
-            /> :
+            <LoginView asteroid={this.props.asteroid}/> :
             <PasswordResetView asteroid={this.props.asteroid} />
         );
     },
