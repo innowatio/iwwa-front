@@ -16,7 +16,6 @@ import {theme, defaultTheme} from "lib/theme";
 
 import {closeNotificationModal} from "actions/notifications";
 import {selectThemeColor} from "actions/user-setting";
-import {logout} from "actions/sso-auth";
 
 const stylesFunction = ({colors}) => ({
     header: {
@@ -59,7 +58,6 @@ var Root = React.createClass({
     propTypes: {
         children: PropTypes.node,
         closeNotificationModal: PropTypes.func,
-        logout: PropTypes.func.isRequired,
         reduxState: PropTypes.object,
         selectThemeColor: PropTypes.func
     },
@@ -82,9 +80,9 @@ var Root = React.createClass({
     },
     componentDidMount: function () {
         asteroid.subscribe("users");
-        asteroid.call("checkToken").catch(() => {
-            asteroid.logout();
-        });
+    },
+    logout: function () {
+        asteroid.logout();
     },
     getTheme: function () {
         const colorTheme = this.props.reduxState.userSetting.theme.color || "dark";
@@ -149,7 +147,7 @@ var Root = React.createClass({
                     <div style={styles.header}>
                         <components.Header
                             asteroid={asteroid}
-                            logout={this.props.logout}
+                            logout={this.logout}
                             menuClickAction={this.toggleSidebar}
                             selectThemeColor={this.props.selectThemeColor}
                             title={titleView}
@@ -189,7 +187,6 @@ function mapStateToProps (state) {
 function mapDispatchToProps (dispatch) {
     return {
         closeNotificationModal: bindActionCreators(closeNotificationModal, dispatch),
-        logout: bindActionCreators(logout, dispatch),
         selectThemeColor: bindActionCreators(selectThemeColor, dispatch)
     };
 }
