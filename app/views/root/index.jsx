@@ -11,7 +11,7 @@ import asteroid from "lib/asteroid";
 import {EXEC_ENV} from "lib/config";
 import LocalStorageMixin from "lib/localstorage-mixin";
 import measures from "lib/measures";
-import {isAdmin, isYousaveUser} from "lib/roles-utils";
+import {isAdmin, isYousaveUser, isAuthorizedUser} from "lib/roles-utils";
 import {theme, defaultTheme} from "lib/theme";
 
 import {closeNotificationModal} from "actions/notifications";
@@ -131,6 +131,16 @@ var Root = React.createClass({
             </div>
         ) : null;
     },
+    renderSideNav: function (styles) {
+        return isAuthorizedUser(asteroid) ? (
+            <components.SideNav
+                items={this.getMenuItems()}
+                linkClickAction={this.closeSidebar}
+                sidebarOpen={this.state.sidebarOpen}
+                style={this.getSidebarStyle(styles)}
+            />
+        ) : null;
+    },
     render: function () {
         const {notifications} = this.props.reduxState;
         const styles = stylesFunction(this.getTheme());
@@ -138,15 +148,11 @@ var Root = React.createClass({
         return (
             <StyleRoot>
                 <div style={{backgroundColor: this.getTheme().background}}>
-                    <components.SideNav
-                        items={this.getMenuItems()}
-                        linkClickAction={this.closeSidebar}
-                        sidebarOpen={this.state.sidebarOpen}
-                        style={this.getSidebarStyle(styles)}
-                    />
+                    {this.renderSideNav(styles)}
                     <div style={styles.header}>
                         <components.Header
                             asteroid={asteroid}
+                            isAuthorizedUser={isAuthorizedUser(asteroid)}
                             logout={this.logout}
                             menuClickAction={this.toggleSidebar}
                             selectThemeColor={this.props.selectThemeColor}
@@ -169,6 +175,9 @@ var Root = React.createClass({
                         />
                     </div>
                     {this.renderFooter(styles)}
+                    <components.UnauthorizedModal
+                        isOpen={!isAuthorizedUser(asteroid)}
+                    />
                     <components.LoginModal
                         asteroid={asteroid}
                         isOpen={!this.state.userId}

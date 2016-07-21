@@ -34,6 +34,7 @@ var stylesFunction = ({colors}) => ({
 var Header = React.createClass({
     propTypes: {
         asteroid: PropTypes.object.isRequired,
+        isAuthorizedUser: PropTypes.bool.isRequired,
         logout: PropTypes.func.isRequired,
         menuClickAction: PropTypes.func,
         selectThemeColor: PropTypes.func,
@@ -56,7 +57,7 @@ var Header = React.createClass({
         const userSetting = this.getUserSettings().find(userSetting => {
             return this.props.userSetting.theme.color === userSetting.key;
         });
-        return (
+        return this.props.isAuthorizedUser ? (
             <components.Popover
                 arrowColor={this.getTheme().colors.backgroundArrowPopover}
                 hideOnChange={true}
@@ -78,7 +79,7 @@ var Header = React.createClass({
                     value={userSetting}
                 />
             </components.Popover>
-        );
+        ) : null;
     },
     renderAdminPage: function () {
         return isAdmin(this.props.asteroid) && EXEC_ENV !== "cordova" ? (
@@ -95,7 +96,7 @@ var Header = React.createClass({
         ) : null;
     },
     renderInboxPage: function () {
-        return (
+        return this.props.isAuthorizedUser ? (
             <div style={{marginRight: "15px"}}>
                 <Link to="" >
                     <components.Icon
@@ -106,10 +107,10 @@ var Header = React.createClass({
                     />
                 </Link>
             </div>
-        );
+        ) : null;
     },
     renderAlarmPage: function () {
-        return (
+        return this.props.isAuthorizedUser ? (
             <div style={{marginRight: "15px"}}>
                 <Link to="" >
                     <components.Icon
@@ -120,19 +121,24 @@ var Header = React.createClass({
                     />
                 </Link>
             </div>
-        );
+        ) : null;
+    },
+    renderMenu: function () {
+        return this.props.isAuthorizedUser ? (
+            <components.Icon
+                color={this.getTheme().colors.white}
+                icon={"menu"}
+                onClick={this.props.menuClickAction}
+                size={"46px"}
+                style={{lineHeight: "20px"}}
+            />
+        ) : null;
     },
     render: function () {
         const styles = stylesFunction(this.getTheme());
         return (
             <div style={styles.base}>
-                <components.Icon
-                    color={this.getTheme().colors.white}
-                    icon={"menu"}
-                    onClick={this.props.menuClickAction}
-                    size={"46px"}
-                    style={{lineHeight: "20px"}}
-                />
+                {this.renderMenu()}
                 <span style={merge(styles.base, {marginLeft: "15px"})}>
                     <Link to="/" >
                         <components.Icon

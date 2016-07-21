@@ -46,4 +46,5 @@ exports.SiteNavigator           = require("./site-navigator/");
 exports.Spacer                  = require("./spacer/");
 exports.TreeView                = require("./tree-view/");
 exports.TutorialAnchor          = require("./tutorial-anchor/");
+exports.UnauthorizedModal       = require("./unauthorized-modal/");
 exports.VariablesPanel          = require("./variables-panel/");
