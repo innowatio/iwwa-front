@@ -8,6 +8,18 @@ export const setTokenOnInnowatioSSO = (tokenId) => {
         },
         withCredentials: true
     })
-        .then(() => console.log("success"))
-        .catch(() => console.log("error"));
+        .catch(() => console.error("Error setting token on Innowatio SSO"));
+};
+
+export const getTokenFromInnowatioSSO = (callback) => {
+    const endpoint = "https://sso.innowatio.it/tokenId";
+    axios.get(endpoint, {
+        withCredentials: true
+    })
+        .then((result) => {
+            if (result.data && result.data.tokenId) {
+                callback(result.data.tokenId);
+            }
+        })
+        .catch(() => console.error("Error retrieving token from Innowatio SSO"));
 };

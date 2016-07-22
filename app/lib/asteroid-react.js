@@ -1,6 +1,6 @@
 // var throttle = require("lodash.throttle");
 import {debounce} from "lodash";
-import {setTokenOnInnowatioSSO} from "./innowatio-sso";
+import {getTokenFromInnowatioSSO, setTokenOnInnowatioSSO} from "./innowatio-sso";
 
 exports.getControllerViewMixin = function getControllerViewMixin () {
     var self = this;
@@ -32,7 +32,13 @@ exports.getControllerViewMixin = function getControllerViewMixin () {
         },
         onLoggedOut: function () {
             this.setUserId();
-            setTokenOnInnowatioSSO("NULL");
+            getTokenFromInnowatioSSO(tokenId => {
+                self.login({
+                    sso: {
+                        tokenId: tokenId 
+                    }
+                });
+            });
         },
         updateCollections: debounce(function () {
             if (self.loggedIn) {
