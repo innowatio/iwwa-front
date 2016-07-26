@@ -85,20 +85,10 @@ var SensorRow = React.createClass({
             </bootstrap.Tooltip>
         );
     },
-    renderSensorName: function () {
-        let {sensor} = this.props;
-        return (
-            <div style={styles(this.getTheme()).sensorName}>
-                {getSensorLabel(sensor)}
-            </div>
-        );
-    },
-    renderTags: function () {
-        const theme = this.getTheme();
-        let tags = [];
-        if (this.props.sensor.get("tags")) {
-            this.props.sensor.get("tags").forEach((tag) => {
-                tags.push(
+    addTags: function (tagsField, tagsArray, theme) {
+        if (tagsField) {
+            tagsField.forEach((tag) => {
+                tagsArray.push(
                     <label style={{
                         border: "solid 1px " + theme.colors.white,
                         padding: "2px 10px 2px 10px",
@@ -110,6 +100,20 @@ var SensorRow = React.createClass({
                 );
             });
         }
+    },
+    renderSensorName: function () {
+        let {sensor} = this.props;
+        return (
+            <div style={styles(this.getTheme()).sensorName}>
+                {getSensorLabel(sensor)}
+            </div>
+        );
+    },
+    renderTags: function () {
+        const theme = this.getTheme();
+        let tags = [];
+        this.addTags(this.props.sensor.get("primaryTags"), tags, theme);
+        this.addTags(this.props.sensor.get("tags"), tags, theme);
         return (
             <div style={styles(this.getTheme()).tagsContainer}>
                 <Icon
@@ -118,7 +122,8 @@ var SensorRow = React.createClass({
                     size={"27px"}
                     style={{
                         verticalAlign: "middle",
-                        lineHeight: "49px"
+                        lineHeight: "49px",
+                        marginRight: "10px"
                     }}
                 />
                 {tags}
