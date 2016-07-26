@@ -3,13 +3,13 @@ import ReactPureRender from "react-addons-pure-render-mixin";
 import {DragSource} from "react-dnd";
 import IPropTypes from "react-immutable-proptypes";
 import {Link} from "react-router";
-import {partial} from "ramda";
+import {concat, partial} from "ramda";
 import * as bootstrap from "react-bootstrap";
 
 import {Types} from "lib/dnd-utils";
 import {getSensorLabel} from "lib/sensors-utils";
 import {defaultTheme} from "lib/theme";
-import {Icon} from "components";
+import {Icon, TagList} from "components";
 
 const styles = ({colors}) => ({
     container: {
@@ -33,7 +33,8 @@ const styles = ({colors}) => ({
     },
     tagsContainer: {
         float: "left",
-        width: "calc(100% - 330px)"
+        width: "calc(100% - 330px)",
+        cursor: "pointer"
     },
     buttonsContainer: {
         float: "right",
@@ -85,22 +86,6 @@ var SensorRow = React.createClass({
             </bootstrap.Tooltip>
         );
     },
-    addTags: function (tagsField, tagsArray, theme) {
-        if (tagsField) {
-            tagsField.forEach((tag) => {
-                tagsArray.push(
-                    <label style={{
-                        border: "solid 1px " + theme.colors.white,
-                        padding: "2px 10px 2px 10px",
-                        borderRadius: "35px",
-                        marginRight: "5px"
-                    }}>
-                        {tag}
-                    </label>
-                );
-            });
-        }
-    },
     renderSensorName: function () {
         let {sensor} = this.props;
         return (
@@ -110,24 +95,14 @@ var SensorRow = React.createClass({
         );
     },
     renderTags: function () {
-        const theme = this.getTheme();
-        let tags = [];
-        this.addTags(this.props.sensor.get("primaryTags"), tags, theme);
-        this.addTags(this.props.sensor.get("tags"), tags, theme);
+        const primaryTags = this.props.sensor.get("primaryTags") ? this.props.sensor.get("primaryTags") : [];
+        const tags = this.props.sensor.get("tags") ? this.props.sensor.get("tags") : [];
         return (
-            <div style={styles(this.getTheme()).tagsContainer}>
-                <Icon
-                    color={theme.colors.mainFontColor}
-                    icon={"tag"}
-                    size={"27px"}
-                    style={{
-                        verticalAlign: "middle",
-                        lineHeight: "49px",
-                        marginRight: "10px"
-                    }}
-                />
-                {tags}
-            </div>
+            <TagList
+                tagIcon={true}
+                tags={concat(primaryTags, tags)}
+                style={styles(this.getTheme()).tagsContainer}
+            />
         );
     },
     renderInfoButton: function (sensor) {

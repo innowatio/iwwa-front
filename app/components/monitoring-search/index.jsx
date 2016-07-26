@@ -2,7 +2,7 @@ import Radium from "radium";
 import React, {PropTypes} from "react";
 import {FormControl, FormGroup, InputGroup} from "react-bootstrap";
 
-import {Button, Icon} from "components";
+import {Button, Icon, TagList} from "components";
 
 import {styles} from "lib/styles";
 import {defaultTheme} from "lib/theme";
@@ -101,26 +101,6 @@ var MonitoringSearch = React.createClass({
             </FormGroup>
         );
     },
-    renderSearchValuesTag: function (searchValuesField) {
-        return (
-            <div style={{textAlign: "left"}}>
-                {this.state[searchValuesField].map(item => {
-                    return (
-                        <label key={item} style={{
-                            border: "solid 1px",
-                            fontSize: "16px",
-                            fontWeight: "300",
-                            padding: "3px 10px 3px 10px",
-                            borderRadius: "35px",
-                            marginRight: "5px"
-                        }}>
-                            {item}
-                        </label>
-                    );
-                })}
-            </div>
-        );
-    },
     render: function () {
         let self = this;
         let divStyle = {
@@ -144,8 +124,14 @@ var MonitoringSearch = React.createClass({
                     </label>
 
                     <div style={{marginBottom: "30px"}}>
-                        {this.renderSearchValuesTag("primaryTagsToSearch")}
-                        {this.renderSearchValuesTag("tagsToSearch")}
+                        <TagList
+                            tags={this.state.primaryTagsToSearch}
+                            style={{textAlign: "left"}}
+                        />
+                        <TagList
+                            tags={this.state.tagsToSearch}
+                            style={{textAlign: "left"}}
+                        />
                         <div style={{textAlign: "left"}}>
                             {self.state.wordsToSearch.map(item => {
                                 return (
