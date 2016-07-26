@@ -1,5 +1,5 @@
 import React, {PropTypes} from "react";
-import {Col, FormControl} from "react-bootstrap";
+import {Col} from "react-bootstrap";
 import IPropTypes from "react-immutable-proptypes";
 import Select from "react-select";
 import Radium from "radium";
@@ -7,13 +7,13 @@ import R from "ramda";
 import TagsInput from "react-tagsinput";
 import {reduxForm} from "redux-form";
 
-import {FullscreenModal, SensorAggregator} from "components";
+import {FormInputText, FullscreenModal, SensorAggregator, TagList} from "components";
 
 import {potentialUnitsOfMeasurement} from "lib/sensors-utils";
 import {styles} from "lib/styles";
 import {defaultTheme} from "lib/theme";
 
-export const fields = ["name", "description", "unitOfMeasurement", "siteId", "userId", "tags"];
+export const fields = ["name", "description", "unitOfMeasurement", "siteId", "userId", "primaryTags", "tags"];
 
 const validate = values => {
     const errors = {};
@@ -107,12 +107,12 @@ var SensorForm = React.createClass({
     },
     render: function () {
         const {
-            fields: {name, description, unitOfMeasurement, siteId, userId, tags},
+            fields: {name, description, unitOfMeasurement, siteId, userId, primaryTags, tags},
             resetForm,
             handleSubmit
         } = this.props;
         let theme = this.getTheme();
-        // TODO refactor to create more field components
+        // TODO try to see if redux-form change is avoidable
         return (
             <FullscreenModal
                 backgroundColor={theme.colors.backgroundModal}
@@ -144,11 +144,10 @@ var SensorForm = React.createClass({
                     <Col md={6}>
                         <div className={"form-group" + (name.touched && name.error ? " has-error" : "")} style={{marginBottom: "15px", padding:"1px"}}>
                             <div className={"col-xs-12"}>
-                                <FormControl
-                                    type="text"
-                                    className="form-control" placeholder="Nome"
+                                <FormInputText
+                                    field={name}
+                                    placeholder="Nome"
                                     style={R.merge(styles(theme).inputLine, {color: theme.colors.buttonPrimary})}
-                                    {...name}
                                 />
                             </div>
                             {name.touched && name.error && <div className="col-xs-12 help-block">{name.error}</div>}
@@ -203,15 +202,25 @@ var SensorForm = React.createClass({
 
                         </div>
                         <div className={"form-group col-xs-12"} style={{marginBottom: "20px"}}>
-                            <FormControl type="text" className="form-control" placeholder="Referenza sito" style={styles(theme).inputLine}
-                                {...siteId}
+                            <FormInputText
+                                field={siteId}
+                                placeholder="Referenza sito"
+                                style={styles(theme).inputLine}
                             />
                         </div>
                         <div className={"form-group col-xs-12"} style={{marginBottom: "20px"}}>
-                            <FormControl type="text" className="form-control" placeholder="Referenza cliente" style={styles(theme).inputLine}
-                                {...userId}
+                            <FormInputText
+                                field={userId}
+                                placeholder="Referenza cliente"
+                                style={styles(theme).inputLine}
                             />
                         </div>
+                        <TagList
+                            className={"tags-wrp form-group col-xs-12"}
+                            style={{marginBottom: "15px"}}
+                            tagIcon={true}
+                            tags={primaryTags.value}
+                        />
                         <div className={"tags-wrp form-group col-xs-12"} style={{marginBottom: "15px"}}>
                             <TagsInput
                                 addOnBlur={true}

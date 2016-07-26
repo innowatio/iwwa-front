@@ -7,7 +7,7 @@ import {bindActionCreators} from "redux";
 
 import {getDragDropContext} from "lib/dnd-utils";
 import {defaultTheme} from "lib/theme";
-import {getAllSensors, getMonitoringSensors, getSensorLabel} from "lib/sensors-utils";
+import {getAllSensors, getMonitoringSensors, getSensorLabel, findSensor} from "lib/sensors-utils";
 import {styles} from "lib/styles";
 
 import {
@@ -145,16 +145,23 @@ var Monitoring = React.createClass({
             }
             return fields;
         } else {
-            //TODO find how to delete initial values...
             return {
                 name: "",
                 description: "",
                 unitOfMeasurement: "",
                 siteId: "",
                 userId: "",
+                primaryTags: this.getParentsPrimaryTags(this.props.sensorsState.workAreaSensors),
                 tags: []
             };
         }
+    },
+    getParentsPrimaryTags: function (selectedSensors) {
+        const allSensors = this.getAllSensors();
+        return R.uniq(R.flatten(selectedSensors.map(sensor => {
+            const sensorObj = findSensor(allSensors, sensor);
+            return sensorObj.get("primaryTags") ? sensorObj.get("primaryTags").toArray() : [];
+        })));
     },
     onClickEditSensor: function () {
         this.props.getFormulaItems();
