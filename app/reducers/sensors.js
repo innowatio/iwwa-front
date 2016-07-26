@@ -21,8 +21,8 @@ let defaultState = {
     current: {
         formulaItems: []
     },
-    selectedSensors: [],
     primaryTagsToFilter: [],
+    selectedSensors: [],
     tagsToFilter: [],
     wordsToFilter: [],
     workAreaSensors: []
@@ -33,8 +33,8 @@ function cloneState (state) {
         current: {
             formulaItems: state.current.formulaItems.slice()
         },
-        selectedSensors: state.selectedSensors.slice(),
         primaryTagsToFilter: state.primaryTagsToFilter.slice(),
+        selectedSensors: state.selectedSensors.slice(),
         tagsToFilter: state.tagsToFilter.slice(),
         wordsToFilter: state.wordsToFilter.slice(),
         workAreaSensors: state.workAreaSensors.slice()
