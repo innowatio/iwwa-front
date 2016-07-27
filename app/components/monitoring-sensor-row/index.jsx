@@ -95,8 +95,8 @@ var SensorRow = React.createClass({
         );
     },
     renderTags: function () {
-        const primaryTags = this.props.sensor.get("primaryTags") ? this.props.sensor.get("primaryTags") : [];
-        const tags = this.props.sensor.get("tags") ? this.props.sensor.get("tags") : [];
+        const primaryTags = this.props.sensor.get("primaryTags") ? this.props.sensor.get("primaryTags").toArray() : [];
+        const tags = this.props.sensor.get("tags") ? this.props.sensor.get("tags").toArray() : [];
         return (
             <TagList
                 tagIcon={true}
