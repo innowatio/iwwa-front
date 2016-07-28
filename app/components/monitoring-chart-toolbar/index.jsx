@@ -131,6 +131,15 @@ var MonitoringChartToolbar = React.createClass({
     changeYAxisValues: function () {
         this.props.changeYAxisValues(this.state.yAxis, this.getChartPeriod());
     },
+    exportSV: function () {
+        const csvData = this.props.monitoringChartRef.refs.DEFAULT.getChart().getCSV();
+        let csvFile = document.createElement("a");
+        csvFile.href = "data:attachment/csv," + encodeURIComponent(csvData);
+        csvFile.target = "_blank";
+        csvFile.download = "monitoring-export.csv";
+        document.body.appendChild(csvFile);
+        csvFile.click();
+    },
     openModal: function () {
         this.setState({showModal:true});
     },
@@ -399,6 +408,25 @@ var MonitoringChartToolbar = React.createClass({
                         {this.renderComparisonButton(theme, "month")}
                         {this.renderComparisonButton(theme, "year")}
                     </div>
+                </div>
+                <div style={{textAlign: "center", padding: "20px", borderBottom: "solid 1px", borderColor: theme.colors.white}}>
+                    <Button
+                        disabled={!this.props.monitoringChartRef}
+                        onClick={this.exportSV}
+                        style={{
+                            ...styles(theme).buttonSelectChart,
+                            width: "120px",
+                            height: "40px",
+                            lineHeight: "40px",
+                            padding: "0px",
+                            margin: "0px 0px 0px 30px",
+                            fontSize: "20px",
+                            border: "0px",
+                            backgroundColor: this.getTheme().colors.buttonPrimary
+                        }}
+                    >
+                        {"Eporta CSV"}
+                    </Button>
                 </div>
             </div>
         );
