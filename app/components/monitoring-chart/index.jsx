@@ -134,7 +134,7 @@ var MonitoringChart = React.createClass({
             },
             exporting: {
                 csv: {
-                    dateFormat: "%Y-%m-%d-%H:%M"
+                    dateFormat: "%d/%m/%Y %H:%M"
                 }
             },
             legend: {
