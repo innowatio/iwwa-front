@@ -34,9 +34,7 @@ exports.getControllerViewMixin = function getControllerViewMixin () {
             this.setUserId();
             getTokenFromInnowatioSSO(tokenId => {
                 self.login({
-                    sso: {
-                        tokenId: tokenId 
-                    }
+                    token: tokenId
                 });
             });
         },
