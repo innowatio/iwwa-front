@@ -18,16 +18,9 @@ exports.getControllerViewMixin = function getControllerViewMixin () {
                 user: self.collections.getIn(["users", self.userId])
             });
         },
-        // updateCollections: throttle(function () {
-        //     if (self.loggedIn) {
-        //         this.setState({
-        //             collections: self.collections
-        //         });
-        //     }
-        // }, 1000),
         onLoggedIn: function () {
             this.setUserId();
-            const tokenId = self.collections.getIn(["users", self.userId, "services", "innowatioSSO", "token"]);
+            const tokenId = self.collections.getIn(["users", self.userId, "services", "sso", "token"]);
             setTokenOnInnowatioSSO(tokenId);
         },
         onLoggedOut: function () {
