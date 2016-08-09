@@ -12,6 +12,7 @@ import {
 
 import {getDragDropContext} from "lib/dnd-utils";
 import {defaultTheme} from "lib/theme";
+import {getUsername} from "lib/users-utils";
 
 const lazyLoadButtonStyle = ({colors}) => ({
     width: "230px",
@@ -56,8 +57,7 @@ var Users = React.createClass({
     },
     searchFilter: function (element, search) {
         return (
-            (element.get("username") && element.get("username").toLowerCase().indexOf(search.toLowerCase()) >= 0) ||
-            element.getIn(["emails", "0", "address"]).toLowerCase().indexOf(search.toLowerCase()) >= 0
+            getUsername(element).toLowerCase().indexOf(search.toLowerCase()) >= 0
         );
     },
     renderUserList: function (element) {
