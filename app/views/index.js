@@ -6,5 +6,5 @@ exports.MonitoringFavoritesCharts   = require("./monitoring/favorites-charts");
 exports.RealTime                    = require("./real-time/");
 exports.Root                        = require("./root/");
 exports.SummaryConsumptions         = require("./summary-consumptions/");
-exports.Users                       = require("./users/");
 exports.User                        = require("./user/");
+exports.Users                       = require("./users/");
