@@ -1,14 +1,44 @@
-var Immutable  = require("immutable");
-var IPropTypes = require("react-immutable-proptypes");
-var React      = require("react");
-var Router     = require("react-router");
-var moment     = require("moment");
-var R          = require("ramda");
-var Radium              = require("radium");
+import Immutable from "immutable";
+import IPropTypes from "react-immutable-proptypes";
+import React from "react";
 
-var components = require("components");
-import {styles} from "lib/styles";
+import {
+    Button,
+    CollectionItemList,
+    Icon,
+    SectionToolbar,
+    UserRow
+} from "components";
+
+import {getDragDropContext} from "lib/dnd-utils";
 import {defaultTheme} from "lib/theme";
+
+const lazyLoadButtonStyle = ({colors}) => ({
+    width: "230px",
+    height: "45px",
+    lineHeight: "43px",
+    backgroundColor: colors.buttonPrimary,
+    fontSize: "14px",
+    color: colors.white,
+    textTransform: "uppercase",
+    fontWeight: "400",
+    margin: "10px auto 40px auto",
+    borderRadius: "30px",
+    cursor: "pointer",
+    textAlign: "center"
+});
+
+const stylesFunction = (theme) => ({
+    buttonIconStyle: {
+        backgroundColor: theme.colors.buttonPrimary,
+        border: "0px none",
+        borderRadius: "100%",
+        height: "50px",
+        margin: "auto",
+        width: "50px",
+        marginLeft: "10px"
+    }
+});
 
 var Users = React.createClass({
     propTypes: {
@@ -24,134 +54,102 @@ var Users = React.createClass({
     getTheme: function () {
         return this.context.theme || defaultTheme;
     },
-    getColumnsUsers: function () {
-        const theme = this.getTheme();
-        return [
-            {
-                key: "emails",
-                style: function () {
-                    return {
-                        width: "25%",
-                        color: theme.colors.mainFontColor
-                    };
-                },
-                valueFormatter: function (value) {
-                    return value.getIn(["0", "address"]) || "";
-                }
-            },
-            {
-                key: "emails",
-                style: function () {
-                    return {
-                        width: "15%",
-                        color: theme.colors.mainFontColor
-                    };
-                },
-                valueFormatter: function (value) {
-                    return value.getIn(["0", "verified"]) ? "Si" : "No";
-                }
-            },
-            {
-                key: "createdAt",
-                style: function () {
-                    return {
-                        width: "20%",
-                        color: theme.colors.mainFontColor
-                    };
-                },
-                valueFormatter: function (value) {
-                    var date = moment.utc(value && value.get("$date")) || "";
-                    return date.locale("it").format("LL");
-                }
-            },
-            {
-                key: "roles",
-                style: function () {
-                    return {
-                        width: "30%",
-                        color: theme.colors.mainFontColor
-                    };
-                },
-                valueFormatter: function (value) {
-                    return !R.isNil(value) ? value.join(", ") : "";
-                }
-            },
-            {
-                key: "_id",
-                style: function () {
-                    return {
-                        width: "10%"
-                    };
-                },
-                valueFormatter: function (value) {
-                    return (
-                        <Router.Link to={`/users/${value}`}>
-                            <components.Icon
-                                color={theme.colors.iconEditUser}
-                                icon={"edit"}
-                                size={"30px"}
-                                style={{float:"right", marginRight: "10px", lineHeight: "50px"}}
-                            />
-                        </Router.Link>
-                    );
-                }
-            }
-        ];
+    searchFilter: function (element, search) {
+        return (
+            (element.get("username") && element.get("username").toLowerCase().indexOf(search.toLowerCase()) >= 0) ||
+            element.getIn(["emails", "0", "address"]).toLowerCase().indexOf(search.toLowerCase()) >= 0
+        );
     },
-    getKey: function (value) {
-        return value.get("emails").getIn(["0", "address"]);
+    renderUserList: function (element) {
+        return (
+            <UserRow
+                user={element}
+            />
+        );
     },
     render: function () {
         const theme = this.getTheme();
         return (
-            <div className="table-user">
-                <Radium.Style
-                    rules={{
-                        ".table tr": {
-                            fontWeight: "300",
-                            fontSize: "16px",
-                            height: "50px"
-                        },
-                        ".table tbody tr td": {
-                            height: "50px",
-                            padding: "0 6px"
-                        },
-                        ".table tr:hover": {
-                            backgroundColor: theme.colors.backgroundUserRowHover
-                        }
-                    }}
-                    scopeSelector=".table-user"
-                />
-                <div style={styles(this.getTheme()).titlePage}>
-                    <div style={{
-                        fontSize: "18px",
-                        marginBottom: "0px",
-                        paddingTop: "18px",
-                        width: "100%"
-                    }}>
-                        {""}
+            <div>
+                <SectionToolbar>
+                    <div style={{float: "left", marginTop: "3px"}}>
+                        <Button
+                            style={stylesFunction(theme).buttonIconStyle}
+                            disabled={true}
+                        >
+                            <Icon
+                                color={theme.colors.iconHeader}
+                                icon={"add"}
+                                size={"28px"}
+                                style={{lineHeight: "45px"}}
+                            />
+                        </Button>
                     </div>
-                </div>
-                <div style={{width: "98%", position: "relative", left: "1%", marginTop: "20px"}}>
-                    <components.CollectionElementsTable
-                        collection={this.props.collections.get("users") || Immutable.Map()}
-                        columns={this.getColumnsUsers()}
-                        headColumn={["Email", "Email verificata", "Data di creazione", "Ruolo", ""]}
-                        headStyle={{
-                            color: theme.colors.mainFontColor,
-                            fontSize: "18px",
-                            fontWeight: "400",
-                            padding: "10px 6px",
-                            margin: "0px",
-                            backgroundColor: theme.colors.backgroundUserRowHover
-                        }}
-                        hover={true}
-                        style={{height: "calc(100vh - 100px)", paddingBottom: "10px"}}
-                    />
+                    <div style={{float: "right", marginTop: "3px"}}>
+                        <Button
+                            style={stylesFunction(theme).buttonIconStyle}
+                            disabled={true}
+                        >
+                            <Icon
+                                color={theme.colors.iconHeader}
+                                icon={"gauge"}
+                                size={"28px"}
+                                style={{lineHeight: "45px"}}
+                            />
+                        </Button>
+                        <Button
+                            style={stylesFunction(theme).buttonIconStyle}
+                            disabled={true}
+                        >
+                            <Icon
+                                color={theme.colors.iconHeader}
+                                icon={"edit"}
+                                size={"28px"}
+                                style={{lineHeight: "45px"}}
+                            />
+                        </Button>
+                        <Button
+                            style={stylesFunction(theme).buttonIconStyle}
+                            disabled={true}
+                        >
+                            <Icon
+                                color={theme.colors.iconHeader}
+                                icon={"edit"}
+                                size={"28px"}
+                                style={{lineHeight: "45px"}}
+                            />
+                        </Button>
+                        <Button
+                            style={stylesFunction(theme).buttonIconStyle}
+                            disabled={true}
+                        >
+                            <Icon
+                                color={theme.colors.iconHeader}
+                                icon={"delete"}
+                                size={"28px"}
+                                style={{lineHeight: "45px"}}
+                            />
+                        </Button>
+                    </div>
+                </SectionToolbar>
+
+                <div className="table-user">
+                    <div style={{width: "98%", position: "relative", left: "1%", marginTop: "20px"}}>
+                        <CollectionItemList
+                            collections={this.props.collections.get("users") || Immutable.Map()}
+                            filter={this.searchFilter}
+                            headerComponent={this.renderUserList}
+                            hover={true}
+                            initialVisibleRow={10}
+                            lazyLoadButtonStyle={lazyLoadButtonStyle(theme)}
+                            lazyLoadLabel={"Carica altri"}
+                            showFilterInput={true}
+                        />
+                    </div>
                 </div>
             </div>
         );
     }
 });
 
-module.exports = Users;
+module.exports = getDragDropContext(Users);

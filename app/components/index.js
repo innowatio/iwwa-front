@@ -48,4 +48,5 @@ exports.Spacer                  = require("./spacer/");
 exports.TreeView                = require("./tree-view/");
 exports.TagList                 = require("./tag-list/");
 exports.TutorialAnchor          = require("./tutorial-anchor/");
+exports.UserRow                 = require("./user-row/");
 exports.VariablesPanel          = require("./variables-panel/");

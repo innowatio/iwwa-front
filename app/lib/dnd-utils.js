@@ -6,7 +6,8 @@ export const Types = {
     NUMBER: "number",
     OPERATOR: "operator",
     SENSOR: "sensor",
-    SENSOR_ROW: "sensor-row"
+    SENSOR_ROW: "sensor-row",
+    USER_ROW: "user-row"
 };
 
 export function getDragDropContext (ReactClass) {
