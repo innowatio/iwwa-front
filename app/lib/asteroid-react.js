@@ -1,5 +1,6 @@
 // var throttle = require("lodash.throttle");
-var debounce = require("lodash.debounce");
+import {debounce} from "lodash";
+import {getTokenFromInnowatioSSO, setTokenOnInnowatioSSO} from "./innowatio-sso";
 
 exports.getControllerViewMixin = function getControllerViewMixin () {
     var self = this;
@@ -17,13 +18,19 @@ exports.getControllerViewMixin = function getControllerViewMixin () {
                 user: self.collections.getIn(["users", self.userId])
             });
         },
-        // updateCollections: throttle(function () {
-        //     if (self.loggedIn) {
-        //         this.setState({
-        //             collections: self.collections
-        //         });
-        //     }
-        // }, 1000),
+        onLoggedIn: function () {
+            this.setUserId();
+            const tokenId = self.collections.getIn(["users", self.userId, "services", "sso", "token"]);
+            setTokenOnInnowatioSSO(tokenId);
+        },
+        onLoggedOut: function () {
+            this.setUserId();
+            getTokenFromInnowatioSSO(tokenId => {
+                self.login({
+                    token: tokenId
+                });
+            });
+        },
         updateCollections: debounce(function () {
             if (self.loggedIn) {
                 this.setState({
@@ -32,14 +39,14 @@ exports.getControllerViewMixin = function getControllerViewMixin () {
             }
         }, 500),
         componentDidMount: function () {
-            self.on("loggedIn", this.setUserId);
-            self.on("loggedOut", this.setUserId);
+            self.on("loggedIn", this.onLoggedIn);
+            self.on("loggedOut", this.onLoggedOut);
             self.on("collections:change", this.updateCollections);
         },
         componentWillUnmount: function () {
             self.off("collections:change", this.updateCollections);
-            self.off("loggedIn", this.setUserId);
-            self.off("loggedOut", this.setUserId);
+            self.off("loggedIn", this.onLoggedIn);
+            self.off("loggedOut", this.onLoggedOut);
         }
     };
 };

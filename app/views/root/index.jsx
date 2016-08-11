@@ -5,15 +5,18 @@ import {connect} from "react-redux";
 import {bindActionCreators} from "redux";
 import get from "lodash.get";
 
-var asteroid          = require("lib/asteroid");
-var components        = require("components");
-var LocalStorageMixin = require("lib/localstorage-mixin");
-var measures          = require("lib/measures");
-import {theme, defaultTheme} from "lib/theme";
-import {selectThemeColor} from "actions/user-setting";
-import {closeNotificationModal} from "actions/notifications";
-import {isAdmin, isYousaveUser} from "lib/roles-utils";
+import components from "components";
+
+import asteroid from "lib/asteroid";
 import {EXEC_ENV} from "lib/config";
+import {setTokenOnInnowatioSSO} from "lib/innowatio-sso";
+import LocalStorageMixin from "lib/localstorage-mixin";
+import measures from "lib/measures";
+import {isAdmin, isYousaveUser, isAuthorizedUser} from "lib/roles-utils";
+import {theme, defaultTheme} from "lib/theme";
+
+import {closeNotificationModal} from "actions/notifications";
+import {selectThemeColor} from "actions/user-setting";
 
 const stylesFunction = ({colors}) => ({
     header: {
@@ -79,6 +82,10 @@ var Root = React.createClass({
     componentDidMount: function () {
         asteroid.subscribe("users");
     },
+    logout: function () {
+        asteroid.logout();
+        setTokenOnInnowatioSSO(null);
+    },
     getTheme: function () {
         const colorTheme = this.props.reduxState.userSetting.theme.color || "dark";
         return theme.getStyle(colorTheme) || defaultTheme;
@@ -126,6 +133,16 @@ var Root = React.createClass({
             </div>
         ) : null;
     },
+    renderSideNav: function (styles) {
+        return isAuthorizedUser(asteroid) ? (
+            <components.SideNav
+                items={this.getMenuItems()}
+                linkClickAction={this.closeSidebar}
+                sidebarOpen={this.state.sidebarOpen}
+                style={this.getSidebarStyle(styles)}
+            />
+        ) : null;
+    },
     render: function () {
         const {notifications} = this.props.reduxState;
         const styles = stylesFunction(this.getTheme());
@@ -133,15 +150,12 @@ var Root = React.createClass({
         return (
             <StyleRoot>
                 <div style={{backgroundColor: this.getTheme().background}}>
-                    <components.SideNav
-                        items={this.getMenuItems()}
-                        linkClickAction={this.closeSidebar}
-                        sidebarOpen={this.state.sidebarOpen}
-                        style={this.getSidebarStyle(styles)}
-                    />
+                    {this.renderSideNav(styles)}
                     <div style={styles.header}>
                         <components.Header
                             asteroid={asteroid}
+                            isAuthorizedUser={isAuthorizedUser(asteroid)}
+                            logout={this.logout}
                             menuClickAction={this.toggleSidebar}
                             selectThemeColor={this.props.selectThemeColor}
                             title={titleView}
@@ -163,6 +177,9 @@ var Root = React.createClass({
                         />
                     </div>
                     {this.renderFooter(styles)}
+                    <components.UnauthorizedModal
+                        isOpen={!isAuthorizedUser(asteroid)}
+                    />
                     <components.LoginModal
                         asteroid={asteroid}
                         isOpen={!this.state.userId}

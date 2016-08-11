@@ -113,11 +113,12 @@ var LoginView = React.createClass({
     },
     login: function () {
         var credentials = {
-            email: ReactDOM.findDOMNode(this.refs.email).value,
-            password: ReactDOM.findDOMNode(this.refs.password).value
+            sso: {
+                username: ReactDOM.findDOMNode(this.refs.username).value,
+                password: ReactDOM.findDOMNode(this.refs.password).value
+            }
         };
-        this.setLoginError(null);
-        this.props.asteroid.loginWithPassword(credentials).catch(this.setLoginError);
+        this.props.asteroid.login(credentials).catch(this.setLoginError);
     },
     renderError: function (styles) {
         return this.state.loginError ? (
@@ -150,10 +151,10 @@ var LoginView = React.createClass({
                             </bootstrap.InputGroup.Addon>
                             <bootstrap.FormControl
                                 bsSize="large"
-                                placeholder={string.email}
-                                ref="email"
+                                placeholder={string.username}
+                                ref="username"
                                 style={styles.inputs}
-                                type="email"
+                                type="text"
                             />
                         </bootstrap.FormGroup>
                     </div>
