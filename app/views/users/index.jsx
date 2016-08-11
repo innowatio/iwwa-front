@@ -12,7 +12,7 @@ import {
 
 import {getDragDropContext} from "lib/dnd-utils";
 import {defaultTheme} from "lib/theme";
-import {getUsername} from "lib/users-utils";
+import {getChildren, getParentUserId, getUsername} from "lib/users-utils";
 
 const lazyLoadButtonStyle = ({colors}) => ({
     width: "230px",
@@ -55,14 +55,19 @@ var Users = React.createClass({
     getTheme: function () {
         return this.context.theme || defaultTheme;
     },
+    getAllUsers: function () {
+        return this.props.collections.get("users") || Immutable.Map();
+    },
+    getParentUsers: function () {
+        return this.getAllUsers().filterNot(user => getParentUserId(user));
+    },
     searchFilter: function (element, search) {
-        return (
-            getUsername(element).toLowerCase().indexOf(search.toLowerCase()) >= 0
-        );
+        return (getUsername(element).toLowerCase().indexOf(search.toLowerCase()) >= 0);
     },
     renderUserList: function (element) {
         return (
             <UserRow
+                children={getChildren(element.get("_id"), this.getAllUsers())}
                 user={element}
             />
         );
@@ -136,7 +141,7 @@ var Users = React.createClass({
                 <div className="table-user">
                     <div style={{width: "98%", position: "relative", left: "1%", marginTop: "20px"}}>
                         <CollectionItemList
-                            collections={this.props.collections.get("users") || Immutable.Map()}
+                            collections={this.getParentUsers()}
                             filter={this.searchFilter}
                             headerComponent={this.renderUserList}
                             hover={true}

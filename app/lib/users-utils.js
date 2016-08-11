@@ -4,5 +4,21 @@ export function getUsername (user) {
 }
 
 export function isConfirmedUser (user) {
-    return user.get("profile") ? user.getIn(["profile", "confirmed"]) : false;
+    return getProfileField(user, "confirmed");
+}
+
+export function isActiveUser (user) {
+    return getProfileField(user, "active");
+}
+
+export function getParentUserId (user) {
+    return getProfileField(user, "parentUserId");
+}
+
+export function getChildren (parentUserId, users) {
+    return users.filter(user => getParentUserId(user) === parentUserId);
+}
+
+function getProfileField (user, field) {
+    return user.get("profile") ? user.getIn(["profile", field]) : null;
 }
