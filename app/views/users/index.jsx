@@ -67,7 +67,8 @@ var Users = React.createClass({
     renderUserList: function (element) {
         return (
             <UserRow
-                children={getChildren(element.get("_id"), this.getAllUsers())}
+                getChildren={userId => getChildren(userId, this.getAllUsers())}
+                indent={0}
                 user={element}
             />
         );

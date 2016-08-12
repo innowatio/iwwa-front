@@ -10,14 +10,13 @@ import {Button, Icon} from "components";
 import {defaultTheme} from "lib/theme";
 import {getUsername, isActiveUser, isConfirmedUser} from "lib/users-utils";
 
-const styles = ({colors}, marginLeft, open) => ({
+const styles = ({colors}, open) => ({
     container: {
         borderBottom: "1px solid " + colors.borderSensorsTable,
         width: "100%",
         height: "50px",
         margin: "0px",
         padding: "0px",
-        marginLeft: marginLeft + "px",
         display: "initial"
     },
     iconArrow: {
@@ -31,9 +30,9 @@ const styles = ({colors}, marginLeft, open) => ({
 
 var UserRow = React.createClass({
     propTypes: {
-        children: IPropTypes.map,
         connectDragSource: PropTypes.func,
-        indent: PropTypes.bool,
+        getChildren: PropTypes.func,
+        indent: PropTypes.number.isRequired,
         isDragging: PropTypes.bool,
         user: IPropTypes.map.isRequired
     },
@@ -51,9 +50,9 @@ var UserRow = React.createClass({
     renderUser: function (theme) {
         return isConfirmedUser(this.props.user) ? this.renderRegistered(theme) : this.renderUnregistered(theme);
     },
-    renderChildrenButton: function (theme) {
+    renderChildrenButton: function (children, theme) {
         const isOpen = this.state.childrenOpen;
-        return this.props.children && this.props.children.size > 0 ? (
+        return children && children.size > 0 ? (
             <Button
                 onClick={() => this.setState({childrenOpen: !isOpen})}
                 style={{
@@ -69,37 +68,43 @@ var UserRow = React.createClass({
                     color={theme.colors.mainFontColor}
                     icon={"arrow-down"}
                     size={"14px"}
-                    style={styles(theme, 0, isOpen).iconArrow}
+                    style={styles(theme, isOpen).iconArrow}
                 />
             </Button>
         ) : null;
     },
-    renderChildren: function () {
+    renderChildren: function (children) {
         return this.state.childrenOpen ? (
             <UserRow
-                indent={true}
-                user={this.props.children.first()}
+                getChildren={this.props.getChildren}
+                indent={this.props.indent + 10}
+                user={children.first()}
             />
         ) : null;
     },
     renderRegistered: function (theme) {
+        const children = this.props.getChildren(this.props.user.get("_id"));
         return (
-            <div style={{color: theme.colors.white, display: "inline"}}>
-                <label style={{width: "40%"}}>
+            <div style={{color: theme.colors.white}}>
+                <label style={{width: this.props.indent + "%"}} />
+                <label style={{width: (60 - this.props.indent) + "%"}}>
                     {getUsername(this.props.user)}
                 </label>
-                <label style={{width: "50%"}}>
+                <label style={{width: "30%"}}>
                     {!R.isNil(this.props.user.get("roles")) ? this.props.user.get("roles").join(", ") : ""}
                 </label>
-                <Toggle defaultChecked={isActiveUser(this.props.user)} />
-                {this.renderChildrenButton(theme)}
-                {this.renderChildren()}
+                <div style={{display: "inline", position: "absolute", width: "10%"}}>
+                    <Toggle defaultChecked={isActiveUser(this.props.user)} />
+                    {this.renderChildrenButton(children, theme)}
+                </div>
+                {this.renderChildren(children)}
             </div>
         );
     },
     renderUnregistered: function (theme) {
         return (
-            <div style={{color: theme.colors.greySubTitle, display: "inline"}}>
+            <div style={{color: theme.colors.greySubTitle}}>
+                <label style={{width: this.props.indent + "%"}} />
                 <Icon
                     icon={"danger"}
                     size={"20px"}
@@ -110,12 +115,12 @@ var UserRow = React.createClass({
         );
     },
     render: function () {
+        console.log(this.props.indent);
         const theme = this.getTheme();
-        // const {connectDragSource, indent} = this.props;
-        const {indent} = this.props;
+        // const {connectDragSource} = this.props;
         // return connectDragSource(
         return (
-            <div style={styles(theme, indent ? 100 : 0).container}>
+            <div style={styles(theme).container}>
                 {this.renderUser(theme)}
             </div>
         );
