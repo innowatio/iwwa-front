@@ -115,7 +115,6 @@ var UserRow = React.createClass({
         );
     },
     render: function () {
-        console.log(this.props.indent);
         const theme = this.getTheme();
         // const {connectDragSource} = this.props;
         // return connectDragSource(

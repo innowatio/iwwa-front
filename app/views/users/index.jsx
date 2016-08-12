@@ -62,7 +62,13 @@ var Users = React.createClass({
         return this.getAllUsers().filterNot(user => getParentUserId(user));
     },
     searchFilter: function (element, search) {
-        return (getUsername(element).toLowerCase().indexOf(search.toLowerCase()) >= 0);
+        let found = getUsername(element).toLowerCase().indexOf(search.toLowerCase()) >= 0;
+        if (found) {
+            return true;
+        } else {
+            const children = getChildren(element.get("_id"), this.getAllUsers());
+            return children.some(child => this.searchFilter(child, search));
+        }
     },
     renderUserList: function (element) {
         return (
