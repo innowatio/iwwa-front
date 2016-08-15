@@ -1,6 +1,8 @@
 import Immutable from "immutable";
+import React, {PropTypes} from "react";
 import IPropTypes from "react-immutable-proptypes";
-import React from "react";
+import {connect} from "react-redux";
+import {bindActionCreators} from "redux";
 
 import {
     Button,
@@ -13,6 +15,10 @@ import {
 import {getDragDropContext} from "lib/dnd-utils";
 import {defaultTheme} from "lib/theme";
 import {getChildren, getParentUserId, getUsername} from "lib/users-utils";
+
+import {
+    selectUser
+} from "actions/users";
 
 const lazyLoadButtonStyle = ({colors}) => ({
     width: "230px",
@@ -43,11 +49,12 @@ const stylesFunction = (theme) => ({
 
 var Users = React.createClass({
     propTypes: {
-        asteroid: React.PropTypes.object,
-        collections: IPropTypes.map
+        asteroid: PropTypes.object,
+        collections: IPropTypes.map,
+        selectUser: PropTypes.func.isRequired
     },
     contextTypes: {
-        theme: React.PropTypes.object
+        theme: PropTypes.object
     },
     componentDidMount: function () {
         this.props.asteroid.subscribe("users");
@@ -75,6 +82,7 @@ var Users = React.createClass({
             <UserRow
                 getChildren={userId => getChildren(userId, this.getAllUsers())}
                 indent={0}
+                onSelect={this.props.selectUser}
                 user={element}
             />
         );
@@ -115,28 +123,6 @@ var Users = React.createClass({
                         >
                             <Icon
                                 color={theme.colors.iconHeader}
-                                icon={"edit"}
-                                size={"28px"}
-                                style={{lineHeight: "45px"}}
-                            />
-                        </Button>
-                        <Button
-                            style={stylesFunction(theme).buttonIconStyle}
-                            disabled={true}
-                        >
-                            <Icon
-                                color={theme.colors.iconHeader}
-                                icon={"edit"}
-                                size={"28px"}
-                                style={{lineHeight: "45px"}}
-                            />
-                        </Button>
-                        <Button
-                            style={stylesFunction(theme).buttonIconStyle}
-                            disabled={true}
-                        >
-                            <Icon
-                                color={theme.colors.iconHeader}
                                 icon={"delete"}
                                 size={"28px"}
                                 style={{lineHeight: "45px"}}
@@ -151,8 +137,7 @@ var Users = React.createClass({
                             collections={this.getParentUsers()}
                             filter={this.searchFilter}
                             headerComponent={this.renderUserList}
-                            hover={true}
-                            initialVisibleRow={10}
+                            initialVisibleRow={20}
                             lazyLoadButtonStyle={lazyLoadButtonStyle(theme)}
                             lazyLoadLabel={"Carica altri"}
                             showFilterInput={true}
@@ -164,4 +149,16 @@ var Users = React.createClass({
     }
 });
 
-module.exports = getDragDropContext(Users);
+const mapStateToProps = (state) => {
+    return {
+        sensorsState: state.sensors
+    };
+};
+
+const mapDispatchToProps = (dispatch) => {
+    return {
+        selectUser: bindActionCreators(selectUser, dispatch)
+    };
+};
+
+module.exports = connect(mapStateToProps, mapDispatchToProps)(getDragDropContext(Users));

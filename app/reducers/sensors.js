@@ -16,8 +16,9 @@ import {
 
 import {Types} from "lib/dnd-utils";
 import {formulaToOperator, getSensorId} from "lib/sensors-utils";
+import {addOrRemove, remove} from "./utils";
 
-let defaultState = {
+const defaultState = {
     current: {
         formulaItems: []
     },
@@ -82,7 +83,7 @@ function populateFormulaItems (formula, sensors) {
 }
 
 function removeFromSelected (selectedSensors, sensorId) {
-    return selectedSensors.filter(it => {
+    return remove(selectedSensors, it => {
         return getSensorId(it) !== sensorId;
     });
 }
@@ -126,14 +127,10 @@ export function sensors (state = defaultState, action) {
             break;
         }
         case SELECT_SENSOR: {
-            let sensor = action.payload;
-            if (newState.selectedSensors.find((it) => {
+            const sensor = action.payload;
+            newState.selectedSensors = addOrRemove(sensor, newState.selectedSensors, it => {
                 return getSensorId(it) === getSensorId(sensor);
-            })) {
-                newState.selectedSensors = removeFromSelected(newState.selectedSensors, getSensorId(sensor));
-            } else {
-                newState.selectedSensors.push(sensor);
-            }
+            });
             break;
         }
         case SENSOR_CREATION_SUCCESS: {

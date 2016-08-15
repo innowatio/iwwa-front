@@ -1,3 +1,4 @@
+import {Style} from "radium";
 import R from "ramda";
 import React, {PropTypes} from "react";
 // import {DragSource} from "react-dnd";
@@ -9,6 +10,11 @@ import {Button, Icon} from "components";
 // import {Types} from "lib/dnd-utils";
 import {defaultTheme} from "lib/theme";
 import {getUsername, isActiveUser, isConfirmedUser} from "lib/users-utils";
+
+const hoverStyle = ({colors}) => ({
+    backgroundColor: colors.backgroundMonitoringRowHover,
+    cursor: "pointer"
+});
 
 const styles = ({colors}, open) => ({
     container: {
@@ -34,6 +40,8 @@ var UserRow = React.createClass({
         getChildren: PropTypes.func,
         indent: PropTypes.number.isRequired,
         isDragging: PropTypes.bool,
+        isSelected: PropTypes.func,
+        onSelect: PropTypes.func,
         user: IPropTypes.map.isRequired
     },
     contextTypes: {
@@ -78,6 +86,8 @@ var UserRow = React.createClass({
             <UserRow
                 getChildren={this.props.getChildren}
                 indent={this.props.indent + 10}
+                isSelected={this.props.isSelected}
+                onSelect={this.props.onSelect}
                 user={children.first()}
             />
         ) : null;
@@ -86,14 +96,19 @@ var UserRow = React.createClass({
         const children = this.props.getChildren(this.props.user.get("_id"));
         return (
             <div style={{color: theme.colors.white}}>
-                <label style={{width: this.props.indent + "%"}} />
-                <label style={{width: (60 - this.props.indent) + "%"}}>
-                    {getUsername(this.props.user)}
-                </label>
-                <label style={{width: "30%"}}>
-                    {!R.isNil(this.props.user.get("roles")) ? this.props.user.get("roles").join(", ") : ""}
-                </label>
-                <div style={{display: "inline", position: "absolute", width: "10%"}}>
+                <div className="registered-user" onClick={() => this.props.onSelect(this.props.user)} style={{display: "inline-block", width: "90%"}}>
+                    <Style
+                        rules={{".registered-user:hover": hoverStyle(theme)}}
+                    />
+                    <label style={{width: this.props.indent + "%"}} />
+                    <label style={{cursor: "inherit", width: (70 - this.props.indent) + "%"}}>
+                        {getUsername(this.props.user)}
+                    </label>
+                    <label style={{cursor: "inherit", width: "30%"}}>
+                        {!R.isNil(this.props.user.get("roles")) ? this.props.user.get("roles").join(", ") : ""}
+                    </label>
+                </div>
+                <div style={{display: "inline"}}>
                     <Toggle defaultChecked={isActiveUser(this.props.user)} />
                     {this.renderChildrenButton(children, theme)}
                 </div>

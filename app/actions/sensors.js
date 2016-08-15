@@ -1,10 +1,10 @@
 import axios from "axios";
 import UUID from "uuid-js";
 
+import {WRITE_API_ENDPOINT} from "lib/config";
 import {Types} from "lib/dnd-utils";
 import {getSensorId, operatorToFormula} from "lib/sensors-utils";
-
-import {WRITE_API_ENDPOINT} from "lib/config";
+import {getBasicObject} from "./utils";
 
 export const ADD_ITEM_TO_FORMULA = "ADD_ITEM_TO_FORMULA";
 export const ADD_SENSOR_TO_WORK_AREA = "ADD_SENSOR_TO_WORK_AREA";
@@ -19,13 +19,6 @@ export const SENSOR_DELETE_SUCCESS = "SENSOR_DELETE_SUCCESS";
 export const SENSOR_UPDATE_SUCCESS = "SENSOR_UPDATE_SUCCESS";
 
 const MONITORING_TYPE = "custom-monitoring";
-
-function getBasicObject (type, payload) {
-    return {
-        type: type,
-        payload: payload
-    };
-}
 
 function getSensorObj (collectionItem) {
     return addMonitoringAttrs({
