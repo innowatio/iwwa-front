@@ -3,12 +3,20 @@ export function getUsername (user) {
     return username ? username : user.get("_id");
 }
 
+export function isActiveUser (user) {
+    return getProfileField(user, "active");
+}
+
 export function isConfirmedUser (user) {
     return getProfileField(user, "confirmed");
 }
 
-export function isActiveUser (user) {
-    return getProfileField(user, "active");
+export function isDeleted (user) {
+    return getProfileField(user, "isDeleted");
+}
+
+export function geUsersForManagement (allUsers) {
+    return allUsers.filterNot(user => isDeleted(user) || getParentUserId(user));
 }
 
 export function getParentUserId (user) {
@@ -16,7 +24,7 @@ export function getParentUserId (user) {
 }
 
 export function getChildren (parentUserId, users) {
-    return users.filter(user => getParentUserId(user) === parentUserId);
+    return users.filter(user => getParentUserId(user) === parentUserId && !isDeleted(user));
 }
 
 function getProfileField (user, field) {

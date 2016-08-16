@@ -16,7 +16,7 @@ import {
 
 import {getDragDropContext} from "lib/dnd-utils";
 import {defaultTheme} from "lib/theme";
-import {getChildren, getParentUserId, getUsername} from "lib/users-utils";
+import {getChildren, getUsername, geUsersForManagement} from "lib/users-utils";
 
 import {
     changeActiveStatus,
@@ -71,9 +71,6 @@ var Users = React.createClass({
     },
     getAllUsers: function () {
         return this.props.collections.get("users") || Immutable.Map();
-    },
-    getParentUsers: function () {
-        return this.getAllUsers().filterNot(user => getParentUserId(user));
     },
     searchFilter: function (element, search) {
         let found = getUsername(element).toLowerCase().indexOf(search.toLowerCase()) >= 0;
@@ -139,7 +136,7 @@ var Users = React.createClass({
                         </Button>
                         <DeleteWithConfirmButton
                             disabled={this.props.usersState.selectedUsers.length < 1}
-                            onConfirm={() => this.props.deleteUsers(this.props.usersState.selectedUsers)}
+                            onConfirm={() => this.props.deleteUsers(this.props.usersState.selectedUsers, this.getAllUsers())}
                         />
                     </div>
                 </SectionToolbar>
@@ -147,7 +144,7 @@ var Users = React.createClass({
                 <div className="table-user">
                     <div style={{width: "98%", position: "relative", left: "1%", marginTop: "20px"}}>
                         <CollectionItemList
-                            collections={this.getParentUsers()}
+                            collections={geUsersForManagement(this.getAllUsers())}
                             filter={this.searchFilter}
                             headerComponent={this.renderUserList}
                             hover={true}

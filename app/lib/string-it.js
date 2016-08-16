@@ -10,7 +10,7 @@ exports.titleAlarmActive          = "Attivo";
 exports.titleAlarmRepeat          = "Ripetizione";
 
 // Login-modal
-exports.appName                   = "e-coach";
+exports.appName                   = "Lucy";
 exports.innowatio                 = "Innowatio";
 exports.loginErrorAlert           = "Login non riuscito: email o password errate";
 exports.accessButton              = "ACCEDI";

@@ -12,8 +12,9 @@ import {EXEC_ENV} from "lib/config";
 import {setTokenOnInnowatioSSO} from "lib/innowatio-sso";
 import LocalStorageMixin from "lib/localstorage-mixin";
 import measures from "lib/measures";
-import {isAdmin, isYousaveUser, isAuthorizedUser} from "lib/roles-utils";
+import {getLoggedUser, isAdmin, isYousaveUser, isAuthorizedUser} from "lib/roles-utils";
 import {theme, defaultTheme} from "lib/theme";
+import {isActiveUser, isDeleted} from "lib/users-utils";
 
 import {closeNotificationModal} from "actions/notifications";
 import {selectThemeColor} from "actions/user-setting";
@@ -147,6 +148,7 @@ var Root = React.createClass({
         const {notifications} = this.props.reduxState;
         const styles = stylesFunction(this.getTheme());
         const titleView = this.props.children.props.route.titleView || "";
+        const user = getLoggedUser(asteroid);
         return (
             <StyleRoot>
                 <div style={{backgroundColor: this.getTheme().background}}>
@@ -178,7 +180,7 @@ var Root = React.createClass({
                     </div>
                     {this.renderFooter(styles)}
                     <components.UnauthorizedModal
-                        isOpen={!isAuthorizedUser(asteroid)}
+                        isOpen={(!isAuthorizedUser(asteroid) || !isActiveUser(user) || isDeleted(user)) === true}
                     />
                     <components.LoginModal
                         asteroid={asteroid}

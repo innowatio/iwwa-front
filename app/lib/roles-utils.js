@@ -4,9 +4,13 @@ import R from "ramda";
 const ROLE_ADMIN = "admin";
 const ROLE_YOUSAVE = "yousave";
 
-export function getRoles (asteroid) {
+export function getLoggedUser (asteroid) {
     const users = asteroid.collections.get("users") || Map();
-    return (users.getIn([asteroid.userId, "roles"]) || List()).toArray();
+    return users.get(asteroid.userId) || Map();
+}
+
+export function getRoles (asteroid) {
+    return (getLoggedUser(asteroid).get("roles") || List()).toArray();
 }
 
 export function isAdmin (asteroid) {

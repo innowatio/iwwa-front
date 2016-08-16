@@ -1,7 +1,7 @@
 import axios from "axios";
 
 import {WRITE_API_ENDPOINT} from "lib/config";
-import {isActiveUser} from "lib/users-utils";
+import {getChildren, isActiveUser} from "lib/users-utils";
 
 import {getBasicObject} from "./utils";
 
@@ -30,22 +30,26 @@ export const changeActiveStatus = user => {
     };
 };
 
-export const deleteUsers = users => {
+export const deleteUsers = (usersToDelete, allUsers) => {
     return dispatch => {
         dispatch({
             type: "DELETING_USERS"
         });
-        users.forEach((user) => {
-            const id = user.get("_id");
-            const endpoint = "http://" + WRITE_API_ENDPOINT + "/users/" + id;
-            axios.delete(endpoint)
-                .then(() => dispatch({
-                    type: USER_DELETE_SUCCESS,
-                    payload: id
-                }))
-                .catch(() => dispatch({
-                    type: "USER_DELETE_FAIL"
-                }));
-        });
+        usersToDelete.forEach(user => deleteUser(user, allUsers, dispatch));
     };
 };
+
+function deleteUser (user, allUsers, dispatch) {
+    const userId = user.get("_id");
+    const endpoint = "http://" + WRITE_API_ENDPOINT + "/users/" + userId;
+    axios.delete(endpoint)
+        .then(() => dispatch({
+            type: USER_DELETE_SUCCESS,
+            payload: userId
+        }))
+        .catch(() => dispatch({
+            type: "USER_DELETE_FAIL"
+        }));
+    getChildren(userId, allUsers).forEach(child => deleteUser(child, allUsers, dispatch));
+
+}
