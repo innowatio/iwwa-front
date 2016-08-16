@@ -8,6 +8,7 @@ import {bindActionCreators} from "redux";
 import {
     Button,
     CollectionItemList,
+    DeleteWithConfirmButton,
     Icon,
     SectionToolbar,
     UserRow
@@ -18,6 +19,8 @@ import {defaultTheme} from "lib/theme";
 import {getChildren, getParentUserId, getUsername} from "lib/users-utils";
 
 import {
+    changeActiveStatus,
+    deleteUsers,
     selectUser
 } from "actions/users";
 
@@ -51,7 +54,9 @@ const stylesFunction = (theme) => ({
 var Users = React.createClass({
     propTypes: {
         asteroid: PropTypes.object,
+        changeActiveStatus: PropTypes.func.isRequired,
         collections: IPropTypes.map,
+        deleteUsers: PropTypes.func.isRequired,
         selectUser: PropTypes.func.isRequired,
         usersState: PropTypes.object.isRequired
     },
@@ -97,6 +102,7 @@ var Users = React.createClass({
                         return it.get("_id") === userId;
                     })(this.props.usersState.selectedUsers) != null;
                 }}
+                onChangeActiveStatus={this.props.changeActiveStatus}
                 onSelect={this.props.selectUser}
                 user={user}
             />
@@ -131,17 +137,10 @@ var Users = React.createClass({
                                 style={{lineHeight: "45px"}}
                             />
                         </Button>
-                        <Button
-                            style={stylesFunction(theme).buttonIconStyle}
+                        <DeleteWithConfirmButton
                             disabled={this.props.usersState.selectedUsers.length < 1}
-                        >
-                            <Icon
-                                color={theme.colors.iconHeader}
-                                icon={"delete"}
-                                size={"28px"}
-                                style={{lineHeight: "45px"}}
-                            />
-                        </Button>
+                            onConfirm={() => this.props.deleteUsers(this.props.usersState.selectedUsers)}
+                        />
                     </div>
                 </SectionToolbar>
 
@@ -174,6 +173,8 @@ const mapStateToProps = (state) => {
 
 const mapDispatchToProps = (dispatch) => {
     return {
+        changeActiveStatus: bindActionCreators(changeActiveStatus, dispatch),
+        deleteUsers: bindActionCreators(deleteUsers, dispatch),
         selectUser: bindActionCreators(selectUser, dispatch)
     };
 };

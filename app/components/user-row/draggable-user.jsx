@@ -34,6 +34,7 @@ var DraggableUser = React.createClass({
         isChildrenOpen: PropTypes.bool,
         isDragging: PropTypes.bool,
         isSelected: PropTypes.func,
+        onChangeActiveStatus: PropTypes.func,
         onOpenChildren: PropTypes.func,
         onSelect: PropTypes.func,
         user: IPropTypes.map.isRequired
@@ -68,7 +69,7 @@ var DraggableUser = React.createClass({
     },
     render: function () {
         const theme = this.getTheme();
-        const {connectDragSource, isSelected, user} = this.props;
+        const {connectDragSource, indent, isSelected, user} = this.props;
         let rowStyle = {};
         if (isSelected(user.get("_id"))) {
             rowStyle = {
@@ -80,17 +81,20 @@ var DraggableUser = React.createClass({
                 <Style
                     rules={{".registered-user:hover": hoverStyle(theme)}}
                 />
-                <div onClick={() => this.props.onSelect(this.props.user)} style={{display: "inline-block", width: "90%"}}>
-                    <label style={{width: this.props.indent + "%"}} />
-                    <label style={{cursor: "inherit", width: (70 - this.props.indent) + "%"}}>
-                        {getUsername(this.props.user)}
+                <div onClick={() => this.props.onSelect(user)} style={{display: "inline-block", width: "90%"}}>
+                    <label style={{width: indent + "%"}} />
+                    <label style={{cursor: "inherit", width: (70 - indent) + "%"}}>
+                        {getUsername(user)}
                     </label>
                     <label style={{cursor: "inherit", width: "30%"}}>
-                        {!R.isNil(this.props.user.get("roles")) ? this.props.user.get("roles").join(", ") : ""}
+                        {!R.isNil(user.get("roles")) ? user.get("roles").join(", ") : ""}
                     </label>
                 </div>
                 <div style={{display: "inline"}}>
-                    <Toggle defaultChecked={isActiveUser(this.props.user)} />
+                    <Toggle 
+                        defaultChecked={isActiveUser(user)}
+                        onChange={() => this.props.onChangeActiveStatus(user)}
+                    />
                     {this.renderChildrenButton(theme)}
                 </div>
             </div>

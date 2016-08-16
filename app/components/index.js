@@ -10,6 +10,7 @@ exports.CollectionItemList      = require("./collection-item-list/");
 exports.ConsumptionButtons      = require("./consumption-buttons/");
 exports.DateCompare             = require("./date-compare/");
 exports.DateFilter              = require("./date-filter/");
+exports.DeleteWithConfirmButton = require("./delete-with-confirm-button/");
 exports.DraggableOperator       = require("./draggable-operator/");
 exports.DraggableSensor         = require("./draggable-sensor/");
 exports.DropdownButton          = require("./dropdown-button/");
