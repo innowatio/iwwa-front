@@ -1,3 +1,4 @@
+import R from "ramda";
 import Immutable from "immutable";
 import React, {PropTypes} from "react";
 import IPropTypes from "react-immutable-proptypes";
@@ -51,7 +52,8 @@ var Users = React.createClass({
     propTypes: {
         asteroid: PropTypes.object,
         collections: IPropTypes.map,
-        selectUser: PropTypes.func.isRequired
+        selectUser: PropTypes.func.isRequired,
+        usersState: PropTypes.object.isRequired
     },
     contextTypes: {
         theme: PropTypes.object
@@ -77,13 +79,26 @@ var Users = React.createClass({
             return children.some(child => this.searchFilter(child, search));
         }
     },
-    renderUserList: function (element) {
+    sortByUsername: function (a, b, asc) {
+        let aLabel = getUsername(a).toLowerCase();
+        let bLabel = getUsername(b).toLowerCase();
+        if (asc) {
+            return aLabel > bLabel ? 1 : -1;
+        }
+        return aLabel > bLabel ? -1 : 1;
+    },
+    renderUserList: function (user) {
         return (
             <UserRow
                 getChildren={userId => getChildren(userId, this.getAllUsers())}
                 indent={0}
+                isSelected={userId => {
+                    return R.find(it => {
+                        return it.get("_id") === userId;
+                    })(this.props.usersState.selectedUsers) != null;
+                }}
                 onSelect={this.props.selectUser}
-                user={element}
+                user={user}
             />
         );
     },
@@ -95,7 +110,6 @@ var Users = React.createClass({
                     <div style={{float: "left", marginTop: "3px"}}>
                         <Button
                             style={stylesFunction(theme).buttonIconStyle}
-                            disabled={true}
                         >
                             <Icon
                                 color={theme.colors.iconHeader}
@@ -108,7 +122,7 @@ var Users = React.createClass({
                     <div style={{float: "right", marginTop: "3px"}}>
                         <Button
                             style={stylesFunction(theme).buttonIconStyle}
-                            disabled={true}
+                            disabled={this.props.usersState.selectedUsers.length < 1}
                         >
                             <Icon
                                 color={theme.colors.iconHeader}
@@ -119,7 +133,7 @@ var Users = React.createClass({
                         </Button>
                         <Button
                             style={stylesFunction(theme).buttonIconStyle}
-                            disabled={true}
+                            disabled={this.props.usersState.selectedUsers.length < 1}
                         >
                             <Icon
                                 color={theme.colors.iconHeader}
@@ -137,10 +151,13 @@ var Users = React.createClass({
                             collections={this.getParentUsers()}
                             filter={this.searchFilter}
                             headerComponent={this.renderUserList}
+                            hover={true}
+                            hoverStyle={{}}
                             initialVisibleRow={20}
                             lazyLoadButtonStyle={lazyLoadButtonStyle(theme)}
                             lazyLoadLabel={"Carica altri"}
                             showFilterInput={true}
+                            sort={R.partialRight(this.sortByUsername, [true])}
                         />
                     </div>
                 </div>
@@ -151,7 +168,7 @@ var Users = React.createClass({
 
 const mapStateToProps = (state) => {
     return {
-        sensorsState: state.sensors
+        usersState: state.users
     };
 };
 
