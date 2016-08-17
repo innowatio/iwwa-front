@@ -15,8 +15,7 @@ import {
     DeleteWithConfirmButton,
     DropdownButton,
     Icon,
-    MonitoringSearch,
-    MonitoringWorkArea,
+    MonitoringSensorsSelector,
     Popover,
     SectionToolbar,
     SensorForm
@@ -268,22 +267,20 @@ var Monitoring = React.createClass({
                     </div>
                 </SectionToolbar>
 
-                <MonitoringSearch
-                    filterSensors={this.props.filterSensors}
-                    style={{width: "25%", float: "left", marginTop: "2px", height: "calc(100vh - 120px)"}}
-                />
-
-                <MonitoringWorkArea
+                <MonitoringSensorsSelector
                     addSensorToWorkArea={this.props.addSensorToWorkArea}
+                    filters={{
+                        primaryTagsToFilter: this.props.sensorsState.primaryTagsToFilter,
+                        tagsToFilter: this.props.sensorsState.tagsToFilter,
+                        wordsToFilter: this.props.sensorsState.wordsToFilter
+                    }}
+                    filterSensors={this.props.filterSensors}
                     onClickAggregate={this.resetAndOpenNew}
-                    primaryTagsToFilter={this.props.sensorsState.primaryTagsToFilter}
                     removeSensorFromWorkArea={this.props.removeSensorFromWorkArea}
+                    selectedSensors={selected}
                     selectSensor={this.props.selectSensor}
                     selectSensorsToDraw={this.props.selectSensorsToDraw}
-                    selected={selected}
                     sensors={this.getMonitoringSensors()}
-                    tagsToFilter={this.props.sensorsState.tagsToFilter}
-                    wordsToFilter={this.props.sensorsState.wordsToFilter}
                     workAreaSensors={this.props.sensorsState.workAreaSensors}
                 />
 

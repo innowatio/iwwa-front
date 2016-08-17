@@ -30,15 +30,13 @@ const lazyLoadButtonStyle = ({colors}) => ({
 var MonitoringWorkArea = React.createClass({
     propTypes: {
         addSensorToWorkArea: PropTypes.func.isRequired,
+        filters: PropTypes.object.isRequired,
         onClickAggregate: PropTypes.func.isRequired,
-        primaryTagsToFilter: PropTypes.array,
         removeSensorFromWorkArea: PropTypes.func.isRequired,
         selectSensor: PropTypes.func.isRequired,
         selectSensorsToDraw: PropTypes.func.isRequired,
         selected: PropTypes.array,
         sensors: IPropTypes.map.isRequired,
-        tagsToFilter: PropTypes.array,
-        wordsToFilter: PropTypes.array,
         workAreaSensors: PropTypes.array
     },
     contextTypes: {
@@ -48,7 +46,7 @@ var MonitoringWorkArea = React.createClass({
         return this.context.theme || defaultTheme;
     },
     searchFilter: function (item) {
-        const {primaryTagsToFilter, tagsToFilter, wordsToFilter} = this.props;
+        const {primaryTagsToFilter, tagsToFilter, wordsToFilter} = this.props.filters;
         return (
             (primaryTagsToFilter <= 0 && tagsToFilter <= 0 && wordsToFilter <= 0) ||
             (this.searchPrimaryTags(item, primaryTagsToFilter) &&
