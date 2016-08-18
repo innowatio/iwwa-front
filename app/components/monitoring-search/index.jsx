@@ -10,6 +10,7 @@ import {defaultTheme} from "lib/theme";
 var MonitoringSearch = React.createClass({
     propTypes: {
         filterSensors: PropTypes.func.isRequired,
+        searchButton: PropTypes.object,
         style: PropTypes.object
     },
     contextTypes: {
@@ -61,6 +62,27 @@ var MonitoringSearch = React.createClass({
             wordsToFilter: this.state.wordsToSearch
         });
     },
+    renderSearchButton: function (theme) {
+        return this.props.searchButton ? (
+            <Button
+                onClick={this.props.searchButton.onClick}
+                style={{
+                    color: theme.colors.white,
+                    borderRadius: "30px",
+                    fontWeight: "300",
+                    width: "120px",
+                    height: "45px",
+                    lineHeight: "45px",
+                    padding: "0px",
+                    fontSize: "20px",
+                    border: "0px",
+                    backgroundColor: theme.colors.buttonPrimary
+                }}
+            >
+                {this.props.searchButton.label}
+            </Button>
+        ) : null;
+    },
     renderSearchInput: function (theme, inputPlaceholder, filterField, searchValuesField) {
         let self = this;
         return (
@@ -88,7 +110,7 @@ var MonitoringSearch = React.createClass({
                                 let obj = {};
                                 obj[filterField] = "";
                                 obj[searchValuesField] = newWords;
-                                self.setState(obj);
+                                self.setState(obj, self.filterSensors);
                             }
                         }}
                         size={"34px"}
@@ -148,30 +170,12 @@ var MonitoringSearch = React.createClass({
                     </div>
 
                     <div style={{marginLeft: "20px"}}>
-                        <Button
-                            onClick={self.filterSensors}
-                            style={{
-                                color: theme.colors.white,
-                                borderRadius: "30px",
-                                fontWeight: "300",
-                                width: "120px",
-                                height: "45px",
-                                lineHeight: "45px",
-                                padding: "0px",
-                                fontSize: "20px",
-                                border: "0px",
-                                backgroundColor: theme.colors.buttonPrimary
-                            }}
-                        >
-                            {"OK"}
-                        </Button>
+                        {this.renderSearchButton(theme)}
                         <Icon
                             color={theme.colors.white}
                             icon={"reset"}
                             onClick={() => {
-                                self.setState(self.getInitialState(), function () {
-                                    self.filterSensors();
-                                }.bind(self));
+                                self.setState(self.getInitialState(), self.filterSensors);
                             }}
                             size={"35px"}
                             style={{

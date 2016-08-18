@@ -47,10 +47,11 @@ var SensorsDropArea = React.createClass({
         addSensorToWorkArea: PropTypes.func.isRequired,
         allSensors: IPropTypes.map.isRequired,
         connectDropTarget: PropTypes.func,
-        onClickAggregate: PropTypes.func.isRequired,
-        onClickChart: PropTypes.func.isRequired,
+        onClickAggregate: PropTypes.func,
+        onClickChart: PropTypes.func,
         removeSensorFromWorkArea: PropTypes.func.isRequired,
-        sensors: PropTypes.array.isRequired
+        sensors: PropTypes.array.isRequired,
+        workAreaInstructions: PropTypes.string
     },
     contextTypes: {
         theme: PropTypes.object
@@ -66,9 +67,48 @@ var SensorsDropArea = React.createClass({
                 fontSize: "14px",
                 textAlign: "center"
             }}>
-                {"Trascina in questo spazio i sensori che vuoi graficare"}
+                {this.props.workAreaInstructions}
             </label>
         );
+    },
+    renderAggregateButton: function (theme) {
+        return this.props.onClickAggregate ? (
+            <Button
+                style={
+                        R.merge(buttonStyle(theme), {
+                            right: "50px",
+                            padding: "1px 8px"
+                        })
+                    }
+                onClick={this.props.onClickAggregate}
+            >
+                <Icon
+                    color={theme.colors.iconHeader}
+                    icon={"merge"}
+                    size={"30px"}
+                    style={{verticalAlign:"middle"}}
+                />
+            </Button>
+        ) : null;
+    },
+    renderChartButton: function (theme) {
+        return this.props.onClickChart ? (
+            <Link
+                to={"/monitoring/chart/"}
+                onClick={() => this.props.onClickChart(this.props.sensors)}
+                style={
+                        R.merge(buttonStyle(theme),
+                        {right: "0px"})
+                    }
+            >
+                <Icon
+                    color={theme.colors.iconHeader}
+                    icon={"chart"}
+                    size={"24px"}
+                    style={{verticalAlign: "middle"}}
+                />
+            </Link>
+        ) : null;
     },
     renderSensors: function () {
         let sensors = [];
@@ -140,37 +180,8 @@ var SensorsDropArea = React.createClass({
                     {"Hai selezionato: "}
                 </h4>
                 {sensors}
-                <Button
-                    style={
-                        R.merge(buttonStyle(theme), {
-                            right: "50px",
-                            padding: "1px 8px"
-                        })
-                    }
-                    onClick={this.props.onClickAggregate}
-                >
-                    <Icon
-                        color={theme.colors.iconHeader}
-                        icon={"merge"}
-                        size={"30px"}
-                        style={{verticalAlign:"middle"}}
-                    />
-                </Button>
-                <Link
-                    to={"/monitoring/chart/"}
-                    onClick={() => this.props.onClickChart(this.props.sensors)}
-                    style={
-                        R.merge(buttonStyle(theme),
-                        {right: "0px"})
-                    }
-                >
-                    <Icon
-                        color={theme.colors.iconHeader}
-                        icon={"chart"}
-                        size={"24px"}
-                        style={{verticalAlign: "middle"}}
-                    />
-                </Link>
+                {this.renderAggregateButton(theme)}
+                {this.renderChartButton(theme)}
             </div>
         );
     },

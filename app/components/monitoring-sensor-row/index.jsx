@@ -141,7 +141,7 @@ var SensorRow = React.createClass({
     },
     renderChartButton: function () {
         const theme = this.getTheme();
-        return (
+        return this.props.selectSensorToDraw ? (
             <Link
                 to={"/monitoring/chart/"}
                 onClick={() => this.props.selectSensorToDraw(this.props.sensor)}
@@ -164,7 +164,7 @@ var SensorRow = React.createClass({
                     }}
                 />
             </Link>
-        );
+        ) : null;
     },
     render: function () {
         const theme = this.getTheme();
@@ -180,7 +180,7 @@ var SensorRow = React.createClass({
         }
         return connectDragSource(
             <div style={divStyle}>
-                <div onClick={partial(onClickSelect, [sensor])} style={{cursor: "pointer"}}>
+                <div onClick={onClickSelect ? partial(onClickSelect, [sensor]) : null} style={{cursor: "pointer"}}>
                     {this.renderSensorName()}
                     {this.renderTags()}
                 </div>

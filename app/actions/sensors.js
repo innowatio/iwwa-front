@@ -13,6 +13,7 @@ export const GET_FORMULA_ITEMS = "GET_FORMULA_ITEMS";
 export const REMOVE_ITEM_FROM_FORMULA = "REMOVE_ITEM_FROM_FORMULA";
 export const REMOVE_SENSOR_FROM_WORK_AREA = "REMOVE_SENSOR_FROM_WORK_AREA";
 export const RESET_FORMULA_ITEMS = "RESET_FORMULA_ITEMS";
+export const RESET_WORK_AREA_SENSORS = "RESET_WORK_AREA_SENSORS";
 export const SELECT_SENSOR = "SELECT_SENSOR";
 export const SENSOR_CREATION_SUCCESS = "SENSOR_CREATION_SUCCESS";
 export const SENSOR_DELETE_SUCCESS = "SENSOR_DELETE_SUCCESS";
@@ -191,6 +192,8 @@ export const filterSensors = (payload) => getBasicObject(FILTER_SENSORS, payload
 export const getFormulaItems = () => getBasicObject(GET_FORMULA_ITEMS);
 
 export const resetFormulaItems = (resetWorkArea) => getBasicObject(RESET_FORMULA_ITEMS, resetWorkArea);
+
+export const resetWorkAreaSensors = () => getBasicObject(RESET_WORK_AREA_SENSORS);
 
 export const monitorSensor = (id) => getBasicObject("MONITOR_SENSOR", id);
 

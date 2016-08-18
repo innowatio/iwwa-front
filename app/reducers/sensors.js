@@ -9,6 +9,7 @@ import {
     REMOVE_ITEM_FROM_FORMULA,
     REMOVE_SENSOR_FROM_WORK_AREA,
     RESET_FORMULA_ITEMS,
+    RESET_WORK_AREA_SENSORS,
     SELECT_SENSOR,
     SENSOR_CREATION_SUCCESS,
     SENSOR_DELETE_SUCCESS
@@ -124,6 +125,10 @@ export function sensors (state = defaultState, action) {
             if (action.payload) {
                 newState.workAreaSensors = [];
             }
+            break;
+        }
+        case RESET_WORK_AREA_SENSORS: {
+            newState.workAreaSensors = [];
             break;
         }
         case SELECT_SENSOR: {

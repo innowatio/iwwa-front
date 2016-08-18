@@ -269,11 +269,6 @@ var Monitoring = React.createClass({
 
                 <MonitoringSensorsSelector
                     addSensorToWorkArea={this.props.addSensorToWorkArea}
-                    filters={{
-                        primaryTagsToFilter: this.props.sensorsState.primaryTagsToFilter,
-                        tagsToFilter: this.props.sensorsState.tagsToFilter,
-                        wordsToFilter: this.props.sensorsState.wordsToFilter
-                    }}
                     filterSensors={this.props.filterSensors}
                     onClickAggregate={this.resetAndOpenNew}
                     removeSensorFromWorkArea={this.props.removeSensorFromWorkArea}
@@ -281,7 +276,9 @@ var Monitoring = React.createClass({
                     selectSensor={this.props.selectSensor}
                     selectSensorsToDraw={this.props.selectSensorsToDraw}
                     sensors={this.getMonitoringSensors()}
-                    workAreaSensors={this.props.sensorsState.workAreaSensors}
+                    sensorsState={this.props.sensorsState}
+                    tableInstructions={"Seleziona alcuni sensori per interagire con essi o clicca sul icona per vedere il grafico"}
+                    workAreaInstructions={"Trascina in questo spazio i sensori che vuoi graficare"}
                 />
 
                 {this.renderSensorForm()}

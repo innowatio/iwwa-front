@@ -31,12 +31,14 @@ var MonitoringWorkArea = React.createClass({
     propTypes: {
         addSensorToWorkArea: PropTypes.func.isRequired,
         filters: PropTypes.object.isRequired,
-        onClickAggregate: PropTypes.func.isRequired,
+        onClickAggregate: PropTypes.func,
         removeSensorFromWorkArea: PropTypes.func.isRequired,
-        selectSensor: PropTypes.func.isRequired,
-        selectSensorsToDraw: PropTypes.func.isRequired,
+        selectSensor: PropTypes.func,
+        selectSensorsToDraw: PropTypes.func,
         selected: PropTypes.array,
         sensors: IPropTypes.map.isRequired,
+        tableInstructions: PropTypes.string,
+        workAreaInstructions: PropTypes.string,
         workAreaSensors: PropTypes.array
     },
     contextTypes: {
@@ -103,7 +105,7 @@ var MonitoringWorkArea = React.createClass({
         return aLabel > bLabel ? -1 : 1;
     },
     renderSensorList: function (element, elementId) {
-        let found = R.find((it) => {
+        let found = this.props.selected && R.find((it) => {
             return getSensorId(it) === elementId;
         })(this.props.selected) != null;
         return (
@@ -115,6 +117,13 @@ var MonitoringWorkArea = React.createClass({
                 sensorId={elementId}
             />
         );
+    },
+    renderTableInstructions: function (theme) {
+        return this.props.tableInstructions ? (
+            <label style={{width: "100%", color: theme.colors.mainFontColor, textAlign: "center"}}>
+                {this.props.tableInstructions}
+            </label>
+        ) : null;
     },
     render: function () {
         const theme = this.getTheme();
@@ -132,9 +141,7 @@ var MonitoringWorkArea = React.createClass({
                     marginRight: "-15px",
                     padding: "10px 15px 0px 15px"
                 }}>
-                    <label style={{width: "100%", color: theme.colors.mainFontColor, textAlign: "center"}}>
-                        {"Seleziona alcuni sensori per visualizzare il grafico o per creare un nuovo sensore"}
-                    </label>
+                    {this.renderTableInstructions(theme)}
                     <div style={{
                         color: theme.colors.mainFontColor,
                         borderRadius: "20px",
@@ -171,6 +178,7 @@ var MonitoringWorkArea = React.createClass({
                         onClickChart={this.props.selectSensorsToDraw}
                         removeSensorFromWorkArea={this.props.removeSensorFromWorkArea}
                         sensors={this.props.workAreaSensors}
+                        workAreaInstructions={this.props.workAreaInstructions}
                     />
                 </div>
             </div>

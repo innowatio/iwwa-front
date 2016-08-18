@@ -26,7 +26,8 @@ var FullscreenModal = React.createClass({
         onHide: PropTypes.func,
         onReset: PropTypes.func,
         renderConfirmButton: PropTypes.bool,
-        show: PropTypes.bool
+        show: PropTypes.bool,
+        title: PropTypes.string
     },
     contextTypes: {
         theme: React.PropTypes.object
@@ -115,7 +116,15 @@ var FullscreenModal = React.createClass({
                     }}
                     scopeSelector=".fullscreen-modal-selector"
                 />
-                <Modal.Header>
+                <Modal.Header style={{textAlign: "center"}}>
+                    <label style={{
+                        color: "white",
+                        fontSize: "xx-large",
+                        fontWeight: 100,
+                        fontVariant: "small-caps"
+                    }}>
+                        {this.props.title}
+                    </label>
                     {this.renderHeader()}
                 </Modal.Header>
                 <Modal.Body>

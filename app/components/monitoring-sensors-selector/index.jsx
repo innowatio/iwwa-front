@@ -10,32 +10,38 @@ var MonitoringSensorsSelector = React.createClass({
     propTypes: {
         addSensorToWorkArea: PropTypes.func.isRequired,
         filterSensors: PropTypes.func.isRequired,
-        filters: PropTypes.object,
         onClickAggregate: PropTypes.func,
         removeSensorFromWorkArea: PropTypes.func.isRequired,
-        selectSensor: PropTypes.func.isRequired,
-        selectSensorsToDraw: PropTypes.func.isRequired,
+        searchButton: PropTypes.object,
+        selectSensor: PropTypes.func,
+        selectSensorsToDraw: PropTypes.func,
         selectedSensors: PropTypes.array,
         sensors: IPropTypes.map.isRequired,
-        workAreaSensors: PropTypes.array
+        sensorsState: PropTypes.object,
+        tableInstructions: PropTypes.string,
+        workAreaInstructions: PropTypes.string
     },
     render: function () {
+        const {workAreaSensors} = this.props.sensorsState;
         return (
             <div>
                 <MonitoringSearch
                     filterSensors={this.props.filterSensors}
+                    searchButton={this.props.searchButton}
                     style={{width: "25%", float: "left", marginTop: "2px", height: "calc(100vh - 120px)"}}
                 />
                 <MonitoringWorkArea
                     addSensorToWorkArea={this.props.addSensorToWorkArea}
-                    filters={this.props.filters}
+                    filters={this.props.sensorsState}
                     onClickAggregate={this.props.onClickAggregate}
                     removeSensorFromWorkArea={this.props.removeSensorFromWorkArea}
                     selectSensor={this.props.selectSensor}
                     selectSensorsToDraw={this.props.selectSensorsToDraw}
                     selected={this.props.selectedSensors}
                     sensors={this.props.sensors}
-                    workAreaSensors={this.props.workAreaSensors}
+                    tableInstructions={this.props.tableInstructions}
+                    workAreaInstructions={this.props.workAreaInstructions}
+                    workAreaSensors={workAreaSensors}
                 />
             </div>
         );
