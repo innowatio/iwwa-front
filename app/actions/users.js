@@ -30,6 +30,14 @@ export const changeActiveStatus = user => {
     };
 };
 
+export const assignSensorsToUsers = (users, sensors) => {
+    console.log(users);
+    console.log(sensors);
+    return {
+        type: "ASSIGNING_SENSORS_TO_USERS"
+    };
+};
+
 export const deleteUsers = (usersToDelete, allUsers) => {
     return dispatch => {
         dispatch({
@@ -51,5 +59,4 @@ function deleteUser (user, allUsers, dispatch) {
             type: "USER_DELETE_FAIL"
         }));
     getChildren(userId, allUsers).forEach(child => deleteUser(child, allUsers, dispatch));
-
 }

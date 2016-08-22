@@ -17,6 +17,7 @@ import {
 } from "components";
 
 import {getDragDropContext} from "lib/dnd-utils";
+import {getLoggedUser, isAdmin} from "lib/roles-utils";
 import {getMonitoringSensors} from "lib/sensors-utils";
 import {defaultTheme} from "lib/theme";
 import {getChildren, getUsername, geUsersForManagement} from "lib/users-utils";
@@ -29,6 +30,7 @@ import {
 } from "actions/sensors";
 
 import {
+    assignSensorsToUsers,
     changeActiveStatus,
     deleteUsers,
     selectUser
@@ -64,6 +66,7 @@ const stylesFunction = (theme) => ({
 var Users = React.createClass({
     propTypes: {
         addSensorToWorkArea: PropTypes.func.isRequired,
+        assignSensorsToUsers: PropTypes.func.isRequired,
         asteroid: PropTypes.object,
         changeActiveStatus: PropTypes.func.isRequired,
         collections: IPropTypes.map,
@@ -88,7 +91,8 @@ var Users = React.createClass({
         this.props.asteroid.subscribe("users");
     },
     getMonitoringSensors: function () {
-        return getMonitoringSensors(this.props.collections.get("sensors"));
+        const {asteroid} = this.props;
+        return getMonitoringSensors(this.props.collections.get("sensors"), isAdmin(asteroid), getLoggedUser(asteroid).get("sensors"));
     },
     getTheme: function () {
         return this.context.theme || defaultTheme;
@@ -118,12 +122,19 @@ var Users = React.createClass({
     },
     openSensorsModal: function () {
         this.resetAndOpenModal(true);
+        this.fillWorkAreaSensors();
     },
     resetAndOpenModal: function (open) {
         this.props.resetWorkAreaSensors();
         this.setState({
             showSensorsModal: open
         });
+    },
+    fillWorkAreaSensors: function () {
+        const user = this.props.usersState.selectedUsers.length == 1 && this.props.usersState.selectedUsers[0];
+        if (user && user.get("sensors")) {
+            user.get("sensors").forEach(sensor => this.props.addSensorToWorkArea(sensor));
+        }
     },
     renderSensorsAssociationModal: function (theme) {
         return (
@@ -140,7 +151,7 @@ var Users = React.createClass({
                     removeSensorFromWorkArea={this.props.removeSensorFromWorkArea}
                     searchButton={{
                         label: "ASSEGNA",
-                        onClick: null
+                        onClick: () => this.props.assignSensorsToUsers(this.props.usersState.selectedUsers, this.props.sensorsState.workAreaSensors)
                     }}
                     sensors={this.getMonitoringSensors()}
                     sensorsState={this.props.sensorsState}
@@ -234,6 +245,7 @@ const mapStateToProps = (state) => {
 const mapDispatchToProps = (dispatch) => {
     return {
         addSensorToWorkArea: bindActionCreators(addSensorToWorkArea, dispatch),
+        assignSensorsToUsers: bindActionCreators(assignSensorsToUsers, dispatch),
         changeActiveStatus: bindActionCreators(changeActiveStatus, dispatch),
         deleteUsers: bindActionCreators(deleteUsers, dispatch),
         filterSensors: bindActionCreators(filterSensors, dispatch),

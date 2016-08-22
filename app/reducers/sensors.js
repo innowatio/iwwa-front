@@ -97,7 +97,7 @@ export function sensors (state = defaultState, action) {
             break;
         }
         case ADD_SENSOR_TO_WORK_AREA: {
-            newState.workAreaSensors.push(getSensorId(action.payload));
+            newState.workAreaSensors.push(typeof action.payload === "string" ? action.payload : getSensorId(action.payload));
             break;
         }
         case FILTER_SENSORS: {

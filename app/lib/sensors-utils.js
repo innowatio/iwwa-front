@@ -1,7 +1,8 @@
 import Immutable from "immutable";
 import R from "ramda";
-import {allSensorsDecorator} from "lib/sensors-decorators";
 import * as f from "iwwa-formula-resolver";
+
+import {allSensorsDecorator} from "lib/sensors-decorators";
 
 const operatorMapping = {
     "+" : "add",
@@ -181,7 +182,7 @@ export function getAllSensors (sensorsCollection) {
     return decorateWithMeasurementType(sensorsCollection, []);
 }
 
-export function getMonitoringSensors (sensorsCollection) {
+export function getMonitoringSensors (sensorsCollection, isAdmin, userSensors) {
     if (!sensorsCollection) {
         return Immutable.Map();
     }
@@ -192,10 +193,12 @@ export function getMonitoringSensors (sensorsCollection) {
             originalToHide.push(parentId);
         }
     });
-    return decorateWithMeasurementType(sensorsCollection.filter(
-        sensor => !sensor.get("isDeleted") &&
-        sensor.get("type") !== "pod"
+    const complete = decorateWithMeasurementType(sensorsCollection.filter(
+        sensor => !sensor.get("isDeleted") && sensor.get("type") !== "pod"
     ), originalToHide);
+    return isAdmin ? complete : complete.filter(
+        sensor => userSensors && userSensors.indexOf(getSensorId(sensor)) >= 0
+    );
 }
 
 function decorateWithMeasurementType (sensors, originalToHide) {

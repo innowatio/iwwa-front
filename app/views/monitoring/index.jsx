@@ -7,6 +7,7 @@ import {bindActionCreators} from "redux";
 
 import {getDragDropContext} from "lib/dnd-utils";
 import {defaultTheme} from "lib/theme";
+import {getLoggedUser, isAdmin} from "lib/roles-utils";
 import {getAllSensors, getMonitoringSensors, getSensorLabel, findSensor} from "lib/sensors-utils";
 import {styles} from "lib/styles";
 
@@ -130,7 +131,8 @@ var Monitoring = React.createClass({
         return getAllSensors(this.props.collections.get("sensors"));
     },
     getMonitoringSensors: function () {
-        return getMonitoringSensors(this.props.collections.get("sensors"));
+        const {asteroid} = this.props;
+        return getMonitoringSensors(this.props.collections.get("sensors"), isAdmin(asteroid), getLoggedUser(asteroid).get("sensors"));
     },
     getSensorFields: function () {
         const selected = this.props.sensorsState.selectedSensors;
