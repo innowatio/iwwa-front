@@ -83,8 +83,7 @@ var Root = React.createClass({
         asteroid.subscribe("users");
     },
     logout: function () {
-        asteroid.logout();
-        setTokenOnInnowatioSSO(null);
+        setTokenOnInnowatioSSO(null, asteroid.logout.bind(asteroid));
     },
     getTheme: function () {
         const colorTheme = this.props.reduxState.userSetting.theme.color || "dark";
