@@ -51,7 +51,7 @@ var User = React.createClass({
     },
     getSiti: function () {
         var user = this.getUser();
-        var userSiti = user.get("siti") || Immutable.List();
+        var userSiti = user.get("sites") || Immutable.List();
         return (
             userSiti.map(sitoId => this.props.collections.getIn(["sites", sitoId])) ||
             Immutable.List()
@@ -74,7 +74,7 @@ var User = React.createClass({
     },
     removeAllSiteFromUser: function () {
         var siti = this.props.collections.get("sites") || Immutable.Map();
-        var userSiti = this.getUser().get("siti") || Immutable.List();
+        var userSiti = this.getUser().get("sites") || Immutable.List();
         siti.filter(sito => {
             return R.isNil(userSiti) ? {} : userSiti.includes(sito.get("_id"));
         }).map(this.removeSiteFromUser);
@@ -126,7 +126,7 @@ var User = React.createClass({
     },
     renderSelectUserSite: function () {
         var siti = this.props.collections.get("sites") || Immutable.Map();
-        var userSiti = this.getUser().get("siti");
+        var userSiti = this.getUser().get("sites");
         var sitiToAdd = siti.filter(sito => {
             return R.isNil(userSiti) ? {} : !userSiti.includes(sito.get("_id"));
         });
