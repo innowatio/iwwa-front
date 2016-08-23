@@ -1,4 +1,5 @@
 import axios from "axios";
+import R from "ramda";
 
 import {WRITE_API_ENDPOINT} from "lib/config";
 import {getChildren, isActiveUser} from "lib/users-utils";
@@ -15,28 +16,47 @@ export const changeActiveStatus = user => {
         dispatch({
             type: "CHANGING_ACTIVE_STATUS"
         });
-        const endpoint = "http://" + WRITE_API_ENDPOINT + "/users/" + user.get("_id");
         const newProfile = {
             ...user.get("profile"),
             active: !isActiveUser(user)
         };
-        axios.put(endpoint, newProfile)
-            .then(() => dispatch({
-                type: "ACTIVE_STATUS_UPDATE_SUCCESS"
-            }))
-            .catch(() => dispatch({
-                type: "ACTIVE_STATUS_UPDATE_FAIL"
-            }));
+        updateUser(dispatch, user.get("_id"), newProfile, "ACTIVE_STATUS_UPDATE");
     };
 };
 
+function updateUser (dispatch, userId, updatedInfo, event) {
+    const endpoint = "http://" + WRITE_API_ENDPOINT + "/users/" + userId;
+    axios.put(endpoint, updatedInfo)
+        .then(() => dispatch({
+            type: event + "_SUCCESS"
+        }))
+        .catch(() => dispatch({
+            type: event + "_FAIL"
+        }));
+}
+
 export const assignSensorsToUsers = (users, sensors) => {
-    console.log(users);
-    console.log(sensors);
-    return {
-        type: "ASSIGNING_SENSORS_TO_USERS"
+    return dispatch => {
+        dispatch({
+            type: "ASSIGNING_SENSORS_TO_USERS"
+        });
+        if (users.length == 1) {
+            assignSensorsToUser(dispatch, users[0], sensors);
+        } else {
+            users.forEach(user => {
+                const mergedSensors = user.get("sensors") ? R.compose(R.uniq, R.flatten)([user.get("sensors").toJS(), sensors]) : sensors;
+                assignSensorsToUser(dispatch, user, mergedSensors);
+            });
+        }
     };
 };
+
+function assignSensorsToUser (dispatch, user, sensors) {
+    const updated = {
+        sensors: sensors
+    };
+    updateUser(dispatch, user.get("_id"), updated, "SENSORS_ASSIGNMENT");
+}
 
 export const deleteUsers = (usersToDelete, allUsers) => {
     return dispatch => {

@@ -101,7 +101,7 @@ var Users = React.createClass({
         return this.props.collections.get("users") || Immutable.Map();
     },
     searchFilter: function (element, search) {
-        let found = getUsername(element).toLowerCase().indexOf(search.toLowerCase()) >= 0;
+        const found = getUsername(element).toLowerCase().indexOf(search.toLowerCase()) >= 0;
         if (found) {
             return true;
         } else {
@@ -151,7 +151,10 @@ var Users = React.createClass({
                     removeSensorFromWorkArea={this.props.removeSensorFromWorkArea}
                     searchButton={{
                         label: "ASSEGNA",
-                        onClick: () => this.props.assignSensorsToUsers(this.props.usersState.selectedUsers, this.props.sensorsState.workAreaSensors)
+                        onClick: () => {
+                            this.props.assignSensorsToUsers(this.props.usersState.selectedUsers, this.props.sensorsState.workAreaSensors);
+                            this.closeSensorsModal();
+                        }
                     }}
                     sensors={this.getMonitoringSensors()}
                     sensorsState={this.props.sensorsState}
@@ -178,21 +181,22 @@ var Users = React.createClass({
     },
     render: function () {
         const theme = this.getTheme();
+                    // TODO create user
+                    // <div style={{float: "left", marginTop: "3px"}}>
+                    //     <Button
+                    //         style={stylesFunction(theme).buttonIconStyle}
+                    //     >
+                    //         <Icon
+                    //             color={theme.colors.iconHeader}
+                    //             icon={"add"}
+                    //             size={"28px"}
+                    //             style={{lineHeight: "45px"}}
+                    //         />
+                    //     </Button>
+                    // </div>
         return (
             <div>
                 <SectionToolbar>
-                    <div style={{float: "left", marginTop: "3px"}}>
-                        <Button
-                            style={stylesFunction(theme).buttonIconStyle}
-                        >
-                            <Icon
-                                color={theme.colors.iconHeader}
-                                icon={"add"}
-                                size={"28px"}
-                                style={{lineHeight: "45px"}}
-                            />
-                        </Button>
-                    </div>
                     <div style={{float: "right", marginTop: "3px"}}>
                         <Button
                             style={stylesFunction(theme).buttonIconStyle}
