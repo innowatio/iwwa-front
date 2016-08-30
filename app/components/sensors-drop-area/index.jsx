@@ -5,10 +5,10 @@ import {Link} from "react-router";
 import R from "ramda";
 
 import {Types} from "lib/dnd-utils";
-import {getSensorId, getUnitOfMeasurementLabel} from "lib/sensors-utils";
+import {getSensorId, getSensorLabel, getUnitOfMeasurementLabel} from "lib/sensors-utils";
 import {defaultTheme} from "lib/theme";
 
-import {Button, Icon} from "components";
+import {Button, CollectionItemList, Icon} from "components";
 
 const buttonStyle = ({colors}) => ({
     backgroundColor: colors.primary,
@@ -47,17 +47,24 @@ var SensorsDropArea = React.createClass({
         addSensorToWorkArea: PropTypes.func.isRequired,
         allSensors: IPropTypes.map.isRequired,
         connectDropTarget: PropTypes.func,
+        oldSensors: IPropTypes.list,
         onClickAggregate: PropTypes.func,
         onClickChart: PropTypes.func,
         removeSensorFromWorkArea: PropTypes.func.isRequired,
         sensors: PropTypes.array.isRequired,
-        workAreaInstructions: PropTypes.string
+        sensorsFilter: PropTypes.func,
+        sensorsSort: PropTypes.func,
+        workAreaInstructions: PropTypes.string,
+        workAreaMessage: PropTypes.string
     },
     contextTypes: {
         theme: PropTypes.object
     },
     getTheme: function () {
         return this.context.theme || defaultTheme;
+    },
+    isNewSensor: function (sensorId) {
+        return !this.props.oldSensors || this.props.oldSensors.indexOf(sensorId) < 0;
     },
     renderMessage: function (theme) {
         return (
@@ -75,11 +82,11 @@ var SensorsDropArea = React.createClass({
         return this.props.onClickAggregate ? (
             <Button
                 style={
-                        R.merge(buttonStyle(theme), {
-                            right: "50px",
-                            padding: "1px 8px"
-                        })
-                    }
+                    R.merge(buttonStyle(theme), {
+                        right: "50px",
+                        padding: "1px 8px"
+                    })
+                }
                 onClick={this.props.onClickAggregate}
             >
                 <Icon
@@ -110,63 +117,59 @@ var SensorsDropArea = React.createClass({
             </Link>
         ) : null;
     },
-    renderSensors: function () {
-        let sensors = [];
-        let theme = this.getTheme();
-        this.props.sensors.forEach((sensorId, index) => {
-            let sensor = this.props.allSensors.get(sensorId);
-            if (sensor) {
-                sensors.push(
-                    <div
-                        key={sensorId}
+    renderSensor: function (element, elementId) {
+        const {colors} = this.getTheme();
+        return (
+            <div
+                key={elementId}
+                style={{
+                    width:"100%",
+                    backgroundColor: this.isNewSensor(elementId) ? colors.buttonPrimary : "none",
+                    height: "48px",
+                    lineHeight: "48px",
+                    borderTop: "1px solid " + colors.white,
+                    borderBottom: "1px solid " + colors.white,
+                    color: colors.white,
+                    marginBottom: "1px",
+                    padding: "0px 10px"
+                }}
+            >
+                {
+                    getSensorLabel(element) +
+                    (element.get("description") ? " - " + element.get("description") : "") +
+                    (element.get("unitOfMeasurement") ? " - " + getUnitOfMeasurementLabel(element.get("unitOfMeasurement")) : "")
+                }
+                <div
+                    onClick={() => this.props.removeSensorFromWorkArea(elementId)}
+                    style={{
+                        display: "block",
+                        float: "right",
+                        border: "1px solid " + colors.white,
+                        width: "20px",
+                        height: "20px",
+                        lineHeight: "18px",
+                        overflow: "hidden",
+                        borderRadius: "30px",
+                        textAlign: "center",
+                        textDecoration: "none",
+                        marginTop: "13px",
+                        color: colors.white,
+                        cursor: "pointer"
+                    }}
+                >
+                    <Icon
+                        color={colors.mainFontColor}
+                        icon={"delete"}
+                        size={"15px"}
                         style={{
-                            width:"100%",
-                            backgroundColor: theme.colors.buttonPrimary,
-                            height: "48px",
-                            lineHeight: "48px",
-                            borderTop: "1px solid " + theme.colors.white,
-                            borderBottom: "1px solid " + theme.colors.white,
-                            color: theme.colors.white,
-                            marginBottom: "1px",
-                            padding: "0px 10px"
+                            verticalAlign: "middle"
                         }}
-                    >
-                        {
-                            (sensor.get("name") ? sensor.get("name") : sensorId) +
-                            (sensor.get("description") ? " - " + sensor.get("description") : "") +
-                            (sensor.get("unitOfMeasurement") ? " - " + getUnitOfMeasurementLabel(sensor.get("unitOfMeasurement")) : "")
-                        }
-                        <div
-                            onClick={() => this.props.removeSensorFromWorkArea(index)}
-                            style={{
-                                display: "block",
-                                float: "right",
-                                border: "1px solid " + theme.colors.white,
-                                width: "20px",
-                                height: "20px",
-                                lineHeight: "18px",
-                                overflow: "hidden",
-                                borderRadius: "30px",
-                                textAlign: "center",
-                                textDecoration: "none",
-                                marginTop: "13px",
-                                color: theme.colors.white,
-                                cursor: "pointer"
-                            }}
-                        >
-                            <Icon
-                                color={theme.colors.mainFontColor}
-                                icon={"delete"}
-                                size={"15px"}
-                                style={{
-                                    verticalAlign: "middle"
-                                }}
-                            />
-                        </div>
-                    </div>
-                );
-            }
-        });
+                    />
+                </div>
+            </div>
+        );
+    },
+    renderSensors: function (theme) {
         return (
             <div style={{position: "relative"}}>
                 <h4 style={{
@@ -177,9 +180,14 @@ var SensorsDropArea = React.createClass({
                     margin: "0px 0px 25px 0px",
                     padding: "0px"
                 }}>
-                    {"Hai selezionato: "}
+                    {this.props.workAreaMessage}
                 </h4>
-                {sensors}
+                <CollectionItemList
+                    collections={this.props.allSensors.filter(sensor => this.props.sensors.indexOf(getSensorId(sensor)) >= 0)}
+                    filter={this.props.sensorsFilter}
+                    headerComponent={this.renderSensor}
+                    sort={this.props.sensorsSort}
+                />
                 {this.renderAggregateButton(theme)}
                 {this.renderChartButton(theme)}
             </div>
@@ -199,7 +207,7 @@ var SensorsDropArea = React.createClass({
                 padding: "20px 10px",
                 verticalAlign: "middle"
             }}>
-                {this.props.sensors.length > 0 ? this.renderSensors() : this.renderMessage(theme)}
+                {this.props.sensors.length > 0 ? this.renderSensors(theme) : this.renderMessage(theme)}
             </div>
         );
     }

@@ -19,7 +19,9 @@ var MonitoringSensorsSelector = React.createClass({
         sensors: IPropTypes.map.isRequired,
         sensorsState: PropTypes.object,
         tableInstructions: PropTypes.string,
-        workAreaInstructions: PropTypes.string
+        workAreaInstructions: PropTypes.string,
+        workAreaMessage: PropTypes.string,
+        workAreaOldSensors: IPropTypes.list
     },
     render: function () {
         const {workAreaSensors} = this.props.sensorsState;
@@ -41,6 +43,8 @@ var MonitoringSensorsSelector = React.createClass({
                     sensors={this.props.sensors}
                     tableInstructions={this.props.tableInstructions}
                     workAreaInstructions={this.props.workAreaInstructions}
+                    workAreaMessage={this.props.workAreaMessage}
+                    workAreaOldSensors={this.props.workAreaOldSensors}
                     workAreaSensors={workAreaSensors}
                 />
             </div>

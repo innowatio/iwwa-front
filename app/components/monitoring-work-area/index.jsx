@@ -39,6 +39,8 @@ var MonitoringWorkArea = React.createClass({
         sensors: IPropTypes.map.isRequired,
         tableInstructions: PropTypes.string,
         workAreaInstructions: PropTypes.string,
+        workAreaMessage: PropTypes.string,
+        workAreaOldSensors: IPropTypes.list,
         workAreaSensors: PropTypes.array
     },
     contextTypes: {
@@ -46,6 +48,9 @@ var MonitoringWorkArea = React.createClass({
     },
     getTheme: function () {
         return this.context.theme || defaultTheme;
+    },
+    getSortFunc: function () {
+        return R.partialRight(this.sortByLabel, [true]);    
     },
     searchFilter: function (item) {
         const {primaryTagsToFilter, tagsToFilter, wordsToFilter} = this.props.filters;
@@ -166,7 +171,7 @@ var MonitoringWorkArea = React.createClass({
                                 initialVisibleRow={6}
                                 lazyLoadButtonStyle={lazyLoadButtonStyle(theme)}
                                 lazyLoadLabel={"Carica altri"}
-                                sort={R.partialRight(this.sortByLabel, [true])}
+                                sort={this.getSortFunc()}
                             />
                         </div>
                     </div>
@@ -174,11 +179,15 @@ var MonitoringWorkArea = React.createClass({
                     <SensorsDropArea
                         addSensorToWorkArea={this.props.addSensorToWorkArea}
                         allSensors={this.props.sensors}
+                        oldSensors={this.props.workAreaOldSensors}
                         onClickAggregate={this.props.onClickAggregate}
                         onClickChart={this.props.selectSensorsToDraw}
                         removeSensorFromWorkArea={this.props.removeSensorFromWorkArea}
                         sensors={this.props.workAreaSensors}
+                        sensorsFilter={this.searchFilter}
+                        sensorsSort={this.getSortFunc()}
                         workAreaInstructions={this.props.workAreaInstructions}
+                        workAreaMessage={this.props.workAreaMessage}
                     />
                 </div>
             </div>

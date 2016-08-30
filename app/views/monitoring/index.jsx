@@ -281,6 +281,7 @@ var Monitoring = React.createClass({
                     sensorsState={this.props.sensorsState}
                     tableInstructions={"Seleziona alcuni sensori per interagire con essi o clicca sul icona per vedere il grafico"}
                     workAreaInstructions={"Trascina in questo spazio i sensori che vuoi graficare"}
+                    workAreaMessage={"Hai selezionato:"}
                 />
 
                 {this.renderSensorForm()}

@@ -92,7 +92,7 @@ export const removeItemFromFormula = (index) => getBasicObject(REMOVE_ITEM_FROM_
 
 export const addSensorToWorkArea = (sensor) => getBasicObject(ADD_SENSOR_TO_WORK_AREA, sensor);
 
-export const removeSensorFromWorkArea = (index) => getBasicObject(REMOVE_SENSOR_FROM_WORK_AREA, index);
+export const removeSensorFromWorkArea = (sensorId) => getBasicObject(REMOVE_SENSOR_FROM_WORK_AREA, sensorId);
 
 export const addSensor = (sensor, formulaItems) => {
     sensor.formulas = buildFormulas(formulaItems);

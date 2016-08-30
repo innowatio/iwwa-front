@@ -131,9 +131,15 @@ var Users = React.createClass({
         });
     },
     fillWorkAreaSensors: function () {
+        const userSensors = this.getUserSensors();
+        if (userSensors) {
+            userSensors.forEach(sensor => this.props.addSensorToWorkArea(sensor));
+        }
+    },
+    getUserSensors: function () {
         const user = this.props.usersState.selectedUsers.length == 1 && this.props.usersState.selectedUsers[0];
         if (user && user.get("sensors")) {
-            user.get("sensors").forEach(sensor => this.props.addSensorToWorkArea(sensor));
+            return user.get("sensors");
         }
     },
     renderSensorsAssociationModal: function (theme) {
@@ -159,6 +165,8 @@ var Users = React.createClass({
                     sensors={this.getMonitoringSensors()}
                     sensorsState={this.props.sensorsState}
                     workAreaInstructions={"Trascina in questo spazio i sensori che vuoi assegnare"}
+                    workAreaMessage={"Item nuovi a sfondo rosa, item già assegnati a sfondo nero:"}
+                    workAreaOldSensors={this.getUserSensors()}
                 />
             </FullscreenModal>
         );

@@ -117,7 +117,7 @@ export function sensors (state = defaultState, action) {
             break;
         }
         case REMOVE_SENSOR_FROM_WORK_AREA: {
-            newState.workAreaSensors.splice(action.payload, 1);
+            newState.workAreaSensors.splice(newState.workAreaSensors.indexOf(action.payload), 1);
             break;
         }
         case RESET_FORMULA_ITEMS: {
@@ -129,6 +129,9 @@ export function sensors (state = defaultState, action) {
         }
         case RESET_WORK_AREA_SENSORS: {
             newState.workAreaSensors = [];
+            newState.primaryTagsToFilter = [];
+            newState.tagsToFilter = [];
+            newState.wordsToFilter = [];
             break;
         }
         case SELECT_SENSOR: {
