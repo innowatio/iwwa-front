@@ -32,6 +32,7 @@ exports.MonitoringChart         = require("./monitoring-chart/");
 exports.MonitoringChartToolbar  = require("./monitoring-chart-toolbar/");
 exports.MonitoringSearch        = require("./monitoring-search/");
 exports.MonitoringSensorRow     = require("./monitoring-sensor-row/");
+exports.MonitoringSensorsAssociator = require("./monitoring-sensors-associator/");
 exports.MonitoringSensorsSelector = require("./monitoring-sensors-selector/");
 exports.MonitoringWorkArea      = require("./monitoring-work-area/");
 exports.NotificationModal       = require("./notification-modal/");
