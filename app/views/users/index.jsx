@@ -1,5 +1,6 @@
-import R from "ramda";
 import Immutable from "immutable";
+import Radium from "radium";
+import R from "ramda";
 import React, {PropTypes} from "react";
 import IPropTypes from "react-immutable-proptypes";
 import {connect} from "react-redux";
@@ -9,13 +10,16 @@ import {
     Button,
     CollectionItemList,
     DeleteWithConfirmButton,
+    FullscreenModal,
     Icon,
     MonitoringSensorsAssociator,
     SectionToolbar,
     UserRow
 } from "components";
+import {FormControl} from "react-bootstrap";
 
 import {getDragDropContext} from "lib/dnd-utils";
+import {styles} from "lib/styles";
 import {defaultTheme} from "lib/theme";
 import {getChildren, getUsername, geUsersForManagement} from "lib/users-utils";
 
@@ -80,7 +84,8 @@ var Users = React.createClass({
     },
     getInitialState: function () {
         return {
-            showSensorsAssociator: false
+            showSensorsAssociator: false,
+            showCreateUserModal: false
         };
     },
     componentDidMount: function () {
@@ -153,22 +158,22 @@ var Users = React.createClass({
     },
     render: function () {
         const theme = this.getTheme();
-                    // TODO create user
-                    // <div style={{float: "left", marginTop: "3px"}}>
-                    //     <Button
-                    //         style={stylesFunction(theme).buttonIconStyle}
-                    //     >
-                    //         <Icon
-                    //             color={theme.colors.iconHeader}
-                    //             icon={"add"}
-                    //             size={"28px"}
-                    //             style={{lineHeight: "45px"}}
-                    //         />
-                    //     </Button>
-                    // </div>
         return (
             <div>
                 <SectionToolbar>
+                    <div style={{float: "left", marginTop: "3px"}}>
+                        <Button
+                            style={stylesFunction(theme).buttonIconStyle}
+                            onClick={() => this.setState({showCreateUserModal: true})}
+                        >
+                            <Icon
+                                color={theme.colors.iconHeader}
+                                icon={"add"}
+                                size={"28px"}
+                                style={{lineHeight: "45px"}}
+                            />
+                        </Button>
+                    </div>
                     <div style={{float: "right", marginTop: "3px"}}>
                         <Button
                             style={stylesFunction(theme).buttonIconStyle}
@@ -219,6 +224,37 @@ var Users = React.createClass({
                     usersState={this.props.usersState}
                     workAreaOldSensors={this.getUserSensors()}
                 />
+                <FullscreenModal
+                    onHide={() => this.setState({showCreateUserModal: false})}
+                    renderConfirmButton={true}
+                    show={this.state.showCreateUserModal}
+                >
+                    <form className="form-fields">
+                        <Radium.Style
+                            rules={styles(theme).formFields}
+                            scopeSelector={".form-fields"}
+                        />
+                        <h3
+                            className="text-center"
+                            style={{
+                                color: theme.colors.mainFontColor,
+                                fontSize: "24px",
+                                fontWeight: "400",
+                                marginBottom: "20px",
+                                textTransform: "uppercase",
+                                paddingBottom: "20px",
+                                borderBottom: "1px solid " + theme.colors.borderContentModal
+                            }}
+                        >
+                            {"Crea nuovo utente"}
+                        </h3>
+                        <FormControl
+                            type="email"
+                            placeholder="Indirizzo email"
+                            style={R.merge(styles(theme).inputLine, {color: theme.colors.buttonPrimary})}
+                        />
+                    </form>
+                </FullscreenModal>
             </div>
         );
     }
