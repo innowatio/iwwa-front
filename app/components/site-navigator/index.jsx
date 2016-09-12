@@ -8,6 +8,7 @@ var React           = require("react");
 import components from "components";
 import {defaultTheme} from "lib/theme";
 import {styles} from "lib/styles";
+import mergeSiteSensors from "lib/merge-site-sensors";
 
 const itemsStyle = (theme) => (R.merge(styles(theme).buttonBasicStyle, {
     background: theme.colors.primary,
@@ -33,6 +34,7 @@ const heightBody = "420px";
 var SiteNavigator = React.createClass({
     propTypes: {
         allowedValues: IPropTypes.map.isRequired,
+        decorators: IPropTypes.map,
         onChange: React.PropTypes.func.isRequired,
         path: React.PropTypes.oneOfType([
             React.PropTypes.array,
@@ -43,10 +45,21 @@ var SiteNavigator = React.createClass({
     contextTypes: {
         theme: React.PropTypes.object
     },
+    getDefaultProps: function () {
+        return {
+            decorators: Immutable.Map()
+        };
+    },
     getInitialState: function () {
         return {
             inputFilter: ""
         };
+    },
+    decoratedValues: function () {
+        if (this.props.allowedValues) {
+            return this.props.allowedValues.map((value) => Immutable.fromJS(mergeSiteSensors(value, this.props.decorators)));
+        }
+        return [];
     },
     getTheme: function () {
         return this.context.theme || defaultTheme;
@@ -64,14 +77,16 @@ var SiteNavigator = React.createClass({
         return value.get("description") || value.get("id");
     },
     getFilterCriteria: function (values) {
-        const NOT_VISIBLE_SENSORS = ["CO2", "THL", "POD-ANZ"];
+        const NOT_VISIBLE_SENSORS = ["POD-ANZ", "ACTIVEENERGY", "REACTIVEENERGY", "MAXPOWER",
+            "THL", "TEMPERATURE", "HUMIDITY", "ILLUMINANCE", "CO2"];
+
         return values.filter((value) => {
             return NOT_VISIBLE_SENSORS.indexOf((value.get("type") || "").toUpperCase()) < 0;
         });
     },
     getFilteredValues: function () {
         var clause = this.state.inputFilter.toLowerCase();
-        return this.props.allowedValues.filter((value) => {
+        return this.decoratedValues().filter((value) => {
             var pods = this.getFilterCriteria(value.get("sensors") || Immutable.Map())
                 .map(this.getLabelChildren);
             return value.get("name").toLowerCase().includes(clause) ||
@@ -134,9 +149,11 @@ var SiteNavigator = React.createClass({
     },
     renderSitesChildren: function () {
         if (this.props.path[0]) {
+            const sensorsBySite = this.props.allowedValues.getIn([this.props.path[0], "sensors"]) || Immutable.List();
+
             return (
                 <components.TreeView
-                    allowedValues={this.getFilteredValues().getIn([this.props.path[0], "sensors"]) || []}
+                    allowedValues={sensorsBySite}
                     filterCriteria={this.getFilterCriteria}
                     getKey={this.getKeyChildren}
                     getLabel={this.getLabelChildren}
