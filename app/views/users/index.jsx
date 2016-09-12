@@ -14,6 +14,7 @@ import {
     Icon,
     MonitoringSensorsAssociator,
     SectionToolbar,
+    UserRolesAssociator,
     UserRow
 } from "components";
 import {FormControl} from "react-bootstrap";
@@ -85,6 +86,7 @@ var Users = React.createClass({
     getInitialState: function () {
         return {
             showSensorsAssociator: false,
+            showRolesAssociator: false,
             showCreateUserModal: false
         };
     },
@@ -156,6 +158,41 @@ var Users = React.createClass({
             />
         );
     },
+    renderCreateUserModal: function (theme) {
+        return (
+            <FullscreenModal
+                onHide={() => this.setState({showCreateUserModal: false})}
+                renderConfirmButton={true}
+                show={this.state.showCreateUserModal}
+            >
+                <form className="form-fields">
+                    <Radium.Style
+                        rules={styles(theme).formFields}
+                        scopeSelector={".form-fields"}
+                    />
+                    <h3
+                        className="text-center"
+                        style={{
+                            color: theme.colors.mainFontColor,
+                            fontSize: "24px",
+                            fontWeight: "400",
+                            marginBottom: "20px",
+                            textTransform: "uppercase",
+                            paddingBottom: "20px",
+                            borderBottom: "1px solid " + theme.colors.borderContentModal
+                        }}
+                    >
+                        {"Crea nuovo utente"}
+                    </h3>
+                    <FormControl
+                        type="email"
+                        placeholder="Indirizzo email"
+                        style={R.merge(styles(theme).inputLine, {color: theme.colors.buttonPrimary})}
+                    />
+                </form>
+            </FullscreenModal>
+        );
+    },
     render: function () {
         const theme = this.getTheme();
         return (
@@ -183,6 +220,18 @@ var Users = React.createClass({
                             <Icon
                                 color={theme.colors.iconHeader}
                                 icon={"gauge"}
+                                size={"28px"}
+                                style={{lineHeight: "45px"}}
+                            />
+                        </Button>
+                        <Button
+                            style={stylesFunction(theme).buttonIconStyle}
+                            disabled={this.props.usersState.selectedUsers.length < 1}
+                            onClick={() => this.setState({showRolesAssociator: true})}
+                        >
+                            <Icon
+                                color={theme.colors.iconHeader}
+                                icon={"edit"}
                                 size={"28px"}
                                 style={{lineHeight: "45px"}}
                             />
@@ -224,37 +273,11 @@ var Users = React.createClass({
                     usersState={this.props.usersState}
                     workAreaOldSensors={this.getUserSensors()}
                 />
-                <FullscreenModal
-                    onHide={() => this.setState({showCreateUserModal: false})}
-                    renderConfirmButton={true}
-                    show={this.state.showCreateUserModal}
-                >
-                    <form className="form-fields">
-                        <Radium.Style
-                            rules={styles(theme).formFields}
-                            scopeSelector={".form-fields"}
-                        />
-                        <h3
-                            className="text-center"
-                            style={{
-                                color: theme.colors.mainFontColor,
-                                fontSize: "24px",
-                                fontWeight: "400",
-                                marginBottom: "20px",
-                                textTransform: "uppercase",
-                                paddingBottom: "20px",
-                                borderBottom: "1px solid " + theme.colors.borderContentModal
-                            }}
-                        >
-                            {"Crea nuovo utente"}
-                        </h3>
-                        <FormControl
-                            type="email"
-                            placeholder="Indirizzo email"
-                            style={R.merge(styles(theme).inputLine, {color: theme.colors.buttonPrimary})}
-                        />
-                    </form>
-                </FullscreenModal>
+                <UserRolesAssociator
+                    onHide={() => this.setState({showRolesAssociator: false})}
+                    show={this.state.showRolesAssociator}
+                />
+                {this.renderCreateUserModal(theme)}
             </div>
         );
     }
