@@ -9,7 +9,6 @@ import components from "components";
 
 import asteroid from "lib/asteroid";
 import {EXEC_ENV} from "lib/config";
-import {setTokenOnInnowatioSSO} from "lib/innowatio-sso";
 import LocalStorageMixin from "lib/localstorage-mixin";
 import measures from "lib/measures";
 import {getLoggedUser, isAdmin, isYousaveUser, isAuthorizedUser} from "lib/roles-utils";
@@ -84,7 +83,7 @@ var Root = React.createClass({
         asteroid.subscribe("users");
     },
     logout: function () {
-        setTokenOnInnowatioSSO(null, asteroid.logout.bind(asteroid));
+        asteroid.logout();
     },
     getTheme: function () {
         const colorTheme = this.props.reduxState.userSetting.theme.color || "dark";

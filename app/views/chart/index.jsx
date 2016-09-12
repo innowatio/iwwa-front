@@ -25,6 +25,7 @@ import {
 import {styles} from "lib/styles";
 import {defaultTheme} from "lib/theme";
 import {getTitleForSingleSensor, getStringPeriod, getSensorName} from "lib/page-header-utils";
+import mergeSiteSensors from "lib/merge-site-sensors";
 
 const measurementTypeButtonStyle = (theme) => R.merge(styles(theme).buttonSelectChart, {
     minWidth: "132px",
@@ -214,6 +215,14 @@ var Chart = React.createClass({
     },
     getSensorById: function (sensorId) {
         return this.props.collections.getIn(["sensors", sensorId]);
+    },
+    getSortedAndDecoratedSites: function () {
+        const sites = this.props.collections.get("sites") || Immutable.Map();
+        const sensors = this.props.collections.get("sensors") || Immutable.Map();
+
+        return sites
+            .map((value) => Immutable.fromJS(mergeSiteSensors(value, sensors)))
+            .sortBy(site => site.get("name"));
     },
     getConsumptionVariablesFromFullPath: function (fullPath) {
         if (R.isArrayLike(fullPath) && fullPath.length > 0) {
@@ -484,11 +493,11 @@ var Chart = React.createClass({
         );
     },
     renderSiteCompare: function () {
-        const sites = this.props.collections.get("sites") || Immutable.Map();
         const chartFilter = this.props.chartState.charts;
+
         return (
             <components.SiteNavigator
-                allowedValues={sites.sortBy(site => site.get("name"))}
+                allowedValues={this.getSortedAndDecoratedSites()}
                 onChange={this.onChangeWidgetValue}
                 path={this.state.value || (chartFilter[1] && chartFilter[1].fullPath) || []}
                 title={
@@ -515,10 +524,9 @@ var Chart = React.createClass({
         );
     },
     renderSiteNavigator: function () {
-        const sites = this.props.collections.get("sites") || Immutable.Map();
         return (
             <components.SiteNavigator
-                allowedValues={sites.sortBy(site => site.get("name"))}
+                allowedValues={this.getSortedAndDecoratedSites()}
                 onChange={this.onChangeWidgetValue}
                 path={this.state.value || this.props.chartState.charts[0].fullPath || []}
                 title={"QUALE PUNTO DI MISURAZIONE VUOI VISUALIZZARE?"}

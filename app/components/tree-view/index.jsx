@@ -51,6 +51,16 @@ var TreeView = React.createClass({
             };
         }, {position: 0, allowedValues: this.props.allowedValues});
 
+        /**
+
+            ATTENTION!
+
+            We don't filter the first level cause we suppose it's already ok
+            (and because it's a work around for a new request, for more info check the
+            `getChildrenSensors` method of the SiteNavigator component)
+
+        */
+
         allowedValues = this.applyFilters(allowedValues || []);
 
         const selectedValue = value ? [Immutable.Map({"id": value})] : [];

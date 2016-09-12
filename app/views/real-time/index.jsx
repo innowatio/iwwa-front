@@ -7,7 +7,6 @@ import {connect} from "react-redux";
 import {bindActionCreators} from "redux";
 
 import components from "components";
-import {decorateMeasure, addValueToMeasures} from "./utils";
 import * as sensorsDecorators from "lib/sensors-decorators";
 import {styles} from "lib/styles";
 import {selectRealTimeSite} from "actions/real-time";
@@ -92,8 +91,8 @@ var RealTime = React.createClass({
     },
     drawGauges: function () {
         const {colors} = this.getTheme();
-        if (this.findLatestMeasuresForEnergy().size > 0) {
-            return this.findLatestMeasuresForEnergy().map((measure) => {
+        if (this.findEnergyReadingsRealtime().size > 0) {
+            return this.findEnergyReadingsRealtime().map((measure) => {
                 var gaugeParams = {
                     id: measure.get("id"),
                     key: measure.get("key"),
@@ -154,8 +153,8 @@ var RealTime = React.createClass({
     },
     drawGaugeTotal: function () {
         const {colors} = this.getTheme();
-        if (this.findLatestMeasuresForEnergy().size > 0) {
-            const {value, unit} = this.findLatestMeasuresForEnergy().reduce((acc, measure) => {
+        if (this.findEnergyReadingsRealtime().size > 0) {
+            const {value, unit} = this.findEnergyReadingsRealtime().reduce((acc, measure) => {
                 return {
                     value: acc.value + parseFloat((measure.get("value")) || 0),
                     unit: measure.get("unit")
@@ -213,67 +212,39 @@ var RealTime = React.createClass({
             null
         );
     },
-    getMeasuresBySite: function () {
-        var selectedSiteId = this.props.realTime.site ?
-            this.getSite(this.props.realTime.fullPath[0]).get("_id") :
-            null;
-        var selectSite = this.getMeasures().find(function (measure) {
-            return measure.get("_id") === selectedSiteId;
-        });
-        return selectSite ?
-        selectSite.get("sensors") :
-        Immutable.Map();
-    },
     getGaugeLabel: function (params) {
         return (
             <components.MeasureLabel {...params} />
         );
     },
-    findLatestMeasuresWithCriteria: function (criteria) {
+    findFilteredReadingsRealtime (criteria) {
         const decorators = R.unnest(sensorsDecorators.allSensorsDecorator(this.getTheme()));
-        var res = Immutable.fromJS(decorators).filter(criteria);
-        if (this.props.realTime.fullPath && this.getMeasures().size) {
-            var decoMeasurements = this.getSite(this.props.realTime.fullPath[0]).get("sensors")
-                .map(sensor => {
-                    return decorateMeasure(sensor, this.getTheme());
-                });
-            res = R.filter(
-                criteria,
-                addValueToMeasures(
-                    decoMeasurements.flatten(1),
-                    this.getMeasuresBySite()
-            ));
-        }
-        return res;
+        const sensorsData = this.getSite(this.props.realTime.site) ? this.getSite(this.props.realTime.site).get("sensors") : Immutable.List();
+        const results = this.getMeasures().map((measure, index) => {
+            const decorator = decorators.find(x => (x.key === measure.get("measurementType")));
+            const sensorData = sensorsData.find(x => x.get("id") == measure.get("sensorId"));
+            if (decorator && sensorData) {
+                measure = measure.set("key", index);
+                measure = measure.set("color", decorator.color);
+                measure = measure.set("icon", decorator.icon);
+                measure = measure.set("id", measure.get("sensorId"));
+                measure = measure.set("unit", measure.get("unitOfMeasurement"));
+                measure = measure.set("value", measure.get("measurementValue"));
+                measure = measure.set("keyType", measure.get("measurementType"));
+                measure = measure.set("type", sensorData.get("type"));
+                measure = measure.set("description", sensorData.get("description"));
+                return measure;
+            }
+        }).filter(criteria).sortBy(x => x.get("sensorId"));
+        return results.toList();
     },
-    findLatestMeasuresForEnergy: function () {
-        var measures = this.findLatestMeasuresWithCriteria(decorator => {
-            return (
-                decorator.get("type") === "pod" &&
-                decorator.get("keyType") === "activeEnergy"
-            );
-        });
-        return measures.map(pod => {
-            var anzId = (pod.get("children") || Immutable.List()).map(anz => {
-                return decorateMeasure(anz, this.getTheme());
-            });
-            return pod.set("value", addValueToMeasures(
-                anzId.flatten(1),
-                this.getMeasuresBySite()
-            ).filter(decorator => {
-                return decorator.get("keyType") === "activeEnergy";
-            }).reduce((acc, measure) => {
-                return acc + (measure.get("value") || 0);
-            }, 0));
-        });
+    findReadingsRealtime () {
+        const result = this.findFilteredReadingsRealtime(x => x && (x.get("type") !== "pod" && x.get("type") !== "pod-anz"));
+        return result.sortBy(x => x.get("sensorId"));
     },
-    findLatestMeasuresForVariables: function () {
-        return this.findLatestMeasuresWithCriteria(decorator => {
-            return (
-                decorator.get("type") !== "pod" &&
-                decorator.get("type") !== "pod-anz"
-            );
-        });
+    findEnergyReadingsRealtime: function () {
+        var measures = this.findFilteredReadingsRealtime(x => x && (x.get("type") === "pod" && x.get("keyType") === "activeEnergy"));
+        return measures;
     },
     getSitoById: function (sitoId) {
         const sites = this.props.collections.get("sites") || Immutable.Map();
@@ -359,7 +330,7 @@ var RealTime = React.createClass({
                 </h3>
                 <components.VariablesPanel
                     numberOfConsumptionSensor={numberOfConsumptionSensor}
-                    values={this.findLatestMeasuresForVariables()}
+                    values={this.findReadingsRealtime()}
                 />
             </div>
         ) : null;
