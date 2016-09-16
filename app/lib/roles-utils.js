@@ -9,16 +9,33 @@ export function getLoggedUser (asteroid) {
     return users.get(asteroid.userId) || Map();
 }
 
-export function getRoles (asteroid) {
-    return (getLoggedUser(asteroid).get("roles") || List()).toArray();
+export function getGroups (asteroid) {
+    return (getLoggedUser(asteroid).get("groups") || List()).toArray();
 }
 
+export function getRoles (asteroid) {
+    return R.compose(
+        R.filter(R.identity),
+        R.uniq,
+        R.flatten,
+        R.map(function (groupName) {
+            const group = asteroid.collections.get("groups").find(function (v) {
+                return v.get("name") === groupName;
+            });
+            if (group && group.get("roles")) {
+                return group.get("roles").toJS();
+            }
+        })
+    )(getGroups(asteroid));
+}
+
+//TODO need to keep these until complete switch of roles management
 export function isAdmin (asteroid) {
-    return getRoles(asteroid).indexOf(ROLE_ADMIN) > -1;
+    return getGroups(asteroid).indexOf(ROLE_ADMIN) > -1;
 }
 
 export function isYousaveUser (asteroid) {
-    return getRoles(asteroid).indexOf(ROLE_YOUSAVE) > -1;
+    return getGroups(asteroid).indexOf(ROLE_YOUSAVE) > -1;
 }
 
 export function isAuthorizedUser (asteroid) {

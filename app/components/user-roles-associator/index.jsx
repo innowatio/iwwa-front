@@ -3,7 +3,7 @@ import React, {PropTypes} from "react";
 import IPropTypes from "react-immutable-proptypes";
 
 import {FullscreenModal} from "components";
-import {Tab, Tabs} from "react-bootstrap";
+import {Col, Tab, Tabs} from "react-bootstrap";
 
 import {styles} from "lib/styles";
 import {defaultTheme} from "lib/theme";
@@ -61,10 +61,40 @@ var UserRolesAssociator = React.createClass({
         );
     },
     renderRoleTab: function () {
-
+        return (
+            <Tab eventKey={1} title="Profili predefiniti">
+                <Col md={6}>
+                    {this.props.collections.get("groups").map(group => {
+                        return (
+                            <div>
+                                {group.get("name")}
+                            </div>
+                        );
+                    })}
+                </Col>
+                <Col md={6}>
+                    {"lista ruoli del gruppo selezionato"}
+                </Col>
+            </Tab>
+        );
     },
     renderFunctionsTab: function () {
-
+        return (
+            <Tab eventKey={2} title="Assegnazione funzioni manuale">
+                <Col md={6}>
+                    {"funzioni assegnate"}
+                </Col>
+                <Col md={6}>
+                    {this.props.collections.get("roles").map(group => {
+                        return (
+                            <div>
+                                {group.get("name")}
+                            </div>
+                        );
+                    })}
+                </Col>
+            </Tab>
+        );
     },
     render: function () {
         const theme = this.getTheme();
@@ -83,12 +113,8 @@ var UserRolesAssociator = React.createClass({
                             scopeSelector={".modal-container"}
                         />
                         <Tabs defaultActiveKey={1}>
-                            <Tab eventKey={1} title="Profili predefiniti">
-                                {"lista ruoli / lista funzionalità ruolo"}
-                            </Tab>
-                            <Tab eventKey={2} title="Assegnazione funzioni manuale">
-                                {"funzioni assegnate / funzioni disponibili"}
-                            </Tab>
+                            {this.renderRoleTab()}
+                            {this.renderFunctionsTab()}
                         </Tabs>
                     </div>
                 </FullscreenModal>

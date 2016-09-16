@@ -93,6 +93,8 @@ var Users = React.createClass({
     componentDidMount: function () {
         this.props.asteroid.subscribe("sensors");
         this.props.asteroid.subscribe("users");
+        this.props.asteroid.subscribe("groups");
+        this.props.asteroid.subscribe("roles");
     },
     getTheme: function () {
         return this.context.theme || defaultTheme;
@@ -274,6 +276,8 @@ var Users = React.createClass({
                     workAreaOldSensors={this.getUserSensors()}
                 />
                 <UserRolesAssociator
+                    asteroid={this.props.asteroid}
+                    collections={this.props.collections}
                     onHide={() => this.setState({showRolesAssociator: false})}
                     show={this.state.showRolesAssociator}
                 />
