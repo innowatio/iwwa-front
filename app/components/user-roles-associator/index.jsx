@@ -5,6 +5,7 @@ import IPropTypes from "react-immutable-proptypes";
 import {FullscreenModal} from "components";
 import {Col, Tab, Tabs} from "react-bootstrap";
 
+import {getGroupsRoles} from "lib/roles-utils";
 import {styles} from "lib/styles";
 import {defaultTheme} from "lib/theme";
 
@@ -24,6 +25,7 @@ var UserRolesAssociator = React.createClass({
         assignRoleToUsers: PropTypes.func.isRequired,
         asteroid: PropTypes.object,
         collections: IPropTypes.map,
+        onGroupSelect: PropTypes.func,
         onHide: PropTypes.func,
         show: PropTypes.bool,
         usersState: PropTypes.object.isRequired
@@ -66,14 +68,20 @@ var UserRolesAssociator = React.createClass({
                 <Col md={6}>
                     {this.props.collections.get("groups").map(group => {
                         return (
-                            <div>
+                            <div onClick={this.props.onGroupSelect}>
                                 {group.get("name")}
                             </div>
                         );
                     })}
                 </Col>
                 <Col md={6}>
-                    {"lista ruoli del gruppo selezionato"}
+                    {getGroupsRoles(this.props.usersState.selectedGroups, this.props.asteroid).map(role => {
+                        return (
+                            <div>
+                                {role.get("name")}
+                            </div>
+                        );
+                    })}
                 </Col>
             </Tab>
         );

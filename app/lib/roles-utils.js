@@ -14,6 +14,10 @@ export function getGroups (asteroid) {
 }
 
 export function getRoles (asteroid) {
+    return getGroupsRoles(getGroups(asteroid), asteroid);
+}
+
+export function getGroupsRoles (groups, asteroid) {
     return R.compose(
         R.filter(R.identity),
         R.uniq,
@@ -26,7 +30,7 @@ export function getRoles (asteroid) {
                 return group.get("roles").toJS();
             }
         })
-    )(getGroups(asteroid));
+    )(groups);
 }
 
 //TODO need to keep these until complete switch of roles management

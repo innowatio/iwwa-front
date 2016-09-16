@@ -35,7 +35,8 @@ import {
     assignSensorsToUsers,
     changeActiveStatus,
     deleteUsers,
-    selectUser
+    selectUser,
+    toggleGroup
 } from "actions/users";
 
 const lazyLoadButtonStyle = ({colors}) => ({
@@ -78,6 +79,7 @@ var Users = React.createClass({
         resetWorkAreaSensors: PropTypes.func.isRequired,
         selectUser: PropTypes.func.isRequired,
         sensorsState: PropTypes.object.isRequired,
+        toggleGroup: PropTypes.func.isRequired,
         usersState: PropTypes.object.isRequired
     },
     contextTypes: {
@@ -278,8 +280,10 @@ var Users = React.createClass({
                 <UserRolesAssociator
                     asteroid={this.props.asteroid}
                     collections={this.props.collections}
+                    onGroupSelect={this.props.toggleGroup}
                     onHide={() => this.setState({showRolesAssociator: false})}
                     show={this.state.showRolesAssociator}
+                    usersState={this.props.usersState}
                 />
                 {this.renderCreateUserModal(theme)}
             </div>
@@ -303,7 +307,8 @@ const mapDispatchToProps = (dispatch) => {
         filterSensors: bindActionCreators(filterSensors, dispatch),
         removeSensorFromWorkArea: bindActionCreators(removeSensorFromWorkArea, dispatch),
         resetWorkAreaSensors: bindActionCreators(resetWorkAreaSensors, dispatch),
-        selectUser: bindActionCreators(selectUser, dispatch)
+        selectUser: bindActionCreators(selectUser, dispatch),
+        toggleGroup: bindActionCreators(toggleGroup, dispatch)
     };
 };
 
