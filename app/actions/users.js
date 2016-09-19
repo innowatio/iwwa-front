@@ -6,6 +6,7 @@ import {getChildren, isActiveUser} from "lib/users-utils";
 
 import {getBasicObject} from "./utils";
 
+export const ADD_ROLE = "ADD_ROLE";
 export const SELECT_USER = "SELECT_USER";
 export const TOGGLE_GROUP = "TOGGLE_GROUP";
 export const USER_DELETE_SUCCESS = "USER_DELETE_SUCCESS";
@@ -83,3 +84,5 @@ function deleteUser (user, allUsers, dispatch) {
 }
 
 export const toggleGroup = group => getBasicObject(TOGGLE_GROUP, group);
+
+export const addRole = role => getBasicObject(ADD_ROLE, role);

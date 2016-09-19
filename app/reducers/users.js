@@ -1,4 +1,5 @@
 import {
+    ADD_ROLE,
     SELECT_USER,
     TOGGLE_GROUP
 } from "../actions/users";
@@ -7,19 +8,25 @@ import {addOrRemove} from "./utils";
 
 const defaultState = {
     selectedUsers: [],
-    selectedGroups: []
+    selectedGroups: [],
+    selectedRoles: []
 };
 
 function cloneState (state) {
     return {
         selectedUsers: state.selectedUsers.slice(),
-        selectedGroups: state.selectedGroups.slice()
+        selectedGroups: state.selectedGroups.slice(),
+        selectedRoles: state.selectedRoles.slice()
     };
 }
 
 export function users (state = defaultState, action) {
     var newState = cloneState(state);
     switch (action.type) {
+        case ADD_ROLE: {
+            newState.selectedRoles.push(action.payload);
+            break;
+        }
         case SELECT_USER: {
             const user = action.payload;
             newState.selectedUsers = addOrRemove(user, newState.selectedUsers, it => {

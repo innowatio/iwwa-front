@@ -3,7 +3,9 @@ import React, {PropTypes} from "react";
 import IPropTypes from "react-immutable-proptypes";
 
 import {FullscreenModal} from "components";
+import DraggableRole from "./draggable-role";
 import {Col, Tab, Tabs} from "react-bootstrap";
+import RoleDropArea from "./role-drop-area";
 
 import {getGroupsRoles} from "lib/roles-utils";
 import {styles} from "lib/styles";
@@ -22,6 +24,7 @@ const stylesFunction = ({colors}) => ({
 
 var UserRolesAssociator = React.createClass({
     propTypes: {
+        addRole: PropTypes.func.isRequired,
         assignRoleToUsers: PropTypes.func.isRequired,
         asteroid: PropTypes.object,
         collections: IPropTypes.map,
@@ -90,16 +93,13 @@ var UserRolesAssociator = React.createClass({
         return (
             <Tab eventKey={2} title="Assegnazione funzioni manuale">
                 <Col md={6}>
-                    {"funzioni assegnate"}
+                    <RoleDropArea
+                        addRole={this.props.addRole}
+                        roles={this.props.usersState.selectedRoles}
+                    />
                 </Col>
                 <Col md={6}>
-                    {this.props.collections.get("roles").map(group => {
-                        return (
-                            <div>
-                                {group.get("name")}
-                            </div>
-                        );
-                    })}
+                    {this.props.collections.get("roles").map(role => <DraggableRole role={role} />)}
                 </Col>
             </Tab>
         );

@@ -5,6 +5,7 @@ import HTML5Backend from "react-dnd-html5-backend";
 export const Types = {
     NUMBER: "number",
     OPERATOR: "operator",
+    ROLE: "role",
     SENSOR: "sensor",
     SENSOR_ROW: "sensor-row",
     USER_ROW: "user-row"

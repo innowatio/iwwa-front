@@ -32,6 +32,7 @@ import {
 } from "actions/sensors";
 
 import {
+    addRole,
     assignSensorsToUsers,
     changeActiveStatus,
     deleteUsers,
@@ -68,6 +69,7 @@ const stylesFunction = (theme) => ({
 
 var Users = React.createClass({
     propTypes: {
+        addRole: PropTypes.func.isRequired,
         addSensorToWorkArea: PropTypes.func.isRequired,
         assignSensorsToUsers: PropTypes.func.isRequired,
         asteroid: PropTypes.object,
@@ -278,6 +280,7 @@ var Users = React.createClass({
                     workAreaOldSensors={this.getUserSensors()}
                 />
                 <UserRolesAssociator
+                    addRole={this.props.addRole}
                     asteroid={this.props.asteroid}
                     collections={this.props.collections}
                     onGroupSelect={this.props.toggleGroup}
@@ -300,6 +303,7 @@ const mapStateToProps = (state) => {
 
 const mapDispatchToProps = (dispatch) => {
     return {
+        addRole: bindActionCreators(addRole, dispatch),
         addSensorToWorkArea: bindActionCreators(addSensorToWorkArea, dispatch),
         assignSensorsToUsers: bindActionCreators(assignSensorsToUsers, dispatch),
         changeActiveStatus: bindActionCreators(changeActiveStatus, dispatch),
