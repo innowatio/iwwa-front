@@ -68,17 +68,17 @@ var UserRolesAssociator = React.createClass({
                 <Col md={6}>
                     {this.props.collections.get("groups").map(group => {
                         return (
-                            <div onClick={this.props.onGroupSelect}>
+                            <div onClick={() => this.props.onGroupSelect(group.get("name"))}>
                                 {group.get("name")}
                             </div>
                         );
                     })}
                 </Col>
                 <Col md={6}>
-                    {getGroupsRoles(this.props.usersState.selectedGroups, this.props.asteroid).map(role => {
+                    {getGroupsRoles(this.props.usersState.selectedGroups, this.props.asteroid).map(roleName => {
                         return (
                             <div>
-                                {role.get("name")}
+                                {roleName}
                             </div>
                         );
                     })}
