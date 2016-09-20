@@ -7,6 +7,7 @@ import {getChildren, isActiveUser} from "lib/users-utils";
 import {getBasicObject} from "./utils";
 
 export const ADD_ROLE = "ADD_ROLE";
+export const REMOVE_ROLE = "REMOVE_ROLE";
 export const SELECT_USER = "SELECT_USER";
 export const TOGGLE_GROUP = "TOGGLE_GROUP";
 export const USER_DELETE_SUCCESS = "USER_DELETE_SUCCESS";
@@ -86,3 +87,44 @@ function deleteUser (user, allUsers, dispatch) {
 export const toggleGroup = group => getBasicObject(TOGGLE_GROUP, group);
 
 export const addRole = role => getBasicObject(ADD_ROLE, role);
+
+export const removeRole = role => getBasicObject(REMOVE_ROLE, role);
+
+export const assignGroupsToUsers = (users, groups) => {
+    console.log(users);
+    console.log(groups);
+    return dispatch => {
+        dispatch({
+            type: "ASSIGNING_GROUPS_TO_USERS"
+        });
+        //TODO
+        // if (users.length == 1) {
+        //     assignSensorsToUser(dispatch, users[0], sensors);
+        // } else {
+        //     users.forEach(user => {
+        //         const mergedSensors = user.get("sensors") ? R.compose(R.uniq, R.flatten)([user.get("sensors").toJS(), sensors]) : sensors;
+        //         assignSensorsToUser(dispatch, user, mergedSensors);
+        //     });
+        // }
+    };
+};
+
+export const saveAndAssignGroupToUsers = (users, groupName, roles) => {
+    console.log(users);
+    console.log(groupName);
+    console.log(roles);
+    return dispatch => {
+        //TODO
+        dispatch({
+            type: "ASSIGNING_GROUPS_TO_USERS"
+        });
+        // if (users.length == 1) {
+        //     assignSensorsToUser(dispatch, users[0], sensors);
+        // } else {
+        //     users.forEach(user => {
+        //         const mergedSensors = user.get("sensors") ? R.compose(R.uniq, R.flatten)([user.get("sensors").toJS(), sensors]) : sensors;
+        //         assignSensorsToUser(dispatch, user, mergedSensors);
+        //     });
+        // }
+    };
+};

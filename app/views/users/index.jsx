@@ -33,9 +33,11 @@ import {
 
 import {
     addRole,
+    assignGroupsToUsers,
     assignSensorsToUsers,
     changeActiveStatus,
     deleteUsers,
+    removeRole,
     selectUser,
     toggleGroup
 } from "actions/users";
@@ -71,12 +73,14 @@ var Users = React.createClass({
     propTypes: {
         addRole: PropTypes.func.isRequired,
         addSensorToWorkArea: PropTypes.func.isRequired,
+        assignGroupsToUsers: PropTypes.func.isRequired,
         assignSensorsToUsers: PropTypes.func.isRequired,
         asteroid: PropTypes.object,
         changeActiveStatus: PropTypes.func.isRequired,
         collections: IPropTypes.map,
         deleteUsers: PropTypes.func.isRequired,
         filterSensors: PropTypes.func.isRequired,
+        removeRole: PropTypes.func.isRequired,
         removeSensorFromWorkArea: PropTypes.func.isRequired,
         resetWorkAreaSensors: PropTypes.func.isRequired,
         selectUser: PropTypes.func.isRequired,
@@ -281,10 +285,12 @@ var Users = React.createClass({
                 />
                 <UserRolesAssociator
                     addRole={this.props.addRole}
+                    assignGroupsToUsers={this.props.assignGroupsToUsers}
                     asteroid={this.props.asteroid}
                     collections={this.props.collections}
                     onGroupSelect={this.props.toggleGroup}
                     onHide={() => this.setState({showRolesAssociator: false})}
+                    removeRole={this.props.removeRole}
                     show={this.state.showRolesAssociator}
                     usersState={this.props.usersState}
                 />
@@ -305,10 +311,12 @@ const mapDispatchToProps = (dispatch) => {
     return {
         addRole: bindActionCreators(addRole, dispatch),
         addSensorToWorkArea: bindActionCreators(addSensorToWorkArea, dispatch),
+        assignGroupsToUsers: bindActionCreators(assignGroupsToUsers, dispatch),
         assignSensorsToUsers: bindActionCreators(assignSensorsToUsers, dispatch),
         changeActiveStatus: bindActionCreators(changeActiveStatus, dispatch),
         deleteUsers: bindActionCreators(deleteUsers, dispatch),
         filterSensors: bindActionCreators(filterSensors, dispatch),
+        removeRole: bindActionCreators(removeRole, dispatch),
         removeSensorFromWorkArea: bindActionCreators(removeSensorFromWorkArea, dispatch),
         resetWorkAreaSensors: bindActionCreators(resetWorkAreaSensors, dispatch),
         selectUser: bindActionCreators(selectUser, dispatch),

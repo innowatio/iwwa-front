@@ -1,5 +1,6 @@
 import {
     ADD_ROLE,
+    REMOVE_ROLE,
     SELECT_USER,
     TOGGLE_GROUP
 } from "../actions/users";
@@ -25,6 +26,10 @@ export function users (state = defaultState, action) {
     switch (action.type) {
         case ADD_ROLE: {
             newState.selectedRoles.push(action.payload);
+            break;
+        }
+        case REMOVE_ROLE: {
+            newState.selectedRoles.splice(action.payload, 1);
             break;
         }
         case SELECT_USER: {

@@ -7,6 +7,7 @@ var RoleDropArea = React.createClass({
     propTypes: {
         addRole: PropTypes.func.isRequired,
         connectDropTarget: PropTypes.func,
+        removeRole: PropTypes.func.isRequired,
         roles: PropTypes.array.isRequired
     },
     render: function () {
@@ -14,7 +15,7 @@ var RoleDropArea = React.createClass({
         return connectDropTarget(
             <div style={{minHeight: "300px"}}>
                 {roles.map(role => (
-                    <div>
+                    <div onClick={() => this.props.removeRole(role)}>
                         {role}
                     </div>
                 ))}
