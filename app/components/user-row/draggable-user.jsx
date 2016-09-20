@@ -81,7 +81,7 @@ var DraggableUser = React.createClass({
                 <Style
                     rules={{".registered-user:hover": hoverStyle(theme)}}
                 />
-                <div onClick={() => this.props.onSelect(user)} style={{display: "inline-block", width: "90%"}}>
+                <div onClick={() => this.props.onSelect(user)} style={{float: "left", width: "90%", paddingTop: "2px"}}>
                     <label style={{width: indent + "%"}} />
                     <label style={{cursor: "inherit", width: (70 - indent) + "%"}}>
                         {getUsername(user)}
@@ -90,8 +90,8 @@ var DraggableUser = React.createClass({
                         {!R.isNil(user.get("roles")) ? user.get("roles").join(", ") : ""}
                     </label>
                 </div>
-                <div style={{display: "inline"}}>
-                    <Toggle 
+                <div style={{display: "inline-block", paddingTop: "8px"}}>
+                    <Toggle
                         defaultChecked={isActiveUser(user)}
                         onChange={() => this.props.onChangeActiveStatus(user)}
                     />

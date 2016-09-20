@@ -33,11 +33,9 @@ import {
 
 import {
     addRole,
-    assignGroupsToUsers,
     assignSensorsToUsers,
     changeActiveStatus,
     deleteUsers,
-    removeRole,
     selectUser,
     toggleGroup
 } from "actions/users";
@@ -59,13 +57,28 @@ const lazyLoadButtonStyle = ({colors}) => ({
 
 const stylesFunction = (theme) => ({
     buttonIconStyle: {
-        backgroundColor: theme.colors.buttonPrimary,
-        border: "0px none",
+        backgroundColor: theme.colors.primary,
+        border: "0px",
         borderRadius: "100%",
         height: "50px",
-        margin: "auto",
         width: "50px",
-        marginLeft: "10px"
+        padding: "0px",
+        textAlign: "center",
+        margin: "0px 5px"
+    },
+    buttonIcon: {
+        lineHeight: "25px",
+        verticalAlign: "middle"
+    },
+    listItems: {
+        width: "100%",
+        height: "auto",
+        verticalAlign: "middle",
+        lineHeight: "45px",
+        minHeight: "50px",
+        cursor: "pointer",
+        fontSize: "16px",
+        borderLeft: "3px solid " + theme.colors.borderSensorsTable
     }
 });
 
@@ -73,14 +86,12 @@ var Users = React.createClass({
     propTypes: {
         addRole: PropTypes.func.isRequired,
         addSensorToWorkArea: PropTypes.func.isRequired,
-        assignGroupsToUsers: PropTypes.func.isRequired,
         assignSensorsToUsers: PropTypes.func.isRequired,
         asteroid: PropTypes.object,
         changeActiveStatus: PropTypes.func.isRequired,
         collections: IPropTypes.map,
         deleteUsers: PropTypes.func.isRequired,
         filterSensors: PropTypes.func.isRequired,
-        removeRole: PropTypes.func.isRequired,
         removeSensorFromWorkArea: PropTypes.func.isRequired,
         resetWorkAreaSensors: PropTypes.func.isRequired,
         selectUser: PropTypes.func.isRequired,
@@ -153,19 +164,22 @@ var Users = React.createClass({
         return aLabel > bLabel ? -1 : 1;
     },
     renderUserList: function (user) {
+        const theme = this.getTheme();
         return (
-            <UserRow
-                getChildren={userId => getChildren(userId, this.getAllUsers())}
-                indent={0}
-                isSelected={userId => {
-                    return R.find(it => {
-                        return it.get("_id") === userId;
-                    })(this.props.usersState.selectedUsers) != null;
-                }}
-                onChangeActiveStatus={this.props.changeActiveStatus}
-                onSelect={this.props.selectUser}
-                user={user}
-            />
+            <div style={stylesFunction(theme).listItems}>
+                <UserRow
+                    getChildren={userId => getChildren(userId, this.getAllUsers())}
+                    indent={1}
+                    isSelected={userId => {
+                        return R.find(it => {
+                            return it.get("_id") === userId;
+                        })(this.props.usersState.selectedUsers) != null;
+                    }}
+                    onChangeActiveStatus={this.props.changeActiveStatus}
+                    onSelect={this.props.selectUser}
+                    user={user}
+                />
+            </div>
         );
     },
     renderCreateUserModal: function (theme) {
@@ -197,7 +211,12 @@ var Users = React.createClass({
                     <FormControl
                         type="email"
                         placeholder="Indirizzo email"
-                        style={R.merge(styles(theme).inputLine, {color: theme.colors.buttonPrimary})}
+                        style={R.merge(styles(theme).inputLine, {
+                            color: theme.colors.buttonPrimary,
+                            padding: "20px",
+                            margin: "5%",
+                            width: "90%"
+                        })}
                     />
                 </form>
             </FullscreenModal>
@@ -217,7 +236,7 @@ var Users = React.createClass({
                                 color={theme.colors.iconHeader}
                                 icon={"add"}
                                 size={"28px"}
-                                style={{lineHeight: "45px"}}
+                                style={stylesFunction(theme).buttonIcon}
                             />
                         </Button>
                     </div>
@@ -230,8 +249,8 @@ var Users = React.createClass({
                             <Icon
                                 color={theme.colors.iconHeader}
                                 icon={"gauge"}
-                                size={"28px"}
-                                style={{lineHeight: "45px"}}
+                                size={"30px"}
+                                style={stylesFunction(theme).buttonIcon}
                             />
                         </Button>
                         <Button
@@ -241,9 +260,19 @@ var Users = React.createClass({
                         >
                             <Icon
                                 color={theme.colors.iconHeader}
-                                icon={"edit"}
-                                size={"28px"}
-                                style={{lineHeight: "45px"}}
+                                icon={"user-functions"}
+                                size={"34px"}
+                                style={stylesFunction(theme).buttonIcon}
+                            />
+                        </Button>
+                        <Button
+                            style={stylesFunction(theme).buttonIconStyle}
+                        >
+                            <Icon
+                                color={theme.colors.iconHeader}
+                                icon={"clone"}
+                                size={"34px"}
+                                style={stylesFunction(theme).buttonIcon}
                             />
                         </Button>
                         <DeleteWithConfirmButton
@@ -254,7 +283,16 @@ var Users = React.createClass({
                 </SectionToolbar>
 
                 <div className="table-user">
-                    <div style={{width: "98%", position: "relative", left: "1%", marginTop: "20px"}}>
+                    <div style={{
+                        width: "98%",
+                        position: "relative",
+                        left: "1%",
+                        borderRadius: "20px",
+                        marginTop: "20px",
+                        padding: "5px 20px 20px 20px",
+                        border: "1px solid " + theme.colors.borderUsersTable,
+                        backgroundColor: theme.colors.backgroundUsersTable
+                    }}>
                         <CollectionItemList
                             collections={geUsersForManagement(this.getAllUsers())}
                             filter={this.searchFilter}
@@ -285,12 +323,10 @@ var Users = React.createClass({
                 />
                 <UserRolesAssociator
                     addRole={this.props.addRole}
-                    assignGroupsToUsers={this.props.assignGroupsToUsers}
                     asteroid={this.props.asteroid}
                     collections={this.props.collections}
                     onGroupSelect={this.props.toggleGroup}
                     onHide={() => this.setState({showRolesAssociator: false})}
-                    removeRole={this.props.removeRole}
                     show={this.state.showRolesAssociator}
                     usersState={this.props.usersState}
                 />
@@ -311,12 +347,10 @@ const mapDispatchToProps = (dispatch) => {
     return {
         addRole: bindActionCreators(addRole, dispatch),
         addSensorToWorkArea: bindActionCreators(addSensorToWorkArea, dispatch),
-        assignGroupsToUsers: bindActionCreators(assignGroupsToUsers, dispatch),
         assignSensorsToUsers: bindActionCreators(assignSensorsToUsers, dispatch),
         changeActiveStatus: bindActionCreators(changeActiveStatus, dispatch),
         deleteUsers: bindActionCreators(deleteUsers, dispatch),
         filterSensors: bindActionCreators(filterSensors, dispatch),
-        removeRole: bindActionCreators(removeRole, dispatch),
         removeSensorFromWorkArea: bindActionCreators(removeSensorFromWorkArea, dispatch),
         resetWorkAreaSensors: bindActionCreators(resetWorkAreaSensors, dispatch),
         selectUser: bindActionCreators(selectUser, dispatch),

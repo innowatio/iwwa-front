@@ -71,11 +71,24 @@ var UserRow = React.createClass({
         return (
             <div style={{color: theme.colors.greySubTitle}}>
                 <label style={{width: this.props.indent + "%"}} />
-                <Icon
-                    icon={"danger"}
-                    size={"20px"}
-                    style={{lineHeight: "20px", marginRight: "10px"}}
-                />
+                <div style={{
+                    display: "inline-block",
+                    width: "28px",
+                    height: "28px",
+                    marginRight: "10px",
+                    border: "1px solid " + theme.colors.greySubTitle,
+                    backgroundColor: theme.colors.backgroundUserIcon,
+                    borderRadius: "100%",
+                    textAlign: "center",
+                    verticalAlign: "middle",
+                    lineHeight: "28px"
+                }}>
+                    <Icon
+                        color={theme.colors.white}
+                        icon={"danger"}
+                        size={"16px"}
+                    />
+                </div>
                 {getUsername(this.props.user)}
             </div>
         );

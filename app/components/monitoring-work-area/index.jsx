@@ -50,7 +50,7 @@ var MonitoringWorkArea = React.createClass({
         return this.context.theme || defaultTheme;
     },
     getSortFunc: function () {
-        return R.partialRight(this.sortByLabel, [true]);    
+        return R.partialRight(this.sortByLabel, [true]);
     },
     searchFilter: function (item) {
         const {primaryTagsToFilter, tagsToFilter, wordsToFilter} = this.props.filters;
@@ -159,7 +159,6 @@ var MonitoringWorkArea = React.createClass({
                             height: "100%",
                             overflow: "auto",
                             overflowY: "scroll",
-                            marginRight: "-15px",
                             borderRadius: "18px"
                         }}>
                             <CollectionItemList

@@ -81,7 +81,7 @@ var MonitoringSensorsAssociator = React.createClass({
                     onHide={() => this.setState({showConfirmModal: true})}
                     renderConfirmButton={false}
                     show={this.props.show}
-                    title={"Assegna sensori all'utente"}
+                    title={"ASSEGNA SENSORI ALL'UTENTE"}
                 >
                     <MonitoringSensorsSelector
                         addSensorToWorkArea={this.props.addSensorToWorkArea}

@@ -193,7 +193,7 @@ var UserRolesAssociator = React.createClass({
                     onHide={() => this.setState({showConfirmModal: true})}
                     renderConfirmButton={false}
                     show={this.props.show}
-                    title={"Assegna funzioni all'utente"}
+                    title={"assegna funzioni all'utente"}
                 >
                     <div style={{margin: "0px 5% 0px 5%"}} className="modal-container">
                         <Radium.Style
