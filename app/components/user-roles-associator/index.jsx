@@ -5,7 +5,7 @@ import IPropTypes from "react-immutable-proptypes";
 
 import {Button, FullscreenModal} from "components";
 import DraggableRole from "./draggable-role";
-import {Col, FormControl, Tab, Tabs} from "react-bootstrap";
+import {Col, Clearfix, FormControl, Row, Tab, Tabs} from "react-bootstrap";
 import RoleDropArea from "./role-drop-area";
 
 import {getGroupsRoles} from "lib/roles-utils";
@@ -112,121 +112,140 @@ var UserRolesAssociator = React.createClass({
         const {usersState} = this.props;
         return (
             <Tab eventKey={1} title="Profili predefiniti">
-                <Col md={6}>
-                    {this.props.collections.get("groups").map(group => {
-                        return (
-                            <div onClick={() => this.props.onGroupSelect(group.get("name"))}>
-                                {group.get("name")}
-                            </div>
-                        );
-                    })}
-                </Col>
-                <Col md={6}>
-                    {getGroupsRoles(usersState.selectedGroups, this.props.asteroid).map(roleName => {
-                        return (
-                            <div>
-                                {roleName}
-                            </div>
-                        );
-                    })}
-                </Col>
-                <Button
-                    onClick={() => this.props.assignGroupsToUsers(usersState.selectedUsers, usersState.selectedGroups)}
-                    style={{
-                        color: theme.colors.white,
-                        borderRadius: "30px",
-                        fontWeight: "300",
-                        width: "120px",
-                        height: "45px",
-                        lineHeight: "45px",
-                        padding: "0px",
-                        fontSize: "20px",
-                        border: "0px",
-                        backgroundColor: theme.colors.buttonPrimary
-                    }}
-                >
-                    {"OK"}
-                </Button>
+                <Row>
+                    <Col xs={6} style={{marginTop: "10px"}}>
+                        {this.props.collections.get("groups").map(group => {
+                            return (
+                                <Button
+                                    className="hoverButton"
+                                    style={{
+                                        color: theme.colors.white,
+                                        textTransform: "uppercase",
+                                        fontSize: "16px",
+                                        fontWeight: "300",
+                                        padding: "10px 20px",
+                                        backgroundColor: theme.colors.transparent,
+                                        border: "0px"
+                                    }}
+                                    onClick={() => this.props.onGroupSelect(group.get("name"))}
+                                >
+                                    <Radium.Style
+                                        rules={{
+                                            "": {
+                                                display: "block"
+                                            },
+                                            ":hover": {
+                                                color: theme.colors.buttonPrimary + "!important"
+                                            }
+                                        }}
+                                        scopeSelector={".hoverButton"}
+                                    />
+                                    {group.get("name")}
+                                </Button>
+                            );
+                        })}
+                    </Col>
+                    <Col xs={6} style={{marginTop: "10px"}}>
+                        {getGroupsRoles(usersState.selectedGroups, this.props.asteroid).map(roleName => {
+                            return (
+                                <div style={{
+                                    color: theme.colors.white,
+                                    textTransform: "uppercase",
+                                    fontSize: "16px",
+                                    fontWeight: "300",
+                                    padding: "10px 20px"
+                                }}>
+                                    {roleName}
+                                </div>
+                            );
+                        })}
+                    </Col>
+                    <Clearfix />
+                </Row>
+                <Row style={{textAlign: "center"}}>
+                    <Button
+                        onClick={() => this.props.assignGroupsToUsers(usersState.selectedUsers, usersState.selectedGroups)}
+                        style={{
+                            textAlign: "center",
+                            color: theme.colors.white,
+                            borderRadius: "30px",
+                            fontWeight: "300",
+                            width: "220px",
+                            height: "45px",
+                            lineHeight: "45px",
+                            padding: "0px",
+                            fontSize: "20px",
+                            border: "0px",
+                            backgroundColor: theme.colors.buttonPrimary
+                        }}
+                    >
+                        {"OK"}
+                    </Button>
+                </Row>
             </Tab>
         );
     },
     renderFunctionsTab: function (theme) {
         return (
-            <Tab className="tab" eventKey={2} title="Assegnazione funzioni manuale">
-                <Radium.Style
-                    rules={{
-                        "ul": {
-                            border: "0px",
-                            height: "55px",
-                            backgroundColor: theme.colors.secondary
-                        },
-                        "ul li": {
+            <Tab eventKey={2} title="Assegnazione funzioni manuale">
+                <Row style={{margin: "20px"}}>
+                    <Col md={6} style={{marginTop: "10px", color: theme.colors.white, fontWeight: 300}}>
+                        <p style={{fontSize: "18px"}}>{"FUNZIONI ASSEGNATE"}</p>
+                        <RoleDropArea
+                            addRole={this.props.addRole}
+                            removeRole={this.props.removeRole}
+                            roles={this.props.usersState.selectedRoles}
+                        />
+
+                    </Col>
+                    <Col
+                        md={6}
+                        style={{
+                            borderLeft: "1px solid " + theme.colors.white,
+                            marginTop: "10px",
                             color: theme.colors.white,
-                            margin: "0 1.5%"
-                        },
-                        "ul li a": {
-                            height: "55px",
-                            lineHeight: "55px",
-                            fontSize: "17px",
-                            textTransform: "uppercase",
-                            padding: "0px 4px"
-                        },
-                        ".nav-tabs > li > a": {
-                            height: "44px",
+                            fontWeight: 300
+                        }}
+                    >
+                        <p style={{fontSize: "18px"}}>{"FUNZIONI DISPONIBILI"}</p>
+                        <div style={{
                             color: theme.colors.white,
-                            border: "0px",
-                            outline: "none",
-                            borderBottom: "3px solid" + theme.colors.secondary
-                        },
-                        ".nav-tabs > li:hover > a:hover": {
-                            fontWeight: "400"
-                        },
-                        ".nav-tabs > li.active > a, .nav-tabs > li > a:hover, .nav-tabs > li.active > a:hover, .nav-tabs > li.active > a:focus": {
-                            height: "44px",
-                            fontSize: "17px",
-                            fontWeight: "500",
+                            fontSize: "14px",
+                            fontWeight: "300"
+                        }}>
+                            {this.props.collections.get("roles").map(role =>
+                                <DraggableRole
+                                    style={{
+                                        padding: "5px 20px",
+                                        border: "1px solid " + theme.colors.white,
+                                        borderRadius: "100%"
+                                    }}
+                                    role={role}
+                                />
+                            )}
+                        </div>
+                    </Col>
+                    <Clearfix />
+                </Row>
+                <Row style={{textAlign: "center", margin: "20px 0px"}}>
+                    <Button
+                        onClick={() => this.setState({showSaveGroupModal: true})}
+                        style={{
                             color: theme.colors.white,
+                            borderRadius: "30px",
+                            fontWeight: "300",
+                            width: "220px",
+                            height: "45px",
+                            lineHeight: "45px",
+                            padding: "0px",
+                            fontSize: "20px",
                             border: "0px",
-                            borderRadius: "0px",
-                            outline: "none",
-                            backgroundColor: theme.colors.secondary,
-                            borderBottom: "3px solid" + theme.colors.buttonPrimary,
-                            outlineStyle: "none",
-                            outlineWidth: "0px"
-                        },
-                        ".nav > li > a:hover, .nav > li > a:focus": {
-                            background: theme.colors.transparent
-                        }
-                    }}
-                    scopeSelector=".tab"
-                />
-                <Col md={6}>
-                    <RoleDropArea
-                        addRole={this.props.addRole}
-                        removeRole={this.props.removeRole}
-                        roles={this.props.usersState.selectedRoles}
-                    />
-                </Col>
-                <Col md={6}>
-                    {this.props.collections.get("roles").map(role => <DraggableRole role={role} />)}
-                </Col>
-                <Button
-                    onClick={() => this.setState({showSaveGroupModal: true})}
-                    style={{
-                        color: theme.colors.white,
-                        borderRadius: "30px",
-                        fontWeight: "300",
-                        width: "120px",
-                        height: "45px",
-                        lineHeight: "45px",
-                        padding: "0px",
-                        fontSize: "20px",
-                        border: "0px",
-                        backgroundColor: theme.colors.buttonPrimary
-                    }}
-                >
-                    {"SALVA CON NOME"}
-                </Button>
+                            backgroundColor: theme.colors.buttonPrimary
+                        }}
+                    >
+                        {"SALVA CON NOME"}
+                    </Button>
+                </Row>
                 {this.renderSaveGroupModal(theme)}
             </Tab>
         );
@@ -247,7 +266,55 @@ var UserRolesAssociator = React.createClass({
                             rules={styles(theme).formFields}
                             scopeSelector={".modal-container"}
                         />
-                        <Tabs defaultActiveKey={1}>
+                        <Tabs className="tabs" defaultActiveKey={1}>
+                            <Radium.Style
+                                rules={{
+                                    "ul": {
+                                        border: "0px",
+                                        height: "55px",
+                                        backgroundColor: theme.colors.transparent,
+                                        borderBottom: "1px solid " + theme.colors.white
+                                    },
+                                    "ul li": {
+                                        color: theme.colors.white,
+                                        margin: "0 1.5%"
+                                    },
+                                    "ul li a": {
+                                        height: "55px",
+                                        lineHeight: "55px",
+                                        fontSize: "17px",
+                                        textTransform: "uppercase",
+                                        padding: "0px 4px"
+                                    },
+                                    ".nav-tabs > li > a": {
+                                        height: "44px",
+                                        color: theme.colors.white,
+                                        border: "0px",
+                                        outline: "none",
+                                        borderBottom: "3px solid" + theme.colors.transparent
+                                    },
+                                    ".nav-tabs > li:hover > a:hover": {
+                                        fontWeight: "400"
+                                    },
+                                    ".nav-tabs > li.active > a, .nav-tabs > li > a:hover, .nav-tabs > li.active > a:hover, .nav-tabs > li.active > a:focus": {
+                                        height: "44px",
+                                        fontSize: "17px",
+                                        fontWeight: "500",
+                                        color: theme.colors.white,
+                                        border: "0px",
+                                        borderRadius: "0px",
+                                        outline: "none",
+                                        backgroundColor: theme.colors.transparent,
+                                        borderBottom: "3px solid" + theme.colors.buttonPrimary,
+                                        outlineStyle: "none",
+                                        outlineWidth: "0px"
+                                    },
+                                    ".nav > li > a:hover, .nav > li > a:focus": {
+                                        background: theme.colors.transparent
+                                    }
+                                }}
+                                scopeSelector=".tabs"
+                            />
                             {this.renderRoleTab(theme)}
                             {this.renderFunctionsTab(theme)}
                         </Tabs>
