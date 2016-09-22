@@ -446,18 +446,26 @@ var SummaryConsumptions = React.createClass({
                 </div>
                 <div style={styleRightPane(theme)}>
                     <div style={{clear: "both", height: "50px", width: "100%"}}>
-                        <components.Button className="pull-right" onClick={this.openModal} style={styleSiteButton(theme)} >
-                            <components.Icon
-                                color={theme.colors.iconSiteButton}
-                                icon={"map"}
-                                size={"38px"}
-                                style={{
-                                    textAlign: "center",
-                                    verticalAlign: "middle",
-                                    lineHeight: "20px"
-                                }}
-                            />
-                        </components.Button>
+                        <bootstrap.OverlayTrigger
+                            overlay={<bootstrap.Tooltip className="buttonInfo">
+                                {"Seleziona punto di misurazione"}
+                            </bootstrap.Tooltip>}
+                            placement="bottom"
+                            rootClose={true}
+                        >
+                            <components.Button className="pull-right" onClick={this.openModal} style={styleSiteButton(theme)} >
+                                <components.Icon
+                                    color={theme.colors.iconSiteButton}
+                                    icon={"map"}
+                                    size={"38px"}
+                                    style={{
+                                        textAlign: "center",
+                                        verticalAlign: "middle",
+                                        lineHeight: "20px"
+                                    }}
+                                />
+                            </components.Button>
+                        </bootstrap.OverlayTrigger>
                         <components.FullscreenModal
                             onConfirm={this.onConfirmFullscreenModal}
                             onHide={this.closeModal}

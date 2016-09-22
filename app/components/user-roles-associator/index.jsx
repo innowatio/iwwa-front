@@ -152,7 +152,54 @@ var UserRolesAssociator = React.createClass({
     },
     renderFunctionsTab: function (theme) {
         return (
-            <Tab eventKey={2} title="Assegnazione funzioni manuale">
+            <Tab className="tab" eventKey={2} title="Assegnazione funzioni manuale">
+                <Radium.Style
+                    rules={{
+                        "ul": {
+                            border: "0px",
+                            height: "55px",
+                            backgroundColor: theme.colors.secondary
+                        },
+                        "ul li": {
+                            color: theme.colors.white,
+                            margin: "0 1.5%"
+                        },
+                        "ul li a": {
+                            height: "55px",
+                            lineHeight: "55px",
+                            fontSize: "17px",
+                            textTransform: "uppercase",
+                            padding: "0px 4px"
+                        },
+                        ".nav-tabs > li > a": {
+                            height: "44px",
+                            color: theme.colors.white,
+                            border: "0px",
+                            outline: "none",
+                            borderBottom: "3px solid" + theme.colors.secondary
+                        },
+                        ".nav-tabs > li:hover > a:hover": {
+                            fontWeight: "400"
+                        },
+                        ".nav-tabs > li.active > a, .nav-tabs > li > a:hover, .nav-tabs > li.active > a:hover, .nav-tabs > li.active > a:focus": {
+                            height: "44px",
+                            fontSize: "17px",
+                            fontWeight: "500",
+                            color: theme.colors.white,
+                            border: "0px",
+                            borderRadius: "0px",
+                            outline: "none",
+                            backgroundColor: theme.colors.secondary,
+                            borderBottom: "3px solid" + theme.colors.buttonPrimary,
+                            outlineStyle: "none",
+                            outlineWidth: "0px"
+                        },
+                        ".nav > li > a:hover, .nav > li > a:focus": {
+                            background: theme.colors.transparent
+                        }
+                    }}
+                    scopeSelector=".tab"
+                />
                 <Col md={6}>
                     <RoleDropArea
                         addRole={this.props.addRole}

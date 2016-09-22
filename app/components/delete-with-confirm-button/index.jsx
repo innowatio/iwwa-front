@@ -1,5 +1,5 @@
 import React, {PropTypes} from "react";
-
+import * as bootstrap from "react-bootstrap";
 import {defaultTheme} from "lib/theme";
 
 import {
@@ -58,18 +58,26 @@ var DeleteWithConfirmButton = React.createClass({
         const theme = this.getTheme();
         return (
             <div style={{display: "inline"}}>
-                <Button
-                    disabled={this.props.disabled}
-                    onClick={this.openConfirmModal}
-                    style={stylesFunction(theme).buttonIconStyle}
+                <bootstrap.OverlayTrigger
+                    overlay={<bootstrap.Tooltip className="buttonInfo">
+                        {"Elimina"}
+                    </bootstrap.Tooltip>}
+                    placement="bottom"
+                    rootClose={true}
                 >
-                    <Icon
-                        color={theme.colors.iconHeader}
-                        icon={"close"}
-                        size={"28px"}
-                        style={{lineHeight: "45px"}}
-                    />
-                </Button>
+                    <Button
+                        disabled={this.props.disabled}
+                        onClick={this.openConfirmModal}
+                        style={stylesFunction(theme).buttonIconStyle}
+                    >
+                        <Icon
+                            color={theme.colors.iconHeader}
+                            icon={"close"}
+                            size={"28px"}
+                            style={{lineHeight: "45px"}}
+                        />
+                    </Button>
+                </bootstrap.OverlayTrigger>
                 <FullscreenModal
                     onConfirm={() => {
                         this.props.onConfirm();

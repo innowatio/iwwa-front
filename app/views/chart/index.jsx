@@ -587,14 +587,20 @@ var Chart = React.createClass({
                     <div style={{fontSize: "18px", marginBottom: "0px", paddingTop: "16px", width: "100%"}}>
                         {this.getTitleForChart().toUpperCase()}
                     </div>
-                    <components.Button style={alarmButtonStyle(theme)}>
-                        <components.Icon
-                            color={theme.colors.iconHeader}
-                            icon={"danger"}
-                            size={"28px"}
-                            style={{lineHeight: "20px"}}
-                        />
-                    </components.Button>
+                    <bootstrap.OverlayTrigger
+                        overlay={<bootstrap.Tooltip className="buttonInfo">{"Visualizza allarmi"}</bootstrap.Tooltip>}
+                        placement="bottom"
+                        rootClose={true}
+                    >
+                        <components.Button style={alarmButtonStyle(theme)}>
+                            <components.Icon
+                                color={theme.colors.iconHeader}
+                                icon={"danger"}
+                                size={"28px"}
+                                style={{lineHeight: "20px"}}
+                            />
+                        </components.Button>
+                    </bootstrap.OverlayTrigger>
                     <components.Popover
                         className="pull-right"
                         hideOnChange={true}

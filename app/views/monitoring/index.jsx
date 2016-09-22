@@ -4,6 +4,7 @@ import IPropTypes from "react-immutable-proptypes";
 import {connect} from "react-redux";
 import {browserHistory} from "react-router";
 import {bindActionCreators} from "redux";
+import * as bootstrap from "react-bootstrap";
 
 import {getDragDropContext} from "lib/dnd-utils";
 import {defaultTheme} from "lib/theme";
@@ -127,6 +128,18 @@ var Monitoring = React.createClass({
     getTheme: function () {
         return this.context.theme || defaultTheme;
     },
+    getButtonLink: function (iconName, selected) {
+        switch (iconName) {
+            case "duplicate":
+                this.props.cloneSensors(selected);
+                break;
+            case "edit":
+                this.onClickEditSensor();
+                break;
+            default:
+                break;
+        }
+    },
     getAllSensors: function () {
         return getAllSensors(this.props.collections.get("sensors"));
     },
@@ -206,6 +219,33 @@ var Monitoring = React.createClass({
             );
         }
     },
+    renderButton: function (iconName, tooltip, disabled) {
+        const theme = this.getTheme();
+        const selected = this.props.sensorsState.selectedSensors;
+        return (
+            <bootstrap.OverlayTrigger
+                overlay={<bootstrap.Tooltip className="buttonInfo">
+                    {tooltip}
+                </bootstrap.Tooltip>}
+                placement="bottom"
+                rootClose={true}
+            >
+                <Button
+                    style={stylesFunction(theme).buttonIconStyle}
+                    disabled={disabled}
+                    onClick={() => this.getButtonLink(iconName, selected)}
+                >
+                    <Icon
+                        color={theme.colors.iconHeader}
+                        icon={iconName}
+                        size={"28px"}
+                        style={{lineHeight: "45px"}}
+                    />
+                </Button>
+            </bootstrap.OverlayTrigger>
+        );
+    },
+
     render: function () {
         const theme = this.getTheme();
         const selected = this.props.sensorsState.selectedSensors;
@@ -238,30 +278,8 @@ var Monitoring = React.createClass({
                         </Popover>
                     </div>
                     <div style={{float: "right", marginTop: "3px"}}>
-                        <Button
-                            style={stylesFunction(theme).buttonIconStyle}
-                            disabled={selected.length < 1}
-                            onClick={() => this.props.cloneSensors(selected)}
-                        >
-                            <Icon
-                                color={theme.colors.iconHeader}
-                                icon={"duplicate"}
-                                size={"28px"}
-                                style={{lineHeight: "45px"}}
-                            />
-                        </Button>
-                        <Button
-                            style={stylesFunction(theme).buttonIconStyle}
-                            disabled={selected.length != 1}
-                            onClick={this.onClickEditSensor}
-                        >
-                            <Icon
-                                color={theme.colors.iconHeader}
-                                icon={"edit"}
-                                size={"28px"}
-                                style={{lineHeight: "45px"}}
-                            />
-                        </Button>
+                        {this.renderButton("duplicate", "Duplica", (selected.length < 1))}
+                        {this.renderButton("edit", "Modifica", (selected.length != 1))}
                         <DeleteWithConfirmButton
                             disabled={selected.length < 1}
                             onConfirm={() => this.props.deleteSensors(selected)}

@@ -5,6 +5,7 @@ import React, {PropTypes} from "react";
 import IPropTypes from "react-immutable-proptypes";
 import {connect} from "react-redux";
 import {bindActionCreators} from "redux";
+import * as bootstrap from "react-bootstrap";
 
 import {
     Button,
@@ -115,6 +116,23 @@ var Users = React.createClass({
         this.props.asteroid.subscribe("groups");
         this.props.asteroid.subscribe("roles");
     },
+    getClickFunction: function (iconName) {
+        switch (iconName) {
+            case "gauge":
+                this.openSensorsModal();
+                break;
+            case "user-functions":
+                this.setState({showRolesAssociator: true});
+                break;
+            case "clone":
+                break;
+            case "add":
+                this.setState({showCreateUserModal: true});
+                break;
+            default:
+                break;
+        }
+    },
     getTheme: function () {
         return this.context.theme || defaultTheme;
     },
@@ -222,59 +240,41 @@ var Users = React.createClass({
             </FullscreenModal>
         );
     },
+    renderButton: function (tooltip, iconName, disabled) {
+        const theme = this.getTheme();
+        return (
+            <bootstrap.OverlayTrigger
+                overlay={<bootstrap.Tooltip className="buttonInfo">{tooltip}</bootstrap.Tooltip>}
+                placement="bottom"
+                rootClose={true}
+            >
+                <Button
+                    disabled={disabled}
+                    onClick={() => this.getClickFunction(iconName)}
+                    style={stylesFunction(theme).buttonIconStyle}
+                >
+                    <Icon
+                        color={theme.colors.iconHeader}
+                        icon={iconName}
+                        size={"34px"}
+                        style={stylesFunction(theme).buttonIcon}
+                    />
+                </Button>
+            </bootstrap.OverlayTrigger>
+        );
+    },
     render: function () {
         const theme = this.getTheme();
         return (
             <div>
                 <SectionToolbar>
                     <div style={{float: "left", marginTop: "3px"}}>
-                        <Button
-                            style={stylesFunction(theme).buttonIconStyle}
-                            onClick={() => this.setState({showCreateUserModal: true})}
-                        >
-                            <Icon
-                                color={theme.colors.iconHeader}
-                                icon={"add"}
-                                size={"28px"}
-                                style={stylesFunction(theme).buttonIcon}
-                            />
-                        </Button>
+                        {this.renderButton("Crea utente", "add", "")}
                     </div>
                     <div style={{float: "right", marginTop: "3px"}}>
-                        <Button
-                            style={stylesFunction(theme).buttonIconStyle}
-                            disabled={this.props.usersState.selectedUsers.length < 1}
-                            onClick={this.openSensorsModal}
-                        >
-                            <Icon
-                                color={theme.colors.iconHeader}
-                                icon={"gauge"}
-                                size={"30px"}
-                                style={stylesFunction(theme).buttonIcon}
-                            />
-                        </Button>
-                        <Button
-                            style={stylesFunction(theme).buttonIconStyle}
-                            disabled={this.props.usersState.selectedUsers.length < 1}
-                            onClick={() => this.setState({showRolesAssociator: true})}
-                        >
-                            <Icon
-                                color={theme.colors.iconHeader}
-                                icon={"user-functions"}
-                                size={"34px"}
-                                style={stylesFunction(theme).buttonIcon}
-                            />
-                        </Button>
-                        <Button
-                            style={stylesFunction(theme).buttonIconStyle}
-                        >
-                            <Icon
-                                color={theme.colors.iconHeader}
-                                icon={"clone"}
-                                size={"34px"}
-                                style={stylesFunction(theme).buttonIcon}
-                            />
-                        </Button>
+                        {this.renderButton("Gestione ruoli", "gauge", (this.props.usersState.selectedUsers.length < 1))}
+                        {this.renderButton("Assegna funzioni", "user-functions", (this.props.usersState.selectedUsers.length < 1))}
+                        {this.renderButton("Clona", "clone", (this.props.usersState.selectedUsers.length < 1))}
                         <DeleteWithConfirmButton
                             disabled={this.props.usersState.selectedUsers.length < 1}
                             onConfirm={() => this.props.deleteUsers(this.props.usersState.selectedUsers, this.getAllUsers())}

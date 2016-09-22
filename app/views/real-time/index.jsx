@@ -268,18 +268,26 @@ var RealTime = React.createClass({
         const theme = this.getTheme();
         return (
             <div>
-                <components.Button className="pull-right" onClick={this.openModal} style={styleSiteButton(theme)} >
-                    <components.Icon
-                        color={this.getTheme().colors.iconSiteButton}
-                        icon={"map"}
-                        size={"38px"}
-                        style={{
-                            textAlign: "center",
-                            verticalAlign: "middle",
-                            lineHeight: "20px"
-                        }}
-                    />
-                </components.Button>
+                <bootstrap.OverlayTrigger
+                    overlay={<bootstrap.Tooltip className="buttonInfo">
+                        {"Seleziona punto di misurazione"}
+                    </bootstrap.Tooltip>}
+                    placement="bottom"
+                    rootClose={true}
+                >
+                    <components.Button className="pull-right" onClick={this.openModal} style={styleSiteButton(theme)} >
+                        <components.Icon
+                            color={this.getTheme().colors.iconSiteButton}
+                            icon={"map"}
+                            size={"38px"}
+                            style={{
+                                textAlign: "center",
+                                verticalAlign: "middle",
+                                lineHeight: "20px"
+                            }}
+                        />
+                    </components.Button>
+                </bootstrap.OverlayTrigger>
                 <components.FullscreenModal
                     onConfirm={this.onConfirmFullscreenModal}
                     onHide={this.closeModal}

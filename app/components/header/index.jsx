@@ -1,6 +1,7 @@
 import React, {PropTypes} from "react";
 import {Link} from "react-router";
 import {merge, prop} from "ramda";
+import * as bootstrap from "react-bootstrap";
 
 import {defaultTheme} from "lib/theme";
 import components from "components";
@@ -84,42 +85,66 @@ var Header = React.createClass({
     renderAdminPage: function () {
         return isAdmin(this.props.asteroid) && EXEC_ENV !== "cordova" ? (
             <span style={{marginRight: "15px"}}>
-                <Link to="/users/" >
-                    <components.Icon
-                        color={this.getTheme().colors.iconHeader}
-                        icon={"user"}
-                        size={"30px"}
-                        style={{lineHeight: "20px", verticalAlign: "top"}}
-                    />
-                </Link>
+                <bootstrap.OverlayTrigger
+                    overlay={<bootstrap.Tooltip className="buttonInfo">
+                        {"Gestione utenti"}
+                    </bootstrap.Tooltip>}
+                    placement="bottom"
+                    rootClose={true}
+                >
+                    <Link to="/users/" >
+                        <components.Icon
+                            color={this.getTheme().colors.iconHeader}
+                            icon={"user"}
+                            size={"30px"}
+                            style={{lineHeight: "20px", verticalAlign: "top"}}
+                        />
+                    </Link>
+                </bootstrap.OverlayTrigger>
             </span>
         ) : null;
     },
     renderInboxPage: function () {
         return this.props.isAuthorizedUser ? (
             <div style={{marginRight: "15px"}}>
-                <Link to="" >
-                    <components.Icon
-                        color={this.getTheme().colors.iconHeader}
-                        icon={"box"}
-                        size={"30px"}
-                        style={{lineHeight: "20px", verticalAlign: "middle"}}
-                    />
-                </Link>
+                <bootstrap.OverlayTrigger
+                    overlay={<bootstrap.Tooltip className="buttonInfo">
+                        {"Messaggi"}
+                    </bootstrap.Tooltip>}
+                    placement="bottom"
+                    rootClose={true}
+                >
+                    <Link to="" >
+                        <components.Icon
+                            color={this.getTheme().colors.iconHeader}
+                            icon={"box"}
+                            size={"30px"}
+                            style={{lineHeight: "20px", verticalAlign: "middle"}}
+                        />
+                    </Link>
+                </bootstrap.OverlayTrigger>
             </div>
         ) : null;
     },
     renderAlarmPage: function () {
         return this.props.isAuthorizedUser ? (
             <div style={{marginRight: "15px"}}>
-                <Link to="" >
-                    <components.Icon
-                        color={this.getTheme().colors.iconHeader}
-                        icon={"danger"}
-                        size={"28px"}
-                        style={{lineHeight: "20px", verticalAlign: "top"}}
-                    />
-                </Link>
+                <bootstrap.OverlayTrigger
+                    overlay={<bootstrap.Tooltip className="buttonInfo">
+                        {"Allarmi"}
+                    </bootstrap.Tooltip>}
+                    placement="bottom"
+                    rootClose={true}
+                >
+                    <Link to="" >
+                        <components.Icon
+                            color={this.getTheme().colors.iconHeader}
+                            icon={"danger"}
+                            size={"28px"}
+                            style={{lineHeight: "20px", verticalAlign: "top"}}
+                        />
+                    </Link>
+                </bootstrap.OverlayTrigger>
             </div>
         ) : null;
     },
@@ -156,14 +181,22 @@ var Header = React.createClass({
                 {this.renderAdminPage()}
                 {this.renderInboxPage()}
                 {this.renderAlarmPage()}
-                <span onClick={this.props.logout} style={styles.icon}>
-                    <components.Icon
-                        color={this.getTheme().colors.iconHeader}
-                        icon={"logout"}
-                        size={"30px"}
-                        style={{lineHeight: "20px", verticalAlign: "middle"}}
-                    />
-                </span>
+                <bootstrap.OverlayTrigger
+                    overlay={<bootstrap.Tooltip className="buttonInfo">
+                        {"Logout"}
+                    </bootstrap.Tooltip>}
+                    placement="bottom"
+                    rootClose={true}
+                >
+                    <span onClick={this.props.logout} style={styles.icon}>
+                        <components.Icon
+                            color={this.getTheme().colors.iconHeader}
+                            icon={"logout"}
+                            size={"30px"}
+                            style={{lineHeight: "20px", verticalAlign: "middle"}}
+                        />
+                    </span>
+                </bootstrap.OverlayTrigger>
             </div>
         );
     }

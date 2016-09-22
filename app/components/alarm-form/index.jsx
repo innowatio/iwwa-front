@@ -340,18 +340,26 @@ var AlarmForm = React.createClass({
     renderSiteButton: function () {
         const theme = this.getTheme();
         return (
-            <components.Button className="pull-left" onClick={this.openModal} style={styleSiteButton(theme)} >
-                <components.Icon
-                    color={this.getTheme().colors.iconSiteButton}
-                    icon={"map"}
-                    size={"38px"}
-                    style={{
-                        textAlign: "center",
-                        verticalAlign: "middle",
-                        lineHeight: "20px"
-                    }}
-                />
-            </components.Button>
+            <bootstrap.OverlayTrigger
+                overlay={<bootstrap.Tooltip className="buttonInfo">
+                    {"Seleziona punto di misurazione"}
+                </bootstrap.Tooltip>}
+                placement="bottom"
+                rootClose={true}
+            >
+                <components.Button className="pull-left" onClick={this.openModal} style={styleSiteButton(theme)} >
+                    <components.Icon
+                        color={this.getTheme().colors.iconSiteButton}
+                        icon={"map"}
+                        size={"38px"}
+                        style={{
+                            textAlign: "center",
+                            verticalAlign: "middle",
+                            lineHeight: "20px"
+                        }}
+                    />
+                </components.Button>
+            </bootstrap.OverlayTrigger>
         );
     },
     renderTitleSelectSite: function () {
