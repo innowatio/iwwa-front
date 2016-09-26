@@ -220,7 +220,6 @@ var RealTime = React.createClass({
         );
     },
     findFilteredReadingsRealtime (criteria) {
-        console.log(this.getSite(this.props.realTime.site));
         const decorators = R.unnest(sensorsDecorators.allSensorsDecorator(this.getTheme()));
         const sensorsData = this.props.collections.get("sensors") ? this.props.collections.get("sensors") : Immutable.List();
         const mergedSiteSensor = Immutable.fromJS(mergeSiteSensors(this.getSite(this.props.realTime.site), sensorsData));
