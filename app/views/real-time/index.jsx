@@ -12,6 +12,7 @@ import {styles} from "lib/styles";
 import {selectRealTimeSite} from "actions/real-time";
 import {defaultTheme} from "lib/theme";
 import {getTitleForSingleSensor} from "lib/page-header-utils";
+import mergeSiteSensors from "lib/merge-site-sensors";
 
 const styleSiteButton = ({colors}) => ({
     width: "50px",
@@ -189,6 +190,7 @@ var RealTime = React.createClass({
     getSites: function () {
         return this.props.collections.get("sites") || Immutable.Map();
     },
+
     getSite: function (siteId) {
         return this.getSites().find(function (site) {
             return site.get("_id") === siteId;
@@ -218,11 +220,13 @@ var RealTime = React.createClass({
         );
     },
     findFilteredReadingsRealtime (criteria) {
+        console.log(this.getSite(this.props.realTime.site));
         const decorators = R.unnest(sensorsDecorators.allSensorsDecorator(this.getTheme()));
-        const sensorsData = this.getSite(this.props.realTime.site) ? this.getSite(this.props.realTime.site).get("sensors") : Immutable.List();
+        const sensorsData = this.props.collections.get("sensors") ? this.props.collections.get("sensors") : Immutable.List();
+        const mergedSiteSensor = Immutable.fromJS(mergeSiteSensors(this.getSite(this.props.realTime.site), sensorsData));
         const results = this.getMeasures().map((measure, index) => {
             const decorator = decorators.find(x => (x.key === measure.get("measurementType")));
-            const sensorData = sensorsData.find(x => x.get("id") == measure.get("sensorId"));
+            const sensorData = mergedSiteSensor.get("sensors").find(x => x.get("id") == measure.get("sensorId"));
             if (decorator && sensorData) {
                 measure = measure.set("key", index);
                 measure = measure.set("color", decorator.color);
