@@ -272,7 +272,7 @@ var Users = React.createClass({
                         {this.renderButton("Crea utente", "add", "")}
                     </div>
                     <div style={{float: "right", marginTop: "3px"}}>
-                        {this.renderButton("Gestione ruoli", "gauge", (this.props.usersState.selectedUsers.length < 1))}
+                        {this.renderButton("Assegna sensori", "gauge", (this.props.usersState.selectedUsers.length < 1))}
                         {this.renderButton("Assegna funzioni", "user-functions", (this.props.usersState.selectedUsers.length < 1))}
                         {this.renderButton("Clona", "clone", (this.props.usersState.selectedUsers.length < 1))}
                         <DeleteWithConfirmButton

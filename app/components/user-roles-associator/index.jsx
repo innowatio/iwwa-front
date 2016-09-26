@@ -108,23 +108,25 @@ var UserRolesAssociator = React.createClass({
             </FullscreenModal>
         );
     },
-    renderRoleTab: function (theme) {
+    renderRoleTab: function ({colors}) {
         const {usersState} = this.props;
         return (
             <Tab eventKey={1} title="Profili predefiniti">
                 <Row>
                     <Col xs={6} style={{marginTop: "10px"}}>
                         {this.props.collections.get("groups").map(group => {
+                            const groupName = group.get("name");
+                            const isToggled = usersState.selectedGroups.indexOf(groupName) >= 0;
                             return (
                                 <Button
                                     className="hoverButton"
                                     style={{
-                                        color: theme.colors.white,
+                                        color: isToggled ? colors.buttonPrimary : colors.white,
                                         textTransform: "uppercase",
                                         fontSize: "16px",
                                         fontWeight: "300",
                                         padding: "10px 20px",
-                                        backgroundColor: theme.colors.transparent,
+                                        backgroundColor: colors.transparent,
                                         border: "0px"
                                     }}
                                     onClick={() => this.props.onGroupSelect(group.get("name"))}
@@ -135,7 +137,7 @@ var UserRolesAssociator = React.createClass({
                                                 display: "block"
                                             },
                                             ":hover": {
-                                                color: theme.colors.buttonPrimary + "!important"
+                                                color: colors.buttonPrimary + "!important"
                                             }
                                         }}
                                         scopeSelector={".hoverButton"}
@@ -149,7 +151,7 @@ var UserRolesAssociator = React.createClass({
                         {getGroupsRoles(usersState.selectedGroups, this.props.asteroid).map(roleName => {
                             return (
                                 <div style={{
-                                    color: theme.colors.white,
+                                    color: colors.white,
                                     textTransform: "uppercase",
                                     fontSize: "16px",
                                     fontWeight: "300",
@@ -167,7 +169,7 @@ var UserRolesAssociator = React.createClass({
                         onClick={() => this.props.assignGroupsToUsers(usersState.selectedUsers, usersState.selectedGroups)}
                         style={{
                             textAlign: "center",
-                            color: theme.colors.white,
+                            color: colors.white,
                             borderRadius: "30px",
                             fontWeight: "300",
                             width: "220px",
@@ -176,7 +178,7 @@ var UserRolesAssociator = React.createClass({
                             padding: "0px",
                             fontSize: "20px",
                             border: "0px",
-                            backgroundColor: theme.colors.buttonPrimary
+                            backgroundColor: colors.buttonPrimary
                         }}
                     >
                         {"OK"}
