@@ -13,6 +13,10 @@ export function getGroups (asteroid) {
     return (getLoggedUser(asteroid).get("groups") || List()).toArray();
 }
 
+function getOldRoles (asteroid) {
+    return (getLoggedUser(asteroid).get("roles") || List()).toArray();
+}
+
 export function getRoles (asteroid) {
     return getGroupsRoles(getGroups(asteroid), asteroid);
 }
@@ -35,7 +39,7 @@ export function getGroupsRoles (groups, asteroid) {
 
 //TODO need to keep these until complete switch of roles management
 export function isAdmin (asteroid) {
-    return getGroups(asteroid).indexOf(ROLE_ADMIN) > -1;
+    return getOldRoles(asteroid).indexOf(ROLE_ADMIN) > -1;
 }
 
 export function isYousaveUser (asteroid) {
@@ -44,7 +48,7 @@ export function isYousaveUser (asteroid) {
 
 export function isAuthorizedUser (asteroid) {
     const allRoles = R.values(R.map(role => role.name, (asteroid.collections.get("roles") || Map()).toJS()));
-    const userRoles = getRoles(asteroid);
+    const userRoles = getOldRoles(asteroid);
     let isAuthorized = false;
     R.forEach(userRole => {
         isAuthorized = isAuthorized || R.contains(userRole, allRoles);
