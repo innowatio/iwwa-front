@@ -1,6 +1,9 @@
 import {Map} from "immutable";
 
 export default function mergeSiteSensors (site, sensors) {
+    if (!site) {
+        return {};
+    }
     const siteJS = site.toJS();
     return {
         ...siteJS,
