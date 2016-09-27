@@ -106,6 +106,7 @@
     "redux-action-type-validator": "^1.0.2",
     "redux-form": "^5.2.4",
     "redux-logger": "^2.6.1",
+    "redux-persist": "^4.0.0-alpha5",
     "redux-storage": "^4.0.0",
     "redux-storage-decorator-filter": "^1.1.4",
     "redux-storage-engine-localstorage": "^1.1.0",
