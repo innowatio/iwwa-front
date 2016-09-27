@@ -1,3 +1,4 @@
+import Immutable from "immutable";
 import Radium from "radium";
 import R from "ramda";
 import React, {PropTypes} from "react";
@@ -110,11 +111,12 @@ var UserRolesAssociator = React.createClass({
     },
     renderRoleTab: function ({colors}) {
         const {usersState} = this.props;
+        const groups = this.props.collections.get("groups") || Immutable.Map();
         return (
             <Tab eventKey={1} title="Profili predefiniti">
                 <Row>
                     <Col xs={6} style={{marginTop: "10px"}}>
-                        {this.props.collections.get("groups").map(group => {
+                        {groups.map(group => {
                             const groupName = group.get("name");
                             const isToggled = usersState.selectedGroups.indexOf(groupName) >= 0;
                             return (
