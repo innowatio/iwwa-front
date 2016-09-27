@@ -18,10 +18,8 @@ const hoverStyle = ({colors}) => ({
 
 const styles = ({colors}, open) => ({
     iconArrow: {
-        lineHeight: "15px",
-        verticalAlign: "text-top",
-        marginRight: "10px",
         display: "inline-block",
+        lineHeight: "10px",
         transform: open ? "rotate(180deg)" : null
     }
 });
@@ -50,12 +48,18 @@ var DraggableUser = React.createClass({
             <Button
                 onClick={this.props.onOpenChildren}
                 style={{
-                    backgroundColor: theme.colors.transparent,
+                    float: "right",
+                    backgroundColor: theme.colors.backgroundUserButton,
                     border: "0px",
+                    borderRadius: "100%",
                     color: theme.colors.mainFontColor,
-                    boxShadow: "none",
-                    minWidth: "auto",
-                    textAlign: "left"
+                    textAlign: "center",
+                    lineHeight: "30px",
+                    width: "26px",
+                    height: "26px",
+                    padding: "0px",
+                    marginTop: "4px",
+                    marginLeft: "10px"
                 }}
             >
                 <Icon
@@ -90,10 +94,50 @@ var DraggableUser = React.createClass({
                         {!R.isNil(user.get("roles")) ? user.get("roles").join(", ") : ""}
                     </label>
                 </div>
-                <div style={{display: "inline-block", paddingTop: "8px"}}>
+                <div className="toggle" style={{display: "inline-block", paddingTop: "9px"}}>
                     <Toggle
                         defaultChecked={isActiveUser(user)}
                         onChange={() => this.props.onChangeActiveStatus(user)}
+                    />
+                    <Style
+                        rules={{
+                            ".react-toggle-track":{
+                                backgroundColor: theme.colors.backgroundToggleButton,
+                                border: "1px solid " + theme.colors.backgroundUserButton,
+                                padding: "4px !important"
+                            },
+                            ".react-toggle:hover .react-toggle-track": {
+                                backgroundColor: theme.colors.backgroundToggleButton
+                            },
+                            ".react-toggle-track-x, .react-toggle-track-check": {
+                                display: "none"
+                            },
+                            ".react-toggle-thumb": {
+                                backgroundColor: theme.colors.backgroundUnregisteredUser,
+                                width: "16px",
+                                height: "16px",
+                                top: "4px",
+                                left: "4px",
+                                border: "none",
+                                borderColor: theme.colors.transparent
+                            },
+
+                            ".react-toggle--checked .react-toggle-thumb": {
+                                backgroundColor: theme.colors.backgroundRegisteredUser,
+                                left: "30px"
+                            },
+                            ".react-toggle--focus .react-toggle-thumb, .react-toggle:active .react-toggle-thumb": {
+                                WebkitBoxShadow: "0px !important",
+                                MozBoxShadow: "0px !important",
+                                BoxShadow: "0px !important"
+                            },
+                            ".react-toggle:focus .react-toggle-thumb": {
+                                WebkitBoxShadow: "0px !important",
+                                MozBoxShadow: "0px !important",
+                                BoxShadow: "0px !important"
+                            }
+                        }}
+                        scopeSelector={".toggle"}
                     />
                     {this.renderChildrenButton(theme)}
                 </div>

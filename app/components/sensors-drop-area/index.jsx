@@ -3,6 +3,7 @@ import {DropTarget} from "react-dnd";
 import IPropTypes from "react-immutable-proptypes";
 import {Link} from "react-router";
 import R from "ramda";
+import * as bootstrap from "react-bootstrap";
 
 import {Types} from "lib/dnd-utils";
 import {getSensorId, getSensorLabel, getUnitOfMeasurementLabel} from "lib/sensors-utils";
@@ -80,41 +81,53 @@ var SensorsDropArea = React.createClass({
     },
     renderAggregateButton: function (theme) {
         return this.props.onClickAggregate ? (
-            <Button
-                style={
-                    R.merge(buttonStyle(theme), {
-                        right: "50px",
-                        padding: "1px 8px"
-                    })
-                }
-                onClick={this.props.onClickAggregate}
+            <bootstrap.OverlayTrigger
+                overlay={<bootstrap.Tooltip className="buttonInfo">{"Unisci in un unico sensore"}</bootstrap.Tooltip>}
+                placement="bottom"
+                rootClose={true}
             >
-                <Icon
-                    color={theme.colors.iconHeader}
-                    icon={"merge"}
-                    size={"30px"}
-                    style={{verticalAlign:"middle"}}
-                />
-            </Button>
+                <Button
+                    style={
+                        R.merge(buttonStyle(theme), {
+                            right: "50px",
+                            padding: "1px 8px"
+                        })
+                    }
+                    onClick={this.props.onClickAggregate}
+                >
+                    <Icon
+                        color={theme.colors.iconHeader}
+                        icon={"merge"}
+                        size={"30px"}
+                        style={{verticalAlign:"middle"}}
+                    />
+                </Button>
+            </bootstrap.OverlayTrigger>
         ) : null;
     },
     renderChartButton: function (theme) {
         return this.props.onClickChart ? (
-            <Link
-                to={"/monitoring/chart/"}
-                onClick={() => this.props.onClickChart(this.props.sensors)}
-                style={
-                        R.merge(buttonStyle(theme),
-                        {right: "0px"})
-                    }
+            <bootstrap.OverlayTrigger
+                overlay={<bootstrap.Tooltip className="buttonInfo">{"Visualizza grafico dei sensori"}</bootstrap.Tooltip>}
+                placement="bottom"
+                rootClose={true}
             >
-                <Icon
-                    color={theme.colors.iconHeader}
-                    icon={"chart"}
-                    size={"24px"}
-                    style={{verticalAlign: "middle"}}
-                />
-            </Link>
+                <Link
+                    to={"/monitoring/chart/"}
+                    onClick={() => this.props.onClickChart(this.props.sensors)}
+                    style={
+                            R.merge(buttonStyle(theme),
+                            {right: "0px"})
+                        }
+                >
+                    <Icon
+                        color={theme.colors.iconHeader}
+                        icon={"chart"}
+                        size={"24px"}
+                        style={{verticalAlign: "middle"}}
+                    />
+                </Link>
+            </bootstrap.OverlayTrigger>
         ) : null;
     },
     renderSensor: function (element, elementId) {

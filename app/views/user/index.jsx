@@ -13,7 +13,7 @@ import {styles} from "lib/styles";
 import {defaultTheme} from "lib/theme";
 
 const buttonStyle = ({colors}) => ({
-    width: "200px",
+    width: "240px",
     height: "40px",
     backgroundColor: colors.primary,
     color: colors.white
@@ -202,7 +202,7 @@ var User = React.createClass({
     renderPasswordTab: function () {
         const theme = this.getTheme();
         return (
-            <bootstrap.Tab eventKey={2} title="Password" >
+            <bootstrap.Tab eventKey={2} title="Password">
                 {/* Automatic change of the password */}
                 <bootstrap.Col style={{height: "calc(100vh - 200px)", paddingRight: "0px"}} xs={6}>
                     <div style={{
@@ -249,7 +249,6 @@ var User = React.createClass({
                         </div>
                     </div>
                 </bootstrap.Col>
-
             </bootstrap.Tab>
         );
     },

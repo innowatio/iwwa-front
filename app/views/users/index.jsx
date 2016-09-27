@@ -80,8 +80,7 @@ const stylesFunction = (theme) => ({
         lineHeight: "45px",
         minHeight: "50px",
         cursor: "pointer",
-        fontSize: "16px",
-        borderLeft: "3px solid " + theme.colors.borderSensorsTable
+        fontSize: "16px"
     }
 });
 

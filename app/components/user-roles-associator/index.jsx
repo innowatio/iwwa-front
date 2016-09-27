@@ -103,7 +103,12 @@ var UserRolesAssociator = React.createClass({
                     <FormControl
                         type="text"
                         placeholder="Assegna un nome a questo profilo"
-                        style={R.merge(styles(theme).inputLine, {color: theme.colors.buttonPrimary})}
+                        style={R.merge(styles(theme).inputLine, {
+                            color: theme.colors.buttonPrimary,
+                            padding: "20px",
+                            margin: "5%",
+                            width: "90%"
+                        })}
                     />
                 </form>
             </FullscreenModal>
@@ -200,7 +205,6 @@ var UserRolesAssociator = React.createClass({
                             removeRole={this.props.removeRole}
                             roles={this.props.usersState.selectedRoles}
                         />
-
                     </Col>
                     <Col
                         md={6}
@@ -219,11 +223,6 @@ var UserRolesAssociator = React.createClass({
                         }}>
                             {this.props.collections.get("roles").map(role =>
                                 <DraggableRole
-                                    style={{
-                                        padding: "5px 20px",
-                                        border: "1px solid " + theme.colors.white,
-                                        borderRadius: "100%"
-                                    }}
                                     role={role}
                                 />
                             )}

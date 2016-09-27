@@ -41,7 +41,7 @@ var UserRow = React.createClass({
         return this.state.childrenOpen ? (
             <UserRow
                 getChildren={this.props.getChildren}
-                indent={this.props.indent + 10}
+                indent={this.props.indent + 5}
                 isSelected={this.props.isSelected}
                 onChangeActiveStatus={this.props.onChangeActiveStatus}
                 onSelect={this.props.onSelect}
@@ -52,7 +52,10 @@ var UserRow = React.createClass({
     renderRegistered: function (theme) {
         const children = this.props.getChildren(this.props.user.get("_id"));
         return (
-            <div style={{color: theme.colors.white}}>
+            <div style={{
+                color: theme.colors.white,
+                borderLeft: "2px solid " + theme.colors.white
+            }}>
                 <DraggableUser
                     hasChildren={children && children.size > 0}
                     indent={this.props.indent}
@@ -69,7 +72,11 @@ var UserRow = React.createClass({
     },
     renderUnregistered: function (theme) {
         return (
-            <div style={{color: theme.colors.greySubTitle}}>
+            <div style={{
+                color: theme.colors.greySubTitle,
+                borderLeft: "2px solid " + theme.colors.borderUsersTable,
+                height: "50px"
+            }}>
                 <label style={{width: this.props.indent + "%"}} />
                 <div style={{
                     display: "inline-block",

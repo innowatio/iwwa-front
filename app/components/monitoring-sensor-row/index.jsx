@@ -17,7 +17,8 @@ const styles = ({colors}) => ({
         width: "100%",
         height: "50px",
         margin: "0px",
-        padding: "0px"
+        padding: "0px",
+        marginRight: "-15px"
     },
     sensorName: {
         float: "left",
@@ -148,7 +149,6 @@ var SensorRow = React.createClass({
                 style={{
                     height: "50px",
                     width: "50px",
-                    marginRight: "15px",
                     float: "right",
                     textAlign: "center",
                     backgroundColor: theme.colors.backgroundMonitoringRowChart

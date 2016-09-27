@@ -159,7 +159,8 @@ var MonitoringWorkArea = React.createClass({
                             height: "100%",
                             overflow: "auto",
                             overflowY: "scroll",
-                            borderRadius: "18px"
+                            borderRadius: "18px",
+                            marginRight: "-15px"
                         }}>
                             <CollectionItemList
                                 collections={this.props.sensors}
