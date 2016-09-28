@@ -74,10 +74,9 @@ const stylesFunction = (theme) => ({
         verticalAlign: "middle"
     },
     listItems: {
-        width: "100%",
         height: "auto",
         verticalAlign: "middle",
-        lineHeight: "45px",
+        lineHeight: "50px",
         minHeight: "50px",
         cursor: "pointer",
         fontSize: "16px"
@@ -190,7 +189,7 @@ var Users = React.createClass({
             <div style={stylesFunction(theme).listItems}>
                 <UserRow
                     getChildren={userId => getChildren(userId, this.getAllUsers())}
-                    indent={1}
+                    indent={0}
                     isSelected={userId => {
                         return R.find(it => {
                             return it.get("_id") === userId;
