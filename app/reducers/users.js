@@ -29,7 +29,7 @@ export function users (state = defaultState, action) {
             break;
         }
         case REMOVE_ROLE: {
-            newState.selectedRoles.splice(action.payload, 1);
+            newState.selectedRoles.splice(newState.selectedRoles.indexOf(action.payload), 1);
             break;
         }
         case SELECT_USER: {
@@ -44,6 +44,7 @@ export function users (state = defaultState, action) {
             newState.selectedGroups = addOrRemove(group, newState.selectedGroups, it => {
                 return it === group;
             });
+            break;
         }
     }
     return newState;

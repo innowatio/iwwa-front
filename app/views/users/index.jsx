@@ -272,7 +272,7 @@ var Users = React.createClass({
             <div>
                 <SectionToolbar>
                     <div style={{float: "left", marginTop: "3px"}}>
-                        {this.renderButton("Crea utente", "add", "")}
+                        {this.renderButton("Crea utente", "add", false)}
                     </div>
                     <div style={{float: "right", marginTop: "3px"}}>
                         {this.renderButton("Assegna sensori", "gauge", (this.props.usersState.selectedUsers.length < 1))}

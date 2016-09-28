@@ -91,7 +91,7 @@ var DraggableUser = React.createClass({
                         {getUsername(user)}
                     </label>
                     <label style={{cursor: "inherit", width: "30%"}}>
-                        {!R.isNil(user.get("roles")) ? user.get("roles").join(", ") : ""}
+                        {!R.isNil(user.get("groups")) ? user.get("groups").join(", ") : ""}
                     </label>
                 </div>
                 <div className="toggle" style={{display: "inline-block", paddingTop: "9px"}}>
