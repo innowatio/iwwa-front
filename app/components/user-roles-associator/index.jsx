@@ -119,50 +119,50 @@ var UserRolesAssociator = React.createClass({
         const groups = this.props.collections.get("groups") || Immutable.Map();
         return (
             <Tab eventKey={1} title="Profili predefiniti">
-                <Row>
+                <Row style={{margin: "20px"}}>
                     <Col xs={6} style={{marginTop: "10px"}}>
                         {groups.map(group => {
                             const groupName = group.get("name");
                             const isToggled = usersState.selectedGroups.indexOf(groupName) >= 0;
                             return (
                                 <Button
-                                    className="hoverButton"
                                     style={{
                                         color: isToggled ? colors.buttonPrimary : colors.white,
                                         textTransform: "uppercase",
-                                        fontSize: "16px",
+                                        fontSize: "18px",
                                         fontWeight: "300",
-                                        padding: "10px 20px",
+                                        padding: "0px",
                                         backgroundColor: colors.transparent,
                                         border: "0px"
                                     }}
                                     onClick={() => this.props.onGroupSelect(group.get("name"))}
                                 >
-                                    <Radium.Style
-                                        rules={{
-                                            "": {
-                                                display: "block"
-                                            },
-                                            ":hover": {
-                                                color: colors.buttonPrimary + "!important"
-                                            }
-                                        }}
-                                        scopeSelector={".hoverButton"}
-                                    />
                                     {group.get("name")}
                                 </Button>
                             );
                         })}
                     </Col>
-                    <Col xs={6} style={{marginTop: "10px"}}>
+                    <Col
+                        xs={6}
+                        style={{
+                            borderLeft: "1px solid " + colors.white,
+                            marginTop: "10px",
+                            color: colors.white,
+                            fontWeight: 300
+                        }}
+                    >
                         {getGroupsRoles(usersState.selectedGroups, this.props.asteroid).map(roleName => {
                             return (
                                 <div style={{
-                                    color: colors.white,
-                                    textTransform: "uppercase",
-                                    fontSize: "16px",
-                                    fontWeight: "300",
-                                    padding: "10px 20px"
+                                    padding: "2px 10px",
+                                    border: "1px solid " + colors.white,
+                                    borderRadius: "30px",
+                                    marginBottom: "8px",
+                                    float: "left",
+                                    display: "block",
+                                    width: "auto",
+                                    clear: "both",
+                                    cursor: "pointer"
                                 }}>
                                     {roleName}
                                 </div>
@@ -171,7 +171,7 @@ var UserRolesAssociator = React.createClass({
                     </Col>
                     <Clearfix />
                 </Row>
-                <Row style={{textAlign: "center"}}>
+                <Row style={{textAlign: "center", margin: "30px 0px"}}>
                     <Button
                         onClick={() => this.props.assignGroupsToUsers(usersState.selectedUsers, usersState.selectedGroups)}
                         style={{
