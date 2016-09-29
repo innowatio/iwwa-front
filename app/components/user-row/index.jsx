@@ -1,3 +1,4 @@
+import {Style} from "radium";
 import React, {PropTypes} from "react";
 import IPropTypes from "react-immutable-proptypes";
 
@@ -15,6 +16,11 @@ const styles = () => ({
         padding: "0px",
         display: "initial"
     }
+});
+
+const hoverStyle = ({colors}) => ({
+    backgroundColor: colors.backgroundMonitoringRowHover,
+    cursor: "pointer"
 });
 
 var UserRow = React.createClass({
@@ -67,8 +73,24 @@ var UserRow = React.createClass({
         );
     },
     renderUnregistered: function (theme) {
+        let rowStyle = {
+            width: "100%",
+            color: theme.colors.greySubTitle,
+            minHeight: "50px"
+        };
+        if (this.props.isSelected(this.props.user.get("_id"))) {
+            rowStyle.backgroundColor= theme.colors.buttonPrimary;
+            rowStyle.color= theme.colors.white;
+        }
         return (
-            <div style={{width: "100%", color: theme.colors.greySubTitle}}>
+            <div
+                className="unregistered-user"
+                style={rowStyle}
+                onClick={() => this.props.onSelect(this.props.user)}
+            >
+                <Style
+                    rules={{".unregistered-user:hover": hoverStyle(theme)}}
+                />
                 <label style={{display: "inline-block", float: "left", width: this.props.indent + "%"}} />
                 <div style={{float: "left", borderLeft: "2px solid " + theme.colors.white, width: ("100%" - (this.props.indent + "%"))}}>
                     <div style={{
