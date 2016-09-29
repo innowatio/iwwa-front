@@ -39,6 +39,7 @@ import {
     changeActiveStatus,
     deleteUsers,
     removeRole,
+    resetRolesAndGroups,
     selectUser,
     toggleGroup
 } from "actions/users";
@@ -96,6 +97,7 @@ var Users = React.createClass({
         filterSensors: PropTypes.func.isRequired,
         removeRole: PropTypes.func.isRequired,
         removeSensorFromWorkArea: PropTypes.func.isRequired,
+        resetRolesAndGroups: PropTypes.func.isRequired,
         resetWorkAreaSensors: PropTypes.func.isRequired,
         selectUser: PropTypes.func.isRequired,
         sensorsState: PropTypes.object.isRequired,
@@ -124,7 +126,7 @@ var Users = React.createClass({
                 this.openSensorsModal();
                 break;
             case "user-functions":
-                this.setState({showRolesAssociator: true});
+                this.openUserRolesModal();
                 break;
             case "clone":
                 break;
@@ -146,19 +148,23 @@ var Users = React.createClass({
     },
     openSensorsModal: function () {
         this.resetAndOpenModal(true);
-        this.fillWorkAreaSensors();
+        const userSensors = this.getUserSensors();
+        if (userSensors) {
+            userSensors.forEach(sensor => this.props.addSensorToWorkArea(sensor));
+        }
+    },
+    openUserRolesModal: function () {
+        this.setState({showRolesAssociator: true});
+        const user = this.props.usersState.selectedUsers.length == 1 && this.props.usersState.selectedUsers[0];
+        if (user && user.get("groups")) {
+            user.get("groups").forEach(group => this.props.toggleGroup(group));
+        }
     },
     resetAndOpenModal: function (open) {
         this.props.resetWorkAreaSensors();
         this.setState({
             showSensorsAssociator: open
         });
-    },
-    fillWorkAreaSensors: function () {
-        const userSensors = this.getUserSensors();
-        if (userSensors) {
-            userSensors.forEach(sensor => this.props.addSensorToWorkArea(sensor));
-        }
     },
     getUserSensors: function () {
         const user = this.props.usersState.selectedUsers.length == 1 && this.props.usersState.selectedUsers[0];
@@ -182,6 +188,10 @@ var Users = React.createClass({
             return aLabel > bLabel ? 1 : -1;
         }
         return aLabel > bLabel ? -1 : 1;
+    },
+    hideUserRolesAssociator: function () {
+        this.props.resetRolesAndGroups();
+        this.setState({showRolesAssociator: false});
     },
     renderUserList: function (user) {
         const theme = this.getTheme();
@@ -329,7 +339,7 @@ var Users = React.createClass({
                     asteroid={this.props.asteroid}
                     collections={this.props.collections}
                     onGroupSelect={this.props.toggleGroup}
-                    onHide={() => this.setState({showRolesAssociator: false})}
+                    onHide={this.hideUserRolesAssociator}
                     removeRole={this.props.removeRole}
                     show={this.state.showRolesAssociator}
                     usersState={this.props.usersState}
@@ -358,6 +368,7 @@ const mapDispatchToProps = (dispatch) => {
         filterSensors: bindActionCreators(filterSensors, dispatch),
         removeRole: bindActionCreators(removeRole, dispatch),
         removeSensorFromWorkArea: bindActionCreators(removeSensorFromWorkArea, dispatch),
+        resetRolesAndGroups: bindActionCreators(resetRolesAndGroups, dispatch),
         resetWorkAreaSensors: bindActionCreators(resetWorkAreaSensors, dispatch),
         selectUser: bindActionCreators(selectUser, dispatch),
         toggleGroup: bindActionCreators(toggleGroup, dispatch)

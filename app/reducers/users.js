@@ -1,6 +1,7 @@
 import {
     ADD_ROLE,
     REMOVE_ROLE,
+    RESET_ROLES_GROUPS,
     SELECT_USER,
     TOGGLE_GROUP
 } from "../actions/users";
@@ -30,6 +31,11 @@ export function users (state = defaultState, action) {
         }
         case REMOVE_ROLE: {
             newState.selectedRoles.splice(newState.selectedRoles.indexOf(action.payload), 1);
+            break;
+        }
+        case RESET_ROLES_GROUPS: {
+            newState.selectedGroups = [];
+            newState.selectedRoles = [];
             break;
         }
         case SELECT_USER: {

@@ -125,20 +125,22 @@ var UserRolesAssociator = React.createClass({
                             const groupName = group.get("name");
                             const isToggled = usersState.selectedGroups.indexOf(groupName) >= 0;
                             return (
-                                <Button
-                                    style={{
-                                        color: isToggled ? colors.buttonPrimary : colors.white,
-                                        textTransform: "uppercase",
-                                        fontSize: "18px",
-                                        fontWeight: "300",
-                                        padding: "0px",
-                                        backgroundColor: colors.transparent,
-                                        border: "0px"
-                                    }}
-                                    onClick={() => this.props.onGroupSelect(group.get("name"))}
-                                >
-                                    {group.get("name")}
-                                </Button>
+                                <div>
+                                    <Button
+                                        style={{
+                                            color: isToggled ? colors.buttonPrimary : colors.white,
+                                            textTransform: "uppercase",
+                                            fontSize: "18px",
+                                            fontWeight: "300",
+                                            padding: "0px",
+                                            backgroundColor: colors.transparent,
+                                            border: "0px"
+                                        }}
+                                        onClick={() => this.props.onGroupSelect(group.get("name"))}
+                                    >
+                                        {group.get("name")}
+                                    </Button>
+                                </div>
                             );
                         })}
                     </Col>
