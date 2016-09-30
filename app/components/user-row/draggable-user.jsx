@@ -21,6 +21,13 @@ const styles = ({colors}, open) => ({
         display: "inline-block",
         lineHeight: "10px",
         transform: open ? "rotate(180deg)" : null
+    },
+    usernameStyles: {
+        borderLeft: open ? "2px solid " + colors.buttonPrimary : "2px solid " + colors.white,
+        color: open ? colors.buttonPrimary : colors.white
+    },
+    groupsStyles: {
+        color: open ? colors.buttonPrimary : colors.white
     }
 });
 
@@ -74,79 +81,100 @@ var DraggableUser = React.createClass({
     render: function () {
         const theme = this.getTheme();
         const {connectDragSource, indent, isSelected, user} = this.props;
+        const marginLeft = indent + "%";
         let rowStyle = {};
         if (isSelected(user.get("_id"))) {
             rowStyle = {
-                backgroundColor: theme.colors.buttonPrimary
+                backgroundColor: theme.colors.buttonPrimary,
+                color: theme.colors.white
             };
         }
         return connectDragSource(
-            <div className="registered-user" style={rowStyle}>
-                <Style
-                    rules={{".registered-user:hover": hoverStyle(theme)}}
-                />
-                <div onClick={() => this.props.onSelect(user)} style={{float: "left", width: "90%"}}>
-                    <label style={{width: indent + "%"}} />
-                    <label style={{
-                        cursor: "inherit",
-                        width: (70 - indent) + "%",
-                        borderLeft: "2px solid " + theme.colors.white,
-                        paddingLeft: "10px",
-                        margin: "0px"
-                    }}>
-                        {getUsername(user)}
-                    </label>
-                    <label style={{cursor: "inherit", width: "30%", margin: "0px"}}>
-                        {!R.isNil(user.get("groups")) ? user.get("groups").join(", ") : ""}
-                    </label>
-                </div>
-                <div className="toggle" style={{height: "50px", padding: "6px"}}>
-                    <Toggle
-                        defaultChecked={isActiveUser(user)}
-                        onChange={() => this.props.onChangeActiveStatus(user)}
-                    />
+            <div>
+                <div style={{
+                    display: "block",
+                    float: "left",
+                    backgroundColor: theme.colors.backgroundUsersTable,
+                    width: marginLeft,
+                    height: "50px"
+                }} />
+                <div className="registered-user" style={rowStyle}>
                     <Style
-                        rules={{
-                            ".react-toggle-track":{
-                                backgroundColor: theme.colors.backgroundToggleButton,
-                                border: "1px solid " + theme.colors.backgroundUserButton,
-                                padding: "4px !important"
-                            },
-                            ".react-toggle:hover .react-toggle-track": {
-                                backgroundColor: theme.colors.backgroundToggleButton
-                            },
-                            ".react-toggle-track-x, .react-toggle-track-check": {
-                                display: "none"
-                            },
-                            ".react-toggle-thumb": {
-                                backgroundColor: theme.colors.backgroundUnregisteredUser,
-                                width: "16px",
-                                height: "16px",
-                                top: "4px",
-                                left: "4px",
-                                border: "none",
-                                borderColor: theme.colors.transparent
-                            },
-                            ".react-toggle--checked .react-toggle-thumb": {
-                                backgroundColor: theme.colors.backgroundRegisteredUser,
-                                left: "30px"
-                            },
-                            ".react-toggle--focus .react-toggle-thumb": {
-                                outline: "none !important",
-                                WebkitBoxShadow: "none !important",
-                                MozBoxShadow: "none !important",
-                                BoxShadow: "none !important"
-                            },
-                            ".react-toggle--focus": {
-                                outline: "none !important",
-                                WebkitBoxShadow: "none !important",
-                                MozBoxShadow: "none !important",
-                                BoxShadow: "none !important"
-                            }
-                        }}
-                        scopeSelector={".toggle"}
+                        rules={{".registered-user:hover": hoverStyle(theme)}}
                     />
-                    {this.renderChildrenButton(theme)}
+                    <div onClick={() => this.props.onSelect(user)}>
+                        <div style={{
+                            width: `calc(50% - ${marginLeft})`,
+                            cursor: "inherit",
+                            float: "left",
+                            borderLeft: "2px solid " + theme.colors.white,
+                            paddingLeft: "10px",
+                            marginBottom: "0px",
+                            ...styles(theme, this.props.isChildrenOpen).usernameStyles,
+                            ...rowStyle
+                        }}>
+                            {getUsername(user)}
+                        </div>
+                        <div style={{
+                            cursor: "inherit",
+                            width: "30%",
+                            height: "50px",
+                            margin: "0px",
+                            float: "left",
+                            ...styles(theme, this.props.isChildrenOpen).groupsStyles,
+                            ...rowStyle
+                        }}>
+                            {!R.isNil(user.get("groups")) ? user.get("groups").join(", ") : ""}
+                        </div>
+                    </div>
+                    <div className="toggle" style={{height: "50px", padding: "6px"}}>
+                        <Toggle
+                            defaultChecked={isActiveUser(user)}
+                            onChange={() => this.props.onChangeActiveStatus(user)}
+                        />
+                        <Style
+                            rules={{
+                                ".react-toggle-track":{
+                                    backgroundColor: theme.colors.backgroundToggleButton,
+                                    border: "1px solid " + theme.colors.backgroundUserButton,
+                                    padding: "4px !important"
+                                },
+                                ".react-toggle:hover .react-toggle-track": {
+                                    backgroundColor: theme.colors.backgroundToggleButton
+                                },
+                                ".react-toggle-track-x, .react-toggle-track-check": {
+                                    display: "none"
+                                },
+                                ".react-toggle-thumb": {
+                                    backgroundColor: theme.colors.backgroundUnregisteredUser,
+                                    width: "16px",
+                                    height: "16px",
+                                    top: "4px",
+                                    left: "4px",
+                                    border: "none",
+                                    borderColor: theme.colors.transparent
+                                },
+                                ".react-toggle--checked .react-toggle-thumb": {
+                                    backgroundColor: theme.colors.backgroundRegisteredUser,
+                                    left: "30px"
+                                },
+                                ".react-toggle--focus .react-toggle-thumb": {
+                                    outline: "none !important",
+                                    WebkitBoxShadow: "none !important",
+                                    MozBoxShadow: "none !important",
+                                    BoxShadow: "none !important"
+                                },
+                                ".react-toggle--focus": {
+                                    outline: "none !important",
+                                    WebkitBoxShadow: "none !important",
+                                    MozBoxShadow: "none !important",
+                                    BoxShadow: "none !important"
+                                }
+                            }}
+                            scopeSelector={".toggle"}
+                        />
+                        {this.renderChildrenButton(theme)}
+                    </div>
                 </div>
             </div>
         );

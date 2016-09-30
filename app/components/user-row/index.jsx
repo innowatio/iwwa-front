@@ -73,6 +73,7 @@ var UserRow = React.createClass({
         );
     },
     renderUnregistered: function (theme) {
+        const marginLeft = this.props.indent + "%";
         let rowStyle = {
             width: "100%",
             color: theme.colors.greySubTitle,
@@ -83,35 +84,45 @@ var UserRow = React.createClass({
             rowStyle.color= theme.colors.white;
         }
         return (
-            <div
-                className="unregistered-user"
-                style={rowStyle}
-                onClick={() => this.props.onSelect(this.props.user)}
-            >
-                <Style
-                    rules={{".unregistered-user:hover": hoverStyle(theme)}}
-                />
-                <label style={{display: "inline-block", float: "left", width: this.props.indent + "%"}} />
-                <div style={{float: "left", borderLeft: "2px solid " + theme.colors.white, width: ("100%" - (this.props.indent + "%"))}}>
+            <div>
+                <div style={{
+                    display: "block",
+                    float: "left",
+                    backgroundColor: theme.colors.backgroundUsersTable,
+                    width: marginLeft,
+                    height: "50px"
+                }} />
+                <div className="unregistered-user" onClick={() => this.props.onSelect(this.props.user)} style={rowStyle}>
+                    <Style
+                        rules={{".unregistered-user:hover": hoverStyle(theme)}}
+                    />
                     <div style={{
-                        display: "inline-block",
-                        width: "28px",
-                        height: "28px",
-                        margin: "0px 10px",
-                        border: "1px solid " + theme.colors.greySubTitle,
-                        backgroundColor: theme.colors.backgroundUserIcon,
-                        borderRadius: "100%",
-                        textAlign: "center",
-                        verticalAlign: "middle",
-                        lineHeight: "28px"
+                        width: `calc(100% - ${marginLeft})`,
+                        cursor: "inherit",
+                        float: "left",
+                        borderLeft: "2px solid " + theme.colors.white,
+                        marginBottom: "0px"
                     }}>
-                        <Icon
-                            color={theme.colors.white}
-                            icon={"danger"}
-                            size={"16px"}
-                        />
+                        <div style={{
+                            display: "inline-block",
+                            width: "28px",
+                            height: "28px",
+                            margin: "0px 10px",
+                            border: "1px solid " + theme.colors.greySubTitle,
+                            backgroundColor: theme.colors.backgroundUserIcon,
+                            borderRadius: "100%",
+                            textAlign: "center",
+                            verticalAlign: "middle",
+                            lineHeight: "28px"
+                        }}>
+                            <Icon
+                                color={theme.colors.white}
+                                icon={"danger"}
+                                size={"16px"}
+                            />
+                        </div>
+                        {getUsername(this.props.user)}
                     </div>
-                    {getUsername(this.props.user)}
                 </div>
             </div>
         );

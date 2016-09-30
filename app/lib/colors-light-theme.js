@@ -39,7 +39,7 @@ export const colorsLightTheme = {
     backgroundTitlePage: "#536DFE",
     backgroundToggleButton: "rgba(0,0,0,0.2)",
     backgroundUnregisteredUser: "#f45353",
-    backgroundUsersTable: "#ffffff",
+    backgroundUsersTable: "#eeeeee",
     backgroundUserIcon: "#ffffff",
     backgroundUserRowHover: "#eeeeee",
     backgroundUserButton: "rgba(0,0,0,0.2)",

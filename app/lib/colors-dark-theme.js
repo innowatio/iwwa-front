@@ -39,7 +39,7 @@ export const colorsDarkTheme = {
     backgroundTitlePage: "#536DFE",
     backgroundToggleButton: "rgba(0,0,0,0.4)",
     backgroundUnregisteredUser: "#f45353",
-    backgroundUsersTable: "rgba(35, 31, 32, 0.5)",
+    backgroundUsersTable: "#28282A",
     backgroundUserIcon: "rgba(2, 2, 2, 0.6)",
     backgroundUserButton: "rgba(255,255,255,0.2)",
     backgroundUserRowHover: "#28282A",
