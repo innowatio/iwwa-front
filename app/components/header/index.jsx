@@ -86,7 +86,7 @@ var Header = React.createClass({
         return isAdmin(this.props.asteroid) && EXEC_ENV !== "cordova" ? (
             <span style={{marginRight: "15px"}}>
                 <bootstrap.OverlayTrigger
-                    overlay={<bootstrap.Tooltip className="buttonInfo">
+                    overlay={<bootstrap.Tooltip id="users" className="buttonInfo">
                         {"Gestione utenti"}
                     </bootstrap.Tooltip>}
                     placement="bottom"
@@ -108,7 +108,7 @@ var Header = React.createClass({
         return this.props.isAuthorizedUser ? (
             <div style={{marginRight: "15px"}}>
                 <bootstrap.OverlayTrigger
-                    overlay={<bootstrap.Tooltip className="buttonInfo">
+                    overlay={<bootstrap.Tooltip id="messages" className="buttonInfo">
                         {"Messaggi"}
                     </bootstrap.Tooltip>}
                     placement="bottom"
@@ -130,7 +130,7 @@ var Header = React.createClass({
         return this.props.isAuthorizedUser ? (
             <div style={{marginRight: "15px"}}>
                 <bootstrap.OverlayTrigger
-                    overlay={<bootstrap.Tooltip className="buttonInfo">
+                    overlay={<bootstrap.Tooltip id="alarms" className="buttonInfo">
                         {"Allarmi"}
                     </bootstrap.Tooltip>}
                     placement="bottom"
@@ -182,7 +182,7 @@ var Header = React.createClass({
                 {this.renderInboxPage()}
                 {this.renderAlarmPage()}
                 <bootstrap.OverlayTrigger
-                    overlay={<bootstrap.Tooltip className="buttonInfo">
+                    overlay={<bootstrap.Tooltip id="logout" className="buttonInfo">
                         {"Logout"}
                     </bootstrap.Tooltip>}
                     placement="bottom"

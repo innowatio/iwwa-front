@@ -40,6 +40,7 @@ import {
     deleteUsers,
     removeRole,
     resetRolesAndGroups,
+    saveAndAssignGroupToUsers,
     selectUser,
     toggleGroup
 } from "actions/users";
@@ -99,6 +100,7 @@ var Users = React.createClass({
         removeSensorFromWorkArea: PropTypes.func.isRequired,
         resetRolesAndGroups: PropTypes.func.isRequired,
         resetWorkAreaSensors: PropTypes.func.isRequired,
+        saveAndAssignGroupToUsers: PropTypes.func.isRequired,
         selectUser: PropTypes.func.isRequired,
         sensorsState: PropTypes.object.isRequired,
         toggleGroup: PropTypes.func.isRequired,
@@ -256,7 +258,7 @@ var Users = React.createClass({
         const theme = this.getTheme();
         return (
             <bootstrap.OverlayTrigger
-                overlay={<bootstrap.Tooltip className="buttonInfo">{tooltip}</bootstrap.Tooltip>}
+                overlay={<bootstrap.Tooltip id={tooltip} className="buttonInfo">{tooltip}</bootstrap.Tooltip>}
                 placement="bottom"
                 rootClose={true}
             >
@@ -341,6 +343,7 @@ var Users = React.createClass({
                     onGroupSelect={this.props.toggleGroup}
                     onHide={this.hideUserRolesAssociator}
                     removeRole={this.props.removeRole}
+                    saveAndAssignGroupToUsers={this.props.saveAndAssignGroupToUsers}
                     show={this.state.showRolesAssociator}
                     usersState={this.props.usersState}
                 />
@@ -370,6 +373,7 @@ const mapDispatchToProps = (dispatch) => {
         removeSensorFromWorkArea: bindActionCreators(removeSensorFromWorkArea, dispatch),
         resetRolesAndGroups: bindActionCreators(resetRolesAndGroups, dispatch),
         resetWorkAreaSensors: bindActionCreators(resetWorkAreaSensors, dispatch),
+        saveAndAssignGroupToUsers: bindActionCreators(saveAndAssignGroupToUsers, dispatch),
         selectUser: bindActionCreators(selectUser, dispatch),
         toggleGroup: bindActionCreators(toggleGroup, dispatch)
     };

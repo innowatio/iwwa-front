@@ -1,12 +1,12 @@
 import Immutable from "immutable";
 import Radium from "radium";
-import R from "ramda";
 import React, {PropTypes} from "react";
 import IPropTypes from "react-immutable-proptypes";
 
 import {Button, FullscreenModal} from "components";
 import DraggableRole from "./draggable-role";
-import {Col, Clearfix, FormControl, Row, Tab, Tabs} from "react-bootstrap";
+import SaveGroupModal from "./save-group-modal";
+import {Col, Clearfix, Row, Tab, Tabs} from "react-bootstrap";
 import RoleDropArea from "./role-drop-area";
 
 import {getGroupsRoles} from "lib/roles-utils";
@@ -70,48 +70,17 @@ var UserRolesAssociator = React.createClass({
             </FullscreenModal>
         );
     },
-    renderSaveGroupModal: function (theme) {
+    renderSaveGroupModal: function () {
         return (
-            <FullscreenModal
-                onConfirm={() => {
+            <SaveGroupModal
+                onHide={() => {
                     this.setState({showSaveGroupModal: false});
                     this.props.onHide();
                 }}
-                onHide={() => this.setState({showSaveGroupModal: false})}
-                renderConfirmButton={true}
+                saveAndAssignGroupToUsers={this.props.saveAndAssignGroupToUsers}
                 show={this.state.showSaveGroupModal}
-            >
-                <form className="form-fields">
-                    <Radium.Style
-                        rules={styles(theme).formFields}
-                        scopeSelector={".form-fields"}
-                    />
-                    <h3
-                        className="text-center"
-                        style={{
-                            color: theme.colors.mainFontColor,
-                            fontSize: "24px",
-                            fontWeight: "400",
-                            marginBottom: "20px",
-                            textTransform: "uppercase",
-                            paddingBottom: "20px",
-                            borderBottom: "1px solid " + theme.colors.borderContentModal
-                        }}
-                    >
-                        {"Nome profilo"}
-                    </h3>
-                    <FormControl
-                        type="text"
-                        placeholder="Assegna un nome a questo profilo"
-                        style={R.merge(styles(theme).inputLine, {
-                            color: theme.colors.buttonPrimary,
-                            padding: "20px",
-                            margin: "5%",
-                            width: "90%"
-                        })}
-                    />
-                </form>
-            </FullscreenModal>
+                usersState={this.props.usersState}    
+            />
         );
     },
     renderRoleTab: function ({colors}) {
@@ -175,7 +144,10 @@ var UserRolesAssociator = React.createClass({
                 </Row>
                 <Row style={{textAlign: "center", margin: "30px 0px"}}>
                     <Button
-                        onClick={() => this.props.assignGroupsToUsers(usersState.selectedUsers, usersState.selectedGroups)}
+                        onClick={() => {
+                            this.props.assignGroupsToUsers(usersState.selectedUsers, usersState.selectedGroups);
+                            this.props.onHide();
+                        }}
                         style={{
                             textAlign: "center",
                             color: colors.white,
@@ -251,7 +223,7 @@ var UserRolesAssociator = React.createClass({
                         {"SALVA CON NOME"}
                     </Button>
                 </Row>
-                {this.renderSaveGroupModal(theme)}
+                {this.renderSaveGroupModal()}
             </Tab>
         );
     },
@@ -271,7 +243,7 @@ var UserRolesAssociator = React.createClass({
                             rules={styles(theme).formFields}
                             scopeSelector={".modal-container"}
                         />
-                        <Tabs className="tabs" defaultActiveKey={1}>
+                        <Tabs id="roleTabs" className="tabs" defaultActiveKey={1}>
                             <Radium.Style
                                 rules={{
                                     "ul": {
