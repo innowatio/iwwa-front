@@ -44,22 +44,33 @@ export const assignSensorsToUsers = (users, sensors) => {
         dispatch({
             type: "ASSIGNING_SENSORS_TO_USERS"
         });
-        if (users.length == 1) {
-            assignSensorsToUser(dispatch, users[0], sensors);
-        } else {
-            users.forEach(user => {
-                const mergedSensors = user.get("sensors") ? R.compose(R.uniq, R.flatten)([user.get("sensors").toJS(), sensors]) : sensors;
-                assignSensorsToUser(dispatch, user, mergedSensors);
-            });
-        }
+        checkAndAssignObjectsToUsers(dispatch, users, sensors, assignSensorsToUser, "sensors");
     };
 };
+
+function checkAndAssignObjectsToUsers (dispatch, users, objects, assignFunc, userField) {
+    if (users.length == 1) {
+        assignFunc(dispatch, users[0], objects);
+    } else {
+        users.forEach(user => {
+            const merged = user.get(userField) ? R.compose(R.uniq, R.flatten)([user.get(userField).toJS(), objects]) : objects;
+            assignFunc(dispatch, user, merged);
+        });
+    }
+}
 
 function assignSensorsToUser (dispatch, user, sensors) {
     const updated = {
         sensors: sensors
     };
     updateUser(dispatch, user.get("_id"), updated, "SENSORS_ASSIGNMENT");
+}
+
+function assignGroupsToUser (dispatch, user, groups) {
+    const updated = {
+        groups: groups
+    };
+    updateUser(dispatch, user.get("_id"), updated, "GROUPS_ASSIGNMENT");
 }
 
 export const deleteUsers = (usersToDelete, allUsers) => {
@@ -94,40 +105,31 @@ export const removeRole = role => getBasicObject(REMOVE_ROLE, role);
 export const resetRolesAndGroups = () => getBasicObject(RESET_ROLES_GROUPS);
 
 export const assignGroupsToUsers = (users, groups) => {
-    console.log(users);
-    console.log(groups);
     return dispatch => {
         dispatch({
             type: "ASSIGNING_GROUPS_TO_USERS"
         });
-        //TODO
-        // if (users.length == 1) {
-        //     assignSensorsToUser(dispatch, users[0], sensors);
-        // } else {
-        //     users.forEach(user => {
-        //         const mergedSensors = user.get("sensors") ? R.compose(R.uniq, R.flatten)([user.get("sensors").toJS(), sensors]) : sensors;
-        //         assignSensorsToUser(dispatch, user, mergedSensors);
-        //     });
-        // }
+        checkAndAssignObjectsToUsers(dispatch, users, groups, assignGroupsToUser, "groups");
     };
 };
 
 export const saveAndAssignGroupToUsers = (users, groupName, roles) => {
-    console.log(users);
-    console.log(groupName);
-    console.log(roles);
     return dispatch => {
-        //TODO
         dispatch({
             type: "ASSIGNING_GROUPS_TO_USERS"
         });
-        // if (users.length == 1) {
-        //     assignSensorsToUser(dispatch, users[0], sensors);
-        // } else {
-        //     users.forEach(user => {
-        //         const mergedSensors = user.get("sensors") ? R.compose(R.uniq, R.flatten)([user.get("sensors").toJS(), sensors]) : sensors;
-        //         assignSensorsToUser(dispatch, user, mergedSensors);
-        //     });
-        // }
+        var endpoint = "http://" + WRITE_API_ENDPOINT + "/groups";
+        const group = {
+            name: groupName,
+            roles: roles
+        };
+        axios.post(endpoint, group)
+            .then(() => dispatch({
+                type: "GROUP_CREATION_SUCCESS"
+            }))
+            .catch(() => dispatch({
+                type: "GROUP_CREATION_FAIL"
+            }));
+        checkAndAssignObjectsToUsers(dispatch, users, [groupName], assignGroupsToUser, "groups");
     };
 };

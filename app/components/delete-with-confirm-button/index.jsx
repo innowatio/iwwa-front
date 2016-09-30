@@ -59,7 +59,7 @@ var DeleteWithConfirmButton = React.createClass({
         return (
             <div style={{display: "inline"}}>
                 <bootstrap.OverlayTrigger
-                    overlay={<bootstrap.Tooltip className="buttonInfo">
+                    overlay={<bootstrap.Tooltip id="delete" className="buttonInfo">
                         {"Elimina"}
                     </bootstrap.Tooltip>}
                     placement="bottom"

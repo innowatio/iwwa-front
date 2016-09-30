@@ -588,7 +588,7 @@ var Chart = React.createClass({
                         {this.getTitleForChart().toUpperCase()}
                     </div>
                     <bootstrap.OverlayTrigger
-                        overlay={<bootstrap.Tooltip className="buttonInfo">{"Visualizza allarmi"}</bootstrap.Tooltip>}
+                        overlay={<bootstrap.Tooltip id="show-alarms" className="buttonInfo">{"Visualizza allarmi"}</bootstrap.Tooltip>}
                         placement="bottom"
                         rootClose={true}
                     >
