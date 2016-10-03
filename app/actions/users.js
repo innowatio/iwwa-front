@@ -2,7 +2,7 @@ import axios from "axios";
 import R from "ramda";
 
 import {WRITE_API_ENDPOINT} from "lib/config";
-import {getChildren, isActiveUser} from "lib/users-utils";
+import {getChildren, getUsername, isActiveUser} from "lib/users-utils";
 
 import {getBasicObject} from "./utils";
 
@@ -21,16 +21,22 @@ export const changeActiveStatus = user => {
             type: "CHANGING_ACTIVE_STATUS"
         });
         const newProfile = {
-            ...user.get("profile"),
-            active: !isActiveUser(user)
+            profile: {
+                ...user.get("profile").toObject(),
+                active: !isActiveUser(user)
+            }
         };
-        updateUser(dispatch, user.get("_id"), newProfile, "ACTIVE_STATUS_UPDATE");
+        updateUser(dispatch, user, newProfile, "ACTIVE_STATUS_UPDATE");
     };
 };
 
-function updateUser (dispatch, userId, updatedInfo, event) {
-    const endpoint = "http://" + WRITE_API_ENDPOINT + "/users/" + userId;
-    axios.put(endpoint, updatedInfo)
+function updateUser (dispatch, user, updatedInfo, event) {
+    const endpoint = "http://" + WRITE_API_ENDPOINT + "/users/" + getUsername(user);
+    const updatedUser = {
+        uid: user.get("_id"),
+        ...updatedInfo
+    };
+    axios.put(endpoint, updatedUser)
         .then(() => dispatch({
             type: event + "_SUCCESS"
         }))
@@ -63,14 +69,14 @@ function assignSensorsToUser (dispatch, user, sensors) {
     const updated = {
         sensors: sensors
     };
-    updateUser(dispatch, user.get("_id"), updated, "SENSORS_ASSIGNMENT");
+    updateUser(dispatch, user, updated, "SENSORS_ASSIGNMENT");
 }
 
 function assignGroupsToUser (dispatch, user, groups) {
     const updated = {
         groups: groups
     };
-    updateUser(dispatch, user.get("_id"), updated, "GROUPS_ASSIGNMENT");
+    updateUser(dispatch, user, updated, "GROUPS_ASSIGNMENT");
 }
 
 export const deleteUsers = (usersToDelete, allUsers) => {
