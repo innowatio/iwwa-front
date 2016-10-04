@@ -73,11 +73,14 @@ var UserRolesAssociator = React.createClass({
     renderSaveGroupModal: function () {
         return (
             <SaveGroupModal
+                allGroups={this.props.collections.get("groups") || Immutable.Map()}
                 onHide={() => {
                     this.setState({showSaveGroupModal: false});
+                }}
+                saveAndAssignGroupToUsers={(users, name, roles) => {
+                    this.props.saveAndAssignGroupToUsers(users, name, roles);
                     this.props.onHide();
                 }}
-                saveAndAssignGroupToUsers={this.props.saveAndAssignGroupToUsers}
                 show={this.state.showSaveGroupModal}
                 usersState={this.props.usersState}    
             />
@@ -207,6 +210,7 @@ var UserRolesAssociator = React.createClass({
                 <Row style={{textAlign: "center", margin: "20px 0px"}}>
                     <Button
                         onClick={() => this.setState({showSaveGroupModal: true})}
+                        disabled={this.props.usersState.selectedRoles.length < 1}
                         style={{
                             color: theme.colors.white,
                             borderRadius: "30px",

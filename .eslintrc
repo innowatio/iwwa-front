@@ -11,6 +11,7 @@
         "PushNotification": true,
         "device": true,
         "expect": true,
+        "Promise": true,
         "proxyquire": true,
         "React": true,
         "ReactDOM": true,

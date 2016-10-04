@@ -3,17 +3,14 @@ import {Col} from "react-bootstrap";
 import IPropTypes from "react-immutable-proptypes";
 import Select from "react-select";
 import Radium from "radium";
-import R from "ramda";
 import TagsInput from "react-tagsinput";
-import {reduxForm} from "redux-form";
+import {reduxForm, Field} from "redux-form";
 
 import {FormInputText, FullscreenModal, SensorAggregator, TagList} from "components";
 
 import {potentialUnitsOfMeasurement} from "lib/sensors-utils";
 import {styles} from "lib/styles";
 import {defaultTheme} from "lib/theme";
-
-export const fields = ["name", "description", "unitOfMeasurement", "siteId", "userId", "primaryTags", "tags"];
 
 const validate = values => {
     const errors = {};
@@ -37,7 +34,6 @@ var SensorForm = React.createClass({
         allSensors: IPropTypes.map,
         closeForm: PropTypes.func.isRequired,
         currentSensor: IPropTypes.map,
-        fields: PropTypes.object.isRequired,
         handleSubmit: PropTypes.func.isRequired,
         initialValues: PropTypes.object,
         onSave: PropTypes.func.isRequired,
@@ -105,13 +101,104 @@ var SensorForm = React.createClass({
             <input type="text" placeholder="Tags" {...props} />
         );
     },
+    renderInputTextField: function (field) {
+        const theme = this.getTheme();
+        return (
+            <div className={"form-group" + (field.meta.touched && field.meta.error ? " has-error" : "")} style={{marginBottom: "15px", padding:"1px"}}>
+                <div className={"col-xs-12"}>
+                    <FormInputText
+                        field={field.input}
+                        placeholder={field.label}
+                        style={styles(theme).inputLine}
+                        type="text"
+                    />
+                </div>
+                {field.meta.touched && field.meta.error && <div className="col-xs-12 help-block">{field.meta.error}</div>}
+            </div>
+        );
+    },
+    renderTextAreaField: function (field) {
+        const theme = this.getTheme();
+        return (
+            <div className={"form-group" + (field.meta.touched && field.meta.error ? " has-error" : "")}>
+                <div className={"col-xs-12"}>
+                    <label style={{
+                        width: "100%",
+                        color: theme.colors.textGrey,
+                        fontSize: "16px",
+                        fontWeight: "300",
+                        marginTop: "10px"
+                    }}>
+                        {field.label}
+                    </label>
+                    <textarea
+                        className="form-control"
+                        style={{...styles(theme).inputLine,
+                            resize: "none",
+                            margin: "0px",
+                            padding: "5px 0px",
+                            height: "133px"
+                        }}
+                        {...field.input}
+                    />
+                </div>
+                {field.meta.touched && field.meta.error && <div className="col-xs-12 help-block">{field.meta.error}</div>}
+            </div>
+        );
+    },
+    renderSelectInputField: function (field) {
+        const theme = this.getTheme();
+        return (
+            <div className={"form-group" + (field.meta.touched && field.meta.error ? " has-error" : "")}>
+                <div
+                    className={"col-xs-12"}
+                    style={{marginBottom: "20px"}}
+                >
+                    <Radium.Style
+                        rules={styles(theme).sensorModalSelect}
+                        scopeSelector=".sensor-modal-select"
+                    />
+                    <Select
+                        className="sensor-modal-select"
+                        name="unitOfMeasurement"
+                        onChange={field.input.onChange}
+                        options={potentialUnitsOfMeasurement}
+                        placeholder={field.label}
+                        value={field.input.value}
+                    />
+                    {field.meta.touched && field.meta.error && <div className="col-xs-12 help-block">{field.meta.error}</div>}
+                </div>
+            </div>
+        );
+    },
+    renderTagListField: function (field) {
+        return (
+            <TagList
+                className={"tags-wrp form-group col-xs-12"}
+                style={{marginBottom: "15px"}}
+                tagIcon={true}
+                tags={field.input.value}
+            />
+        );
+    },
+    renderTagsInputField: function (field) {
+        return (
+            <div className={"tags-wrp form-group col-xs-12"} style={{marginBottom: "15px"}}>
+                <TagsInput
+                    addOnBlur={true}
+                    renderInput={this.renderTagInput}
+                    onChange={field.input.onChange}
+                    value={field.input.value || field.input.initialValue}
+                />
+            </div>
+        );
+    },
     render: function () {
         const {
-            fields: {name, description, unitOfMeasurement, siteId, userId, primaryTags, tags},
             resetForm,
             handleSubmit
         } = this.props;
-        let theme = this.getTheme();
+        const theme = this.getTheme();
         // TODO try to see if redux-form change is avoidable
         return (
             <FullscreenModal
@@ -142,93 +229,41 @@ var SensorForm = React.createClass({
                         {this.props.title}
                     </h3>
                     <Col md={6}>
-                        <div className={"form-group" + (name.touched && name.error ? " has-error" : "")} style={{marginBottom: "15px", padding:"1px"}}>
-                            <div className={"col-xs-12"}>
-                                <FormInputText
-                                    field={name}
-                                    placeholder="Nome"
-                                    style={R.merge(styles(theme).inputLine, {color: theme.colors.buttonPrimary})}
-                                />
-                            </div>
-                            {name.touched && name.error && <div className="col-xs-12 help-block">{name.error}</div>}
-                        </div>
-                        <div className={"form-group" + (description.touched && description.error ? " has-error" : "")}>
-                            <div className={"col-xs-12"}>
-                                <label style={{
-                                    width: "100%",
-                                    color: theme.colors.textGrey,
-                                    fontSize: "16px",
-                                    fontWeight: "300",
-                                    marginTop: "10px"
-                                }}>
-                                    {"Descrizione"}
-                                </label>
-                                <textarea
-                                    className="form-control"
-                                    style={{...styles(theme).inputLine,
-                                        resize: "none",
-                                        margin: "0px",
-                                        padding: "5px 0px",
-                                        height: "133px"
-                                    }}
-                                    {...description}
-                                />
-                            </div>
-                            {description.touched && description.error && <div className="col-xs-12 help-block">{description.error}</div>}
-                        </div>
+                        <Field
+                            name="name"
+                            label="Nome"
+                            component={this.renderInputTextField}
+                        />
+                        <Field
+                            name="description"
+                            label="Descrizione"
+                            component={this.renderTextAreaField}
+                        />
                     </Col>
                     <Col md={6}>
-                        <div className={"form-group" + (unitOfMeasurement.touched && unitOfMeasurement.error ? " has-error" : "")}>
-                            <div
-                                className={"col-xs-12"}
-                                style={{marginBottom: "20px"}}
-                            >
-                                <Radium.Style
-                                    rules={styles(theme).sensorModalSelect}
-                                    scopeSelector=".sensor-modal-select"
-                                />
-                                <Select
-                                    className="sensor-modal-select"
-                                    name="unitOfMeasurement"
-                                    onChange={unitOfMeasurement.onChange}
-                                    options={potentialUnitsOfMeasurement}
-                                    placeholder="Unità di misura"
-                                    value={unitOfMeasurement.value}
-                                />
-                                {unitOfMeasurement.touched && unitOfMeasurement.error &&
-                                    <div className="col-xs-12 help-block">{unitOfMeasurement.error}</div>
-                                }
-                            </div>
-
-                        </div>
-                        <div className={"form-group col-xs-12"} style={{marginBottom: "20px"}}>
-                            <FormInputText
-                                field={siteId}
-                                placeholder="Referenza sito"
-                                style={styles(theme).inputLine}
-                            />
-                        </div>
-                        <div className={"form-group col-xs-12"} style={{marginBottom: "20px"}}>
-                            <FormInputText
-                                field={userId}
-                                placeholder="Referenza cliente"
-                                style={styles(theme).inputLine}
-                            />
-                        </div>
-                        <TagList
-                            className={"tags-wrp form-group col-xs-12"}
-                            style={{marginBottom: "15px"}}
-                            tagIcon={true}
-                            tags={primaryTags.value}
+                        <Field
+                            name="unitOfMeasurement"
+                            label="Unità di misura"
+                            component={this.renderSelectInputField}
                         />
-                        <div className={"tags-wrp form-group col-xs-12"} style={{marginBottom: "15px"}}>
-                            <TagsInput
-                                addOnBlur={true}
-                                renderInput={this.renderTagInput}
-                                onChange={tags.onChange}
-                                value={tags.value || tags.initialValue}
-                            />
-                        </div>
+                        <Field
+                            name="siteId"
+                            label="Referenza sito"
+                            component={this.renderInputTextField}
+                        />
+                        <Field
+                            name="userId"
+                            label="Referenza cliente"
+                            component={this.renderInputTextField}
+                        />
+                        <Field
+                            name="primaryTags"
+                            component={this.renderTagListField}
+                        />
+                        <Field
+                            name="tags"
+                            component={this.renderTagsInputField}
+                        />
                     </Col>
                     {this.renderSensorAggregation()}
                     <div style={{clear: "both", height: "20px"}}></div>
@@ -238,4 +273,4 @@ var SensorForm = React.createClass({
     }
 });
 
-module.exports = reduxForm({form: "sensor", fields, validate})(SensorForm);
+module.exports = reduxForm({form: "sensor", validate})(SensorForm);
