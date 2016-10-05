@@ -11,6 +11,7 @@ import {
     Button,
     CollectionItemList,
     DeleteWithConfirmButton,
+    FormInputText,
     FullscreenModal,
     Icon,
     MonitoringSensorsAssociator,
@@ -18,7 +19,7 @@ import {
     UserRolesAssociator,
     UserRow
 } from "components";
-import {FormControl} from "react-bootstrap";
+import {reduxForm, Field, SubmissionError} from "redux-form";
 
 import {getDragDropContext} from "lib/dnd-utils";
 import {styles} from "lib/styles";
@@ -97,6 +98,7 @@ var Users = React.createClass({
         collections: IPropTypes.map,
         deleteUsers: PropTypes.func.isRequired,
         filterSensors: PropTypes.func.isRequired,
+        handleSubmit: PropTypes.func.isRequired,
         moveUser: PropTypes.func.isRequired,
         removeRole: PropTypes.func.isRequired,
         removeSensorFromWorkArea: PropTypes.func.isRequired,
@@ -143,6 +145,16 @@ var Users = React.createClass({
     },
     getTheme: function () {
         return this.context.theme || defaultTheme;
+    },
+    validateEmail: function ({email}) {
+        console.log("cacca");
+        return Promise.resolve().then(() => {
+            if (!email) {
+                throw new SubmissionError({email: "L'email è richiesta", _error: "error"});
+            } else if (!/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i.test(email)) {
+                throw new SubmissionError({email: "Inserisci un formato email corretto", _error: "error"});
+            }
+        });
     },
     getAllUsers: function () {
         return this.props.collections.get("users") || Immutable.Map();
@@ -217,9 +229,30 @@ var Users = React.createClass({
             </div>
         );
     },
+    renderFormInput: function (field) {
+        const theme = this.getTheme();
+        return (
+            <div
+                className={"form-group" + (field.meta.touched && field.meta.error ? " has-error" : "")}
+                style={{width: "90%", margin: "5%"}}
+            >
+                <FormInputText
+                    field={field.input}
+                    placeholder="Indirizzo email"
+                    style={R.merge(styles(theme).inputLine, {
+                        color: theme.colors.buttonPrimary
+                    })}
+                    type={field.type}
+                />
+                {field.meta.touched && field.meta.error && <div className="help-block">{field.meta.error}</div>}
+            </div>
+        );
+    },
     renderCreateUserModal: function (theme) {
+        const {handleSubmit} = this.props;
         return (
             <FullscreenModal
+                onConfirm={handleSubmit(this.validateEmail)}
                 onHide={() => this.setState({showCreateUserModal: false})}
                 renderConfirmButton={true}
                 show={this.state.showCreateUserModal}
@@ -243,15 +276,10 @@ var Users = React.createClass({
                     >
                         {"Crea nuovo utente"}
                     </h3>
-                    <FormControl
+                    <Field
+                        name="email"
+                        component={this.renderFormInput}
                         type="email"
-                        placeholder="Indirizzo email"
-                        style={R.merge(styles(theme).inputLine, {
-                            color: theme.colors.buttonPrimary,
-                            padding: "20px",
-                            margin: "5%",
-                            width: "90%"
-                        })}
                     />
                 </form>
             </FullscreenModal>
@@ -383,4 +411,4 @@ const mapDispatchToProps = (dispatch) => {
     };
 };
 
-module.exports = connect(mapStateToProps, mapDispatchToProps)(getDragDropContext(Users));
+module.exports = connect(mapStateToProps, mapDispatchToProps)(getDragDropContext(reduxForm({form: "newUser"})(Users)));

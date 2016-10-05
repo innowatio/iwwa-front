@@ -50,19 +50,19 @@ var SaveGroupModal = React.createClass({
     renderFormInput: function (field) {
         const theme = this.getTheme();
         return (
-            <div>
+            <div
+                className={"form-group" + (field.meta.touched && field.meta.error ? " has-error" : "")}
+                style={{width: "90%", margin: "5%"}}
+            >
                 <FormInputText
                     field={field.input}
                     placeholder="Assegna un nome a questo profilo"
                     style={R.merge(styles(theme).inputLine, {
-                        color: theme.colors.buttonPrimary,
-                        padding: "20px",
-                        margin: "5%",
-                        width: "90%"
+                        color: theme.colors.buttonPrimary
                     })}
                     type={field.type}
                 />
-                {field.meta.touched && field.meta.error && <span className="error">{field.meta.error}</span>}
+                {field.meta.touched && field.meta.error && <div className="help-block">{field.meta.error}</div>}
             </div>
         );
     },

@@ -143,7 +143,6 @@ var MonitoringWorkArea = React.createClass({
                     width: "auto",
                     overflow: "auto",
                     height: "100%",
-                    marginRight: "-15px",
                     padding: "10px 15px 0px 15px"
                 }}>
                     {this.renderTableInstructions(theme)}

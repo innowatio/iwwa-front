@@ -10,7 +10,7 @@ const buttonConfirmStyle = ({colors}) => ({
     height: "50px",
     lineHeight: "45px",
     padding: "0px",
-    margin: "0 0 0 20px",
+    margin: "0px",
     fontSize: "20px",
     border: "0px",
     backgroundColor: colors.buttonPrimary,
@@ -59,8 +59,9 @@ var FullscreenModal = React.createClass({
         );
     },
     renderFooter: function () {
+        const padding = this.props.onReset ? "40px" : "0px";
         return (
-            <Modal.Footer style={{display: "block", paddingLeft: "40px"}}>
+            <Modal.Footer style={{display: "block", padding}}>
                 <components.ButtonConfirmAndReset
                     confirmButtonStyle={buttonConfirmStyle(this.getTheme())}
                     onConfirm={this.props.onConfirm}

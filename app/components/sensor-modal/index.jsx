@@ -15,15 +15,15 @@ import {defaultTheme} from "lib/theme";
 const validate = values => {
     const errors = {};
     if (!values.name) {
-        errors.name = "Required";
+        errors.name = "Campo Richiesto";
     } else if (values.name.length < 5) {
-        errors.name = "Must be 5 characters or more";
+        errors.name = "Dev'essere di 5 o più caratteri";
     }
     if (!values.description) {
-        errors.description = "Required";
+        errors.description = "Campo Richiesto";
     }
     if (!values.unitOfMeasurement) {
-        errors.unitOfMeasurement = "Required";
+        errors.unitOfMeasurement = "Campo Richiesto";
     }
     return errors;
 };
