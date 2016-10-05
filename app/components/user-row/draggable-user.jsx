@@ -6,6 +6,7 @@ import IPropTypes from "react-immutable-proptypes";
 import Toggle from "react-toggle";
 
 import {Button, Icon} from "components";
+import UserDropArea from "./user-drop-area";
 
 import {Types} from "lib/dnd-utils";
 import {defaultTheme} from "lib/theme";
@@ -39,6 +40,7 @@ var DraggableUser = React.createClass({
         isChildrenOpen: PropTypes.bool,
         isDragging: PropTypes.bool,
         isSelected: PropTypes.func,
+        moveUser: PropTypes.func,
         onChangeActiveStatus: PropTypes.func,
         onOpenChildren: PropTypes.func,
         onSelect: PropTypes.func,
@@ -97,8 +99,14 @@ var DraggableUser = React.createClass({
                     backgroundColor: theme.colors.backgroundUsersTable,
                     width: marginLeft,
                     height: "50px"
-                }} />
-                <div className="registered-user" style={rowStyle}>
+                }}>
+                </div>
+                <UserDropArea
+                    changeParent={this.props.moveUser}
+                    className="registered-user"
+                    style={rowStyle}
+                    user={this.props.user}
+                >
                     <Style
                         rules={{".registered-user:hover": hoverStyle(theme)}}
                     />
@@ -175,16 +183,17 @@ var DraggableUser = React.createClass({
                         />
                         {this.renderChildrenButton(theme)}
                     </div>
-                </div>
+                </UserDropArea>
             </div>
         );
     }
 });
 
 const userSource = {
-    beginDrag () {
+    beginDrag (props) {
         return {
-            type: Types.USER_ROW
+            type: Types.USER_ROW,
+            user: props.user
         };
     }
 };

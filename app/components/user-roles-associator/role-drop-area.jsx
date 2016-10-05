@@ -1,9 +1,10 @@
 import React, {PropTypes} from "react";
 import {DropTarget} from "react-dnd";
-import {defaultTheme} from "lib/theme";
+
 import {Icon} from "components";
 
 import {Types} from "lib/dnd-utils";
+import {defaultTheme} from "lib/theme";
 
 var RoleDropArea = React.createClass({
     propTypes: {

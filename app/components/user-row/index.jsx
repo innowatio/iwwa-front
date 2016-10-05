@@ -28,6 +28,7 @@ var UserRow = React.createClass({
         getChildren: PropTypes.func,
         indent: PropTypes.number.isRequired,
         isSelected: PropTypes.func,
+        moveUser: PropTypes.func,
         onChangeActiveStatus: PropTypes.func,
         onSelect: PropTypes.func,
         user: IPropTypes.map.isRequired
@@ -63,6 +64,7 @@ var UserRow = React.createClass({
                     indent={this.props.indent}
                     isChildrenOpen={this.state.childrenOpen}
                     isSelected={this.props.isSelected}
+                    moveUser={this.props.moveUser}
                     onChangeActiveStatus={this.props.onChangeActiveStatus}
                     onOpenChildren={() => this.setState({childrenOpen: !this.state.childrenOpen})}
                     onSelect={this.props.onSelect}
@@ -91,7 +93,8 @@ var UserRow = React.createClass({
                     backgroundColor: theme.colors.backgroundUsersTable,
                     width: marginLeft,
                     height: "50px"
-                }} />
+                }}>
+                </div>
                 <div className="unregistered-user" onClick={() => this.props.onSelect(this.props.user)} style={rowStyle}>
                     <Style
                         rules={{".unregistered-user:hover": hoverStyle(theme)}}

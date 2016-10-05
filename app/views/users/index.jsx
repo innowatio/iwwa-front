@@ -38,6 +38,7 @@ import {
     assignSensorsToUsers,
     changeActiveStatus,
     deleteUsers,
+    moveUser,
     removeRole,
     resetRolesAndGroups,
     saveAndAssignGroupToUsers,
@@ -96,6 +97,7 @@ var Users = React.createClass({
         collections: IPropTypes.map,
         deleteUsers: PropTypes.func.isRequired,
         filterSensors: PropTypes.func.isRequired,
+        moveUser: PropTypes.func.isRequired,
         removeRole: PropTypes.func.isRequired,
         removeSensorFromWorkArea: PropTypes.func.isRequired,
         resetRolesAndGroups: PropTypes.func.isRequired,
@@ -207,6 +209,7 @@ var Users = React.createClass({
                             return it.get("_id") === userId;
                         })(this.props.usersState.selectedUsers) != null;
                     }}
+                    moveUser={this.props.moveUser}
                     onChangeActiveStatus={this.props.changeActiveStatus}
                     onSelect={this.props.selectUser}
                     user={user}
@@ -369,6 +372,7 @@ const mapDispatchToProps = (dispatch) => {
         changeActiveStatus: bindActionCreators(changeActiveStatus, dispatch),
         deleteUsers: bindActionCreators(deleteUsers, dispatch),
         filterSensors: bindActionCreators(filterSensors, dispatch),
+        moveUser: bindActionCreators(moveUser, dispatch),
         removeRole: bindActionCreators(removeRole, dispatch),
         removeSensorFromWorkArea: bindActionCreators(removeSensorFromWorkArea, dispatch),
         resetRolesAndGroups: bindActionCreators(resetRolesAndGroups, dispatch),

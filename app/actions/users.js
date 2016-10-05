@@ -140,3 +140,18 @@ export const saveAndAssignGroupToUsers = (users, groupName, roles) => {
         checkAndAssignObjectsToUsers(dispatch, users, [groupName], assignGroupsToUser, "groups");
     };
 };
+
+export const moveUser = (user, parentUserId) => {
+    return dispatch => {
+        dispatch({
+            type: "MOVING_USER"
+        });
+        const newProfile = {
+            profile: {
+                ...user.get("profile").toObject(),
+                parentUserId: parentUserId
+            }
+        };
+        updateUser(dispatch, user, newProfile, "CHANGE_USER_PARENT");
+    };
+};
