@@ -11,6 +11,7 @@ var UserDropArea = React.createClass({
         children: PropTypes.element,
         className: PropTypes.string,
         connectDropTarget: PropTypes.func,
+        onClick: PropTypes.func,
         style: PropTypes.object,
         user: IPropTypes.map.isRequired
     },
@@ -18,9 +19,9 @@ var UserDropArea = React.createClass({
         return this.context.theme || defaultTheme;
     },
     render: function () {
-        const {children, className, connectDropTarget, style} = this.props;
+        const {children, className, connectDropTarget, onClick, style} = this.props;
         return connectDropTarget(
-            <div className={className} style={style}>
+            <div className={className} style={style} onClick={onClick}>
                 {children}
             </div>
         );

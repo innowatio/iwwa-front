@@ -17,18 +17,22 @@ const hoverStyle = ({colors}) => ({
     cursor: "pointer"
 });
 
-const styles = ({colors}, open) => ({
+function getColor (colors, open, confirmed, prepend) {
+    return prepend + (open ? colors.buttonPrimary : (confirmed ? colors.white : colors.greySubTitle));
+}
+
+const styles = ({colors}, open, confirmed) => ({
     iconArrow: {
         display: "inline-block",
         lineHeight: "10px",
         transform: open ? "rotate(180deg)" : null
     },
     usernameStyles: {
-        borderLeft: open ? "2px solid " + colors.buttonPrimary : "2px solid " + colors.white,
-        color: open ? colors.buttonPrimary : colors.white
+        borderLeft: getColor(colors, open, confirmed, "2px solid "),
+        color: getColor(colors, open, confirmed, "")
     },
     groupsStyles: {
-        color: open ? colors.buttonPrimary : colors.white
+        color: getColor(colors, open, confirmed, "")
     }
 });
 
@@ -38,6 +42,7 @@ var DraggableUser = React.createClass({
         hasChildren: PropTypes.bool,
         indent: PropTypes.number.isRequired,
         isChildrenOpen: PropTypes.bool,
+        isConfirmed: PropTypes.bool,
         isDragging: PropTypes.bool,
         isSelected: PropTypes.func,
         moveUser: PropTypes.func,
@@ -55,7 +60,10 @@ var DraggableUser = React.createClass({
     renderChildrenButton: function (theme) {
         return this.props.hasChildren ? (
             <Button
-                onClick={this.props.onOpenChildren}
+                onClick={(event) => {
+                    this.props.onOpenChildren();
+                    event.stopPropagation();
+                }}
                 style={{
                     float: "right",
                     backgroundColor: theme.colors.backgroundUserButton,
@@ -75,10 +83,47 @@ var DraggableUser = React.createClass({
                     color={theme.colors.mainFontColor}
                     icon={"arrow-down"}
                     size={"14px"}
-                    style={styles(theme, this.props.isChildrenOpen).iconArrow}
+                    style={styles(theme, this.props.isChildrenOpen, this.props.isConfirmed).iconArrow}
                 />
             </Button>
         ) : null;
+    },
+    renderUserName: function (theme, rowStyle, marginLeft) {
+        let nameStyle = {
+            width: `calc(50% - ${marginLeft})`,
+            cursor: "inherit",
+            float: "left",
+            borderLeft: "2px solid " + theme.colors.white,
+            marginBottom: "0px",
+            paddingLeft: "10px",
+            ...styles(theme, this.props.isChildrenOpen, this.props.isConfirmed).usernameStyles,
+            ...rowStyle
+        };
+        return (
+            <div style={nameStyle}>
+                {!this.props.isConfirmed ?
+                    <div style={{
+                        display: "inline-block",
+                        width: "28px",
+                        height: "28px",
+                        margin: "0px 10px",
+                        border: "1px solid " + theme.colors.greySubTitle,
+                        backgroundColor: theme.colors.backgroundUserIcon,
+                        borderRadius: "100%",
+                        textAlign: "center",
+                        verticalAlign: "middle",
+                        lineHeight: "28px"
+                    }}>
+                        <Icon
+                            color={theme.colors.white}
+                            icon={"danger"}
+                            size={"16px"}
+                        />
+                    </div>
+                : null}
+                {getUsername(this.props.user)}
+            </div>
+        );
     },
     render: function () {
         const theme = this.getTheme();
@@ -103,37 +148,25 @@ var DraggableUser = React.createClass({
                 </div>
                 <UserDropArea
                     changeParent={this.props.moveUser}
-                    className="registered-user"
+                    className="user-row"
+                    onClick={() => this.props.onSelect(user)}
                     style={rowStyle}
                     user={this.props.user}
                 >
                     <Style
-                        rules={{".registered-user:hover": hoverStyle(theme)}}
+                        rules={{".user-row:hover": hoverStyle(theme)}}
                     />
-                    <div onClick={() => this.props.onSelect(user)}>
-                        <div style={{
-                            width: `calc(50% - ${marginLeft})`,
-                            cursor: "inherit",
-                            float: "left",
-                            borderLeft: "2px solid " + theme.colors.white,
-                            paddingLeft: "10px",
-                            marginBottom: "0px",
-                            ...styles(theme, this.props.isChildrenOpen).usernameStyles,
-                            ...rowStyle
-                        }}>
-                            {getUsername(user)}
-                        </div>
-                        <div style={{
-                            cursor: "inherit",
-                            width: "30%",
-                            height: "50px",
-                            margin: "0px",
-                            float: "left",
-                            ...styles(theme, this.props.isChildrenOpen).groupsStyles,
-                            ...rowStyle
-                        }}>
-                            {!R.isNil(user.get("groups")) ? user.get("groups").join(", ") : ""}
-                        </div>
+                    {this.renderUserName(theme, rowStyle, marginLeft)}
+                    <div style={{
+                        cursor: "inherit",
+                        width: "30%",
+                        height: "50px",
+                        margin: "0px",
+                        float: "left",
+                        ...styles(theme, this.props.isChildrenOpen, this.props.isConfirmed).groupsStyles,
+                        ...rowStyle
+                    }}>
+                        {!R.isNil(user.get("groups")) ? user.get("groups").join(", ") : ""}
                     </div>
                     <div className="toggle" style={{height: "50px", padding: "6px"}}>
                         <Toggle
