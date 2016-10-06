@@ -36,11 +36,12 @@ var SaveGroupModal = React.createClass({
             } else if (name.length < 3) {
                 throw new SubmissionError({name: "Dev'essere di 3 o più caratteri"});
             }
+            const selectedRoles = this.props.usersState.selectedRoles.sort().toString();
             this.props.allGroups.forEach(group => {
                 if (group.get("name").toLowerCase() === name.toLowerCase()) {
                     throw new SubmissionError({name: "C'è già un profilo con lo stesso nome"});
                 }
-                if (this.props.usersState.selectedRoles.sort().toString() === group.get("roles").sort().toString()) {
+                if (selectedRoles === group.get("roles").toJS().sort().toString()) {
                     throw new SubmissionError({name: "C'è già un profilo ('" + group.get("name") + "') con le stesse funzionalità"});
                 }
             });
