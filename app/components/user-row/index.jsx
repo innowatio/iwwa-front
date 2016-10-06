@@ -18,6 +18,7 @@ const styles = () => ({
 
 var UserRow = React.createClass({
     propTypes: {
+        asteroid: PropTypes.object,
         getChildren: PropTypes.func,
         indent: PropTypes.number.isRequired,
         isSelected: PropTypes.func,
@@ -38,6 +39,7 @@ var UserRow = React.createClass({
     renderChildren: function (children) {
         return this.state.childrenOpen ? (
             <UserRow
+                asteroid={this.props.asteroid}
                 getChildren={this.props.getChildren}
                 indent={this.props.indent + 5}
                 isSelected={this.props.isSelected}
@@ -55,6 +57,7 @@ var UserRow = React.createClass({
             <div style={styles(theme).container}>
                 <div style={{color: theme.colors.white}}>
                     <DraggableUser
+                        asteroid={this.props.asteroid}
                         hasChildren={children && children.size > 0}
                         indent={this.props.indent}
                         isChildrenOpen={this.state.childrenOpen}

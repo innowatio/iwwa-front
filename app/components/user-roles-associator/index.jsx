@@ -9,7 +9,7 @@ import SaveGroupModal from "./save-group-modal";
 import {Col, Clearfix, Row, Tab, Tabs} from "react-bootstrap";
 import RoleDropArea from "./role-drop-area";
 
-import {getGroupsRoles} from "lib/roles-utils";
+import {getGroupsRoles, hasRole, MANAGE_USERS, ASSIGN_GROUPS, CREATE_GROUPS} from "lib/roles-utils";
 import {styles} from "lib/styles";
 import {defaultTheme} from "lib/theme";
 
@@ -87,9 +87,9 @@ var UserRolesAssociator = React.createClass({
         );
     },
     renderRoleTab: function ({colors}) {
-        const {usersState} = this.props;
+        const {asteroid, usersState} = this.props;
         const groups = this.props.collections.get("groups") || Immutable.Map();
-        return (
+        return hasRole(asteroid, MANAGE_USERS) || hasRole(asteroid, ASSIGN_GROUPS) ? (
             <Tab eventKey={1} title="Profili predefiniti">
                 <Row style={{margin: "20px"}}>
                     <Col xs={6} style={{marginTop: "10px"}}>
@@ -169,10 +169,11 @@ var UserRolesAssociator = React.createClass({
                     </Button>
                 </Row>
             </Tab>
-        );
+        ) : null;
     },
     renderFunctionsTab: function (theme) {
-        return (
+        const {asteroid} = this.props;
+        return hasRole(asteroid, MANAGE_USERS) || hasRole(asteroid, CREATE_GROUPS) ? (
             <Tab eventKey={2} title="Assegnazione funzioni manuale">
                 <Row style={{margin: "20px"}}>
                     <Col md={6} style={{marginTop: "10px", color: theme.colors.white, fontWeight: 300}}>
@@ -198,7 +199,7 @@ var UserRolesAssociator = React.createClass({
                             fontSize: "14px",
                             fontWeight: "300"
                         }}>
-                            {this.props.collections.get("roles").map(role =>
+                            {this.props.collections.get("roles").sortBy(role => role.get("name")).map(role =>
                                 <DraggableRole
                                     role={role}
                                 />
@@ -229,7 +230,7 @@ var UserRolesAssociator = React.createClass({
                 </Row>
                 {this.renderSaveGroupModal()}
             </Tab>
-        );
+        ) : null;
     },
     render: function () {
         const theme = this.getTheme();

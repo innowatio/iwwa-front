@@ -22,6 +22,7 @@ import {
 import {reduxForm, Field, SubmissionError} from "redux-form";
 
 import {getDragDropContext} from "lib/dnd-utils";
+import {hasRole, MANAGE_USERS, ASSIGN_SENSORS, ASSIGN_GROUPS, CREATE_GROUPS} from "lib/roles-utils";
 import {styles} from "lib/styles";
 import {defaultTheme} from "lib/theme";
 import {getChildren, getUsername, geUsersForManagement} from "lib/users-utils";
@@ -214,6 +215,7 @@ var Users = React.createClass({
         return (
             <div style={stylesFunction(theme).listItems}>
                 <UserRow
+                    asteroid={this.props.asteroid}
                     getChildren={userId => getChildren(userId, this.getAllUsers())}
                     indent={0}
                     isSelected={userId => {
@@ -285,9 +287,13 @@ var Users = React.createClass({
             </FullscreenModal>
         );
     },
-    renderButton: function (tooltip, iconName, disabled) {
+    renderButton: function (tooltip, iconName, disabled, permissions) {
         const theme = this.getTheme();
-        return (
+        let hasPermisions = false;
+        permissions.forEach(permissionRole => {
+            hasPermisions = hasPermisions || hasRole(this.props.asteroid, permissionRole);
+        });
+        return hasPermisions ? (
             <bootstrap.OverlayTrigger
                 overlay={<bootstrap.Tooltip id={tooltip} className="buttonInfo">{tooltip}</bootstrap.Tooltip>}
                 placement="bottom"
@@ -306,7 +312,7 @@ var Users = React.createClass({
                     />
                 </Button>
             </bootstrap.OverlayTrigger>
-        );
+        ) : null;
     },
     render: function () {
         const theme = this.getTheme();
@@ -314,19 +320,20 @@ var Users = React.createClass({
             <div>
                 <SectionToolbar>
                     <div style={{float: "left", marginTop: "3px"}}>
-                        {this.renderButton("Crea utente", "add", false)}
+                        {this.renderButton("Crea utente", "add", false, [MANAGE_USERS])}
                     </div>
                     <div style={{float: "right", marginTop: "3px"}}>
-                        {this.renderButton("Assegna sensori", "gauge", (this.props.usersState.selectedUsers.length < 1))}
-                        {this.renderButton("Assegna funzioni", "user-functions", (this.props.usersState.selectedUsers.length < 1))}
-                        {this.renderButton("Clona", "clone", (this.props.usersState.selectedUsers.length < 1))}
-                        <DeleteWithConfirmButton
-                            disabled={this.props.usersState.selectedUsers.length < 1}
-                            onConfirm={() => this.props.deleteUsers(this.props.usersState.selectedUsers, this.getAllUsers())}
-                        />
+                        {this.renderButton("Assegna sensori", "gauge", this.props.usersState.selectedUsers.length < 1, [MANAGE_USERS, ASSIGN_SENSORS])}
+                        {this.renderButton("Assegna funzioni", "user-functions", this.props.usersState.selectedUsers.length < 1, [MANAGE_USERS, ASSIGN_GROUPS, CREATE_GROUPS])}
+                        {this.renderButton("Clona", "clone", this.props.usersState.selectedUsers.length < 1, [MANAGE_USERS])}
+                        {hasRole(this.props.asteroid, MANAGE_USERS) ?
+                            <DeleteWithConfirmButton
+                                disabled={this.props.usersState.selectedUsers.length < 1}
+                                onConfirm={() => this.props.deleteUsers(this.props.usersState.selectedUsers, this.getAllUsers())}
+                            /> : null
+                        }
                     </div>
                 </SectionToolbar>
-
                 <div className="table-user">
                     <div style={{
                         width: "98%",

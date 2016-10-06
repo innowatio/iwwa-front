@@ -5,7 +5,7 @@ import * as bootstrap from "react-bootstrap";
 
 import {defaultTheme} from "lib/theme";
 import components from "components";
-import {isAdmin} from "lib/roles-utils";
+import {isAdmin, canAccessUsers} from "lib/roles-utils";
 import {EXEC_ENV} from "lib/config";
 
 var stylesFunction = ({colors}) => ({
@@ -83,7 +83,7 @@ var Header = React.createClass({
         ) : null;
     },
     renderAdminPage: function () {
-        return isAdmin(this.props.asteroid) && EXEC_ENV !== "cordova" ? (
+        return (isAdmin(this.props.asteroid) || canAccessUsers(this.props.asteroid)) && EXEC_ENV !== "cordova" ? (
             <span style={{marginRight: "15px"}}>
                 <bootstrap.OverlayTrigger
                     overlay={<bootstrap.Tooltip id="users" className="buttonInfo">

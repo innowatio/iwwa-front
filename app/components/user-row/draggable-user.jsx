@@ -38,6 +38,7 @@ const styles = ({colors}, open, confirmed) => ({
 
 var DraggableUser = React.createClass({
     propTypes: {
+        asteroid: PropTypes.object,
         connectDragSource: PropTypes.func,
         hasChildren: PropTypes.bool,
         indent: PropTypes.number.isRequired,
@@ -147,6 +148,7 @@ var DraggableUser = React.createClass({
                 }}>
                 </div>
                 <UserDropArea
+                    asteroid={this.props.asteroid}
                     changeParent={this.props.moveUser}
                     className="user-row"
                     onClick={() => this.props.onSelect(user)}

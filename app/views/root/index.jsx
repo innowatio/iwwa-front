@@ -11,7 +11,7 @@ import asteroid from "lib/asteroid";
 import {EXEC_ENV} from "lib/config";
 import LocalStorageMixin from "lib/localstorage-mixin";
 import measures from "lib/measures";
-import {getLoggedUser, isAdmin, isYousaveUser, isAuthorizedUser} from "lib/roles-utils";
+import {getLoggedUser, isAdmin, hasRole, isAuthorizedUser, ACCESS_MONITORING, ACCESS_LUCY} from "lib/roles-utils";
 import {theme, defaultTheme} from "lib/theme";
 import {isActiveUser, isDeleted} from "lib/users-utils";
 
@@ -93,7 +93,7 @@ var Root = React.createClass({
         var items = [];
         // user yousave => solo yousave
         // admin tutto
-        if (!isYousaveUser(asteroid)) {
+        if (hasRole(asteroid, ACCESS_LUCY) || isAdmin(asteroid)) {
             items = items.concat([
                 {key: "chart", label: "CONSUMI STORICI", url: "/chart/", iconClassName: "history"},
                 {key: "live", label: "CONSUMI LIVE", url: "/live/", iconClassName: "gauge"},
@@ -101,7 +101,7 @@ var Root = React.createClass({
                 {key: "alarms", label: "ALLARMI", url: "/alarms/", iconClassName: "alarms"}
             ]);
         }
-        if (isYousaveUser(asteroid) || isAdmin(asteroid)) {
+        if (hasRole(asteroid, ACCESS_MONITORING) || isAdmin(asteroid)) {
             items.push({key: "monitoring", label: "MONITORING", url: "/monitoring/", iconClassName: "monitoring"});
         }
         return items;

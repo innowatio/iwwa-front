@@ -3,10 +3,12 @@ import {DropTarget} from "react-dnd";
 import IPropTypes from "react-immutable-proptypes";
 
 import {Types} from "lib/dnd-utils";
+import {hasRole, MANAGE_USERS} from "lib/roles-utils";
 import {defaultTheme} from "lib/theme";
 
 var UserDropArea = React.createClass({
     propTypes: {
+        asteroid: PropTypes.object,
         changeParent: PropTypes.func.isRequired,
         children: PropTypes.element,
         className: PropTypes.string,
@@ -31,7 +33,9 @@ var UserDropArea = React.createClass({
 const userTarget = {
     drop (props, monitor) {
         const item = monitor.getItem();
-        props.changeParent(item.user, props.user.get("_id"));
+        if (item.user.get("_id") !== props.user.get("_id") && hasRole(props.asteroid, MANAGE_USERS)) {
+            props.changeParent(item.user, props.user.get("_id"));
+        }
         return {moved: true};
     }
 };

@@ -1,6 +1,6 @@
 import {fromJS} from "immutable";
 
-import {getRoles, isAdmin, isYousaveUser} from "lib/roles-utils";
+import {getRoles, isAdmin} from "lib/roles-utils";
 
 describe("`roles-utils`", () => {
 
@@ -39,12 +39,5 @@ describe("`roles-utils`", () => {
         expect(isAdmin(getAsteroid("utenteYousave"))).to.be.False;
         expect(isAdmin(getAsteroid("userNoRole"))).to.be.False;
         expect(isAdmin(getAsteroid("utenteMultiRoles"))).to.be.False;
-    });
-
-    it("`isYousaveUser`", () => {
-        expect(isYousaveUser(getAsteroid("userAdmin"))).to.be.True;
-        expect(isYousaveUser(getAsteroid("userYousave"))).to.be.True;
-        expect(isYousaveUser(getAsteroid("userNoRole"))).to.be.False;
-        expect(isYousaveUser(getAsteroid("utenteMultiRoles"))).to.be.False;
     });
 });

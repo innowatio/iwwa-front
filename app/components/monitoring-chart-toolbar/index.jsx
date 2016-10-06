@@ -5,6 +5,7 @@ import Radium from "radium";
 
 import {Button, Icon, FullscreenModal} from "components";
 
+import {hasRole, DOWNLOAD_CHART_DATA} from "lib/roles-utils";
 import {styles} from "lib/styles";
 import {defaultTheme} from "lib/theme";
 
@@ -185,8 +186,7 @@ var MonitoringChartToolbar = React.createClass({
             </Button>
         );
     },
-    renderFavouriteButton: function () {
-        const theme = this.getTheme();
+    renderFavouriteButton: function (theme) {
         return (
             <div>
                 <Button
@@ -216,13 +216,12 @@ var MonitoringChartToolbar = React.createClass({
                     renderConfirmButton={true}
                     show={this.state.showModal}
                 >
-                    {this.renderModalBody()}
+                    {this.renderModalBody(theme)}
                 </FullscreenModal>
             </div>
         );
     },
-    renderModalBody: function () {
-        const theme = this.getTheme();
+    renderModalBody: function (theme) {
         return (
             <div style={{textAlign: "center"}}>
                 <div>
@@ -264,7 +263,7 @@ var MonitoringChartToolbar = React.createClass({
                             margin: "0px 0px 0px 30px",
                             fontSize: "20px",
                             border: "0px",
-                            backgroundColor: this.getTheme().colors.buttonPrimary
+                            backgroundColor: theme.colors.buttonPrimary
                         }}
                     >
                         {"OK"}
@@ -340,6 +339,29 @@ var MonitoringChartToolbar = React.createClass({
         });
         return components;
     },
+    renderCSVExport: function (theme) {
+        return hasRole(this.props.asteroid, DOWNLOAD_CHART_DATA) ? (
+            <div style={{textAlign: "center", padding: "20px", borderBottom: "solid 1px", borderColor: theme.colors.white}}>
+                <Button
+                    disabled={!this.props.monitoringChartRef}
+                    onClick={this.exportSV}
+                    style={{
+                        ...styles(theme).buttonSelectChart,
+                        width: "120px",
+                        height: "40px",
+                        lineHeight: "40px",
+                        padding: "0px",
+                        margin: "0px 0px 0px 30px",
+                        fontSize: "20px",
+                        border: "0px",
+                        backgroundColor: theme.colors.buttonPrimary
+                    }}
+                >
+                    {"Eporta CSV"}
+                </Button>
+            </div>
+        ) : null;
+    },
     render: function () {
         const theme = this.getTheme();
         return (
@@ -363,7 +385,7 @@ var MonitoringChartToolbar = React.createClass({
                 {this.renderYAxisValuesChange(theme)}
                 <div style={{textAlign: "center", marginTop: "25px", borderBottom: "solid 1px", borderColor: theme.colors.white}}>
                     <Col lg={6} md={6} xs={12}>
-                        {this.renderFavouriteButton()}
+                        {this.renderFavouriteButton(theme)}
                     </Col>
                     <Col className="link" lg={6} md={6} xs={12}>
                         <Radium.Style
@@ -409,25 +431,7 @@ var MonitoringChartToolbar = React.createClass({
                         {this.renderComparisonButton(theme, "year")}
                     </div>
                 </div>
-                <div style={{textAlign: "center", padding: "20px", borderBottom: "solid 1px", borderColor: theme.colors.white}}>
-                    <Button
-                        disabled={!this.props.monitoringChartRef}
-                        onClick={this.exportSV}
-                        style={{
-                            ...styles(theme).buttonSelectChart,
-                            width: "120px",
-                            height: "40px",
-                            lineHeight: "40px",
-                            padding: "0px",
-                            margin: "0px 0px 0px 30px",
-                            fontSize: "20px",
-                            border: "0px",
-                            backgroundColor: this.getTheme().colors.buttonPrimary
-                        }}
-                    >
-                        {"Eporta CSV"}
-                    </Button>
-                </div>
+                {this.renderCSVExport(theme)}
             </div>
         );
     }
