@@ -37,18 +37,24 @@ var UserRow = React.createClass({
         return this.context.theme || defaultTheme;
     },
     renderChildren: function (children) {
-        return this.state.childrenOpen ? (
-            <UserRow
-                asteroid={this.props.asteroid}
-                getChildren={this.props.getChildren}
-                indent={this.props.indent + 5}
-                isSelected={this.props.isSelected}
-                moveUser={this.props.moveUser}
-                onChangeActiveStatus={this.props.onChangeActiveStatus}
-                onSelect={this.props.onSelect}
-                user={children.first()}
-            />
-        ) : null;
+        if (this.state.childrenOpen) {
+            let userRows = [];
+            children.forEach(child => {
+                userRows.push(
+                    <UserRow
+                        asteroid={this.props.asteroid}
+                        getChildren={this.props.getChildren}
+                        indent={this.props.indent + 5}
+                        isSelected={this.props.isSelected}
+                        moveUser={this.props.moveUser}
+                        onChangeActiveStatus={this.props.onChangeActiveStatus}
+                        onSelect={this.props.onSelect}
+                        user={child}
+                    />
+                );
+            });
+            return userRows;
+        }
     },
     render: function () {
         const theme = this.getTheme();

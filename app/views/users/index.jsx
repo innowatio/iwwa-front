@@ -148,7 +148,6 @@ var Users = React.createClass({
         return this.context.theme || defaultTheme;
     },
     validateEmail: function ({email}) {
-        console.log("cacca");
         return Promise.resolve().then(() => {
             if (!email) {
                 throw new SubmissionError({email: "L'email è richiesta", _error: "error"});
