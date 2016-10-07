@@ -1,9 +1,11 @@
 var React     = require("react");
 var components = require("components");
+var bootstrap       = require("react-bootstrap");
 
 var MeasureLabel = require("components/").MeasureLabel;
 import {defaultTheme} from "lib/theme";
 import {EXEC_ENV} from "lib/config";
+import getLastUpdate from "lib/date-utils";
 
 var style = (variableColor) => ({
     box: {
@@ -32,6 +34,7 @@ var VariablesPanel = React.createClass({
     },
     renderVariableBox: function () {
         return this.props.values.map((variable) => {
+            const updateTitle = getLastUpdate(variable.get("measurementTime"));
             return (
                 <div
                     key={variable.get("key")}
@@ -44,28 +47,34 @@ var VariablesPanel = React.createClass({
                         flex: "1 0 auto"
                     }}
                 >
-                    <div style={style(variable.get("color")).box} styleName="variableContainer">
-                        <components.Icon
-                            color={this.getTheme().colors.iconConsumptionVariable}
-                            icon={variable.get("icon")}
-                            size={EXEC_ENV === "cordova" ? "48px" : "60px"}
-                            style={{
-                                lineHeight: EXEC_ENV === "cordova" ? "70px" : "20px",
-                                width: EXEC_ENV === "cordova" ? "30px" : "45px",
-                                verticalAlign: "middle"
-                            }}
-                        />
-                        <MeasureLabel
-                            id={variable.get("id")}
-                            style={{
-                                paddingLeft: "16px",
-                                verticalAlign: "text-top",
-                                minWidth: EXEC_ENV === "cordova" ? "40px" : "45px"
-                            }}
-                            unit={variable.get("unit")}
-                            value={variable.get("value")}
-                        />
-                    </div>
+                    <bootstrap.OverlayTrigger
+                        overlay={<bootstrap.Tooltip id="lastUpdate" className="lastUpdate">{updateTitle}</bootstrap.Tooltip>}
+                        placement="bottom"
+                        rootClose={true}
+                    >
+                        <div style={style(variable.get("color")).box}>
+                            <components.Icon
+                                color={this.getTheme().colors.iconConsumptionVariable}
+                                icon={variable.get("icon")}
+                                size={EXEC_ENV === "cordova" ? "48px" : "60px"}
+                                style={{
+                                    lineHeight: EXEC_ENV === "cordova" ? "70px" : "20px",
+                                    width: EXEC_ENV === "cordova" ? "30px" : "45px",
+                                    verticalAlign: "middle"
+                                }}
+                            />
+                            <MeasureLabel
+                                id={variable.get("id")}
+                                style={{
+                                    paddingLeft: "16px",
+                                    verticalAlign: "text-top",
+                                    minWidth: EXEC_ENV === "cordova" ? "40px" : "45px"
+                                }}
+                                unit={variable.get("unit")}
+                                value={variable.get("value")}
+                            />
+                        </div>
+                    </bootstrap.OverlayTrigger>
                 </div>
             );
         });

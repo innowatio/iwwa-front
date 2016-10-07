@@ -238,7 +238,6 @@ var SelectTree = React.createClass({
                     </bootstrap.InputGroup.Addon>
                 </bootstrap.FormGroup>
                 <bootstrap.PanelGroup
-                    accordion={true}
                     activeKey={this.state.activeKey}
                     style={{
                         maxHeight: "300px",
