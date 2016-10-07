@@ -7,10 +7,9 @@ export const ASSIGN_GROUPS = "assign-groups";
 export const ASSIGN_SENSORS = "assign-sensors";
 export const CREATE_GROUPS = "create-groups";
 export const CREATE_SENSORS = "create-sensors";
-export const MANAGE_USERS = "manage-users";
 export const DOWNLOAD_CHART_DATA = "download-chart-data";
-//TODO finire questi ruoli...
 export const EDIT_SENSORS = "edit-sensors";
+export const MANAGE_USERS = "manage-users";
 export const VIEW_FORMULA_DETAILS = "view-formula-details";
 
 const usersAccess = [MANAGE_USERS, ASSIGN_GROUPS, CREATE_GROUPS, ASSIGN_SENSORS];

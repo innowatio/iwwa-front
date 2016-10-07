@@ -8,6 +8,7 @@ import {reduxForm, Field} from "redux-form";
 
 import {FormInputText, FullscreenModal, SensorAggregator, TagList} from "components";
 
+import {hasRole, VIEW_FORMULA_DETAILS} from "lib/roles-utils";
 import {potentialUnitsOfMeasurement} from "lib/sensors-utils";
 import {styles} from "lib/styles";
 import {defaultTheme} from "lib/theme";
@@ -32,6 +33,7 @@ var SensorForm = React.createClass({
     propTypes: {
         addItemToFormula: PropTypes.func.isRequired,
         allSensors: IPropTypes.map,
+        asteroid: PropTypes.object,
         closeForm: PropTypes.func.isRequired,
         currentSensor: IPropTypes.map,
         handleSubmit: PropTypes.func.isRequired,
@@ -265,7 +267,7 @@ var SensorForm = React.createClass({
                             component={this.renderTagsInputField}
                         />
                     </Col>
-                    {this.renderSensorAggregation()}
+                    {hasRole(this.props.asteroid, VIEW_FORMULA_DETAILS) ? this.renderSensorAggregation() : null}
                     <div style={{clear: "both", height: "20px"}}></div>
                 </form>
             </FullscreenModal>

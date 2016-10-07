@@ -9,6 +9,7 @@ import {
 var MonitoringSensorsSelector = React.createClass({
     propTypes: {
         addSensorToWorkArea: PropTypes.func.isRequired,
+        asteroid: PropTypes.object,
         filterSensors: PropTypes.func.isRequired,
         onClickAggregate: PropTypes.func,
         removeSensorFromWorkArea: PropTypes.func.isRequired,
@@ -34,6 +35,7 @@ var MonitoringSensorsSelector = React.createClass({
                 />
                 <MonitoringWorkArea
                     addSensorToWorkArea={this.props.addSensorToWorkArea}
+                    asteroid={this.props.asteroid}
                     filters={this.props.sensorsState}
                     onClickAggregate={this.props.onClickAggregate}
                     removeSensorFromWorkArea={this.props.removeSensorFromWorkArea}

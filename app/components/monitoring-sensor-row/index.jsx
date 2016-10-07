@@ -7,6 +7,7 @@ import {concat, partial} from "ramda";
 import * as bootstrap from "react-bootstrap";
 
 import {Types} from "lib/dnd-utils";
+import {hasRole, VIEW_FORMULA_DETAILS} from "lib/roles-utils";
 import {getSensorLabel} from "lib/sensors-utils";
 import {defaultTheme} from "lib/theme";
 import {Icon, TagList} from "components";
@@ -62,6 +63,7 @@ function collect (connect, monitor) {
 
 var SensorRow = React.createClass({
     propTypes: {
+        asteroid: PropTypes.object,
         connectDragSource: PropTypes.func,
         isDragging: PropTypes.bool,
         isSelected: PropTypes.bool,
@@ -83,7 +85,7 @@ var SensorRow = React.createClass({
             <bootstrap.Tooltip id="createChartInfo">
                 {sensor.get("description")}
                 <br />
-                {sensorFormula ? sensorFormula : null}
+                {sensorFormula && hasRole(this.props.asteroid, VIEW_FORMULA_DETAILS) ? sensorFormula : null}
             </bootstrap.Tooltip>
         );
     },

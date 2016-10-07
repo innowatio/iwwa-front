@@ -205,6 +205,7 @@ var Monitoring = React.createClass({
                 <SensorForm
                     addItemToFormula={this.props.addItemToFormula}
                     allSensors={this.getAllSensors()}
+                    asteroid={this.props.asteroid}
                     closeForm={() => this.closeModal(this.state.editSensor)}
                     currentSensor={selected.length == 1 ? selected[0] : null}
                     initialValues={this.getSensorFields()}
@@ -290,6 +291,7 @@ var Monitoring = React.createClass({
 
                 <MonitoringSensorsSelector
                     addSensorToWorkArea={this.props.addSensorToWorkArea}
+                    asteroid={this.props.asteroid}
                     filterSensors={this.props.filterSensors}
                     onClickAggregate={hasRole(this.props.asteroid, CREATE_SENSORS) ? this.resetAndOpenNew : null}
                     removeSensorFromWorkArea={this.props.removeSensorFromWorkArea}
