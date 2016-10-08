@@ -33,7 +33,6 @@ var SubListNotification = React.createClass({
     render: function () {
         return (
             <bootstrap.Panel
-                accordion={true}
                 collapsible={true}
                 expanded={this.props.isExpanded}
                 style={styles(this.getTheme()).panel}
