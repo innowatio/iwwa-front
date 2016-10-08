@@ -13,6 +13,7 @@ import {selectRealTimeSite} from "actions/real-time";
 import {defaultTheme} from "lib/theme";
 import {getTitleForSingleSensor} from "lib/page-header-utils";
 import mergeSiteSensors from "lib/merge-site-sensors";
+import getLastUpdate from "lib/date-utils";
 
 const styleSiteButton = ({colors}) => ({
     width: "50px",
@@ -40,6 +41,7 @@ var RealTime = React.createClass({
             value: null
         };
     },
+    
     componentDidMount: function () {
         this.props.asteroid.subscribe("sites");
         this.props.asteroid.subscribe("sensors");
@@ -52,6 +54,7 @@ var RealTime = React.createClass({
             this.props.asteroid.subscribe("readingsRealTimeAggregatesBySite", this.props.realTime.site);
         }
     },
+
     getTheme: function () {
         return this.context.theme || defaultTheme;
     },
@@ -77,6 +80,13 @@ var RealTime = React.createClass({
                     }}
                 >
                     <div>{params.description}</div>
+                    <div style={{
+                        textAlign: "center",
+                        fontSize: "11px",
+                        color: colors.mainFontColor
+                    }}>
+                        {params.measurementTime}
+                    </div>
                 </div>
                 <div
                     style={{
@@ -98,6 +108,7 @@ var RealTime = React.createClass({
                     id: measure.get("id"),
                     key: measure.get("key"),
                     description: measure.get("description"),
+                    measurementTime: getLastUpdate(measure.get("measurementTime")),
                     maximum: 100,
                     minimum: 0,
                     style: {height: "auto", width: "100%"},

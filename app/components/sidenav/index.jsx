@@ -1,4 +1,3 @@
-import {Nav} from "react-bootstrap";
 import React, {PropTypes} from "react";
 import {Link} from "react-router";
 import {merge, partial} from "ramda";
@@ -23,6 +22,9 @@ const stylesFunction = ({colors}) => ({
         height: "30px",
         padding: "10px auto",
         lineHeight: "40px"
+    },
+    liMenu: {
+        listStyleType: "none"
     }
 });
 
@@ -58,7 +60,7 @@ var SideNav = React.createClass({
         // string.
         const active = this.context.router.isActive(menuItem.url || "");
         return menuItem.url ? (
-            <li key={menuItem.key}>
+            <li key={menuItem.key} style={styles.liMenu}>
                 <Link
                     activeStyle={styles.activeLink}
                     onClick={this.props.linkClickAction}
@@ -109,13 +111,13 @@ var SideNav = React.createClass({
                     <Style
                         rules={{".nav > li > a:hover": styles.activeLink}}
                     />
-                    <Nav bsStyle="pills" stacked={true} >
+                    <div>
                         {
                             this.props.items.map(
                                 partial(this.renderNavItem, [styles])
                             )
                         }
-                    </Nav>
+                    </div>
                 </div>
             </div>
         );
