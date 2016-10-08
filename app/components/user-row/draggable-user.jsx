@@ -9,6 +9,7 @@ import {Button, Icon} from "components";
 import UserDropArea from "./user-drop-area";
 
 import {Types} from "lib/dnd-utils";
+import {hasRole, MANAGE_USERS} from "lib/roles-utils";
 import {defaultTheme} from "lib/theme";
 import {getUsername, isActiveUser} from "lib/users-utils";
 
@@ -172,6 +173,7 @@ var DraggableUser = React.createClass({
                     </div>
                     <div className="toggle" style={{height: "50px", padding: "6px"}}>
                         <Toggle
+                            disabled={!hasRole(this.props.asteroid, MANAGE_USERS)}
                             defaultChecked={isActiveUser(user)}
                             onChange={() => this.props.onChangeActiveStatus(user)}
                         />

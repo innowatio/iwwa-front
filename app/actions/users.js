@@ -37,7 +37,7 @@ function updateUser (dispatch, user, updatedInfo, event) {
         uid: userName,
         ...updatedInfo
     };
-    axios.put(endpoint, updatedUser)
+    axios.post(endpoint, updatedUser)
         .then(() => dispatch({
             type: event + "_SUCCESS"
         }))
