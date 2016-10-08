@@ -70,6 +70,12 @@ var MonitoringChart = React.createClass({
             this.tooltip.hide();
             this.xAxis[0].hideCrosshair();
         };
+        ReactHighstock.Highcharts.setOptions({
+            global: {
+                timezoneOffset: new Date().getTimezoneOffset(),
+                useUTC: false
+            }
+        });
     },
     componentWillReceiveProps: function (props) {
         this.setState(this.getStateFromProps(props));
