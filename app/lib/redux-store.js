@@ -15,7 +15,8 @@ const storageConfig ={
         "consumptions",
         "realTime",
         "userSetting"
-    ]
+    ],
+    keyPrefix: "iwwa-front:"
 };
 
 const store = compose(

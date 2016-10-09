@@ -1,6 +1,5 @@
 import {combineReducers} from "redux";
 import {reducer as form} from "redux-form";
-import storage from "redux-storage";
 
 import {collections} from "./collections";
 import {chart} from "./chart";
@@ -12,7 +11,7 @@ import {userSetting} from "./user-setting";
 import {sensors} from "./sensors";
 import {notifications} from "./notifications";
 
-const rootReducer = storage.reducer(combineReducers({
+const rootReducer = combineReducers({
     collections,
     chart,
     consumptions,
@@ -23,6 +22,6 @@ const rootReducer = storage.reducer(combineReducers({
     form,
     sensors,
     notifications
-}));
+});
 
 export default rootReducer;

@@ -359,6 +359,9 @@ var Chart = React.createClass({
     isDateCompare: function () {
         return this.props.chartState.charts[0].date.type === "dateCompare";
     },
+    allUniq: function (list) {
+        return R.equals(list, R.uniq(list));
+    },
     isComparationActive: function () {
         const selectedSitesId = this.selectedSitesId();
         const selectedSources = this.selectedSources();
@@ -367,7 +370,7 @@ var Chart = React.createClass({
             selectedSitesId.length > 1 ||
             (
                 this.props.chartState.charts.length >= 2 &&
-                !R.allUniq(this.props.chartState.charts.map(singleSelection => singleSelection.measurementType)) &&
+                !this.allUniq(this.props.chartState.charts.map(singleSelection => singleSelection.measurementType)) &&
                 R.uniq(selectedSources).length === 1
             )
         );
@@ -494,7 +497,6 @@ var Chart = React.createClass({
     },
     renderSiteCompare: function () {
         const chartFilter = this.props.chartState.charts;
-
         return (
             <components.SiteNavigator
                 allowedValues={this.getSortedAndDecoratedSites()}
@@ -574,7 +576,7 @@ var Chart = React.createClass({
         const selectedSensor = this.props.chartState.charts[1] ? this.props.chartState.charts[1].sensorId : undefined;
         const selectedConsumptionType = (
             this.props.chartState.charts.length > 1 &&
-            R.allUniq(this.props.chartState.charts.map(singleSelection => singleSelection.measurementType))
+            this.allUniq(this.props.chartState.charts.map(singleSelection => singleSelection.measurementType))
         ) ?
             this.props.chartState.charts[1].measurementType :
             null;

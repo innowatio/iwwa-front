@@ -4,8 +4,8 @@ var IPropTypes = require("react-immutable-proptypes");
 var Radium     = require("radium");
 var React      = require("react");
 import moment from "moment";
-import {partial} from "ramda";
-import icons from "lib/icons";
+import {partial, is} from "ramda";
+// import icons from "lib/icons";
 
 var components   = require("components");
 import {connect} from "react-redux";
@@ -52,7 +52,7 @@ var styleRoundedDiv = ({colors}) => ({
     backgroundColor: colors.secondary
 });
 var styleMeasure  = ({colors}) => ({
-    fontSize: "90px",
+    // fontSize: "90px",
     fontWeight: "600",
     lineHeight: "110px",
     color: colors.white
@@ -65,18 +65,18 @@ var styleUnit  = ({colors}) => ({
     padding: "0px",
     color: colors.white
 });
-var styleCongratMessage = ({colors}) => ({
-    color: colors.white,
-    width: "90%",
-    margin: "60px auto 20px auto",
-    minHeight: "100px",
-    height: "auto",
-    padding: "20px",
-    fontSize: "20px",
-    textAlign: "left",
-    borderRadius: "20px",
-    backgroundColor: colors.secondary
-});
+// var styleCongratMessage = ({colors}) => ({
+//     color: colors.white,
+//     width: "90%",
+//     margin: "60px auto 20px auto",
+//     minHeight: "100px",
+//     height: "auto",
+//     padding: "20px",
+//     fontSize: "20px",
+//     textAlign: "left",
+//     borderRadius: "20px",
+//     backgroundColor: colors.secondary
+// });
 var styleRightPane  = ({colors}) => ({
     width: "30%",
     float: "right",
@@ -203,6 +203,10 @@ var SummaryConsumptions = React.createClass({
     onChangeTabValue: function (tabPeriod) {
         this.setState({period: tabPeriod});
     },
+    getFontSize: function (item, defaultFontSize) {
+        const itemLength = is(Number, item) ? item.toString().length : item.length;
+        return item.toString().length > 5 ? `${defaultFontSize - ((itemLength - 5) * 10)}px`: `${defaultFontSize}px`;
+    },
     renderCustomersComparisons: function () {
         const {colors} = this.getTheme();
         const title = "Confronta i tuoi consumi con quelli di attività simili alla tua";
@@ -300,7 +304,9 @@ var SummaryConsumptions = React.createClass({
         const now = parseInt(
             comparisonNow(
                 this.props.consumptions.fullPath[0],
-                this.props.collections.get("consumptions-yearly-aggregates") || Immutable.Map()).toFixed(0));
+                this.props.collections.get("consumptions-yearly-aggregates") || Immutable.Map()
+            ).toFixed(0)
+        );
         return this.renderStyledProgressBar(comparisonParams.key, max, now, comparisonParams.title);
     },
     renderStyledProgressBar: function (key, max, now, title) {
@@ -410,28 +416,34 @@ var SummaryConsumptions = React.createClass({
             this.subscribeToConsumptions();
             sum = this.getSum(getTimeRangeByPeriod(tabParameters.period));
         }
-        const congratMessage = "COMPLIMENTI! Ieri hai utilizzato il 12% in meno dell’energia che utilizzi di solito.";
+        const measure = sum >= 100 ? Math.trunc(sum) : Math.round(sum * 10, -1) / 10;
+        // const congratMessage = "COMPLIMENTI! Ieri hai utilizzato il 12% in meno dell’energia che utilizzi di solito.";
         return (
             <div style={styleContent(theme)}>
                 <h2 style={styleH2(theme)}>{siteName}</h2>
                 <h3 style={styleH3(theme)}>{tabParameters.periodTitle}</h3>
                 <div style={styleRoundedDiv(theme)}>
-                    <p style={styleMeasure(theme)}>{sum >= 100 ? Math.trunc(sum) : Math.round(sum * 10, -1) / 10}</p>
+                    <p style={{
+                        ...styleMeasure(theme),
+                        fontSize: this.getFontSize(measure, 90)
+                    }}>{measure}</p>
                     <span style={styleUnit(theme)}>{tabParameters.measureUnit}</span>
                 </div>
                 <p style={styleH2(theme)}>{tabParameters.periodSubtitle}</p>
-                <div style={styleCongratMessage(theme)}>
-                    <bootstrap.Col xs={12} md={8} lg={9} style={{float: "left"}}>{congratMessage}</bootstrap.Col>
-                    <bootstrap.Col xs={12} md={4} lg={3} style={{
-                        textAlign: "right",
-                        float: "right",
-                        backgroundImage: `url(${icons.iconGoGreen})`,
-                        backgroundRepeat: "none",
-                        width: "116px",
-                        height: "116px"
-                    }}></bootstrap.Col>
-                    <div style={{clear: "both"}} />
-                </div>
+                {/*
+                    <div style={styleCongratMessage(theme)}>
+                        <bootstrap.Col xs={12} md={8} lg={9} style={{float: "left"}}>{congratMessage}</bootstrap.Col>
+                        <bootstrap.Col xs={12} md={4} lg={3} style={{
+                            textAlign: "right",
+                            float: "right",
+                            backgroundImage: `url(${icons.iconGoGreen})`,
+                            backgroundRepeat: "none",
+                            width: "116px",
+                            height: "116px"
+                        }}></bootstrap.Col>
+                        <div style={{clear: "both"}} />
+                    </div>
+                */}
             </div>
         );
     },
@@ -470,8 +482,8 @@ var SummaryConsumptions = React.createClass({
                     </div>
                     <div style={{margin: "5px 20px"}}>
                         {this.props.consumptions.fullPath ? this.renderPeriodComparisons() : null}
-                        {this.props.consumptions.fullPath ? this.renderCustomersComparisons() : null}
-                        {this.props.consumptions.fullPath ? this.renderFeedbackBox() : null}
+                        {/* this.props.consumptions.fullPath ? this.renderCustomersComparisons() : null */}
+                        {/* this.props.consumptions.fullPath ? this.renderFeedbackBox() : null */}
                     </div>
                 </div>
             </div>

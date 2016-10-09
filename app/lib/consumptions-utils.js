@@ -149,17 +149,19 @@ function getTitleAndSubtitle (period) {
                     title: `${moment(getPreviousPeriod(period, period).start).locale("it").format("MMMM YYYY")}`.toUpperCase(),
                     max: defaultMax,
                     now: defaultNow
-                }, {
-                    key: "month-1y",
-                    title: `${moment(getPreviousPeriod("year", "month").start).locale("it").format("MMMM YYYY")}`.toUpperCase(),
-                    max: partial(getAverageBySiteAndPeriod, [getPreviousPeriod("year", "month")]),
-                    now: defaultNow
-                }, {
-                    key: "avg-month",
-                    title: "MEDIA DEI MESI",
-                    max: partial(getAverageBySiteAndPeriod, [getPreviousPeriod("year", "month")]),
-                    now: defaultNow
-                }]
+                }
+                // {
+                //     key: "month-1y",
+                //     title: `${moment(getPreviousPeriod("year", "month").start).locale("it").format("MMMM YYYY")}`.toUpperCase(),
+                //     max: partial(getAverageBySiteAndPeriod, [getPreviousPeriod("year", "month")]),
+                //     now: defaultNow
+                // }, {
+                //     key: "avg-month",
+                //     title: "MEDIA DEI MESI",
+                //     max: partial(getAverageBySiteAndPeriod, [getPreviousPeriod("year", "month")]),
+                //     now: defaultNow
+                // }
+            ]
             };
         case 3:
             return {
@@ -170,12 +172,14 @@ function getTitleAndSubtitle (period) {
                 periodTitle: `NEL ${moment(periodDates.start).format("YYYY")} HAI UTILIZZATO`,
                 periodSubtitle: `${moment(periodDates.start).format("YYYY")}`.toUpperCase(),
                 title: "ANNO CORRENTE",
-                comparisons: [{
-                    key: "year-1y",
-                    title: `${moment(getPreviousPeriod(period, period).start).locale("it").format("YYYY")}`.toUpperCase(),
-                    max: defaultMax,
-                    now: defaultNow
-                }]
+                comparisons: [
+                    // {
+                    //     key: "year-1y",
+                    //     title: `${moment(getPreviousPeriod(period, period).start).locale("it").format("YYYY")}`.toUpperCase(),
+                    //     max: defaultMax,
+                    //     now: defaultNow
+                    // }
+                ]
             };
         default:
             return {
