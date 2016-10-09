@@ -1,7 +1,9 @@
 import R from "ramda";
 
 export function allSensorsDecorator (theme) {
-    return consumptionSensors(theme).concat(electricalSensors);
+    return consumptionSensors(theme)
+        .concat(electricalSensors)
+        .concat(yousaveSensors);
 }
 
 export const consumptionSensors = ({colors}) => [
@@ -69,6 +71,16 @@ export const electricalSensors = [
         key: "reactiveEnergy",
         type: "pod-anz",
         unit: "kVARh"
+    }
+];
+
+export const yousaveSensors = [
+    {
+        key: "db",
+        type: "db"
+    }, {
+        key: "scada",
+        type: "scada"
     }
 ];
 

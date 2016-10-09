@@ -1,6 +1,9 @@
 import R from "ramda";
 import React, {PropTypes} from "react";
 import ReactHighstock from "react-highcharts/bundle/ReactHighstock"; // Highstock is bundled
+import ExportCSV from "highcharts-export-csv";
+ExportCSV(ReactHighstock.Highcharts);
+
 
 import {defaultTheme} from "lib/theme";
 import {Button, Icon} from "components";
@@ -67,6 +70,12 @@ var MonitoringChart = React.createClass({
             this.tooltip.hide();
             this.xAxis[0].hideCrosshair();
         };
+        ReactHighstock.Highcharts.setOptions({
+            global: {
+                timezoneOffset: new Date().getTimezoneOffset(),
+                useUTC: false
+            }
+        });
     },
     componentWillReceiveProps: function (props) {
         this.setState(this.getStateFromProps(props));
@@ -129,6 +138,11 @@ var MonitoringChart = React.createClass({
             credits: {
                 enabled: false
             },
+            exporting: {
+                csv: {
+                    dateFormat: "%d/%m/%Y %H:%M"
+                }
+            },
             legend: {
                 enabled: true,
                 itemStyle: {
@@ -136,6 +150,11 @@ var MonitoringChart = React.createClass({
                 },
                 itemHoverStyle: {
                     color: theme.colors.mainFontColor
+                }
+            },
+            navigator: {
+                series: {
+                    includeInCSVExport: false
                 }
             },
             plotOptions: {
