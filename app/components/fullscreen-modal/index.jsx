@@ -82,7 +82,6 @@ var FullscreenModal = React.createClass({
                         ".modal-body": {
                             paddingTop: "auto",
                             height: "auto"
-
                         },
                         ".modal-dialog": {
                             bottom: "0px",
@@ -119,7 +118,7 @@ var FullscreenModal = React.createClass({
                 />
                 <Modal.Header style={{textAlign: "center"}}>
                     <label style={{
-                        color: "white",
+                        color: colors.white,
                         fontSize: "30px",
                         fontWeight: 400,
                         textAlign: "center",
