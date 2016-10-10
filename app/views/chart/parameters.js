@@ -45,9 +45,13 @@ export function getMeasurementTypes () {
 }
 
 export function getSources (theme) {
+    // PER DEMO 10/10/16
+    // return [
+    //     {label: "Reale", color: theme.colors.lineReale, key: "reading"},
+    //     {label: "Previsionale", color: theme.colors.linePrevisionale, key: "forecast"}
+    // ];
     return [
         {label: "Reale", color: theme.colors.lineReale, key: "reading"},
-        {label: "Previsionale", color: theme.colors.linePrevisionale, key: "forecast"}
     ];
 }
 
