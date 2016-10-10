@@ -1,5 +1,4 @@
 import Immutable from "immutable";
-import Radium from "radium";
 import R from "ramda";
 import React, {PropTypes} from "react";
 import IPropTypes from "react-immutable-proptypes";
@@ -11,19 +10,16 @@ import {
     Button,
     CollectionItemList,
     DeleteWithConfirmButton,
-    FormInputText,
-    FullscreenModal,
     Icon,
     MonitoringSensorsAssociator,
+    NewUserModal,
     SectionToolbar,
     UserRolesAssociator,
     UserRow
 } from "components";
-import {reduxForm, Field, SubmissionError} from "redux-form";
 
 import {getDragDropContext} from "lib/dnd-utils";
 import {hasRole, MANAGE_USERS, ASSIGN_SENSORS, ASSIGN_GROUPS, CREATE_GROUPS} from "lib/roles-utils";
-import {styles} from "lib/styles";
 import {defaultTheme} from "lib/theme";
 import {getChildren, getUsername, geUsersForManagement} from "lib/users-utils";
 
@@ -99,7 +95,6 @@ var Users = React.createClass({
         collections: IPropTypes.map,
         deleteUsers: PropTypes.func.isRequired,
         filterSensors: PropTypes.func.isRequired,
-        handleSubmit: PropTypes.func.isRequired,
         moveUser: PropTypes.func.isRequired,
         removeRole: PropTypes.func.isRequired,
         removeSensorFromWorkArea: PropTypes.func.isRequired,
@@ -123,7 +118,6 @@ var Users = React.createClass({
     },
     componentDidMount: function () {
         this.props.asteroid.subscribe("sensors");
-        this.props.asteroid.subscribe("users");
         this.props.asteroid.subscribe("groups");
         this.props.asteroid.subscribe("roles");
     },
@@ -146,15 +140,6 @@ var Users = React.createClass({
     },
     getTheme: function () {
         return this.context.theme || defaultTheme;
-    },
-    validateEmail: function ({email}) {
-        return Promise.resolve().then(() => {
-            if (!email) {
-                throw new SubmissionError({email: "L'email è richiesta", _error: "error"});
-            } else if (!/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i.test(email)) {
-                throw new SubmissionError({email: "Inserisci un formato email corretto", _error: "error"});
-            }
-        });
     },
     getAllUsers: function () {
         return this.props.collections.get("users") || Immutable.Map();
@@ -228,62 +213,6 @@ var Users = React.createClass({
                     user={user}
                 />
             </div>
-        );
-    },
-    renderFormInput: function (field) {
-        const theme = this.getTheme();
-        return (
-            <div
-                className={"form-group" + (field.meta.touched && field.meta.error ? " has-error" : "")}
-                style={{width: "90%", margin: "5%"}}
-            >
-                <FormInputText
-                    field={field.input}
-                    placeholder="Indirizzo email"
-                    style={R.merge(styles(theme).inputLine, {
-                        color: theme.colors.buttonPrimary
-                    })}
-                    type={field.type}
-                />
-                {field.meta.touched && field.meta.error && <div className="help-block">{field.meta.error}</div>}
-            </div>
-        );
-    },
-    renderCreateUserModal: function (theme) {
-        const {handleSubmit} = this.props;
-        return (
-            <FullscreenModal
-                onConfirm={handleSubmit(this.validateEmail)}
-                onHide={() => this.setState({showCreateUserModal: false})}
-                renderConfirmButton={true}
-                show={this.state.showCreateUserModal}
-            >
-                <form className="form-fields">
-                    <Radium.Style
-                        rules={styles(theme).formFields}
-                        scopeSelector={".form-fields"}
-                    />
-                    <h3
-                        className="text-center"
-                        style={{
-                            color: theme.colors.mainFontColor,
-                            fontSize: "24px",
-                            fontWeight: "400",
-                            marginBottom: "20px",
-                            textTransform: "uppercase",
-                            paddingBottom: "20px",
-                            borderBottom: "1px solid " + theme.colors.borderContentModal
-                        }}
-                    >
-                        {"Crea nuovo utente"}
-                    </h3>
-                    <Field
-                        name="email"
-                        component={this.renderFormInput}
-                        type="email"
-                    />
-                </form>
-            </FullscreenModal>
         );
     },
     renderButton: function (tooltip, iconName, disabled, permissions) {
@@ -384,7 +313,10 @@ var Users = React.createClass({
                     show={this.state.showRolesAssociator}
                     usersState={this.props.usersState}
                 />
-                {this.renderCreateUserModal(theme)}
+                <NewUserModal
+                    onHide={() => this.setState({showCreateUserModal: false})}
+                    show={this.state.showCreateUserModal}
+                />
             </div>
         );
     }
@@ -417,4 +349,4 @@ const mapDispatchToProps = (dispatch) => {
     };
 };
 
-module.exports = connect(mapStateToProps, mapDispatchToProps)(getDragDropContext(reduxForm({form: "newUser"})(Users)));
+module.exports = connect(mapStateToProps, mapDispatchToProps)(getDragDropContext(Users));

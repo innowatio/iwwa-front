@@ -16,7 +16,11 @@ export function isDeleted (user) {
 }
 
 export function geUsersForManagement (allUsers) {
-    return allUsers.filterNot(user => isDeleted(user) || getParentUserId(user));
+    return allUsers.filterNot(user => isDeleted(user) || hasParent(allUsers, user));
+}
+
+function hasParent (allUsers, user) {
+    return allUsers.get(getParentUserId(user));
 }
 
 export function getParentUserId (user) {

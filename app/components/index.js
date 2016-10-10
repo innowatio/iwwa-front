@@ -36,6 +36,7 @@ exports.MonitoringSensorRow     = require("./monitoring-sensor-row/");
 exports.MonitoringSensorsAssociator = require("./monitoring-sensors-associator/");
 exports.MonitoringSensorsSelector = require("./monitoring-sensors-selector/");
 exports.MonitoringWorkArea      = require("./monitoring-work-area/");
+exports.NewUserModal            = require("./new-user-modal/");
 exports.NotificationModal       = require("./notification-modal/");
 exports.PageContainer           = require("./page-container/");
 exports.Popover                 = require("./popover/");
