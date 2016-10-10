@@ -8,6 +8,7 @@ import * as bootstrap from "react-bootstrap";
 
 import {
     Button,
+    ConfirmModal,
     CollectionItemList,
     DeleteWithConfirmButton,
     Icon,
@@ -112,8 +113,7 @@ var Users = React.createClass({
     getInitialState: function () {
         return {
             showSensorsAssociator: false,
-            showRolesAssociator: false,
-            showCreateUserModal: false
+            showRolesAssociator: false
         };
     },
     componentDidMount: function () {
@@ -314,8 +314,16 @@ var Users = React.createClass({
                     usersState={this.props.usersState}
                 />
                 <NewUserModal
+                    onConfirm={() => this.setState({showCreateConfirmModal: true})}
                     onHide={() => this.setState({showCreateUserModal: false})}
                     show={this.state.showCreateUserModal}
+                />
+                <ConfirmModal
+                    onConfirm={() => this.setState({showCreateConfirmModal: false})}
+                    onHide={() => this.setState({showCreateConfirmModal: false, showCreateUserModal: false})}
+                    iconType={"flag"}
+                    show={this.state.showCreateConfirmModal}
+                    title={"UNA EMAIL È STATA INVIATA AL NUOVO UTENTE PER CONFERMARE LA REGISTRAZIONE"}
                 />
             </div>
         );

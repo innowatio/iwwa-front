@@ -31,10 +31,10 @@ var NewUserModal = React.createClass({
     getTheme: function () {
         return this.context.theme || defaultTheme;
     },
-    confirmAndHide: function (data) {
+    onConfirm: function (data) {
         this.props.onConfirm(data.email);
-        this.props.onHide();
     },
+    // this.props.onHide();
     renderFormInput: function (field) {
         const theme = this.getTheme();
         return (
@@ -59,7 +59,7 @@ var NewUserModal = React.createClass({
         const theme = this.getTheme();
         return (
             <FullscreenModal
-                onConfirm={handleSubmit(this.confirmAndHide)}
+                onConfirm={handleSubmit(this.onConfirm)}
                 onHide={onHide}
                 renderConfirmButton={true}
                 show={show}
