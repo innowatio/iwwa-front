@@ -36,7 +36,9 @@ const styles = ({colors}) => ({
     tagsContainer: {
         float: "left",
         width: "calc(100% - 330px)",
-        cursor: "pointer"
+        cursor: "pointer",
+        maxHeight: "50px",
+        overflow: "hidden"
     },
     buttonsContainer: {
         float: "right",
