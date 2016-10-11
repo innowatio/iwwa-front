@@ -131,7 +131,7 @@ var MonitoringWorkArea = React.createClass({
                     width: "auto",
                     overflow: "auto",
                     height: "100%",
-                    marginRight: "-15px",
+                    margin: "0px",
                     padding: "10px 15px 0px 15px"
                 }}>
                     <label style={{width: "100%", color: theme.colors.mainFontColor, textAlign: "center"}}>
