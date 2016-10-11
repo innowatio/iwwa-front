@@ -4,7 +4,7 @@ import {Style} from "radium";
 import ReactPureRender from "react-addons-pure-render-mixin";
 
 import {defaultTheme} from "lib/theme";
-import components from "components";
+import {Button, InputFilter} from "components";
 
 var RowItem = React.createClass({
     propTypes: {
@@ -44,9 +44,11 @@ var CollectionItemList = React.createClass({
         lazyLoadButtonStyle: PropTypes.object,
         lazyLoadButtonStyleContainer: PropTypes.object,
         lazyLoadLabel: PropTypes.string,
+        selectAll: PropTypes.object,
         showFilterInput: PropTypes.bool,
         sort: PropTypes.func,
-        subListComponent: PropTypes.func
+        subListComponent: PropTypes.func,
+        transferAll: PropTypes.object
     },
     contextTypes: {
         theme: PropTypes.object
@@ -99,9 +101,9 @@ var CollectionItemList = React.createClass({
         );
     },
     renderInputFilter: function () {
-        // We use components.InputFilter because is used in many part of application.
+        // We use InputFilter because is used in many part of application.
         return this.props.showFilterInput ? (
-            <components.InputFilter
+            <InputFilter
                 onChange={this.onChangeInputFilter}
                 style={this.props.inputFilterStyle}
             />
@@ -133,6 +135,31 @@ var CollectionItemList = React.createClass({
             </div>
         ) : null;
     },
+    renderSelectAll: function (renderedItems) {
+        const {selectAll} = this.props;
+        return selectAll && renderedItems.length > 0 ? (
+            <Button
+                style={this.props.lazyLoadButtonStyle}
+                onClick={() => {
+                    selectAll.onClick(renderedItems);
+                }}
+            >
+                {selectAll.label}
+            </Button>
+        ) : null;
+    },
+    renderTransferAll: function () {
+        const {transferAll} = this.props;
+        return transferAll ? (
+            <Button
+                disabled={transferAll.selected.length <= 0}
+                style={this.props.lazyLoadButtonStyle}
+                onClick={transferAll.onClick}
+            >
+                {transferAll.label}
+            </Button>
+        ) : null;
+    },
     render: function () {
         const collectionList = this.props.collections
             .sort(this.props.sort)
@@ -151,6 +178,8 @@ var CollectionItemList = React.createClass({
                     }
                     <div style={this.props.lazyLoadButtonStyleContainer}>
                         {this.renderLazyLoad(collectionList.length)}
+                        {this.renderSelectAll(collectionList)}
+                        {this.renderTransferAll()}
                     </div>
                 </div>
             </div>

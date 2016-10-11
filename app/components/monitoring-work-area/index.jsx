@@ -110,6 +110,16 @@ var MonitoringWorkArea = React.createClass({
         }
         return aLabel > bLabel ? -1 : 1;
     },
+    selectAllSensors: function (sensors) {
+        sensors.forEach(sensor => {
+            this.props.selectSensor(this.props.sensors.get(sensor.key));
+        });
+    },
+    moveSelectedSensors: function () {
+        this.props.selected.forEach(sensor => {
+            this.props.addSensorToWorkArea(sensor);
+        });
+    },
     renderSensorList: function (element, elementId) {
         let found = this.props.selected && R.find((it) => {
             return getSensorId(it) === elementId;
@@ -172,7 +182,16 @@ var MonitoringWorkArea = React.createClass({
                                 initialVisibleRow={6}
                                 lazyLoadButtonStyle={lazyLoadButtonStyle(theme)}
                                 lazyLoadLabel={"Carica altri"}
+                                selectAll={{
+                                    label: "Seleziona tutti",
+                                    onClick: this.selectAllSensors
+                                }}
                                 sort={this.getSortFunc()}
+                                transferAll={{
+                                    label: "Sposta selezionati",
+                                    selected: this.props.selected,
+                                    onClick: this.moveSelectedSensors
+                                }}
                             />
                         </div>
                     </div>
