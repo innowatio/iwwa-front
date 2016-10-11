@@ -7,6 +7,7 @@ exports.ButtonFilter            = require("./button-filter/");
 exports.ButtonGroupSelect       = require("./button-group-select/");
 exports.CollectionElementsTable = require("./collection-elements-table/");
 exports.CollectionItemList      = require("./collection-item-list/");
+exports.ConfirmModal            = require("./confirm-modal/");
 exports.ConsumptionButtons      = require("./consumption-buttons/");
 exports.DateCompare             = require("./date-compare/");
 exports.DateFilter              = require("./date-filter/");
