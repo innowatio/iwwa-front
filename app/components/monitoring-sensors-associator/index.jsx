@@ -31,6 +31,7 @@ var MonitoringSensorsAssociator = React.createClass({
         onHide: PropTypes.func,
         removeSensorFromWorkArea: PropTypes.func.isRequired,
         resetWorkAreaSensors: PropTypes.func.isRequired,
+        selectSensor: PropTypes.func.isRequired,
         sensorsState: PropTypes.object.isRequired,
         show: PropTypes.bool,
         usersState: PropTypes.object.isRequired,
@@ -85,6 +86,7 @@ var MonitoringSensorsAssociator = React.createClass({
                 >
                     <MonitoringSensorsSelector
                         addSensorToWorkArea={this.props.addSensorToWorkArea}
+                        asteroid={this.props.asteroid}
                         filterSensors={this.props.filterSensors}
                         removeSensorFromWorkArea={this.props.removeSensorFromWorkArea}
                         searchButton={{
@@ -94,6 +96,8 @@ var MonitoringSensorsAssociator = React.createClass({
                                 this.props.onHide();
                             }
                         }}
+                        selectedSensors={this.props.sensorsState.selectedSensors}
+                        selectSensor={this.props.selectSensor}
                         sensors={this.getMonitoringSensors()}
                         sensorsState={this.props.sensorsState}
                         workAreaInstructions={"Trascina in questo spazio i sensori che vuoi assegnare"}

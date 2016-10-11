@@ -152,7 +152,7 @@ var CollectionItemList = React.createClass({
         const {transferAll} = this.props;
         return transferAll ? (
             <Button
-                disabled={transferAll.selected.length <= 0}
+                disabled={!transferAll.selected || transferAll.selected.length <= 0}
                 style={this.props.lazyLoadButtonStyle}
                 onClick={transferAll.onClick}
             >

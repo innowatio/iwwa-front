@@ -28,7 +28,8 @@ import {
     addSensorToWorkArea,
     filterSensors,
     removeSensorFromWorkArea,
-    resetWorkAreaSensors
+    resetWorkAreaSensors,
+    selectSensor
 } from "actions/sensors";
 
 import {
@@ -102,6 +103,7 @@ var Users = React.createClass({
         resetRolesAndGroups: PropTypes.func.isRequired,
         resetWorkAreaSensors: PropTypes.func.isRequired,
         saveAndAssignGroupToUsers: PropTypes.func.isRequired,
+        selectSensor: PropTypes.func.isRequired,
         selectUser: PropTypes.func.isRequired,
         sensorsState: PropTypes.object.isRequired,
         toggleGroup: PropTypes.func.isRequired,
@@ -296,6 +298,7 @@ var Users = React.createClass({
                     onHide={this.closeSensorsModal}
                     removeSensorFromWorkArea={this.props.removeSensorFromWorkArea}
                     resetWorkAreaSensors={this.props.resetWorkAreaSensors}
+                    selectSensor={this.props.selectSensor}
                     sensorsState={this.props.sensorsState}
                     show={this.state.showSensorsAssociator}
                     usersState={this.props.usersState}
@@ -352,6 +355,7 @@ const mapDispatchToProps = (dispatch) => {
         resetRolesAndGroups: bindActionCreators(resetRolesAndGroups, dispatch),
         resetWorkAreaSensors: bindActionCreators(resetWorkAreaSensors, dispatch),
         saveAndAssignGroupToUsers: bindActionCreators(saveAndAssignGroupToUsers, dispatch),
+        selectSensor: bindActionCreators(selectSensor, dispatch),
         selectUser: bindActionCreators(selectUser, dispatch),
         toggleGroup: bindActionCreators(toggleGroup, dispatch)
     };

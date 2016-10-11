@@ -128,6 +128,7 @@ export function sensors (state = defaultState, action) {
             break;
         }
         case RESET_WORK_AREA_SENSORS: {
+            newState.selectedSensors = [];
             newState.workAreaSensors = [];
             newState.primaryTagsToFilter = [];
             newState.tagsToFilter = [];
