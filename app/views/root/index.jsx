@@ -4,6 +4,8 @@ import {StyleRoot} from "radium";
 import {connect} from "react-redux";
 import {bindActionCreators} from "redux";
 import get from "lodash.get";
+import moment from "moment";
+import pkg from "../../../package.json";
 
 import components from "components";
 
@@ -36,7 +38,7 @@ const stylesFunction = ({colors}) => ({
         top: measures.headerHeight,
         width: measures.sidebarWidth,
         left: `-${measures.sidebarWidth}px`,
-        height: "calc(100vh - 55px)",
+        height: `calc(100vh - ${measures.headerHeight})`,
         fontSize: "15px",
         transition: "left 0.3s ease",
         zIndex: 1040,
@@ -46,6 +48,8 @@ const stylesFunction = ({colors}) => ({
         position: "fixed",
         backgroundColor: colors.backgroundFooter,
         color: colors.textFooter,
+        fontWeight: 300,
+        lineHeight: "30px",
         height: measures.footerHeight,
         width: "100%",
         bottom: "0px",
@@ -127,7 +131,7 @@ var Root = React.createClass({
     renderFooter: function (styles) {
         return EXEC_ENV !== "cordova" ? (
             <div style={styles.footer}>
-                {"Copyright 2015 - Innowatio"}
+                {`Versione ${pkg.version} - Copyright ${moment().format("YYYY")} ©Innowatio SpA`}
             </div>
         ) : null;
     },
