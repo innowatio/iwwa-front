@@ -51,7 +51,7 @@ export function getSources (theme) {
     //     {label: "Previsionale", color: theme.colors.linePrevisionale, key: "forecast"}
     // ];
     return [
-        {label: "Reale", color: theme.colors.lineReale, key: "reading"},
+        {label: "Reale", color: theme.colors.lineReale, key: "reading"}
     ];
 }
 
