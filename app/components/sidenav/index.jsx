@@ -3,18 +3,22 @@ import {Link} from "react-router";
 import {merge, partial} from "ramda";
 import {Style} from "radium";
 import * as components from "components";
+import {EXEC_ENV} from "lib/config";
+import moment from "moment";
+import pkg from "../../../package.json";
 
 import {defaultTheme} from "lib/theme";
 import * as measures from "lib/measures";
 
 const stylesFunction = ({colors}) => ({
     menu: {
-        position: "absolute",
-        width: "100%"
+        width: "100%",
+        height: "calc(100% - 60px)"
     },
     activeLink: {
         borderRadius: "0px",
-        backgroundColor: colors.navBackgroundSelected
+        backgroundColor: colors.navBackgroundSelected,
+        textDecoration: "none"
     },
     sideLabel: {
         color: colors.navText,
@@ -25,6 +29,15 @@ const stylesFunction = ({colors}) => ({
     },
     liMenu: {
         listStyleType: "none"
+    },
+    copyright: {
+        height: "60px",
+        fontWeight: 300,
+        padding: "10px",
+        fontSize: "12px",
+        color: colors.white,
+        textAlign: "center",
+        backgroundColor: colors.backgroundFooter
     }
 });
 
@@ -55,6 +68,15 @@ var SideNav = React.createClass({
         this.props.linkClickAction();
         location.reload();
     },
+    renderFooter: function (styles) {
+        return EXEC_ENV === "cordova" ? (
+            <div style={styles.copyright}>
+                {`Versione ${pkg.version}`}
+                <br />
+                {`Copyright ${moment().format("YYYY")} ©Innowatio SpA`}
+            </div>
+        ) : null;
+    },
     renderNavItem: function (styles, menuItem) {
         // Not all the menuItem have the `url` key. If not, it's set to empty
         // string.
@@ -64,7 +86,11 @@ var SideNav = React.createClass({
                 <Link
                     activeStyle={styles.activeLink}
                     onClick={this.props.linkClickAction}
-                    style={{cursor: "pointer", padding: "15px 10px"}}
+                    style={{
+                        display: "block",
+                        cursor: "pointer",
+                        padding: "15px 10px"
+                    }}
                     to={menuItem.url}
                 >
                     <components.Icon
@@ -85,7 +111,11 @@ var SideNav = React.createClass({
                 onClick={this.resetTutorial}
                 style={{cursor: "pointer", padding: "5px 0px"}}
             >
-                <a style={{cursor: "pointer", padding: "15px 10px"}}>
+                <a style={{
+                    display: "block",
+                    cursor: "pointer",
+                    padding: "15px 10px"
+                }}>
                     <components.Icon
                         color={this.getTheme().colors.iconSidenav}
                         icon={menuItem.iconClassName}
@@ -109,7 +139,7 @@ var SideNav = React.createClass({
             <div style={this.props.style}>
                 <div id="menu" style={styles.menu}>
                     <Style
-                        rules={{".nav > li > a:hover": styles.activeLink}}
+                        rules={{"a:hover, a:focus": styles.activeLink}}
                     />
                     <div>
                         {
@@ -119,6 +149,8 @@ var SideNav = React.createClass({
                         }
                     </div>
                 </div>
+                <div style={{clear: "both"}}></div>
+                {this.renderFooter(styles)}
             </div>
         );
     }

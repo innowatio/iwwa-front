@@ -6,7 +6,16 @@ var React      = require("react");
 import {connect} from "react-redux";
 import {bindActionCreators} from "redux";
 
-import components from "components";
+import {
+    Button,
+    FullscreenModal,
+    Gauge,
+    Icon,
+    MeasureLabel,
+    SiteNavigator,
+    VariablesPanel
+} from "components";
+
 import * as sensorsDecorators from "lib/sensors-decorators";
 import {styles} from "lib/styles";
 import {selectRealTimeSite} from "actions/real-time";
@@ -37,11 +46,10 @@ var RealTime = React.createClass({
     },
     getInitialState: function () {
         return {
-            showModal: false,
+            showFullscreenModal: false,
             value: null
         };
     },
-    
     componentDidMount: function () {
         this.props.asteroid.subscribe("sites");
         this.props.asteroid.subscribe("sensors");
@@ -54,7 +62,6 @@ var RealTime = React.createClass({
             this.props.asteroid.subscribe("readingsRealTimeAggregatesBySite", this.props.realTime.site);
         }
     },
-
     getTheme: function () {
         return this.context.theme || defaultTheme;
     },
@@ -62,7 +69,7 @@ var RealTime = React.createClass({
         const {colors} = this.getTheme();
         return (
             <div style={{margin: "auto", width: R.path(["style", "width"], params) || "200px"}}>
-                <components.Gauge
+                <Gauge
                     valueLabel={this.getGaugeLabel({
                         styleTextLabel: params.styleTextLabel,
                         styleTextUnit: params.styleTextUnit,
@@ -96,7 +103,8 @@ var RealTime = React.createClass({
                         textTransform: "uppercase"
                     }}
                 >
-                    {params.id}</div>
+                    {params.id}
+                </div>
             </div>
         );
     },
@@ -212,7 +220,7 @@ var RealTime = React.createClass({
     },
     closeModal: function () {
         this.setState({
-            showModal: false,
+            showFullscreenModal: false,
             value: null
         });
     },
@@ -227,7 +235,7 @@ var RealTime = React.createClass({
     },
     getGaugeLabel: function (params) {
         return (
-            <components.MeasureLabel {...params} />
+            <MeasureLabel {...params} />
         );
     },
     findFilteredReadingsRealtime (criteria) {
@@ -267,7 +275,7 @@ var RealTime = React.createClass({
         });
     },
     openModal: function () {
-        this.setState({showModal:true});
+        this.setState({showFullscreenModal:true});
     },
     onChangeWidgetValue: function (value) {
         this.setState({value});
@@ -289,8 +297,8 @@ var RealTime = React.createClass({
                     placement="bottom"
                     rootClose={true}
                 >
-                    <components.Button className="pull-right" onClick={this.openModal} style={styleSiteButton(theme)} >
-                        <components.Icon
+                    <Button className="pull-right" onClick={this.openModal} style={styleSiteButton(theme)} >
+                        <Icon
                             color={this.getTheme().colors.iconSiteButton}
                             icon={"map"}
                             size={"38px"}
@@ -300,23 +308,23 @@ var RealTime = React.createClass({
                                 lineHeight: "20px"
                             }}
                         />
-                    </components.Button>
+                    </Button>
                 </bootstrap.OverlayTrigger>
-                <components.FullscreenModal
+                <FullscreenModal
                     onConfirm={this.onConfirmFullscreenModal}
                     onHide={this.closeModal}
                     onReset={this.closeModal}
                     renderConfirmButton={true}
-                    show={this.state.showModal}
+                    show={this.state.showFullscreenModal}
                 >
                     {this.renderModalBody()}
-                </components.FullscreenModal>
+                </FullscreenModal>
             </div>
         );
     },
     renderModalBody: function () {
         return (
-            <components.SiteNavigator
+            <SiteNavigator
                 allowedValues={this.getSites()}
                 onChange={this.onChangeWidgetValue}
                 path={this.state.value || this.props.realTime.fullPath || []}
@@ -350,7 +358,7 @@ var RealTime = React.createClass({
                 >
                     {`${selectedSiteName ? selectedSiteName + " - " : ""}Rilevazioni ambientali`}
                 </h3>
-                <components.VariablesPanel
+                <VariablesPanel
                     numberOfConsumptionSensor={numberOfConsumptionSensor}
                     values={this.findReadingsRealtime()}
                 />

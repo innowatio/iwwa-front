@@ -17,6 +17,7 @@ const itemsStyle = (theme) => (R.merge(styles(theme).buttonBasicStyle, {
     border: "0px",
     marginTop: "10px",
     width: "95%",
+    minWidth: "100px",
     padding: "14px",
     borderRadius: "20px"
 }));
@@ -235,7 +236,7 @@ var SiteNavigator = React.createClass({
                         paddingRight:"60px",
                         marginTop: "10px",
                         height: `calc(100vh - ${heightBody})`,
-                        minHeight: "300px"
+                        minHeight: "350px"
                     }}
                     xs={4}
                 >
@@ -259,12 +260,13 @@ var SiteNavigator = React.createClass({
                     </div>
                 </bootstrap.Col>
                 <bootstrap.Col
-                    style={{height: `calc(100vh - ${heightBody})`, minHeight: "300px"}}
+                    style={{height: `calc(100vh - ${heightBody})`, minHeight: "350px", overflow: "hidden"}}
                     xs={8}
                 >
                     <div
                         className="site-navigator-child"
                         style={{
+                            overflow: "auto",
                             height: "100%",
                             marginTop: "10px",
                             borderRadius: "20px",
@@ -277,7 +279,8 @@ var SiteNavigator = React.createClass({
                             rules={{
                                 ".btn-group-vertical": {
                                     width: "30%",
-                                    padding: "12px"
+                                    minWidth: "100px",
+                                    padding: "0px 10px"
                                 },
                                 "button.btn": itemsStyle(theme),
                                 "button.btn.active": itemsStyleActive

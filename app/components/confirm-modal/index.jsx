@@ -3,7 +3,10 @@ import Radium from "radium";
 import React, {PropTypes} from "react";
 
 import {defaultTheme} from "lib/theme";
-import components from "components";
+import {
+    Button,
+    Icon
+} from "components";
 
 var ConfirmModal = React.createClass({
     propTypes: {
@@ -70,7 +73,7 @@ var ConfirmModal = React.createClass({
                         }}
                         scopeSelector=".modal-icon"
                     />
-                    <components.Icon
+                    <Icon
                         color={colors.white}
                         icon={this.props.iconType}
                         size={"200px"}
@@ -90,12 +93,12 @@ var ConfirmModal = React.createClass({
                 onClick={this.props.onConfirm}
                 style={{display: "block", cursor: "pointer", padding: "2% 0"}}
             >
-                <components.Button
+                <Button
                     bsStyle={"link"}
                     style={{fontSize: "20px", color: colors.white, width: "100%"}}
                 >
                     {"MODIFICA"}
-                </components.Button>
+                </Button>
             </Modal.Footer>
         );
     },
