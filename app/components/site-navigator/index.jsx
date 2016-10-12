@@ -171,64 +171,66 @@ var SiteNavigator = React.createClass({
     render: function () {
         const theme = this.getTheme();
         return (
-            <div>
+            <div style={{padding: "20px"}}>
                 <h3 className="text-center" style={styles(theme).titleFullScreenModal}>
                     {this.props.title}
                 </h3>
-                <bootstrap.Col style={{marginTop: "20px"}} xs={12}>
-                    <div className="search-container">
-                        <Radium.Style
-                            rules={{
-                                ".input-search": {
-                                    height: "60px",
-                                    fontSize: "20px",
-                                    borderRight: "0px",
-                                    borderTopLeftRadius: "20px",
-                                    borderBottomLeftRadius: "20px",
-                                    borderBottomRightRadius: "0px",
-                                    borderTopRightRadius: "0px",
-                                    borderColor: theme.colors.borderInputSearch,
-                                    backgroundColor: theme.colors.backgroundInputSearch,
-                                    color: theme.colors.mainFontColor
-                                },
-                                ".form-control:focus": {
-                                    borderColor: theme.colors.borderInputSearch,
-                                    outline: "none",
-                                    boxShadow: "none",
-                                    WebkitBoxShadow: "none"
-                                },
-                                ".input-group-addon:last-child": {
-                                    backgroundColor: theme.colors.backgroundInputSearch,
-                                    borderColor: theme.colors.borderInputSearch,
-                                    borderTopRightRadius: "20px",
-                                    borderBottomRightRadius: "20px",
-                                    cursor: "pointer"
-                                }
-                            }}
-                            scopeSelector=".search-container"
-                        />
-                        <bootstrap.FormGroup style={{display: "table"}}>
-                            <bootstrap.FormControl
-                                className="input-search"
-                                onChange={input => this.setState({inputFilter: input.target.value})}
-                                placeholder="Ricerca"
-                                type="text"
-                                value={this.state.inputFilter}
+                <bootstrap.Row>
+                    <bootstrap.Col style={{marginTop: "20px"}} xs={12}>
+                        <div className="search-container">
+                            <Radium.Style
+                                rules={{
+                                    ".input-search": {
+                                        height: "60px",
+                                        fontSize: "20px",
+                                        borderRight: "0px",
+                                        borderTopLeftRadius: "20px",
+                                        borderBottomLeftRadius: "20px",
+                                        borderBottomRightRadius: "0px",
+                                        borderTopRightRadius: "0px",
+                                        borderColor: theme.colors.borderInputSearch,
+                                        backgroundColor: theme.colors.backgroundInputSearch,
+                                        color: theme.colors.mainFontColor
+                                    },
+                                    ".form-control:focus": {
+                                        borderColor: theme.colors.borderInputSearch,
+                                        outline: "none",
+                                        boxShadow: "none",
+                                        WebkitBoxShadow: "none"
+                                    },
+                                    ".input-group-addon:last-child": {
+                                        backgroundColor: theme.colors.backgroundInputSearch,
+                                        borderColor: theme.colors.borderInputSearch,
+                                        borderTopRightRadius: "20px",
+                                        borderBottomRightRadius: "20px",
+                                        cursor: "pointer"
+                                    }
+                                }}
+                                scopeSelector=".search-container"
                             />
-                            <bootstrap.InputGroup.Addon>
-                                <components.Icon
-                                    color={theme.colors.iconInputSearch}
-                                    icon={"search"}
-                                    size={"34px"}
-                                    style={{
-                                        lineHeight: "10px",
-                                        verticalAlign: "middle"
-                                    }}
+                            <bootstrap.FormGroup style={{display: "table"}}>
+                                <bootstrap.FormControl
+                                    className="input-search"
+                                    onChange={input => this.setState({inputFilter: input.target.value})}
+                                    placeholder="Ricerca"
+                                    type="text"
+                                    value={this.state.inputFilter}
                                 />
-                            </bootstrap.InputGroup.Addon>
-                        </bootstrap.FormGroup>
-                    </div>
-                </bootstrap.Col>
+                                <bootstrap.InputGroup.Addon>
+                                    <components.Icon
+                                        color={theme.colors.iconInputSearch}
+                                        icon={"search"}
+                                        size={"34px"}
+                                        style={{
+                                            lineHeight: "10px",
+                                            verticalAlign: "middle"
+                                        }}
+                                    />
+                                </bootstrap.InputGroup.Addon>
+                            </bootstrap.FormGroup>
+                        </div>
+                    </bootstrap.Col>
+                </bootstrap.Row>
                 <bootstrap.Col
                     style={{
                         position: "relative",
@@ -250,7 +252,6 @@ var SiteNavigator = React.createClass({
                                     left: "0px",
                                     right: "-20px",
                                     overflow: "auto",
-                                    padding: "15px",
                                     width: "100%"
                                 }
                             }}
@@ -260,27 +261,32 @@ var SiteNavigator = React.createClass({
                     </div>
                 </bootstrap.Col>
                 <bootstrap.Col
-                    style={{height: `calc(100vh - ${heightBody})`, minHeight: "350px", overflow: "hidden"}}
+                    style={{
+                        overflow: "hidden",
+                        height: `calc(100vh - ${heightBody})`,
+                        minHeight: "350px",
+                        borderRadius: "20px",
+                        border: `1px solid ${theme.colors.borderContentModal}`,
+                        backgroundColor: theme.colors.backgroundContentModal
+                    }}
                     xs={8}
                 >
                     <div
                         className="site-navigator-child"
                         style={{
+                            position: "absolute",
                             overflow: "auto",
-                            height: "100%",
-                            marginTop: "10px",
-                            borderRadius: "20px",
-                            border: `1px solid ${theme.colors.borderContentModal}`,
-                            padding: "16px",
-                            backgroundColor: theme.colors.backgroundContentModal
+                            right: "-15px",
+                            padding: "15px 20px",
+                            width: "100%",
+                            height: "100%"
                         }}
                     >
                         <Radium.Style
                             rules={{
                                 ".btn-group-vertical": {
                                     width: "30%",
-                                    minWidth: "100px",
-                                    padding: "0px 10px"
+                                    minWidth: "100px"
                                 },
                                 "button.btn": itemsStyle(theme),
                                 "button.btn.active": itemsStyleActive
