@@ -41,6 +41,7 @@ var SensorForm = React.createClass({
         handleSubmit: PropTypes.func.isRequired,
         initialValues: PropTypes.object,
         onSave: PropTypes.func.isRequired,
+        onSaveClose: PropTypes.bool,
         removeItemFromFormula: PropTypes.func.isRequired,
         resetForm: PropTypes.func.isRequired,
         sensorState: PropTypes.object,
@@ -82,7 +83,9 @@ var SensorForm = React.createClass({
     },
     saveForm: function (data) {
         this.props.onSave(data, this.props.sensorState.formulaItems, this.props.currentSensor);
-        this.props.closeForm();
+        if (this.props.onSaveClose) {
+            this.props.closeForm();
+        }
     },
     renderSensorAggregation: function () {
         let {showSensorAggregator, sensorState, currentSensor} = this.props;
@@ -215,13 +218,24 @@ var SensorForm = React.createClass({
                                 style={styles(theme).inputLine}
                             />
                         </div>
-                        <TagList
-                            className={"tags-wrp form-group col-xs-12"}
-                            style={{marginBottom: "15px"}}
-                            tagIcon={true}
-                            tags={primaryTags.value}
-                        />
                         <div className={"tags-wrp form-group col-xs-12"} style={{marginBottom: "15px"}}>
+                            <Radium.Style
+                                rules={{
+                                    ".react-tagsinput .react-tagsinput-input": {
+                                        paddingLeft: "35px"
+                                    }
+                                }}
+                                scopeSelector=".tags-wrp"
+                            />
+                            <TagList
+                                style={{
+                                    position: "absolute",
+                                    bottom: "5px",
+                                    height: "40px"
+                                }}
+                                tagIcon={true}
+                                tags={primaryTags.value}
+                            />
                             <TagsInput
                                 addOnBlur={true}
                                 renderInput={this.renderTagInput}
