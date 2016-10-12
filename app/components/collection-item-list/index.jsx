@@ -148,9 +148,9 @@ var CollectionItemList = React.createClass({
             </Button>
         ) : null;
     },
-    renderTransferAll: function () {
+    renderTransferAll: function (renderedItems) {
         const {transferAll} = this.props;
-        return transferAll ? (
+        return transferAll && renderedItems.length > 0 ? (
             <Button
                 disabled={!transferAll.selected || transferAll.selected.length <= 0}
                 style={this.props.lazyLoadButtonStyle}
@@ -179,7 +179,7 @@ var CollectionItemList = React.createClass({
                     <div style={this.props.lazyLoadButtonStyleContainer}>
                         {this.renderLazyLoad(collectionList.length)}
                         {this.renderSelectAll(collectionList)}
-                        {this.renderTransferAll()}
+                        {this.renderTransferAll(collectionList)}
                     </div>
                 </div>
             </div>

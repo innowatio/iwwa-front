@@ -39,6 +39,7 @@ import {
     resetFormulaItems,
     selectSensor
 } from "actions/sensors";
+import {assignSensorsToUsers} from "actions/users";
 
 const stylesFunction = (theme) => ({
     buttonIconStyle: {
@@ -98,6 +99,7 @@ var Monitoring = React.createClass({
         addItemToFormula: PropTypes.func.isRequired,
         addSensor: PropTypes.func.isRequired,
         addSensorToWorkArea: PropTypes.func.isRequired,
+        assignSensorsToUsers: PropTypes.func.isRequired,
         asteroid: PropTypes.object,
         cloneSensors: PropTypes.func.isRequired,
         collections: IPropTypes.map.isRequired,
@@ -124,6 +126,13 @@ var Monitoring = React.createClass({
     },
     componentDidMount: function () {
         this.props.asteroid.subscribe("sensors");
+    },
+    componentWillReceiveProps: function (nextProps) {
+        if (nextProps.sensorsState.sensorsCreated.length > 0) {
+            const user = getLoggedUser(nextProps.asteroid);
+            const sensors = R.uniq(R.concat(nextProps.sensorsState.sensorsCreated, user.get("sensors").toJS()));
+            nextProps.assignSensorsToUsers([user], sensors);
+        }
     },
     getTheme: function () {
         return this.context.theme || defaultTheme;
@@ -323,6 +332,7 @@ const mapDispatchToProps = (dispatch) => {
         addItemToFormula: bindActionCreators(addItemToFormula, dispatch),
         addSensor: bindActionCreators(addSensor, dispatch),
         addSensorToWorkArea: bindActionCreators(addSensorToWorkArea, dispatch),
+        assignSensorsToUsers: bindActionCreators(assignSensorsToUsers, dispatch),
         cloneSensors: bindActionCreators(cloneSensors, dispatch),
         deleteSensors: bindActionCreators(deleteSensors, dispatch),
         editSensor: bindActionCreators(editSensor, dispatch),

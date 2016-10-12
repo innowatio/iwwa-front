@@ -32,7 +32,7 @@ export const changeActiveStatus = user => {
 
 function updateUser (dispatch, user, updatedInfo, event) {
     const userName = getUsername(user);
-    const endpoint = "http://" + WRITE_API_ENDPOINT + "/users/" + userName;
+    const endpoint = "http://" + WRITE_API_ENDPOINT + "/users/";
     const updatedUser = {
         uid: userName,
         ...updatedInfo

@@ -25,6 +25,7 @@ const defaultState = {
     },
     primaryTagsToFilter: [],
     selectedSensors: [],
+    sensorsCreated: [],
     tagsToFilter: [],
     wordsToFilter: [],
     workAreaSensors: []
@@ -37,6 +38,7 @@ function cloneState (state) {
         },
         primaryTagsToFilter: state.primaryTagsToFilter.slice(),
         selectedSensors: state.selectedSensors.slice(),
+        sensorsCreated: state.sensorsCreated.slice(),
         tagsToFilter: state.tagsToFilter.slice(),
         wordsToFilter: state.wordsToFilter.slice(),
         workAreaSensors: state.workAreaSensors.slice()
@@ -144,10 +146,15 @@ export function sensors (state = defaultState, action) {
         }
         case SENSOR_CREATION_SUCCESS: {
             newState.selectedSensors = removeFromSelected(newState.selectedSensors, action.payload.parentSensorId);
+            newState.sensorsCreated.push(action.payload.id);
             break;
         }
         case SENSOR_DELETE_SUCCESS: {
             newState.selectedSensors = removeFromSelected(newState.selectedSensors, action.payload);
+            break;
+        }
+        case "ASSIGNING_SENSORS_TO_USERS": {
+            newState.sensorsCreated = [];
             break;
         }
     }
