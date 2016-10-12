@@ -55,7 +55,7 @@ export function canAccessUsers (asteroid) {
     usersAccess.forEach(role => {
         canAccess = canAccess || userRoles.indexOf(role) > -1;
     });
-    return canAccess;
+    return canAccess || isAdmin(asteroid);
 }
 
 //TODO need to keep these until complete switch of roles management
@@ -64,7 +64,7 @@ export function isAdmin (asteroid) {
 }
 
 export function hasRole (asteroid, role) {
-    return getRoles(asteroid).indexOf(role) > -1;
+    return isAdmin(asteroid) || getRoles(asteroid).indexOf(role) > -1;
 }
 
 export function isAuthorizedUser (asteroid) {

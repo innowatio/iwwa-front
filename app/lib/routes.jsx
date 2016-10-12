@@ -3,7 +3,7 @@ import {Router, Route, hashHistory, browserHistory} from "react-router";
 
 import asteroid from "lib/asteroid";
 import {EXEC_ENV} from "lib/config";
-import {isAdmin, canAccessUsers, hasRole, ACCESS_MONITORING} from "lib/roles-utils";
+import {canAccessUsers, hasRole, ACCESS_MONITORING} from "lib/roles-utils";
 
 import * as views from "views";
 
@@ -36,13 +36,13 @@ module.exports = (
 );
 
 function requireAdminAuthorization (nextState, replace) {
-    if (!isAdmin(asteroid) && !canAccessUsers(asteroid)) {
+    if (!canAccessUsers(asteroid)) {
         applyReplace(nextState, replace, "/");
     }
 }
 
 function requireYousaveAuthorization (nextState, replace) {
-    if (!isAdmin(asteroid) && !hasRole(asteroid, ACCESS_MONITORING)) {
+    if (!hasRole(asteroid, ACCESS_MONITORING)) {
         applyReplace(nextState, replace, "/");
     }
 }
