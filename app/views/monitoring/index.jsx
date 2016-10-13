@@ -12,6 +12,7 @@ import {styles} from "lib/styles";
 
 import {
     Button,
+    ConfirmModal,
     DropdownButton,
     FullscreenModal,
     Icon,
@@ -119,8 +120,9 @@ var Monitoring = React.createClass({
         return {
             editSensor: false,
             deleteSensors: false,
-            showFullscreenModal: false,
-            showDeleteFullscreenModal: false
+            showConfirmModal: false,
+            showDeleteModal: false,
+            showEditModal: false
         };
     },
     componentDidMount: function () {
@@ -165,38 +167,50 @@ var Monitoring = React.createClass({
     },
     onClickEditSensor: function () {
         this.props.getFormulaItems();
-        this.openModal(true);
+        this.openEditModal(true);
     },
     resetAndOpenNew: function () {
         this.props.resetFormulaItems(false);
-        this.openModal(false);
+        this.openEditModal(false);
     },
-    openModal: function (editSensor) {
+    openEditModal: function (editSensor) {
         this.setState({
             editSensor: editSensor,
-            showFullscreenModal: true
+            showEditModal: true
         });
     },
     openDeleteModal: function (deleteSensors) {
         this.setState({
             deleteSensors: deleteSensors,
-            showDeleteFullscreenModal: true
+            showDeleteModal: true
         });
     },
-    closeModal: function (reset) {
+    openConfirmModal: function () {
+        this.setState({
+            showConfirmModal: true
+        });
+    },
+    closeModals: function (reset) {
         if (reset) {
             this.props.resetFormulaItems(true);
         }
         this.setState({
-            showFullscreenModal: false,
-            showDeleteFullscreenModal: false
+            showEditModal: false,
+            showConfirmModal: false
         });
     },
-    onConfirmFullscreenModal: function () {
+    onConfirmDeleteModal: function () {
         const selected = this.props.sensorsState.selectedSensors;
-
         this.props.deleteSensors(selected);
-        this.closeModal();
+        this.setState({showDeleteModal: false});
+    },
+    onSaveForm: function () {
+        if (this.state.editSensor) {
+            this.props.editSensor(...arguments);
+        } else {
+            this.props.addSensor(...arguments);
+        }
+        this.openConfirmModal();
     },
     renderSensorForm: function () {
         const selected = this.props.sensorsState.selectedSensors;
@@ -206,14 +220,14 @@ var Monitoring = React.createClass({
                 <SensorForm
                     addItemToFormula={this.props.addItemToFormula}
                     allSensors={this.getAllSensors()}
-                    closeForm={() => this.closeModal(this.state.editSensor)}
+                    closeForm={() => this.setState({showEditModal: false})}
                     currentSensor={selected.length == 1 ? selected[0] : null}
                     initialValues={this.getSensorFields()}
-                    onSave={this.state.editSensor ? this.props.editSensor : this.props.addSensor}
+                    onSave={this.onSaveForm}
                     removeItemFromFormula={this.props.removeItemFromFormula}
                     sensorState={this.props.sensorsState.current}
                     sensorsToAggregate={workAreaSensors}
-                    showFullscreenModal={this.state.showFullscreenModal}
+                    showFullscreenModal={this.state.showEditModal}
                     showSensorAggregator={!this.state.editSensor}
                     title={this.state.editSensor ? "MODIFICA SENSORE" : "CREA NUOVO SENSORE"}
                 />
@@ -238,10 +252,10 @@ var Monitoring = React.createClass({
                     />
                 </Button>
                 <FullscreenModal
-                    onConfirm={this.onConfirmFullscreenModal}
-                    onHide={this.closeModal}
+                    onConfirm={this.onConfirmDeleteModal}
+                    onHide={() => this.setState({showDeleteModal: false})}
                     renderConfirmButton={true}
-                    show={this.state.showDeleteFullscreenModal}
+                    show={this.state.showDeleteModal}
                 >
                     {this.renderDeleteModalBody()}
                 </FullscreenModal>
@@ -258,6 +272,22 @@ var Monitoring = React.createClass({
                     </label>
                 </div>
             </div>
+        );
+    },
+    renderConfirmModal: function () {
+        const selected = this.getSensorFields();
+        const title = (this.state.editSensor ?
+            "HAI MODIFICATO IL SENSORE \n" :
+            "HAI CREATO IL SENSORE \n");
+        return (
+            <ConfirmModal
+                onConfirm={() => this.setState({showConfirmModal: false})}
+                onHide={this.closeModals}
+                iconType={"flag"}
+                show={this.state.showConfirmModal}
+                subtitle={selected.name + " · " + selected.description + " · " + selected.unitOfMeasurement}
+                title={title}
+            />
         );
     },
     render: function () {
@@ -338,8 +368,8 @@ var Monitoring = React.createClass({
                     wordsToFilter={this.props.sensorsState.wordsToFilter}
                     workAreaSensors={this.props.sensorsState.workAreaSensors}
                 />
-
                 {this.renderSensorForm()}
+                {this.renderConfirmModal()}
             </div>
         );
     }
