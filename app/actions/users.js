@@ -11,7 +11,6 @@ export const REMOVE_ROLE = "REMOVE_ROLE";
 export const RESET_ROLES_GROUPS = "RESET_ROLES_GROUPS";
 export const SELECT_USER = "SELECT_USER";
 export const TOGGLE_GROUP = "TOGGLE_GROUP";
-export const USER_DELETE_SUCCESS = "USER_DELETE_SUCCESS";
 
 export const selectUser = user => getBasicObject(SELECT_USER, user);
 
@@ -91,15 +90,13 @@ export const deleteUsers = (usersToDelete, allUsers) => {
 
 function deleteUser (user, allUsers, dispatch) {
     const userId = user.get("_id");
-    const endpoint = "http://" + WRITE_API_ENDPOINT + "/users/" + userId;
-    axios.delete(endpoint)
-        .then(() => dispatch({
-            type: USER_DELETE_SUCCESS,
-            payload: userId
-        }))
-        .catch(() => dispatch({
-            type: "USER_DELETE_FAIL"
-        }));
+    const newProfile = {
+        profile: {
+            ...user.get("profile").toObject(),
+            isDeleted: true
+        }
+    };
+    updateUser(dispatch, user, newProfile, "USER_DELETE");
     getChildren(userId, allUsers).forEach(child => deleteUser(child, allUsers, dispatch));
 }
 
