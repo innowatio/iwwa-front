@@ -1,6 +1,7 @@
 var Immutable  = require("immutable");
 var R          = require("ramda");
 var React      = require("react");
+var moment     = require("moment");
 var bootstrap  = require("react-bootstrap");
 var IPropTypes = require("react-immutable-proptypes");
 import {connect} from "react-redux";
@@ -23,7 +24,6 @@ import {
     Spacer
 } from "components";
 import * as parameters from "./parameters";
-import moment from "lib/moment";
 import {consumptionSensors} from "lib/sensors-decorators";
 import {
     selectSingleElectricalSensor,
