@@ -9,6 +9,7 @@ import {ButtonGroupSelect} from "components";
 import {defaultTheme} from "lib/theme";
 import {styles} from "lib/styles";
 import icons from "lib/icons";
+import get from "lodash.get";
 
 const styleDateFilter = ({colors}) => ({
     borderRadius: "20px",
@@ -269,7 +270,7 @@ var DateFilter = React.createClass({
                         onChange={this.setMonthlyDate}
                         style={styleCalendar(this.getTheme())}
                         value={
-                            this.props.value.valueType.key === "calendar" ?
+                            get(this.props, "value.valueType.key") === "calendar" ?
                             new Date(this.props.value.start) :
                             null
                         }
