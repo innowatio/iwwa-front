@@ -87,7 +87,6 @@ var Popover = React.createClass({
             `${colors.backgroundArrowPopover} !important`;
         return (
             <bootstrap.Popover
-                animation={false}
                 className="multiselect-popover"
                 id={"popover"}
             >
@@ -139,7 +138,6 @@ var Popover = React.createClass({
                     {this.renderButton()}
                 </div>
                 <bootstrap.Overlay
-                    animation={false}
                     onHide={this.onHide}
                     placement={this.props.placement || "bottom"}
                     rootClose={true}

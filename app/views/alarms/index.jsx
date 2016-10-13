@@ -231,7 +231,6 @@ var Alarms = React.createClass({
                 <div className="tabbed-area">
                     <bootstrap.Tabs
                         activeKey={this.props.alarms.selectedTab || 1}
-                        animation={false}
                         id={"alarm"}
                         bsStyle={"tabs"}
                         onSelect={this.activeKey}
