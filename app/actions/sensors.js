@@ -35,6 +35,11 @@ function getSensorObj (collectionItem) {
 }
 
 function addMonitoringAttrs (sensor) {
+    sensor._id = undefined;
+    sensor.measurementType = undefined;
+    if (sensor.unitOfMeasurement instanceof Object) {
+        sensor.unitOfMeasurement = sensor.unitOfMeasurement.value;
+    }
     sensor.id = UUID.create().hex;
     sensor.type = MONITORING_TYPE;
     sensor.virtual = true;
