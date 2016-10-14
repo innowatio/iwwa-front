@@ -14,6 +14,7 @@ import {styles} from "lib/styles";
 
 import {
     Button,
+    ConfirmModal,
     DeleteWithConfirmButton,
     DropdownButton,
     Icon,
@@ -121,7 +122,8 @@ var Monitoring = React.createClass({
     getInitialState: function () {
         return {
             editSensor: false,
-            showFullscreenModal: false
+            showConfirmModal: false,
+            showEditModal: false
         };
     },
     componentDidMount: function () {
@@ -186,25 +188,39 @@ var Monitoring = React.createClass({
     },
     onClickEditSensor: function () {
         this.props.getFormulaItems();
-        this.openModal(true);
+        this.openEditModal(true);
     },
     resetAndOpenNew: function () {
         this.props.resetFormulaItems(false);
-        this.openModal(false);
+        this.openEditModal(false);
     },
-    openModal: function (editSensor) {
+    openEditModal: function (editSensor) {
         this.setState({
             editSensor: editSensor,
-            showFullscreenModal: true
+            showEditModal: true
         });
     },
-    closeModal: function (reset) {
+    openConfirmModal: function () {
+        this.setState({
+            showConfirmModal: true
+        });
+    },
+    closeModals: function (reset) {
         if (reset) {
             this.props.resetFormulaItems(true);
         }
         this.setState({
-            showFullscreenModal: false
+            showEditModal: false,
+            showConfirmModal: false
         });
+    },
+    onSaveForm: function () {
+        if (this.state.editSensor) {
+            this.props.editSensor(...arguments);
+        } else {
+            this.props.addSensor(...arguments);
+        }
+        this.openConfirmModal();
     },
     renderSensorForm: function () {
         const selected = this.props.sensorsState.selectedSensors;
@@ -215,14 +231,14 @@ var Monitoring = React.createClass({
                     addItemToFormula={this.props.addItemToFormula}
                     allSensors={this.getAllSensors()}
                     asteroid={this.props.asteroid}
-                    closeForm={() => this.closeModal(this.state.editSensor)}
+                    closeForm={() => this.setState({showEditModal: false})}
                     currentSensor={selected.length == 1 ? selected[0] : null}
                     initialValues={this.getSensorFields()}
-                    onSave={this.state.editSensor ? this.props.editSensor : this.props.addSensor}
+                    onSave={this.onSaveForm}
                     removeItemFromFormula={this.props.removeItemFromFormula}
                     sensorState={this.props.sensorsState.current}
                     sensorsToAggregate={workAreaSensors}
-                    showFullscreenModal={this.state.showFullscreenModal}
+                    showFullscreenModal={this.state.showEditModal}
                     showSensorAggregator={!this.state.editSensor}
                     title={this.state.editSensor ? "MODIFICA SENSORE" : "CREA NUOVO SENSORE"}
                 />
@@ -254,6 +270,22 @@ var Monitoring = React.createClass({
                 </Button>
             </bootstrap.OverlayTrigger>
         ) : null;
+    },
+    renderConfirmModal: function () {
+        const selected = this.getSensorFields();
+        const title = (this.state.editSensor ?
+            "HAI MODIFICATO IL SENSORE \n" :
+            "HAI CREATO IL SENSORE \n");
+        return (
+            <ConfirmModal
+                onConfirm={() => this.setState({showConfirmModal: false})}
+                onHide={this.closeModals}
+                iconType={"flag"}
+                show={this.state.showConfirmModal}
+                subtitle={selected.name + " · " + selected.description + " · " + selected.unitOfMeasurement}
+                title={title}
+            />
+        );
     },
     render: function () {
         const theme = this.getTheme();
@@ -315,6 +347,7 @@ var Monitoring = React.createClass({
                 />
 
                 {this.renderSensorForm()}
+                {this.renderConfirmModal()}
             </div>
         );
     }
