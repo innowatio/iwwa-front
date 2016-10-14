@@ -7,7 +7,22 @@ var IPropTypes = require("react-immutable-proptypes");
 import {connect} from "react-redux";
 import {bindActionCreators} from "redux";
 
-var components         = require("components/");
+import {
+    Button,
+    ButtonGroupSelect,
+    ConfirmModal,
+    ConsumptionButtons,
+    DateFilter,
+    DateCompare,
+    DropdownButton,
+    Export,
+    FullscreenModal,
+    HistoricalGraph,
+    Icon,
+    Popover,
+    SiteNavigator,
+    Spacer
+} from "components";
 import * as parameters from "./parameters";
 import {consumptionSensors} from "lib/sensors-decorators";
 import {
@@ -132,11 +147,17 @@ var Chart = React.createClass({
     getTheme: function () {
         return this.context.theme || defaultTheme;
     },
-    closeModal: function () {
+    closeFullscreenModal: function () {
         this.setState({
             showFullscreenModal: false,
             selectedWidget: null,
             value: undefined
+        });
+    },
+    closeModals: function () {
+        this.setState({
+            showConfirmModal: false,
+            showFullscreenModal: false
         });
     },
     updateFirstSiteToChart: function () {
@@ -158,7 +179,7 @@ var Chart = React.createClass({
         const exportAPILocation = this.refs.historicalGraph.refs.graphType.refs.highcharts.refs.chart;
         const chart = exportAPILocation.getChart();
         chart.getCSV();
-        this.closeModal();
+        this.closeFullscreenModal();
     },
     exportCsv: function () {
         const exportAPILocation = this.refs.historicalGraph.refs.graphType.refs.highcharts.refs.chart;
@@ -166,7 +187,7 @@ var Chart = React.createClass({
         const csv = chart.exportChartLocal();
         const dataTypePrefix = "data:text/csv;base64,";
         this.openDownloadLink(dataTypePrefix + window.btoa(csv), "chart.csv");
-        this.closeModal();
+        this.closeFullscreenModal();
     },
     subscribeToMisure: function (props) {
         const chartFilter = props.chartState.charts;
@@ -454,7 +475,7 @@ var Chart = React.createClass({
                 this.props.resetZoom();
                 break;
         }
-        return this.closeModal();
+        this.setState({showConfirmModal: true});
     },
     onChangeWidgetValue: function (value) {
         this.setState({value});
@@ -464,6 +485,37 @@ var Chart = React.createClass({
     },
     selectedSources: function () {
         return this.props.chartState.charts.map(singleSelection => singleSelection.source);
+    },
+    getModalTitle: function () {
+        switch (this.state.selectedWidget) {
+            case "siteNavigator":
+                return "HAI SCELTO DI VISUALIZZARE";
+            case "dateFilter":
+                return "HAI SCELTO DI VISUALIZZARE I CONSUMI RELATIVI AL MESE DI";
+            case "siteCompare":
+                return "HAI SCELTO DI CONFRONTARE";
+            case "dateCompare":
+                return "HAI SCELTO DI CONFRONTARE IL PERIODO";
+        }
+    },
+    getModalSubtitle: function () {
+        const chartFilter = this.props.chartState.charts;
+        switch (this.state.selectedWidget) {
+            case "siteNavigator":
+                return getTitleForSingleSensor(chartFilter[0], this.props.collections);
+            case "dateFilter":
+                return getStringPeriod(chartFilter[0].date);
+            case "siteCompare":
+                return (
+                    getTitleForSingleSensor(chartFilter[0], this.props.collections)
+                    + " CON " +
+                    getTitleForSingleSensor(chartFilter[1], this.props.collections)
+                );
+            case "dateCompare":
+                return (
+                    getStringPeriod(chartFilter[0].date)
+                );
+        }
     },
     renderChildComponent: function () {
         switch (this.state.selectedWidget) {
@@ -481,7 +533,7 @@ var Chart = React.createClass({
     },
     renderDateCompare: function () {
         return (
-            <components.DateCompare
+            <DateCompare
                 allowedValues={parameters.getDateCompare()}
                 getKey={R.prop("key")}
                 getLabel={R.prop("label")}
@@ -498,7 +550,7 @@ var Chart = React.createClass({
     renderSiteCompare: function () {
         const chartFilter = this.props.chartState.charts;
         return (
-            <components.SiteNavigator
+            <SiteNavigator
                 allowedValues={this.getSortedAndDecoratedSites()}
                 onChange={this.onChangeWidgetValue}
                 path={this.state.value || (chartFilter[1] && chartFilter[1].fullPath) || []}
@@ -513,7 +565,7 @@ var Chart = React.createClass({
     renderDateFilter: function () {
         const chartFilter = this.props.chartState.charts;
         return (
-            <components.DateFilter
+            <DateFilter
                 getKey={R.prop("key")}
                 getLabel={R.prop("label")}
                 onChange={this.onChangeWidgetValue}
@@ -527,7 +579,7 @@ var Chart = React.createClass({
     },
     renderSiteNavigator: function () {
         return (
-            <components.SiteNavigator
+            <SiteNavigator
                 allowedValues={this.getSortedAndDecoratedSites()}
                 onChange={this.onChangeWidgetValue}
                 path={this.state.value || this.props.chartState.charts[0].fullPath || []}
@@ -537,7 +589,7 @@ var Chart = React.createClass({
     },
     renderExport: function () {
         return (
-            <components.Export
+            <Export
                 exportPng={this.exportPng}
                 exportCsv={this.exportCsv}
                 title={"INVIA I DATI VISUALIZZATI VIA EMAIL"}
@@ -560,16 +612,54 @@ var Chart = React.createClass({
                     cursor: "pointer"
                 }}
             >
-                <components.Icon
+                <Icon
                     color={colors.iconLogout}
                     icon={"logout"}
                     size={"28px"}
                     style={{lineHeight: "20px", paddingRight: "5px"}}
                 />
-                <components.Spacer direction="h" size={5} />
+                <Spacer direction="h" size={5} />
                 {"Esci dal confronto"}
             </div>
         ) : null;
+    },
+    renderConfirmModal: function () {
+        return (
+            <ConfirmModal
+                onConfirm={() => this.setState({showConfirmModal: false})}
+                onHide={this.closeModals}
+                iconType={"flag"}
+                show={this.state.showConfirmModal}
+                subtitle={this.getModalSubtitle()}
+                title={this.getModalTitle()}
+            />
+        );
+    },
+    renderFullscreenModal: function () {
+        const theme = this.getTheme();
+        return (
+            <FullscreenModal
+                backgroundColor={
+                    this.state.selectedWidget !== "export" ?
+                    undefined :
+                    theme.colors.backgroundModalExport
+                }
+                iconCloseColor={
+                    this.state.selectedWidget !== "export" ?
+                    theme.colors.iconClose :
+                    theme.colors.white
+                }
+                onConfirm={this.onConfirmFullscreenModal}
+                onHide={this.closeFullscreenModal}
+                onReset={this.closeFullscreenModal}
+                renderConfirmButton={
+                    this.state.selectedWidget !== "export" && !R.isNil(this.state.selectedWidget)
+                }
+                show={this.state.showFullscreenModal}
+            >
+                {this.renderChildComponent()}
+            </FullscreenModal>
+        );
     },
     render: function () {
         const theme = this.getTheme();
@@ -589,26 +679,20 @@ var Chart = React.createClass({
                     <div style={{fontSize: "18px", marginBottom: "0px", paddingTop: "16px", width: "100%"}}>
                         {this.getTitleForChart().toUpperCase()}
                     </div>
-                    <bootstrap.OverlayTrigger
-                        overlay={<bootstrap.Tooltip id="show-alarms" className="buttonInfo">{"Visualizza allarmi"}</bootstrap.Tooltip>}
-                        placement="bottom"
-                        rootClose={true}
-                    >
-                        <components.Button style={alarmButtonStyle(theme)}>
-                            <components.Icon
-                                color={theme.colors.iconHeader}
-                                icon={"danger"}
-                                size={"28px"}
-                                style={{lineHeight: "20px"}}
-                            />
-                        </components.Button>
-                    </bootstrap.OverlayTrigger>
-                    <components.Popover
+                    <Button style={alarmButtonStyle(theme)}>
+                        <Icon
+                            color={theme.colors.iconHeader}
+                            icon={"danger"}
+                            size={"28px"}
+                            style={{lineHeight: "20px"}}
+                        />
+                    </Button>
+                    <Popover
                         className="pull-right"
                         hideOnChange={true}
                         style={{height: "56px", margin: 0}}
                         title={
-                            <components.Icon
+                            <Icon
                                 color={theme.colors.iconOption}
                                 icon={"option"}
                                 size={"32px"}
@@ -616,7 +700,7 @@ var Chart = React.createClass({
                             />
                         }
                     >
-                        <components.DropdownButton
+                        <DropdownButton
                             allowedValues={parameters.getChartSetting(this.getTheme())}
                             getColor={R.prop("color")}
                             getHoverColor={R.prop("hoverColor")}
@@ -626,10 +710,10 @@ var Chart = React.createClass({
                             onChange={this.onChangeWidget}
                             style={styles(theme).chartDropdownButton}
                         />
-                    </components.Popover>
+                    </Popover>
                 </div>
                 {/* Button Left and Right arrow */}
-                <components.Button
+                <Button
                     style={R.merge(
                         dateButtonStyle(theme), {
                             borderRadius: "0 20px 20px 0",
@@ -638,20 +722,20 @@ var Chart = React.createClass({
                         })
                     }
                 >
-                    <components.Icon
+                    <Icon
                         color={theme.colors.iconArrowSwitch}
                         icon={"arrow-left"}
                         onClick={this.handleClickLeft}
                         size={"34px"}
                         style={{lineHeight: "20px"}}
                     />
-                </components.Button>
+                </Button>
                 {/* Button top chart */}
                 <div style={styles(theme).mainDivStyle}>
                     <bootstrap.Col sm={12} style={styles(theme).colVerticalPadding}>
                         {this.renderChartResetButton()}
                         <span className="pull-right" style={{display: "flex"}}>
-                            <components.ButtonGroupSelect
+                            <ButtonGroupSelect
                                 allowedValues={parameters.getSources(theme)}
                                 getKey={R.prop("key")}
                                 getLabel={R.prop("label")}
@@ -670,28 +754,9 @@ var Chart = React.createClass({
                     </bootstrap.Col>
                     {/* Chart and widget modal */}
                     <bootstrap.Col className="modal-container" sm={12}>
-                        <components.FullscreenModal
-                            backgroundColor={
-                                this.state.selectedWidget !== "export" ?
-                                undefined :
-                                theme.colors.backgroundModalExport
-                            }
-                            iconCloseColor={
-                                this.state.selectedWidget !== "export" ?
-                                theme.colors.iconClose :
-                                theme.colors.white
-                            }
-                            onConfirm={this.onConfirmFullscreenModal}
-                            onHide={this.closeModal}
-                            onReset={this.closeModal}
-                            renderConfirmButton={
-                                this.state.selectedWidget !== "export" && !R.isNil(this.state.selectedWidget)
-                            }
-                            show={this.state.showFullscreenModal}
-                        >
-                            {this.renderChildComponent()}
-                        </components.FullscreenModal>
-                        <components.HistoricalGraph
+                        {this.renderFullscreenModal()}
+                        {this.renderConfirmModal()}
+                        <HistoricalGraph
                             chartState={this.props.chartState}
                             isComparationActive={this.isComparationActive()}
                             isDateCompareActive={this.isDateCompare()}
@@ -704,7 +769,7 @@ var Chart = React.createClass({
                     {/* Button bottom chart */}
                     <bootstrap.Col sm={12}>
                         <span className="pull-left" style={{display: "flex", width: "auto"}}>
-                            <components.ConsumptionButtons
+                            <ConsumptionButtons
                                 allowedValues={variables}
                                 onChange={this.onChangeConsumption}
                                 resetConsumption={this.props.removeAllCompare}
@@ -715,7 +780,7 @@ var Chart = React.createClass({
                             />
                         </span>
                         <span className="pull-right" style={{display: "flex", paddingTop: "33px"}}>
-                            <components.ButtonGroupSelect
+                            <ButtonGroupSelect
                                 allowedValues={parameters.getMeasurementTypes()}
                                 getKey={R.prop("key")}
                                 getLabel={R.prop("label")}
@@ -731,20 +796,20 @@ var Chart = React.createClass({
                         </span>
                     </bootstrap.Col>
                 </div>
-                <components.Button
+                <Button
                     style={
                         R.merge(dateButtonStyle(theme),
                         {borderRadius: "20px 0 0 20px", right: "0px", padding: "0px"})
                     }
                 >
-                    <components.Icon
+                    <Icon
                         color={theme.colors.iconArrowSwitch}
                         icon={"arrow-right"}
                         onClick={this.handleClickRight}
                         size={"34px"}
                         style={{lineHeight: "20px"}}
                     />
-                </components.Button>
+                </Button>
             </div>
         );
     }

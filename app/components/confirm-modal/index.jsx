@@ -16,6 +16,7 @@ var ConfirmModal = React.createClass({
         onConfirm: PropTypes.func,
         onHide: PropTypes.func,
         show: PropTypes.bool,
+        subtitle: PropTypes.string,
         title: PropTypes.string
     },
     contextTypes: {
@@ -29,18 +30,22 @@ var ConfirmModal = React.createClass({
         return (
             <Modal.Header
                 onClick={this.props.onHide}
-                style={{width: "100%", textAlign: "center", padding: "5%", cursor: "pointer"}}
-            >
-                <label style={{
+                style={{
+                    width: "100%",
+                    textAlign: "center",
+                    padding: "5%",
+                    cursor: "pointer",
                     color: colors.white,
                     fontSize: "30px",
-                    fontWeight: 400,
-                    textAlign: "center",
-                    verticalAlign: "middle",
                     lineHeight: "30px",
                     textTransform: "uppercase"
-                }}>
+                }}
+            >
+                <label style={{width: "100%", fontWeight: 400}}>
                     {this.props.title}
+                </label>
+                <label style={{width: "100%", fontWeight: 400}}>
+                    {this.props.subtitle}
                 </label>
             </Modal.Header>
         );
@@ -107,7 +112,8 @@ var ConfirmModal = React.createClass({
         return (
             <Modal
                 className="confirm-modal-selector"
-                {...this.props}
+                onHide={this.props.onHide}
+                show={this.props.show}
             >
                 <Radium.Style
                     rules={{

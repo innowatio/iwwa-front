@@ -61,7 +61,7 @@ var FullscreenModal = React.createClass({
     renderFooter: function () {
         const padding = this.props.onReset ? "40px" : "0px";
         return (
-            <Modal.Footer style={{display: "block", padding}}>
+            <Modal.Footer style={{display: "block"}}>
                 <components.ButtonConfirmAndReset
                     confirmButtonStyle={buttonConfirmStyle(this.getTheme())}
                     onConfirm={this.props.onConfirm}
@@ -75,7 +75,10 @@ var FullscreenModal = React.createClass({
         return (
             <Modal
                 className="fullscreen-modal-selector"
-                {...this.props}
+                children={this.props.children}
+                onHide={this.props.onHide}
+                onReset={this.props.onReset}
+                show={this.props.show}
             >
                 <Radium.Style
                     rules={{

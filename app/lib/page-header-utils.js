@@ -17,12 +17,12 @@ export function getTitleForSingleSensor (reduxViewState, collections) {
     return res.join(" · ");
 }
 
+
 export function getStringPeriod (date) {
     if (date.type === "dateCompare") {
-        const momentNow = moment.utc();
-        return `${momentNow.format("MMM YYYY")} & ${momentNow.subtract(1, date.period.key).format("MMM YYYY")}`;
+        return getDateComparePeriod(date);
     } else {
-        return `${moment.utc(date.end).format("MMM YYYY")}`;
+        return `${moment.utc(date.end).format("MMMM YYYY")}`;
     }
 }
 
@@ -32,4 +32,22 @@ export function getSensorName (sensorId, collections) {
 
 function getSiteName (siteId, collections) {
     return collections.getIn(["sites", siteId, "name"]);
+}
+
+function getDateComparePeriod (date) {
+    const momentNow = moment.utc();
+    switch (date.period.key) {
+        case "7 days before":
+            return `${momentNow.format("DD MMMM YYYY")} CON ${momentNow.subtract({days: 7}).format("DD MMMM YYYY")}`;
+        case "months":
+        case "years":
+            return `${momentNow.format("MMMM YYYY")} CON ${momentNow.subtract(1, date.period.key).format("MMMM YYYY")}`;
+        case "week":
+            return `DAL ${moment.utc().subtract({days: 14}).format("DD MMMM YYYY")}
+            AL ${moment.utc().subtract({days: 7}).format("DD MMMM YYYY")}` +
+            ` E DAL ${moment.utc().subtract({days: 7}).format("DD MMMM YYYY")}
+            AD OGGI`;
+        default:
+            return `${momentNow.format("DD MMMM YYYY")} CON ${momentNow.subtract(1, date.period.key).format("DD MMMM YYYY")}`;
+    }
 }

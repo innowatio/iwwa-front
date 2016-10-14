@@ -77,7 +77,7 @@ describe("`page-header-utils` lib", () => {
                 end: moment("2016-02-5", "YYYY-MM-DD").valueOf()
             };
             const ret = pageHeaderUtils.getStringPeriod(date);
-            expect(ret).to.equal("Feb 2016");
+            expect(ret).to.equal("February 2016");
         });
 
         it("returns a single date in format `YYYY-MM` [CASE: date.type === `dateCompare`]`", () => {
@@ -88,7 +88,7 @@ describe("`page-header-utils` lib", () => {
                 }
             };
             const ret = pageHeaderUtils.getStringPeriod(date);
-            expect(ret).to.equal("Jan 1970 & Dec 1969");
+            expect(ret).to.equal("January 1970 CON December 1969");
         });
 
     });

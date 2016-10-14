@@ -380,7 +380,6 @@ var User = React.createClass({
                 <div className="tabbed-area" style={R.merge(styles(theme).tabbedArea, {marginTop: "25px"})}>
                     <bootstrap.Tabs
                         activeKey={this.state.key}
-                        animation={false}
                         bsStyle={"tabs"}
                         id={"user"}
                         onSelect={this.activeKey}

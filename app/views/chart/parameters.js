@@ -73,7 +73,7 @@ export function getExportType () {
 export function getDateCompare () {
     return [
         {label: "IERI", key: "days"},
-        {label: "7 GG FA", key: "7 days before"},
+        {label: "7 GIORNI FA", key: "7 days before"},
         {label: "SETTIMANA SCORSA", key: "week"},
         {label: "MESE SCORSO", key: "months"},
         {label: "12 MESI FA", key: "years"}
