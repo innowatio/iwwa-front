@@ -17,6 +17,7 @@ describe("`chart` reducer", () => {
             },
             date: {
                 type: "dateFilter",
+                valueType: {label: "calendario", key: "calendar"},
                 start: 1449157137862,
                 end: 1449157157862
             },
@@ -296,7 +297,7 @@ describe("`chart` reducer", () => {
 
         describe("`SELECT_DATE_RANGES` type", () => {
 
-            it("returns the new charts filtered by date", () => {
+            it("returns the new charts filtered by date [CASE: empty valueType in payload]", () => {
                 const valuePassedFromAction = {
                     type: "SELECT_DATE_RANGES",
                     payload: {
@@ -310,6 +311,29 @@ describe("`chart` reducer", () => {
                     ...defaultChartStateObject,
                     date: {
                         type: "dateFilter",
+                        valueType: {},
+                        start: 1498749876543,
+                        end: 1516543214890
+                    }
+                }]);
+            });
+
+            it("returns the new charts filtered by date [CASE: valueType in payload]", () => {
+                const valuePassedFromAction = {
+                    type: "SELECT_DATE_RANGES",
+                    payload: {
+                        type: "dateFilter",
+                        valueType: {label: "calendario", key: "calendar"},
+                        start: 1498749876543,
+                        end: 1516543214890
+                    }
+                };
+                const ret = charts(chartState, valuePassedFromAction);
+                expect(ret).to.deep.equal([{
+                    ...defaultChartStateObject,
+                    date: {
+                        type: "dateFilter",
+                        valueType: {label: "calendario", key: "calendar"},
                         start: 1498749876543,
                         end: 1516543214890
                     }
@@ -320,7 +344,7 @@ describe("`chart` reducer", () => {
 
         describe("`DISPLAY_ALARMS_ON_CHART` type", () => {
 
-            it("returns single charts notification of alarms associated to a selected sensor", () => {
+            it("returns single charts notification of alarms associated to a selected sensor [CASE: empty valueType in payload]", () => {
                 const valuePassedFromAction = {
                     type: "DISPLAY_ALARMS_ON_CHART",
                     payload: {
@@ -339,7 +363,8 @@ describe("`chart` reducer", () => {
                     date: {
                         start: moment.utc(1516543214890).startOf("month").valueOf(),
                         end: moment.utc(1516543214890).endOf("month").valueOf(),
-                        type: "dateFilter"
+                        type: "dateFilter",
+                        valueType: {}
                     }
                 }]);
             });

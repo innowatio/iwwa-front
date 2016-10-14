@@ -163,6 +163,7 @@ function charts (state = defaultChartState, {type, payload}) {
                 return [{
                     ...state[0],
                     date: {
+                        valueType: {},
                         ...payload,
                         type: "dateFilter"
                     }
@@ -171,6 +172,7 @@ function charts (state = defaultChartState, {type, payload}) {
             return state.map(stateObj => ({
                 ...stateObj,
                 date: {
+                    valueType: {},
                     ...payload,
                     type: "dateFilter"
                 }
@@ -184,6 +186,7 @@ function charts (state = defaultChartState, {type, payload}) {
                 ...state[0],
                 date: {
                     ...state[0].date,
+                    valueType: {label: "calendario", key: "calendar"},
                     type: "dateFilter"
                 }
             }];
@@ -199,6 +202,7 @@ function charts (state = defaultChartState, {type, payload}) {
                 date: {
                     start: moment.utc(alarmDate).startOf("month").valueOf(),
                     end: moment.utc(alarmDate).endOf("month").valueOf(),
+                    valueType: {},
                     type: "dateFilter"
                 }
             }];

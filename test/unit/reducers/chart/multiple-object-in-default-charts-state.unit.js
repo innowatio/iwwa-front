@@ -17,6 +17,7 @@ describe("`chart` reducer", () => {
             },
             date: {
                 type: "dateFilter",
+                valueType: {label: "calendario", key: "calendar"},
                 start: 1449157137862,
                 end: 1449157157862
             },
@@ -41,6 +42,7 @@ describe("`chart` reducer", () => {
             },
             date: {
                 type: "dateFilter",
+                valueType: {label: "calendario", key: "calendar"},
                 start: 1449157137862,
                 end: 1449157157862
             },
@@ -358,9 +360,9 @@ describe("`chart` reducer", () => {
 
         describe("`SELECT_DATE_RANGES` type", () => {
 
-            describe("returns the new charts filtered by date", () => {
+            describe("returns the new charts filtered by date ", () => {
 
-                it("[CASE: `dateFilter`]", () => {
+                it("[CASE: `dateFilter` with empty valueType in payload]", () => {
                     const valuePassedFromAction = {
                         type: "SELECT_DATE_RANGES",
                         payload: {
@@ -374,6 +376,7 @@ describe("`chart` reducer", () => {
                         ...defaultChartStateFirstObject,
                         date: {
                             type: "dateFilter",
+                            valueType: {},
                             start: 1498749876543,
                             end: 1516543214890
                         }
@@ -381,13 +384,44 @@ describe("`chart` reducer", () => {
                         ...defaultChartStateSecondObject,
                         date: {
                             type: "dateFilter",
+                            valueType: {},
                             start: 1498749876543,
                             end: 1516543214890
                         }
                     }]);
                 });
 
-                it("[CASE: `dateCompare`]", () => {
+                it("[CASE: `dateFilter` with valueType in payload]", () => {
+                    const valuePassedFromAction = {
+                        type: "SELECT_DATE_RANGES",
+                        payload: {
+                            type: "dateFilter",
+                            valueType: {label: "calendario", key: "calendar"},
+                            start: 1498749876543,
+                            end: 1516543214890
+                        }
+                    };
+                    const ret = charts(chartState, valuePassedFromAction);
+                    expect(ret).to.deep.equal([{
+                        ...defaultChartStateFirstObject,
+                        date: {
+                            type: "dateFilter",
+                            valueType: {label: "calendario", key: "calendar"},
+                            start: 1498749876543,
+                            end: 1516543214890
+                        }
+                    }, {
+                        ...defaultChartStateSecondObject,
+                        date: {
+                            type: "dateFilter",
+                            valueType: {label: "calendario", key: "calendar"},
+                            start: 1498749876543,
+                            end: 1516543214890
+                        }
+                    }]);
+                });
+
+                it("[CASE: `dateCompare` with empty valueType in payload]", () => {
                     const chartStateFirstObject = {
                         ...defaultChartStateFirstObject,
                         date: {
@@ -417,6 +451,45 @@ describe("`chart` reducer", () => {
                         ...defaultChartStateFirstObject,
                         date: {
                             type: "dateFilter",
+                            valueType: {},
+                            start: 1468749876543,
+                            end: 1476543214890
+                        }
+                    }]);
+                });
+
+                it("[CASE: `dateCompare` with valueType in payload]", () => {
+                    const chartStateFirstObject = {
+                        ...defaultChartStateFirstObject,
+                        date: {
+                            start: 1498749876543,
+                            end: 1516543214890,
+                            type: "dateCompare"
+                        }
+                    };
+                    const chartStateSecondObject = {
+                        ...defaultChartStateFirstObject,
+                        date: {
+                            start: 1488749876543,
+                            end: 1506543214890,
+                            type: "dateCompare"
+                        }
+                    };
+                    const valuePassedFromAction = {
+                        type: "SELECT_DATE_RANGES",
+                        payload: {
+                            type: "dateFilter",
+                            valueType: {label: "calendario", key: "calendar"},
+                            start: 1468749876543,
+                            end: 1476543214890
+                        }
+                    };
+                    const ret = charts([chartStateFirstObject, chartStateSecondObject], valuePassedFromAction);
+                    expect(ret).to.deep.equal([{
+                        ...defaultChartStateFirstObject,
+                        date: {
+                            type: "dateFilter",
+                            valueType: {label: "calendario", key: "calendar"},
                             start: 1468749876543,
                             end: 1476543214890
                         }
@@ -457,7 +530,8 @@ describe("`chart` reducer", () => {
                     date: {
                         start: moment.utc(1516543214890).startOf("month").valueOf(),
                         end: moment.utc(1516543214890).endOf("month").valueOf(),
-                        type: "dateFilter"
+                        type: "dateFilter",
+                        valueType: {}
                     }
                 }]);
             });

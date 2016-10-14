@@ -16,7 +16,7 @@ const itemsStyle = (theme) => (R.merge(styles(theme).buttonBasicStyle, {
     fontSize: "22px",
     border: "0px",
     marginTop: "10px",
-    width: "95%",
+    width: "90%",
     minWidth: "100px",
     padding: "14px",
     borderRadius: "20px"
@@ -237,6 +237,7 @@ var SiteNavigator = React.createClass({
                         overflow: "hidden",
                         paddingRight:"60px",
                         marginTop: "10px",
+                        padding: "10px",
                         height: `calc(100vh - ${heightBody})`,
                         minHeight: "350px"
                     }}
