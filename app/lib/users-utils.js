@@ -1,4 +1,5 @@
 import Immutable from "immutable";
+import R from "ramda";
 import {getRoles, isAdmin} from "lib/roles-utils";
 
 export function getUsername (user) {
@@ -38,7 +39,7 @@ function getProfileField (user, field) {
     return user.get("profile") ? user.getIn(["profile", field]) : null;
 }
 
-export function getAllRoles (rolesCollection, asteroid) {
+export function getVisibleRoles (rolesCollection, asteroid) {
     if (!rolesCollection) {
         return Immutable.Map();
     }
@@ -46,5 +47,23 @@ export function getAllRoles (rolesCollection, asteroid) {
         return rolesCollection.sortBy(role => role.get("name"));
     } else {
         return getRoles(asteroid).sort();
+    }
+}
+
+export function getVisibleGroups (groupsCollection, asteroid) {
+    if (!groupsCollection) {
+        return Immutable.Map();
+    }
+    if (isAdmin(asteroid)) {
+        return groupsCollection.sortBy(group => group.get("name"));
+    } else {
+        let groupsNames = [];
+        const userRoles = getRoles(asteroid);
+        groupsCollection.forEach(group => {
+            if (R.difference(group.get("roles").toJS(), userRoles).length === 0) {
+                groupsNames.push(group.get("name"));
+            }
+        });
+        return groupsNames.sort();
     }
 }

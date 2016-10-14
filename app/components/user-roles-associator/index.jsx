@@ -10,7 +10,7 @@ import {Col, Clearfix, Row, Tab, Tabs} from "react-bootstrap";
 import RoleDropArea from "./role-drop-area";
 
 import {getGroupsRoles, hasRole, MANAGE_USERS, ASSIGN_GROUPS, CREATE_GROUPS} from "lib/roles-utils";
-import {getAllRoles} from "lib/users-utils";
+import {getVisibleRoles, getVisibleGroups} from "lib/users-utils";
 import {styles} from "lib/styles";
 import {defaultTheme} from "lib/theme";
 
@@ -89,13 +89,12 @@ var UserRolesAssociator = React.createClass({
     },
     renderRoleTab: function ({colors}) {
         const {asteroid, usersState} = this.props;
-        const groups = this.props.collections.get("groups") || Immutable.Map();
         return hasRole(asteroid, MANAGE_USERS) || hasRole(asteroid, ASSIGN_GROUPS) ? (
             <Tab eventKey={1} title="Profili predefiniti">
                 <Row style={{margin: "20px"}}>
                     <Col xs={6} style={{marginTop: "10px"}}>
-                        {groups.map(group => {
-                            const groupName = group.get("name");
+                        {getVisibleGroups(this.props.collections.get("groups"), asteroid).map(group => {
+                            const groupName = group instanceof Immutable.Map ? group.get("name") : group;
                             const isToggled = usersState.selectedGroups.indexOf(groupName) >= 0;
                             return (
                                 <div>
@@ -109,9 +108,9 @@ var UserRolesAssociator = React.createClass({
                                             backgroundColor: colors.transparent,
                                             border: "0px"
                                         }}
-                                        onClick={() => this.props.onGroupSelect(group.get("name"))}
+                                        onClick={() => this.props.onGroupSelect(groupName)}
                                     >
-                                        {group.get("name")}
+                                        {groupName}
                                     </Button>
                                 </div>
                             );
@@ -200,7 +199,7 @@ var UserRolesAssociator = React.createClass({
                             fontSize: "14px",
                             fontWeight: "300"
                         }}>
-                            {getAllRoles(this.props.collections.get("roles"), asteroid).map(role =>
+                            {getVisibleRoles(this.props.collections.get("roles"), asteroid).map(role =>
                                 <DraggableRole
                                     roleName={role instanceof Immutable.Map ? role.get("name") : role}
                                 />
