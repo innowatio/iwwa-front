@@ -4,6 +4,7 @@ import IPropTypes from "react-immutable-proptypes";
 import {connect} from "react-redux";
 import {browserHistory} from "react-router";
 import {bindActionCreators} from "redux";
+import * as bootstrap from "react-bootstrap";
 
 import {getDragDropContext} from "lib/dnd-utils";
 import {defaultTheme} from "lib/theme";
@@ -13,9 +14,8 @@ import {styles} from "lib/styles";
 
 import {
     Button,
-    ConfirmModal,
+    DeleteWithConfirmButton,
     DropdownButton,
-    FullscreenModal,
     Icon,
     MonitoringSensorsSelector,
     Popover,
@@ -121,10 +121,7 @@ var Monitoring = React.createClass({
     getInitialState: function () {
         return {
             editSensor: false,
-            deleteSensors: false,
-            showConfirmModal: false,
-            showDeleteModal: false,
-            showEditModal: false
+            showFullscreenModal: false
         };
     },
     componentDidMount: function () {
@@ -139,6 +136,18 @@ var Monitoring = React.createClass({
     },
     getTheme: function () {
         return this.context.theme || defaultTheme;
+    },
+    getButtonLink: function (iconName, selected) {
+        switch (iconName) {
+            case "duplicate":
+                this.props.cloneSensors(selected);
+                break;
+            case "edit":
+                this.onClickEditSensor();
+                break;
+            default:
+                break;
+        }
     },
     getAllSensors: function () {
         return getAllSensors(this.props.collections.get("sensors"));
@@ -177,50 +186,25 @@ var Monitoring = React.createClass({
     },
     onClickEditSensor: function () {
         this.props.getFormulaItems();
-        this.openEditModal(true);
+        this.openModal(true);
     },
     resetAndOpenNew: function () {
         this.props.resetFormulaItems(false);
-        this.openEditModal(false);
+        this.openModal(false);
     },
-    openEditModal: function (editSensor) {
+    openModal: function (editSensor) {
         this.setState({
             editSensor: editSensor,
-            showEditModal: true
+            showFullscreenModal: true
         });
     },
-    openDeleteModal: function (deleteSensors) {
-        this.setState({
-            deleteSensors: deleteSensors,
-            showDeleteModal: true
-        });
-    },
-    openConfirmModal: function () {
-        this.setState({
-            showConfirmModal: true
-        });
-    },
-    closeModals: function (reset) {
+    closeModal: function (reset) {
         if (reset) {
             this.props.resetFormulaItems(true);
         }
         this.setState({
-            showEditModal: false,
-            showConfirmModal: false
+            showFullscreenModal: false
         });
-    },
-    onConfirmDeleteModal: function () {
-        const selected = this.props.sensorsState.selectedSensors;
-        this.props.deleteSensors(selected);
-        this.setState({showDeleteModal: false});
-    },
-    onSaveForm: function () {
-        if (this.state.editSensor) {
-            this.props.editSensor(...arguments);
-        } else {
-            this.props.addSensor(...arguments);
-        }
-        this.openConfirmModal();
     },
     renderSensorForm: function () {
         const selected = this.props.sensorsState.selectedSensors;
@@ -234,72 +218,42 @@ var Monitoring = React.createClass({
                     closeForm={() => this.closeModal(this.state.editSensor)}
                     currentSensor={selected.length == 1 ? selected[0] : null}
                     initialValues={this.getSensorFields()}
-                    onSave={this.onSaveForm}
+                    onSave={this.state.editSensor ? this.props.editSensor : this.props.addSensor}
                     removeItemFromFormula={this.props.removeItemFromFormula}
                     sensorState={this.props.sensorsState.current}
                     sensorsToAggregate={workAreaSensors}
-                    showFullscreenModal={this.state.showEditModal}
+                    showFullscreenModal={this.state.showFullscreenModal}
                     showSensorAggregator={!this.state.editSensor}
                     title={this.state.editSensor ? "MODIFICA SENSORE" : "CREA NUOVO SENSORE"}
                 />
             );
         }
     },
-    renderDeleteButton: function () {
+    renderButton: function (iconName, tooltip, disabled, permissionRole) {
         const theme = this.getTheme();
         const selected = this.props.sensorsState.selectedSensors;
-        return (
-            <div style={{display: "inline"}}>
+        return hasRole(this.props.asteroid, permissionRole) ? (
+            <bootstrap.OverlayTrigger
+                overlay={<bootstrap.Tooltip className="buttonInfo">
+                    {tooltip}
+                </bootstrap.Tooltip>}
+                placement="bottom"
+                rootClose={true}
+            >
                 <Button
-                    disabled={selected.length < 1}
-                    onClick={this.openDeleteModal}
                     style={stylesFunction(theme).buttonIconStyle}
+                    disabled={disabled}
+                    onClick={() => this.getButtonLink(iconName, selected)}
                 >
                     <Icon
                         color={theme.colors.iconHeader}
-                        icon={"close"}
+                        icon={iconName}
                         size={"28px"}
                         style={{lineHeight: "45px"}}
                     />
                 </Button>
-                <FullscreenModal
-                    onConfirm={this.onConfirmDeleteModal}
-                    onHide={() => this.setState({showDeleteModal: false})}
-                    renderConfirmButton={true}
-                    show={this.state.showDeleteModal}
-                >
-                    {this.renderDeleteModalBody()}
-                </FullscreenModal>
-            </div>
-        );
-    },
-    renderDeleteModalBody: function () {
-        const theme = this.getTheme();
-        return (
-            <div style={{textAlign: "center"}}>
-                <div>
-                    <label style={stylesFunction(theme).modalTitleStyle}>
-                        {"Sei sicuro di voler cancellare questo elemento?"}
-                    </label>
-                </div>
-            </div>
-        );
-    },
-    renderConfirmModal: function () {
-        const selected = this.getSensorFields();
-        const title = (this.state.editSensor ?
-            "HAI MODIFICATO IL SENSORE \n" :
-            "HAI CREATO IL SENSORE \n");
-        return (
-            <ConfirmModal
-                onConfirm={() => this.setState({showConfirmModal: false})}
-                onHide={this.closeModals}
-                iconType={"flag"}
-                show={this.state.showConfirmModal}
-                subtitle={selected.name + " · " + selected.description + " · " + selected.unitOfMeasurement}
-                title={title}
-            />
-        );
+            </bootstrap.OverlayTrigger>
+        ) : null;
     },
     render: function () {
         const theme = this.getTheme();
@@ -333,31 +287,14 @@ var Monitoring = React.createClass({
                         </Popover>
                     </div>
                     <div style={{float: "right", marginTop: "3px"}}>
-                        <Button
-                            style={stylesFunction(theme).buttonIconStyle}
-                            disabled={selected.length < 1}
-                            onClick={() => this.props.cloneSensors(selected)}
-                        >
-                            <Icon
-                                color={theme.colors.iconHeader}
-                                icon={"duplicate"}
-                                size={"28px"}
-                                style={{lineHeight: "45px"}}
-                            />
-                        </Button>
-                        <Button
-                            style={stylesFunction(theme).buttonIconStyle}
-                            disabled={selected.length != 1}
-                            onClick={this.onClickEditSensor}
-                        >
-                            <Icon
-                                color={theme.colors.iconHeader}
-                                icon={"edit"}
-                                size={"28px"}
-                                style={{lineHeight: "45px"}}
-                            />
-                        </Button>
-                        {this.renderDeleteButton()}
+                        {this.renderButton("duplicate", "Duplica", selected.length < 1, CREATE_SENSORS)}
+                        {this.renderButton("edit", "Modifica", selected.length != 1, EDIT_SENSORS)}
+                        {hasRole(this.props.asteroid, CREATE_SENSORS) || hasRole(this.props.asteroid, EDIT_SENSORS) ?
+                            <DeleteWithConfirmButton
+                                disabled={selected.length < 1}
+                                onConfirm={() => this.props.deleteSensors(selected)}
+                            /> : null
+                        }
                     </div>
                 </SectionToolbar>
 
@@ -378,7 +315,6 @@ var Monitoring = React.createClass({
                 />
 
                 {this.renderSensorForm()}
-                {this.renderConfirmModal()}
             </div>
         );
     }

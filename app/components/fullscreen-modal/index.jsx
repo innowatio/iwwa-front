@@ -59,7 +59,6 @@ var FullscreenModal = React.createClass({
         );
     },
     renderFooter: function () {
-        const padding = this.props.onReset ? "40px" : "0px";
         return (
             <Modal.Footer style={{display: "block"}}>
                 <components.ButtonConfirmAndReset
