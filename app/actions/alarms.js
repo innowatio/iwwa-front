@@ -10,8 +10,8 @@ import {
     union
 } from "tcomb";
 import {isEmpty} from "ramda";
-import moment from "moment";
 import actionTypeValidator from "redux-action-type-validator";
+import moment from "../lib/moment";
 
 import {WRITE_BACKEND_ENDPOINT} from "../lib/config";
 

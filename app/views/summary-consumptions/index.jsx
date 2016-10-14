@@ -1,18 +1,26 @@
-var bootstrap  = require("react-bootstrap");
-var Immutable  = require("immutable");
-var IPropTypes = require("react-immutable-proptypes");
-var Radium     = require("radium");
-var React      = require("react");
+import Immutable from "immutable";
+import get from "lodash.get";
+import Radium from "radium";
+import * as bootstrap from "react-bootstrap";
+import React from "react";
+import IPropTypes from "react-immutable-proptypes";
+
 import moment from "moment";
 import {partial, is} from "ramda";
-// import icons from "lib/icons";
 
-var components   = require("components");
+import {
+    Button,
+    ConfirmModal,
+    Icon,
+    FullscreenModal,
+    ProgressBar,
+    SiteNavigator
+} from "components";
 import {connect} from "react-redux";
 import {bindActionCreators} from "redux";
 import {defaultTheme} from "lib/theme";
-import {selectSite, selectPeriod} from "actions/consumptions";
 import {getSumBySiteAndPeriod, getTimeRangeByPeriod, tabParameters} from "lib/consumptions-utils";
+import {selectSite, selectPeriod} from "actions/consumptions";
 
 
 var styleLeftPane  = {
@@ -148,7 +156,7 @@ var SummaryConsumptions = React.createClass({
     getInitialState: function () {
         return {
             period: tabParameters()[0].key,
-            showModal: false,
+            showFullscreenModal: false,
             site: null
         };
     },
@@ -184,18 +192,24 @@ var SummaryConsumptions = React.createClass({
                 this.props.collections.get("consumptions-yearly-aggregates") || Immutable.Map())
             .toFixed(2));
     },
-    closeModal: function () {
+    closeFullscreenModal: function () {
         this.setState ({
-            showModal: false,
+            showFullscreenModal: false,
             site: null
         });
     },
     openModal: function () {
-        this.setState ({showModal:true});
+        this.setState ({showFullscreenModal:true});
+    },
+    closeModals: function () {
+        this.setState({
+            showConfirmModal: false,
+            showFullscreenModal: false
+        });
     },
     onConfirmFullscreenModal: function () {
         this.props.selectSite(this.state.site || this.props.consumptions.fullPath);
-        this.closeModal();
+        this.setState({showConfirmModal: true});
     },
     onChangeWidgetValue: function (site) {
         this.setState({site});
@@ -271,7 +285,7 @@ var SummaryConsumptions = React.createClass({
                 <div style={{
                     textAlign: "center"
                 }}>
-                    <components.Icon
+                    <Icon
                         color={colors.feedbackGood}
                         icon={"good"}
                         size={"50px"}
@@ -313,7 +327,7 @@ var SummaryConsumptions = React.createClass({
         const colors = this.getTheme();
         return (
             <div key={key} style={{marginBottom: "15px"}}>
-                <components.ProgressBar
+                <ProgressBar
                     key={key}
                     max={max}
                     now={now}
@@ -325,15 +339,37 @@ var SummaryConsumptions = React.createClass({
                 />
             </div>);
     },
-    renderModalBody: function () {
+    renderConfirmModal: function () {
+        const fullPath = get(this.props, "consumptions.fullPath", []) || [];
+        const subtitle = fullPath.join(" · ");
+        return (
+            <ConfirmModal
+                onConfirm={() => this.setState({showConfirmModal: false})}
+                onHide={this.closeModals}
+                iconType={"flag"}
+                show={this.state.showConfirmModal}
+                subtitle={subtitle}
+                title={"HAI SCELTO DI VISUALIZZARE "}
+            />
+        );
+    },
+    renderFullscreenModal: function () {
         const sites = this.props.collections.get("sites") || Immutable.Map({});
         return (
-            <components.SiteNavigator
-                allowedValues={sites.sortBy(site => site.get("name"))}
-                onChange={this.onChangeWidgetValue}
-                path={this.state.site || this.props.consumptions.fullPath || []}
-                title={"QUALE PUNTO DI MISURAZIONE VUOI VISUALIZZARE?"}
-            />
+            <FullscreenModal
+                onConfirm={this.onConfirmFullscreenModal}
+                onHide={this.closeFullscreenModal}
+                onReset={this.closeFullscreenModal}
+                renderConfirmButton={true}
+                show={this.state.showFullscreenModal}
+            >
+                <SiteNavigator
+                    allowedValues={sites.sortBy(site => site.get("name"))}
+                    onChange={this.onChangeWidgetValue}
+                    path={this.state.site || this.props.consumptions.fullPath || []}
+                    title={"QUALE PUNTO DI MISURAZIONE VUOI VISUALIZZARE?"}
+                />
+            </FullscreenModal>
         );
     },
     renderSingleTab: function (siteName, theme, tabParameters) {
@@ -465,8 +501,8 @@ var SummaryConsumptions = React.createClass({
                             placement="bottom"
                             rootClose={true}
                         >
-                            <components.Button className="pull-right" onClick={this.openModal} style={styleSiteButton(theme)} >
-                                <components.Icon
+                            <Button className="pull-right" onClick={this.openModal} style={styleSiteButton(theme)} >
+                                <Icon
                                     color={theme.colors.iconSiteButton}
                                     icon={"map"}
                                     size={"38px"}
@@ -476,17 +512,8 @@ var SummaryConsumptions = React.createClass({
                                         lineHeight: "20px"
                                     }}
                                 />
-                            </components.Button>
+                            </Button>
                         </bootstrap.OverlayTrigger>
-                        <components.FullscreenModal
-                            onConfirm={this.onConfirmFullscreenModal}
-                            onHide={this.closeModal}
-                            onReset={this.closeModal}
-                            renderConfirmButton={true}
-                            show={this.state.showModal}
-                        >
-                            {this.renderModalBody()}
-                        </components.FullscreenModal>
                     </div>
                     <div style={{margin: "5px 20px"}}>
                         {this.props.consumptions.fullPath ? this.renderPeriodComparisons() : null}
@@ -494,6 +521,8 @@ var SummaryConsumptions = React.createClass({
                         {/* this.props.consumptions.fullPath ? this.renderFeedbackBox() : null */}
                     </div>
                 </div>
+                {this.renderFullscreenModal()}
+                {this.renderConfirmModal()}
             </div>
         );
     }

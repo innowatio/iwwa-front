@@ -2,11 +2,11 @@ import IPropTypes from "react-immutable-proptypes";
 import React, {PropTypes} from "react";
 import ReactPureRender from "react-addons-pure-render-mixin";
 import {isEmpty} from "ramda";
-import moment from "moment";
 
 import components from "components";
 import readingsDailyAggregatesToHighchartsData from "lib/readings-daily-aggregates-to-highcharts-data";
 import {defaultTheme} from "lib/theme";
+import moment from "lib/moment";
 
 var SitesCompare = React.createClass({
     propTypes: {

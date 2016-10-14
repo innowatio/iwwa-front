@@ -1,6 +1,5 @@
 import {flatten, range, partial, always} from "ramda";
-import moment from "moment";
-
+import moment from "lib/moment";
 
 const PERIODS = ["day", "week", "month", "year"];
 

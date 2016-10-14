@@ -1,7 +1,6 @@
 import React, {PropTypes} from "react";
 import {equals, range, isEmpty} from "ramda";
 import ReactHighcharts from "react-highcharts/bundle/ReactHighcharts";
-import moment from "moment";
 
 import Exporting from "highcharts-exporting";
 Exporting(ReactHighcharts.Highcharts);
@@ -12,6 +11,7 @@ ExportCSV(ReactHighcharts.Highcharts);
 
 import {getYLabel} from "./highchart-utils";
 import {defaultTheme} from "lib/theme";
+import moment from "lib/moment";
 
 var HighCharts = React.createClass({
     propTypes: {

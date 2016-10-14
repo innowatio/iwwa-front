@@ -4,11 +4,11 @@ import {merge, partial} from "ramda";
 import {Style} from "radium";
 import * as components from "components";
 import {EXEC_ENV} from "lib/config";
-import moment from "moment";
 import pkg from "../../../package.json";
 
 import {defaultTheme} from "lib/theme";
 import * as measures from "lib/measures";
+import moment from "lib/moment";
 
 const stylesFunction = ({colors}) => ({
     menu: {

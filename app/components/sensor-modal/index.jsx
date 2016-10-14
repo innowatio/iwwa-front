@@ -106,15 +106,13 @@ var SensorForm = React.createClass({
     renderInputTextField: function (field) {
         const theme = this.getTheme();
         return (
-            <div className={"form-group" + (field.meta.touched && field.meta.error ? " has-error" : "")} style={{marginBottom: "15px", padding:"1px"}}>
-                <div className={"col-xs-12"}>
-                    <FormInputText
-                        field={field.input}
-                        placeholder={field.label}
-                        style={styles(theme).inputLine}
-                        type="text"
-                    />
-                </div>
+            <div className={(field.meta.touched && field.meta.error ? " has-error" : "")} style={{marginBottom: "15px", padding:"1px"}}>
+                <FormInputText
+                    field={field.input}
+                    placeholder={field.label}
+                    style={styles(theme).inputLine}
+                    type="text"
+                />
                 {field.meta.touched && field.meta.error && <div className="col-xs-12 help-block">{field.meta.error}</div>}
             </div>
         );
@@ -139,7 +137,7 @@ var SensorForm = React.createClass({
                             resize: "none",
                             margin: "0px",
                             padding: "5px 0px",
-                            height: "133px"
+                            height: "110px"
                         }}
                         {...field.input}
                     />
@@ -151,10 +149,9 @@ var SensorForm = React.createClass({
     renderSelectInputField: function (field) {
         const theme = this.getTheme();
         return (
-            <div className={"form-group" + (field.meta.touched && field.meta.error ? " has-error" : "")}>
+            <div className={(field.meta.touched && field.meta.error ? " has-error" : "")}>
                 <div
-                    className={"col-xs-12"}
-                    style={{marginBottom: "20px"}}
+                    style={{display: "block", marginBottom: "20px"}}
                 >
                     <Radium.Style
                         rules={styles(theme).sensorModalSelect}
@@ -177,7 +174,11 @@ var SensorForm = React.createClass({
         return (
             <TagList
                 className={"tags-wrp form-group col-xs-12"}
-                style={{marginBottom: "15px"}}
+                style={{
+                    width: "30px",
+                    position: "absolute",
+                    bottom: "0px"
+                }}
                 tagIcon={true}
                 tags={field.input.value}
             />
@@ -185,7 +186,18 @@ var SensorForm = React.createClass({
     },
     renderTagsInputField: function (field) {
         return (
-            <div className={"tags-wrp form-group col-xs-12"} style={{marginBottom: "15px"}}>
+            <div
+                className={"tags-wrp-input form-group col-xs-12"}
+                style={{marginBottom: "5px"}}
+            >
+                <Radium.Style
+                    rules={{
+                        "input": {
+                            paddingLeft: "35px"
+                        }
+                    }}
+                    scopeSelector={".tags-wrp-input"}
+                />
                 <TagsInput
                     addOnBlur={true}
                     renderInput={this.renderTagInput}

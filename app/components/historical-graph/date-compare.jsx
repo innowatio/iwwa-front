@@ -1,11 +1,11 @@
 import React, {PropTypes} from "react";
-import moment from "moment";
 import ReactPureRender from "react-addons-pure-render-mixin";
 import IPropTypes from "react-immutable-proptypes";
 
 import components from "components";
 import readingsDailyAggregatesToHighchartsData from "lib/readings-daily-aggregates-to-highcharts-data";
 import {defaultTheme} from "lib/theme";
+import moment from "lib/moment";
 
 var DateCompare = React.createClass({
     propTypes: {

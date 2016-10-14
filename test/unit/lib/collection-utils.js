@@ -1,7 +1,7 @@
 import {fromJS} from "immutable";
 import moment from "moment";
 
-import CollectionUtils from "lib/collection-utils";
+import * as CollectionUtils from "lib/collection-utils";
 
 describe("`CollectionUtils` lib", () => {
 

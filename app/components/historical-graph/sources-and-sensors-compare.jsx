@@ -2,8 +2,8 @@ import IPropTypes from "react-immutable-proptypes";
 import {isEmpty, prop, map, uniq} from "ramda";
 import React, {PropTypes} from "react";
 import ReactPureRender from "react-addons-pure-render-mixin";
-import moment from "moment";
 
+import moment from "lib/moment";
 import components from "components";
 import readingsDailyAggregatesToHighchartsData from "lib/readings-daily-aggregates-to-highcharts-data";
 

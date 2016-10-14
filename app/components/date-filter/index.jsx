@@ -2,7 +2,6 @@ var R               = require("ramda");
 var Radium          = require("radium");
 var React           = require("react");
 var Calendar        = require("react-widgets").Calendar;
-var moment          = require("moment");
 var momentLocalizer = require("react-widgets/lib/localizers/moment");
 
 import {ButtonGroupSelect} from "components";
@@ -10,6 +9,7 @@ import {defaultTheme} from "lib/theme";
 import {styles} from "lib/styles";
 import icons from "lib/icons";
 import get from "lodash.get";
+import moment from "lib/moment";
 
 const styleDateFilter = ({colors}) => ({
     borderRadius: "20px",

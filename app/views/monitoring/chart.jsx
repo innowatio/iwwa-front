@@ -2,7 +2,6 @@ import React, {PropTypes} from "react";
 import IPropTypes from "react-immutable-proptypes";
 import {connect} from "react-redux";
 import {bindActionCreators} from "redux";
-import moment from "moment";
 
 import {
     addMoreData,
@@ -17,6 +16,7 @@ import {
 import {getUnitOfMeasurement} from "lib/sensors-decorators";
 import {extractSensorsFromFormula, getAllSensors, getSensorLabel, reduceFormula} from "lib/sensors-utils";
 import {defaultTheme} from "lib/theme";
+import moment from "lib/moment";
 import readingsDailyAggregatesToHighchartsData from "lib/readings-daily-aggregates-to-highcharts-data";
 
 import {MonitoringChart, MonitoringChartToolbar, SectionToolbar} from "components";

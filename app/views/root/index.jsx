@@ -4,7 +4,6 @@ import {StyleRoot} from "radium";
 import {connect} from "react-redux";
 import {bindActionCreators} from "redux";
 import get from "lodash.get";
-import moment from "moment";
 import pkg from "../../../package.json";
 
 import components from "components";
@@ -13,6 +12,7 @@ import asteroid from "lib/asteroid";
 import {EXEC_ENV} from "lib/config";
 import LocalStorageMixin from "lib/localstorage-mixin";
 import measures from "lib/measures";
+import moment from "lib/moment";
 import {getLoggedUser, hasRole, isAuthorizedUser, ACCESS_MONITORING, ACCESS_LUCY} from "lib/roles-utils";
 import {theme, defaultTheme} from "lib/theme";
 import {isActiveUser, isDeleted} from "lib/users-utils";

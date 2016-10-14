@@ -1,5 +1,5 @@
-import moment from "moment";
 import {map} from "ramda";
+import moment from "lib/moment";
 
 function numberOfWeeksToAdd (startOne, startTwo) {
     return (

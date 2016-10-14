@@ -1,11 +1,11 @@
 import React, {PropTypes} from "react";
-import moment from "moment";
 import IPropTypes from "react-immutable-proptypes";
 import ReactPureRender from "react-addons-pure-render-mixin";
 import {partial} from "ramda";
 
 import components from "components";
 import {defaultTheme} from "lib/theme";
+import moment from "lib/moment";
 
 const styles = ({colors}, open) => ({
     headerContainer: {
