@@ -10,6 +10,7 @@ import {Col, Clearfix, Row, Tab, Tabs} from "react-bootstrap";
 import RoleDropArea from "./role-drop-area";
 
 import {getGroupsRoles, hasRole, MANAGE_USERS, ASSIGN_GROUPS, CREATE_GROUPS} from "lib/roles-utils";
+import {getAllRoles} from "lib/users-utils";
 import {styles} from "lib/styles";
 import {defaultTheme} from "lib/theme";
 
@@ -199,9 +200,9 @@ var UserRolesAssociator = React.createClass({
                             fontSize: "14px",
                             fontWeight: "300"
                         }}>
-                            {this.props.collections.get("roles").sortBy(role => role.get("name")).map(role =>
+                            {getAllRoles(this.props.collections.get("roles"), asteroid).map(role =>
                                 <DraggableRole
-                                    role={role}
+                                    roleName={role instanceof Immutable.Map ? role.get("name") : role}
                                 />
                             )}
                         </div>

@@ -1,3 +1,6 @@
+import Immutable from "immutable";
+import {getRoles, isAdmin} from "lib/roles-utils";
+
 export function getUsername (user) {
     const username = user.getIn(["services", "sso", "uid"]);
     return username ? username : user.get("_id");
@@ -33,4 +36,15 @@ export function getChildren (parentUserId, users) {
 
 function getProfileField (user, field) {
     return user.get("profile") ? user.getIn(["profile", field]) : null;
+}
+
+export function getAllRoles (rolesCollection, asteroid) {
+    if (!rolesCollection) {
+        return Immutable.Map();
+    }
+    if (isAdmin(asteroid)) {
+        return rolesCollection.sortBy(role => role.get("name"));
+    } else {
+        return getRoles(asteroid).sort();
+    }
 }

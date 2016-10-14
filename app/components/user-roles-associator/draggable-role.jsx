@@ -1,6 +1,5 @@
 import React, {PropTypes} from "react";
 import {DragSource} from "react-dnd";
-import IPropTypes from "react-immutable-proptypes";
 import {defaultTheme} from "lib/theme";
 
 import {Types} from "lib/dnd-utils";
@@ -8,14 +7,14 @@ import {Types} from "lib/dnd-utils";
 var DraggableRole = React.createClass({
     propTypes: {
         connectDragSource: PropTypes.func,
-        role: IPropTypes.map.isRequired
+        roleName: PropTypes.string.isRequired
     },
     getTheme: function () {
         return this.context.theme || defaultTheme;
     },
     render: function () {
         const {colors} = this.getTheme();
-        const {connectDragSource, role} = this.props;
+        const {connectDragSource, roleName} = this.props;
         return connectDragSource(
             <div style={{
                 padding: "2px 10px",
@@ -28,7 +27,7 @@ var DraggableRole = React.createClass({
                 clear: "both",
                 cursor: "pointer"
             }}>
-                {role.get("name")}
+                {roleName}
             </div>
         );
     }
@@ -37,7 +36,7 @@ var DraggableRole = React.createClass({
 const roleSource = {
     beginDrag (props) {
         return {
-            role: props.role.get("name"),
+            role: props.roleName,
             type: Types.ROLE
         };
     }
