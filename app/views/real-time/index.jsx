@@ -1,13 +1,16 @@
-var bootstrap  = require("react-bootstrap");
-var Immutable  = require("immutable");
-var IPropTypes = require("react-immutable-proptypes");
-var R          = require("ramda");
-var React      = require("react");
+import * as R from "ramda";
+import get from "lodash.get";
+import Immutable from "immutable";
+import * as bootstrap from "react-bootstrap";
+import React from "react";
+import IPropTypes from "react-immutable-proptypes";
+
 import {connect} from "react-redux";
 import {bindActionCreators} from "redux";
 
 import {
     Button,
+    ConfirmModal,
     FullscreenModal,
     Gauge,
     Icon,
@@ -218,8 +221,9 @@ var RealTime = React.createClass({
     getMeasures: function () {
         return this.props.collections.get("readings-real-time-aggregates") || Immutable.Map();
     },
-    closeModal: function () {
+    closeModals: function () {
         this.setState({
+            showConfirmModal: false,
             showFullscreenModal: false,
             value: null
         });
@@ -274,9 +278,6 @@ var RealTime = React.createClass({
             return site.get("_id") === sitoId;
         });
     },
-    openModal: function () {
-        this.setState({showFullscreenModal:true});
-    },
     onChangeWidgetValue: function (value) {
         this.setState({value});
     },
@@ -284,9 +285,9 @@ var RealTime = React.createClass({
         const siteId = this.state.value[0];
         this.props.asteroid.subscribe("readingsRealTimeAggregatesBySite", siteId);
         this.props.selectRealTimeSite(this.state.value || this.props.realTime.fullPath);
-        this.closeModal();
+        this.setState({showConfirmModal: true});
     },
-    renderModalButton: function () {
+    renderButton: function () {
         const theme = this.getTheme();
         return (
             <div>
@@ -297,7 +298,11 @@ var RealTime = React.createClass({
                     placement="bottom"
                     rootClose={true}
                 >
-                    <Button className="pull-right" onClick={this.openModal} style={styleSiteButton(theme)} >
+                    <Button
+                        className="pull-right"
+                        onClick={() => this.setState({showFullscreenModal: true})}
+                        style={styleSiteButton(theme)}
+                    >
                         <Icon
                             color={this.getTheme().colors.iconSiteButton}
                             icon={"map"}
@@ -310,26 +315,39 @@ var RealTime = React.createClass({
                         />
                     </Button>
                 </bootstrap.OverlayTrigger>
-                <FullscreenModal
-                    onConfirm={this.onConfirmFullscreenModal}
-                    onHide={this.closeModal}
-                    onReset={this.closeModal}
-                    renderConfirmButton={true}
-                    show={this.state.showFullscreenModal}
-                >
-                    {this.renderModalBody()}
-                </FullscreenModal>
             </div>
         );
     },
-    renderModalBody: function () {
+    renderConfirmModal: function () {
+        const fullPath = get(this.props, "realTime.fullPath", []) || [];
+        const subtitle = fullPath.join(" · ");
         return (
-            <SiteNavigator
-                allowedValues={this.getSites()}
-                onChange={this.onChangeWidgetValue}
-                path={this.state.value || this.props.realTime.fullPath || []}
-                title={"QUALE PUNTO DI MISURAZIONE VUOI VISUALIZZARE?"}
+            <ConfirmModal
+                onConfirm={() => this.setState({showConfirmModal: false})}
+                onHide={this.closeModals}
+                iconType={"flag"}
+                show={this.state.showConfirmModal}
+                subtitle={subtitle}
+                title={"HAI SCELTO DI VISUALIZZARE "}
             />
+        );
+    },
+    renderFullscreenModal: function () {
+        return (
+            <FullscreenModal
+                onConfirm={this.onConfirmFullscreenModal}
+                onHide={() => this.setState({showFullscreenModal: false})}
+                onReset={() => this.setState({showFullscreenModal: false})}
+                renderConfirmButton={true}
+                show={this.state.showFullscreenModal}
+            >
+                <SiteNavigator
+                    allowedValues={this.getSites()}
+                    onChange={this.onChangeWidgetValue}
+                    path={this.state.value || this.props.realTime.fullPath || []}
+                    title={"QUALE PUNTO DI MISURAZIONE VUOI VISUALIZZARE?"}
+                />
+            </FullscreenModal>
         );
     },
     renderConsumptionPanel: function (numberOfConsumptionSensor) {
@@ -376,7 +394,7 @@ var RealTime = React.createClass({
                     <div style={{fontSize: "18px", marginBottom: "0px", paddingTop: "18px", width: "100%"}}>
                     </div>
                     <bootstrap.Col sm={4}>
-                        {this.renderModalButton()}
+                        {this.renderButton()}
                     </bootstrap.Col>
                 </div>
                 <div style={styles(theme).mainDivStyle, {position: "relative"}}>
@@ -428,6 +446,8 @@ var RealTime = React.createClass({
                         </div>
                     </div>
                 </div>
+                {this.renderFullscreenModal()}
+                {this.renderConfirmModal()}
             </div>
         );
     }
