@@ -1,6 +1,6 @@
 import {equals, head, last, update} from "ramda";
 import {combineReducers} from "redux";
-import moment from "moment";
+import moment from "lib/moment";
 
 import {
     SELECT_SINGLE_ELECTRICAL_SENSOR_CHART,

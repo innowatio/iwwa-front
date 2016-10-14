@@ -1,12 +1,12 @@
 import Immutable from "immutable";
 import {evaluateFormula} from "iwwa-formula-resolver";
 import {addIndex, map, memoize} from "ramda";
-import moment from "moment";
+import moment from "lib/moment";
 
 const mapIndexed = addIndex(map);
 
 export default memoize(function readingsDailyAggregatesToHighchartsData (aggregates, chartsState, allSensors) {
-    
+
     if (aggregates.isEmpty()) {
         return [{
             data: []

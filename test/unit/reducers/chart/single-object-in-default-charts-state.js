@@ -1,4 +1,4 @@
-import moment from "moment";
+import moment from "lib/moment";
 
 import chartReducer from "reducers/chart";
 

@@ -1,5 +1,5 @@
 import {isEmpty, isNil, last} from "ramda";
-import moment from "moment";
+import moment from "lib/moment";
 
 export function getTitleForSingleSensor (reduxViewState, collections) {
     const path = reduxViewState.fullPath;

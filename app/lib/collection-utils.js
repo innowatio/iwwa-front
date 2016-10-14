@@ -1,7 +1,7 @@
-var Immutable = require("immutable");
-var R         = require("ramda");
-var changeCase = require("change-case");
-var moment    = require("moment");
+import Immutable from "immutable";
+import R from "ramda";
+import changeCase from "change-case";
+import moment from "lib/moment";
 
 exports.labelGraph = {
     getYLabel: function (tipologia) {
