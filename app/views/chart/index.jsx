@@ -509,7 +509,7 @@ var Chart = React.createClass({
                 return (
                     getTitleForSingleSensor(chartFilter[0], this.props.collections)
                     + " CON " +
-                    getTitleForSingleSensor(chartFilter[1], this.props.collections)
+                    getTitleForSingleSensor(chartFilter[1] || {}, this.props.collections)
                 );
             case "dateCompare":
                 return (
