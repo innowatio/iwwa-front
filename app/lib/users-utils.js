@@ -1,6 +1,6 @@
 import Immutable from "immutable";
 import R from "ramda";
-import {getRoles, isAdmin} from "lib/roles-utils";
+import {getRoles, getUserRoles, isAdmin, isAdminUser} from "lib/roles-utils";
 
 export function getUsername (user) {
     const username = user.getIn(["services", "sso", "uid"]);
@@ -66,4 +66,19 @@ export function getVisibleGroups (groupsCollection, asteroid) {
         });
         return groupsNames.sort();
     }
+}
+
+export function hasParentPermissions (childUser, parentUser, asteroid) {
+    if (isAdminUser(parentUser)) {
+        return true;
+    }
+    return arrayContainsArray(getUserRoles(parentUser, asteroid), getUserRoles(childUser, asteroid)) &&
+            arrayContainsArray(parentUser.get("sensors"), childUser.get("sensors"));
+}
+
+function arrayContainsArray (masterArray, checkingArray) {
+    if (!checkingArray) {
+        return true;
+    }
+    return checkingArray.every(elem => masterArray && masterArray.indexOf(elem) >= 0);
 }

@@ -3,6 +3,8 @@ import IPropTypes from "react-immutable-proptypes";
 
 import DraggableUser from "./draggable-user";
 
+import {FullscreenModal, Icon} from "components";
+
 import {defaultTheme} from "lib/theme";
 import {isConfirmedUser} from "lib/users-utils";
 
@@ -31,7 +33,10 @@ var UserRow = React.createClass({
         theme: PropTypes.object
     },
     getInitialState: function () {
-        return {childrenOpen: false};
+        return {
+            childrenOpen: false,
+            showMoveAlarm: false
+        };
     },
     getTheme: function () {
         return this.context.theme || defaultTheme;
@@ -56,6 +61,18 @@ var UserRow = React.createClass({
             return userRows;
         }
     },
+    renderMoveAlarm: function () {
+        return (
+            <FullscreenModal
+                onHide={() => this.setState({showMoveAlarm: false})}
+                show={this.state.showMoveAlarm}
+            >
+                <Icon icon="alarm" />
+                {"Attenzione, operazione non consentita!"}
+                {"L'utente selezionato dispone di sensori / funzioni non compatibili."}
+            </FullscreenModal>
+        );
+    },
     render: function () {
         const theme = this.getTheme();
         const children = this.props.getChildren(this.props.user.get("_id"));
@@ -73,10 +90,12 @@ var UserRow = React.createClass({
                         onChangeActiveStatus={this.props.onChangeActiveStatus}
                         onOpenChildren={() => this.setState({childrenOpen: !this.state.childrenOpen})}
                         onSelect={this.props.onSelect}
+                        showDragAlarm={() => this.setState({showMoveAlarm: true})}
                         user={this.props.user}
                     />
                     {this.renderChildren(children)}
                 </div>
+                {this.renderMoveAlarm()}
             </div>
         );
     }

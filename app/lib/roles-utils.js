@@ -22,15 +22,19 @@ export function getLoggedUser (asteroid) {
 }
 
 export function getGroups (asteroid) {
-    return (getLoggedUser(asteroid).get("groups") || List()).toArray();
+    return getUserGroups(getLoggedUser(asteroid));
 }
 
-function getOldRoles (asteroid) {
-    return (getLoggedUser(asteroid).get("roles") || List()).toArray();
+function getUserGroups (user) {
+    return (user.get("groups") || List()).toArray();
 }
 
 export function getRoles (asteroid) {
     return getGroupsRoles(getGroups(asteroid), asteroid);
+}
+
+export function getUserRoles (user, asteroid) {
+    return getGroupsRoles(getUserGroups(user), asteroid);
 }
 
 export function getGroupsRoles (groups, asteroid) {
@@ -58,19 +62,28 @@ export function canAccessUsers (asteroid) {
     return canAccess || isAdmin(asteroid);
 }
 
-//TODO need to keep these until complete switch of roles management
-export function isAdmin (asteroid) {
-    return getOldRoles(asteroid).indexOf(ROLE_ADMIN) > -1;
-}
-
 export function hasRole (asteroid, role) {
     return isAdmin(asteroid) || getRoles(asteroid).indexOf(role) > -1;
 }
 
+//TODO need to keep these until complete switch of roles management
+export function isAdmin (asteroid) {
+    return getOldRoles(getLoggedUser(asteroid)).indexOf(ROLE_ADMIN) > -1;
+}
+
+export function isAdminUser (user) {
+    return getOldRoles(user).indexOf(ROLE_ADMIN) > -1;
+}
+
+function getOldRoles (user) {
+    return (user.get("roles") || List()).toArray();
+}
+
+
 export function isAuthorizedUser (asteroid) {
     const allRoles = R.values(R.map(role => role.name, (asteroid.collections.get("roles") || Map()).toJS()));
     //TODO need to keep these until complete switch of roles management
-    const userRoles = getOldRoles(asteroid).concat(getRoles(asteroid));
+    const userRoles = getOldRoles(getLoggedUser(asteroid)).concat(getRoles(asteroid));
     let isAuthorized = false;
     R.forEach(userRole => {
         isAuthorized = isAuthorized || R.contains(userRole, allRoles);

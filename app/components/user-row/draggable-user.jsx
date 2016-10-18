@@ -51,6 +51,7 @@ var DraggableUser = React.createClass({
         onChangeActiveStatus: PropTypes.func,
         onOpenChildren: PropTypes.func,
         onSelect: PropTypes.func,
+        showDragAlarm: PropTypes.func,
         user: IPropTypes.map.isRequired
     },
     contextTypes: {
@@ -232,6 +233,12 @@ const userSource = {
             type: Types.USER_ROW,
             user: props.user
         };
+    },
+    endDrag (props, monitor) {
+        const result = monitor.getDropResult();
+        if (result && !result.moved) {
+            props.showDragAlarm();
+        }
     }
 };
 

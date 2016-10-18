@@ -5,6 +5,7 @@ import IPropTypes from "react-immutable-proptypes";
 import {Types} from "lib/dnd-utils";
 import {hasRole, MANAGE_USERS} from "lib/roles-utils";
 import {defaultTheme} from "lib/theme";
+import {hasParentPermissions} from "lib/users-utils";
 
 var UserDropArea = React.createClass({
     propTypes: {
@@ -31,12 +32,18 @@ var UserDropArea = React.createClass({
 });
 
 const userTarget = {
+    canDrop (props, monitor) {
+        const item = monitor.getItem();
+        return item.user.get("_id") !== props.user.get("_id") && hasRole(props.asteroid, MANAGE_USERS);
+    },
     drop (props, monitor) {
         const item = monitor.getItem();
-        if (item.user.get("_id") !== props.user.get("_id") && hasRole(props.asteroid, MANAGE_USERS)) {
+        if (hasParentPermissions(item.user, props.user, props.asteroid)) {
             props.changeParent(item.user, props.user.get("_id"));
+            return {moved: true};
+        } else {
+            return {moved: false};
         }
-        return {moved: true};
     }
 };
 
