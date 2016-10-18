@@ -437,7 +437,8 @@ var Chart = React.createClass({
     onChangeWidget: function ({key}) {
         this.setState({
             showFullscreenModal: true,
-            selectedWidget: key
+            selectedWidget: key,
+            value: undefined
         });
     },
     onConfirmFullscreenModal: function () {
