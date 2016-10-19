@@ -11,10 +11,11 @@ import {
 var ConfirmModal = React.createClass({
     propTypes: {
         backgroundColor: PropTypes.string,
-        iconCloseColor: PropTypes.string,
+        iconBgColor: PropTypes.string,
         iconType: PropTypes.string,
         onConfirm: PropTypes.func,
         onHide: PropTypes.func,
+        renderFooter: PropTypes.bool,
         show: PropTypes.bool,
         subtitle: PropTypes.string,
         title: PropTypes.string
@@ -32,6 +33,7 @@ var ConfirmModal = React.createClass({
                 onClick={this.props.onHide}
                 style={{
                     width: "100%",
+                    height: "25%",
                     textAlign: "center",
                     padding: "5%",
                     cursor: "pointer",
@@ -55,17 +57,21 @@ var ConfirmModal = React.createClass({
         return (
             <Modal.Body
                 onClick={this.props.onHide}
-                style={{padding:"2% 0", textAlign: "center", cursor: "pointer"}}
+                style={{
+                    padding:"2% 0",
+                    height: "50%",
+                    textAlign: "center",
+                    cursor: "pointer"
+                }}
             >
                 <div
                     className="modal-icon"
                     style={{
                         display: "inline-block",
                         width: "300px",
-                        height: "300px",
                         textAlign: "center",
                         borderRadius: "100%",
-                        backgroundColor: colors.secondary}}
+                        backgroundColor: this.props.iconBgColor || colors.backgroundConfirmIcon}}
                 >
                     <Radium.Style
                         rules={{
@@ -91,12 +97,30 @@ var ConfirmModal = React.createClass({
             </Modal.Body>
         );
     },
+    renderFooterEmpty: function () {
+        return (
+            <Modal.Footer
+                onClick={this.props.onHide}
+                style={{
+                    display: "block",
+                    width: "100%",
+                    height: "25%",
+                    cursor: "pointer"
+                }}
+            />
+        );
+    },
     renderFooter: function () {
         const {colors} = this.getTheme();
         return (
             <Modal.Footer
                 onClick={this.props.onConfirm}
-                style={{display: "block", cursor: "pointer", padding: "2% 0"}}
+                style={{
+                    display: "block",
+                    cursor: "pointer",
+                    paddingTop: "3%",
+                    height: "25%"
+                }}
             >
                 <Button
                     bsStyle={"link"}
@@ -133,7 +157,7 @@ var ConfirmModal = React.createClass({
                             width: "100%"
                         },
                         ".modal-content": {
-                            backgroundColor: this.props.backgroundColor || colors.primary,
+                            backgroundColor: this.props.backgroundColor || colors.backgroundConfirmModal,
                             border: "none",
                             borderRadius: "0px",
                             height: "100%",
@@ -157,7 +181,7 @@ var ConfirmModal = React.createClass({
                 {this.renderHeader()}
                 {this.renderIcon()}
                 <div style={{clear: "both"}}></div>
-                {this.renderFooter()}
+                {this.props.renderFooter ? this.renderFooter() : this.renderFooterEmpty()}
             </Modal>
         );
     }

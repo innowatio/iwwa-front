@@ -281,6 +281,7 @@ var Monitoring = React.createClass({
                 onConfirm={() => this.setState({showConfirmModal: false})}
                 onHide={this.closeModals}
                 iconType={"flag"}
+                renderFooter={true}
                 show={this.state.showConfirmModal}
                 subtitle={selected.name + " · " + selected.description + " · " + selected.unitOfMeasurement}
                 title={title}

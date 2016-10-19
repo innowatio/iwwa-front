@@ -3,7 +3,7 @@ import IPropTypes from "react-immutable-proptypes";
 
 import DraggableUser from "./draggable-user";
 
-import {FullscreenModal, Icon} from "components";
+import {ConfirmModal} from "components";
 
 import {defaultTheme} from "lib/theme";
 import {isConfirmedUser} from "lib/users-utils";
@@ -62,15 +62,19 @@ var UserRow = React.createClass({
         }
     },
     renderMoveAlarm: function () {
+        const {colors} = this.getTheme();
         return (
-            <FullscreenModal
+            <ConfirmModal
+                backgroundColor={colors.backgroundAlertModal}
+                onConfirm={() => this.setState({showMoveAlarm: false})}
                 onHide={() => this.setState({showMoveAlarm: false})}
+                iconBgColor={colors.backgroundAlertIcon}
+                iconType={"alert"}
+                renderFooter={false}
                 show={this.state.showMoveAlarm}
-            >
-                <Icon icon="alarm" />
-                {"Attenzione, operazione non consentita!"}
-                {"L'utente selezionato dispone di sensori / funzioni non compatibili."}
-            </FullscreenModal>
+                subtitle={"L'utente selezionato dispone di sensori / funzioni non compatibili."}
+                title={"Attenzione, operazione non consentita!"}
+            />
         );
     },
     render: function () {

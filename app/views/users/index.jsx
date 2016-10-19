@@ -325,6 +325,7 @@ var Users = React.createClass({
                     onConfirm={() => this.setState({showCreateConfirmModal: false})}
                     onHide={() => this.setState({showCreateConfirmModal: false, showCreateUserModal: false})}
                     iconType={"flag"}
+                    renderFooter={false}
                     show={this.state.showCreateConfirmModal}
                     title={"UNA EMAIL È STATA INVIATA AL NUOVO UTENTE PER CONFERMARE LA REGISTRAZIONE"}
                 />

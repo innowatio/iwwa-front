@@ -326,6 +326,7 @@ var RealTime = React.createClass({
                 onConfirm={() => this.setState({showConfirmModal: false})}
                 onHide={this.closeModals}
                 iconType={"flag"}
+                renderFooter={true}
                 show={this.state.showConfirmModal}
                 subtitle={subtitle}
                 title={"HAI SCELTO DI VISUALIZZARE "}
