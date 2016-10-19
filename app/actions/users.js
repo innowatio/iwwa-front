@@ -6,11 +6,16 @@ import {getChildren, getUsername, isActiveUser} from "lib/users-utils";
 
 import {getBasicObject} from "./utils";
 
+export const ACTIVE_STATUS_UPDATE_SUCCESS = "ACTIVE_STATUS_UPDATE_SUCCESS";
 export const ADD_ROLE = "ADD_ROLE";
+export const CHANGE_USER_PARENT_SUCCESS = "CHANGE_USER_PARENT_SUCCESS";
+export const GROUPS_ASSIGNMENT_SUCCESS = "GROUPS_ASSIGNMENT_SUCCESS";
 export const REMOVE_ROLE = "REMOVE_ROLE";
 export const RESET_ROLES_GROUPS = "RESET_ROLES_GROUPS";
 export const SELECT_USER = "SELECT_USER";
+export const SENSORS_ASSIGNMENT_SUCCESS = "SENSORS_ASSIGNMENT_SUCCESS";
 export const TOGGLE_GROUP = "TOGGLE_GROUP";
+export const USER_DELETE_SUCCESS = "USER_DELETE_SUCCESS";
 
 export const selectUser = user => getBasicObject(SELECT_USER, user);
 
@@ -38,7 +43,11 @@ function updateUser (dispatch, user, updatedInfo, event) {
     };
     axios.post(endpoint, updatedUser)
         .then(() => dispatch({
-            type: event + "_SUCCESS"
+            type: event + "_SUCCESS",
+            payload: {
+                _id: user.get("_id"),
+                ...updatedUser
+            }
         }))
         .catch(() => dispatch({
             type: event + "_FAIL"

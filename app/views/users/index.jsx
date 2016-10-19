@@ -335,6 +335,7 @@ var Users = React.createClass({
 
 const mapStateToProps = (state) => {
     return {
+        collections: state.collections,
         sensorsState: state.sensors,
         usersState: state.users
     };
