@@ -12,6 +12,20 @@ const hoverStyle = ({colors}) => ({
     cursor: "pointer"
 });
 
+const buttonBottomStyle = ({colors}) => ({
+    width: "40%",
+    height: "40px",
+    fontSize: "14px",
+    color: colors.white,
+    backgroundColor: colors.transparent,
+    textTransform: "uppercase",
+    fontWeight: "400",
+    margin: "10px 5%",
+    border: "0",
+    cursor: "pointer",
+    textAlign: "center"
+});
+
 const lazyLoadButtonStyle = ({colors}) => ({
     width: "230px",
     height: "45px",
@@ -160,8 +174,10 @@ var MonitoringWorkArea = React.createClass({
                 }}>
                     {this.renderTableInstructions(theme)}
                     <div style={{
+                        position: "relative",
                         color: theme.colors.mainFontColor,
                         borderRadius: "20px",
+                        paddingBottom: "40px",
                         height: "400px",
                         overflow: "hidden",
                         border: "1px solid " + theme.colors.borderContentModal,
@@ -175,12 +191,13 @@ var MonitoringWorkArea = React.createClass({
                             marginRight: "-15px"
                         }}>
                             <CollectionItemList
+                                buttonBottomStyle={buttonBottomStyle(theme)}
                                 collections={this.props.sensors}
                                 filter={this.searchFilter}
                                 headerComponent={this.renderSensorList}
                                 hover={true}
                                 hoverStyle={hoverStyle(theme)}
-                                initialVisibleRow={6}
+                                initialVisibleRow={5}
                                 lazyLoadButtonStyle={lazyLoadButtonStyle(theme)}
                                 lazyLoadLabel={"Carica altri"}
                                 selectAll={{

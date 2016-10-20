@@ -33,6 +33,7 @@ var RowItem = React.createClass({
 
 var CollectionItemList = React.createClass({
     propTypes: {
+        buttonBottomStyle: PropTypes.object,
         collections: IPropTypes.map.isRequired,
         filter: PropTypes.func,
         headerComponent: PropTypes.func.isRequired,
@@ -139,7 +140,7 @@ var CollectionItemList = React.createClass({
         const {selectAll} = this.props;
         return selectAll && renderedItems.length > 0 ? (
             <Button
-                style={this.props.lazyLoadButtonStyle}
+                style={this.props.buttonBottomStyle}
                 onClick={() => {
                     selectAll.onClick(renderedItems);
                 }}
@@ -153,7 +154,7 @@ var CollectionItemList = React.createClass({
         return transferAll && renderedItems.length > 0 ? (
             <Button
                 disabled={!transferAll.selected || transferAll.selected.length <= 0}
-                style={this.props.lazyLoadButtonStyle}
+                style={this.props.buttonBottomStyle}
                 onClick={transferAll.onClick}
             >
                 {transferAll.label}
@@ -161,6 +162,7 @@ var CollectionItemList = React.createClass({
         ) : null;
     },
     render: function () {
+        const {colors} = this.getTheme();
         const collectionList = this.props.collections
             .sort(this.props.sort)
             .filter(this.filter)
@@ -178,6 +180,14 @@ var CollectionItemList = React.createClass({
                     }
                     <div style={this.props.lazyLoadButtonStyleContainer}>
                         {this.renderLazyLoad(collectionList.length)}
+                    </div>
+                    <div style={{
+                        width: "100%",
+                        backgroundColor: colors.backgroundButtonBottom,
+                        borderTop: `1px solid ${colors.borderContentModal}`,
+                        position: "absolute",
+                        bottom: "0"
+                    }}>
                         {this.renderSelectAll(collectionList)}
                         {this.renderTransferAll(collectionList)}
                     </div>

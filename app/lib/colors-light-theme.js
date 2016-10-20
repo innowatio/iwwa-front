@@ -13,6 +13,7 @@ export const colorsLightTheme = {
     backgroundArrowPopoverTop: "#cccccc",
     backgroundAlarmsRowHover: "#eeeeee",
     backgroundButtonCalendar: "rgba(0, 0, 0, 0)",
+    backgroundButtonBottom: "#eeeeee",
     backgroundButtonExport: "#536DFE",
     backgroundCalendarArrowSwitch: "#3e50b4",
     backgroundConfirmModal: "#3e50b4",
