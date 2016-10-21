@@ -30,7 +30,6 @@ var MonitoringSensorsAssociator = React.createClass({
         filterSensors: PropTypes.func.isRequired,
         onHide: PropTypes.func,
         removeSensorFromWorkArea: PropTypes.func.isRequired,
-        resetWorkAreaSensors: PropTypes.func.isRequired,
         selectSensor: PropTypes.func.isRequired,
         sensorsState: PropTypes.object.isRequired,
         show: PropTypes.bool,

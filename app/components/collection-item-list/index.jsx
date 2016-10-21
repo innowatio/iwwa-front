@@ -136,22 +136,23 @@ var CollectionItemList = React.createClass({
             </div>
         ) : null;
     },
-    renderSelectAll: function (renderedItems) {
+    renderSelectAll: function (collectionList, renderedElems) {
         const {selectAll} = this.props;
-        return selectAll && renderedItems.length > 0 ? (
+        return selectAll && collectionList.length > 0 ? (
             <Button
+                disabled={renderedElems.length <= 0}
                 style={this.props.buttonBottomStyle}
                 onClick={() => {
-                    selectAll.onClick(renderedItems);
+                    selectAll.onClick(renderedElems);
                 }}
             >
                 {selectAll.label}
             </Button>
         ) : null;
     },
-    renderTransferAll: function (renderedItems) {
+    renderTransferAll: function (collectionList) {
         const {transferAll} = this.props;
-        return transferAll && renderedItems.length > 0 ? (
+        return transferAll && collectionList.length > 0 ? (
             <Button
                 disabled={!transferAll.selected || transferAll.selected.length <= 0}
                 style={this.props.buttonBottomStyle}
@@ -169,15 +170,12 @@ var CollectionItemList = React.createClass({
             .map(this.renderItemList)
             .toList()
             .toJS();
+        const renderedElems = collectionList.slice(0, this.props.initialVisibleRow ? this.state.visibleValuesList : Infinity);
         return (
             <div>
                 {this.renderInputFilter()}
                 <div style={{height: "100%", overflow: "auto"}}>
-                    {
-                        collectionList.length > 0 ?
-                        collectionList.slice(0, this.props.initialVisibleRow ? this.state.visibleValuesList : Infinity) :
-                        this.renderEmptyMessage()
-                    }
+                    {collectionList.length > 0 ? renderedElems : this.renderEmptyMessage()}
                     <div style={this.props.lazyLoadButtonStyleContainer}>
                         {this.renderLazyLoad(collectionList.length)}
                     </div>
@@ -188,7 +186,7 @@ var CollectionItemList = React.createClass({
                         position: "absolute",
                         bottom: "0"
                     }}>
-                        {this.renderSelectAll(collectionList)}
+                        {this.renderSelectAll(collectionList, renderedElems)}
                         {this.renderTransferAll(collectionList)}
                     </div>
                 </div>

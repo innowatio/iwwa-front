@@ -297,7 +297,6 @@ var Users = React.createClass({
                     filterSensors={this.props.filterSensors}
                     onHide={this.closeSensorsModal}
                     removeSensorFromWorkArea={this.props.removeSensorFromWorkArea}
-                    resetWorkAreaSensors={this.props.resetWorkAreaSensors}
                     selectSensor={this.props.selectSensor}
                     sensorsState={this.props.sensorsState}
                     show={this.state.showSensorsAssociator}

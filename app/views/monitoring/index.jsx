@@ -231,7 +231,7 @@ var Monitoring = React.createClass({
                     addItemToFormula={this.props.addItemToFormula}
                     allSensors={this.getAllSensors()}
                     asteroid={this.props.asteroid}
-                    closeForm={() => this.setState({showEditModal: false})}
+                    closeForm={() => this.closeModals(true)}
                     currentSensor={selected.length == 1 ? selected[0] : null}
                     initialValues={this.getSensorFields()}
                     onSave={this.onSaveForm}
