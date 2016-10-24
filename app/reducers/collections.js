@@ -10,6 +10,7 @@ import {
 import {
     ACTIVE_STATUS_UPDATE_SUCCESS,
     CHANGE_USER_PARENT_SUCCESS,
+    CLONE_USER_SUCCESS,
     GROUPS_ASSIGNMENT_SUCCESS,
     SENSORS_ASSIGNMENT_SUCCESS,
     USER_DELETE_SUCCESS
@@ -34,6 +35,7 @@ export function collections (state = Map(), {type, payload}) {
         }
         case ACTIVE_STATUS_UPDATE_SUCCESS:
         case CHANGE_USER_PARENT_SUCCESS:
+        case CLONE_USER_SUCCESS:
         case GROUPS_ASSIGNMENT_SUCCESS:
         case SENSORS_ASSIGNMENT_SUCCESS:
         case USER_DELETE_SUCCESS: {
