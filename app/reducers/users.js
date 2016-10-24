@@ -3,22 +3,28 @@ import {
     REMOVE_ROLE,
     RESET_ROLES_GROUPS,
     SELECT_USER,
+    SELECT_USER_TO_CLONE,
+    TOGGLE_CLONE,
     TOGGLE_GROUP
 } from "../actions/users";
 
 import {addOrRemove} from "./utils";
 
 const defaultState = {
-    selectedUsers: [],
+    cloneMode: false,
     selectedGroups: [],
-    selectedRoles: []
+    selectedRoles: [],
+    selectedUsers: [],
+    selectedUsersToClone: []
 };
 
 function cloneState (state) {
     return {
-        selectedUsers: state.selectedUsers.slice(),
+        cloneMode: state.cloneMode,
         selectedGroups: state.selectedGroups.slice(),
-        selectedRoles: state.selectedRoles.slice()
+        selectedRoles: state.selectedRoles.slice(),
+        selectedUsers: state.selectedUsers.slice(),
+        selectedUsersToClone: state.selectedUsersToClone.slice()
     };
 }
 
@@ -39,10 +45,16 @@ export function users (state = defaultState, action) {
             break;
         }
         case SELECT_USER: {
-            const user = action.payload;
-            newState.selectedUsers = addOrRemove(user, newState.selectedUsers, it => {
-                return it.get("_id") === user.get("_id");
-            });
+            onSelectUser(action.payload, newState, "selectedUsers");
+            break;
+        }
+        case SELECT_USER_TO_CLONE: {
+            onSelectUser(action.payload, newState, "selectedUsersToClone");
+            break;
+        }
+        case TOGGLE_CLONE: {
+            newState.cloneMode = !newState.cloneMode;
+            newState.selectedUsersToClone = [];
             break;
         }
         case TOGGLE_GROUP: {
@@ -54,4 +66,10 @@ export function users (state = defaultState, action) {
         }
     }
     return newState;
+}
+
+function onSelectUser (user, state, field) {
+    state[field] = addOrRemove(user, state[field], it => {
+        return it.get("_id") === user.get("_id");
+    });
 }

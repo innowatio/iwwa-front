@@ -47,6 +47,7 @@ var DraggableUser = React.createClass({
         isConfirmed: PropTypes.bool,
         isDragging: PropTypes.bool,
         isSelected: PropTypes.func,
+        isSelectedToClone: PropTypes.func,
         moveUser: PropTypes.func,
         onChangeActiveStatus: PropTypes.func,
         onOpenChildren: PropTypes.func,
@@ -130,9 +131,15 @@ var DraggableUser = React.createClass({
     },
     render: function () {
         const theme = this.getTheme();
-        const {connectDragSource, indent, isSelected, user} = this.props;
+        const {connectDragSource, indent, isSelected, isSelectedToClone, user} = this.props;
         const marginLeft = indent + "%";
         let rowStyle = {};
+        if (isSelectedToClone(user.get("_id"))) {
+            rowStyle = {
+                backgroundColor: "lightpink",
+                color: theme.colors.white
+            };
+        }
         if (isSelected(user.get("_id"))) {
             rowStyle = {
                 backgroundColor: theme.colors.buttonPrimary,

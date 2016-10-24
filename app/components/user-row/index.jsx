@@ -24,6 +24,7 @@ var UserRow = React.createClass({
         getChildren: PropTypes.func,
         indent: PropTypes.number.isRequired,
         isSelected: PropTypes.func,
+        isSelectedToClone: PropTypes.func,
         moveUser: PropTypes.func,
         onChangeActiveStatus: PropTypes.func,
         onSelect: PropTypes.func,
@@ -51,6 +52,7 @@ var UserRow = React.createClass({
                         getChildren={this.props.getChildren}
                         indent={this.props.indent + 5}
                         isSelected={this.props.isSelected}
+                        isSelectedToClone={this.props.isSelectedToClone}
                         moveUser={this.props.moveUser}
                         onChangeActiveStatus={this.props.onChangeActiveStatus}
                         onSelect={this.props.onSelect}
@@ -90,6 +92,7 @@ var UserRow = React.createClass({
                         isChildrenOpen={this.state.childrenOpen}
                         isConfirmed={isConfirmedUser(this.props.user)}
                         isSelected={this.props.isSelected}
+                        isSelectedToClone={this.props.isSelectedToClone}
                         moveUser={this.props.moveUser}
                         onChangeActiveStatus={this.props.onChangeActiveStatus}
                         onOpenChildren={() => this.setState({childrenOpen: !this.state.childrenOpen})}

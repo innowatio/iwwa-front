@@ -13,11 +13,17 @@ export const GROUPS_ASSIGNMENT_SUCCESS = "GROUPS_ASSIGNMENT_SUCCESS";
 export const REMOVE_ROLE = "REMOVE_ROLE";
 export const RESET_ROLES_GROUPS = "RESET_ROLES_GROUPS";
 export const SELECT_USER = "SELECT_USER";
+export const SELECT_USER_TO_CLONE = "SELECT_USER_TO_CLONE";
 export const SENSORS_ASSIGNMENT_SUCCESS = "SENSORS_ASSIGNMENT_SUCCESS";
+export const TOGGLE_CLONE = "TOGGLE_CLONE";
 export const TOGGLE_GROUP = "TOGGLE_GROUP";
 export const USER_DELETE_SUCCESS = "USER_DELETE_SUCCESS";
 
 export const selectUser = user => getBasicObject(SELECT_USER, user);
+
+export const selectUserToClone = user => getBasicObject(SELECT_USER_TO_CLONE, user);
+
+export const toggleClone = () => getBasicObject(TOGGLE_CLONE);
 
 export const changeActiveStatus = user => {
     return dispatch => {
@@ -159,5 +165,20 @@ export const moveUser = (user, parentUserId) => {
             }
         };
         updateUser(dispatch, user, newProfile, "CHANGE_USER_PARENT");
+    };
+};
+
+export const cloneUsers = (userToClone, usersToBeCloned) => {
+    return dispatch => {
+        dispatch({
+            type: "CLONING_USERS"
+        });
+        usersToBeCloned.forEach(user => {
+            const newSettings = {
+                groups: userToClone.get("groups"),
+                sensors: userToClone.get("sensors")
+            };
+            updateUser(dispatch, user, newSettings, "CLONE_USER");
+        });
     };
 };

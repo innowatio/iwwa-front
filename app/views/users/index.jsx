@@ -37,12 +37,15 @@ import {
     assignGroupsToUsers,
     assignSensorsToUsers,
     changeActiveStatus,
+    cloneUsers,
     deleteUsers,
     moveUser,
     removeRole,
     resetRolesAndGroups,
     saveAndAssignGroupToUsers,
     selectUser,
+    selectUserToClone,
+    toggleClone,
     toggleGroup
 } from "actions/users";
 
@@ -94,6 +97,7 @@ var Users = React.createClass({
         assignSensorsToUsers: PropTypes.func.isRequired,
         asteroid: PropTypes.object,
         changeActiveStatus: PropTypes.func.isRequired,
+        cloneUsers: PropTypes.func.isRequired,
         collections: IPropTypes.map,
         deleteUsers: PropTypes.func.isRequired,
         filterSensors: PropTypes.func.isRequired,
@@ -105,7 +109,9 @@ var Users = React.createClass({
         saveAndAssignGroupToUsers: PropTypes.func.isRequired,
         selectSensor: PropTypes.func.isRequired,
         selectUser: PropTypes.func.isRequired,
+        selectUserToClone: PropTypes.func.isRequired,
         sensorsState: PropTypes.object.isRequired,
+        toggleClone: PropTypes.func.isRequired,
         toggleGroup: PropTypes.func.isRequired,
         usersState: PropTypes.object.isRequired
     },
@@ -123,23 +129,6 @@ var Users = React.createClass({
         this.props.asteroid.subscribe("groups");
         this.props.asteroid.subscribe("roles");
     },
-    getClickFunction: function (iconName) {
-        switch (iconName) {
-            case "gauge":
-                this.openSensorsModal();
-                break;
-            case "user-functions":
-                this.openUserRolesModal();
-                break;
-            case "clone":
-                break;
-            case "add":
-                this.setState({showCreateUserModal: true});
-                break;
-            default:
-                break;
-        }
-    },
     getTheme: function () {
         return this.context.theme || defaultTheme;
     },
@@ -148,6 +137,10 @@ var Users = React.createClass({
     },
     closeSensorsModal: function () {
         this.resetAndOpenModal(false);
+    },
+    onCloneClick: function () {
+        this.props.toggleClone();
+        //TODO aprire la modale che scompare a tempo
     },
     openSensorsModal: function () {
         this.resetAndOpenModal(true);
@@ -174,6 +167,13 @@ var Users = React.createClass({
         if (user && user.get("sensors")) {
             return user.get("sensors");
         }
+    },
+    getIsSelectedFunc: function (selectedField) {
+        return userId => {
+            return R.find(it => {
+                return it.get("_id") === userId;
+            })(this.props.usersState[selectedField]) != null;
+        };
     },
     searchFilter: function (element, search) {
         const found = getUsername(element).toLowerCase().indexOf(search.toLowerCase()) >= 0;
@@ -204,20 +204,25 @@ var Users = React.createClass({
                     asteroid={this.props.asteroid}
                     getChildren={userId => getChildren(userId, this.getAllUsers())}
                     indent={0}
-                    isSelected={userId => {
-                        return R.find(it => {
-                            return it.get("_id") === userId;
-                        })(this.props.usersState.selectedUsers) != null;
-                    }}
+                    isSelected={this.getIsSelectedFunc("selectedUsers")}
+                    isSelectedToClone={this.getIsSelectedFunc("selectedUsersToClone")}
                     moveUser={this.props.moveUser}
                     onChangeActiveStatus={this.props.changeActiveStatus}
-                    onSelect={this.props.selectUser}
+                    onSelect={this.props.usersState.cloneMode ? this.props.selectUserToClone : this.props.selectUser}
                     user={user}
                 />
             </div>
         );
     },
-    renderButton: function (tooltip, iconName, disabled, permissions) {
+    renderCloneButtons: function () {
+        return this.props.usersState.cloneMode ? (
+            <div>
+                {this.renderButton("Conferma clonazione", "clone", false, [MANAGE_USERS], () => this.props.cloneUsers(this.props.usersState.selectedUsers[0], this.props.usersState.selectedUsersToClone))}
+                {this.renderButton("Annulla clonazione", "reset", false, [MANAGE_USERS], this.props.toggleClone)}
+            </div>
+        ) : null;
+    },
+    renderButton: function (tooltip, iconName, disabled, permissions, onClickFunc) {
         const theme = this.getTheme();
         let hasPermisions = false;
         permissions.forEach(permissionRole => {
@@ -231,7 +236,7 @@ var Users = React.createClass({
             >
                 <Button
                     disabled={disabled}
-                    onClick={() => this.getClickFunction(iconName)}
+                    onClick={onClickFunc}
                     style={stylesFunction(theme).buttonIconStyle}
                 >
                     <Icon
@@ -250,12 +255,12 @@ var Users = React.createClass({
             <div>
                 <SectionToolbar>
                     <div style={{float: "left", marginTop: "3px"}}>
-                        {this.renderButton("Crea utente", "add", false, [MANAGE_USERS])}
+                        {this.renderButton("Crea utente", "add", false, [MANAGE_USERS], () => this.setState({showCreateUserModal: true}))}
                     </div>
                     <div style={{float: "right", marginTop: "3px"}}>
-                        {this.renderButton("Assegna sensori", "gauge", this.props.usersState.selectedUsers.length < 1, [MANAGE_USERS, ASSIGN_SENSORS])}
-                        {this.renderButton("Assegna funzioni", "user-functions", this.props.usersState.selectedUsers.length < 1, [MANAGE_USERS, ASSIGN_GROUPS, CREATE_GROUPS])}
-                        {this.renderButton("Clona", "clone", this.props.usersState.selectedUsers.length < 1, [MANAGE_USERS])}
+                        {this.renderButton("Assegna sensori", "gauge", this.props.usersState.selectedUsers.length < 1, [MANAGE_USERS, ASSIGN_SENSORS], this.openSensorsModal)}
+                        {this.renderButton("Assegna funzioni", "user-functions", this.props.usersState.selectedUsers.length < 1, [MANAGE_USERS, ASSIGN_GROUPS, CREATE_GROUPS], this.openUserRolesModal)}
+                        {this.renderButton("Clona", "clone", this.props.usersState.selectedUsers.length !== 1, [MANAGE_USERS], this.onCloneClick)}
                         {hasRole(this.props.asteroid, MANAGE_USERS) ?
                             <DeleteWithConfirmButton
                                 disabled={this.props.usersState.selectedUsers.length < 1}
@@ -328,6 +333,7 @@ var Users = React.createClass({
                     show={this.state.showCreateConfirmModal}
                     title={"UNA EMAIL È STATA INVIATA AL NUOVO UTENTE PER CONFERMARE LA REGISTRAZIONE"}
                 />
+                {this.renderCloneButtons()}
             </div>
         );
     }
@@ -348,6 +354,7 @@ const mapDispatchToProps = (dispatch) => {
         assignGroupsToUsers: bindActionCreators(assignGroupsToUsers, dispatch),
         assignSensorsToUsers: bindActionCreators(assignSensorsToUsers, dispatch),
         changeActiveStatus: bindActionCreators(changeActiveStatus, dispatch),
+        cloneUsers: bindActionCreators(cloneUsers, dispatch),
         deleteUsers: bindActionCreators(deleteUsers, dispatch),
         filterSensors: bindActionCreators(filterSensors, dispatch),
         moveUser: bindActionCreators(moveUser, dispatch),
@@ -358,6 +365,8 @@ const mapDispatchToProps = (dispatch) => {
         saveAndAssignGroupToUsers: bindActionCreators(saveAndAssignGroupToUsers, dispatch),
         selectSensor: bindActionCreators(selectSensor, dispatch),
         selectUser: bindActionCreators(selectUser, dispatch),
+        selectUserToClone: bindActionCreators(selectUserToClone, dispatch),
+        toggleClone: bindActionCreators(toggleClone, dispatch),
         toggleGroup: bindActionCreators(toggleGroup, dispatch)
     };
 };
