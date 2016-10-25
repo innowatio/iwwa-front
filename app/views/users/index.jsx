@@ -11,6 +11,7 @@ import {
     ConfirmModal,
     CollectionItemList,
     DeleteWithConfirmButton,
+    FullscreenModal,
     Icon,
     MonitoringSensorsAssociator,
     NewUserModal,
@@ -120,6 +121,7 @@ var Users = React.createClass({
     },
     getInitialState: function () {
         return {
+            showCloneMessage: false,
             showSensorsAssociator: false,
             showRolesAssociator: false
         };
@@ -140,7 +142,10 @@ var Users = React.createClass({
     },
     onCloneClick: function () {
         this.props.toggleClone();
-        //TODO aprire la modale che scompare a tempo
+        this.setState({showCloneMessage: true});
+    },
+    closeMessageModal: function () {
+        this.setState({showCloneMessage: false});
     },
     openSensorsModal: function () {
         this.resetAndOpenModal(true);
@@ -158,9 +163,7 @@ var Users = React.createClass({
     },
     resetAndOpenModal: function (open) {
         this.props.resetWorkAreaSensors();
-        this.setState({
-            showSensorsAssociator: open
-        });
+        this.setState({showSensorsAssociator: open});
     },
     getUserSensors: function () {
         const user = this.props.usersState.selectedUsers.length == 1 && this.props.usersState.selectedUsers[0];
@@ -214,11 +217,23 @@ var Users = React.createClass({
             </div>
         );
     },
+    renderCloneMessageModal: function () {
+        return (
+            <FullscreenModal
+                show={this.state.showCloneMessage}
+                onEntered={() => setTimeout(this.closeMessageModal, 2500)}
+                onHide={this.closeMessageModal}
+            >
+                {"Seleziona gli utenti che devono ereditare le stesse caratteristiche (sensori e funzioni)"}
+            </FullscreenModal>
+        );
+    },
     renderCloneButtons: function () {
         return this.props.usersState.cloneMode ? (
             <div>
                 {this.renderButton("Conferma clonazione", "clone", false, [MANAGE_USERS], () => this.props.cloneUsers(this.props.usersState.selectedUsers[0], this.props.usersState.selectedUsersToClone))}
-                {this.renderButton("Annulla clonazione", "reset", false, [MANAGE_USERS], this.props.toggleClone)}
+                {this.renderButton("Annulla clonazione", "delete", false, [MANAGE_USERS], this.props.toggleClone)}
+                {this.renderCloneMessageModal()}
             </div>
         ) : null;
     },

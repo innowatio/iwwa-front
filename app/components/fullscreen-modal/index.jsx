@@ -23,6 +23,7 @@ var FullscreenModal = React.createClass({
         children: PropTypes.element,
         iconCloseColor: PropTypes.string,
         onConfirm: PropTypes.func,
+        onEntered: PropTypes.func,
         onHide: PropTypes.func,
         onReset: PropTypes.func,
         renderConfirmButton: PropTypes.bool,
@@ -75,6 +76,7 @@ var FullscreenModal = React.createClass({
             <Modal
                 className="fullscreen-modal-selector"
                 children={this.props.children}
+                onEntered={this.props.onEntered}
                 onHide={this.props.onHide}
                 onReset={this.props.onReset}
                 show={this.props.show}
