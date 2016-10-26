@@ -65,9 +65,9 @@ const lazyLoadButtonStyle = ({colors}) => ({
     textAlign: "center"
 });
 
-const stylesFunction = (theme) => ({
+const stylesFunction = ({colors}, active) => ({
     buttonIconStyle: {
-        backgroundColor: theme.colors.primary,
+        backgroundColor: active ? colors.buttonPrimary : colors.primary,
         border: "0px",
         borderRadius: "100%",
         height: "50px",
@@ -237,7 +237,7 @@ var Users = React.createClass({
             </div>
         ) : null;
     },
-    renderButton: function (tooltip, iconName, disabled, permissions, onClickFunc) {
+    renderButton: function (tooltip, iconName, disabled, permissions, onClickFunc, active) {
         const theme = this.getTheme();
         let hasPermisions = false;
         permissions.forEach(permissionRole => {
@@ -252,7 +252,7 @@ var Users = React.createClass({
                 <Button
                     disabled={disabled}
                     onClick={onClickFunc}
-                    style={stylesFunction(theme).buttonIconStyle}
+                    style={stylesFunction(theme, active).buttonIconStyle}
                 >
                     <Icon
                         color={theme.colors.iconHeader}
@@ -266,20 +266,21 @@ var Users = React.createClass({
     },
     render: function () {
         const theme = this.getTheme();
+        const {cloneMode, selectedUsers} = this.props.usersState;
         return (
             <div>
                 <SectionToolbar>
                     <div style={{float: "left", marginTop: "3px"}}>
-                        {this.renderButton("Crea utente", "add", false, [MANAGE_USERS], () => this.setState({showCreateUserModal: true}))}
+                        {this.renderButton("Crea utente", "add", cloneMode, [MANAGE_USERS], () => this.setState({showCreateUserModal: true}))}
                     </div>
                     <div style={{float: "right", marginTop: "3px"}}>
-                        {this.renderButton("Assegna sensori", "gauge", this.props.usersState.selectedUsers.length < 1, [MANAGE_USERS, ASSIGN_SENSORS], this.openSensorsModal)}
-                        {this.renderButton("Assegna funzioni", "user-functions", this.props.usersState.selectedUsers.length < 1, [MANAGE_USERS, ASSIGN_GROUPS, CREATE_GROUPS], this.openUserRolesModal)}
-                        {this.renderButton("Clona", "clone", this.props.usersState.selectedUsers.length !== 1, [MANAGE_USERS], this.onCloneClick)}
+                        {this.renderButton("Assegna sensori", "gauge", selectedUsers.length < 1 || cloneMode, [MANAGE_USERS, ASSIGN_SENSORS], this.openSensorsModal)}
+                        {this.renderButton("Assegna funzioni", "user-functions", selectedUsers.length < 1 || cloneMode, [MANAGE_USERS, ASSIGN_GROUPS, CREATE_GROUPS], this.openUserRolesModal)}
+                        {this.renderButton("Clona", "clone", selectedUsers.length !== 1 || cloneMode, [MANAGE_USERS], this.onCloneClick, cloneMode)}
                         {hasRole(this.props.asteroid, MANAGE_USERS) ?
                             <DeleteWithConfirmButton
-                                disabled={this.props.usersState.selectedUsers.length < 1}
-                                onConfirm={() => this.props.deleteUsers(this.props.usersState.selectedUsers, this.getAllUsers())}
+                                disabled={selectedUsers.length < 1 || cloneMode}
+                                onConfirm={() => this.props.deleteUsers(selectedUsers, this.getAllUsers())}
                             /> : null
                         }
                     </div>

@@ -10,7 +10,7 @@ import {
 
 const stylesFunction = ({colors}) => ({
     buttonIconStyle: {
-        backgroundColor: colors.buttonPrimary,
+        backgroundColor: colors.primary,
         border: "0px none",
         borderRadius: "100%",
         height: "50px",

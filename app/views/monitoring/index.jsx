@@ -44,7 +44,7 @@ import {assignSensorsToUsers} from "actions/users";
 
 const stylesFunction = (theme) => ({
     buttonIconStyle: {
-        backgroundColor: theme.colors.buttonPrimary,
+        backgroundColor: theme.colors.primary,
         border: "0px none",
         borderRadius: "100%",
         height: "50px",
