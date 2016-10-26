@@ -286,10 +286,10 @@ var Users = React.createClass({
         return this.props.usersState.cloneMode ? (
             <div style={{
                 position: "absolute",
-                width: "98%",
-                left: "1%",
+                width: "40%",
+                left: "50%",
+                margin: "0 0 0 -20%",
                 textAlign: "center",
-                right: "20",
                 bottom: "-30px"
             }}>
                 {this.renderBiggerButton(
@@ -359,24 +359,33 @@ var Users = React.createClass({
                         height: "calc(100vh - 200px)",
                         position: "relative",
                         left: "1%",
+                        overflow: "hidden",
                         borderRadius: "20px",
                         marginTop: "20px",
-                        padding: "5px 20px 20px 20px",
+                        padding: "0px",
                         border: "1px solid " + theme.colors.borderUsersTable,
                         backgroundColor: theme.colors.backgroundUsersTable
                     }}>
-                        <CollectionItemList
-                            collections={geUsersForManagement(this.getAllUsers())}
-                            filter={this.searchFilter}
-                            headerComponent={this.renderUserList}
-                            hover={true}
-                            hoverStyle={{}}
-                            initialVisibleRow={20}
-                            lazyLoadButtonStyle={lazyLoadButtonStyle(theme)}
-                            lazyLoadLabel={"Carica altri"}
-                            showFilterInput={true}
-                            sort={R.partialRight(this.sortByUsername, [true])}
-                        />
+                        <div style={{
+                            overflow: "auto",
+                            width: "100%",
+                            height: "100%",
+                            paddingRight: "35px",
+                            margin: "0px 20px"
+                        }}>
+                            <CollectionItemList
+                                collections={geUsersForManagement(this.getAllUsers())}
+                                filter={this.searchFilter}
+                                headerComponent={this.renderUserList}
+                                hover={true}
+                                hoverStyle={{}}
+                                initialVisibleRow={20}
+                                lazyLoadButtonStyle={lazyLoadButtonStyle(theme)}
+                                lazyLoadLabel={"Carica altri"}
+                                showFilterInput={true}
+                                sort={R.partialRight(this.sortByUsername, [true])}
+                            />
+                        </div>
                     </div>
                 </div>
                 <MonitoringSensorsAssociator
