@@ -261,7 +261,7 @@ var Users = React.createClass({
         return hasPermisions ? (
             <bootstrap.OverlayTrigger
                 overlay={<bootstrap.Tooltip id={tooltip} className="buttonClone">{tooltip}</bootstrap.Tooltip>}
-                placement="bottom"
+                placement="top"
                 rootClose={true}
             >
                 <Button
@@ -314,7 +314,7 @@ var Users = React.createClass({
         return hasPermisions ? (
             <bootstrap.OverlayTrigger
                 overlay={<bootstrap.Tooltip id={tooltip} className="buttonInfo">{tooltip}</bootstrap.Tooltip>}
-                placement="top"
+                placement="bottom"
                 rootClose={true}
             >
                 <Button
