@@ -46,6 +46,7 @@ var CollectionItemList = React.createClass({
         lazyLoadButtonStyleContainer: PropTypes.object,
         lazyLoadLabel: PropTypes.string,
         selectAll: PropTypes.object,
+        selectionButtonStyleContainer: PropTypes.object,
         showFilterInput: PropTypes.bool,
         sort: PropTypes.func,
         subListComponent: PropTypes.func,
@@ -163,7 +164,6 @@ var CollectionItemList = React.createClass({
         ) : null;
     },
     render: function () {
-        const {colors} = this.getTheme();
         const collectionList = this.props.collections
             .sort(this.props.sort)
             .filter(this.filter)
@@ -179,13 +179,7 @@ var CollectionItemList = React.createClass({
                     <div style={this.props.lazyLoadButtonStyleContainer}>
                         {this.renderLazyLoad(collectionList.length)}
                     </div>
-                    <div style={{
-                        width: "100%",
-                        backgroundColor: colors.backgroundButtonBottom,
-                        borderTop: `1px solid ${colors.borderContentModal}`,
-                        position: "absolute",
-                        bottom: "0"
-                    }}>
+                    <div style={this.props.selectionButtonStyleContainer}>
                         {this.renderSelectAll(collectionList, renderedElems)}
                         {this.renderTransferAll(collectionList)}
                     </div>

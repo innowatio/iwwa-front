@@ -80,6 +80,19 @@ const stylesFunction = ({colors}, active) => ({
         lineHeight: "25px",
         verticalAlign: "middle"
     },
+    buttonBiggerIconStyle: {
+        border: "0px",
+        borderRadius: "100%",
+        height: "68px",
+        width: "68px",
+        padding: "0px",
+        textAlign: "center",
+        margin: "0px 10px"
+    },
+    buttonBiggerIcon: {
+        lineHeight: "25px",
+        verticalAlign: "middle"
+    },
     listItems: {
         height: "auto",
         verticalAlign: "middle",
@@ -218,21 +231,76 @@ var Users = React.createClass({
         );
     },
     renderCloneMessageModal: function () {
+        const theme = this.getTheme();
         return (
             <FullscreenModal
                 show={this.state.showCloneMessage}
                 onEntered={() => setTimeout(this.closeMessageModal, 2500)}
                 onHide={this.closeMessageModal}
             >
-                {"Seleziona gli utenti che devono ereditare le stesse caratteristiche (sensori e funzioni)"}
+                <div style={{
+                    padding: "150px",
+                    textAlign: "center",
+                    color: theme.colors.white,
+                    fontSize: "40px"
+                }}>
+                    {"Seleziona gli utenti che devono ereditare le stesse caratteristiche (sensori e funzioni)"}
+                </div>
             </FullscreenModal>
         );
     },
+    renderBiggerButton: function (tooltip, iconName, disabled, permissions, onClickFunc, active) {
+        const theme = this.getTheme();
+        let hasPermisions = false;
+        permissions.forEach(permissionRole => {
+            hasPermisions = hasPermisions || hasRole(this.props.asteroid, permissionRole);
+        });
+        const backgroundStyle = {backgroundColor:
+            (iconName === "clone" ? theme.colors.buttonPrimary : theme.colors.primary)
+        };
+        return hasPermisions ? (
+            <bootstrap.OverlayTrigger
+                overlay={<bootstrap.Tooltip id={tooltip} className="buttonClone">{tooltip}</bootstrap.Tooltip>}
+                placement="bottom"
+                rootClose={true}
+            >
+                <Button
+                    disabled={disabled}
+                    onClick={onClickFunc}
+                    style={{
+                        ...backgroundStyle,
+                        ...stylesFunction(theme, active).buttonBiggerIconStyle
+                    }}
+                >
+                    <Icon
+                        color={theme.colors.iconHeader}
+                        icon={iconName}
+                        size={"50px"}
+                        style={stylesFunction(theme).buttonBiggerIcon}
+                    />
+                </Button>
+            </bootstrap.OverlayTrigger>
+        ) : null;
+    },
     renderCloneButtons: function () {
         return this.props.usersState.cloneMode ? (
-            <div>
-                {this.renderButton("Conferma clonazione", "clone", false, [MANAGE_USERS], () => this.props.cloneUsers(this.props.usersState.selectedUsers[0], this.props.usersState.selectedUsersToClone))}
-                {this.renderButton("Annulla clonazione", "delete", false, [MANAGE_USERS], this.props.toggleClone)}
+            <div style={{
+                position: "absolute",
+                width: "98%",
+                left: "1%",
+                textAlign: "center",
+                right: "20",
+                bottom: "-30px"
+            }}>
+                {this.renderBiggerButton(
+                    "Conferma clonazione", "clone", false, [MANAGE_USERS],
+                    () => this.props.cloneUsers(this.props.usersState.selectedUsers[0],
+                    this.props.usersState.selectedUsersToClone))
+                }
+                {this.renderBiggerButton(
+                    "Annulla clonazione", "delete", false, [MANAGE_USERS],
+                    this.props.toggleClone)
+                }
                 {this.renderCloneMessageModal()}
             </div>
         ) : null;
@@ -246,7 +314,7 @@ var Users = React.createClass({
         return hasPermisions ? (
             <bootstrap.OverlayTrigger
                 overlay={<bootstrap.Tooltip id={tooltip} className="buttonInfo">{tooltip}</bootstrap.Tooltip>}
-                placement="bottom"
+                placement="top"
                 rootClose={true}
             >
                 <Button
@@ -268,7 +336,7 @@ var Users = React.createClass({
         const theme = this.getTheme();
         const {cloneMode, selectedUsers} = this.props.usersState;
         return (
-            <div>
+            <div style={{position: "relative"}}>
                 <SectionToolbar>
                     <div style={{float: "left", marginTop: "3px"}}>
                         {this.renderButton("Crea utente", "add", cloneMode, [MANAGE_USERS], () => this.setState({showCreateUserModal: true}))}
@@ -288,6 +356,7 @@ var Users = React.createClass({
                 <div className="table-user">
                     <div style={{
                         width: "98%",
+                        height: "calc(100vh - 200px)",
                         position: "relative",
                         left: "1%",
                         borderRadius: "20px",

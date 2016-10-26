@@ -136,7 +136,7 @@ var DraggableUser = React.createClass({
         let rowStyle = {};
         if (isSelectedToClone(user.get("_id"))) {
             rowStyle = {
-                backgroundColor: "lightpink",
+                backgroundColor: theme.colors.backgroundCloneSelection,
                 color: theme.colors.white
             };
         }

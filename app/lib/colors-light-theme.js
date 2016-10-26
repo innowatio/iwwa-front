@@ -37,6 +37,7 @@ export const colorsLightTheme = {
     backgroundRealTimeButton: "#eeeeee",
     backgroundRealTimeSection: "#ffffff",
     backgroundRegisteredUser: "#1df288",
+    backgroundCloneSelection: "#f969a4",
     backgroundChartButton: "#ffffff",
     backgroundChartSelectedButton: "rgba(0,0,0,0)",
     backgroundSelectSearch: "#ffffff",

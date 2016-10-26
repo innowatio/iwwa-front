@@ -12,6 +12,16 @@ const hoverStyle = ({colors}) => ({
     cursor: "pointer"
 });
 
+const selectionButtonStyleContainer = ({colors}) => ({
+    width: "100%",
+    backgroundColor: colors.backgroundButtonBottom,
+    borderBottomRightRadius: "20px",
+    borderBottomLeftRadius: "20px",
+    borderTop: `1px solid ${colors.borderContentModal}`,
+    position: "absolute",
+    bottom: "0"
+});
+
 const buttonBottomStyle = ({colors}) => ({
     width: "40%",
     height: "40px",
@@ -177,8 +187,8 @@ var MonitoringWorkArea = React.createClass({
                         position: "relative",
                         color: theme.colors.mainFontColor,
                         borderRadius: "20px",
-                        paddingBottom: "40px",
-                        height: "400px",
+                        paddingBottom: "60px",
+                        height: "360px",
                         overflow: "hidden",
                         border: "1px solid " + theme.colors.borderContentModal,
                         background: theme.colors.transparent
@@ -187,7 +197,8 @@ var MonitoringWorkArea = React.createClass({
                             height: "100%",
                             overflow: "auto",
                             overflowY: "scroll",
-                            borderRadius: "18px",
+                            borderRadiusTopRight: "18px",
+                            borderRadiusTopLeft: "18px",
                             marginRight: "-15px"
                         }}>
                             <CollectionItemList
@@ -197,9 +208,10 @@ var MonitoringWorkArea = React.createClass({
                                 headerComponent={this.renderSensorList}
                                 hover={true}
                                 hoverStyle={hoverStyle(theme)}
-                                initialVisibleRow={5}
+                                initialVisibleRow={20}
                                 lazyLoadButtonStyle={lazyLoadButtonStyle(theme)}
                                 lazyLoadLabel={"Carica altri"}
+                                selectionButtonStyleContainer={selectionButtonStyleContainer(theme)}
                                 selectAll={{
                                     label: "Seleziona tutti",
                                     onClick: this.selectAllSensors
