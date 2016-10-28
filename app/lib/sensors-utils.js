@@ -182,7 +182,7 @@ export function getAllSensors (sensorsCollection) {
     return decorateWithMeasurementType(sensorsCollection, []);
 }
 
-export function getMonitoringSensors (sensorsCollection, isAdmin, userSensors) {
+export function getMonitoringSensors (sensorsCollection, viewAll, userSensors) {
     if (!sensorsCollection) {
         return Immutable.Map();
     }
@@ -196,7 +196,7 @@ export function getMonitoringSensors (sensorsCollection, isAdmin, userSensors) {
     const complete = decorateWithMeasurementType(sensorsCollection.filter(
         sensor => !sensor.get("isDeleted") && sensor.get("type") !== "pod"
     ), originalToHide);
-    return isAdmin ? complete : complete.filter(
+    return viewAll ? complete : complete.filter(
         sensor => userSensors && userSensors.indexOf(getSensorId(sensor)) >= 0
     );
 }

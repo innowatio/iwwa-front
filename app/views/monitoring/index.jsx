@@ -8,7 +8,7 @@ import * as bootstrap from "react-bootstrap";
 
 import {getDragDropContext} from "lib/dnd-utils";
 import {defaultTheme} from "lib/theme";
-import {getLoggedUser, isAdmin, hasRole, CREATE_SENSORS, EDIT_SENSORS} from "lib/roles-utils";
+import {getLoggedUser, hasRole, CREATE_SENSORS, EDIT_SENSORS, VIEW_ALL_SENSORS} from "lib/roles-utils";
 import {getAllSensors, getMonitoringSensors, getSensorLabel, findSensor} from "lib/sensors-utils";
 import {styles} from "lib/styles";
 
@@ -156,7 +156,7 @@ var Monitoring = React.createClass({
     },
     getMonitoringSensors: function () {
         const {asteroid} = this.props;
-        return getMonitoringSensors(this.props.collections.get("sensors"), isAdmin(asteroid), getLoggedUser(asteroid).get("sensors"));
+        return getMonitoringSensors(this.props.collections.get("sensors"), hasRole(asteroid, VIEW_ALL_SENSORS), getLoggedUser(asteroid).get("sensors"));
     },
     getSensorFields: function () {
         const selected = this.props.sensorsState.selectedSensors;
@@ -291,6 +291,7 @@ var Monitoring = React.createClass({
     render: function () {
         const theme = this.getTheme();
         const selected = this.props.sensorsState.selectedSensors;
+        const {asteroid} = this.props;
         return (
             <div>
                 <SectionToolbar>
@@ -322,7 +323,7 @@ var Monitoring = React.createClass({
                     <div style={{float: "right", marginTop: "3px"}}>
                         {this.renderButton("duplicate", "Duplica", selected.length < 1, CREATE_SENSORS)}
                         {this.renderButton("edit", "Modifica", selected.length != 1, EDIT_SENSORS)}
-                        {hasRole(this.props.asteroid, CREATE_SENSORS) || hasRole(this.props.asteroid, EDIT_SENSORS) ?
+                        {hasRole(asteroid, CREATE_SENSORS) || hasRole(asteroid, EDIT_SENSORS) ?
                             <DeleteWithConfirmButton
                                 disabled={selected.length < 1}
                                 onConfirm={() => this.props.deleteSensors(selected)}
@@ -333,9 +334,9 @@ var Monitoring = React.createClass({
 
                 <MonitoringSensorsSelector
                     addSensorToWorkArea={this.props.addSensorToWorkArea}
-                    asteroid={this.props.asteroid}
+                    asteroid={asteroid}
                     filterSensors={this.props.filterSensors}
-                    onClickAggregate={hasRole(this.props.asteroid, CREATE_SENSORS) ? this.resetAndOpenNew : null}
+                    onClickAggregate={hasRole(asteroid, CREATE_SENSORS) ? this.resetAndOpenNew : null}
                     removeSensorFromWorkArea={this.props.removeSensorFromWorkArea}
                     selectedSensors={selected}
                     selectSensor={this.props.selectSensor}

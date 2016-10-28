@@ -286,9 +286,8 @@ var Users = React.createClass({
         return this.props.usersState.cloneMode ? (
             <div style={{
                 position: "absolute",
-                width: "40%",
-                left: "50%",
-                margin: "0 0 0 -20%",
+                width: "176px",
+                margin: "0 0 0 85%",
                 textAlign: "center",
                 bottom: "-30px"
             }}>

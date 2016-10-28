@@ -10,6 +10,10 @@ export const CREATE_SENSORS = "create-sensors";
 export const DOWNLOAD_CHART_DATA = "download-chart-data";
 export const EDIT_SENSORS = "edit-sensors";
 export const MANAGE_USERS = "manage-users";
+export const VIEW_ALL_ROLES = "view-all-roles";
+export const VIEW_ALL_SENSORS = "view-all-sensors";
+export const VIEW_ALL_SITES = "view-all-sites";
+export const VIEW_ALL_USERS = "view-all-users";
 export const VIEW_FORMULA_DETAILS = "view-formula-details";
 
 const usersAccess = [MANAGE_USERS, ASSIGN_GROUPS, CREATE_GROUPS, ASSIGN_SENSORS];

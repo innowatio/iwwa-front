@@ -1,6 +1,6 @@
 import Immutable from "immutable";
 import R from "ramda";
-import {getRoles, getUserRoles, isAdmin, isAdminUser} from "lib/roles-utils";
+import {getRoles, getUserRoles, hasRole, isAdminUser, VIEW_ALL_ROLES} from "lib/roles-utils";
 
 export function getUsername (user) {
     const username = user.getIn(["services", "sso", "uid"]);
@@ -43,7 +43,7 @@ export function getVisibleRoles (rolesCollection, asteroid) {
     if (!rolesCollection) {
         return Immutable.Map();
     }
-    if (isAdmin(asteroid)) {
+    if (hasRole(asteroid, VIEW_ALL_ROLES)) {
         return rolesCollection.sortBy(role => role.get("name"));
     } else {
         return getRoles(asteroid).sort();
@@ -54,7 +54,7 @@ export function getVisibleGroups (groupsCollection, asteroid) {
     if (!groupsCollection) {
         return Immutable.Map();
     }
-    if (isAdmin(asteroid)) {
+    if (hasRole(asteroid, VIEW_ALL_ROLES)) {
         return groupsCollection.sortBy(group => group.get("name"));
     } else {
         let groupsNames = [];
