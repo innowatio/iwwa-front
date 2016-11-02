@@ -3,7 +3,7 @@ import ReactPureRender from "react-addons-pure-render-mixin";
 import {DragSource} from "react-dnd";
 import IPropTypes from "react-immutable-proptypes";
 import {Link} from "react-router";
-import {concat, partial} from "ramda";
+import {partial} from "ramda";
 import * as bootstrap from "react-bootstrap";
 
 import {Types} from "lib/dnd-utils";
@@ -99,14 +99,17 @@ var SensorRow = React.createClass({
             </div>
         );
     },
-    renderTags: function () {
+    renderTags: function (isSelected) {
+        const theme = this.getTheme();
         const primaryTags = this.props.sensor.get("primaryTags") ? this.props.sensor.get("primaryTags").toArray() : [];
         const tags = this.props.sensor.get("tags") ? this.props.sensor.get("tags").toArray() : [];
         return (
             <TagList
+                isSelected={isSelected}
+                primaryTags={primaryTags}
                 tagIcon={true}
-                tags={concat(primaryTags, tags)}
-                style={styles(this.getTheme()).tagsContainer}
+                tags={tags}
+                containerStyle={styles(theme).tagsContainer}
             />
         );
     },
@@ -155,7 +158,7 @@ var SensorRow = React.createClass({
                     width: "50px",
                     float: "right",
                     textAlign: "center",
-                    backgroundColor: theme.colors.backgroundMonitoringRowChart
+                    backgroundColor: theme.colors.backgroundButtonOpacity
                 }}
             >
                 <Icon
@@ -186,7 +189,7 @@ var SensorRow = React.createClass({
             <div style={divStyle}>
                 <div onClick={onClickSelect ? partial(onClickSelect, [sensor]) : null} style={{cursor: "pointer"}}>
                     {this.renderSensorName()}
-                    {this.renderTags()}
+                    {this.renderTags(isSelected)}
                 </div>
                 <div style={styles(theme).buttonsContainer}>
                     {this.renderChartButton()}
