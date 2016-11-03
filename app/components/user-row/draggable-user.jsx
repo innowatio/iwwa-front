@@ -11,7 +11,7 @@ import UserDropArea from "./user-drop-area";
 import {Types} from "lib/dnd-utils";
 import {hasRole, MANAGE_USERS} from "lib/roles-utils";
 import {defaultTheme} from "lib/theme";
-import {getUsername, isActiveUser} from "lib/users-utils";
+import {getUsername, isActiveUser, isLoggedUser} from "lib/users-utils";
 
 const hoverStyle = ({colors}) => ({
     backgroundColor: colors.backgroundMonitoringRowHover,
@@ -131,7 +131,7 @@ var DraggableUser = React.createClass({
     },
     render: function () {
         const theme = this.getTheme();
-        const {connectDragSource, indent, isSelected, isSelectedToClone, user} = this.props;
+        const {asteroid, connectDragSource, indent, isSelected, isSelectedToClone, user} = this.props;
         const marginLeft = indent + "%";
         let rowStyle = {};
         if (isSelectedToClone(user.get("_id"))) {
@@ -157,7 +157,7 @@ var DraggableUser = React.createClass({
                 }}>
                 </div>
                 <UserDropArea
-                    asteroid={this.props.asteroid}
+                    asteroid={asteroid}
                     changeParent={this.props.moveUser}
                     className="user-row"
                     onClick={() => this.props.onSelect(user)}
@@ -181,7 +181,7 @@ var DraggableUser = React.createClass({
                     </div>
                     <div className="toggle" style={{height: "50px", padding: "6px"}}>
                         <Toggle
-                            disabled={!hasRole(this.props.asteroid, MANAGE_USERS)}
+                            disabled={!hasRole(asteroid, MANAGE_USERS) || isLoggedUser(asteroid, user)}
                             defaultChecked={isActiveUser(user)}
                             onChange={() => this.props.onChangeActiveStatus(user)}
                         />

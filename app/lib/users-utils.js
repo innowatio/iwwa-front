@@ -1,6 +1,6 @@
 import Immutable from "immutable";
 import R from "ramda";
-import {getRoles, getUserRoles, hasRole, isAdminUser, VIEW_ALL_ROLES} from "lib/roles-utils";
+import {getLoggedUser, getRoles, getUserRoles, hasRole, isAdminUser, VIEW_ALL_ROLES} from "lib/roles-utils";
 
 export function getUsername (user) {
     const username = user.getIn(["services", "sso", "uid"]);
@@ -81,4 +81,8 @@ function arrayContainsArray (masterArray, checkingArray) {
         return true;
     }
     return checkingArray.every(elem => masterArray && masterArray.indexOf(elem) >= 0);
+}
+
+export function isLoggedUser (asteroid, user) {
+    return getLoggedUser(asteroid).get("_id") == user.get("_id");
 }

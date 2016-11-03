@@ -23,7 +23,7 @@ import {
 import {getDragDropContext} from "lib/dnd-utils";
 import {hasRole, MANAGE_USERS, ASSIGN_SENSORS, ASSIGN_GROUPS, CREATE_GROUPS} from "lib/roles-utils";
 import {defaultTheme} from "lib/theme";
-import {getChildren, getUsername, geUsersForManagement} from "lib/users-utils";
+import {getChildren, getUsername, geUsersForManagement, isLoggedUser} from "lib/users-utils";
 
 import {
     addSensorToWorkArea,
@@ -212,6 +212,10 @@ var Users = React.createClass({
         this.props.resetRolesAndGroups();
         this.setState({showRolesAssociator: false});
     },
+    isLoggedUserSelected: function () {
+        const {selectedUsers} = this.props.usersState;
+        return selectedUsers.some(user => isLoggedUser(this.props.asteroid, user));
+    },
     renderUserList: function (user) {
         const theme = this.getTheme();
         return (
@@ -346,7 +350,7 @@ var Users = React.createClass({
                         {this.renderButton("Clona", "clone", selectedUsers.length !== 1 || cloneMode, [MANAGE_USERS], this.onCloneClick, cloneMode)}
                         {hasRole(this.props.asteroid, MANAGE_USERS) ?
                             <DeleteWithConfirmButton
-                                disabled={selectedUsers.length < 1 || cloneMode}
+                                disabled={selectedUsers.length < 1 || cloneMode || this.isLoggedUserSelected()}
                                 onConfirm={() => this.props.deleteUsers(selectedUsers, this.getAllUsers())}
                             /> : null
                         }
