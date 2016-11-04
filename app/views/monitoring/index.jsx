@@ -85,13 +85,6 @@ let advancedOptions = function ({colors}) {
                 browserHistory.push("/monitoring/favorites/");
             }
         }
-        // {
-        //     label: "Assegna",
-        //     key: "assign",
-        //     iconClass: "assign",
-        //     hoverColor: colors.white,
-        //     color: colors.iconDropdown
-        // }
     ];
 };
 

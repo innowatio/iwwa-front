@@ -2,8 +2,6 @@ import Immutable from "immutable";
 import R from "ramda";
 import * as f from "iwwa-formula-resolver";
 
-import {allSensorsDecorator} from "lib/sensors-decorators";
-
 const operatorMapping = {
     "+" : "add",
     "-" : "minus",
@@ -203,21 +201,15 @@ export function getMonitoringSensors (sensorsCollection, viewAll, userSensors) {
 
 function decorateWithMeasurementType (sensors, originalToHide) {
     let items = {};
-    let fakeTheme = {
-        colors: {}
-    };
     sensors.forEach(sensor => {
-        let types = R.filter(R.propEq("type", sensor.get("type")))(allSensorsDecorator(fakeTheme));
-        if (types.length > 0) {
-            types.forEach(type => {
-                let measurementType = type.key;
+        const types = sensor.get("measurementTypes");
+        if (types && types.size > 0) {
+            types.forEach(measurementType => {
                 let itemKey = sensor.get("_id") + "-" + measurementType;
                 if (originalToHide.indexOf(itemKey) < 0) {
                     items[itemKey] = sensor.set("measurementType", measurementType);
                 }
             });
-        } else {
-            items[sensor.get("_id")] = sensor;
         }
     });
     return Immutable.fromJS(items);
