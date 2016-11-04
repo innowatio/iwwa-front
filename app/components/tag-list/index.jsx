@@ -34,7 +34,7 @@ var TagList = React.createClass({
         className: PropTypes.string,
         containerStyle: PropTypes.object,
         isSelected: PropTypes.bool,
-        primaryTags: PropTypes.any.isRequired,
+        primaryTags: PropTypes.any,
         tagIcon: PropTypes.bool,
         tags: PropTypes.any.isRequired
     },
@@ -61,22 +61,28 @@ var TagList = React.createClass({
     renderTags: function (theme) {
         let tags = [];
         if (this.props.primaryTags) {
-            this.props.primaryTags.forEach((primaryTags) => {
+            this.props.primaryTags.forEach(primaryTag => {
                 tags.push(
-                    <label style={
-                        this.props.isSelected ?
-                        styles(theme).labelPrimaryTagHover :
-                        styles(theme).labelPrimaryTag
-                    }>
-                        {primaryTags}
+                    <label
+                        style={
+                            this.props.isSelected ?
+                            styles(theme).labelPrimaryTagHover :
+                            styles(theme).labelPrimaryTag
+                        }
+                        key={"primary-" + primaryTag}
+                    >
+                        {primaryTag}
                     </label>
                 );
             });
         }
         if (this.props.tags) {
-            this.props.tags.forEach((tag) => {
+            this.props.tags.forEach(tag => {
                 tags.push(
-                    <label style={styles(theme).labelTag}>
+                    <label
+                        style={styles(theme).labelTag}
+                        key={"tag-" + tag}
+                    >
                         {tag}
                     </label>
                 );

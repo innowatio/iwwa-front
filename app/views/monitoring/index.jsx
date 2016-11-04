@@ -218,7 +218,7 @@ var Monitoring = React.createClass({
     renderSensorForm: function () {
         const selected = this.props.sensorsState.selectedSensors;
         const workAreaSensors = this.props.sensorsState.workAreaSensors;
-        if (selected.length > 0 || workAreaSensors.length > 0) {
+        if (this.state.showEditModal) {
             return (
                 <SensorForm
                     addItemToFormula={this.props.addItemToFormula}
@@ -243,9 +243,11 @@ var Monitoring = React.createClass({
         const selected = this.props.sensorsState.selectedSensors;
         return hasRole(this.props.asteroid, permissionRole) ? (
             <bootstrap.OverlayTrigger
-                overlay={<bootstrap.Tooltip className="buttonInfo">
-                    {tooltip}
-                </bootstrap.Tooltip>}
+                overlay={
+                    <bootstrap.Tooltip className="buttonInfo" id={tooltip}>
+                        {tooltip}
+                    </bootstrap.Tooltip>
+                }
                 placement="bottom"
                 rootClose={true}
             >

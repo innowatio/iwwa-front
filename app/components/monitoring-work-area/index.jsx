@@ -19,7 +19,7 @@ const selectionButtonStyleContainer = ({colors}) => ({
     borderBottomLeftRadius: "20px",
     borderTop: `1px solid ${colors.borderContentModal}`,
     position: "absolute",
-    bottom: "0"
+    bottom: "0px"
 });
 
 const buttonBottomStyle = ({colors}) => ({
@@ -31,7 +31,7 @@ const buttonBottomStyle = ({colors}) => ({
     textTransform: "uppercase",
     fontWeight: "400",
     margin: "10px 5%",
-    border: "0",
+    border: "0px",
     cursor: "pointer",
     textAlign: "center"
 });

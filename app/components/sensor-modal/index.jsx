@@ -40,7 +40,7 @@ var SensorForm = React.createClass({
         initialValues: PropTypes.object,
         onSave: PropTypes.func.isRequired,
         removeItemFromFormula: PropTypes.func.isRequired,
-        resetForm: PropTypes.func.isRequired,
+        resetForm: PropTypes.func,
         sensorState: PropTypes.object,
         sensorsToAggregate: PropTypes.array,
         showFullscreenModal: PropTypes.bool.isRequired,
