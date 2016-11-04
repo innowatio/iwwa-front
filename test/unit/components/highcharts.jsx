@@ -43,11 +43,11 @@ describe("HighCharts component", () => {
             expect(ret.length).to.equal(5);
         });
 
-        it.skip("should return an the correct object from saturday to sunday", () => {
+        it("should return an the correct object from saturday to sunday", () => {
             const ret = getWeekendOverlay.call(instance);
             ret.forEach(dataObject => {
-                expect(moment.utc(dataObject.from).weekday()).to.equal(6);
-                expect(moment.utc(dataObject.to).weekday()).to.equal(0);
+                expect(moment.utc(dataObject.from).isoWeekday()).to.equal(6);
+                expect(moment.utc(dataObject.to).isoWeekday()).to.equal(7);
                 expect(dataObject.color).to.equal("color");
             });
         });

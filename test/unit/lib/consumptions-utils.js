@@ -1,10 +1,4 @@
-import {
-    getTimeRangeByPeriod,
-    getSumBySiteAndPeriod,
-    tabParameters,
-    getAverageBySiteAndPeriod
-} from "lib/consumptions-utils";
-import * as Immutable from "immutable";
+import {tabParameters} from "lib/consumptions-utils";
 
 describe("`consumptions-utils`", () => {
 

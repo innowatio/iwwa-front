@@ -1,13 +1,13 @@
 import {partial, partialRight, always} from "ramda";
 import utils from "iwwa-utils";
 import moment from "moment";
+import "moment/locale/it";
 
 const PERIODS = ["day", "week", "month", "year"];
 
 export function tabParameters () {
     return PERIODS.map(period => getTitleAndSubtitle(period));
 }
-
 
 function getTitleAndSubtitle (period) {
     const periodDates = utils.getTimeRangeByPeriod(period);
@@ -19,7 +19,7 @@ function getTitleAndSubtitle (period) {
                 key: period,
                 now: defaultNow,
                 measureUnit: "kWh",
-                period: period,
+                period,
                 periodTitle: "OGGI HAI UTILIZZATO",
                 periodSubtitle: `${moment(periodDates.start).format("DD MMMM YYYY")}`.toUpperCase(),
                 title: "OGGI",
@@ -30,12 +30,12 @@ function getTitleAndSubtitle (period) {
                     now: defaultNow
                 }, {
                     key: "today-7d",
-                    title: `${moment().format("dddd")} scors${moment().day() === 6 ? "a" : "o"}`.toUpperCase(),
+                    title: `${moment.utc().format("dddd")} scors${moment().day() === 6 ? "a" : "o"}`.toUpperCase(),
                     max: partial(utils.getSumByPeriod, [utils.getPreviousPeriod("week", "day")]),
                     now: defaultNow
                 }, {
                     key: "avg-7d",
-                    title: `media ${moment().format("dddd")}`.toUpperCase(),
+                    title: `media ${moment.utc().format("dddd")}`.toUpperCase(),
                     max: partialRight(utils.getAverageByPeriod, ["days", 7]),
                     now: defaultNow
                 }]
@@ -45,9 +45,9 @@ function getTitleAndSubtitle (period) {
                 key: period,
                 measureUnit: "kWh",
                 now: defaultNow,
-                period: period,
+                period,
                 periodTitle: "QUESTA SETTIMANA HAI UTILIZZATO",
-                periodSubtitle: `${moment(periodDates.start).format("DD")} - ${moment(periodDates.end).format("DD MMMM YYYY")}`.toUpperCase(),
+                periodSubtitle: `${moment.utc(periodDates.start).format("DD")} - ${moment.utc(periodDates.end).format("DD MMMM YYYY")}`.toUpperCase(),
                 title: "SETTIMANA CORRENTE",
                 comparisons: [{
                     key: "week-1w",
@@ -66,25 +66,25 @@ function getTitleAndSubtitle (period) {
                 key: period,
                 measureUnit: "kWh",
                 now: defaultNow,
-                period: period,
-                periodTitle: `NEL MESE DI ${moment(periodDates.start).format("MMMM")} HAI UTILIZZATO`.toUpperCase(),
-                periodSubtitle: `${moment(periodDates.start).format("YYYY")}`,
+                period,
+                periodTitle: `NEL MESE DI ${moment.utc(periodDates.start).format("MMMM")} HAI UTILIZZATO`.toUpperCase(),
+                periodSubtitle: `${moment.utc(periodDates.start).format("MMMM YYYY")}`,
                 title: "MESE CORRENTE",
                 comparisons: [{
                     key: "month-1m",
-                    title: `${moment(utils.getPreviousPeriod(period, period).start).format("MMMM YYYY")}`.toUpperCase(),
+                    title: `${moment.utc(utils.getPreviousPeriod(period, period).start).format("MMMM YYYY")}`.toUpperCase(),
                     max: defaultMax,
                     now: defaultNow
                 }
                 // {
                 //     key: "month-1y",
-                //     title: `${moment(getPreviousPeriod("year", "month").start).format("MMMM YYYY")}`.toUpperCase(),
-                //     max: partial(getAverageBySiteAndPeriod, [getPreviousPeriod("year", "month")]),
+                //     title: `${moment(utils.getPreviousPeriod("year", "month").start).format("MMMM YYYY")}`.toUpperCase(),
+                //     max: partial(utils.getAverageByPeriod, [utils.getPreviousPeriod("year", "month")]),
                 //     now: defaultNow
                 // }, {
                 //     key: "avg-month",
                 //     title: "MEDIA DEI MESI",
-                //     max: partial(getAverageBySiteAndPeriod, [getPreviousPeriod("year", "month")]),
+                //     max: partial(utils.getAverageByPeriod, [utils.getPreviousPeriod("year", "month")]),
                 //     now: defaultNow
                 // }
             ]
@@ -94,17 +94,17 @@ function getTitleAndSubtitle (period) {
                 key: period,
                 measureUnit: "kWh",
                 now: defaultNow,
-                period: period,
+                period,
                 periodTitle: `NEL ${moment(periodDates.start).format("YYYY")} HAI UTILIZZATO`,
                 periodSubtitle: `${moment(periodDates.start).format("YYYY")}`.toUpperCase(),
                 title: "ANNO CORRENTE",
                 comparisons: [
-                    // {
-                    //     key: "year-1y",
-                    //     title: `${moment(getPreviousPeriod(period, period).start).format("YYYY")}`.toUpperCase(),
-                    //     max: defaultMax,
-                    //     now: defaultNow
-                    // }
+                //     {
+                //     key: "year-1y",
+                //     title: `${moment(utils.getPreviousPeriod(period, period).start).format("YYYY")}`.toUpperCase(),
+                //     max: defaultMax,
+                //     now: defaultNow
+                // }
                 ]
             };
         default:

@@ -5,6 +5,7 @@ import * as bootstrap from "react-bootstrap";
 import React from "react";
 import IPropTypes from "react-immutable-proptypes";
 import moment from "moment";
+import "moment/locale/it";
 
 import {partial, is} from "ramda";
 import {
@@ -188,8 +189,6 @@ var SummaryConsumptions = React.createClass({
         const aggregates = (this.props.collections
             .get("consumptions-yearly-aggregates") || Immutable.Map())
             .filter(agg => agg.get("sensorId") === this.props.consumptions.fullPath[0]);
-        console.log("aggregates");
-        console.log(aggregates);
         return parseFloat(utils.getSumByPeriod(dateRange, aggregates).toFixed(2));
     },
     closeFullscreenModal: function () {
@@ -324,8 +323,8 @@ var SummaryConsumptions = React.createClass({
             <div key={key} style={{marginBottom: "15px"}}>
                 <ProgressBar
                     key={key}
-                    max={max}
-                    now={now}
+                    max={parseInt(max)}
+                    now={parseInt(now)}
                     title={title}
                     rules={rulesProgressBar(colors)}
                     style={styleProgressBar(colors)}
@@ -447,7 +446,7 @@ var SummaryConsumptions = React.createClass({
             this.subscribeToConsumptions();
             sum = this.getSum(utils.getTimeRangeByPeriod(tabParameters.period));
         }
-        const measure = sum >= 100 ? Math.trunc(sum) : Math.round(sum * 10, -1) / 10;
+        const measure = sum >= 100 ? Math.round(sum) : Math.round(sum * 10, -1) / 10;
         // const congratMessage = "COMPLIMENTI! Ieri hai utilizzato il 12% in meno dell’energia che utilizzi di solito.";
         return (
             <div style={styleContent(theme)}>
