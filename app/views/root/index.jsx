@@ -5,6 +5,7 @@ import {connect} from "react-redux";
 import {bindActionCreators} from "redux";
 import get from "lodash.get";
 import pkg from "../../../package.json";
+require("moment/locale/it");
 
 import components from "components";
 

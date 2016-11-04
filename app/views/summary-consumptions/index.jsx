@@ -4,10 +4,9 @@ import Radium from "radium";
 import * as bootstrap from "react-bootstrap";
 import React from "react";
 import IPropTypes from "react-immutable-proptypes";
-
 import moment from "moment";
-import {partial, is} from "ramda";
 
+import {partial, is} from "ramda";
 import {
     Button,
     ConfirmModal,
@@ -19,7 +18,8 @@ import {
 import {connect} from "react-redux";
 import {bindActionCreators} from "redux";
 import {defaultTheme} from "lib/theme";
-import {getSumBySiteAndPeriod, getTimeRangeByPeriod, tabParameters} from "lib/consumptions-utils";
+import {tabParameters} from "lib/consumptions-utils";
+import utils from "iwwa-utils";
 import {selectSite, selectPeriod} from "actions/consumptions";
 
 
@@ -185,12 +185,12 @@ var SummaryConsumptions = React.createClass({
         return Immutable.Map({name: ""});
     },
     getSum: function (dateRange) {
-        return parseFloat(
-            getSumBySiteAndPeriod(
-                dateRange,
-                this.props.consumptions.fullPath[0],
-                this.props.collections.get("consumptions-yearly-aggregates") || Immutable.Map())
-            .toFixed(2));
+        const aggregates = (this.props.collections
+            .get("consumptions-yearly-aggregates") || Immutable.Map())
+            .filter(agg => agg.get("sensorId") === this.props.consumptions.fullPath[0]);
+        console.log("aggregates");
+        console.log(aggregates);
+        return parseFloat(utils.getSumByPeriod(dateRange, aggregates).toFixed(2));
     },
     closeFullscreenModal: function () {
         this.setState ({
@@ -312,15 +312,10 @@ var SummaryConsumptions = React.createClass({
         );
     },
     renderProgressBar: function (comparisonNow, comparisonParams) {
-        const max = parseInt(comparisonParams.max(
-            this.props.consumptions.fullPath[0],
-            this.props.collections.get("consumptions-yearly-aggregates") || Immutable.Map()).toFixed(0));
-        const now = parseInt(
-            comparisonNow(
-                this.props.consumptions.fullPath[0],
-                this.props.collections.get("consumptions-yearly-aggregates") || Immutable.Map()
-            ).toFixed(0)
-        );
+        const aggregates = (this.props.collections.get("consumptions-yearly-aggregates") || Immutable.Map())
+            .filter(agg => agg.get("sensorId") === this.props.consumptions.fullPath[0]);
+        const max = comparisonParams.max(aggregates).toFixed(0);
+        const now = comparisonNow(aggregates).toFixed(0);
         return this.renderStyledProgressBar(comparisonParams.key, max, now, comparisonParams.title);
     },
     renderStyledProgressBar: function (key, max, now, title) {
@@ -450,7 +445,7 @@ var SummaryConsumptions = React.createClass({
         var sum = 0;
         if (this.props.consumptions.fullPath) {
             this.subscribeToConsumptions();
-            sum = this.getSum(getTimeRangeByPeriod(tabParameters.period));
+            sum = this.getSum(utils.getTimeRangeByPeriod(tabParameters.period));
         }
         const measure = sum >= 100 ? Math.trunc(sum) : Math.round(sum * 10, -1) / 10;
         // const congratMessage = "COMPLIMENTI! Ieri hai utilizzato il 12% in meno dell’energia che utilizzi di solito.";
