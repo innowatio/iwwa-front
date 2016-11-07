@@ -30,7 +30,7 @@ function getTitleAndSubtitle (period) {
                     now: defaultNow
                 }, {
                     key: "today-7d",
-                    title: `${moment.utc().format("dddd")} scors${moment().day() === 6 ? "a" : "o"}`.toUpperCase(),
+                    title: `${moment.utc().format("dddd")} scors${moment().isoWeekday() === 7 ? "a" : "o"}`.toUpperCase(),
                     max: partial(utils.getSumByPeriod, [utils.getPreviousPeriod("week", "day")]),
                     now: defaultNow
                 }, {
