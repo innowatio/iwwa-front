@@ -1,6 +1,6 @@
 import {fromJS} from "immutable";
 
-import {getRoles, isAdmin} from "lib/roles-utils";
+import {getRoles} from "lib/roles-utils";
 
 describe("`roles-utils`", () => {
 
