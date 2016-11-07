@@ -19,8 +19,6 @@ export const SENSOR_CREATION_SUCCESS = "SENSOR_CREATION_SUCCESS";
 export const SENSOR_DELETE_SUCCESS = "SENSOR_DELETE_SUCCESS";
 export const SENSOR_UPDATE_SUCCESS = "SENSOR_UPDATE_SUCCESS";
 
-const MONITORING_TYPE = "custom-monitoring";
-
 function getSensorObj (collectionItem) {
     return addMonitoringAttrs({
         "name": (collectionItem.get("name") ? collectionItem.get("name") : collectionItem.get("_id")),
@@ -41,7 +39,7 @@ function addMonitoringAttrs (sensor) {
         sensor.unitOfMeasurement = sensor.unitOfMeasurement.value;
     }
     sensor.id = UUID.create().hex;
-    sensor.type = MONITORING_TYPE;
+    sensor.createdByUser = true;
     sensor.virtual = true;
     return sensor;
 }
@@ -131,8 +129,8 @@ export const deleteSensors = (sensors) => {
         dispatch({
             type: "DELETING_SENSORS"
         });
-        sensors.forEach((sensor) => {
-            if (sensor.get("type") === MONITORING_TYPE) {
+        sensors.forEach(sensor => {
+            if (sensor.get("createdByUser")) {
                 let id = sensor.get("_id");
                 var endpoint = "http://" + WRITE_API_ENDPOINT + "/sensors/" + id;
                 axios.delete(endpoint)
@@ -166,12 +164,11 @@ function callEditSensor (sensorData, sensorId) {
 }
 
 export const editSensor = (sensorData, formulaItems, sensor) => {
-    let type = sensor.get("type");
-    if (type === MONITORING_TYPE) {
+    if (sensor.get("createdByUser")) {
         let id = sensor.get("_id");
         sensorData.formulas = buildFormulas(formulaItems);
         sensorData.id = id;
-        sensorData.type = type;
+        sensorData.createdByUser = true;
         sensorData.virtual = true;
         sensorData.parentSensorId = sensor.get("parentSensorId");
         return callEditSensor(sensorData, id);
