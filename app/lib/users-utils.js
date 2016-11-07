@@ -1,6 +1,6 @@
 import Immutable from "immutable";
 import R from "ramda";
-import {getLoggedUser, getRoles, getUserRoles, hasRole, isAdminUser, VIEW_ALL_ROLES} from "lib/roles-utils";
+import {getLoggedUser, getRoles, getUserRoles, hasRole, VIEW_ALL_ROLES, VIEW_ALL_SENSORS} from "lib/roles-utils";
 
 export function getUsername (user) {
     const username = user.getIn(["services", "sso", "uid"]);
@@ -69,11 +69,8 @@ export function getVisibleGroups (groupsCollection, asteroid) {
 }
 
 export function hasParentPermissions (childUser, parentUser, asteroid) {
-    if (isAdminUser(parentUser)) {
-        return true;
-    }
-    return arrayContainsArray(getUserRoles(parentUser, asteroid), getUserRoles(childUser, asteroid)) &&
-            arrayContainsArray(parentUser.get("sensors"), childUser.get("sensors"));
+    return (hasRole(asteroid, VIEW_ALL_ROLES) || arrayContainsArray(getUserRoles(parentUser, asteroid), getUserRoles(childUser, asteroid))) &&
+        (hasRole(asteroid, VIEW_ALL_SENSORS) || arrayContainsArray(parentUser.get("sensors"), childUser.get("sensors")));
 }
 
 function arrayContainsArray (masterArray, checkingArray) {

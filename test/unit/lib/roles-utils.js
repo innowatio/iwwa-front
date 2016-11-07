@@ -10,15 +10,29 @@ describe("`roles-utils`", () => {
             collections: fromJS({
                 users: {
                     utenteAdmin: {
-                        roles: ["admin"]
+                        groups: ["admin"]
                     },
                     utenteYousave: {
-                        roles: ["yousave"]
+                        groups: ["yousave"]
                     },
                     utenteMultiRoles: {
-                        roles: ["role1", "role2", "role3"]
+                        groups: ["multiroles"]
                     },
                     utenteNoRoles: {
+                    }
+                },
+                groups: {
+                    admin: {
+                        name: "admin",
+                        roles: ["manage-all"]
+                    },
+                    yousave: {
+                        name: "yousave",
+                        roles: ["access-lucy-pro"]
+                    },
+                    multiroles: {
+                        name: "multiroles",
+                        roles: ["access-lucy-pro", "access-lucy-light", "access-lucy-mobile"]
                     }
                 }
             })
@@ -27,17 +41,10 @@ describe("`roles-utils`", () => {
 
     it("`getRoles`", () => {
         it("returns an array of the roles", () => {
-            expect(getRoles(getAsteroid("userAdmin"))).to.deep.equal(["admin"]);
-            expect(getRoles(getAsteroid("utenteYousave"))).to.deep.equal(["yousave"]);
-            expect(getRoles(getAsteroid("userNoRole"))).to.deep.equal([]);
-            expect(getRoles(getAsteroid("utenteMultiRoles"))).to.deep.equal(["role1", "role2", "role3"]);
+            expect(getRoles(getAsteroid("utenteAdmin"))).to.deep.equal(["manage-all"]);
+            expect(getRoles(getAsteroid("utenteYousave"))).to.deep.equal(["access-lucy-pro"]);
+            expect(getRoles(getAsteroid("utenteNoRoles"))).to.deep.equal([]);
+            expect(getRoles(getAsteroid("utenteMultiRoles"))).to.deep.equal(["access-lucy-pro", "access-lucy-light", "access-lucy-mobile"]);
         });
-    });
-
-    it("`isAdmin`", () => {
-        expect(isAdmin(getAsteroid("userAdmin"))).to.be.True;
-        expect(isAdmin(getAsteroid("utenteYousave"))).to.be.False;
-        expect(isAdmin(getAsteroid("userNoRole"))).to.be.False;
-        expect(isAdmin(getAsteroid("utenteMultiRoles"))).to.be.False;
     });
 });

@@ -3,7 +3,7 @@ import {Router, Route, hashHistory, browserHistory} from "react-router";
 
 import asteroid from "lib/asteroid";
 import {EXEC_ENV} from "lib/config";
-import {canAccessUsers, hasRole, ACCESS_MONITORING} from "lib/roles-utils";
+import {canAccessUsers, hasRole, ACCESS_LUCY_PRO} from "lib/roles-utils";
 
 import * as views from "views";
 
@@ -42,7 +42,7 @@ function requireAdminAuthorization (nextState, replace) {
 }
 
 function requireYousaveAuthorization (nextState, replace) {
-    if (!hasRole(asteroid, ACCESS_MONITORING)) {
+    if (!hasRole(asteroid, ACCESS_LUCY_PRO)) {
         applyReplace(nextState, replace, "/");
     }
 }

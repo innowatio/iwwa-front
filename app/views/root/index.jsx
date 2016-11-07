@@ -13,7 +13,7 @@ import {EXEC_ENV} from "lib/config";
 import LocalStorageMixin from "lib/localstorage-mixin";
 import measures from "lib/measures";
 import moment from "lib/moment";
-import {getLoggedUser, hasRole, isAuthorizedUser, ACCESS_MONITORING, ACCESS_LUCY} from "lib/roles-utils";
+import {getLoggedUser, hasRole, isAuthorizedUser, ACCESS_LUCY_PRO, ACCESS_LUCY_LIGHT} from "lib/roles-utils";
 import {theme, defaultTheme} from "lib/theme";
 import {isActiveUser, isDeleted} from "lib/users-utils";
 
@@ -97,7 +97,7 @@ var Root = React.createClass({
         var items = [];
         // user yousave => solo yousave
         // admin tutto
-        if (hasRole(asteroid, ACCESS_LUCY)) {
+        if (hasRole(asteroid, ACCESS_LUCY_LIGHT)) {
             items = items.concat([
                 {key: "chart", label: "CONSUMI STORICI", url: "/chart/", iconClassName: "history"},
                 {key: "live", label: "CONSUMI LIVE", url: "/live/", iconClassName: "gauge"},
@@ -105,7 +105,7 @@ var Root = React.createClass({
                 {key: "alarms", label: "ALLARMI", url: "/alarms/", iconClassName: "alarms"}
             ]);
         }
-        if (hasRole(asteroid, ACCESS_MONITORING)) {
+        if (hasRole(asteroid, ACCESS_LUCY_PRO)) {
             items.push({key: "monitoring", label: "MONITORING", url: "/monitoring/", iconClassName: "monitoring"});
         }
         return items;

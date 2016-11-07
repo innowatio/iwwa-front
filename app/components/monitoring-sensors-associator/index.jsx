@@ -6,7 +6,7 @@ import {
     MonitoringSensorsSelector
 } from "components";
 
-import {getLoggedUser, isAdmin} from "lib/roles-utils";
+import {getLoggedUser, hasRole, VIEW_ALL_SENSORS} from "lib/roles-utils";
 import {getMonitoringSensors} from "lib/sensors-utils";
 import {defaultTheme} from "lib/theme";
 
@@ -49,7 +49,7 @@ var MonitoringSensorsAssociator = React.createClass({
     },
     getMonitoringSensors: function () {
         const {asteroid} = this.props;
-        return getMonitoringSensors(this.props.collections.get("sensors"), isAdmin(asteroid), getLoggedUser(asteroid).get("sensors"));
+        return getMonitoringSensors(this.props.collections.get("sensors"), hasRole(asteroid, VIEW_ALL_SENSORS), getLoggedUser(asteroid).get("sensors"));
     },
     renderCancelConfirm: function (theme) {
         return (

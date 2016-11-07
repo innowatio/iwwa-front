@@ -1,8 +1,8 @@
 import {Map, List} from "immutable";
 import R from "ramda";
 
-export const ACCESS_MONITORING = "access-monitoring";
-export const ACCESS_LUCY = "access-lucy";
+export const ACCESS_LUCY_LIGHT = "access-lucy-light";
+export const ACCESS_LUCY_PRO = "access-lucy-pro";
 export const ASSIGN_GROUPS = "assign-groups";
 export const ASSIGN_SENSORS = "assign-sensors";
 export const CREATE_GROUPS = "create-groups";
@@ -17,8 +17,6 @@ export const VIEW_ALL_USERS = "view-all-users";
 export const VIEW_FORMULA_DETAILS = "view-formula-details";
 
 const usersAccess = [MANAGE_USERS, ASSIGN_GROUPS, CREATE_GROUPS, ASSIGN_SENSORS];
-
-const ROLE_ADMIN = "admin";
 
 export function getLoggedUser (asteroid) {
     const users = asteroid.collections.get("users") || Map();
@@ -63,34 +61,18 @@ export function canAccessUsers (asteroid) {
     usersAccess.forEach(role => {
         canAccess = canAccess || userRoles.indexOf(role) > -1;
     });
-    return canAccess || isAdmin(asteroid);
+    return canAccess;
 }
 
 export function hasRole (asteroid, role) {
-    return isAdmin(asteroid) || getRoles(asteroid).indexOf(role) > -1;
+    return getRoles(asteroid).indexOf(role) > -1;
 }
-
-//TODO need to keep these until complete switch of roles management
-export function isAdmin (asteroid) {
-    return getOldRoles(getLoggedUser(asteroid)).indexOf(ROLE_ADMIN) > -1;
-}
-
-export function isAdminUser (user) {
-    return getOldRoles(user).indexOf(ROLE_ADMIN) > -1;
-}
-
-function getOldRoles (user) {
-    return (user.get("roles") || List()).toArray();
-}
-
 
 export function isAuthorizedUser (asteroid) {
     const allRoles = R.values(R.map(role => role.name, (asteroid.collections.get("roles") || Map()).toJS()));
-    //TODO need to keep these until complete switch of roles management
-    const userRoles = getOldRoles(getLoggedUser(asteroid)).concat(getRoles(asteroid));
     let isAuthorized = false;
     R.forEach(userRole => {
         isAuthorized = isAuthorized || R.contains(userRole, allRoles);
-    }, userRoles);
+    }, getRoles(asteroid));
     return isAuthorized;
 }
