@@ -103,7 +103,7 @@ var HighCharts = React.createClass({
         var weekendOverlay = [];
         const date = this.props.dateFilter || this.props.dateCompare[0];
         const dayInFilter = moment.utc(date.end).diff(moment.utc(date.start), "days");
-        const firstSaturday = moment.utc(date.start).weekday(6);
+        const firstSaturday = moment.utc(date.start).isoWeekday(6);
         for (var i=0; i<=dayInFilter/7; i++) {
             weekendOverlay.push({
                 from: moment.utc(firstSaturday).add({day: i * 7}).startOf("day").valueOf(),
