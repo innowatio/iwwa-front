@@ -85,7 +85,7 @@ export const potentialUnitsOfMeasurement = [
     {value: "ppm", label: "ppm"},
     {value: "Psi", label: "Psi"},
     {value: "s", label: "s"},
-    {value: "Sm³", label: "Sm³"},
+    {value: "Sm3", label: "Sm³"},
     {value: "Sm³/h", label: "Sm³/h"},
     {value: "ton", label: "ton"},
     {value: "Torr", label: "Torr"},
@@ -95,7 +95,8 @@ export const potentialUnitsOfMeasurement = [
 ];
 
 export function getUnitOfMeasurementLabel (val) {
-    return R.find(R.propEq("value", val))(potentialUnitsOfMeasurement).label;
+    const foundedUnit = R.find(R.propEq("value", val))(potentialUnitsOfMeasurement);
+    return foundedUnit ? foundedUnit.label : val;
 }
 
 function swap (json) {

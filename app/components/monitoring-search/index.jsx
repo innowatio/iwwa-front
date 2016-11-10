@@ -10,6 +10,7 @@ import {defaultTheme} from "lib/theme";
 var MonitoringSearch = React.createClass({
     propTypes: {
         filterSensors: PropTypes.func.isRequired,
+        filters: PropTypes.object.isRequired,
         searchButton: PropTypes.object,
         style: PropTypes.object
     },
@@ -26,6 +27,16 @@ var MonitoringSearch = React.createClass({
             wordsSearchFilter: "",
             wordsToSearch: []
         };
+    },
+    componentDidMount: function () {
+        this.updateFilter("primaryTagsToSearch", this.props.filters.primaryTagsToFilter);
+        this.updateFilter("tagsToSearch", this.props.filters.tagsToFilter);
+        this.updateFilter("wordsToSearch", this.props.filters.wordsToFilter);
+    },
+    updateFilter: function (stateFilter, value) {
+        let obj = {};
+        obj[stateFilter] = value;
+        this.setState(obj);
     },
     getTheme: function () {
         return this.context.theme || defaultTheme;
@@ -54,6 +65,9 @@ var MonitoringSearch = React.createClass({
                 cursor: "pointer"
             }
         };
+    },
+    resetFilters: function () {
+        this.setState(this.getInitialState(), this.filterSensors);
     },
     filterSensors: function () {
         this.props.filterSensors({
@@ -90,9 +104,7 @@ var MonitoringSearch = React.createClass({
                 <FormControl
                     className="input-search"
                     onChange={input => {
-                        let obj = {};
-                        obj[filterField] = input.target.value;
-                        self.setState(obj);
+                        this.updateFilter(filterField, input.target.value);
                     }}
                     placeholder={inputPlaceholder}
                     type="text"
@@ -174,9 +186,7 @@ var MonitoringSearch = React.createClass({
                         <Icon
                             color={theme.colors.white}
                             icon={"reset"}
-                            onClick={() => {
-                                self.setState(self.getInitialState(), self.filterSensors);
-                            }}
+                            onClick={this.resetFilters}
                             size={"35px"}
                             style={{
                                 verticalAlign: "middle",

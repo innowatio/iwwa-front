@@ -30,6 +30,7 @@ var MonitoringSensorsSelector = React.createClass({
             <div>
                 <MonitoringSearch
                     filterSensors={this.props.filterSensors}
+                    filters={this.props.sensorsState}
                     searchButton={this.props.searchButton}
                     style={{width: "25%", float: "left", marginTop: "2px", height: "calc(100vh - 120px)"}}
                 />

@@ -116,9 +116,9 @@ var SensorsDropArea = React.createClass({
                     to={"/monitoring/chart/"}
                     onClick={() => this.props.onClickChart(this.props.sensors)}
                     style={
-                            R.merge(buttonStyle(theme),
-                            {right: "0px"})
-                        }
+                        R.merge(buttonStyle(theme),
+                        {right: "0px"})
+                    }
                 >
                     <Icon
                         color={theme.colors.iconHeader}
