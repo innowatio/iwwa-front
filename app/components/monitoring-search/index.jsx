@@ -2,7 +2,7 @@ import Radium from "radium";
 import React, {PropTypes} from "react";
 import {FormControl, FormGroup, InputGroup} from "react-bootstrap";
 
-import {Button, Icon, TagList} from "components";
+import {AutoComplete, Button, Icon, TagList} from "components";
 
 import {styles} from "lib/styles";
 import {defaultTheme} from "lib/theme";
@@ -42,7 +42,7 @@ var MonitoringSearch = React.createClass({
         return this.context.theme || defaultTheme;
     },
     getSearchStyle: function () {
-        let theme = this.getTheme();
+        const theme = this.getTheme();
         return {
             ".input-search": {
                 height: "60px",
@@ -75,6 +75,16 @@ var MonitoringSearch = React.createClass({
             tagsToFilter: this.state.tagsToSearch,
             wordsToFilter: this.state.wordsToSearch
         });
+    },
+    addValueToSearch: function (value, filterField, searchValuesField) {
+        if (value && value.trim().length > 0) {
+            let newValues = this.state[searchValuesField].slice();
+            newValues.push(value);
+            let obj = {};
+            obj[filterField] = "";
+            obj[searchValuesField] = newValues;
+            this.setState(obj, this.filterSensors);
+        }
     },
     renderSearchButton: function (theme) {
         return this.props.searchButton ? (
@@ -114,17 +124,7 @@ var MonitoringSearch = React.createClass({
                     <Icon
                         color={theme.colors.white}
                         icon={"search"}
-                        onClick={() => {
-                            let word = self.state[filterField];
-                            if (word && word.trim().length > 0) {
-                                let newWords = self.state[searchValuesField].slice();
-                                newWords.push(word);
-                                let obj = {};
-                                obj[filterField] = "";
-                                obj[searchValuesField] = newWords;
-                                self.setState(obj, self.filterSensors);
-                            }
-                        }}
+                        onClick={() => this.addValueToSearch(this.state[filterField], filterField, searchValuesField)}
                         size={"34px"}
                         style={{
                             lineHeight: "10px",
@@ -149,8 +149,16 @@ var MonitoringSearch = React.createClass({
                         rules={self.getSearchStyle()}
                         scopeSelector=".search-container"
                     />
-                    {this.renderSearchInput(theme, "Cerca per tag primari", "primaryTagSearchFilter", "primaryTagsToSearch")}
-                    {this.renderSearchInput(theme, "Cerca per tag", "tagSearchFilter", "tagsToSearch")}
+                    <AutoComplete
+                        onSelectSuggestion={suggestion => this.addValueToSearch(suggestion, "primaryTagSearchFilter", "primaryTagsToSearch")}
+                        options={["Setyl", "Curno", "temperature", "Curlo"]}
+                        placeholder={"Cerca per tag primari"}
+                    />
+                    <AutoComplete
+                        onSelectSuggestion={suggestion => this.addValueToSearch(suggestion, "tagSearchFilter", "tagsToSearch")}
+                        options={["Setyl", "Curno", "temperature", "Curlo"]}
+                        placeholder={"Cerca per tag"}
+                    />
                     {this.renderSearchInput(theme, "Cerca testo", "wordsSearchFilter", "wordsToSearch")}
 
                     <label style={{fontSize: "20px", fontWeight: "400", marginBottom: "10px"}}>
