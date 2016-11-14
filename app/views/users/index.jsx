@@ -338,12 +338,13 @@ var Users = React.createClass({
     render: function () {
         const theme = this.getTheme();
         const {cloneMode, selectedUsers} = this.props.usersState;
+        // TODO ripristinare quando presente la funzione
+        // <div style={{float: "left", marginTop: "3px"}}>
+        //     {this.renderButton("Crea utente", "add", cloneMode, [MANAGE_USERS], () => this.setState({showCreateUserModal: true}))}
+        // </div>
         return (
             <div style={{position: "relative"}}>
                 <SectionToolbar>
-                    <div style={{float: "left", marginTop: "3px"}}>
-                        {this.renderButton("Crea utente", "add", cloneMode, [MANAGE_USERS], () => this.setState({showCreateUserModal: true}))}
-                    </div>
                     <div style={{float: "right", marginTop: "3px"}}>
                         {this.renderButton("Assegna sensori", "gauge", selectedUsers.length < 1 || cloneMode, [MANAGE_USERS, ASSIGN_SENSORS], this.openSensorsModal)}
                         {this.renderButton("Assegna funzioni", "user-functions", selectedUsers.length < 1 || cloneMode, [MANAGE_USERS, ASSIGN_GROUPS, CREATE_GROUPS], this.openUserRolesModal)}
