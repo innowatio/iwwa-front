@@ -315,7 +315,7 @@ var SummaryConsumptions = React.createClass({
             .filter(agg => agg.get("sensorId") === this.props.consumptions.fullPath[0]);
         const max = comparisonParams.max(aggregates).toFixed(0);
         const now = comparisonNow(aggregates).toFixed(0);
-        return this.renderStyledProgressBar(comparisonParams.key, max, now, comparisonParams.title);
+        return parseInt(max) ? this.renderStyledProgressBar(comparisonParams.key, max, now, comparisonParams.title) : null;
     },
     renderStyledProgressBar: function (key, max, now, title) {
         const colors = this.getTheme();
