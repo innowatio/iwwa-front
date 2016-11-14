@@ -60,6 +60,7 @@
   "dependencies": {
     "asteroid": "^2.0.3",
     "asteroid-immutable-collections-mixin": "^3.0.0",
+    "autosuggest-highlight": "^3.1.0",
     "axios": "^0.11.1",
     "bootstrap": "^3.3.6",
     "change-case": "^2.3.1",

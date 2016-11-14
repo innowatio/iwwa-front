@@ -1,3 +1,4 @@
+import parse from "autosuggest-highlight/parse";
 import Radium from "radium";
 import React, {PropTypes} from "react";
 import Autosuggest from "react-autosuggest";
@@ -115,31 +116,50 @@ var AutoComplete = React.createClass({
     onSuggestionsClearRequested: function () {
         this.setState({suggestions: []});
     },
+    match: function (text, query) {
+        return query
+            .trim()
+            .toLowerCase()
+            .split(/\s+/)
+            .filter(function (word) {
+                return word.length > 0;
+            })
+            .reduce(function (result, word) {
+                let hasMore = true;
+                text = text.toLowerCase();
+                while (hasMore) {
+                    var wordLen = word.length;
+                    var regex = new RegExp(word.replace(/[.*+?^${}()|[\]\\]/g, "\\$&"), "g");
+                    var index = text.search(regex);
+                    if (index > -1) {
+                        result.push([index, index + wordLen]);
+                        text =
+                            text.slice(0, index) +
+                            (new Array(wordLen + 1)).join(" ") +
+                            text.slice(index + wordLen);
+                    } else {
+                        hasMore = false;
+                    }
+                }
+                return result;
+            }, [])
+            .sort(function (match1, match2) {
+                return match1[0] - match2[0];
+            });
+    },
     renderSuggestion: function (suggestion, {query}) {
-        console.log(suggestion);
-        console.log(query);
-        // const suggestionText = `${suggestion.first} ${suggestion.last}`;
-        // const matches = AutosuggestHighlightMatch(suggestionText, query);
-        // const parts = AutosuggestHighlightParse(suggestionText, matches);
-        //
-        // return (
-        //     <span className={'suggestion-content ' + suggestion.twitter}>
-        //   <span className="name">
-        //     {
-        //         parts.map((part, index) => {
-        //             const className = part.highlight ? 'highlight' : null;
-        //
-        //             return (
-        //                 <span className={className} key={index}>{part.text}</span>
-        //             );
-        //         })
-        //     }
-        //   </span>
-        // </span>
-        // );
+        const matches = this.match(suggestion, query);
+        const parts = parse(suggestion, matches);
         return (
-            <span>
-                {suggestion}
+            <span className="name">
+                {
+                    parts.map((part, index) => {
+                        const className = part.highlight ? "highlight" : null;
+                        return (
+                            <span className={className} key={index}>{part.text}</span>
+                        );
+                    })
+                }
             </span>
         );
     },
