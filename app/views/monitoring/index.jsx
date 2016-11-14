@@ -125,7 +125,8 @@ var Monitoring = React.createClass({
     componentWillReceiveProps: function (nextProps) {
         if (nextProps.sensorsState.sensorsCreated.length > 0) {
             const user = getLoggedUser(nextProps.asteroid);
-            const sensors = R.uniq(R.concat(nextProps.sensorsState.sensorsCreated, user.get("sensors").toJS()));
+            const userSensors = user.get("sensors") ? user.get("sensors").toJS() : [];
+            const sensors = R.uniq(R.concat(nextProps.sensorsState.sensorsCreated, userSensors));
             nextProps.assignSensorsToUsers([user], sensors);
         }
     },

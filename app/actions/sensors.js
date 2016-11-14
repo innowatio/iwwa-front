@@ -3,7 +3,7 @@ import UUID from "uuid-js";
 
 import {WRITE_API_ENDPOINT} from "lib/config";
 import {Types} from "lib/dnd-utils";
-import {getSensorId, operatorToFormula} from "lib/sensors-utils";
+import {getSensorId, getSensorLabel, operatorToFormula} from "lib/sensors-utils";
 import {getBasicObject} from "./utils";
 
 export const ADD_ITEM_TO_FORMULA = "ADD_ITEM_TO_FORMULA";
@@ -21,10 +21,11 @@ export const SENSOR_UPDATE_SUCCESS = "SENSOR_UPDATE_SUCCESS";
 
 function getSensorObj (collectionItem) {
     return addMonitoringAttrs({
-        "name": (collectionItem.get("name") ? collectionItem.get("name") : collectionItem.get("_id")),
+        "name": getSensorLabel(collectionItem),
         "description": collectionItem.get("description"),
         "unitOfMeasurement": collectionItem.get("unitOfMeasurement"),
         "formulas": collectionItem.get("formulas"),
+        "primaryTags": collectionItem.get("primaryTags"),
         "tags": collectionItem.get("tags"),
         "siteId": collectionItem.get("siteId"),
         "userId": collectionItem.get("userId"),
@@ -34,7 +35,6 @@ function getSensorObj (collectionItem) {
 
 function addMonitoringAttrs (sensor) {
     sensor._id = undefined;
-    sensor.measurementType = undefined;
     if (sensor.unitOfMeasurement instanceof Object) {
         sensor.unitOfMeasurement = sensor.unitOfMeasurement.value;
     }

@@ -205,11 +205,17 @@ function decorateWithMeasurementType (sensors, originalToHide) {
         const types = sensor.get("measurementTypes");
         if (types && types.size > 0) {
             types.forEach(measurementType => {
-                let itemKey = sensor.get("_id") + "-" + measurementType;
+                const itemKey = sensor.get("_id") + "-" + measurementType;
                 if (originalToHide.indexOf(itemKey) < 0) {
                     items[itemKey] = sensor.set("measurementType", measurementType);
                 }
             });
+        }
+        if (sensor.get("virtual")) {
+            const itemKey = sensor.get("_id");
+            if (originalToHide.indexOf(itemKey) < 0) {
+                items[itemKey] = sensor;
+            }
         }
     });
     return Immutable.fromJS(items);
