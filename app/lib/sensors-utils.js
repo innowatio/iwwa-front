@@ -221,3 +221,14 @@ function decorateWithMeasurementType (sensors, originalToHide) {
     });
     return Immutable.fromJS(items);
 }
+
+export function getSensorsTags (sensors, tagField) {
+    return R.compose(
+        R.sortBy(R.compose(R.toLower, R.identity)),
+        R.filter(R.identity),
+        R.uniq,
+        R.flatten,
+        R.values,
+        R.map(R.prop(tagField))
+    )(sensors.toJS());
+}

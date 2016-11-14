@@ -1,9 +1,11 @@
 import Radium from "radium";
 import React, {PropTypes} from "react";
 import {FormControl, FormGroup, InputGroup} from "react-bootstrap";
+import IPropTypes from "react-immutable-proptypes";
 
 import {AutoComplete, Button, Icon, TagList} from "components";
 
+import {getSensorsTags} from "lib/sensors-utils";
 import {styles} from "lib/styles";
 import {defaultTheme} from "lib/theme";
 
@@ -12,6 +14,7 @@ var MonitoringSearch = React.createClass({
         filterSensors: PropTypes.func.isRequired,
         filters: PropTypes.object.isRequired,
         searchButton: PropTypes.object,
+        sensors: IPropTypes.map.isRequired,
         style: PropTypes.object
     },
     contextTypes: {
@@ -151,12 +154,12 @@ var MonitoringSearch = React.createClass({
                     />
                     <AutoComplete
                         onSelectSuggestion={suggestion => this.addValueToSearch(suggestion, "primaryTagSearchFilter", "primaryTagsToSearch")}
-                        options={["Setyl", "Curno", "temperature", "Curlo"]}
+                        options={getSensorsTags(this.props.sensors, "primaryTags")}
                         placeholder={"Cerca per tag primari"}
                     />
                     <AutoComplete
                         onSelectSuggestion={suggestion => this.addValueToSearch(suggestion, "tagSearchFilter", "tagsToSearch")}
-                        options={["Setyl", "Curno", "temperature", "Curlo"]}
+                        options={getSensorsTags(this.props.sensors, "tags")}
                         placeholder={"Cerca per tag"}
                     />
                     {this.renderSearchInput(theme, "Cerca testo", "wordsSearchFilter", "wordsToSearch")}
