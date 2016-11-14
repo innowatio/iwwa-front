@@ -331,7 +331,8 @@ var SummaryConsumptions = React.createClass({
                     styleMaxLabel={styleProgressBarMaxLabel(colors)}
                     styleTitleLabel={styleProgressBarTitleLabel(colors)}
                 />
-            </div>);
+            </div>
+        );
     },
     renderConfirmModal: function () {
         const fullPath = get(this.props, "consumptions.fullPath", []) || [];
