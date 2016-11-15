@@ -9,6 +9,31 @@ import {getSensorsTags} from "lib/sensors-utils";
 import {styles} from "lib/styles";
 import {defaultTheme} from "lib/theme";
 
+const inputStyle = (colors) => ({
+    height: "60px",
+    fontSize: "20px",
+    borderRight: "0px",
+    borderTopLeftRadius: "20px",
+    borderBottomLeftRadius: "20px",
+    borderTopRightRadius: "0px",
+    borderBottomRightRadius: "0px",
+    backgroundColor: colors.iconSearchUser,
+    outline: "0px",
+    outlineStyle: "none",
+    outlineWidth: "0px",
+    color: colors.white
+});
+
+const searchStyle = ({colors}) => ({
+    ".input-search": inputStyle(colors),
+    ".input-group-addon:last-child": {
+        backgroundColor: colors.iconSearchUser,
+        borderTopRightRadius: "20px",
+        borderBottomRightRadius: "20px",
+        cursor: "pointer"
+    }
+});
+
 var MonitoringSearch = React.createClass({
     propTypes: {
         filterSensors: PropTypes.func.isRequired,
@@ -43,31 +68,6 @@ var MonitoringSearch = React.createClass({
     },
     getTheme: function () {
         return this.context.theme || defaultTheme;
-    },
-    getSearchStyle: function () {
-        const theme = this.getTheme();
-        return {
-            ".input-search": {
-                height: "60px",
-                fontSize: "20px",
-                borderRight: "0px",
-                borderTopLeftRadius: "20px",
-                borderBottomLeftRadius: "20px",
-                borderTopRightRadius: "0px",
-                borderBottomRightRadius: "0px",
-                backgroundColor: theme.colors.iconSearchUser,
-                outline: "0px",
-                outlineStyle: "none",
-                outlineWidth: "0px",
-                color: theme.colors.white
-            },
-            ".input-group-addon:last-child": {
-                backgroundColor: theme.colors.iconSearchUser,
-                borderTopRightRadius: "20px",
-                borderBottomRightRadius: "20px",
-                cursor: "pointer"
-            }
-        };
     },
     resetFilters: function () {
         this.setState(this.getInitialState(), this.filterSensors);
@@ -149,18 +149,20 @@ var MonitoringSearch = React.createClass({
             <div style={divStyle}>
                 <div className="search-container" style={{paddingTop: "20px", textAlign: "center", width: "100%"}}>
                     <Radium.Style
-                        rules={self.getSearchStyle()}
+                        rules={searchStyle(theme)}
                         scopeSelector=".search-container"
                     />
                     <AutoComplete
-                        onSelectSuggestion={suggestion => this.addValueToSearch(suggestion, "primaryTagSearchFilter", "primaryTagsToSearch")}
+                        onSelectSuggestion={({value}) => this.addValueToSearch(value, "primaryTagSearchFilter", "primaryTagsToSearch")}
                         options={getSensorsTags(this.props.sensors, "primaryTags")}
                         placeholder={"Cerca per tag primari"}
+                        style={inputStyle(theme.colors)}
                     />
                     <AutoComplete
-                        onSelectSuggestion={suggestion => this.addValueToSearch(suggestion, "tagSearchFilter", "tagsToSearch")}
+                        onSelectSuggestion={({value}) => this.addValueToSearch(value, "tagSearchFilter", "tagsToSearch")}
                         options={getSensorsTags(this.props.sensors, "tags")}
                         placeholder={"Cerca per tag"}
+                        style={inputStyle(theme.colors)}
                     />
                     {this.renderSearchInput(theme, "Cerca testo", "wordsSearchFilter", "wordsToSearch")}
 

@@ -224,6 +224,9 @@ function decorateWithMeasurementType (sensors, originalToHide) {
 
 export function getSensorsTags (sensors, tagField) {
     return R.compose(
+        R.map(tag => {
+            return {value: tag, label: tag};
+        }),
         R.sortBy(R.compose(R.toLower, R.identity)),
         R.filter(R.identity),
         R.uniq,

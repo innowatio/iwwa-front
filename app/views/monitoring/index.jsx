@@ -9,7 +9,7 @@ import * as bootstrap from "react-bootstrap";
 import {getDragDropContext} from "lib/dnd-utils";
 import {defaultTheme} from "lib/theme";
 import {getLoggedUser, hasRole, CREATE_SENSORS, EDIT_SENSORS, VIEW_ALL_SENSORS} from "lib/roles-utils";
-import {getAllSensors, getMonitoringSensors, getSensorLabel, findSensor} from "lib/sensors-utils";
+import {getAllSensors, getMonitoringSensors, getSensorLabel, getSensorsTags, findSensor} from "lib/sensors-utils";
 import {styles} from "lib/styles";
 
 import {
@@ -234,6 +234,7 @@ var Monitoring = React.createClass({
                     sensorsToAggregate={workAreaSensors}
                     showFullscreenModal={this.state.showEditModal}
                     showSensorAggregator={!this.state.editSensor}
+                    tagOptions={getSensorsTags(this.getMonitoringSensors(), "tags")}
                     title={this.state.editSensor ? "MODIFICA SENSORE" : "CREA NUOVO SENSORE"}
                 />
             );

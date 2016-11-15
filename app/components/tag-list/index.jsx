@@ -36,7 +36,7 @@ var TagList = React.createClass({
         isSelected: PropTypes.bool,
         primaryTags: PropTypes.any,
         tagIcon: PropTypes.bool,
-        tags: PropTypes.any.isRequired
+        tags: PropTypes.any
     },
     contextTypes: {
         theme: PropTypes.object

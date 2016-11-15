@@ -43,7 +43,6 @@
         "react-redux",
         "react-router",
         "react-select",
-        "react-tagsinput",
         "react-time-picker",
         "react-waypoint",
         "react-widgets",
