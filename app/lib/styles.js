@@ -294,6 +294,7 @@ export const styles = (theme) => ({
             overflow: "hidden",
             position: "relative",
             width: "100%",
+            backgroundColor: theme.colors.transparent,
             color: theme.colors.white,
             fontSize: "16px",
             fontWeight: "300",
@@ -312,14 +313,14 @@ export const styles = (theme) => ({
             outline: "0px",
             outlineStyle: "none",
             outlineWidth: "0px",
-            borderColor: theme.colors.textGrey,
+            borderColor: theme.colors.borderInputSearch,
             boxShadow: "none"
         },
-        ".is-focused:not(.is-open)>.Select-control": {
+        ".is-focused:not(.is-open) > .Select-control": {
             outline: "0px",
             outlineStyle: "none",
             outlineWidth: "0px",
-            borderColor: theme.colors.textGrey,
+            borderColor: theme.colors.borderInputSearch,
             boxShadow: "none"
         },
         ".Select-menu-outer": {
@@ -333,17 +334,18 @@ export const styles = (theme) => ({
             zIndex: "1",
             WebkitOverflowScrolling: "touch",
             backgroundColor: theme.colors.backgroundMenuSelect,
-            border: "1px solid " + theme.colors.textGrey,
+            border: "1px solid " + theme.colors.borderInputSearch,
             borderBottomRightRadius: "10px",
             borderBottomLeftRadius: "10px",
-            color: theme.colors.mainFontColor
+            color: theme.colors.mainFontColor,
+            overflow: "hidden"
         },
         ".Select-menu": {
             maxHeight: "198px",
             overflowY: "auto"
         },
         ".Select-input": {
-            padding: "0px"
+            padding: "0px 10px"
         },
         ".Select-value-label": {
             color: theme.colors.white + "!important"
@@ -351,7 +353,7 @@ export const styles = (theme) => ({
         ".Select-option": {
             boxSizing: "border-box",
             backgroundColor: theme.colors.backgroundMenuSelect,
-            borderBottom: "1px solid " + theme.colors.textGrey,
+            borderBottom: "1px solid " + theme.colors.borderInputSearch,
             color: theme.colors.mainFontColor + "!important",
             fontSize: "15px",
             fontWeight: "300",

@@ -18,8 +18,7 @@ const styles = ({colors}) => ({
         width: "100%",
         height: "50px",
         margin: "0px",
-        padding: "0px",
-        marginRight: "-15px"
+        padding: "0px"
     },
     sensorName: {
         float: "left",
@@ -31,18 +30,19 @@ const styles = ({colors}) => ({
         marginRight: "10px",
         borderRight: "1px solid" + colors.borderSensorsTable,
         lineHeight: "50px",
-        paddingLeft: "10px"
+        paddingLeft: "10px",
+        paddingRight: "10px"
     },
     tagsContainer: {
         float: "left",
-        width: "calc(100% - 330px)",
+        width: "calc(100% - 340px)",
         cursor: "pointer",
         maxHeight: "50px",
         overflow: "hidden"
     },
     buttonsContainer: {
-        float: "right",
-        maxWidth: "130px",
+        float: "left",
+        width: "100px",
         overflow: "hidden"
     }
 });

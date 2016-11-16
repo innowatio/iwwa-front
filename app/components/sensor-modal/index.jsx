@@ -3,9 +3,10 @@ import {Col} from "react-bootstrap";
 import IPropTypes from "react-immutable-proptypes";
 import Select from "react-select";
 import Radium from "radium";
+import TagsInput from "react-tagsinput";
 import {reduxForm, Field} from "redux-form";
 
-import {AutoComplete, FormInputText, FullscreenModal, SensorAggregator, TagList} from "components";
+import {FormInputText, FullscreenModal, SensorAggregator, TagList} from "components";
 
 import {hasRole, VIEW_FORMULA_DETAILS} from "lib/roles-utils";
 import {potentialUnitsOfMeasurement} from "lib/sensors-utils";
@@ -45,7 +46,6 @@ var SensorForm = React.createClass({
         showFullscreenModal: PropTypes.bool.isRequired,
         showSensorAggregator: PropTypes.bool.isRequired,
         submitting: PropTypes.bool.isRequired,
-        tagOptions: PropTypes.array,
         title: PropTypes.string
     },
     contextTypes: {
@@ -79,7 +79,6 @@ var SensorForm = React.createClass({
         return this.context.theme || defaultTheme;
     },
     saveForm: function (data) {
-        data.tags = data.tags.map(tag => tag.value);
         this.props.onSave(data, this.props.sensorState.formulaItems, this.props.currentSensor);
         this.props.closeForm();
     },
@@ -98,6 +97,11 @@ var SensorForm = React.createClass({
                 />
             );
         }
+    },
+    renderTagInput: function (props) {
+        return (
+            <input type="text" placeholder="Tags" {...props} />
+        );
     },
     renderInputTextField: function (field) {
         const theme = this.getTheme();
@@ -154,8 +158,8 @@ var SensorForm = React.createClass({
                         scopeSelector=".sensor-modal-select"
                     />
                     <Select
-                        className={"sensor-modal-select"}
-                        name={"unitOfMeasurement"}
+                        className="sensor-modal-select"
+                        name="unitOfMeasurement"
                         onChange={field.input.onChange}
                         options={potentialUnitsOfMeasurement}
                         placeholder={field.label}
@@ -170,13 +174,13 @@ var SensorForm = React.createClass({
         return (
             <TagList
                 className={"tags-wrp form-group col-xs-12"}
-                style={{
-                    width: "30px",
-                    position: "absolute",
-                    bottom: "0px"
-                }}
                 tagIcon={true}
-                primaryTags={field.input.value}
+                tags={field.input.value}
+                containerStyle={{
+                    position: "absolute",
+                    bottom: "-5px",
+                    left: "15px"
+                }}
             />
         );
     },
@@ -185,29 +189,40 @@ var SensorForm = React.createClass({
         return (
             <div
                 className={"tags-wrp-input form-group col-xs-12"}
-                style={{marginBottom: "5px"}}
+                style={{...styles(theme).inputLine, marginBottom: "5px"}}
             >
                 <Radium.Style
                     rules={{
                         "input": {
-                            paddingLeft: "35px"
+                            padding: "5px 35px",
+                            backgroundColor: theme.colors.transparent,
+                            border: "0px",
+                            width: "100%",
+                            float: "left",
+                            marginTop: "8px",
+                            borderBottom: "solid 1px " + theme.colors.borderInputSearch
+                        },
+                        "input:focus": {
+                            borderColor: theme.colors.borderInputSearch,
+                            outline: "none",
+                            boxShadow: "none",
+                            WebkitBoxShadow: "none"
+                        },
+                        ".react-tagsinput-tag": {
+                            padding: "0px 10px 2px 10px",
+                            borderRadius: "35px",
+                            marginRight: "5px",
+                            color: theme.colors.white,
+                            border: "solid 1px " + theme.colors.white
                         }
                     }}
                     scopeSelector={".tags-wrp-input"}
                 />
-                <Radium.Style
-                    rules={styles(theme).sensorModalSelect}
-                    scopeSelector=".sensor-modal-select"
-                />
-
-                <AutoComplete
-                    className={"sensor-modal-select"}
-                    multi={true}
-                    name={"tags"}
-                    onSelectSuggestion={field.input.onChange}
-                    options={this.props.tagOptions}
-                    placeholder={field.label}
-                    value={field.input.value}
+                <TagsInput
+                    addOnBlur={true}
+                    renderInput={this.renderTagInput}
+                    onChange={field.input.onChange}
+                    value={field.input.value || field.input.initialValue}
                 />
             </div>
         );
@@ -281,7 +296,6 @@ var SensorForm = React.createClass({
                         />
                         <Field
                             name="tags"
-                            label="Aggiungi un tag"
                             component={this.renderTagsInputField}
                         />
                     </Col>
