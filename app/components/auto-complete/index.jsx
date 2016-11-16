@@ -32,6 +32,9 @@ var AutoComplete = React.createClass({
     render: function () {
         return (
             <Select
+                clearAllText={"Cancella tutto"}
+                clearValueText={"Cancella il valore"}
+                noResultsText={"Nessun risultato trovato"}
                 onChange={this.props.onSelectSuggestion}
                 onInputChange={inputValue => this._inputValue = inputValue}
                 optionRenderer={this.renderOption}
