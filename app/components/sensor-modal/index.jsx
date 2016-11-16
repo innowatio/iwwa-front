@@ -212,6 +212,8 @@ var SensorForm = React.createClass({
                             padding: "0px 10px 2px 10px",
                             borderRadius: "35px",
                             marginRight: "5px",
+                            marginBottom: "5px",
+                            display: "inline-block",
                             color: theme.colors.white,
                             border: "solid 1px " + theme.colors.white
                         }

@@ -11,27 +11,18 @@ import {defaultTheme} from "lib/theme";
 
 const inputStyle = (colors) => ({
     height: "60px",
+    lineHeight: "45px",
+    marginBottom: "20px",
     fontSize: "20px",
-    borderRight: "0px",
     borderTopLeftRadius: "20px",
     borderBottomLeftRadius: "20px",
-    borderTopRightRadius: "0px",
-    borderBottomRightRadius: "0px",
+    borderTopRightRadius: "20px",
+    borderBottomRightRadius: "20px",
     backgroundColor: colors.iconSearchUser,
     outline: "0px",
     outlineStyle: "none",
     outlineWidth: "0px",
     color: colors.white
-});
-
-const searchStyle = ({colors}) => ({
-    ".input-search": inputStyle(colors),
-    ".input-group-addon:last-child": {
-        backgroundColor: colors.iconSearchUser,
-        borderTopRightRadius: "20px",
-        borderBottomRightRadius: "20px",
-        cursor: "pointer"
-    }
 });
 
 var MonitoringSearch = React.createClass({
@@ -149,7 +140,115 @@ var MonitoringSearch = React.createClass({
             <div style={divStyle}>
                 <div className="search-container" style={{paddingTop: "20px", textAlign: "center", width: "100%"}}>
                     <Radium.Style
-                        rules={searchStyle(theme)}
+                        rules={{
+                            ".input-search": {
+                                height: "60px",
+                                fontSize: "20px",
+                                borderRight: "0px",
+                                borderTopLeftRadius: "20px",
+                                borderBottomLeftRadius: "20px",
+                                borderTopRightRadius: "0px",
+                                borderBottomRightRadius: "0px",
+                                backgroundColor: theme.colors.iconSearchUser,
+                                outline: "0px",
+                                outlineStyle: "none",
+                                outlineWidth: "0px",
+                                color: theme.colors.white
+                            },
+                            ".input-group-addon:last-child": {
+                                backgroundColor: theme.colors.iconSearchUser,
+                                borderTopRightRadius: "20px",
+                                borderBottomRightRadius: "20px",
+                                cursor: "pointer"
+                            },
+                            ".Select-control > span.Select-multi-value-wrapper > .Select-placeholder": {
+                                lineHeight: "55px"
+                            },
+                            ".Select-control": {
+                                outline: "0px",
+                                outlineStyle: "none",
+                                outlineWidth: "0px",
+                                overflow: "hidden",
+                                position: "relative",
+                                width: "100%",
+                                backgroundColor: theme.colors.transparent,
+                                color: theme.colors.white,
+                                fontSize: "16px",
+                                fontWeight: "300",
+                                padding: "0px"
+                            },
+                            ".Select-noresults": {
+                                boxSizing: "border-box",
+                                color: theme.colors.white,
+                                fontSize: "15px",
+                                fontWeight: "300",
+                                cursor: "default",
+                                display: "block",
+                                padding: "8px 10px"
+                            },
+                            ".Select-control:not(.is-searchable) > .Select-input": {
+                                outline: "0px",
+                                outlineStyle: "none",
+                                outlineWidth: "0px",
+                                borderColor: theme.colors.borderInputSearch,
+                                boxShadow: "none"
+                            },
+                            ".is-focused:not(.is-open) > .Select-control": {
+                                outline: "0px",
+                                outlineStyle: "none",
+                                outlineWidth: "0px",
+                                borderColor: theme.colors.borderInputSearch,
+                                boxShadow: "none"
+                            },
+                            ".Select-menu-outer": {
+                                boxShadow: "none",
+                                boxSizing: "border-box",
+                                // marginTop: "20px",
+                                maxHeight: "200px",
+                                position: "absolute",
+                                top: "100%",
+                                width: "90%",
+                                left: "50%",
+                                marginLeft: "-45%",
+                                zIndex: "1",
+                                WebkitOverflowScrolling: "touch",
+                                backgroundColor: theme.colors.transparent,
+                                border: "1px solid " + theme.colors.borderInputSearch,
+                                borderRadius: "15px",
+                                color: theme.colors.mainFontColor,
+                                overflow: "hidden"
+                            },
+                            ".Select-menu": {
+                                maxHeight: "198px",
+                                overflowY: "auto"
+                            },
+                            ".Select-input": {
+                                padding: "0px 10px"
+                            },
+                            ".Select-value-label": {
+                                color: theme.colors.white + "!important"
+                            },
+                            ".Select-option": {
+                                boxSizing: "border-box",
+                                backgroundColor: theme.colors.backgroundPopover,
+                                borderBottom: "1px solid " + theme.colors.borderInputSearch,
+                                color: theme.colors.mainFontColor + "!important",
+                                fontSize: "15px",
+                                fontWeight: "300",
+                                cursor: "pointer",
+                                display: "block",
+                                padding: "8px 10px"
+                            },
+                            ".Select-option:last-child": {
+                                borderBottomRightRadius: "9px",
+                                borderBottomLeftRadius: "9px",
+                                borderBottom: "0px"
+                            },
+                            ".Select-option.is-selected, .Select-option:hover": {
+                                backgroundColor: theme.colors.buttonPrimary,
+                                color: theme.colors.white
+                            }
+                        }}
                         scopeSelector=".search-container"
                     />
                     <AutoComplete
@@ -166,18 +265,16 @@ var MonitoringSearch = React.createClass({
                     />
                     {this.renderSearchInput(theme, "Cerca testo", "wordsSearchFilter", "wordsToSearch")}
 
-                    <label style={{fontSize: "20px", fontWeight: "400", marginBottom: "10px"}}>
-                        {"Riepilogo ricerca"}
-                    </label>
+                    <div style={{width: "100%", fontSize: "20px", fontWeight: "400", marginBottom: "10px"}}>
+                        <label>{"Riepilogo ricerca"}</label>
+                    </div>
 
-                    <div style={{marginBottom: "30px"}}>
+                    <div style={{float: "left", textAlign: "left", marginBottom: "30px"}}>
                         <TagList
                             tags={this.state.primaryTagsToSearch}
-                            style={{textAlign: "left"}}
                         />
                         <TagList
                             tags={this.state.tagsToSearch}
-                            style={{textAlign: "left"}}
                         />
                         <div style={{textAlign: "left"}}>
                             {self.state.wordsToSearch.map(item => {
@@ -194,7 +291,7 @@ var MonitoringSearch = React.createClass({
                         </div>
                     </div>
 
-                    <div style={{marginLeft: "20px"}}>
+                    <div style={{float: "left", display: "block", width: "100%"}}>
                         {this.renderSearchButton(theme)}
                         <Icon
                             color={theme.colors.white}
@@ -205,7 +302,6 @@ var MonitoringSearch = React.createClass({
                                 verticalAlign: "middle",
                                 lineHeight: "20px"
                             }}
-
                         />
                     </div>
                 </div>
