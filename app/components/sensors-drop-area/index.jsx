@@ -82,7 +82,7 @@ var SensorsDropArea = React.createClass({
     renderAggregateButton: function (theme) {
         return this.props.onClickAggregate ? (
             <bootstrap.OverlayTrigger
-                overlay={<bootstrap.Tooltip className="buttonInfo">{"Unisci in un unico sensore"}</bootstrap.Tooltip>}
+                overlay={<bootstrap.Tooltip id="aggregate" className="buttonInfo">{"Crea un sensore"}</bootstrap.Tooltip>}
                 placement="bottom"
                 rootClose={true}
             >
@@ -108,7 +108,7 @@ var SensorsDropArea = React.createClass({
     renderChartButton: function (theme) {
         return this.props.onClickChart ? (
             <bootstrap.OverlayTrigger
-                overlay={<bootstrap.Tooltip className="buttonInfo">{"Visualizza grafico dei sensori"}</bootstrap.Tooltip>}
+                overlay={<bootstrap.Tooltip id="sensorsChart" className="buttonInfo">{"Visualizza grafico dei sensori"}</bootstrap.Tooltip>}
                 placement="bottom"
                 rootClose={true}
             >
