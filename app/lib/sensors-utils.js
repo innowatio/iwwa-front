@@ -178,7 +178,7 @@ export function getAllSensors (sensorsCollection) {
     if (!sensorsCollection) {
         return Immutable.Map();
     }
-    return decorateWithMeasurementType(sensorsCollection, []);
+    return decorateWithMeasurementInfo(sensorsCollection, []);
 }
 
 export function getMonitoringSensors (sensorsCollection, viewAll, userSensors) {
@@ -192,7 +192,7 @@ export function getMonitoringSensors (sensorsCollection, viewAll, userSensors) {
             originalToHide.push(parentId);
         }
     });
-    const complete = decorateWithMeasurementType(sensorsCollection.filter(
+    const complete = decorateWithMeasurementInfo(sensorsCollection.filter(
         sensor => !sensor.get("isDeleted") && sensor.get("type") !== "pod"
     ), originalToHide);
     return viewAll ? complete : complete.filter(
@@ -200,7 +200,7 @@ export function getMonitoringSensors (sensorsCollection, viewAll, userSensors) {
     );
 }
 
-function decorateWithMeasurementType (sensors, originalToHide) {
+function decorateWithMeasurementInfo (sensors, originalToHide) {
     let items = {};
     sensors.forEach(sensor => {
         const types = sensor.get("measurementTypes");
@@ -208,11 +208,10 @@ function decorateWithMeasurementType (sensors, originalToHide) {
             types.forEach(measurementType => {
                 const itemKey = sensor.get("_id") + "-" + measurementType;
                 if (originalToHide.indexOf(itemKey) < 0) {
-                    items[itemKey] = sensor.set("measurementType", measurementType);
+                    items[itemKey] = getSensorInfo(sensor, measurementType);
                 }
             });
-        }
-        if (sensor.get("virtual")) {
+        } else if (sensor.get("virtual")) {
             const itemKey = sensor.get("_id");
             if (originalToHide.indexOf(itemKey) < 0) {
                 items[itemKey] = sensor;
@@ -220,4 +219,20 @@ function decorateWithMeasurementType (sensors, originalToHide) {
         }
     });
     return Immutable.fromJS(items);
+}
+
+function getSensorInfo (sensor, measurementType) {
+    const measurementsInfo = sensor.get("measurementsInfo");
+    let updatedSensor = sensor.set("measurementType", measurementType);
+    if (measurementsInfo && measurementsInfo.size > 0) {
+        measurementsInfo.forEach(info => {
+            if (info.get("type") === measurementType) {
+                updatedSensor = info.get("description") ? updatedSensor.set("description", info.get("description")) : updatedSensor;
+                updatedSensor = info.get("tags") ? updatedSensor.set("tags", info.get("tags")) : updatedSensor;
+                updatedSensor = info.get("primaryTags") ? updatedSensor.set("primaryTags", info.get("primaryTags")) : updatedSensor;
+                return false;
+            }
+        });
+    }
+    return updatedSensor;
 }

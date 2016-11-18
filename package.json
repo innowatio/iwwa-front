@@ -1,6 +1,6 @@
 {
   "name": "iwwa-front",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "Innowatio app front-end",
   "main": "app/main.html",
   "scripts": {
