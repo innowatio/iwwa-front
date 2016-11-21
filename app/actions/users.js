@@ -81,6 +81,22 @@ function checkAndAssignObjectsToUsers (dispatch, users, objects, assignFunc, use
     }
 }
 
+export const assignSitesToUsers = (users, sites) => {
+    return dispatch => {
+        dispatch({
+            type: "ASSIGNING_SITES_TO_USERS"
+        });
+        checkAndAssignObjectsToUsers(dispatch, users, sites, assignSitesToUser, "sites");
+    };
+};
+
+function assignSitesToUser (dispatch, user, sites) {
+    const updated = {
+        sites
+    };
+    updateUser(dispatch, user, updated, "SITES_ASSIGNMENT");
+}
+
 function assignSensorsToUser (dispatch, user, sensors) {
     const updated = {
         sensors: sensors

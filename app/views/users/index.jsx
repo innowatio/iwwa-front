@@ -15,6 +15,7 @@ import {
     Icon,
     MonitoringSensorsAssociator,
     NewUserModal,
+    SearchableDraggableModal,
     SectionToolbar,
     UserRolesAssociator,
     UserRow
@@ -37,6 +38,7 @@ import {
     addRole,
     assignGroupsToUsers,
     assignSensorsToUsers,
+    assignSitesToUsers,
     changeActiveStatus,
     cloneUsers,
     deleteUsers,
@@ -109,6 +111,7 @@ var Users = React.createClass({
         addSensorToWorkArea: PropTypes.func.isRequired,
         assignGroupsToUsers: PropTypes.func.isRequired,
         assignSensorsToUsers: PropTypes.func.isRequired,
+        assignSitesToUsers: PropTypes.func.isRequired,
         asteroid: PropTypes.object,
         changeActiveStatus: PropTypes.func.isRequired,
         cloneUsers: PropTypes.func.isRequired,
@@ -135,6 +138,7 @@ var Users = React.createClass({
     getInitialState: function () {
         return {
             showCloneMessage: false,
+            showSitesAssociator: false,
             showSensorsAssociator: false,
             showRolesAssociator: false
         };
@@ -143,6 +147,28 @@ var Users = React.createClass({
         this.props.asteroid.subscribe("sensors");
         this.props.asteroid.subscribe("groups");
         this.props.asteroid.subscribe("roles");
+    },
+    getClickFunction: function (iconName) {
+        switch (iconName) {
+            case "map":
+                this.setState({
+                    showSitesAssociator: true
+                });
+                break;
+            case "gauge":
+                this.openSensorsModal();
+                break;
+            case "user-functions":
+                this.openUserRolesModal();
+                break;
+            case "clone":
+                break;
+            case "add":
+                this.setState({showCreateUserModal: true});
+                break;
+            default:
+                break;
+        }
     },
     getTheme: function () {
         return this.context.theme || defaultTheme;
@@ -308,7 +334,7 @@ var Users = React.createClass({
             </div>
         ) : null;
     },
-    renderButton: function (tooltip, iconName, disabled, permissions, onClickFunc, active) {
+    renderButton: function (tooltip, iconName, disabled, permissions = [], onClickFunc, active) {
         const theme = this.getTheme();
         let hasPermisions = false;
         permissions.forEach(permissionRole => {
@@ -342,10 +368,15 @@ var Users = React.createClass({
         // <div style={{float: "left", marginTop: "3px"}}>
         //     {this.renderButton("Crea utente", "add", cloneMode, [MANAGE_USERS], () => this.setState({showCreateUserModal: true}))}
         // </div>
+        const {
+            assignSitesToUsers,
+            usersState
+        } = this.props;
         return (
             <div style={{position: "relative"}}>
                 <SectionToolbar>
                     <div style={{float: "right", marginTop: "3px"}}>
+                        {this.renderButton("Assegna siti", "map", (this.props.usersState.selectedUsers.length < 1), [MANAGE_USERS])}
                         {this.renderButton("Assegna sensori", "gauge", selectedUsers.length < 1 || cloneMode, [MANAGE_USERS, ASSIGN_SENSORS], this.openSensorsModal)}
                         {this.renderButton("Assegna funzioni", "user-functions", selectedUsers.length < 1 || cloneMode, [MANAGE_USERS, ASSIGN_GROUPS, CREATE_GROUPS], this.openUserRolesModal)}
                         {this.renderButton("Clona", "clone", selectedUsers.length !== 1 || cloneMode, [MANAGE_USERS], this.onCloneClick, cloneMode)}
@@ -432,6 +463,46 @@ var Users = React.createClass({
                     title={"UNA EMAIL È STATA INVIATA AL NUOVO UTENTE PER CONFERMARE LA REGISTRAZIONE"}
                 />
                 {this.renderCloneButtons()}
+                <SearchableDraggableModal
+                    collection={this.props.collections.get("sites").map(x => {
+                        return {
+                            ...x.toJS(),
+                            id: x.get("_id")
+                        };
+                    }).toArray()}
+                    initialsItems={R.uniq(R.flatten(usersState.selectedUsers.map(user => {
+                        const userSites = user.get("sites") || [];
+                        const mappedSites = userSites.map(site => {
+                            return {
+                                id: site
+                            };
+                        });
+                        return [...mappedSites];
+                    }))).filter(x => x)}
+                    onHide={() => {
+                        this.setState({
+                            showSitesAssociator: false
+                        });
+                    }}
+                    onConfirm={(selectedItems) => {
+                        this.setState({
+                            showSitesAssociator: false
+                        });
+                        assignSitesToUsers(usersState.selectedUsers, selectedItems.map(x => x.id));
+                    }}
+                    searchFields={[{
+                        key: "id",
+                        title: "Ricerca per sito"
+                    }, {
+                        key: "businessType",
+                        title: "Ricerca per tipo di sito"
+                    }, {
+                        key: "employees",
+                        title: "Ricerca per numero di dipendenti"
+                    }]}
+                    show={this.state.showSitesAssociator}
+                    title={"Assegna siti all'utente"}
+                />
             </div>
         );
     }
@@ -451,6 +522,7 @@ const mapDispatchToProps = (dispatch) => {
         addSensorToWorkArea: bindActionCreators(addSensorToWorkArea, dispatch),
         assignGroupsToUsers: bindActionCreators(assignGroupsToUsers, dispatch),
         assignSensorsToUsers: bindActionCreators(assignSensorsToUsers, dispatch),
+        assignSitesToUsers: bindActionCreators(assignSitesToUsers, dispatch),
         changeActiveStatus: bindActionCreators(changeActiveStatus, dispatch),
         cloneUsers: bindActionCreators(cloneUsers, dispatch),
         deleteUsers: bindActionCreators(deleteUsers, dispatch),
