@@ -4,7 +4,6 @@ import ReactHighstock from "react-highcharts/bundle/ReactHighstock"; // Highstoc
 import ExportCSV from "highcharts-export-csv";
 ExportCSV(ReactHighstock.Highcharts);
 
-
 import {defaultTheme} from "lib/theme";
 import {Button, Icon} from "components";
 
@@ -44,6 +43,7 @@ var MonitoringChart = React.createClass({
         addMoreData: PropTypes.func.isRequired,
         chartState: PropTypes.object.isRequired,
         saveConfig: PropTypes.func.isRequired,
+        selectPeriod: PropTypes.func.isRequired,
         series: PropTypes.array.isRequired,
         style: PropTypes.object,
         yAxis: PropTypes.array.isRequired
@@ -129,7 +129,7 @@ var MonitoringChart = React.createClass({
     },
     getCommonConfig: function (props, yAxis) {
         const theme = this.getTheme();
-        return {
+        let config = {
             chart: {
                 ...this.getCommonChartConfig(props),
                 type: props.chartState.type,
@@ -208,7 +208,7 @@ var MonitoringChart = React.createClass({
                     {type: "ytd", text: "YTD"},
                     {type: "all", text: "Tutto"}
                 ],
-                selected: 1
+                ordinal: false
             },
             tooltip: {
                 pointFormat: "<span style=\"color:{point.color}\">\u25CF</span> {series.name}: <b>{point.y:.2f}</b><br/>",
@@ -223,6 +223,10 @@ var MonitoringChart = React.createClass({
             },
             yAxis: yAxis
         };
+        if (!props.chartState.xAxis.min && !props.chartState.xAxis.max) {
+            config.rangeSelector.selected = 1;
+        }
+        return config;
     },
     getCommonChartConfig: function (props) {
         const theme = this.getTheme();
@@ -363,6 +367,9 @@ var MonitoringChart = React.createClass({
         });
     },
     synchronizeXAxis: function (xAxis) {
+        if (xAxis.trigger && xAxis.triggerOp !== "navigator-drag") {
+            this.props.selectPeriod(xAxis);
+        }
         this.doForEveryChart((hsChart, chart) => {
             if (chart.key !== "DEFAULT") {
                 hsChart.xAxis[0].setExtremes(xAxis.min + chart.timeShifter, xAxis.max + chart.timeShifter);

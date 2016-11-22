@@ -14,6 +14,7 @@ export const RESET_Y_AXIS_VALUES = "RESET_Y_AXIS_VALUES";
 export const SAVE_CHART_CONFIG = "SAVE_CHART_CONFIG";
 export const SELECT_CHART_TYPE = "SELECT_CHART_TYPE";
 export const SELECT_FAVORITE_CHART = "SELECT_FAVORITE_CHART";
+export const SELECT_PERIOD = "SELECT_PERIOD";
 export const SELECT_SENSORS_TO_DRAW = "SELECT_SENSORS_TO_DRAW";
 export const TOGGLE_COMPARISON_CHART = "TOGGLE_COMPARISON_CHART";
 
@@ -83,6 +84,8 @@ export function selectFavoriteChart (favoriteChart) {
     state.sensorsToDraw = map(sensor => typeof sensor === "string" ? sensor : Immutable.fromJS(sensor), state.sensorsToDraw);
     return getBasicObject(SELECT_FAVORITE_CHART, state);
 }
+
+export const selectPeriod = (xAxisPeriod) => getBasicObject(SELECT_PERIOD, xAxisPeriod);
 
 export function selectSensorsToDraw (sensors) {
     let sensorsArray = (Array.isArray(sensors) ? sensors : [sensors]);
