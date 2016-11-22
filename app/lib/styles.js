@@ -323,6 +323,11 @@ export const styles = (theme) => ({
             borderColor: theme.colors.borderInputSearch,
             boxShadow: "none"
         },
+        "Select-input": {
+            display: "block !important",
+            width: "100%",
+            borderBottom: "1px solid" + theme.colors.borderInputSearch
+        },
         ".Select-menu-outer": {
             boxShadow: "none",
             boxSizing: "border-box",
@@ -348,7 +353,8 @@ export const styles = (theme) => ({
             padding: "0px 10px"
         },
         ".Select-value-label": {
-            color: theme.colors.white + "!important"
+            color: theme.colors.white + "!important",
+            padding: "2px 10px 2px 2px"
         },
         ".Select-option": {
             boxSizing: "border-box",
@@ -369,6 +375,20 @@ export const styles = (theme) => ({
         ".Select-option.is-selected, .Select-option:hover": {
             backgroundColor: theme.colors.buttonPrimary,
             color: theme.colors.white
+        },
+
+        ".Select-value": {
+            borderColor: theme.colors.white,
+            color: theme.colors.white,
+            borderRadius: "20px"
+        },
+        ".Select-value-icon": {
+            borderColor: theme.colors.transparent,
+            borderRight: "0px !important"
+        },
+        ".Select-value-icon:hover, .Select-value-icon:active": {
+            color: theme.colors.white,
+            backgroundColor: theme.colors.transparent
         }
     }
 });

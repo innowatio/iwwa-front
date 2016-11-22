@@ -121,7 +121,7 @@ var SensorForm = React.createClass({
                     <label style={{
                         width: "100%",
                         color: theme.colors.textGrey,
-                        fontSize: "16px",
+                        fontSize: "15px",
                         fontWeight: "300",
                         marginTop: "10px"
                     }}>
@@ -187,14 +187,6 @@ var SensorForm = React.createClass({
                 className={"tags-wrp-input form-group col-xs-12"}
                 style={{marginBottom: "5px"}}
             >
-                <Radium.Style
-                    rules={{
-                        "input": {
-                            paddingLeft: "35px"
-                        }
-                    }}
-                    scopeSelector={".tags-wrp-input"}
-                />
                 <Radium.Style
                     rules={styles(theme).sensorModalSelect}
                     scopeSelector=".sensor-modal-select"
