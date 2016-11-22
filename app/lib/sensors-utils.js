@@ -227,9 +227,11 @@ function getSensorInfo (sensor, measurementType) {
     if (measurementsInfo && measurementsInfo.size > 0) {
         measurementsInfo.forEach(info => {
             if (info.get("type") === measurementType) {
-                updatedSensor = info.get("description") ? updatedSensor.set("description", info.get("description")) : updatedSensor;
-                updatedSensor = info.get("tags") ? updatedSensor.set("tags", info.get("tags")) : updatedSensor;
-                updatedSensor = info.get("primaryTags") ? updatedSensor.set("primaryTags", info.get("primaryTags")) : updatedSensor;
+                info.keySeq().forEach(key => {
+                    if (key !== "type") {
+                        updatedSensor = updatedSensor.set(key, info.get(key));
+                    }
+                });
                 return false;
             }
         });
