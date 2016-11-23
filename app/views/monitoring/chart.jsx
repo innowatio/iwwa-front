@@ -108,8 +108,7 @@ var MonitoringChartView = React.createClass({
             let isNull = true;
             for (let i = 0; i < it.data.length && isNull; i++) {
                 const val = it.data[i][1];
-                // isNull = val !== 0 && !val; //TODO in case zero series has to be shown
-                isNull = !val || val == 0;
+                isNull = val !== 0 && !val;
             }
             return isNull;
         });
