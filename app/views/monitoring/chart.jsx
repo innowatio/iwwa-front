@@ -10,10 +10,10 @@ import {
     resetYAxisValues,
     saveChartConfig,
     selectChartType,
+    selectPeriod,
     toggleComparisonChart
 } from "actions/monitoring-chart";
 
-import {getUnitOfMeasurement} from "lib/sensors-decorators";
 import {extractSensorsFromFormula, getAllSensors, getSensorLabel, reduceFormula} from "lib/sensors-utils";
 import {defaultTheme} from "lib/theme";
 import moment from "lib/moment";
@@ -32,6 +32,7 @@ var MonitoringChartView = React.createClass({
         resetYAxisValues: PropTypes.func.isRequired,
         saveChartConfig: PropTypes.func.isRequired,
         selectChartType: PropTypes.func.isRequired,
+        selectPeriod: PropTypes.func.isRequired,
         toggleComparisonChart: PropTypes.func.isRequired
     },
     contextTypes: {
@@ -59,6 +60,9 @@ var MonitoringChartView = React.createClass({
     getEndDate: function (props) {
         return moment.utc().add(props.monitoringChart.dataMonthsSpan.forward, "months").endOf("month");
     },
+    getUnitOfMeasurement: function (sensor) {
+        return sensor.get("unitOfMeasurement") ? sensor.get("unitOfMeasurement") : "indefinito";
+    },
     subscribeToSensorsData: function (props) {
         const sensors = props.monitoringChart.sensorsToDraw;
         let allSensors = this.getAllSensors();
@@ -81,7 +85,6 @@ var MonitoringChartView = React.createClass({
         const allSensors = this.getAllSensors();
         const monitoringCharts = props.monitoringChart.sensorsToDraw.map(sensor => {
             const sensorObj = this.getSensorObj(sensor, allSensors);
-            const unit = sensorObj.get("unitOfMeasurement") ? sensorObj.get("unitOfMeasurement") : getUnitOfMeasurement(sensorObj.get("measurementType"));
             return {
                 date: {
                     start: this.getStartDate(props).valueOf(),
@@ -92,7 +95,7 @@ var MonitoringChartView = React.createClass({
                 name: getSensorLabel(sensorObj),
                 sensorId: sensorObj.get("_id"),
                 source: {key: "reading"},
-                unitOfMeasurement: unit
+                unitOfMeasurement: this.getUnitOfMeasurement(sensorObj)
             };
         });
         const readingsDailyAggregates = props.collections.get("readings-daily-aggregates");
@@ -101,10 +104,11 @@ var MonitoringChartView = React.createClass({
         }
     },
     haveNullSeries: function (series) {
-        return series.some((it) => {
+        return series.some(it => {
             let isNull = true;
             for (let i = 0; i < it.data.length && isNull; i++) {
-                let val = it.data[i][1];
+                const val = it.data[i][1];
+                // isNull = val !== 0 && !val; //TODO in case zero series has to be shown
                 isNull = !val || val == 0;
             }
             return isNull;
@@ -115,7 +119,7 @@ var MonitoringChartView = React.createClass({
         const allSensors = this.getAllSensors();
         props.monitoringChart.sensorsToDraw.forEach(sensor => {
             const sensorObj = this.getSensorObj(sensor, allSensors);
-            const unit = sensorObj.get("unitOfMeasurement") ? sensorObj.get("unitOfMeasurement") : getUnitOfMeasurement(sensorObj.get("measurementType"));
+            const unit = this.getUnitOfMeasurement(sensorObj);
             if (yAxis.indexOf(unit) < 0) {
                 yAxis.push(unit);
             }
@@ -132,6 +136,7 @@ var MonitoringChartView = React.createClass({
                         chartState={this.props.monitoringChart}
                         ref="monitoringChart"
                         saveConfig={this.props.saveChartConfig}
+                        selectPeriod={this.props.selectPeriod}
                         series={series}
                         yAxis={this.getYAxis(this.props)}
                     />
@@ -186,6 +191,7 @@ const mapDispatchToProps = (dispatch) => {
         resetYAxisValues: bindActionCreators(resetYAxisValues, dispatch),
         saveChartConfig: bindActionCreators(saveChartConfig, dispatch),
         selectChartType: bindActionCreators(selectChartType, dispatch),
+        selectPeriod: bindActionCreators(selectPeriod, dispatch),
         toggleComparisonChart: bindActionCreators(toggleComparisonChart, dispatch)
     };
 };

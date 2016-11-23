@@ -304,7 +304,6 @@ var MonitoringChartToolbar = React.createClass({
                             type="number"
                             disabled={this.props.monitoringChart.yAxis.disabled}
                             bsStyle={this.getYAxisValidationState()}
-                            hasFeedback={true}
                             onChange={input => {
                                 let newState = JSON.parse(JSON.stringify(this.state));
                                 newState.yAxis[y].min = input.target.value;
@@ -324,7 +323,6 @@ var MonitoringChartToolbar = React.createClass({
                             type="number"
                             disabled={this.props.monitoringChart.yAxis.disabled}
                             bsStyle={this.getYAxisValidationState()}
-                            hasFeedback={true}
                             onChange={input => {
                                 let newState = JSON.parse(JSON.stringify(this.state));
                                 newState.yAxis[y].max = input.target.value;

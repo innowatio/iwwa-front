@@ -6,6 +6,7 @@ export const Types = {
     NUMBER: "number",
     OPERATOR: "operator",
     ROLE: "role",
+    SEARCHABLE: "searchable",
     SENSOR: "sensor",
     SENSOR_ROW: "sensor-row",
     USER_ROW: "user-row"

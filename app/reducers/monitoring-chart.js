@@ -6,6 +6,7 @@ import {
     SAVE_CHART_CONFIG,
     SELECT_CHART_TYPE,
     SELECT_FAVORITE_CHART,
+    SELECT_PERIOD,
     SELECT_SENSORS_TO_DRAW,
     TOGGLE_COMPARISON_CHART
 } from "../actions/monitoring-chart";
@@ -61,7 +62,9 @@ export function monitoringChart (state = defaultState, action) {
                 }
             });
         case RESET_Y_AXIS_VALUES:
-            return defaultNullConfig(state, {yAxis: {}});
+            return defaultNullConfig(state, {
+                yAxis: {}
+            });
         case SAVE_CHART_CONFIG:
             return {
                 ...state,
@@ -100,6 +103,13 @@ export function monitoringChart (state = defaultState, action) {
                 }
             });
         }
+        case SELECT_PERIOD:
+            return defaultNullConfig(state, {
+                xAxis: {
+                    max: action.payload.max,
+                    min: action.payload.min
+                }
+            });
         default:
             return state;
     }
