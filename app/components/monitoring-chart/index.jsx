@@ -108,8 +108,7 @@ var MonitoringChart = React.createClass({
     },
     getYAxis: function (props) {
         let yAxis = [];
-        props.yAxis.forEach ((item) => {
-            let {min, max} = props.chartState.yAxis[item];
+        props.yAxis.forEach (item => {
             let config = {
                 key: item,
                 labels: {
@@ -117,11 +116,14 @@ var MonitoringChart = React.createClass({
                 },
                 opposite: yAxis.length > 0
             };
-            if (min) {
-                config.min = min;
-            }
-            if (max) {
-                config.max = max;
+            if (props.chartState.yAxis[item]) {
+                const {min, max} = props.chartState.yAxis[item];
+                if (min) {
+                    config.min = min;
+                }
+                if (max) {
+                    config.max = max;
+                }
             }
             yAxis.push(config);
         });
