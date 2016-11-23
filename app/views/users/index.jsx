@@ -368,6 +368,8 @@ var Users = React.createClass({
         // <div style={{float: "left", marginTop: "3px"}}>
         //     {this.renderButton("Crea utente", "add", cloneMode, [MANAGE_USERS], () => this.setState({showCreateUserModal: true}))}
         // </div>
+        // TODO ripristinare quando presente la funzione
+        // {this.renderButton("Assegna siti", "map", (this.props.usersState.selectedUsers.length < 1), [MANAGE_USERS])}
         const {
             assignSitesToUsers,
             usersState
@@ -376,7 +378,6 @@ var Users = React.createClass({
             <div style={{position: "relative"}}>
                 <SectionToolbar>
                     <div style={{float: "right", marginTop: "3px"}}>
-                        {this.renderButton("Assegna siti", "map", (this.props.usersState.selectedUsers.length < 1), [MANAGE_USERS])}
                         {this.renderButton("Assegna sensori", "gauge", selectedUsers.length < 1 || cloneMode, [MANAGE_USERS, ASSIGN_SENSORS], this.openSensorsModal)}
                         {this.renderButton("Assegna funzioni", "user-functions", selectedUsers.length < 1 || cloneMode, [MANAGE_USERS, ASSIGN_GROUPS, CREATE_GROUPS], this.openUserRolesModal)}
                         {this.renderButton("Clona", "clone", selectedUsers.length !== 1 || cloneMode, [MANAGE_USERS], this.onCloneClick, cloneMode)}
