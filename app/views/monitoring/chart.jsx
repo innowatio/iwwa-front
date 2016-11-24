@@ -81,15 +81,18 @@ var MonitoringChartView = React.createClass({
             });
         });
     },
+    getChartDates: function (props) {
+        return {
+            start: this.getStartDate(props).valueOf(),
+            end: this.getEndDate(props).valueOf()
+        }
+    },
     getChartSeries: function (props) {
         const allSensors = this.getAllSensors();
         const monitoringCharts = props.monitoringChart.sensorsToDraw.map(sensor => {
             const sensorObj = this.getSensorObj(sensor, allSensors);
             return {
-                date: {
-                    start: this.getStartDate(props).valueOf(),
-                    end: this.getEndDate(props).valueOf()
-                },
+                date: this.getChartDates(props),
                 formula: reduceFormula(sensorObj, allSensors),
                 measurementType: {key: sensorObj.get("measurementType")},
                 name: getSensorLabel(sensorObj),
@@ -132,6 +135,7 @@ var MonitoringChartView = React.createClass({
                 <div style={{width: "100%", height: "100%", overflow: "scroll"}}>
                     <MonitoringChart
                         addMoreData={this.props.addMoreData}
+                        chartDates={this.getChartDates(this.props)}
                         chartState={this.props.monitoringChart}
                         ref="monitoringChart"
                         saveConfig={this.props.saveChartConfig}

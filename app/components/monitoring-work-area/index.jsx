@@ -77,6 +77,10 @@ var MonitoringWorkArea = React.createClass({
     getSortFunc: function () {
         return R.partialRight(this.sortByLabel, [true]);
     },
+    filterWorkAreaSensors: function () {
+        const {sensors, workAreaSensors} = this.props;
+        return sensors.filterNot(sensor => R.contains(getSensorId(sensor), workAreaSensors));
+    },
     searchFilter: function (item) {
         const {primaryTagsToFilter, tagsToFilter, wordsToFilter} = this.props.filters;
         return (
@@ -135,8 +139,9 @@ var MonitoringWorkArea = React.createClass({
         return aLabel > bLabel ? -1 : 1;
     },
     selectAllSensors: function (sensors) {
+        const allSensors = this.filterWorkAreaSensors();
         sensors.forEach(sensor => {
-            this.props.selectSensor(this.props.sensors.get(sensor.key));
+            this.props.selectSensor(allSensors.get(sensor.key));
         });
     },
     moveSelectedSensors: function () {
@@ -203,7 +208,7 @@ var MonitoringWorkArea = React.createClass({
                         }}>
                             <CollectionItemList
                                 buttonBottomStyle={buttonBottomStyle(theme)}
-                                collections={this.props.sensors}
+                                collections={this.filterWorkAreaSensors()}
                                 filter={this.searchFilter}
                                 headerComponent={this.renderSensorList}
                                 hover={true}
@@ -234,7 +239,6 @@ var MonitoringWorkArea = React.createClass({
                         onClickChart={this.props.selectSensorsToDraw}
                         removeSensorFromWorkArea={this.props.removeSensorFromWorkArea}
                         sensors={this.props.workAreaSensors}
-                        sensorsFilter={this.searchFilter}
                         sensorsSort={this.getSortFunc()}
                         workAreaInstructions={this.props.workAreaInstructions}
                         workAreaMessage={this.props.workAreaMessage}

@@ -149,8 +149,8 @@ var Monitoring = React.createClass({
         return getAllSensors(this.props.collections.get("sensors"));
     },
     getMonitoringSensors: function () {
-        const {asteroid} = this.props;
-        return getMonitoringSensors(this.props.collections.get("sensors"), hasRole(asteroid, VIEW_ALL_SENSORS), getLoggedUser(asteroid).get("sensors"));
+        const {asteroid, collections} = this.props;
+        return getMonitoringSensors(collections.get("sensors"), hasRole(asteroid, VIEW_ALL_SENSORS), getLoggedUser(asteroid).get("sensors"));
     },
     getSensorFields: function () {
         const selected = this.props.sensorsState.selectedSensors;

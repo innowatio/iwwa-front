@@ -4,6 +4,7 @@ import ReactHighstock from "react-highcharts/bundle/ReactHighstock"; // Highstoc
 import ExportCSV from "highcharts-export-csv";
 ExportCSV(ReactHighstock.Highcharts);
 
+import moment from "lib/moment";
 import {defaultTheme} from "lib/theme";
 import {Button, Icon} from "components";
 
@@ -41,6 +42,7 @@ const charts = [
 var MonitoringChart = React.createClass({
     propTypes: {
         addMoreData: PropTypes.func.isRequired,
+        chartDates: PropTypes.object.isRequired,
         chartState: PropTypes.object.isRequired,
         saveConfig: PropTypes.func.isRequired,
         selectPeriod: PropTypes.func.isRequired,
@@ -129,8 +131,22 @@ var MonitoringChart = React.createClass({
         });
         return yAxis;
     },
+    getSundaysOverlay: function (date, colors) {
+        var weekendOverlay = [];
+        const dayInFilter = moment(date.end).diff(moment(date.start), "days");
+        const firstSunday = moment(date.start).isoWeekday(7);
+        for (var i = 0; i <= dayInFilter/7; i++) {
+            const nextSun = moment(firstSunday).add({day: i * 7});
+            weekendOverlay.push({
+                from: nextSun.startOf("day").valueOf(),
+                to: nextSun.endOf("day").valueOf(),
+                color: colors.graphUnderlay
+            });
+        }
+        return weekendOverlay;
+    },
     getCommonConfig: function (props, yAxis) {
-        const theme = this.getTheme();
+        const {colors} = this.getTheme();
         let config = {
             chart: {
                 ...this.getCommonChartConfig(props),
@@ -148,10 +164,10 @@ var MonitoringChart = React.createClass({
             legend: {
                 enabled: true,
                 itemStyle: {
-                    color: theme.colors.mainFontColor
+                    color: colors.mainFontColor
                 },
                 itemHoverStyle: {
-                    color: theme.colors.mainFontColor
+                    color: colors.mainFontColor
                 }
             },
             navigator: {
@@ -170,36 +186,36 @@ var MonitoringChart = React.createClass({
                 buttonTheme: { // styles for the buttons
                     fill: "none",
                     r: 12,
-                    stroke: theme.colors.mainFontColor,
+                    stroke: colors.mainFontColor,
                     "stroke-width": 1,
                     width: 50,
                     style: {
-                        color: theme.colors.mainFontColor
+                        color: colors.mainFontColor
                     },
                     states: {
                         hover: {
-                            fill: theme.colors.buttonPrimary,
-                            stroke: theme.colors.buttonPrimary,
+                            fill: colors.buttonPrimary,
+                            stroke: colors.buttonPrimary,
                             style: {
-                                color: theme.colors.white
+                                color: colors.white
                             }
                         },
                         select: {
-                            stroke: theme.colors.buttonPrimary,
-                            fill: theme.colors.buttonPrimary,
+                            stroke: colors.buttonPrimary,
+                            fill: colors.buttonPrimary,
                             style: {
-                                color: theme.colors.white
+                                color: colors.white
                             }
                         }
                     }
                 },
-                inputBoxBorderColor:  theme.colors.mainFontColor,
+                inputBoxBorderColor:  colors.mainFontColor,
                 inputStyle: {
-                    color: theme.colors.buttonPrimary,
+                    color: colors.buttonPrimary,
                     fontWeight: "600"
                 },
                 labelStyle: {
-                    color: theme.colors.mainFontColor,
+                    color: colors.mainFontColor,
                     fontWeight: "600"
                 },
                 buttons: [
@@ -221,7 +237,8 @@ var MonitoringChart = React.createClass({
                 min: props.chartState.xAxis.min,
                 events: {
                     afterSetExtremes: this.synchronizeXAxis
-                }
+                },
+                plotBands: this.getSundaysOverlay(props.chartDates, colors)
             },
             yAxis: yAxis
         };
