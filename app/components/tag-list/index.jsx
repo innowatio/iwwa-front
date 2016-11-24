@@ -34,6 +34,7 @@ var TagList = React.createClass({
         className: PropTypes.string,
         containerStyle: PropTypes.object,
         isSelected: PropTypes.bool,
+        onClickRemove: PropTypes.func,
         primaryTags: PropTypes.any,
         tagIcon: PropTypes.bool,
         tags: PropTypes.any
@@ -58,34 +59,41 @@ var TagList = React.createClass({
             />
         ) : null;
     },
+    renderTagRemoveIcon: function (value) {
+        return this.props.onClickRemove ? (
+            <label
+                style={{
+                    cursor: "pointer",
+                    marginRight: "5px"
+                }}
+                onClick={() => this.props.onClickRemove(value)}
+            >
+                {"x"}
+            </label>
+        ) : null;
+    },
+    renderTag: function (style, value) {
+        return (
+            <label
+                style={style}
+                key={value}
+            >
+                {this.renderTagRemoveIcon(value)}
+                {value}
+            </label>
+        );
+    },
     renderTags: function (theme) {
         let tags = [];
         if (this.props.primaryTags) {
             this.props.primaryTags.forEach(primaryTag => {
-                tags.push(
-                    <label
-                        style={
-                            this.props.isSelected ?
-                            styles(theme).labelPrimaryTagHover :
-                            styles(theme).labelPrimaryTag
-                        }
-                        key={"primary-" + primaryTag}
-                    >
-                        {primaryTag}
-                    </label>
-                );
+                const style = this.props.isSelected ? styles(theme).labelPrimaryTagHover : styles(theme).labelPrimaryTag;
+                tags.push(this.renderTag(style, primaryTag));
             });
         }
         if (this.props.tags) {
             this.props.tags.forEach(tag => {
-                tags.push(
-                    <label
-                        style={styles(theme).labelTag}
-                        key={"tag-" + tag}
-                    >
-                        {tag}
-                    </label>
-                );
+                tags.push(this.renderTag(styles(theme).labelTag, tag));
             });
         }
         return tags;

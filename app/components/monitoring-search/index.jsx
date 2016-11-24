@@ -71,11 +71,21 @@ var MonitoringSearch = React.createClass({
         });
     },
     addValueToSearch: function (value, filterField, searchValuesField) {
+        this.toggleSearchValue(value, filterField, searchValuesField, true);
+    },
+    removeValueFromSearch: function (value, filterField, searchValuesField) {
+        this.toggleSearchValue(value, filterField, searchValuesField, false);
+    },
+    toggleSearchValue: function (value, filterField, searchValuesField, add) {
         if (value && value.trim().length > 0) {
             let newValues = this.state[searchValuesField].slice();
-            newValues.push(value);
             let obj = {};
-            obj[filterField] = "";
+            if (add) {
+                newValues.push(value);
+                obj[filterField] = "";
+            } else {
+                newValues.splice(newValues.indexOf(value), 1)
+            }
             obj[searchValuesField] = newValues;
             this.setState(obj, this.filterSensors);
         }
@@ -130,12 +140,12 @@ var MonitoringSearch = React.createClass({
         );
     },
     render: function () {
-        let self = this;
-        let divStyle = {
-            ...styles(self.getTheme()).titlePage,
+        const self = this;
+        const theme = self.getTheme();
+        const divStyle = {
+            ...styles(theme).titlePage,
             ...self.props.style
         };
-        let theme = self.getTheme();
         return (
             <div style={divStyle}>
                 <div className="search-container" style={{paddingTop: "20px", textAlign: "center", width: "100%"}}>
@@ -271,24 +281,17 @@ var MonitoringSearch = React.createClass({
 
                     <div style={{float: "left", textAlign: "left", marginBottom: "30px"}}>
                         <TagList
-                            tags={this.state.primaryTagsToSearch}
+                            onClickRemove={value => this.removeValueFromSearch(value, "primaryTagSearchFilter", "primaryTagsToSearch")}
+                            primaryTags={this.state.primaryTagsToSearch}
                         />
                         <TagList
+                            onClickRemove={value => this.removeValueFromSearch(value, "tagSearchFilter", "tagsToSearch")}
                             tags={this.state.tagsToSearch}
                         />
-                        <div style={{textAlign: "left"}}>
-                            {self.state.wordsToSearch.map(item => {
-                                return (
-                                    <label key={item} style={{
-                                        margin:"0px 10px 10px 10px",
-                                        fontSize: "16px",
-                                        fontWeight: "300"
-                                    }}>
-                                        {item}
-                                    </label>
-                                );
-                            })}
-                        </div>
+                        <TagList
+                            onClickRemove={value => this.removeValueFromSearch(value, "wordsSearchFilter", "wordsToSearch")}
+                            tags={this.state.wordsToSearch}
+                        />
                     </div>
 
                     <div style={{float: "left", display: "block", width: "100%"}}>
