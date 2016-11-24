@@ -84,7 +84,7 @@ var MonitoringSearch = React.createClass({
                 newValues.push(value);
                 obj[filterField] = "";
             } else {
-                newValues.splice(newValues.indexOf(value), 1)
+                newValues.splice(newValues.indexOf(value), 1);
             }
             obj[searchValuesField] = newValues;
             this.setState(obj, this.filterSensors);
