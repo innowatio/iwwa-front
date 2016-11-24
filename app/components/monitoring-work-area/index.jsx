@@ -19,7 +19,7 @@ const selectionButtonStyleContainer = ({colors}) => ({
     borderBottomLeftRadius: "20px",
     borderTop: `1px solid ${colors.borderContentModal}`,
     position: "absolute",
-    bottom: "0px"
+    bottom: "-1px"
 });
 
 const buttonBottomStyle = ({colors}) => ({

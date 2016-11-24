@@ -14,6 +14,7 @@ const inputStyle = (colors) => ({
     lineHeight: "45px",
     marginBottom: "20px",
     fontSize: "20px",
+    textAlign: "left",
     borderTopLeftRadius: "20px",
     borderBottomLeftRadius: "20px",
     borderTopRightRadius: "20px",
@@ -113,6 +114,7 @@ var MonitoringSearch = React.createClass({
                     placeholder={inputPlaceholder}
                     type="text"
                     value={self.state[filterField]}
+                    style={{fontWeight: "300"}}
                 />
                 <InputGroup.Addon>
                     <Icon
@@ -186,6 +188,9 @@ var MonitoringSearch = React.createClass({
                                 display: "block",
                                 padding: "8px 10px"
                             },
+                            ".Select-arrow-zone > .Select-arrow": {
+                                borderColor: `${theme.colors.white} ${theme.colors.transparent} ${theme.colors.transparent}`
+                            },
                             ".Select-control:not(.is-searchable) > .Select-input": {
                                 outline: "0px",
                                 outlineStyle: "none",
@@ -200,10 +205,16 @@ var MonitoringSearch = React.createClass({
                                 borderColor: theme.colors.borderInputSearch,
                                 boxShadow: "none"
                             },
+                            ".form-control:focus": {
+                                outline: "0px",
+                                outlineStyle: "none",
+                                outlineWidth: "0px",
+                                borderColor: theme.colors.borderInputSearch,
+                                boxShadow: "none"
+                            },
                             ".Select-menu-outer": {
                                 boxShadow: "none",
                                 boxSizing: "border-box",
-                                // marginTop: "20px",
                                 maxHeight: "200px",
                                 position: "absolute",
                                 top: "100%",
@@ -212,7 +223,7 @@ var MonitoringSearch = React.createClass({
                                 marginLeft: "-45%",
                                 zIndex: "1",
                                 WebkitOverflowScrolling: "touch",
-                                backgroundColor: theme.colors.transparent,
+                                backgroundColor: theme.colors.backgroundPopover,
                                 border: "1px solid " + theme.colors.borderInputSearch,
                                 borderRadius: "15px",
                                 color: theme.colors.mainFontColor,
@@ -230,7 +241,7 @@ var MonitoringSearch = React.createClass({
                             },
                             ".Select-option": {
                                 boxSizing: "border-box",
-                                backgroundColor: theme.colors.backgroundPopover,
+                                backgroundColor: theme.colors.transparent,
                                 borderBottom: "1px solid " + theme.colors.borderInputSearch,
                                 color: theme.colors.mainFontColor + "!important",
                                 fontSize: "15px",

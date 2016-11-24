@@ -133,7 +133,7 @@ var SensorForm = React.createClass({
                             resize: "none",
                             margin: "0px",
                             padding: "5px 0px",
-                            height: "110px"
+                            height: "130px"
                         }}
                         {...field.input}
                     />
@@ -170,11 +170,6 @@ var SensorForm = React.createClass({
         return (
             <TagList
                 className={"tags-wrp form-group col-xs-12"}
-                style={{
-                    width: "30px",
-                    position: "absolute",
-                    bottom: "0px"
-                }}
                 tagIcon={true}
                 primaryTags={field.input.value}
             />
@@ -185,13 +180,12 @@ var SensorForm = React.createClass({
         return (
             <div
                 className={"tags-wrp-input form-group col-xs-12"}
-                style={{marginBottom: "5px"}}
+                style={{marginBottom: "5px", display: "block"}}
             >
                 <Radium.Style
                     rules={styles(theme).sensorModalSelect}
                     scopeSelector=".sensor-modal-select"
                 />
-
                 <AutoComplete
                     className={"sensor-modal-select"}
                     multi={true}
