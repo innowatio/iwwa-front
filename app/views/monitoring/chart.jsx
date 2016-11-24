@@ -85,7 +85,7 @@ var MonitoringChartView = React.createClass({
         return {
             start: this.getStartDate(props).valueOf(),
             end: this.getEndDate(props).valueOf()
-        }
+        };
     },
     getChartSeries: function (props) {
         const allSensors = this.getAllSensors();
