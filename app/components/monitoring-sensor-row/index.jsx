@@ -4,13 +4,12 @@ import {DragSource} from "react-dnd";
 import IPropTypes from "react-immutable-proptypes";
 import {Link} from "react-router";
 import {partial} from "ramda";
-import * as bootstrap from "react-bootstrap";
 
 import {Types} from "lib/dnd-utils";
 import {hasRole, VIEW_FORMULA_DETAILS} from "lib/roles-utils";
 import {getSensorLabel} from "lib/sensors-utils";
 import {defaultTheme} from "lib/theme";
-import {Icon, TagList} from "components";
+import {Icon, TagList, TooltipIconButton} from "components";
 
 const styles = ({colors}) => ({
     container: {
@@ -81,16 +80,6 @@ var SensorRow = React.createClass({
     getTheme: function () {
         return this.context.theme || defaultTheme;
     },
-    addTooltip: function (sensor) {
-        const sensorFormula = sensor.get("formulas") ? sensor.get("formulas").first().get("formula") : null;
-        return (
-            <bootstrap.Tooltip id="createChartInfo">
-                {sensor.get("description")}
-                <br />
-                {sensorFormula && hasRole(this.props.asteroid, VIEW_FORMULA_DETAILS) ? sensorFormula : null}
-            </bootstrap.Tooltip>
-        );
-    },
     renderSensorName: function () {
         let {sensor} = this.props;
         return (
@@ -115,36 +104,35 @@ var SensorRow = React.createClass({
     },
     renderInfoButton: function (sensor) {
         const theme = this.getTheme();
+        const sensorFormula = sensor.get("formulas") ? sensor.get("formulas").first().get("formula") : null;
+        const tooltipText = (
+            <label>
+                {sensor.get("description")}
+                <br />
+                {sensorFormula && hasRole(this.props.asteroid, VIEW_FORMULA_DETAILS) ? sensorFormula : null}
+            </label>
+        );
         return (
-            <bootstrap.OverlayTrigger
-                overlay={this.addTooltip(sensor)}
-                placement="left"
-                rootClose={true}
-                trigger="click"
-            >
-                <bootstrap.Button
-                    bsStyle="link"
-                    style={{
-                        height: "50px",
-                        width: "50px",
-                        textAlign: "center",
-                        padding: "0px",
-                        outline: "0px",
-                        outlineStyle: "none",
-                        outlineWidth: "0px"
-                    }}
-                >
-                    <Icon
-                        color={theme.colors.mainFontColor}
-                        icon={"information"}
-                        size={"34px"}
-                        style={{
-                            verticalAlign: "middle",
-                            lineHeight: "55px"
-                        }}
-                    />
-                </bootstrap.Button>
-            </bootstrap.OverlayTrigger>
+            <TooltipIconButton
+                buttonBsStyle={"link"}
+                buttonStyle={{
+                    height: "50px",
+                    width: "50px",
+                    textAlign: "center",
+                    padding: "0px",
+                    outline: "0px",
+                    outlineStyle: "none",
+                    outlineWidth: "0px"
+                }}
+                icon={"information"}
+                iconColor={theme.colors.mainFontColor}
+                iconSize={"34px"}
+                iconStyle={{verticalAlign: "middle", lineHeight: "55px"}}
+                tooltipId={"createChartInfo"}
+                tooltipPlacement={"left"}
+                tooltipText={tooltipText}
+                tooltipTrigger={"click"}
+            />
         );
     },
     renderChartButton: function () {

@@ -93,13 +93,6 @@ var AlarmForm = React.createClass({
     submit: function () {
         this.props.submit(this.state, this.props.type, this.props.alarm);
     },
-    addTooltip: function () {
-        return (
-            <bootstrap.Tooltip id="createAlarmInfo">
-                {stringIt.createAlarmInfoTooltip}
-            </bootstrap.Tooltip>
-        );
-    },
     updateState: function (newValue) {
         this.setState(newValue);
     },
@@ -120,25 +113,16 @@ var AlarmForm = React.createClass({
                 <h3 style={styleH3(theme)}>{stringIt.titleTabImpostazioniAlarm}</h3>
                 <h4 style={styleH4(theme)}>
                     {"Seleziona un punto da monitorare e le soglie di allarme "}
-                    <bootstrap.OverlayTrigger
-                        overlay={this.addTooltip()}
-                        placement="right"
-                        rootClose={true}
-                        trigger="click"
-                    >
-                        <components.Button  bsStyle="link">
-                            <components.Icon
-                                color={theme.colors.iconInfo}
-                                icon={"info"}
-                                size={"20px"}
-                                style={{
-                                    float: "right",
-                                    verticalAlign: "middle",
-                                    lineHeight: "20px"
-                                }}
-                            />
-                        </components.Button>
-                    </bootstrap.OverlayTrigger>
+                    <components.TooltipIconButton
+                        buttonBsStyle={"link"}
+                        icon={"info"}
+                        iconColor={theme.colors.iconInfo}
+                        iconSize={"20px"}
+                        iconStyle={{float: "right", verticalAlign: "middle"}}
+                        tooltipPlacement={"right"}
+                        tooltipTrigger={"click"}
+                        tooltipText={stringIt.createAlarmInfoTooltip}
+                    />
                 </h4>
                 <div style={{minHeight: "50px"}}>
                     {this.renderSiteButton()}
@@ -340,26 +324,16 @@ var AlarmForm = React.createClass({
     renderSiteButton: function () {
         const theme = this.getTheme();
         return (
-            <bootstrap.OverlayTrigger
-                overlay={<bootstrap.Tooltip className="buttonInfo">
-                    {"Seleziona punto di misurazione"}
-                </bootstrap.Tooltip>}
-                placement="bottom"
-                rootClose={true}
-            >
-                <components.Button className="pull-left" onClick={this.openModal} style={styleSiteButton(theme)} >
-                    <components.Icon
-                        color={this.getTheme().colors.iconSiteButton}
-                        icon={"map"}
-                        size={"38px"}
-                        style={{
-                            textAlign: "center",
-                            verticalAlign: "middle",
-                            lineHeight: "20px"
-                        }}
-                    />
-                </components.Button>
-            </bootstrap.OverlayTrigger>
+            <components.TooltipIconButton
+                buttonClassName={"pull-left"}
+                buttonStyle={styleSiteButton(theme)}
+                icon={"map"}
+                iconColor={theme.colors.iconSiteButton}
+                iconSize={"38px"}
+                iconStyle={{textAlign: "center", verticalAlign: "middle"}}
+                onButtonClick={this.openModal}
+                tooltipText={"Seleziona punto di misurazione"}
+            />
         );
     },
     renderTitleSelectSite: function () {

@@ -9,12 +9,12 @@ import "moment/locale/it";
 
 import {partial, is} from "ramda";
 import {
-    Button,
     ConfirmModal,
     Icon,
     FullscreenModal,
     ProgressBar,
-    SiteNavigator
+    SiteNavigator,
+    TooltipIconButton
 } from "components";
 import {connect} from "react-redux";
 import {bindActionCreators} from "redux";
@@ -490,26 +490,16 @@ var SummaryConsumptions = React.createClass({
                 </div>
                 <div style={styleRightPane(theme)}>
                     <div style={{clear: "both", height: "50px", width: "100%"}}>
-                        <bootstrap.OverlayTrigger
-                            overlay={<bootstrap.Tooltip className="buttonInfo">
-                                {"Seleziona punto di misurazione"}
-                            </bootstrap.Tooltip>}
-                            placement="bottom"
-                            rootClose={true}
-                        >
-                            <Button className="pull-right" onClick={this.openModal} style={styleSiteButton(theme)} >
-                                <Icon
-                                    color={theme.colors.iconSiteButton}
-                                    icon={"map"}
-                                    size={"38px"}
-                                    style={{
-                                        textAlign: "center",
-                                        verticalAlign: "middle",
-                                        lineHeight: "20px"
-                                    }}
-                                />
-                            </Button>
-                        </bootstrap.OverlayTrigger>
+                        <TooltipIconButton
+                            buttonClassName={"pull-right"}
+                            buttonStyle={styleSiteButton(theme)}
+                            icon={"map"}
+                            iconColor={theme.colors.iconSiteButton}
+                            iconSize={"38px"}
+                            iconStyle={{textAlign: "center", verticalAlign: "middle"}}
+                            onButtonClick={this.openModal}
+                            tooltipText={"Seleziona punto di misurazione"}
+                        />
                     </div>
                     <div style={{margin: "5px 20px"}}>
                         {this.props.consumptions.fullPath ? this.renderPeriodComparisons() : null}

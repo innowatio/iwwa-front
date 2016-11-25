@@ -9,13 +9,12 @@ import {connect} from "react-redux";
 import {bindActionCreators} from "redux";
 
 import {
-    Button,
     ConfirmModal,
     FullscreenModal,
     Gauge,
-    Icon,
     MeasureLabel,
     SiteNavigator,
+    TooltipIconButton,
     VariablesPanel
 } from "components";
 
@@ -290,32 +289,16 @@ var RealTime = React.createClass({
     renderButton: function () {
         const theme = this.getTheme();
         return (
-            <div>
-                <bootstrap.OverlayTrigger
-                    overlay={<bootstrap.Tooltip className="buttonInfo">
-                        {"Seleziona punto di misurazione"}
-                    </bootstrap.Tooltip>}
-                    placement="bottom"
-                    rootClose={true}
-                >
-                    <Button
-                        className="pull-right"
-                        onClick={() => this.setState({showFullscreenModal: true})}
-                        style={styleSiteButton(theme)}
-                    >
-                        <Icon
-                            color={this.getTheme().colors.iconSiteButton}
-                            icon={"map"}
-                            size={"38px"}
-                            style={{
-                                textAlign: "center",
-                                verticalAlign: "middle",
-                                lineHeight: "20px"
-                            }}
-                        />
-                    </Button>
-                </bootstrap.OverlayTrigger>
-            </div>
+            <TooltipIconButton
+                buttonClassName={"pull-right"}
+                buttonStyle={styleSiteButton(theme)}
+                icon={"map"}
+                iconColor={theme.colors.iconSiteButton}
+                iconSize={"38px"}
+                iconStyle={{textAlign: "center", verticalAlign: "middle"}}
+                onButtonClick={() => this.setState({showFullscreenModal: true})}
+                tooltipText={"Seleziona punto di misurazione"}
+            />
         );
     },
     renderConfirmModal: function () {

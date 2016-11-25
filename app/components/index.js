@@ -55,6 +55,7 @@ exports.SiteNavigator           = require("./site-navigator/");
 exports.Spacer                  = require("./spacer/");
 exports.TreeView                = require("./tree-view/");
 exports.TagList                 = require("./tag-list/");
+exports.TooltipIconButton       = require("./tooltip-icon-button/");
 exports.TutorialAnchor          = require("./tutorial-anchor/");
 exports.UnauthorizedModal       = require("./unauthorized-modal/");
 exports.UserRolesAssociator     = require("./user-roles-associator/");
