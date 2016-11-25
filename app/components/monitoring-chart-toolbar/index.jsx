@@ -96,11 +96,11 @@ var MonitoringChartToolbar = React.createClass({
     },
     getStateFromProps: function (props) {
         let state = {
+            calculatedYAxis: props.getYAxis(props),
             yAxis: props.monitoringChart.yAxis,
             favoriteName: null
         };
-        let yAxis = props.getYAxis(props);
-        yAxis.forEach(y => {
+        state.calculatedYAxis.forEach(y => {
             if (!state.yAxis[y]) {
                 state.yAxis[y] = {
                     min: "",
@@ -114,9 +114,8 @@ var MonitoringChartToolbar = React.createClass({
         return this.context.theme || defaultTheme;
     },
     getYAxisValidationState: function () {
-        let yAxis = this.props.getYAxis(this.props);
         let success = true;
-        yAxis.forEach((y) => {
+        this.state.calculatedYAxis.forEach((y) => {
             let {min, max} = this.state.yAxis[y];
             success = success && (parseInt(min) < parseInt(max));
         });
@@ -282,9 +281,8 @@ var MonitoringChartToolbar = React.createClass({
         );
     },
     renderYAxisInputs: function (theme) {
-        let yAxis = this.props.getYAxis(this.props);
         let components = [];
-        yAxis.forEach((y, index) => {
+        this.state.calculatedYAxis.forEach((y, index) => {
             components.push(
                 <div key={index}>
                     <Col className="input-style" md={6}>
@@ -355,6 +353,7 @@ var MonitoringChartToolbar = React.createClass({
     },
     render: function () {
         const theme = this.getTheme();
+        const stackedChartDisabled = this.state.calculatedYAxis.length > 1;
         return (
             <div>
                 <div style={{
@@ -369,8 +368,18 @@ var MonitoringChartToolbar = React.createClass({
                     <div>
                         {this.renderChartStyleButton(theme, "spline", "chart-style1", "A linee")}
                         {this.renderChartStyleButton(theme, "column", "chart-style2", "Istogramma")}
-                        {this.renderChartStyleButton(theme, "stacked", "chart-style4", "Istogramma in pila")}
-                        {this.renderChartStyleButton(theme, "percent", "chart-style3", "Istogramma in pila percentuale")}
+                        {this.renderChartStyleButton(
+                            theme,
+                            "stacked",
+                            "chart-style4",
+                            stackedChartDisabled ? "Non applicabile in caso di UM differenti" : "Istogramma in pila",
+                            stackedChartDisabled)}
+                        {this.renderChartStyleButton(
+                            theme,
+                            "percent",
+                            "chart-style3",
+                            stackedChartDisabled ? "Non applicabile in caso di UM differenti" : "Istogramma in pila percentuale",
+                            stackedChartDisabled)}
                     </div>
                 </div>
                 {this.renderYAxisValuesChange(theme)}
