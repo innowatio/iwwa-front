@@ -393,7 +393,8 @@ export const styles = (theme) => ({
             paddingBottom: "2px",
             marginLeft: "0px",
             marginRight: "5px",
-            marginBottom: "3px"
+            marginBottom: "3px",
+            overflow: "hidden"
         },
         ".Select-value-icon": {
             borderColor: theme.colors.transparent,

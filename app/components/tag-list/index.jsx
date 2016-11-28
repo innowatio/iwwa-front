@@ -7,7 +7,6 @@ import {Icon} from "components";
 const styles = (theme) => ({
     labelPrimaryTag: {
         padding: "0px 10px",
-        fontWeight: "300",
         borderRadius: "35px",
         marginRight: "5px",
         color: theme.colors.primaryTagsColor,
@@ -22,7 +21,6 @@ const styles = (theme) => ({
     },
     labelTag: {
         padding: "0px 10px",
-        fontWeight: "300",
         borderRadius: "35px",
         marginRight: "5px",
         color: theme.colors.white,
@@ -67,6 +65,7 @@ var TagList = React.createClass({
                 style={{
                     cursor: "pointer",
                     marginRight: "10px",
+                    fontWeight: "300",
                     display: "inline-block",
                     fontSize: "16px",
                     lineHeight: "18px"
@@ -84,7 +83,9 @@ var TagList = React.createClass({
                 key={value}
             >
                 {this.renderTagRemoveIcon(value)}
-                {value}
+                <span style={{fontWeight: "300"}}>
+                    {value}
+                </span>
             </label>
         );
     },

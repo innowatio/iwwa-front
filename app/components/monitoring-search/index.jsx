@@ -286,25 +286,44 @@ var MonitoringSearch = React.createClass({
                     />
                     {this.renderSearchInput(theme, "Cerca testo", "wordsSearchFilter", "wordsToSearch")}
 
-                    <div style={{width: "100%", fontSize: "20px", fontWeight: "400", marginBottom: "10px"}}>
-                        <label>{"Riepilogo ricerca"}</label>
-                    </div>
+                    <div style={{
+                        borderRadius: "20px",
+                        padding: "5px 10px 10px 10px",
+                        marginBottom: "20px",
+                        backgroundColor: theme.colors.primary,
+                        border: "1px solid " + theme.colors.iconSearchUser
+                    }}>
+                        <div style={{width: "100%", fontSize: "20px", fontWeight: "400", marginBottom: "10px"}}>
+                            <label>{"Riepilogo ricerca"}</label>
+                        </div>
 
-                    <div style={{float: "left", textAlign: "left", marginBottom: "30px"}}>
-                        <TagList
-                            onClickRemove={value => this.removeValueFromSearch(value, "primaryTagSearchFilter", "primaryTagsToSearch")}
-                            primaryTags={this.state.primaryTagsToSearch}
-                        />
-                        <TagList
-                            onClickRemove={value => this.removeValueFromSearch(value, "tagSearchFilter", "tagsToSearch")}
-                            tags={this.state.tagsToSearch}
-                        />
-                        <TagList
-                            onClickRemove={value => this.removeValueFromSearch(value, "wordsSearchFilter", "wordsToSearch")}
-                            tags={this.state.wordsToSearch}
-                        />
+                        <div style={{textAlign: "left", minHeight: "100px"}}>
+                            <TagList
+                                containerStyle={{
+                                    overflow: "hidden",
+                                    whiteSpace: "nowrap"
+                                }}
+                                onClickRemove={value => this.removeValueFromSearch(value, "primaryTagSearchFilter", "primaryTagsToSearch")}
+                                primaryTags={this.state.primaryTagsToSearch}
+                            />
+                            <TagList
+                                containerStyle={{
+                                    overflow: "hidden",
+                                    whiteSpace: "nowrap"
+                                }}
+                                onClickRemove={value => this.removeValueFromSearch(value, "tagSearchFilter", "tagsToSearch")}
+                                tags={this.state.tagsToSearch}
+                            />
+                            <TagList
+                                containerStyle={{
+                                    overflow: "hidden",
+                                    whiteSpace: "nowrap"
+                                }}
+                                onClickRemove={value => this.removeValueFromSearch(value, "wordsSearchFilter", "wordsToSearch")}
+                                tags={this.state.wordsToSearch}
+                            />
+                        </div>
                     </div>
-
                     <div style={{float: "left", display: "block", width: "100%"}}>
                         {this.renderSearchButton(theme)}
                         <Icon
