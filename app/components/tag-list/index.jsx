@@ -6,21 +6,23 @@ import {Icon} from "components";
 
 const styles = (theme) => ({
     labelPrimaryTag: {
-        padding: "0px 10px 2px 10px",
+        padding: "0px 10px",
+        fontWeight: "300",
         borderRadius: "35px",
         marginRight: "5px",
         color: theme.colors.primaryTagsColor,
         border: "solid 1px " + theme.colors.primaryTagsColor
     },
     labelPrimaryTagHover: {
-        padding: "0px 10px 2px 10px",
+        padding: "0px 10px",
         borderRadius: "35px",
         marginRight: "5px",
         color: theme.colors.white,
         border: "solid 1px " + theme.colors.white
     },
     labelTag: {
-        padding: "0px 10px 2px 10px",
+        padding: "0px 10px",
+        fontWeight: "300",
         borderRadius: "35px",
         marginRight: "5px",
         color: theme.colors.white,
@@ -53,7 +55,7 @@ var TagList = React.createClass({
                 size={"27px"}
                 style={{
                     verticalAlign: "middle",
-                    lineHeight: "49px",
+                    lineHeight: "50px",
                     marginRight: "10px"
                 }}
             />
@@ -61,15 +63,18 @@ var TagList = React.createClass({
     },
     renderTagRemoveIcon: function (value) {
         return this.props.onClickRemove ? (
-            <label
+            <div
                 style={{
                     cursor: "pointer",
-                    marginRight: "5px"
+                    marginRight: "10px",
+                    display: "inline-block",
+                    fontSize: "16px",
+                    lineHeight: "18px"
                 }}
                 onClick={() => this.props.onClickRemove(value)}
             >
-                {"x"}
-            </label>
+                {"×"}
+            </div>
         ) : null;
     },
     renderTag: function (style, value) {

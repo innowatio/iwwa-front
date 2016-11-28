@@ -360,8 +360,9 @@ export const styles = (theme) => ({
             overflowY: "auto"
         },
         ".Select-value-label": {
+            lineHeight: "18px",
             color: theme.colors.white + "!important",
-            padding: "2px 10px 2px 2px"
+            padding: "0 10px 0 0"
         },
         ".Select-option": {
             boxSizing: "border-box",
@@ -396,7 +397,8 @@ export const styles = (theme) => ({
         },
         ".Select-value-icon": {
             borderColor: theme.colors.transparent,
-            borderRight: "0px !important"
+            borderRight: "0px !important",
+            padding: "0px 10px"
         },
         ".Select-value-icon:hover, .Select-value-icon:active": {
             color: theme.colors.white,
