@@ -298,7 +298,10 @@ export const styles = (theme) => ({
             color: theme.colors.white,
             fontSize: "16px",
             fontWeight: "300",
-            padding: "0px"
+            padding: "0px",
+            border: 0,
+            borderRadius: "0px",
+            borderBottom: "1px solid " + theme.colors.borderInputSearch
         },
         ".Select-noresults": {
             boxSizing: "border-box",
@@ -307,7 +310,14 @@ export const styles = (theme) => ({
             fontWeight: "300",
             cursor: "default",
             display: "block",
-            padding: "8px 10px"
+            padding: "8px 10px",
+            backgroundColor: theme.colors.backgroundContentModal
+        },
+        ".Select-placeholder": {
+            padding: "0px"
+        },
+        ".Select-arrow-zone > .Select-arrow": {
+            borderColor: `${theme.colors.white} ${theme.colors.transparent} ${theme.colors.transparent}`
         },
         ".Select-control:not(.is-searchable) > .Select-input": {
             outline: "0px",
@@ -323,10 +333,10 @@ export const styles = (theme) => ({
             borderColor: theme.colors.borderInputSearch,
             boxShadow: "none"
         },
-        "Select-input": {
+        ".Select-input": {
             display: "block !important",
             width: "100%",
-            borderBottom: "1px solid" + theme.colors.borderInputSearch
+            padding: "0px"
         },
         ".Select-menu-outer": {
             boxShadow: "none",
@@ -348,9 +358,6 @@ export const styles = (theme) => ({
         ".Select-menu": {
             maxHeight: "198px",
             overflowY: "auto"
-        },
-        ".Select-input": {
-            padding: "0px 10px"
         },
         ".Select-value-label": {
             color: theme.colors.white + "!important",
@@ -376,11 +383,16 @@ export const styles = (theme) => ({
             backgroundColor: theme.colors.buttonPrimary,
             color: theme.colors.white
         },
-
         ".Select-value": {
             borderColor: theme.colors.white,
             color: theme.colors.white,
-            borderRadius: "20px"
+            borderRadius: "20px",
+            fontSize: "14px",
+            lineHeight: "16px",
+            paddingBottom: "2px",
+            marginLeft: "0px",
+            marginRight: "5px",
+            marginBottom: "3px"
         },
         ".Select-value-icon": {
             borderColor: theme.colors.transparent,
