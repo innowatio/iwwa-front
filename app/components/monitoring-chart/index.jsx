@@ -228,6 +228,9 @@ var MonitoringChart = React.createClass({
                 ],
                 ordinal: false
             },
+            scrollbar: {
+                liveRedraw: false
+            },
             tooltip: {
                 pointFormat: "<span style=\"color:{point.color}\">\u25CF</span> {series.name}: <b>{point.y:.2f}</b><br/>",
                 shared: true
@@ -386,7 +389,7 @@ var MonitoringChart = React.createClass({
         });
     },
     synchronizeXAxis: function (xAxis) {
-        if (xAxis.trigger && xAxis.triggerOp !== "navigator-drag") {
+        if (xAxis.trigger) {
             this.props.selectPeriod(xAxis);
         }
         this.doForEveryChart((hsChart, chart) => {
