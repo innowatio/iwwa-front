@@ -14,7 +14,7 @@ import {
     toggleComparisonChart
 } from "actions/monitoring-chart";
 
-import {extractSensorsFromFormula, getAllSensors, getSensorLabel, reduceFormula} from "lib/sensors-utils";
+import {extractSensorsFromFormula, getAggregationFunction, getAllSensors, getSensorLabel, reduceFormula} from "lib/sensors-utils";
 import {defaultTheme} from "lib/theme";
 import moment from "lib/moment";
 import readingsDailyAggregatesToHighchartsData from "lib/readings-daily-aggregates-to-highcharts-data";
@@ -98,7 +98,8 @@ var MonitoringChartView = React.createClass({
                 name: getSensorLabel(sensorObj),
                 sensorId: sensorObj.get("_id"),
                 source: {key: "reading"},
-                unitOfMeasurement: this.getUnitOfMeasurement(sensorObj)
+                unitOfMeasurement: this.getUnitOfMeasurement(sensorObj),
+                aggregationType: getAggregationFunction(sensorObj.get("aggregationType"))
             };
         });
         const readingsDailyAggregates = props.collections.get("readings-daily-aggregates");

@@ -101,6 +101,22 @@ export const sensorOptions = {
     ]
 };
 
+export function getAggregationFunction (aggregationType) {
+    switch (aggregationType) {
+        case "lastValue":
+            return (values) => {
+                if (values && values.length > 0) {
+                    return values[values.length - 1];
+                }
+                return null;
+            };
+        case "sum":
+            return "sum";
+        default:
+            return "average";
+    }
+}
+
 export function getUnitOfMeasurementLabel (val) {
     const foundedUnit = R.find(R.propEq("value", val))(sensorOptions.unitOfMeasurement);
     return foundedUnit ? foundedUnit.label : val;

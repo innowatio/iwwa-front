@@ -96,6 +96,9 @@ var MonitoringChart = React.createClass({
             let yAxisIndex = R.findIndex(R.propEq("key", item.unitOfMeasurement))(yAxis);
             let config = {
                 data: item.data,
+                dataGrouping: {
+                    approximation: item.aggregationType
+                },
                 name: item.name,
                 yAxis: yAxisIndex
             };
@@ -145,6 +148,15 @@ var MonitoringChart = React.createClass({
         }
         return weekendOverlay;
     },
+    getCommonPlotOptions: function () {
+        return {
+            series: {
+                events: {
+                    legendItemClick: this.synchronizeSeries
+                }
+            }
+        };
+    },
     getCommonConfig: function (props, yAxis) {
         const {colors} = this.getTheme();
         let config = {
@@ -175,13 +187,7 @@ var MonitoringChart = React.createClass({
                     includeInCSVExport: false
                 }
             },
-            plotOptions: {
-                series: {
-                    events: {
-                        legendItemClick: this.synchronizeSeries
-                    }
-                }
-            },
+            plotOptions: this.getCommonPlotOptions(),
             rangeSelector: {
                 buttonTheme: { // styles for the buttons
                     fill: "none",
@@ -278,6 +284,7 @@ var MonitoringChart = React.createClass({
                 ...props.chartState.yAxis
             },
             plotOptions: {
+                ...this.getCommonPlotOptions(),
                 column: {
                     stacking: "normal"
                 }
@@ -291,6 +298,7 @@ var MonitoringChart = React.createClass({
                 type: "column"
             },
             plotOptions: {
+                ...this.getCommonPlotOptions(),
                 column: {
                     stacking: "percent"
                 }
