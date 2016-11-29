@@ -165,6 +165,7 @@ var Monitoring = React.createClass({
                 name: "",
                 description: "",
                 unitOfMeasurement: "",
+                aggregationType: "",
                 siteId: "",
                 userId: "",
                 primaryTags: this.getParentsPrimaryTags(this.props.sensorsState.workAreaSensors),

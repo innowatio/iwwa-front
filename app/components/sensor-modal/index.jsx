@@ -8,7 +8,7 @@ import {reduxForm, Field} from "redux-form";
 import {AutoComplete, FormInputText, FullscreenModal, SensorAggregator, TagList} from "components";
 
 import {hasRole, VIEW_FORMULA_DETAILS} from "lib/roles-utils";
-import {potentialUnitsOfMeasurement} from "lib/sensors-utils";
+import {sensorOptions} from "lib/sensors-utils";
 import {styles} from "lib/styles";
 import {defaultTheme} from "lib/theme";
 
@@ -155,9 +155,9 @@ var SensorForm = React.createClass({
                     />
                     <Select
                         className={"sensor-modal-select"}
-                        name={"unitOfMeasurement"}
+                        name={field.name}
                         onChange={field.input.onChange}
-                        options={potentialUnitsOfMeasurement}
+                        options={sensorOptions[field.name]}
                         placeholder={field.label}
                         value={field.input.value}
                     />
@@ -249,6 +249,11 @@ var SensorForm = React.createClass({
                         <Field
                             name="unitOfMeasurement"
                             label="Unità di misura"
+                            component={this.renderSelectInputField}
+                        />
+                        <Field
+                            name="aggregationType"
+                            label="Tipo di aggregazione"
                             component={this.renderSelectInputField}
                         />
                         <Field

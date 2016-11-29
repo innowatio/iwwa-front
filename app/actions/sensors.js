@@ -24,6 +24,7 @@ function getSensorObj (collectionItem) {
         "name": getSensorLabel(collectionItem),
         "description": collectionItem.get("description"),
         "unitOfMeasurement": collectionItem.get("unitOfMeasurement"),
+        "aggregationType": collectionItem.get("aggregationType"),
         "formulas": collectionItem.get("formulas"),
         "primaryTags": collectionItem.get("primaryTags"),
         "tags": collectionItem.get("tags"),
@@ -37,6 +38,9 @@ function addMonitoringAttrs (sensor) {
     sensor._id = undefined;
     if (sensor.unitOfMeasurement instanceof Object) {
         sensor.unitOfMeasurement = sensor.unitOfMeasurement.value;
+    }
+    if (sensor.aggregationType instanceof Object) {
+        sensor.aggregationType = sensor.aggregationType.value;
     }
     sensor.id = UUID.create().hex;
     sensor.createdByUser = true;
