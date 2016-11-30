@@ -207,6 +207,12 @@ var RealTime = React.createClass({
                 value: parseFloat(value).toFixed(2) / 1
             };
             return this.drawGauge(gaugeParams);
+        } else {
+            return (
+                <div>
+                    {"Non sono disponibili dati realtime"}
+                </div>
+            );
         }
     },
     getSites: function () {
