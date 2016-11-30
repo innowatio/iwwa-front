@@ -161,7 +161,7 @@ var Monitoring = React.createClass({
             } else {
                 fields.tags = fields.tags.map(tag => {
                     return {value: tag, label: tag};
-                })
+                });
             }
             return fields;
         } else {
