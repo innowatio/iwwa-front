@@ -27,7 +27,10 @@ var stylesFunction = ({colors}) => ({
     },
     viewTitle: {
         margin: "auto",
-        fontSize: "20px",
+        fontSize: "20px"
+    },
+    textTitle: {
+        marginLeft: "115px",
         borderBottom: `3px solid ${colors.buttonPrimary}`
     }
 });
@@ -175,7 +178,7 @@ var Header = React.createClass({
                     </Link>
                 </span>
                 <div style={styles.viewTitle}>
-                    {this.props.title.toUpperCase()}
+                    <text style={styles.textTitle}>{this.props.title.toUpperCase()}</text>
                 </div>
                 {this.renderUserSetting()}
                 {this.renderAdminPage()}
