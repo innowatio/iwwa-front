@@ -134,14 +134,15 @@ var MonitoringChart = React.createClass({
         });
         return yAxis;
     },
-    getSundaysOverlay: function (date, colors) {
+    getWeekendOverlay: function (date, colors) {
         var weekendOverlay = [];
         const dayInFilter = moment(date.end).diff(moment(date.start), "days");
-        const firstSunday = moment(date.start).isoWeekday(7);
+        const firstSaturday = moment(date.start).isoWeekday(6);
         for (var i = 0; i <= dayInFilter/7; i++) {
-            const nextSun = moment(firstSunday).add({day: i * 7});
+            const nextSat = moment(firstSaturday).add({day: i * 7});
+            const nextSun = moment(firstSaturday).add({day: i * 7 + 1});
             weekendOverlay.push({
-                from: nextSun.startOf("day").valueOf(),
+                from: nextSat.startOf("day").valueOf(),
                 to: nextSun.endOf("day").valueOf(),
                 color: colors.graphUnderlay
             });
@@ -247,7 +248,7 @@ var MonitoringChart = React.createClass({
                 events: {
                     afterSetExtremes: this.synchronizeXAxis
                 },
-                plotBands: this.getSundaysOverlay(props.chartDates, colors)
+                plotBands: this.getWeekendOverlay(props.chartDates, colors)
             },
             yAxis: yAxis
         };
