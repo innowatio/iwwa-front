@@ -163,6 +163,9 @@ var Monitoring = React.createClass({
                     return {value: tag, label: tag};
                 });
             }
+            if (!fields.aggregationType) {
+                fields.aggregationType = "average";
+            }
             return fields;
         } else {
             return {
