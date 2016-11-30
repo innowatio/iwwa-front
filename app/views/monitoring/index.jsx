@@ -158,6 +158,10 @@ var Monitoring = React.createClass({
             fields.name = (getSensorLabel(selected[0]));
             if (!fields.tags) {
                 fields.tags = [];
+            } else {
+                fields.tags = fields.tags.map(tag => {
+                    return {value: tag, label: tag};
+                })
             }
             return fields;
         } else {
