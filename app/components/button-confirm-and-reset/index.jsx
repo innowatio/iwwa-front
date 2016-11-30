@@ -38,8 +38,7 @@ var ButtonConfirmAndReset = React.createClass({
                 style={{
                     float: "right",
                     verticalAlign: "middle",
-                    lineHeight: "20px",
-                    marginLeft: "20px"
+                    lineHeight: "20px"
                 }}
             />
         );

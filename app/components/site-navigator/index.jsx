@@ -243,7 +243,17 @@ var SiteNavigator = React.createClass({
                     }}
                     xs={4}
                 >
-                    <div className="site-navigator-parent">
+                    <div
+                        className="site-navigator-parent"
+                        style={{
+                            position: "absolute",
+                            overflow: "auto",
+                            right: "-15px",
+                            padding: "15px 20px",
+                            width: "100%",
+                            height: "100%"
+                        }}
+                    >
                         <Radium.Style
                             rules={{
                                 ".btn-group-vertical": {
