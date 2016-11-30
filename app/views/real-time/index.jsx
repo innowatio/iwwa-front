@@ -4,6 +4,7 @@ import Immutable from "immutable";
 import * as bootstrap from "react-bootstrap";
 import React from "react";
 import IPropTypes from "react-immutable-proptypes";
+import moment from "moment";
 
 import {connect} from "react-redux";
 import {bindActionCreators} from "redux";
@@ -36,6 +37,15 @@ const styleSiteButton = ({colors}) => ({
     margin: "3px 0 0 0",
     backgroundColor: colors.primary
 });
+const styleTextNodata = ({colors}) => ({
+    padding: "30px",
+    border: "0px",
+    fontSize: "20px",
+    fontWeight: "600",
+    borderRadius: "30px",
+    textAlign: "center",
+    color: colors.buttonPrimary
+});
 
 var RealTime = React.createClass({
     propTypes: {
@@ -64,6 +74,28 @@ var RealTime = React.createClass({
         if (this.props.realTime.site) {
             this.props.asteroid.subscribe("readingsRealTimeAggregatesBySite", this.props.realTime.site);
         }
+    },
+    checkRealTime: function () {
+        const realtimeData = this.props.collections.get("readings-real-time-aggregates");
+        if (realtimeData) {
+            const sites = this.props.collections.get("sites");
+            const site = sites.get(this.props.realTime.site);
+            if (site) {
+                const filter = [
+                    "weather-cloudeness",
+                    "weather-humidity",
+                    "weather-temperature",
+                    "weather-id"
+                ];
+                const siteSensors = site.get("sensorsIds");
+                const realtimeSite = realtimeData
+                    .filter(x => R.contains(x.get("sensorId"), siteSensors.toJS()))
+                    .filter(x => x.get("day") === moment().format("YYYY-MM-DD"))
+                    .filter(x => !R.contains(x.get("measurementType"), filter));
+                return realtimeSite.size > 0;
+            }
+        }
+        return false;
     },
     getTheme: function () {
         return this.context.theme || defaultTheme;
@@ -176,6 +208,16 @@ var RealTime = React.createClass({
     },
     drawGaugeTotal: function () {
         const {colors} = this.getTheme();
+
+        const isRealtimeAnytime = this.checkRealTime();
+        if (!isRealtimeAnytime) {
+            return (
+                <div style={styleTextNodata({colors})}>
+                    {"Non sono disponibili dati realtime"}
+                </div>
+            );
+        }
+
         if (this.findEnergyReadingsRealtime().size > 0) {
             const {value, unit} = this.findEnergyReadingsRealtime().reduce((acc, measure) => {
                 return {
@@ -207,13 +249,16 @@ var RealTime = React.createClass({
                 value: parseFloat(value).toFixed(2) / 1
             };
             return this.drawGauge(gaugeParams);
-        } else {
-            return (
-                <div>
-                    {"Non sono disponibili dati realtime"}
-                </div>
-            );
         }
+
+        // else {
+        //     const theme = this.getTheme();
+        //     return (
+        //         <div style={styleTextNodata(theme)}>
+        //             {"Non sono disponibili dati realtime"}
+        //         </div>
+        //     );
+        // }
     },
     getSites: function () {
         return this.props.collections.get("sites") || Immutable.Map();
@@ -442,7 +487,11 @@ var RealTime = React.createClass({
                             <bootstrap.Col
                                 className="text-center"
                                 md={4}
-                                style={{padding: "20px", color: theme.colors.mainFontColor}}
+                                style={{
+                                    width: "100%",
+                                    padding: "20px",
+                                    color: theme.colors.mainFontColor
+                                }}
                                 xs={12}
                             >
                                 {this.drawGaugeTotal()}
