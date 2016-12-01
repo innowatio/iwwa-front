@@ -90,7 +90,7 @@ var SiteNavigator = React.createClass({
         return this.decoratedValues().filter((value) => {
             var pods = this.getFilterCriteria(value.get("sensors") || Immutable.Map())
                 .map(this.getLabelChildren);
-            return value.get("name").toLowerCase().includes(clause) ||
+            return value.get("name") ? value.get("name").toLowerCase().includes(clause) :
                 pods.map((pod) => {
                     return pod.toLowerCase().includes(clause);
                 }).contains(true);
