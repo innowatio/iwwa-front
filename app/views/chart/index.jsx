@@ -173,21 +173,22 @@ var Chart = React.createClass({
         link.setAttribute("href", encodedUri);
         link.setAttribute("download", name);
         link.setAttribute("target", "_blank");
+        document.body.appendChild(link); //Required for Firefox
         link.click();
     },
     exportPng: function () {
         const exportAPILocation = this.refs.historicalGraph.refs.graphType.refs.highcharts.refs.chart;
         const chart = exportAPILocation.getChart();
-        chart.getCSV();
-        this.closeFullscreenModal();
+        chart.exportChart();
     },
+
     exportCsv: function () {
         const exportAPILocation = this.refs.historicalGraph.refs.graphType.refs.highcharts.refs.chart;
         const chart = exportAPILocation.getChart();
-        const csv = chart.exportChartLocal();
+        const csvData = chart.getCSV();
         const dataTypePrefix = "data:text/csv;base64,";
-        this.openDownloadLink(dataTypePrefix + window.btoa(csv), "chart.csv");
-        this.closeFullscreenModal();
+        this.openDownloadLink(dataTypePrefix + window.btoa(csvData), "chart.csv");
+
     },
     subscribeToMisure: function (props) {
         const chartFilter = props.chartState.charts;
@@ -593,7 +594,7 @@ var Chart = React.createClass({
             <Export
                 exportPng={this.exportPng}
                 exportCsv={this.exportCsv}
-                title={"INVIA I DATI VISUALIZZATI VIA EMAIL"}
+                title={"SCEGLI IL FORMATO CON CUI SCARICARE I DATI"}
             />
         );
     },
