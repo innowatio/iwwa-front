@@ -8,3 +8,4 @@ exports.Root                        = require("./root/");
 exports.SummaryConsumptions         = require("./summary-consumptions/");
 exports.User                        = require("./user/");
 exports.Users                       = require("./users/");
+exports.MultiSite                   = require("./multi-site/");

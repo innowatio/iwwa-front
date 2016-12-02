@@ -102,7 +102,8 @@ var Root = React.createClass({
                 {key: "chart", label: "CONSUMI STORICI", url: "/chart/", iconClassName: "history"},
                 {key: "live", label: "CONSUMI LIVE", url: "/live/", iconClassName: "gauge"},
                 {key: "consumptions", label: "RIEPILOGO CONSUMI", url: "/consumptions/", iconClassName: "percentage"},
-                {key: "alarms", label: "ALLARMI", url: "/alarms/", iconClassName: "alarms"}
+                {key: "alarms", label: "ALLARMI", url: "/alarms/", iconClassName: "alarms"},
+                {key: "sites", label: "DASHBOARD", url: "/dashboard/", iconClassName: "confront"}
             ]);
         }
         if (hasRole(asteroid, ACCESS_LUCY_PRO)) {

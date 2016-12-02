@@ -22,6 +22,7 @@ module.exports = (
             <Route component={views.Chart} name="chart" path="/chart/" titleView="Storico consumi" />
             <Route component={views.SummaryConsumptions} name="consumptions" path="/consumptions/" titleView="Riepilogo Consumi" />
             <Route component={views.RealTime} name="live" path="/live/" titleView="Consumi live" />
+            <Route component={views.MultiSite} name="dashboard" path="/dashboard/" titleView="Dashboard" />
             <Route component={views.Monitoring} name="monitoring" path="/monitoring/" titleView="Monitoring"
                 onEnter={requireYousaveAuthorization}
             />
