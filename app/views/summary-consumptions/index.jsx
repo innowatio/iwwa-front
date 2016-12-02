@@ -1,4 +1,4 @@
-import Immutable from "immutable";
+import {Map} from "immutable";
 import get from "lodash.get";
 import Radium from "radium";
 import * as bootstrap from "react-bootstrap";
@@ -6,6 +6,8 @@ import React from "react";
 import IPropTypes from "react-immutable-proptypes";
 import moment from "moment";
 import "moment/locale/it";
+import ReactHighcharts from "react-highcharts/bundle/ReactHighcharts";
+import utils from "iwwa-utils";
 
 import {partial, is} from "ramda";
 import {
@@ -20,7 +22,6 @@ import {connect} from "react-redux";
 import {bindActionCreators} from "redux";
 import {defaultTheme} from "lib/theme";
 import {tabParameters} from "lib/consumptions-utils";
-import utils from "iwwa-utils";
 import {selectSite, selectPeriod} from "actions/consumptions";
 
 
@@ -176,57 +177,144 @@ var SummaryConsumptions = React.createClass({
             );
         });
     },
+
     getTheme: function () {
         return this.context.theme || defaultTheme;
     },
+
     getSelectedSite: function () {
         if (this.props.consumptions.fullPath && this.props.consumptions.fullPath[0]) {
             return this.props.collections.getIn(["sites", this.props.consumptions.fullPath[0]]);
         }
-        return Immutable.Map({name: ""});
+        return Map({name: ""});
     },
+
     getSum: function (dateRange) {
         const aggregates = (this.props.collections
-            .get("consumptions-yearly-aggregates") || Immutable.Map())
+            .get("consumptions-yearly-aggregates") || Map())
             .filter(agg => agg.get("sensorId") === this.props.consumptions.fullPath[0]);
         return parseFloat(utils.getSumByPeriod(dateRange, aggregates).toFixed(2));
     },
+
     closeFullscreenModal: function () {
         this.setState ({
             showFullscreenModal: false,
             site: null
         });
     },
+
     openModal: function () {
         this.setState ({showFullscreenModal:true});
     },
+
     closeModals: function () {
         this.setState({
             showConfirmModal: false,
             showFullscreenModal: false
         });
     },
+
     onConfirmFullscreenModal: function () {
         this.props.selectSite(this.state.site || this.props.consumptions.fullPath);
         this.setState({showConfirmModal: true});
     },
+
     onChangeWidgetValue: function (site) {
         this.setState({site});
     },
+
     onChangeTabValue: function (tabPeriod) {
         this.setState({period: tabPeriod});
     },
+
     getFontSize: function (item, defaultFontSize) {
         const itemLength = is(Number, item) ? item.toString().length : item.length;
         return item.toString().length > 5 ? `${defaultFontSize - ((itemLength - 5) * 10)}px`: `${defaultFontSize}px`;
     },
+
+    chartVisibility: function (page) {
+        switch (page) {
+            case "year":
+                return {
+                    visibility: "hidden" //"visible"
+                };
+            default:
+                return {
+                    visibility: "hidden"
+                };
+        }
+    },
+
+    getYearSeries: function (year, yearlyAggregate) {
+        const series =[];
+
+        const filteredAggregated = yearlyAggregate.filter(agg => agg.get("year")=== year);
+        for (var x=0; x<12; x++) {
+            const start = moment([year, x, 1, 0, 0, 0, 0]);
+            const end = moment([year, x, start.daysInMonth(), 23, 59, 59, 999]);
+            const period = {
+                start: start.format("YYYY-MM-DD HH:mm:ss"),
+                end: end.format("YYYY-MM-DD HH:mm:ss")
+            };
+            series.push(utils.getSumByPeriod(period, filteredAggregated));
+        }
+        return series;
+    },
+
+    getChartConfig: function () {
+        const {colors} = this.getTheme();
+        const yearlyAggregate = (this.props.collections.get("consumptions-yearly-aggregates") || Map())
+        .filter(agg => agg.get("sensorId") === this.props.consumptions.fullPath[0]);
+
+        const cy = moment().format("YYYY");
+        const py = moment().subtract(1, "years").format("YYYY");
+
+        const cyData = this.getYearSeries(cy, yearlyAggregate);
+        const pyData = this.getYearSeries(py, yearlyAggregate);
+
+        var config = {
+            chart: {
+                backgroundColor: colors.background,
+                events: {
+                    selection: this.onSetExtreme
+                },
+                ignoreHiddenSeries: false,
+                panning: true,
+                panKey: "shift",
+                type: "column"
+            },
+            credits: {
+                enabled: false
+            },
+            exporting: {
+                enabled: false
+            },
+            colors: ["#90ed7d", "#f7a35c"],
+            xAxis: {
+                categories: ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"]
+            },
+            series: [
+                {
+                    name: "CY",
+                    data: cyData
+
+                },
+                {
+                    name: "PY",
+                    data: pyData
+                }
+            ]
+        };
+        return config;
+    },
+
     renderCustomersComparisons: function () {
         const {colors} = this.getTheme();
         const title = "Confronta i tuoi consumi con quelli di attività simili alla tua";
         const selectedTab = tabParameters().find(param => param.key === this.state.period);
         const now = parseInt(selectedTab.now(
             this.props.consumptions.fullPath[0],
-            this.props.collections.get("consumptions-yearly-aggregates") || Immutable.Map()).toFixed(0));
+            this.props.collections.get("consumptions-yearly-aggregates") || Map()).toFixed(0));
         return (
             <div style={{
                 height: "auto",
@@ -266,6 +354,7 @@ var SummaryConsumptions = React.createClass({
             </div>
         );
     },
+
     renderFeedbackBox: function () {
         const {colors} = this.getTheme();
         const feedbackMessage = "Stai andando molto bene. Hai usato il 10% di energia in meno dei tuoi vicini.";
@@ -301,6 +390,7 @@ var SummaryConsumptions = React.createClass({
             </div>
         );
     },
+
     renderPeriodComparisons: function () {
         const selectedTab = tabParameters().find(param => param.key === this.state.period);
         const comparisons = selectedTab.comparisons;
@@ -310,13 +400,15 @@ var SummaryConsumptions = React.createClass({
             </div>
         );
     },
+
     renderProgressBar: function (comparisonNow, comparisonParams) {
-        const aggregates = (this.props.collections.get("consumptions-yearly-aggregates") || Immutable.Map())
+        const aggregates = (this.props.collections.get("consumptions-yearly-aggregates") || Map())
             .filter(agg => agg.get("sensorId") === this.props.consumptions.fullPath[0]);
         const max = comparisonParams.max(aggregates).toFixed(0);
         const now = comparisonNow(aggregates).toFixed(0);
         return parseInt(max) ? this.renderStyledProgressBar(comparisonParams.key, max, now, comparisonParams.title) : null;
     },
+
     renderStyledProgressBar: function (key, max, now, title) {
         const colors = this.getTheme();
         return (
@@ -334,6 +426,7 @@ var SummaryConsumptions = React.createClass({
             </div>
         );
     },
+
     renderConfirmModal: function () {
         const fullPath = get(this.props, "consumptions.fullPath", []) || [];
         const subtitle = fullPath.join(" · ");
@@ -349,8 +442,9 @@ var SummaryConsumptions = React.createClass({
             />
         );
     },
+
     renderFullscreenModal: function () {
-        const sites = this.props.collections.get("sites") || Immutable.Map({});
+        const sites = this.props.collections.get("sites") || Map({});
         return (
             <FullscreenModal
                 onConfirm={this.onConfirmFullscreenModal}
@@ -368,6 +462,7 @@ var SummaryConsumptions = React.createClass({
             </FullscreenModal>
         );
     },
+
     renderSingleTab: function (siteName, theme, tabParameters) {
         return (
             <bootstrap.Tab className="style-single-tab" eventKey={tabParameters.key} key={tabParameters.key} title={tabParameters.title}>
@@ -375,6 +470,7 @@ var SummaryConsumptions = React.createClass({
             </bootstrap.Tab>
         );
     },
+
     renderTabs: function (theme) {
         var site = this.getSelectedSite();
         var siteName = site ? site.get("name") : "";
@@ -442,7 +538,9 @@ var SummaryConsumptions = React.createClass({
             </bootstrap.Tabs>
         );
     },
+
     renderTabContent: function (siteName, theme, tabParameters) {
+        const chartconfig = this.getChartConfig();
         var sum = 0;
         if (this.props.consumptions.fullPath) {
             this.subscribeToConsumptions();
@@ -462,6 +560,9 @@ var SummaryConsumptions = React.createClass({
                     <span style={styleUnit(theme)}>{tabParameters.measureUnit}</span>
                 </div>
                 <p style={styleH2(theme)}>{tabParameters.periodSubtitle}</p>
+                <div style={this.chartVisibility(tabParameters.key)}>
+                    <ReactHighcharts config ={chartconfig} />
+                </div>
                 {/*
                     <div style={styleCongratMessage(theme)}>
                         <bootstrap.Col xs={12} md={8} lg={9} style={{float: "left"}}>{congratMessage}</bootstrap.Col>
@@ -487,6 +588,7 @@ var SummaryConsumptions = React.createClass({
                     <div style={styleTabContent(theme)}>
                         {this.renderTabs(theme)}
                     </div>
+
                 </div>
                 <div style={styleRightPane(theme)}>
                     <div style={{clear: "both", height: "50px", width: "100%"}}>
@@ -520,10 +622,12 @@ function mapStateToProps (state) {
         consumptions: state.consumptions
     };
 }
+
 function mapDispatchToProps (dispatch) {
     return {
         selectSite: bindActionCreators(selectSite, dispatch),
         selectPeriod: bindActionCreators(selectPeriod, dispatch)
     };
 }
+
 module.exports = connect(mapStateToProps, mapDispatchToProps)(SummaryConsumptions);

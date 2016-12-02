@@ -90,7 +90,7 @@ var SiteNavigator = React.createClass({
         return this.decoratedValues().filter((value) => {
             var pods = this.getFilterCriteria(value.get("sensors") || Immutable.Map())
                 .map(this.getLabelChildren);
-            return value.get("name").toLowerCase().includes(clause) ||
+            return value.get("name") ? value.get("name").toLowerCase().includes(clause) :
                 pods.map((pod) => {
                     return pod.toLowerCase().includes(clause);
                 }).contains(true);
@@ -243,7 +243,17 @@ var SiteNavigator = React.createClass({
                     }}
                     xs={4}
                 >
-                    <div className="site-navigator-parent">
+                    <div
+                        className="site-navigator-parent"
+                        style={{
+                            position: "absolute",
+                            overflow: "auto",
+                            right: "-15px",
+                            padding: "15px 20px",
+                            width: "100%",
+                            height: "100%"
+                        }}
+                    >
                         <Radium.Style
                             rules={{
                                 ".btn-group-vertical": {
