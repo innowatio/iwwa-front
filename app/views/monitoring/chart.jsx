@@ -11,6 +11,7 @@ import {
     saveChartConfig,
     selectChartType,
     selectPeriod,
+    selectTimeInterval,
     toggleComparisonChart
 } from "actions/monitoring-chart";
 
@@ -33,6 +34,7 @@ var MonitoringChartView = React.createClass({
         saveChartConfig: PropTypes.func.isRequired,
         selectChartType: PropTypes.func.isRequired,
         selectPeriod: PropTypes.func.isRequired,
+        selectTimeInterval: PropTypes.func.isRequired,
         toggleComparisonChart: PropTypes.func.isRequired
     },
     contextTypes: {
@@ -172,6 +174,7 @@ var MonitoringChartView = React.createClass({
                         monitoringChartRef={this.refs.monitoringChart}
                         resetYAxisValues={this.props.resetYAxisValues}
                         selectChartType={this.props.selectChartType}
+                        selectTimeInterval={this.props.selectTimeInterval}
                         toggleComparisonChart={this.props.toggleComparisonChart}
                     />
                 </div>
@@ -196,6 +199,7 @@ const mapDispatchToProps = (dispatch) => {
         saveChartConfig: bindActionCreators(saveChartConfig, dispatch),
         selectChartType: bindActionCreators(selectChartType, dispatch),
         selectPeriod: bindActionCreators(selectPeriod, dispatch),
+        selectTimeInterval: bindActionCreators(selectTimeInterval, dispatch),
         toggleComparisonChart: bindActionCreators(toggleComparisonChart, dispatch)
     };
 };

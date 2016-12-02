@@ -149,14 +149,34 @@ var MonitoringChart = React.createClass({
         }
         return weekendOverlay;
     },
-    getCommonPlotOptions: function () {
-        return {
+    getTimeInterval: function (timeInterval) {
+        switch (timeInterval) {
+            case "5m":
+                return ["minute", [5]];
+            case "15m":
+                return ["minute", [15]];
+            case "1h":
+                return ["hour", [1]];
+            case "1d":
+                return ["day", [1]];
+            case "1M":
+                return ["month", [1]];
+        }
+    },
+    getCommonPlotOptions: function (props) {
+        let plotOptions = {
             series: {
                 events: {
                     legendItemClick: this.synchronizeSeries
                 }
             }
         };
+        if (props.chartState.timeInterval !== "all") {
+            plotOptions.series.dataGrouping = {
+                units: [this.getTimeInterval(props.chartState.timeInterval)]
+            };
+        }
+        return plotOptions;
     },
     getCommonConfig: function (props, yAxis) {
         const {colors} = this.getTheme();
@@ -188,7 +208,7 @@ var MonitoringChart = React.createClass({
                     includeInCSVExport: false
                 }
             },
-            plotOptions: this.getCommonPlotOptions(),
+            plotOptions: this.getCommonPlotOptions(props),
             rangeSelector: {
                 buttonTheme: { // styles for the buttons
                     fill: "none",
@@ -285,7 +305,7 @@ var MonitoringChart = React.createClass({
                 ...props.chartState.yAxis
             },
             plotOptions: {
-                ...this.getCommonPlotOptions(),
+                ...this.getCommonPlotOptions(props),
                 column: {
                     stacking: "normal"
                 }
@@ -299,7 +319,7 @@ var MonitoringChart = React.createClass({
                 type: "column"
             },
             plotOptions: {
-                ...this.getCommonPlotOptions(),
+                ...this.getCommonPlotOptions(props),
                 column: {
                     stacking: "percent"
                 }

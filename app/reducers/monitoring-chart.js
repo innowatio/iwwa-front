@@ -8,6 +8,7 @@ import {
     SELECT_FAVORITE_CHART,
     SELECT_PERIOD,
     SELECT_SENSORS_TO_DRAW,
+    SELECT_TIME_INTERVAL,
     TOGGLE_COMPARISON_CHART
 } from "../actions/monitoring-chart";
 import {SELECT_SENSOR} from "../actions/sensors";
@@ -23,6 +24,7 @@ const defaultState = {
         forward: 0
     },
     sensorsToDraw: [],
+    timeInterval: "all",
     type: "spline",
     xAxis: {},
     yAxis: {
@@ -110,6 +112,8 @@ export function monitoringChart (state = defaultState, action) {
                     min: action.payload.min
                 }
             });
+        case SELECT_TIME_INTERVAL:
+            return defaultNullConfig(state, {timeInterval: action.payload});
         default:
             return state;
     }

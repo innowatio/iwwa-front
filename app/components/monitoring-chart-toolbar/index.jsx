@@ -44,6 +44,16 @@ const stylesFunction = (theme, active) => ({
         textAlign: "center",
         margin: "0px 5px"
     },
+    timeIntervalButtonStyle: {
+        marginRight: "5px",
+        textAlign: "left",
+        borderRadius: "15px",
+        backgroundColor: active ? theme.colors.buttonPrimary : theme.colors.iconSearchUser,
+        outline: "0px",
+        outlineStyle: "none",
+        outlineWidth: "0px",
+        color: theme.colors.white
+    },
     inputs: {
         width: "90%",
         margin: "0px auto",
@@ -83,6 +93,7 @@ var MonitoringChartToolbar = React.createClass({
         monitoringChartRef: PropTypes.any,
         resetYAxisValues: PropTypes.func.isRequired,
         selectChartType: PropTypes.func.isRequired,
+        selectTimeInterval: PropTypes.func.isRequired,
         toggleComparisonChart: PropTypes.func.isRequired
     },
     contextTypes: {
@@ -152,6 +163,17 @@ var MonitoringChartToolbar = React.createClass({
     onConfirmFullscreenModal: function () {
         this.props.addToFavorite(this.props.monitoringChart, this.state.favoriteName, this.props.asteroid.userId);
         this.closeModal();
+    },
+    renderTimeIntervalButton: function (theme, label, value) {
+        return (
+            <Button
+                disabled={!this.props.monitoringChartRef}
+                style={stylesFunction(theme, this.props.monitoringChart.timeInterval === value).timeIntervalButtonStyle}
+                onClick={() => this.props.selectTimeInterval(value)}
+            >
+                {label}
+            </Button>
+        );
     },
     renderChartStyleButton: function (theme, chartType, icon, tooltipText, disabled) {
         return (
@@ -356,6 +378,24 @@ var MonitoringChartToolbar = React.createClass({
         const stackedChartDisabled = this.state.calculatedYAxis.length > 1;
         return (
             <div>
+                <div style={{
+                    padding: "20px",
+                    textAlign: "center",
+                    borderBottom: "solid 1px",
+                    borderColor: theme.colors.white
+                }}>
+                    <label style={stylesFunction(theme).labelStyle}>
+                        {"INTERVALLO TEMPORALE"}
+                    </label>
+                    <div>
+                        {this.renderTimeIntervalButton(theme, "tutto", "all")}
+                        {this.renderTimeIntervalButton(theme, "5 min", "5m")}
+                        {this.renderTimeIntervalButton(theme, "15 min", "15m")}
+                        {this.renderTimeIntervalButton(theme, "1h", "1h")}
+                        {this.renderTimeIntervalButton(theme, "1g", "1d")}
+                        {this.renderTimeIntervalButton(theme, "1m", "1M")}
+                    </div>
+                </div>
                 <div style={{
                     padding: "20px",
                     textAlign: "center",
