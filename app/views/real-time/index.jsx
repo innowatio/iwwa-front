@@ -471,9 +471,10 @@ var RealTime = React.createClass({
                             </h3>
                             <bootstrap.Col
                                 className="text-center"
+                                lg={4}
                                 md={4}
+                                sm={6}
                                 style={{
-                                    width: "100%",
                                     padding: "20px",
                                     color: theme.colors.mainFontColor
                                 }}
@@ -481,7 +482,7 @@ var RealTime = React.createClass({
                             >
                                 {this.drawGaugeTotal()}
                             </bootstrap.Col>
-                            <bootstrap.Col md={8} xs={12}>
+                            <bootstrap.Col lg={8} md={8} sm={6} xs={12}>
                                 {this.drawGauges()}
                             </bootstrap.Col>
                         </div>
