@@ -24,7 +24,6 @@ import {styles} from "lib/styles";
 import {selectRealTimeSite} from "actions/real-time";
 import {defaultTheme} from "lib/theme";
 import {getTitleForSingleSensor} from "lib/page-header-utils";
-import mergeSiteSensors from "lib/merge-site-sensors";
 import getLastUpdate from "lib/date-utils";
 
 const styleSiteButton = ({colors}) => ({
@@ -74,27 +73,31 @@ var RealTime = React.createClass({
             this.props.asteroid.subscribe("readingsRealTimeAggregatesBySite", this.props.realTime.site);
         }
     },
-    checkRealTime: function () {
+    getRealTimeData: function () {
         const realtimeData = this.props.collections.get("readings-real-time-aggregates");
         if (realtimeData) {
             const sites = this.props.collections.get("sites");
             const site = sites.get(this.props.realTime.site);
             if (site) {
                 const filter = [
-                    "weather-cloudeness",
-                    "weather-humidity",
-                    "weather-temperature",
-                    "weather-id"
+                    "co2",
+                    "temperature",
+                    "humidity",
+                    "illuminance",
+                    "activeEnergy"
                 ];
                 const siteSensors = site.get("sensorsIds");
-                const realtimeSite = realtimeData
-                    .filter(x => R.contains(x.get("sensorId"), siteSensors.toJS()))
-                    .filter(x => x.get("day") === moment().format("YYYY-MM-DD"))
-                    .filter(x => !R.contains(x.get("measurementType"), filter));
-                return realtimeSite.size > 0;
+                if (siteSensors) {
+                    const realtimeSite = realtimeData
+                        .filter(x => R.contains(x.get("sensorId"), siteSensors.toJS()))
+                        .filter(x => x.get("day") === moment().format("YYYY-MM-DD"))
+                        .filter(x => R.contains(x.get("measurementType"), filter))
+                        .filter(x => x);
+                    return realtimeSite;
+                }
             }
         }
-        return false;
+        return Immutable.List();
     },
     getTheme: function () {
         return this.context.theme || defaultTheme;
@@ -147,10 +150,10 @@ var RealTime = React.createClass({
         if (this.findEnergyReadingsRealtime().size > 0) {
             return this.findEnergyReadingsRealtime().map((measure) => {
                 var gaugeParams = {
-                    id: measure.get("id"),
-                    key: measure.get("key"),
-                    description: measure.get("description"),
-                    measurementTime: getLastUpdate(measure.get("measurementTime")),
+                    id: measure.name || measure._id,
+                    key: measure.key,
+                    description: measure.description,
+                    measurementTime: getLastUpdate(measure.measurementTime),
                     maximum: 100,
                     minimum: 0,
                     style: {height: "auto", width: "100%"},
@@ -167,12 +170,12 @@ var RealTime = React.createClass({
                         lineHeight: "20px",
                         marginBottom: "4px"
                     },
-                    unit: measure.get("unit"),
-                    value: parseFloat(measure.get("value")).toFixed(2) / 1 || 0
+                    unit: measure.unit || measure.unitOfMeasurement,
+                    value: parseFloat(measure.measurementValue).toFixed(2) / 1 || 0
                 };
                 return (
                     <bootstrap.Col
-                        key={measure.get("key")}
+                        key={measure.key}
                         md={4}
                         xs={6}
                         style={{padding: "20px"}}
@@ -185,31 +188,14 @@ var RealTime = React.createClass({
     getSensorById: function (sensorId) {
         return this.props.collections.getIn(["sensors", sensorId]);
     },
-    numberOfConsumptionSensor: function (fullPath) {
-        if (R.isArrayLike(fullPath) && fullPath.length > 0) {
-            // All sensors under a site
-            const site = this.getSitoById(fullPath[0]);
-            if (site) {
-                const sensorsType = site.get("sensorsIds").map(sensorId => {
-                    const sensorObject = this.getSensorById(sensorId);
-                    if (sensorObject) {
-                        return sensorObject.get("type");
-                    }
-                });
-                return sensorsType.reduce((acc, sensorsType) => {
-                    return acc + sensorsDecorators.consumptionSensors(this.getTheme()).filter(consumptionSensor => {
-                        return consumptionSensor.type === sensorsType;
-                    }).length;
-                }, 0);
-            }
-        }
-        return 0;
+    numberOfConsumptionSensor: function () {
+        return this.findReadingsRealtime().size;
     },
     drawGaugeTotal: function () {
         const {colors} = this.getTheme();
 
-        const isRealtimeAnytime = this.checkRealTime();
-        if (!isRealtimeAnytime) {
+        const isRealtimeAnytime = this.getRealTimeData();
+        if (isRealtimeAnytime.size === 0) {
             return (
                 <div style={styleTextNodata({colors})}>
                     {"Non sono disponibili dati realtime"}
@@ -220,8 +206,8 @@ var RealTime = React.createClass({
         if (this.findEnergyReadingsRealtime().size > 0) {
             const {value, unit} = this.findEnergyReadingsRealtime().reduce((acc, measure) => {
                 return {
-                    value: acc.value + parseFloat((measure.get("value")) || 0),
-                    unit: measure.get("unit")
+                    value: acc.value + parseFloat((measure.measurementValue) || 0),
+                    unit: measure.unit || measure.unitOfMeasurement
                 };
             }, {value: 0, unit: ""});
             var gaugeParams = {
@@ -249,15 +235,6 @@ var RealTime = React.createClass({
             };
             return this.drawGauge(gaugeParams);
         }
-
-        // else {
-        //     const theme = this.getTheme();
-        //     return (
-        //         <div style={styleTextNodata(theme)}>
-        //             {"Non sono disponibili dati realtime"}
-        //         </div>
-        //     );
-        // }
     },
     getSites: function () {
         return this.props.collections.get("sites") || Immutable.Map();
@@ -281,10 +258,10 @@ var RealTime = React.createClass({
     getSelectedSiteName: function () {
         return (
             this.props.realTime.fullPath &&
-            this.getSites().size > 0 &&
-            this.getSite(this.props.realTime.site) ?
-            this.getSite(this.props.realTime.site).get("name") :
-            null
+                this.getSites().size > 0 &&
+                this.getSite(this.props.realTime.site) ?
+                this.getSite(this.props.realTime.site).get("name") :
+                null
         );
     },
     getGaugeLabel: function (params) {
@@ -292,35 +269,43 @@ var RealTime = React.createClass({
             <MeasureLabel {...params} />
         );
     },
-    findFilteredReadingsRealtime (criteria) {
-        const decorators = R.unnest(sensorsDecorators.allSensorsDecorator(this.getTheme()));
-        const sensorsData = this.props.collections.get("sensors") ? this.props.collections.get("sensors") : Immutable.List();
-        const mergedSiteSensor = Immutable.fromJS(mergeSiteSensors(this.getSite(this.props.realTime.site), sensorsData));
-        const results = this.getMeasures().map((measure, index) => {
-            const decorator = decorators.find(x => (x.key === measure.get("measurementType")));
-            const sensorData = mergedSiteSensor.get("sensors").find(x => x.get("id") == measure.get("sensorId"));
-            if (decorator && sensorData) {
-                measure = measure.set("key", index);
-                measure = measure.set("color", decorator.color);
-                measure = measure.set("icon", decorator.icon);
-                measure = measure.set("id", measure.get("sensorId"));
-                measure = measure.set("unit", measure.get("unitOfMeasurement"));
-                measure = measure.set("value", measure.get("measurementValue"));
-                measure = measure.set("keyType", measure.get("measurementType"));
-                measure = measure.set("type", sensorData.get("type"));
-                measure = measure.set("description", sensorData.get("description"));
-                return measure;
-            }
-        }).filter(criteria).sortBy(x => x.get("sensorId"));
-        return results.toList();
+    getSensorsData () {
+        return this.props.collections.get("sensors") ? this.props.collections.get("sensors") : Immutable.List();
+    },
+    decorateRealtime (realtime, decorators) {
+        const sensorData = this.getSensorsData().find(x => x.get("_id") === realtime.get("sensorId"));
+        const decorationData = decorators.find(x => (x.key === realtime.get("measurementType")));
+        if (sensorData && decorationData) {
+            const decorated = {
+                ...realtime.toJS(),
+                ...sensorData.toJS(),
+                ...decorationData,
+                key: `${realtime.get("sensorId")}-${realtime.get("measurementType")}`
+            };
+            return decorated;
+        }
+    },
+    findRealtimeByMeasurementTypes (measurementTypes = []) {
+        const decorationsData = R.unnest(sensorsDecorators.allSensorsDecorator(this.getTheme()));
+        const realtimeData = this.getRealTimeData().filter(x => x && R.contains(x.get("measurementType"), measurementTypes));
+        const decoratedData = realtimeData.map(ambience => {
+            return this.decorateRealtime(ambience, decorationsData);
+        }).filter(x => x).sortBy(x => x.sensorId);
+
+        return decoratedData.toList();
     },
     findReadingsRealtime () {
-        const result = this.findFilteredReadingsRealtime(x => x && (x.get("type") !== "pod" && x.get("type") !== "pod-anz"));
-        return result.sortBy(x => x.get("sensorId"));
+        return this.findRealtimeByMeasurementTypes([
+            "co2",
+            "temperature",
+            "humidity",
+            "illuminance"
+        ]);
     },
     findEnergyReadingsRealtime: function () {
-        var measures = this.findFilteredReadingsRealtime(x => x && (x.get("type") === "pod" && x.get("keyType") === "activeEnergy"));
-        return measures;
+        return this.findRealtimeByMeasurementTypes([
+            "activeEnergy"
+        ]);
     },
     getSitoById: function (sitoId) {
         const sites = this.props.collections.get("sites") || Immutable.Map();
