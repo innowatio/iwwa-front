@@ -34,10 +34,10 @@ var VariablesPanel = React.createClass({
     },
     renderVariableBox: function () {
         return this.props.values.map((variable) => {
-            const updateTitle = getLastUpdate(variable.get("measurementTime"));
+            const updateTitle = getLastUpdate(variable.measurementTime);
             return (
                 <div
-                    key={variable.get("key")}
+                    key={variable.key}
                     style={{
                         width: (
                             EXEC_ENV === "cordova" ?
@@ -52,10 +52,10 @@ var VariablesPanel = React.createClass({
                         placement="bottom"
                         rootClose={true}
                     >
-                        <div style={style(variable.get("color")).box}>
+                        <div style={style(variable.color).box}>
                             <components.Icon
                                 color={this.getTheme().colors.iconConsumptionVariable}
-                                icon={variable.get("icon")}
+                                icon={variable.icon}
                                 size={EXEC_ENV === "cordova" ? "48px" : "60px"}
                                 style={{
                                     lineHeight: EXEC_ENV === "cordova" ? "70px" : "20px",
@@ -64,14 +64,14 @@ var VariablesPanel = React.createClass({
                                 }}
                             />
                             <MeasureLabel
-                                id={variable.get("id")}
+                                id={variable.name || variable._id}
                                 style={{
                                     paddingLeft: "16px",
                                     verticalAlign: "text-top",
                                     minWidth: EXEC_ENV === "cordova" ? "40px" : "45px"
                                 }}
-                                unit={variable.get("unit")}
-                                value={variable.get("value")}
+                                unit={variable.unit}
+                                value={variable.measurementValue.toFixed(2)}
                             />
                         </div>
                     </bootstrap.OverlayTrigger>
