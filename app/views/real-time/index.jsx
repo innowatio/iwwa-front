@@ -328,7 +328,7 @@ var RealTime = React.createClass({
         return (
             <div>
                 <bootstrap.OverlayTrigger
-                    overlay={<bootstrap.Tooltip className="buttonInfo">
+                    overlay={<bootstrap.Tooltip id="buttonInfo" className="buttonInfo">
                         {"Seleziona punto di misurazione"}
                     </bootstrap.Tooltip>}
                     placement="bottom"

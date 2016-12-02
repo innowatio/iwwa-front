@@ -341,7 +341,7 @@ var AlarmForm = React.createClass({
         const theme = this.getTheme();
         return (
             <bootstrap.OverlayTrigger
-                overlay={<bootstrap.Tooltip className="buttonInfo">
+                overlay={<bootstrap.Tooltip id="buttonInfo" className="buttonInfo">
                     {"Seleziona punto di misurazione"}
                 </bootstrap.Tooltip>}
                 placement="bottom"
