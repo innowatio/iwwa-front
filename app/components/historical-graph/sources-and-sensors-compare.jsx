@@ -9,6 +9,7 @@ import readingsDailyAggregatesToHighchartsData from "lib/readings-daily-aggregat
 
 var SourcesAndSensorsCompare = React.createClass({
     propTypes: {
+        alarmsData: PropTypes.arrayOf(PropTypes.object),
         chartState: PropTypes.shape({
             zoom: PropTypes.arrayOf(PropTypes.object),
             charts: PropTypes.arrayOf(PropTypes.object).isRequired
@@ -48,16 +49,22 @@ var SourcesAndSensorsCompare = React.createClass({
         this.props.setZoomExtremes(zoom);
     },
     render: function () {
+        const {
+            alarmsData,
+            chartState,
+            resetZoom
+        } = this.props;
         return (
             <components.HighCharts
+                alarmsData={alarmsData}
                 colors={this.getColors()}
                 coordinates={this.getCoordinates()}
                 dateFilter={this.getDateFilter()}
                 ref="highcharts"
-                resetZoom={this.props.resetZoom}
+                resetZoom={resetZoom}
                 setZoomExtremes={this.setZoomExtremes}
                 yLabel={this.getYLabel()}
-                zoom={this.props.chartState.zoom}
+                zoom={chartState.zoom}
             />
         );
     }

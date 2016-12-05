@@ -12,7 +12,8 @@ import {
     SELECT_DATE_RANGES_COMPARE,
     REMOVE_ALL_COMPARE,
     SET_ZOOM_EXTREMES,
-    RESET_ZOOM
+    RESET_ZOOM,
+    TOGGLE_SHOW_ALARMS
 } from "actions/chart";
 import {defaultTheme} from "lib/theme";
 import {DISPLAY_ALARMS_ON_CHART} from "actions/alarms";
@@ -212,6 +213,24 @@ function charts (state = defaultChartState, {type, payload}) {
     }
 }
 
+const defaultAlarmState = {
+    show: false
+};
+
+function alarms (state = defaultAlarmState, {type}) {
+    switch (type) {
+        case TOGGLE_SHOW_ALARMS: {
+            const show = !state.show;
+            return {
+                ...state,
+                show
+            };
+        }
+        default:
+            return state;
+    }
+}
+
 function zoom (state = [], {type, payload}) {
     switch (type) {
         case SET_ZOOM_EXTREMES: {
@@ -227,5 +246,6 @@ function zoom (state = [], {type, payload}) {
 
 export const chart = combineReducers({
     charts,
-    zoom
+    zoom,
+    alarms
 });

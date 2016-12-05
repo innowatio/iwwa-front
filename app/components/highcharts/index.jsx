@@ -15,6 +15,7 @@ import moment from "lib/moment";
 
 var HighCharts = React.createClass({
     propTypes: {
+        alarmsData: PropTypes.arrayOf(PropTypes.object),
         colors: PropTypes.arrayOf(PropTypes.string),
         config: PropTypes.object,
         coordinates: PropTypes.arrayOf(PropTypes.object),
@@ -50,7 +51,8 @@ var HighCharts = React.createClass({
     },
     shouldComponentUpdate: function (newProps) {
         return this.props.forceUpdate || !(
-            equals(this.props.coordinates, newProps.coordinates)
+            equals(this.props.coordinates, newProps.coordinates) &&
+            equals(this.props.alarmsData, newProps.alarmsData)
         );
     },
     componentDidUpdate: function () {
@@ -113,9 +115,40 @@ var HighCharts = React.createClass({
         }
         return weekendOverlay;
     },
+    getAlarmLabel: function (measurementType) {
+        switch (measurementType) {
+            case "activeEnergy":
+                return "Soglia di energia attiva superata";
+            case "reactiveEnergy":
+                return "Soglia di energia reattiva superata";
+            case "maxPower":
+                return "Soglia di potenza superata";
+            default:
+                return "Soglia superata";
+        }
+    },
+    getAlarmsSeries: function (measurements) {
+        const {alarmsData} = this.props;
+        const alarmsSeries = alarmsData.map(alarm => {
+            const data = alarm.measurementTimes.split(",").map(time => {
+                return [parseInt(time), measurements.find(x => x[0] >= time)[1]];
+            });
+            return {
+                type: "scatter",
+                name: this.getAlarmLabel(alarm.measurementType),
+                marker: {
+                    radius: 6,
+                    fillColor: "red",
+                    symbol: "circle"
+                },
+                data
+            };
+        });
+        return alarmsSeries;
+    },
     getSeries: function () {
         const {isComparationActive, isDateCompareActive} = this.props;
-        return this.props.coordinates.map((coordinate, index) => ({
+        const series = this.props.coordinates.map((coordinate, index) => ({
             ...coordinate,
             connectNulls: true,
             turboThreshold: 0,
@@ -135,6 +168,13 @@ var HighCharts = React.createClass({
                 ]
             }
         }));
+
+        const alarmSeries = this.getAlarmsSeries(series[0] ? series[0].data : []);
+
+        return [
+            ...series,
+            ...alarmSeries
+        ];
     },
     getConfig: function () {
         const {colors} = this.getTheme();

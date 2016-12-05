@@ -35,7 +35,8 @@ import {
     selectDateRangesCompare,
     removeAllCompare,
     resetZoom,
-    setZoomExtremes
+    setZoomExtremes,
+    toggleAlarms
 } from "actions/chart";
 import {styles} from "lib/styles";
 import {defaultTheme} from "lib/theme";
@@ -89,8 +90,8 @@ const dateButtonStyle = ({colors}) => ({
     top: "50%"
 });
 
-const alarmButtonStyle = ({colors}) => ({
-    backgroundColor: colors.backgroundDanger,
+const alarmButtonStyle = ({colors}, isActive) => ({
+    backgroundColor: isActive ? colors.backgroundChartSelectedButton : colors.backgroundDanger,
     border: "0px none",
     borderRadius: "100%",
     height: "50px",
@@ -102,8 +103,9 @@ var Chart = React.createClass({
     propTypes: {
         asteroid: React.PropTypes.object,
         chartState: React.PropTypes.shape({
-            zoom: React.PropTypes.arrayOf(React.PropTypes.object),
-            charts: React.PropTypes.arrayOf(React.PropTypes.object).isRequired
+            alarms: React.PropTypes.object,
+            charts: React.PropTypes.arrayOf(React.PropTypes.object).isRequired,
+            zoom: React.PropTypes.arrayOf(React.PropTypes.object)
         }).isRequired,
         collections: IPropTypes.map.isRequired,
         localStorage: React.PropTypes.object,
@@ -117,7 +119,8 @@ var Chart = React.createClass({
         selectMultipleElectricalSensor: React.PropTypes.func.isRequired,
         selectSingleElectricalSensor: React.PropTypes.func.isRequired,
         selectSource: React.PropTypes.func.isRequired,
-        setZoomExtremes: React.PropTypes.func.isRequired
+        setZoomExtremes: React.PropTypes.func.isRequired,
+        toggleAlarms: React.PropTypes.func.isRequired
     },
     contextTypes: {
         theme: React.PropTypes.object
@@ -132,9 +135,7 @@ var Chart = React.createClass({
     componentDidMount: function () {
         this.props.asteroid.subscribe("sites");
         this.props.asteroid.subscribe("sensors");
-        if (this.props.chartState.charts[0].alarms) {
-            this.props.asteroid.subscribe("alarms");
-        }
+        this.props.asteroid.subscribe("alarms");
         this.updateFirstSiteToChart();
         this.subscribeToMisure(this.props);
     },
@@ -227,7 +228,44 @@ var Chart = React.createClass({
                 sources[idx],
                 measurementTypes[idx]
             );
+
+            props.asteroid.subscribe(
+                "alarmsAggregates",
+                measurementTypes[idx],
+                R.is(Array, dateStart) ? dateStart[idx] : dateStart,
+                R.is(Array, dateEnd) ? dateEnd[idx] : dateEnd
+            );
         });
+    },
+    getAlarmsData: function () {
+        const {charts} = this.props.chartState;
+        const site = charts[0] ? charts[0].sensorId : null;
+        const measurementType = charts[0] ? charts[0].measurementType : null;
+        const {start, end} = charts[0].date;
+        const alarmsUser = this.props.collections.get("alarms");
+        const alarmsAggregates = this.props.collections.get("alarms-aggregates");
+
+        const {alarms} = this.props.chartState;
+
+        if (charts && alarms.show && site && measurementType && alarmsUser && alarmsAggregates) {
+
+            const decoratedAggregates = alarmsAggregates.map(aggregate => {
+                const siteAlarms = alarmsUser.find(x => x.get("_id") === aggregate.get("alarmId"));
+                const decorated = {
+                    ...siteAlarms.toJS(),
+                    ...aggregate.toJS()
+                };
+                return decorated;
+            }).toArray();
+
+            const filteredSensors = decoratedAggregates
+                .filter(x => x.sensorId === site)
+                .filter(x => x.measurementType === measurementType.key)
+                .filter(x => start <= moment.utc(x.date).valueOf() && moment.utc(x.date).valueOf() <= end);
+
+            return filteredSensors;
+        }
+        return [];
     },
     getSitoById: function (sitoId) {
         const sites = this.props.collections.get("sites") || Immutable.Map();
@@ -675,6 +713,7 @@ var Chart = React.createClass({
             null;
         const valoriMulti = (!this.isDateCompare() && this.selectedSitesId().length < 2 && !selectedConsumptionType);
         const variables = this.getConsumptionVariablesFromFullPath(this.props.chartState.charts[0].fullPath);
+        const {alarms} = this.props.chartState;
         return (
             <div>
                 <div style={styles(theme).titlePage}>
@@ -682,10 +721,11 @@ var Chart = React.createClass({
                     <div style={{fontSize: "18px", marginBottom: "0px", paddingTop: "16px", width: "100%"}}>
                         {this.getTitleForChart().toUpperCase()}
                     </div>
-                    <Button style={alarmButtonStyle(theme)}>
+                    <Button style={alarmButtonStyle(theme, alarms.show)}>
                         <Icon
                             color={theme.colors.iconHeader}
                             icon={"danger"}
+                            onClick={() => this.props.toggleAlarms()}
                             size={"28px"}
                             style={{lineHeight: "20px"}}
                         />
@@ -760,6 +800,7 @@ var Chart = React.createClass({
                         {this.renderFullscreenModal()}
                         {this.renderConfirmModal()}
                         <HistoricalGraph
+                            alarmsData={this.getAlarmsData()}
                             chartState={this.props.chartState}
                             isComparationActive={this.isComparationActive()}
                             isDateCompareActive={this.isDateCompare()}
@@ -835,7 +876,8 @@ function mapDispatchToProps (dispatch) {
         selectDateRangesCompare: bindActionCreators(selectDateRangesCompare, dispatch),
         setZoomExtremes: bindActionCreators(setZoomExtremes, dispatch),
         removeAllCompare: bindActionCreators(removeAllCompare, dispatch),
-        resetZoom: bindActionCreators(resetZoom, dispatch)
+        resetZoom: bindActionCreators(resetZoom, dispatch),
+        toggleAlarms: bindActionCreators(toggleAlarms, dispatch)
     };
 }
 module.exports = connect(mapStateToProps, mapDispatchToProps)(Chart);
