@@ -22,11 +22,11 @@ var MultiSite = React.createClass({
         return this.props.collections.get("sites") || Immutable.Map();
     },
     renderSiteRecap: function () {
-        // TODO per i siti, bisogna capire se il controllo sui siti visibili dall'utente sta sul back (publication) o front
+        // TODO IWWA-834 per i siti, bisogna capire se il controllo sui siti visibili dall'utente sta sul back (publication) o front
         // (in caso va gestita la publication per leggere il permesso `view-all-sites`)
         return (
             <div style={boxContentStyle}>
-                {this.getSites().size }
+                {this.getSites().size}
                 {"Siti monitorati"}
                 {moment().format("ddd D MMM YYYY [  h] HH:mm")}
             </div>
