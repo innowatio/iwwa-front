@@ -11,6 +11,7 @@ exports.CollectionElementsTable = require("./collection-elements-table/");
 exports.CollectionItemList      = require("./collection-item-list/");
 exports.ConfirmModal            = require("./confirm-modal/");
 exports.ConsumptionButtons      = require("./consumption-buttons/");
+exports.ConsumptionChart        = require("./consumption-chart/");
 exports.DateCompare             = require("./date-compare/");
 exports.DateFilter              = require("./date-filter/");
 exports.DeleteWithConfirmButton = require("./delete-with-confirm-button/");
