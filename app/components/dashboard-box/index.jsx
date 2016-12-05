@@ -1,16 +1,14 @@
 import React, {PropTypes} from "react";
+import * as bootstrap from "react-bootstrap";
+import Radium from "radium";
 
 import {defaultTheme} from "lib/theme";
 
-const style = theme => ({
-    container: {
-        backgroundColor: theme.colors.backgroundTitlePage,
-        display: "inline",
-        marginRight: "20px",
-        maxWidth: "300px",
-        maxHeight: "300px",
-        minWidth: "300px",
-        minHeight: "300px"
+const styles = () => ({
+    colDataWrp:{
+        height: "auto",
+        paddingRight: "5px",
+        paddingLeft: "5px"
     }
 });
 
@@ -27,9 +25,17 @@ var DashboardBox = React.createClass({
     render: function () {
         const theme = this.getTheme();
         return (
-            <div style={style(theme).container}>
+            <bootstrap.Col
+                md={3}
+                xs={6}
+                className="data-col"
+            >
+                <Radium.Style
+                    rules={styles(theme).colDataWrp}
+                    scopeSelector=".data-col"
+                />
                 {this.props.children}
-            </div>
+            </bootstrap.Col>
         );
     }
 });

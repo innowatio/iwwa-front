@@ -99,11 +99,11 @@ var Root = React.createClass({
         // admin tutto
         if (hasRole(asteroid, ACCESS_LUCY_LIGHT)) {
             items = items.concat([
+                {key: "multisite", label: "DASHBOARD", url: "/multisite/", iconClassName: "dashboard"},
                 {key: "chart", label: "CONSUMI STORICI", url: "/chart/", iconClassName: "history"},
                 {key: "live", label: "CONSUMI LIVE", url: "/live/", iconClassName: "gauge"},
                 {key: "consumptions", label: "RIEPILOGO CONSUMI", url: "/consumptions/", iconClassName: "percentage"},
-                {key: "alarms", label: "ALLARMI", url: "/alarms/", iconClassName: "alarms"},
-                {key: "sites", label: "DASHBOARD", url: "/dashboard/", iconClassName: "confront"}
+                {key: "alarms", label: "ALLARMI", url: "/alarms/", iconClassName: "alarms"}
             ]);
         }
         if (hasRole(asteroid, ACCESS_LUCY_PRO)) {
