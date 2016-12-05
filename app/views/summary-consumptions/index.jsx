@@ -6,17 +6,17 @@ import React from "react";
 import IPropTypes from "react-immutable-proptypes";
 import moment from "moment";
 import "moment/locale/it";
-import ReactHighcharts from "react-highcharts/bundle/ReactHighcharts";
 import utils from "iwwa-utils";
 
 import {partial, is} from "ramda";
 import {
-    Button,
     ConfirmModal,
+    ConsumptionChart,
     Icon,
     FullscreenModal,
     ProgressBar,
-    SiteNavigator
+    SiteNavigator,
+    TooltipIconButton
 } from "components";
 import {connect} from "react-redux";
 import {bindActionCreators} from "redux";
@@ -25,17 +25,15 @@ import {tabParameters} from "lib/consumptions-utils";
 import {selectSite, selectPeriod} from "actions/consumptions";
 
 
-var styleLeftPane  = {
+var styleLeftPane  = () => ({
     width: "70%",
     float: "left"
-};
-var styleContent  = ({colors}) => ({
+});
+var styleContent  = () => ({
     textAlign: "center",
-    backgroundColor: colors.primary,
     height: "calc(100vh - 130px)"
 });
-var styleTabContent  = ({colors}) => ({
-    backgroundColor: colors.primary
+var styleTabContent  = () => ({
 });
 var styleH2 = ({colors}) => ({
     fontSize: "20px",
@@ -61,14 +59,32 @@ var styleRoundedDiv = ({colors}) => ({
     padding: "70px 10px 0px 10px",
     backgroundColor: colors.secondary
 });
+
+var styleRoundedDivYear = ({colors}) => ({
+    borderRadius: "100%",
+    margin: "15px auto",
+    width: "150px",
+    height: "150px",
+    padding: "35px 5px 0px 5px",
+    backgroundColor: colors.secondary
+});
+
 var styleMeasure  = ({colors}) => ({
     // fontSize: "90px",
     fontWeight: "600",
     lineHeight: "110px",
     color: colors.white
 });
+
+var styleMeasureYear  = ({colors}) => ({
+    // fontSize: "90px",
+    fontWeight: "600",
+    lineHeight: "55px",
+    color: colors.white
+});
+
 var styleUnit  = ({colors}) => ({
-    fontSize: "60px",
+    // fontSize: "60px",
     fontWeight: "600",
     lineHeight: "10px",
     margin: "0px",
@@ -91,6 +107,7 @@ var styleRightPane  = ({colors}) => ({
     width: "30%",
     float: "right",
     borderTop: "4px solid " + colors.secondary,
+    backgroundColor: colors.secondary,
     display: "block"
 });
 var styleSiteButton = ({colors}) => ({
@@ -101,7 +118,7 @@ var styleSiteButton = ({colors}) => ({
     borderRadius: "100%",
     clear: "both",
     margin: "12px 12px 0 0",
-    backgroundColor: colors.secondary
+    backgroundColor: colors.primary
 });
 
 var styleProgressBar = ({colors}) => ({
@@ -230,82 +247,6 @@ var SummaryConsumptions = React.createClass({
     getFontSize: function (item, defaultFontSize) {
         const itemLength = is(Number, item) ? item.toString().length : item.length;
         return item.toString().length > 5 ? `${defaultFontSize - ((itemLength - 5) * 10)}px`: `${defaultFontSize}px`;
-    },
-
-    chartVisibility: function (page) {
-        switch (page) {
-            case "year":
-                return {
-                    visibility: "hidden" //"visible"
-                };
-            default:
-                return {
-                    visibility: "hidden"
-                };
-        }
-    },
-
-    getYearSeries: function (year, yearlyAggregate) {
-        const series =[];
-
-        const filteredAggregated = yearlyAggregate.filter(agg => agg.get("year")=== year);
-        for (var x=0; x<12; x++) {
-            const start = moment([year, x, 1, 0, 0, 0, 0]);
-            const end = moment([year, x, start.daysInMonth(), 23, 59, 59, 999]);
-            const period = {
-                start: start.format("YYYY-MM-DD HH:mm:ss"),
-                end: end.format("YYYY-MM-DD HH:mm:ss")
-            };
-            series.push(utils.getSumByPeriod(period, filteredAggregated));
-        }
-        return series;
-    },
-
-    getChartConfig: function () {
-        const {colors} = this.getTheme();
-        const yearlyAggregate = (this.props.collections.get("consumptions-yearly-aggregates") || Map())
-        .filter(agg => agg.get("sensorId") === this.props.consumptions.fullPath[0]);
-
-        const cy = moment().format("YYYY");
-        const py = moment().subtract(1, "years").format("YYYY");
-
-        const cyData = this.getYearSeries(cy, yearlyAggregate);
-        const pyData = this.getYearSeries(py, yearlyAggregate);
-
-        var config = {
-            chart: {
-                backgroundColor: colors.background,
-                events: {
-                    selection: this.onSetExtreme
-                },
-                ignoreHiddenSeries: false,
-                panning: true,
-                panKey: "shift",
-                type: "column"
-            },
-            credits: {
-                enabled: false
-            },
-            exporting: {
-                enabled: false
-            },
-            colors: ["#90ed7d", "#f7a35c"],
-            xAxis: {
-                categories: ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"]
-            },
-            series: [
-                {
-                    name: "CY",
-                    data: cyData
-
-                },
-                {
-                    name: "PY",
-                    data: pyData
-                }
-            ]
-        };
-        return config;
     },
 
     renderCustomersComparisons: function () {
@@ -540,7 +481,10 @@ var SummaryConsumptions = React.createClass({
     },
 
     renderTabContent: function (siteName, theme, tabParameters) {
-        const chartconfig = this.getChartConfig();
+
+        const chartCollection = (this.props.collections.get("consumptions-yearly-aggregates") || Map())
+        .filter(agg => agg.get("sensorId") === this.props.consumptions.fullPath[0]);
+
         var sum = 0;
         if (this.props.consumptions.fullPath) {
             this.subscribeToConsumptions();
@@ -548,21 +492,29 @@ var SummaryConsumptions = React.createClass({
         }
         const measure = sum >= 100 ? Math.round(sum) : Math.round(sum * 10, -1) / 10;
         // const congratMessage = "COMPLIMENTI! Ieri hai utilizzato il 12% in meno dell’energia che utilizzi di solito.";
+        const styleRound = tabParameters.key=="year" ? styleRoundedDivYear(theme) : styleRoundedDiv(theme);
+        const fontMeasure = tabParameters.key=="year" ? 45 : 90;
+        const fontUnit = tabParameters.key=="year" ? 30 : 60;
+        const styleMeasureVar= tabParameters.key=="year" ? styleMeasureYear(theme): styleMeasure(theme);
         return (
             <div style={styleContent(theme)}>
                 <h2 style={styleH2(theme)}>{siteName}</h2>
                 <h3 style={styleH3(theme)}>{tabParameters.periodTitle}</h3>
-                <div style={styleRoundedDiv(theme)}>
+                <div style={styleRound}>
                     <p style={{
-                        ...styleMeasure(theme),
-                        fontSize: this.getFontSize(measure, 90)
+                        ...styleMeasureVar,
+                        fontSize: this.getFontSize(measure, fontMeasure)
                     }}>{measure}</p>
-                    <span style={styleUnit(theme)}>{tabParameters.measureUnit}</span>
+                    <span style={{
+                        ...styleUnit(theme, fontUnit),
+                        fontSize: fontUnit+"px"
+                    }}>{tabParameters.measureUnit}</span>
                 </div>
                 <p style={styleH2(theme)}>{tabParameters.periodSubtitle}</p>
-                <div style={this.chartVisibility(tabParameters.key)}>
-                    <ReactHighcharts config ={chartconfig} />
-                </div>
+                <ConsumptionChart
+                    collections={chartCollection}
+                    page={tabParameters.key}
+                />
                 {/*
                     <div style={styleCongratMessage(theme)}>
                         <bootstrap.Col xs={12} md={8} lg={9} style={{float: "left"}}>{congratMessage}</bootstrap.Col>
@@ -584,7 +536,7 @@ var SummaryConsumptions = React.createClass({
         const theme = this.getTheme();
         return (
             <div>
-                <div style={styleLeftPane}>
+                <div style={styleLeftPane(theme)}>
                     <div style={styleTabContent(theme)}>
                         {this.renderTabs(theme)}
                     </div>
@@ -592,26 +544,16 @@ var SummaryConsumptions = React.createClass({
                 </div>
                 <div style={styleRightPane(theme)}>
                     <div style={{clear: "both", height: "50px", width: "100%"}}>
-                        <bootstrap.OverlayTrigger
-                            overlay={<bootstrap.Tooltip className="buttonInfo">
-                                {"Seleziona punto di misurazione"}
-                            </bootstrap.Tooltip>}
-                            placement="bottom"
-                            rootClose={true}
-                        >
-                            <Button className="pull-right" onClick={this.openModal} style={styleSiteButton(theme)} >
-                                <Icon
-                                    color={theme.colors.iconSiteButton}
-                                    icon={"map"}
-                                    size={"38px"}
-                                    style={{
-                                        textAlign: "center",
-                                        verticalAlign: "middle",
-                                        lineHeight: "20px"
-                                    }}
-                                />
-                            </Button>
-                        </bootstrap.OverlayTrigger>
+                        <TooltipIconButton
+                            buttonClassName={"pull-right"}
+                            buttonStyle={styleSiteButton(theme)}
+                            icon={"map"}
+                            iconColor={theme.colors.iconSiteButton}
+                            iconSize={"38px"}
+                            iconStyle={{textAlign: "center", verticalAlign: "middle"}}
+                            onButtonClick={this.openModal}
+                            tooltipText={"Seleziona punto di misurazione"}
+                        />
                     </div>
                     <div style={{margin: "5px 20px"}}>
                         {this.props.consumptions.fullPath ? this.renderPeriodComparisons() : null}

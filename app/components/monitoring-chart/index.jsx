@@ -4,6 +4,7 @@ import ReactHighstock from "react-highcharts/bundle/ReactHighstock"; // Highstoc
 import ExportCSV from "highcharts-export-csv";
 ExportCSV(ReactHighstock.Highcharts);
 
+import moment from "lib/moment";
 import {defaultTheme} from "lib/theme";
 import {Button, Icon} from "components";
 
@@ -41,6 +42,7 @@ const charts = [
 var MonitoringChart = React.createClass({
     propTypes: {
         addMoreData: PropTypes.func.isRequired,
+        chartDates: PropTypes.object.isRequired,
         chartState: PropTypes.object.isRequired,
         saveConfig: PropTypes.func.isRequired,
         selectPeriod: PropTypes.func.isRequired,
@@ -94,6 +96,9 @@ var MonitoringChart = React.createClass({
             let yAxisIndex = R.findIndex(R.propEq("key", item.unitOfMeasurement))(yAxis);
             let config = {
                 data: item.data,
+                dataGrouping: {
+                    approximation: item.aggregationType
+                },
                 name: item.name,
                 yAxis: yAxisIndex
             };
@@ -129,8 +134,52 @@ var MonitoringChart = React.createClass({
         });
         return yAxis;
     },
+    getWeekendOverlay: function (date, colors) {
+        var weekendOverlay = [];
+        const dayInFilter = moment(date.end).diff(moment(date.start), "days");
+        const firstSaturday = moment(date.start).isoWeekday(6);
+        for (var i = 0; i <= dayInFilter/7; i++) {
+            const nextSat = moment(firstSaturday).add({day: i * 7});
+            const nextSun = moment(firstSaturday).add({day: i * 7 + 1});
+            weekendOverlay.push({
+                from: nextSat.startOf("day").valueOf(),
+                to: nextSun.endOf("day").valueOf(),
+                color: colors.graphUnderlay
+            });
+        }
+        return weekendOverlay;
+    },
+    getTimeInterval: function (timeInterval) {
+        switch (timeInterval) {
+            case "5m":
+                return ["minute", [5]];
+            case "15m":
+                return ["minute", [15]];
+            case "1h":
+                return ["hour", [1]];
+            case "1d":
+                return ["day", [1]];
+            case "1M":
+                return ["month", [1]];
+        }
+    },
+    getCommonPlotOptions: function (props) {
+        let plotOptions = {
+            series: {
+                events: {
+                    legendItemClick: this.synchronizeSeries
+                }
+            }
+        };
+        if (props.chartState.timeInterval !== "all") {
+            plotOptions.series.dataGrouping = {
+                units: [this.getTimeInterval(props.chartState.timeInterval)]
+            };
+        }
+        return plotOptions;
+    },
     getCommonConfig: function (props, yAxis) {
-        const theme = this.getTheme();
+        const {colors} = this.getTheme();
         let config = {
             chart: {
                 ...this.getCommonChartConfig(props),
@@ -148,10 +197,10 @@ var MonitoringChart = React.createClass({
             legend: {
                 enabled: true,
                 itemStyle: {
-                    color: theme.colors.mainFontColor
+                    color: colors.mainFontColor
                 },
                 itemHoverStyle: {
-                    color: theme.colors.mainFontColor
+                    color: colors.mainFontColor
                 }
             },
             navigator: {
@@ -159,47 +208,41 @@ var MonitoringChart = React.createClass({
                     includeInCSVExport: false
                 }
             },
-            plotOptions: {
-                series: {
-                    events: {
-                        legendItemClick: this.synchronizeSeries
-                    }
-                }
-            },
+            plotOptions: this.getCommonPlotOptions(props),
             rangeSelector: {
                 buttonTheme: { // styles for the buttons
                     fill: "none",
                     r: 12,
-                    stroke: theme.colors.mainFontColor,
+                    stroke: colors.mainFontColor,
                     "stroke-width": 1,
                     width: 50,
                     style: {
-                        color: theme.colors.mainFontColor
+                        color: colors.mainFontColor
                     },
                     states: {
                         hover: {
-                            fill: theme.colors.buttonPrimary,
-                            stroke: theme.colors.buttonPrimary,
+                            fill: colors.buttonPrimary,
+                            stroke: colors.buttonPrimary,
                             style: {
-                                color: theme.colors.white
+                                color: colors.white
                             }
                         },
                         select: {
-                            stroke: theme.colors.buttonPrimary,
-                            fill: theme.colors.buttonPrimary,
+                            stroke: colors.buttonPrimary,
+                            fill: colors.buttonPrimary,
                             style: {
-                                color: theme.colors.white
+                                color: colors.white
                             }
                         }
                     }
                 },
-                inputBoxBorderColor:  theme.colors.mainFontColor,
+                inputBoxBorderColor:  colors.mainFontColor,
                 inputStyle: {
-                    color: theme.colors.buttonPrimary,
+                    color: colors.buttonPrimary,
                     fontWeight: "600"
                 },
                 labelStyle: {
-                    color: theme.colors.mainFontColor,
+                    color: colors.mainFontColor,
                     fontWeight: "600"
                 },
                 buttons: [
@@ -212,6 +255,9 @@ var MonitoringChart = React.createClass({
                 ],
                 ordinal: false
             },
+            scrollbar: {
+                liveRedraw: false
+            },
             tooltip: {
                 pointFormat: "<span style=\"color:{point.color}\">\u25CF</span> {series.name}: <b>{point.y:.2f}</b><br/>",
                 shared: true
@@ -221,7 +267,8 @@ var MonitoringChart = React.createClass({
                 min: props.chartState.xAxis.min,
                 events: {
                     afterSetExtremes: this.synchronizeXAxis
-                }
+                },
+                plotBands: this.getWeekendOverlay(props.chartDates, colors)
             },
             yAxis: yAxis
         };
@@ -258,6 +305,7 @@ var MonitoringChart = React.createClass({
                 ...props.chartState.yAxis
             },
             plotOptions: {
+                ...this.getCommonPlotOptions(props),
                 column: {
                     stacking: "normal"
                 }
@@ -271,6 +319,7 @@ var MonitoringChart = React.createClass({
                 type: "column"
             },
             plotOptions: {
+                ...this.getCommonPlotOptions(props),
                 column: {
                     stacking: "percent"
                 }
@@ -369,7 +418,7 @@ var MonitoringChart = React.createClass({
         });
     },
     synchronizeXAxis: function (xAxis) {
-        if (xAxis.trigger && xAxis.triggerOp !== "navigator-drag") {
+        if (xAxis.trigger) {
             this.props.selectPeriod(xAxis);
         }
         this.doForEveryChart((hsChart, chart) => {

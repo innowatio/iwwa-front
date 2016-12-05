@@ -6,21 +6,21 @@ import {Icon} from "components";
 
 const styles = (theme) => ({
     labelPrimaryTag: {
-        padding: "0px 10px 2px 10px",
+        padding: "0px 10px",
         borderRadius: "35px",
         marginRight: "5px",
         color: theme.colors.primaryTagsColor,
         border: "solid 1px " + theme.colors.primaryTagsColor
     },
     labelPrimaryTagHover: {
-        padding: "0px 10px 2px 10px",
+        padding: "0px 10px",
         borderRadius: "35px",
         marginRight: "5px",
         color: theme.colors.white,
         border: "solid 1px " + theme.colors.white
     },
     labelTag: {
-        padding: "0px 10px 2px 10px",
+        padding: "0px 10px",
         borderRadius: "35px",
         marginRight: "5px",
         color: theme.colors.white,
@@ -34,6 +34,7 @@ var TagList = React.createClass({
         className: PropTypes.string,
         containerStyle: PropTypes.object,
         isSelected: PropTypes.bool,
+        onClickRemove: PropTypes.func,
         primaryTags: PropTypes.any,
         tagIcon: PropTypes.bool,
         tags: PropTypes.any
@@ -52,40 +53,53 @@ var TagList = React.createClass({
                 size={"27px"}
                 style={{
                     verticalAlign: "middle",
-                    lineHeight: "49px",
+                    lineHeight: "50px",
                     marginRight: "10px"
                 }}
             />
         ) : null;
     },
+    renderTagRemoveIcon: function (value) {
+        return this.props.onClickRemove ? (
+            <div
+                style={{
+                    cursor: "pointer",
+                    marginRight: "10px",
+                    fontWeight: "300",
+                    display: "inline-block",
+                    fontSize: "16px",
+                    lineHeight: "18px"
+                }}
+                onClick={() => this.props.onClickRemove(value)}
+            >
+                {"×"}
+            </div>
+        ) : null;
+    },
+    renderTag: function (style, value) {
+        return (
+            <label
+                style={style}
+                key={value}
+            >
+                {this.renderTagRemoveIcon(value)}
+                <span style={{fontWeight: "300"}}>
+                    {value}
+                </span>
+            </label>
+        );
+    },
     renderTags: function (theme) {
         let tags = [];
         if (this.props.primaryTags) {
             this.props.primaryTags.forEach(primaryTag => {
-                tags.push(
-                    <label
-                        style={
-                            this.props.isSelected ?
-                            styles(theme).labelPrimaryTagHover :
-                            styles(theme).labelPrimaryTag
-                        }
-                        key={"primary-" + primaryTag}
-                    >
-                        {primaryTag}
-                    </label>
-                );
+                const style = this.props.isSelected ? styles(theme).labelPrimaryTagHover : styles(theme).labelPrimaryTag;
+                tags.push(this.renderTag(style, primaryTag));
             });
         }
         if (this.props.tags) {
             this.props.tags.forEach(tag => {
-                tags.push(
-                    <label
-                        style={styles(theme).labelTag}
-                        key={"tag-" + tag}
-                    >
-                        {tag}
-                    </label>
-                );
+                tags.push(this.renderTag(styles(theme).labelTag, tag));
             });
         }
         return tags;

@@ -32,7 +32,8 @@ export default memoize(function readingsDailyAggregatesToHighchartsData (aggrega
     return chartData.map((arrayOfData, index) => ({
         data: arrayOfData,
         name: chartsState[index].name,
-        unitOfMeasurement: chartsState[index].unitOfMeasurement
+        unitOfMeasurement: chartsState[index].unitOfMeasurement,
+        aggregationType: chartsState[index].aggregationType
     }));
 });
 

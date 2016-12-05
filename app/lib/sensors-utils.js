@@ -24,78 +24,101 @@ const operatorMapping = {
     [f.A_15MIN_BACKWARD_SHIFT]: "remove-15m"
 };
 
-export const potentialUnitsOfMeasurement = [
-    {value: "#", label: "#"},
-    {value: "%", label: "%"},
-    {value: "€", label: "€"},
-    {value: "€/kSm³", label: "€/kSm³"},
-    {value: "€/kWh", label: "€/kWh"},
-    {value: "€/MWh", label: "€/MWh"},
-    {value: "€/Sm³", label: "€/Sm³"},
-    {value: "°C", label: "°C"},
-    {value: "°F", label: "°F"},
-    {value: "µg", label: "µg"},
-    {value: "A", label: "A"},
-    {value: "atm", label: "atm"},
-    {value: "bar", label: "bar"},
-    {value: "barg", label: "barg"},
-    {value: "BTU", label: "BTU"},
-    {value: "cal", label: "cal"},
-    {value: "cm²", label: "cm²"},
-    {value: "g", label: "g"},
-    {value: "GW", label: "GW"},
-    {value: "GWh", label: "GWh"},
-    {value: "hPa", label: "hPa"},
-    {value: "Hz", label: "Hz"},
-    {value: "J", label: "J"},
-    {value: "K", label: "K"},
-    {value: "kcal", label: "kcal"},
-    {value: "kg", label: "kg"},
-    {value: "kg/m³", label: "kg/m³"},
-    {value: "kg/s", label: "kg/s"},
-    {value: "KHz", label: "KHz"},
-    {value: "KJ", label: "KJ"},
-    {value: "km/h", label: "km/h"},
-    {value: "km²", label: "km²"},
-    {value: "kSm³", label: "kSm³"},
-    {value: "kV", label: "kV"},
-    {value: "kW", label: "kW"},
-    {value: "kWh", label: "kWh"},
-    {value: "l", label: "l"},
-    {value: "l/h", label: "l/h"},
-    {value: "l/s", label: "l/s"},
-    {value: "lm", label: "lm"},
-    {value: "lx", label: "lx"},
-    {value: "m/s", label: "m/s"},
-    {value: "m/s2", label: "m/s2"},
-    {value: "m²", label: "m²"},
-    {value: "m³", label: "m³"},
-    {value: "m³/h", label: "m³/h"},
-    {value: "mbar", label: "mbar"},
-    {value: "mg", label: "mg"},
-    {value: "mg/Nm³", label: "mg/Nm³"},
-    {value: "MHz", label: "MHz"},
-    {value: "min", label: "min"},
-    {value: "mm²", label: "mm²"},
-    {value: "MW", label: "MW"},
-    {value: "MWh", label: "MWh"},
-    {value: "Nm³", label: "Nm³"},
-    {value: "ora", label: "ora"},
-    {value: "Pa", label: "Pa"},
-    {value: "ppm", label: "ppm"},
-    {value: "Psi", label: "Psi"},
-    {value: "s", label: "s"},
-    {value: "Sm3", label: "Sm³"},
-    {value: "Sm³/h", label: "Sm³/h"},
-    {value: "ton", label: "ton"},
-    {value: "Torr", label: "Torr"},
-    {value: "V", label: "V"},
-    {value: "W", label: "W"},
-    {value: "Wh", label: "Wh"}
-];
+export const sensorOptions = {
+    unitOfMeasurement: [
+        {value: "#", label: "#"},
+        {value: "%", label: "%"},
+        {value: "€", label: "€"},
+        {value: "€/kSm^3", label: "€/kSm³"},
+        {value: "€/kWh", label: "€/kWh"},
+        {value: "€/MWh", label: "€/MWh"},
+        {value: "€/Sm^3", label: "€/Sm³"},
+        {value: "°C", label: "°C"},
+        {value: "°F", label: "°F"},
+        {value: "{micro}g", label: "µg"},
+        {value: "A", label: "A"},
+        {value: "atm", label: "atm"},
+        {value: "bar", label: "bar"},
+        {value: "barg", label: "barg"},
+        {value: "BTU", label: "BTU"},
+        {value: "cal", label: "cal"},
+        {value: "cm^2", label: "cm²"},
+        {value: "g", label: "g"},
+        {value: "GW", label: "GW"},
+        {value: "GWh", label: "GWh"},
+        {value: "hPa", label: "hPa"},
+        {value: "Hz", label: "Hz"},
+        {value: "J", label: "J"},
+        {value: "K", label: "K"},
+        {value: "kcal", label: "kcal"},
+        {value: "kg", label: "kg"},
+        {value: "kg/m^3", label: "kg/m³"},
+        {value: "kg/s", label: "kg/s"},
+        {value: "KHz", label: "KHz"},
+        {value: "KJ", label: "KJ"},
+        {value: "km/h", label: "km/h"},
+        {value: "km^2", label: "km²"},
+        {value: "kSm^3", label: "kSm³"},
+        {value: "kV", label: "kV"},
+        {value: "kW", label: "kW"},
+        {value: "kWh", label: "kWh"},
+        {value: "l", label: "l"},
+        {value: "l/h", label: "l/h"},
+        {value: "l/s", label: "l/s"},
+        {value: "lm", label: "lm"},
+        {value: "lx", label: "lx"},
+        {value: "m/s", label: "m/s"},
+        {value: "m/s2", label: "m/s2"},
+        {value: "m^2", label: "m²"},
+        {value: "m^3", label: "m³"},
+        {value: "m^3/h", label: "m³/h"},
+        {value: "mbar", label: "mbar"},
+        {value: "mg", label: "mg"},
+        {value: "mg/Nm^3", label: "mg/Nm³"},
+        {value: "MHz", label: "MHz"},
+        {value: "min", label: "min"},
+        {value: "mm^2", label: "mm²"},
+        {value: "MW", label: "MW"},
+        {value: "MWh", label: "MWh"},
+        {value: "Nm^3", label: "Nm³"},
+        {value: "ora", label: "ora"},
+        {value: "Pa", label: "Pa"},
+        {value: "ppm", label: "ppm"},
+        {value: "Psi", label: "Psi"},
+        {value: "s", label: "s"},
+        {value: "Sm^3", label: "Sm³"},
+        {value: "Sm^3/h", label: "Sm³/h"},
+        {value: "ton", label: "ton"},
+        {value: "Torr", label: "Torr"},
+        {value: "V", label: "V"},
+        {value: "W", label: "W"},
+        {value: "Wh", label: "Wh"}
+    ],
+    aggregationType: [
+        {value: "average", label: "Media dei valori"},
+        {value: "sum", label: "Somma dei valori"},
+        {value: "lastValue", label: "Ultimo valore"}
+    ]
+};
+
+export function getAggregationFunction (aggregationType) {
+    switch (aggregationType) {
+        case "lastValue":
+            return (values) => {
+                if (values && values.length > 0) {
+                    return values[values.length - 1];
+                }
+                return null;
+            };
+        case "sum":
+            return "sum";
+        default:
+            return "average";
+    }
+}
 
 export function getUnitOfMeasurementLabel (val) {
-    const foundedUnit = R.find(R.propEq("value", val))(potentialUnitsOfMeasurement);
+    const foundedUnit = R.find(R.propEq("value", val))(sensorOptions.unitOfMeasurement);
     return foundedUnit ? foundedUnit.label : val;
 }
 

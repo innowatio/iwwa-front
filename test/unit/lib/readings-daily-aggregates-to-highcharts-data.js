@@ -117,7 +117,7 @@ describe("readingsDailyAggregatesToHighchartsData", () => {
             expect(res).to.be.an("array");
             res.map((objectResult, index) => {
                 expect(res[index]).to.be.an("object");
-                expect(res[index]).to.have.all.keys(["data", "name", "unitOfMeasurement"]);
+                expect(res[index]).to.have.all.keys(["data", "name", "unitOfMeasurement", "aggregationType"]);
                 expect(objectResult.data).to.be.an("array");
             });
         });
@@ -132,7 +132,7 @@ describe("readingsDailyAggregatesToHighchartsData", () => {
             expect(res).to.be.an("array");
             res.map((objectResult, index) => {
                 expect(res[index]).to.be.an("object");
-                expect(res[index]).to.have.all.keys(["data", "name", "unitOfMeasurement"]);
+                expect(res[index]).to.have.all.keys(["data", "name", "unitOfMeasurement", "aggregationType"]);
                 expect(objectResult.data).to.be.an("array");
             });
         });

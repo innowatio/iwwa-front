@@ -9,7 +9,7 @@ import {Types} from "lib/dnd-utils";
 import {getSensorId, getSensorLabel, getUnitOfMeasurementLabel} from "lib/sensors-utils";
 import {defaultTheme} from "lib/theme";
 
-import {Button, CollectionItemList, Icon} from "components";
+import {CollectionItemList, Icon, TooltipIconButton} from "components";
 
 const buttonStyle = ({colors}) => ({
     backgroundColor: colors.primary,
@@ -81,28 +81,20 @@ var SensorsDropArea = React.createClass({
     },
     renderAggregateButton: function (theme) {
         return this.props.onClickAggregate ? (
-            <bootstrap.OverlayTrigger
-                overlay={<bootstrap.Tooltip id="aggregate" className="buttonInfo">{"Crea un sensore"}</bootstrap.Tooltip>}
-                placement="bottom"
-                rootClose={true}
-            >
-                <Button
-                    style={
-                        R.merge(buttonStyle(theme), {
-                            right: "50px",
-                            padding: "1px 8px"
-                        })
-                    }
-                    onClick={this.props.onClickAggregate}
-                >
-                    <Icon
-                        color={theme.colors.iconHeader}
-                        icon={"merge"}
-                        size={"30px"}
-                        style={{verticalAlign:"middle"}}
-                    />
-                </Button>
-            </bootstrap.OverlayTrigger>
+            <TooltipIconButton
+                buttonStyle={
+                    R.merge(buttonStyle(theme), {
+                        right: "50px",
+                        padding: "1px 8px"
+                    })
+                }
+                icon={"merge"}
+                iconColor={theme.colors.iconHeader}
+                iconSize={"30px"}
+                iconStyle={{verticalAlign:"middle"}}
+                onButtonClick={this.props.onClickAggregate}
+                tooltipText={"Crea un sensore"}
+            />
         ) : null;
     },
     renderChartButton: function (theme) {

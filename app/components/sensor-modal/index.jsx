@@ -8,7 +8,7 @@ import {reduxForm, Field} from "redux-form";
 import {AutoComplete, FormInputText, FullscreenModal, SensorAggregator, TagList} from "components";
 
 import {hasRole, VIEW_FORMULA_DETAILS} from "lib/roles-utils";
-import {potentialUnitsOfMeasurement} from "lib/sensors-utils";
+import {sensorOptions} from "lib/sensors-utils";
 import {styles} from "lib/styles";
 import {defaultTheme} from "lib/theme";
 
@@ -133,7 +133,7 @@ var SensorForm = React.createClass({
                             resize: "none",
                             margin: "0px",
                             padding: "5px 0px",
-                            height: "110px"
+                            height: "130px"
                         }}
                         {...field.input}
                     />
@@ -155,9 +155,9 @@ var SensorForm = React.createClass({
                     />
                     <Select
                         className={"sensor-modal-select"}
-                        name={"unitOfMeasurement"}
+                        name={field.name}
                         onChange={field.input.onChange}
-                        options={potentialUnitsOfMeasurement}
+                        options={sensorOptions[field.name]}
                         placeholder={field.label}
                         value={field.input.value}
                     />
@@ -170,11 +170,6 @@ var SensorForm = React.createClass({
         return (
             <TagList
                 className={"tags-wrp form-group col-xs-12"}
-                style={{
-                    width: "30px",
-                    position: "absolute",
-                    bottom: "0px"
-                }}
                 tagIcon={true}
                 primaryTags={field.input.value}
             />
@@ -185,13 +180,12 @@ var SensorForm = React.createClass({
         return (
             <div
                 className={"tags-wrp-input form-group col-xs-12"}
-                style={{marginBottom: "5px"}}
+                style={{marginBottom: "5px", display: "block"}}
             >
                 <Radium.Style
                     rules={styles(theme).sensorModalSelect}
                     scopeSelector=".sensor-modal-select"
                 />
-
                 <AutoComplete
                     className={"sensor-modal-select"}
                     multi={true}
@@ -255,6 +249,11 @@ var SensorForm = React.createClass({
                         <Field
                             name="unitOfMeasurement"
                             label="Unità di misura"
+                            component={this.renderSelectInputField}
+                        />
+                        <Field
+                            name="aggregationType"
+                            label="Tipo di aggregazione"
                             component={this.renderSelectInputField}
                         />
                         <Field

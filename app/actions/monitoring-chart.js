@@ -16,6 +16,7 @@ export const SELECT_CHART_TYPE = "SELECT_CHART_TYPE";
 export const SELECT_FAVORITE_CHART = "SELECT_FAVORITE_CHART";
 export const SELECT_PERIOD = "SELECT_PERIOD";
 export const SELECT_SENSORS_TO_DRAW = "SELECT_SENSORS_TO_DRAW";
+export const SELECT_TIME_INTERVAL = "SELECT_TIME_INTERVAL";
 export const TOGGLE_COMPARISON_CHART = "TOGGLE_COMPARISON_CHART";
 
 function getBasicObject (type, payload) {
@@ -99,3 +100,5 @@ export const toggleComparisonChart = (comparisonChart, xAxisPeriod) => {
         xAxisPeriod: xAxisPeriod
     };
 };
+
+export const selectTimeInterval = (timeInterval) => getBasicObject(SELECT_TIME_INTERVAL, timeInterval);

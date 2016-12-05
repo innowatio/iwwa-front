@@ -4,19 +4,17 @@ import React, {PropTypes} from "react";
 import IPropTypes from "react-immutable-proptypes";
 import {connect} from "react-redux";
 import {bindActionCreators} from "redux";
-import * as bootstrap from "react-bootstrap";
 
 import {
-    Button,
     ConfirmModal,
     CollectionItemList,
     DeleteWithConfirmButton,
     FullscreenModal,
-    Icon,
     MonitoringSensorsAssociator,
     NewUserModal,
     SearchableDraggableModal,
     SectionToolbar,
+    TooltipIconButton,
     UserRolesAssociator,
     UserRow
 } from "components";
@@ -289,27 +287,20 @@ var Users = React.createClass({
             (iconName === "clone" ? theme.colors.buttonPrimary : theme.colors.primary)
         };
         return hasPermisions ? (
-            <bootstrap.OverlayTrigger
-                overlay={<bootstrap.Tooltip id={tooltip} className="buttonClone">{tooltip}</bootstrap.Tooltip>}
-                placement="top"
-                rootClose={true}
-            >
-                <Button
-                    disabled={disabled}
-                    onClick={onClickFunc}
-                    style={{
-                        ...backgroundStyle,
-                        ...stylesFunction(theme, active).buttonBiggerIconStyle
-                    }}
-                >
-                    <Icon
-                        color={theme.colors.iconHeader}
-                        icon={iconName}
-                        size={"50px"}
-                        style={stylesFunction(theme).buttonBiggerIcon}
-                    />
-                </Button>
-            </bootstrap.OverlayTrigger>
+            <TooltipIconButton
+                buttonStyle={{
+                    ...backgroundStyle,
+                    ...stylesFunction(theme, active).buttonBiggerIconStyle
+                }}
+                icon={iconName}
+                iconColor={theme.colors.iconHeader}
+                iconSize={"50px"}
+                iconStyle={stylesFunction(theme).buttonBiggerIcon}
+                isButtonDisabled={disabled}
+                onButtonClick={onClickFunc}
+                tooltipPlacement={"top"}
+                tooltipText={tooltip}
+            />
         ) : null;
     },
     renderCloneButtons: function () {
@@ -341,24 +332,16 @@ var Users = React.createClass({
             hasPermisions = hasPermisions || hasRole(this.props.asteroid, permissionRole);
         });
         return hasPermisions ? (
-            <bootstrap.OverlayTrigger
-                overlay={<bootstrap.Tooltip id={tooltip} className="buttonInfo">{tooltip}</bootstrap.Tooltip>}
-                placement="bottom"
-                rootClose={true}
-            >
-                <Button
-                    disabled={disabled}
-                    onClick={onClickFunc}
-                    style={stylesFunction(theme, active).buttonIconStyle}
-                >
-                    <Icon
-                        color={theme.colors.iconHeader}
-                        icon={iconName}
-                        size={"34px"}
-                        style={stylesFunction(theme).buttonIcon}
-                    />
-                </Button>
-            </bootstrap.OverlayTrigger>
+            <TooltipIconButton
+                buttonStyle={stylesFunction(theme, active).buttonIconStyle}
+                icon={iconName}
+                iconColor={theme.colors.iconHeader}
+                iconSize={"34px"}
+                iconStyle={stylesFunction(theme).buttonIcon}
+                isButtonDisabled={disabled}
+                onButtonClick={onClickFunc}
+                tooltipText={tooltip}
+            />
         ) : null;
     },
     render: function () {

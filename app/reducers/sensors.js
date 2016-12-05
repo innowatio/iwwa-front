@@ -12,7 +12,8 @@ import {
     RESET_WORK_AREA_SENSORS,
     SELECT_SENSOR,
     SENSOR_CREATION_SUCCESS,
-    SENSOR_DELETE_SUCCESS
+    SENSOR_DELETE_SUCCESS,
+    SENSOR_UPDATE_SUCCESS
 } from "../actions/sensors";
 
 import {Types} from "lib/dnd-utils";
@@ -100,6 +101,7 @@ export function sensors (state = defaultState, action) {
         }
         case ADD_SENSOR_TO_WORK_AREA: {
             newState.workAreaSensors.push(typeof action.payload === "string" ? action.payload : getSensorId(action.payload));
+            newState.selectedSensors = [];
             break;
         }
         case FILTER_SENSORS: {
@@ -151,6 +153,10 @@ export function sensors (state = defaultState, action) {
         }
         case SENSOR_DELETE_SUCCESS: {
             newState.selectedSensors = removeFromSelected(newState.selectedSensors, action.payload);
+            break;
+        }
+        case SENSOR_UPDATE_SUCCESS: {
+            newState.selectedSensors = [];
             break;
         }
         case "ASSIGNING_SENSORS_TO_USERS": {

@@ -3,7 +3,7 @@ import {Col, Clearfix, ControlLabel, FormControl} from "react-bootstrap";
 import {Link} from "react-router";
 import Radium from "radium";
 
-import {Button, Icon, FullscreenModal} from "components";
+import {Button, Icon, FullscreenModal, TooltipIconButton} from "components";
 
 import {hasRole, DOWNLOAD_CHART_DATA} from "lib/roles-utils";
 import {styles} from "lib/styles";
@@ -44,6 +44,16 @@ const stylesFunction = (theme, active) => ({
         textAlign: "center",
         margin: "0px 5px"
     },
+    timeIntervalButtonStyle: {
+        marginRight: "5px",
+        textAlign: "left",
+        borderRadius: "15px",
+        backgroundColor: active ? theme.colors.buttonPrimary : theme.colors.iconSearchUser,
+        outline: "0px",
+        outlineStyle: "none",
+        outlineWidth: "0px",
+        color: theme.colors.white
+    },
     inputs: {
         width: "90%",
         margin: "0px auto",
@@ -83,6 +93,7 @@ var MonitoringChartToolbar = React.createClass({
         monitoringChartRef: PropTypes.any,
         resetYAxisValues: PropTypes.func.isRequired,
         selectChartType: PropTypes.func.isRequired,
+        selectTimeInterval: PropTypes.func.isRequired,
         toggleComparisonChart: PropTypes.func.isRequired
     },
     contextTypes: {
@@ -96,11 +107,11 @@ var MonitoringChartToolbar = React.createClass({
     },
     getStateFromProps: function (props) {
         let state = {
+            calculatedYAxis: props.getYAxis(props),
             yAxis: props.monitoringChart.yAxis,
             favoriteName: null
         };
-        let yAxis = props.getYAxis(props);
-        yAxis.forEach(y => {
+        state.calculatedYAxis.forEach(y => {
             if (!state.yAxis[y]) {
                 state.yAxis[y] = {
                     min: "",
@@ -114,9 +125,8 @@ var MonitoringChartToolbar = React.createClass({
         return this.context.theme || defaultTheme;
     },
     getYAxisValidationState: function () {
-        let yAxis = this.props.getYAxis(this.props);
         let success = true;
-        yAxis.forEach((y) => {
+        this.state.calculatedYAxis.forEach((y) => {
             let {min, max} = this.state.yAxis[y];
             success = success && (parseInt(min) < parseInt(max));
         });
@@ -154,36 +164,40 @@ var MonitoringChartToolbar = React.createClass({
         this.props.addToFavorite(this.props.monitoringChart, this.state.favoriteName, this.props.asteroid.userId);
         this.closeModal();
     },
-    renderChartStyleButton: function (theme, chartType, icon) {
+    renderTimeIntervalButton: function (theme, label, value) {
         return (
             <Button
                 disabled={!this.props.monitoringChartRef}
-                onClick={() => this.props.selectChartType(chartType, this.getChartPeriod())}
-                style={stylesFunction(theme, this.props.monitoringChart.type === chartType).buttonIconStyle}
+                style={stylesFunction(theme, this.props.monitoringChart.timeInterval === value).timeIntervalButtonStyle}
+                onClick={() => this.props.selectTimeInterval(value)}
             >
-                <Icon
-                    color={theme.colors.white}
-                    icon={icon}
-                    size={"36px"}
-                    style={{lineHeight: "20px"}}
-                />
+                {label}
             </Button>
         );
     },
-    renderComparisonButton:  function (theme, icon) {
+    renderChartStyleButton: function (theme, chartType, icon, tooltipText, disabled) {
         return (
-            <Button
-                disabled={!this.props.monitoringChartRef}
-                onClick={() => this.props.toggleComparisonChart(icon, this.getChartPeriod())}
-                style={stylesFunction(theme, this.props.monitoringChart.comparisonCharts[icon]).buttonIconStyle}
-            >
-                <Icon
-                    color={theme.colors.white}
-                    icon={icon}
-                    size={"32px"}
-                    style={{lineHeight: "20px", verticalAlign: "middle"}}
-                />
-            </Button>
+            <TooltipIconButton
+                buttonStyle={stylesFunction(theme, this.props.monitoringChart.type === chartType).buttonIconStyle}
+                icon={icon}
+                iconSize={"36px"}
+                isButtonDisabled={!this.props.monitoringChartRef || disabled}
+                onButtonClick={() => this.props.selectChartType(chartType, this.getChartPeriod())}
+                tooltipText={tooltipText}
+            />
+        );
+    },
+    renderComparisonButton:  function (theme, icon, tooltipText) {
+        return (
+            <TooltipIconButton
+                buttonStyle={stylesFunction(theme, this.props.monitoringChart.comparisonCharts[icon]).buttonIconStyle}
+                icon={icon}
+                iconSize={"32px"}
+                iconStyle={{verticalAlign: "middle"}}
+                isButtonDisabled={!this.props.monitoringChartRef}
+                onButtonClick={() => this.props.toggleComparisonChart(icon, this.getChartPeriod())}
+                tooltipText={tooltipText}
+            />
         );
     },
     renderFavouriteButton: function (theme) {
@@ -289,9 +303,8 @@ var MonitoringChartToolbar = React.createClass({
         );
     },
     renderYAxisInputs: function (theme) {
-        let yAxis = this.props.getYAxis(this.props);
         let components = [];
-        yAxis.forEach((y, index) => {
+        this.state.calculatedYAxis.forEach((y, index) => {
             components.push(
                 <div key={index}>
                     <Col className="input-style" md={6}>
@@ -362,8 +375,27 @@ var MonitoringChartToolbar = React.createClass({
     },
     render: function () {
         const theme = this.getTheme();
+        const stackedChartDisabled = this.state.calculatedYAxis.length > 1;
         return (
             <div>
+                <div style={{
+                    padding: "20px",
+                    textAlign: "center",
+                    borderBottom: "solid 1px",
+                    borderColor: theme.colors.white
+                }}>
+                    <label style={stylesFunction(theme).labelStyle}>
+                        {"INTERVALLO TEMPORALE"}
+                    </label>
+                    <div>
+                        {this.renderTimeIntervalButton(theme, "tutto", "all")}
+                        {this.renderTimeIntervalButton(theme, "5 min", "5m")}
+                        {this.renderTimeIntervalButton(theme, "15 min", "15m")}
+                        {this.renderTimeIntervalButton(theme, "1h", "1h")}
+                        {this.renderTimeIntervalButton(theme, "1g", "1d")}
+                        {this.renderTimeIntervalButton(theme, "1m", "1M")}
+                    </div>
+                </div>
                 <div style={{
                     padding: "20px",
                     textAlign: "center",
@@ -374,10 +406,20 @@ var MonitoringChartToolbar = React.createClass({
                         {"SCEGLI LO STILE DEL GRAFICO"}
                     </label>
                     <div>
-                        {this.renderChartStyleButton(theme, "spline", "chart-style1")}
-                        {this.renderChartStyleButton(theme, "column", "chart-style2")}
-                        {this.renderChartStyleButton(theme, "stacked", "chart-style4")}
-                        {this.renderChartStyleButton(theme, "percent", "chart-style3")}
+                        {this.renderChartStyleButton(theme, "spline", "chart-style1", "A linee")}
+                        {this.renderChartStyleButton(theme, "column", "chart-style2", "Istogramma")}
+                        {this.renderChartStyleButton(
+                            theme,
+                            "stacked",
+                            "chart-style4",
+                            stackedChartDisabled ? "Non applicabile in caso di UM differenti" : "Istogramma in pila",
+                            stackedChartDisabled)}
+                        {this.renderChartStyleButton(
+                            theme,
+                            "percent",
+                            "chart-style3",
+                            stackedChartDisabled ? "Non applicabile in caso di UM differenti" : "Istogramma in pila percentuale",
+                            stackedChartDisabled)}
                     </div>
                 </div>
                 {this.renderYAxisValuesChange(theme)}
@@ -424,9 +466,9 @@ var MonitoringChartToolbar = React.createClass({
                     {"VEDI SETTIMANA/MESE/ANNO PRECEDENTE:"}
                     </label>
                     <div>
-                        {this.renderComparisonButton(theme, "week")}
-                        {this.renderComparisonButton(theme, "month")}
-                        {this.renderComparisonButton(theme, "year")}
+                        {this.renderComparisonButton(theme, "week", "Settimana")}
+                        {this.renderComparisonButton(theme, "month", "Mese")}
+                        {this.renderComparisonButton(theme, "year", "Anno")}
                     </div>
                 </div>
                 {this.renderCSVExport(theme)}

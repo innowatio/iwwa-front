@@ -4,7 +4,6 @@ import IPropTypes from "react-immutable-proptypes";
 import {connect} from "react-redux";
 import {browserHistory} from "react-router";
 import {bindActionCreators} from "redux";
-import * as bootstrap from "react-bootstrap";
 
 import {getDragDropContext} from "lib/dnd-utils";
 import {defaultTheme} from "lib/theme";
@@ -13,7 +12,6 @@ import {getAllSensors, getMonitoringSensors, getSensorLabel, getSensorsTags, fin
 import {styles} from "lib/styles";
 
 import {
-    Button,
     ConfirmModal,
     DeleteWithConfirmButton,
     DropdownButton,
@@ -21,7 +19,8 @@ import {
     MonitoringSensorsSelector,
     Popover,
     SectionToolbar,
-    SensorForm
+    SensorForm,
+    TooltipIconButton
 } from "components";
 
 import {selectSensorsToDraw} from "actions/monitoring-chart";
@@ -149,8 +148,8 @@ var Monitoring = React.createClass({
         return getAllSensors(this.props.collections.get("sensors"));
     },
     getMonitoringSensors: function () {
-        const {asteroid} = this.props;
-        return getMonitoringSensors(this.props.collections.get("sensors"), hasRole(asteroid, VIEW_ALL_SENSORS), getLoggedUser(asteroid).get("sensors"));
+        const {asteroid, collections} = this.props;
+        return getMonitoringSensors(collections.get("sensors"), hasRole(asteroid, VIEW_ALL_SENSORS), getLoggedUser(asteroid).get("sensors"));
     },
     getSensorFields: function () {
         const selected = this.props.sensorsState.selectedSensors;
@@ -159,6 +158,13 @@ var Monitoring = React.createClass({
             fields.name = (getSensorLabel(selected[0]));
             if (!fields.tags) {
                 fields.tags = [];
+            } else {
+                fields.tags = fields.tags.map(tag => {
+                    return {value: tag, label: tag};
+                });
+            }
+            if (!fields.aggregationType) {
+                fields.aggregationType = "average";
             }
             return fields;
         } else {
@@ -166,6 +172,7 @@ var Monitoring = React.createClass({
                 name: "",
                 description: "",
                 unitOfMeasurement: "",
+                aggregationType: "",
                 siteId: "",
                 userId: "",
                 primaryTags: this.getParentsPrimaryTags(this.props.sensorsState.workAreaSensors),
@@ -244,28 +251,16 @@ var Monitoring = React.createClass({
         const theme = this.getTheme();
         const selected = this.props.sensorsState.selectedSensors;
         return hasRole(this.props.asteroid, permissionRole) ? (
-            <bootstrap.OverlayTrigger
-                overlay={
-                    <bootstrap.Tooltip className="buttonInfo" id={tooltip}>
-                        {tooltip}
-                    </bootstrap.Tooltip>
-                }
-                placement="bottom"
-                rootClose={true}
-            >
-                <Button
-                    style={stylesFunction(theme).buttonIconStyle}
-                    disabled={disabled}
-                    onClick={() => this.getButtonLink(iconName, selected)}
-                >
-                    <Icon
-                        color={theme.colors.iconHeader}
-                        icon={iconName}
-                        size={"28px"}
-                        style={{lineHeight: "45px"}}
-                    />
-                </Button>
-            </bootstrap.OverlayTrigger>
+            <TooltipIconButton
+                buttonStyle={stylesFunction(theme).buttonIconStyle}
+                icon={iconName}
+                iconColor={theme.colors.iconHeader}
+                iconSize={"28px"}
+                iconStyle={{lineHeight: "45px"}}
+                isButtonDisabled={disabled}
+                onButtonClick={() => this.getButtonLink(iconName, selected)}
+                tooltipText={tooltip}
+            />
         ) : null;
     },
     renderConfirmModal: function () {

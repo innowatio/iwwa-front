@@ -11,10 +11,11 @@ import {
     saveChartConfig,
     selectChartType,
     selectPeriod,
+    selectTimeInterval,
     toggleComparisonChart
 } from "actions/monitoring-chart";
 
-import {extractSensorsFromFormula, getAllSensors, getSensorLabel, reduceFormula} from "lib/sensors-utils";
+import {extractSensorsFromFormula, getAggregationFunction, getAllSensors, getSensorLabel, reduceFormula} from "lib/sensors-utils";
 import {defaultTheme} from "lib/theme";
 import moment from "lib/moment";
 import readingsDailyAggregatesToHighchartsData from "lib/readings-daily-aggregates-to-highcharts-data";
@@ -33,6 +34,7 @@ var MonitoringChartView = React.createClass({
         saveChartConfig: PropTypes.func.isRequired,
         selectChartType: PropTypes.func.isRequired,
         selectPeriod: PropTypes.func.isRequired,
+        selectTimeInterval: PropTypes.func.isRequired,
         toggleComparisonChart: PropTypes.func.isRequired
     },
     contextTypes: {
@@ -81,21 +83,25 @@ var MonitoringChartView = React.createClass({
             });
         });
     },
+    getChartDates: function (props) {
+        return {
+            start: this.getStartDate(props).valueOf(),
+            end: this.getEndDate(props).valueOf()
+        };
+    },
     getChartSeries: function (props) {
         const allSensors = this.getAllSensors();
         const monitoringCharts = props.monitoringChart.sensorsToDraw.map(sensor => {
             const sensorObj = this.getSensorObj(sensor, allSensors);
             return {
-                date: {
-                    start: this.getStartDate(props).valueOf(),
-                    end: this.getEndDate(props).valueOf()
-                },
+                date: this.getChartDates(props),
                 formula: reduceFormula(sensorObj, allSensors),
                 measurementType: {key: sensorObj.get("measurementType")},
                 name: getSensorLabel(sensorObj),
                 sensorId: sensorObj.get("_id"),
                 source: {key: "reading"},
-                unitOfMeasurement: this.getUnitOfMeasurement(sensorObj)
+                unitOfMeasurement: this.getUnitOfMeasurement(sensorObj),
+                aggregationType: getAggregationFunction(sensorObj.get("aggregationType"))
             };
         });
         const readingsDailyAggregates = props.collections.get("readings-daily-aggregates");
@@ -132,6 +138,7 @@ var MonitoringChartView = React.createClass({
                 <div style={{width: "100%", height: "100%", overflow: "scroll"}}>
                     <MonitoringChart
                         addMoreData={this.props.addMoreData}
+                        chartDates={this.getChartDates(this.props)}
                         chartState={this.props.monitoringChart}
                         ref="monitoringChart"
                         saveConfig={this.props.saveChartConfig}
@@ -167,6 +174,7 @@ var MonitoringChartView = React.createClass({
                         monitoringChartRef={this.refs.monitoringChart}
                         resetYAxisValues={this.props.resetYAxisValues}
                         selectChartType={this.props.selectChartType}
+                        selectTimeInterval={this.props.selectTimeInterval}
                         toggleComparisonChart={this.props.toggleComparisonChart}
                     />
                 </div>
@@ -191,6 +199,7 @@ const mapDispatchToProps = (dispatch) => {
         saveChartConfig: bindActionCreators(saveChartConfig, dispatch),
         selectChartType: bindActionCreators(selectChartType, dispatch),
         selectPeriod: bindActionCreators(selectPeriod, dispatch),
+        selectTimeInterval: bindActionCreators(selectTimeInterval, dispatch),
         toggleComparisonChart: bindActionCreators(toggleComparisonChart, dispatch)
     };
 };

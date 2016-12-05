@@ -24,6 +24,7 @@ function getSensorObj (collectionItem) {
         "name": getSensorLabel(collectionItem),
         "description": collectionItem.get("description"),
         "unitOfMeasurement": collectionItem.get("unitOfMeasurement"),
+        "aggregationType": collectionItem.get("aggregationType"),
         "formulas": collectionItem.get("formulas"),
         "primaryTags": collectionItem.get("primaryTags"),
         "tags": collectionItem.get("tags"),
@@ -34,14 +35,24 @@ function getSensorObj (collectionItem) {
 }
 
 function addMonitoringAttrs (sensor) {
-    sensor._id = undefined;
-    if (sensor.unitOfMeasurement instanceof Object) {
-        sensor.unitOfMeasurement = sensor.unitOfMeasurement.value;
-    }
+    normalizeSensorData(sensor);
     sensor.id = UUID.create().hex;
-    sensor.createdByUser = true;
-    sensor.virtual = true;
     return sensor;
+}
+
+function normalizeSensorData (sensorData) {
+    sensorData._id = undefined;
+    sensorData.createdDate = undefined;
+    sensorData.lastModifiedDate = undefined;
+    sensorData.isDeleted = undefined;
+    sensorData.createdByUser = true;
+    sensorData.virtual = true;
+    if (sensorData.unitOfMeasurement instanceof Object) {
+        sensorData.unitOfMeasurement = sensorData.unitOfMeasurement.value;
+    }
+    if (sensorData.aggregationType instanceof Object) {
+        sensorData.aggregationType = sensorData.aggregationType.value;
+    }
 }
 
 function insertSensor (requestBody, dispatch) {
@@ -152,6 +163,7 @@ function callEditSensor (sensorData, sensorId) {
             type: "UPDATING_SENSOR"
         });
         var endpoint = "http://" + WRITE_API_ENDPOINT + "/sensors/" + sensorId;
+        normalizeSensorData(sensorData);
         axios.put(endpoint, sensorData)
             .then(() => dispatch({
                 type: SENSOR_UPDATE_SUCCESS,
@@ -168,8 +180,6 @@ export const editSensor = (sensorData, formulaItems, sensor) => {
         let id = sensor.get("_id");
         sensorData.formulas = buildFormulas(formulaItems);
         sensorData.id = id;
-        sensorData.createdByUser = true;
-        sensorData.virtual = true;
         sensorData.parentSensorId = sensor.get("parentSensorId");
         return callEditSensor(sensorData, id);
     } else {
