@@ -14,9 +14,6 @@ const styles = (theme) => ({
         border: 0,
         backgroundColor: theme.colors.transparent
     },
-    iconOption: {
-
-    },
     siteWrp: {
         display: "block",
         marginBottom: "20px",
@@ -25,9 +22,6 @@ const styles = (theme) => ({
         textAlign: "left",
         border: `1px solid ${theme.colors.borderContentModal}`,
         backgroundColor: theme.colors.backgroundContentModal
-    },
-    siteHeader: {
-
     },
     siteName: {
         fontSize: "20px",
@@ -50,15 +44,39 @@ var SiteStatus = React.createClass({
     contextTypes: {
         theme: PropTypes.object
     },
+    getSiteStatus: function () {
+        const theme = this.getTheme();
+        return [
+            {icon: "alert", iconColor: theme.colors.iconSiteButton, key: "Allarme"},
+            {icon: "monitoring", iconColor: theme.colors.iconSiteButton, key: "Connessione"},
+            {icon: "gauge", iconColor: theme.colors.iconSiteButton, key: "Consumi"},
+            {icon: "duplicate", iconColor: theme.colors.iconSiteButton, key: "Telecontrollo"},
+            {icon: "good", iconColor: theme.colors.iconSiteButton, key: "Comfort"}
+        ];
+    },
     getTheme: function () {
         return this.context.theme || defaultTheme;
+    },
+    renderSiteStatus: function () {
+        const siteStatus = this.getSiteStatus().map(status => {
+            return (
+                <Icon
+                    key={status.key}
+                    color={status.iconColor}
+                    icon={status.icon}
+                    size={"28px"}
+                    style={{verticalAlign: "middle", marginRight: "10px"}}
+                />
+            );
+        });
+        return siteStatus;
     },
     render: function () {
         const theme = this.getTheme();
         return (
             <bootstrap.Col xs={12} md={12} lg={6}>
                 <div style={styles(theme).siteWrp}>
-                    <div style={styles(theme).siteHeader}>
+                    <div>
                         <h2 style={styles(theme).siteName}>
                             {this.props.siteName}
                         </h2>
@@ -73,10 +91,6 @@ var SiteStatus = React.createClass({
                                     "": {
                                         padding: "0px !important",
                                         margin: "0px !important"
-                                    },
-                                    ".btn": {
-                                        padding: "0px !important",
-                                        margin: "0px !important"
                                     }
                                 }}
                                 scopeSelector=".button-option"
@@ -85,9 +99,12 @@ var SiteStatus = React.createClass({
                                 color={theme.colors.iconSiteButton}
                                 icon={"option"}
                                 size={"24px"}
-                                style={styles(theme).iconOption}
+                                style={{verticalAlign: "middle"}}
                             />
                         </Button>
+                    </div>
+                    <div style={{marginTop: "15px"}}>
+                        {this.renderSiteStatus()}
                     </div>
                 </div>
             </bootstrap.Col>

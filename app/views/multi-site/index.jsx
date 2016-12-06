@@ -7,6 +7,7 @@ import {connect} from "react-redux";
 import {defaultTheme} from "lib/theme";
 import moment from "lib/moment";
 import {
+    Button,
     ButtonFilter,
     ButtonSortBy,
     DashboardBox,
@@ -54,29 +55,61 @@ const styles = ({colors}) => ({
     },
     sidebarLegend: {
         textAlign: "left",
-        padding: "20px",
+        padding: "15px 20px",
         marginBottom: "20px",
+        borderBottom: `1px solid ${colors.borderContentModal}`,
+        borderRight: `1px solid ${colors.borderContentModal}`,
+        borderLeft: `1px solid ${colors.borderContentModal}`,
+        backgroundColor: colors.backgroundContentModal
+    },
+    legendTitleWrp: {
+        padding: "0px",
+        borderRadius: "0px",
+        textAlign: "left",
+        cursor: "pointer",
         border: `1px solid ${colors.borderContentModal}`,
         backgroundColor: colors.backgroundContentModal
     },
     legendTitle: {
+        display: "block",
+        width: "100%",
+        padding: "15px 20px",
         fontSize: "20px",
-        margin: "0px 0px 10px 0px",
         lineHeight: "20px",
-        fontWeight: "300"
+        fontWeight: "300",
+        color: colors.white
     },
     sidebarTips: {
+        position: "relative",
         textAlign: "left",
-        padding: "20px",
+        padding: "15px 20px",
         marginBottom: "20px",
-        border: `1px dashed ${colors.buttonPrimary}`,
+        border: `2px dashed ${colors.buttonPrimary}`,
         backgroundColor: colors.transparent
+    },
+    buttonCancelTips: {
+        position: "absolute",
+        backgroundColor: colors.transparent,
+        border: "0px",
+        top: "5px",
+        right: "0px"
     },
     tipsTitle: {
         fontSize: "20px",
         margin: "0px 0px 10px 0px",
         lineHeight: "20px",
         fontWeight: "300"
+    },
+    iconTips: {
+        lineHeight: "20px",
+        verticalAlign: "middle"
+    },
+    iconArrowDown: {
+        display: "inline-block",
+        lineHeight: "15px",
+        verticalAlign: "text-top",
+        marginRight: "10px",
+        transform: open ? "rotate(180deg)" : null
     }
 });
 
@@ -124,6 +157,16 @@ var MultiSite = React.createClass({
     getTheme: function () {
         return this.context.theme || defaultTheme;
     },
+    getLegendItems: function () {
+        const theme = this.getTheme();
+        return [
+            {icon: "alert", iconColor: theme.colors.iconSiteButton, label: "Allarme attivo", key: "Allarme"},
+            {icon: "monitoring", iconColor: theme.colors.iconSiteButton, label: "Stato connessione", key: "Connessione"},
+            {icon: "gauge", iconColor: theme.colors.iconSiteButton, label: "Andamento consumi", key: "Consumi"},
+            {icon: "duplicate", iconColor: theme.colors.iconSiteButton, label: "Telecontrollo Innowatio", key: "Telecontrollo"},
+            {icon: "good", iconColor: theme.colors.iconSiteButton, label: "Comfort", key: "Comfort"}
+        ];
+    },
     onChangeInputFilter: function (input) {
         this.setState({
             search: input
@@ -134,12 +177,29 @@ var MultiSite = React.createClass({
         const theme = this.getTheme();
         return (
             <div style={styles(theme).sidebarTips}>
+                <Button className="button-option" style={styles(theme).buttonCancelTips}>
+                    <Radium.Style
+                        rules={{
+                            "": {
+                                padding: "0px !important",
+                                margin: "0px !important"
+                            }
+                        }}
+                        scopeSelector=".button-option"
+                    />
+                    <Icon
+                        color={theme.colors.iconSiteButton}
+                        icon={"delete"}
+                        size={"22px"}
+                        style={{marginRight: "10px", verticalAlign: "middle"}}
+                    />
+                </Button>
                 <h2 style={styles(theme).tipsTitle}>
                     <Icon
                         color={theme.colors.iconSiteButton}
                         icon={"lightbulb"}
-                        size={"30px"}
-                        style={styles(theme).iconOption}
+                        size={"40px"}
+                        style={styles(theme).iconTips}
                     />
                     {"Suggerimento!"}
                 </h2>
@@ -152,31 +212,81 @@ var MultiSite = React.createClass({
 
     renderLegend: function () {
         const theme = this.getTheme();
+        const legend = this.getLegendItems().map(item => {
+            return (
+                <li key={item.key} style={{listStyle: "none", marginTop: "5px"}}>
+                    <Icon
+                        color={item.iconColor}
+                        icon={item.icon}
+                        size={"28px"}
+                        style={{marginRight: "10px", verticalAlign: "middle"}}
+                    />
+                    <label style={{fontWeight: "300", fontSize: "15px"}}>
+                        {item.label}
+                    </label>
+                </li>
+            );
+        });
         return (
-            <div style={styles(theme).sidebarLegend}>
-                <h2 style={styles(theme).legendTitle}>
-                    {"Legenda"}
-                </h2>
-                <ul>
-                    <li>
-                        <Icon
-                            color={theme.colors.iconSiteButton}
-                            icon={"alert"}
-                            size={"14px"}
-                            style={styles(theme).iconOption}
-                        />
-                        <label>{"Allarme Attivo"}</label>
-                    </li>
-                    <li>
-                        <Icon
-                            color={theme.colors.iconSiteButton}
-                            icon={"monitoring"}
-                            size={"14px"}
-                            style={styles(theme).iconOption}
-                        />
-                        <label>{"Stato connessione"}</label>
-                    </li>
-                </ul>
+            <bootstrap.Accordion style={{position: "relative"}}>
+                <Icon
+                    color={theme.colors.white}
+                    icon={"arrow-down"}
+                    size={"16px"}
+                    style={{position: "absolute", right: "15px", top: "18px"}}
+                />
+                <bootstrap.Panel className="legend" header="Legenda" eventKey="1" style={{backgroundColor: theme.colors.black}}>
+                    <Radium.Style
+                        rules={{
+                            "": {
+                                border: `1px solid ${theme.colors.transparent}`,
+                                backgroundColor: theme.colors.transparent,
+                                padding: "0px",
+                                margin: "0px"
+                            },
+                            ".panel-body": {
+                                padding: "0px",
+                                margin: "0px"
+                            },
+                            ".panel-collapse > .panel-body": {
+                                borderTop: "0px !important"
+                            },
+                            ".panel-heading": {
+                                ...styles(theme).legendTitleWrp
+                            },
+                            ".panel-title > a": {
+                                ...styles(theme).legendTitle
+                            }
+                        }}
+                        scopeSelector=".legend"
+                    />
+                    <div style={styles(theme).sidebarLegend}>
+                        <ul style={{margin: "0", padding: "0 0 0 5px"}}>
+                            {legend}
+                        </ul>
+                    </div>
+                </bootstrap.Panel>
+            </bootstrap.Accordion>
+        );
+    },
+
+    renderMap: function () {
+        return (
+            <div className="map-embed" style={{marginBottom: "30px"}}>
+                <Radium.Style
+                    rules={{
+                        ".embed-responsive": {padding: "100px"}
+                    }}
+                    scopeSelector=".map-embed"
+                />
+                <bootstrap.ResponsiveEmbed a16by9={true}>
+                    <iframe
+                        src="https://www.google.com/maps/embed?pb=!1m14!1m12!1m3!1d22121.91644272157!2d9.5555986!3d46.12605785!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!5e0!3m2!1sen!2sit!4v1481041694687"
+                        width="100"
+                        height="100"
+                        frameBorder="0"
+                    />
+                </bootstrap.ResponsiveEmbed>
             </div>
         );
     },
@@ -211,7 +321,9 @@ var MultiSite = React.createClass({
                         onChange={this.onChangeInputFilter}
                     />
                 </bootstrap.Col>
-                <bootstrap.Col xs={12} sm={4} md={3} lg={2}>
+                <bootstrap.Col xs={12} sm={4} md={3} lg={2}
+                    style={{textAlign: "center"}}
+                >
                     <ButtonFilter
                         activeFilter={this.props.collections}
                         filterList={multisiteButtonFilter}
@@ -283,8 +395,9 @@ var MultiSite = React.createClass({
     renderSidebar: function () {
         return (
             <bootstrap.Col xs={12} sm={4}>
-                {this.renderLegend()}
                 {this.renderTips()}
+                {this.renderLegend()}
+                {this.renderMap()}
             </bootstrap.Col>
         );
     },
