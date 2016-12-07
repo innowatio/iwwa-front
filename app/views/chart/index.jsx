@@ -306,7 +306,7 @@ var Chart = React.createClass({
                         sensors: sensorsButton.toJS()
                     };
                 });
-                return sensorsButtonList;
+                return sensorsButtonList.filter(x => x.sensors.length > 0);
             }
         }
         return [];
