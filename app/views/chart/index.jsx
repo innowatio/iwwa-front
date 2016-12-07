@@ -297,31 +297,16 @@ var Chart = React.createClass({
                 }).filter(sensor => {
                     return !R.isNil(sensor);
                 });
-
-                const sensorsType = sensors.map((sensor) => {
-                    return sensor.get("type");
-                });
-                var sensorsButtonList = consumptionSensors(this.getTheme()).filter(consumption => {
-                    return R.contains(consumption.type, sensorsType);
-                });
-                return sensorsButtonList.map((sensorObject) => {
-                    const sensorType = sensorObject.type;
-                    const filteredSensors = sensors.filter((sensor) => {
-                        return sensorType === sensor.get("type");
+                var sensorsButtonList = consumptionSensors(this.getTheme()).map(button => {
+                    const sensorsButton = sensors.filter(x => {
+                        return R.contains(button.key, x.get("measurementTypes") || []);
                     });
                     return {
-                        ...sensorObject,
-                        sensors: filteredSensors.toJS().sort((a, b) => {
-                            if (a.description > b.description) {
-                                return 1;
-                            }
-                            if (a.description < b.description) {
-                                return -1;
-                            }
-                            return 0;
-                        })
+                        ...button,
+                        sensors: sensorsButton.toJS()
                     };
                 });
+                return sensorsButtonList;
             }
         }
         return [];
