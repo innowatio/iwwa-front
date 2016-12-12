@@ -20,71 +20,72 @@ import {
 } from "components";
 import {connect} from "react-redux";
 import {bindActionCreators} from "redux";
+//import icons from "lib/icons";
 import {defaultTheme} from "lib/theme";
 import {tabParameters} from "lib/consumptions-utils";
 import {selectSite, selectPeriod} from "actions/consumptions";
 
-
 var styleLeftPane  = () => ({
     width: "70%",
-    float: "left"
-});
-var styleContent  = () => ({
-    textAlign: "center",
-    height: "calc(100vh - 130px)"
+    float: "left",
+    height: "calc(100vh - 80px)",
+    paddingBottom: "20px",
+    overflow: "hidden"
 });
 var styleTabContent  = () => ({
+    display: "flex",
+    height: "100%",
+    flexDirection: "column",
+    justifyContent: "space-between",
+    textAlign: "center"
 });
 var styleH2 = ({colors}) => ({
     fontSize: "20px",
-    lineHeight: "15px",
-    fontWeight: "400",
-    textTransform: "uppercase",
-    color: colors.white,
-    padding: "0px"
-});
-
-var styleH3 = ({colors}) => ({
-    fontSize: "30px",
-    lineHeight: "20px",
+    lineHeight: "18px",
     fontWeight: "400",
     textTransform: "uppercase",
     color: colors.white
 });
+
+var styleH3 = ({colors}) => ({
+    fontSize: "18px",
+    lineHeight: "15px",
+    fontWeight: "300",
+    textTransform: "uppercase",
+    color: colors.white,
+    margin: "0px"
+});
 var styleRoundedDiv = ({colors}) => ({
     borderRadius: "100%",
-    margin: "30px auto",
+    margin: "15px auto",
     width: "300px",
     height: "300px",
-    padding: "70px 10px 0px 10px",
+    padding: "70px 10px 80px 10px",
     backgroundColor: colors.secondary
 });
 
 var styleRoundedDivYear = ({colors}) => ({
     borderRadius: "100%",
     margin: "15px auto",
-    width: "150px",
-    height: "150px",
-    padding: "35px 5px 0px 5px",
+    width: "120px",
+    height: "120px",
+    padding: "35px 5px 25px 5px",
     backgroundColor: colors.secondary
 });
 
 var styleMeasure  = ({colors}) => ({
-    // fontSize: "90px",
     fontWeight: "600",
     lineHeight: "110px",
     color: colors.white
 });
 
 var styleMeasureYear  = ({colors}) => ({
-    // fontSize: "90px",
     fontWeight: "600",
-    lineHeight: "55px",
+    lineHeight: "30px",
     color: colors.white
 });
 
 var styleUnit  = ({colors}) => ({
-    // fontSize: "60px",
     fontWeight: "600",
     lineHeight: "10px",
     margin: "0px",
@@ -93,22 +94,23 @@ var styleUnit  = ({colors}) => ({
 });
 // var styleCongratMessage = ({colors}) => ({
 //     color: colors.white,
-//     width: "90%",
-//     margin: "60px auto 20px auto",
-//     minHeight: "100px",
+//     width: "95%",
+//     margin: "10px auto 70px auto",
 //     height: "auto",
-//     padding: "20px",
+//     padding: "10px",
 //     fontSize: "20px",
 //     textAlign: "left",
 //     borderRadius: "20px",
-//     backgroundColor: colors.secondary
+//     border: "1px solid " + colors.borderConsumptionSection,
+//     backgroundColor: colors.backgroundConsumptionSection
 // });
 var styleRightPane  = ({colors}) => ({
+    display: "flex",
+    flexDirection: "column",
     width: "30%",
-    float: "right",
-    borderTop: "4px solid " + colors.secondary,
-    backgroundColor: colors.secondary,
-    display: "block"
+    overflow: "hidden",
+    height: "calc(100vh - 80px)",
+    backgroundColor: colors.secondary
 });
 var styleSiteButton = ({colors}) => ({
     width: "50px",
@@ -117,7 +119,7 @@ var styleSiteButton = ({colors}) => ({
     border: "0px",
     borderRadius: "100%",
     clear: "both",
-    margin: "12px 12px 0 0",
+    margin: "3px 25px 0 0",
     backgroundColor: colors.primary
 });
 
@@ -333,13 +335,29 @@ var SummaryConsumptions = React.createClass({
     },
 
     renderPeriodComparisons: function () {
+        const {colors} = this.getTheme();
         const selectedTab = tabParameters().find(param => param.key === this.state.period);
         const comparisons = selectedTab.comparisons;
-        return (
-            <div style={{padding: "12px", marginBottom: "20px"}}>
-                {comparisons.map(partial(this.renderProgressBar, [selectedTab.now]))}
-            </div>
-        );
+
+        if (comparisons.length>0) {
+            return (
+                <div style={{
+                    padding: "12px",
+                    marginBottom: "20px",
+                    border: "1px solid " + colors.borderConsumptionSection,
+                    backgroundColor: colors.backgroundConsumptionSection,
+                    borderRadius: "20px"
+                }}>
+                    {comparisons.map(partial(this.renderProgressBar, [selectedTab.now]))}
+                </div>
+            );
+        } else {
+            return (
+                <div style={{color: colors.white}}>
+                    {"Non ci sono dati disponibili al momento."}
+                </div>
+            );
+        }
     },
 
     renderProgressBar: function (comparisonNow, comparisonParams) {
@@ -406,7 +424,13 @@ var SummaryConsumptions = React.createClass({
 
     renderSingleTab: function (siteName, theme, tabParameters) {
         return (
-            <bootstrap.Tab className="style-single-tab" eventKey={tabParameters.key} key={tabParameters.key} title={tabParameters.title}>
+            <bootstrap.Tab
+                className="style-single-tab"
+                eventKey={tabParameters.key}
+                key={tabParameters.key}
+                title={tabParameters.title}
+                style={{height: "100%"}}
+            >
                 {this.renderTabContent(siteName, theme, tabParameters)}
             </bootstrap.Tab>
         );
@@ -426,14 +450,25 @@ var SummaryConsumptions = React.createClass({
             >
                 <Radium.Style
                     rules={{
+                        "": {
+                            height: "100%"
+                        },
+                        ".tab-content": {
+                            height: "100%"
+                        },
                         "ul": {
+                            overflow: "hidden",
                             border: "0px",
                             height: "55px",
-                            backgroundColor: colors.secondary
+                            backgroundColor: colors.secondary,
+                            display: "flex",
+                            flexDirection: "row",
+                            justifyContent: "space-around",
+                            alignItems: "flex-start"
                         },
                         "ul li": {
-                            color: colors.white,
-                            margin: "0 1.5%"
+
+                            color: colors.white
                         },
                         "ul li a": {
                             height: "55px",
@@ -481,25 +516,27 @@ var SummaryConsumptions = React.createClass({
     },
 
     renderTabContent: function (siteName, theme, tabParameters) {
-
         const chartCollection = (this.props.collections.get("consumptions-yearly-aggregates") || Map())
         .filter(agg => agg.get("sensorId") === this.props.consumptions.fullPath[0]);
-
         var sum = 0;
         if (this.props.consumptions.fullPath) {
             this.subscribeToConsumptions();
             sum = this.getSum(utils.getTimeRangeByPeriod(tabParameters.period));
         }
+        const overflow = tabParameters.key=="year" ? "auto" : "hidden";
         const measure = sum >= 100 ? Math.round(sum) : Math.round(sum * 10, -1) / 10;
-        // const congratMessage = "COMPLIMENTI! Ieri hai utilizzato il 12% in meno dell’energia che utilizzi di solito.";
+        // const congratMessage = "Ieri hai utilizzato il 12% in meno dell’energia che utilizzi di solito.";
+        // const congratTitle = "COMPLIMENTI!";
         const styleRound = tabParameters.key=="year" ? styleRoundedDivYear(theme) : styleRoundedDiv(theme);
-        const fontMeasure = tabParameters.key=="year" ? 45 : 90;
-        const fontUnit = tabParameters.key=="year" ? 30 : 60;
+        const fontMeasure = tabParameters.key=="year" ? 35 : 80;
+        const fontUnit = tabParameters.key=="year" ? 25 : 50;
         const styleMeasureVar= tabParameters.key=="year" ? styleMeasureYear(theme): styleMeasure(theme);
         return (
-            <div style={styleContent(theme)}>
-                <h2 style={styleH2(theme)}>{siteName}</h2>
-                <h3 style={styleH3(theme)}>{tabParameters.periodTitle}</h3>
+            <div style={{...styleTabContent(theme), overflow: overflow}}>
+                <div>
+                    <h2 style={styleH2(theme)}>{siteName}</h2>
+                    <h3 style={styleH3(theme)}>{tabParameters.periodTitle}</h3>
+                </div>
                 <div style={styleRound}>
                     <p style={{
                         ...styleMeasureVar,
@@ -517,15 +554,20 @@ var SummaryConsumptions = React.createClass({
                 />
                 {/*
                     <div style={styleCongratMessage(theme)}>
-                        <bootstrap.Col xs={12} md={8} lg={9} style={{float: "left"}}>{congratMessage}</bootstrap.Col>
-                        <bootstrap.Col xs={12} md={4} lg={3} style={{
-                            textAlign: "right",
-                            float: "right",
+                        <bootstrap.Col xs={3} md={4} lg={3} style={{
+                            textAlign: "left",
+                            float: "left",
                             backgroundImage: `url(${icons.iconGoGreen})`,
                             backgroundRepeat: "none",
-                            width: "116px",
-                            height: "116px"
+                            backgroundSize: "cover",
+                            width: "80px",
+                            height: "80px"
                         }}></bootstrap.Col>
+                        <bootstrap.Col xs={9} md={8} lg={9} style={{float: "left"}}>
+                            <span style={{fontWeight: "400"}}>{congratTitle}</span>
+                            <br></br>
+                            <span style={{fontWeight: "300"}}>{congratMessage}</span>
+                        </bootstrap.Col>
                         <div style={{clear: "both"}} />
                     </div>
                 */}
@@ -535,15 +577,16 @@ var SummaryConsumptions = React.createClass({
     render: function () {
         const theme = this.getTheme();
         return (
-            <div>
+            <div style={{width: "100%", clear: "both"}}>
                 <div style={styleLeftPane(theme)}>
-                    <div style={styleTabContent(theme)}>
-                        {this.renderTabs(theme)}
-                    </div>
-
+                    {this.renderTabs(theme)}
                 </div>
                 <div style={styleRightPane(theme)}>
-                    <div style={{clear: "both", height: "50px", width: "100%"}}>
+                    <div style={{
+                        height: "57px",
+                        width: "100%",
+                        borderBottom: "2px solid " + theme.colors.background
+                    }}>
                         <TooltipIconButton
                             buttonClassName={"pull-right"}
                             buttonStyle={styleSiteButton(theme)}
@@ -555,7 +598,7 @@ var SummaryConsumptions = React.createClass({
                             tooltipText={"Seleziona punto di misurazione"}
                         />
                     </div>
-                    <div style={{margin: "5px 20px"}}>
+                    <div style={{margin: "10px 20px"}}>
                         {this.props.consumptions.fullPath ? this.renderPeriodComparisons() : null}
                         {/* this.props.consumptions.fullPath ? this.renderCustomersComparisons() : null */}
                         {/* this.props.consumptions.fullPath ? this.renderFeedbackBox() : null */}

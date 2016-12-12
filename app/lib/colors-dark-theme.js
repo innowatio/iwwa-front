@@ -71,7 +71,7 @@ export const colorsDarkTheme = {
     co2: "#CE93D8",
     consumption: "#F74F68",
     consumptionprogressBarAlert: "#eb2953",
-    consumptionprogressBarBackground: "#37474f",
+    consumptionprogressBarBackground: "#303232",
     consumptionprogressBarInfo: "#536dfe",
     consumptionsText: "#ffffff",
     graphUnderlay: "#4E4D4F",
