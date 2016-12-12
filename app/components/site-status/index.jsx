@@ -78,7 +78,7 @@ var SiteStatus = React.createClass({
                 <div style={styles(theme).siteWrp}>
                     <div>
                         <h2 style={styles(theme).siteName}>
-                            {this.props.siteName}
+                            {`${this.props.siteName} / `}
                         </h2>
                         <span>{this.props.siteAddress}</span>
                         <Button

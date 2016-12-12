@@ -29,23 +29,55 @@ const styles = ({colors}) => ({
         marginLeft: "-5px"
     },
     dataWrp:{
-        minHeight: "165px",
+        minHeight: "200px",
         height: "auto",
-        padding: "20px 10px",
+        padding: "5px 10px",
         backgroundColor: colors.secondary,
         color: colors.white,
         marginBottom: "10px"
+    },
+    colItemWrp: {
+        height: "auto",
+        paddingRight: "5px",
+        paddingLeft: "5px"
     },
     searchTools: {
         border: `1px solid ${colors.borderContentModal}`,
         backgroundColor: colors.backgroundContentModal,
         marginBottom: "20px"
     },
+    buttonConfront: {
+        display: "block",
+        float: "right",
+        backgroundColor: colors.secondary,
+        borderRadius: "100%",
+        width: "50px",
+        height: "50px",
+        margin: "6px 12px",
+        border: "0"
+    },
+    siteRecapWrp: {
+        backgroundColor: colors.primary,
+        padding: "5px",
+        margin: "3px 0px"
+    },
     siteRecap: {
-        fontSize: "60px",
-        lineHeight: "50px",
+        fontSize: "40px",
+        lineHeight: "30px",
         fontWeight: "600",
         margin: "0"
+    },
+    siteLabel: {
+        display: "inline-block",
+        overflow: "hidden",
+        width: "95%",
+        verticalAlign: "middle",
+        height: "20px",
+        lineHeight: "20px",
+        fontSize: "13px",
+        fontWeight: "300",
+        textOverflow: "ellipsis",
+        whiteSpace: "nowrap"
     },
     boxTitle: {
         fontSize: "20px",
@@ -148,14 +180,57 @@ var MultiSite = React.createClass({
     contextTypes: {
         theme: React.PropTypes.object
     },
+    getInitialState: function () {
+        return {
+            input: ""
+        };
+    },
+
     componentDidMount: function () {
         this.props.asteroid.subscribe("sites");
+    },
+    getTitleTab: function (period) {
+        switch (period) {
+            case "day":
+                return {
+                    key: "day",
+                    title: "GIORNO"
+                };
+            case "week":
+                return {
+                    key: "week",
+                    title: "SETTIMANA"
+                };
+            case "month":
+                return {
+                    key: "month",
+                    title: "MESE"
+                };
+            case "year":
+                return {
+                    key: "year",
+                    title: "ANNO"
+                };
+            default:
+                return {
+                    key: "",
+                    title: ""
+                };
+        }
     },
     getSites: function () {
         return this.props.collections.get("sites") || Immutable.Map();
     },
     getTheme: function () {
         return this.context.theme || defaultTheme;
+    },
+    getTrendItems: function () {
+        const theme = this.getTheme();
+        return [
+            {icon: "good", iconColor: theme.colors.iconSiteButton, label: "Comfort:", key: "Comfort", value: "<=>"},
+            {icon: "middling", iconColor: theme.colors.iconSiteButton, label: "Energy consumption", key: "Energy consumption", value: "15%"},
+            {icon: "bad", iconColor: theme.colors.iconSiteButton, label: "Energy budget Kwh/€:", key: "Energy budget", value: "26%"}
+        ];
     },
     getLegendItems: function () {
         const theme = this.getTheme();
@@ -167,10 +242,306 @@ var MultiSite = React.createClass({
             {icon: "good", iconColor: theme.colors.iconSiteButton, label: "Comfort", key: "Comfort"}
         ];
     },
+    getSitesRecap: function () {
+        return [
+            {data: `${this.getSites().size}`, label: "Siti totali", key: "totali"},
+            {data: `${this.getSites().size}`, label: "Siti monitorati", key: "monitorati"},
+            {data: "1", label: "Real time monitored", key: "realtime"},
+            {data: "1", label: "Remote Control", key: "remote control"}
+        ];
+    },
     onChangeInputFilter: function (input) {
         this.setState({
             search: input
         });
+    },
+
+    onChangeTabValue: function (tabPeriod) {
+        this.setState({period: tabPeriod});
+    },
+
+    getTabParameters: function () {
+        const PERIODS = ["day", "week", "month", "year"];
+        return PERIODS.map(period => this.getTitleTab(period));
+    },
+
+    renderTabContent: function () {
+        const trend = this.getTrendItems().map(item => {
+            return (
+                <div
+                    style={{
+                        display: "flex",
+                        flexDirction: "row",
+                        justifyContent: "space-between"
+                    }}
+                    key={item.key}
+                >
+                    <span style={{
+                        fontSize: "15px",
+                        textAlign: "left",
+                        fontWeight: "300",
+                        textOverflow: "ellipsis",
+                        whiteSpace: "nowrap",
+                        overflow: "hidden"
+                    }}>
+                        {item.label}
+                    </span>
+                    <div style={{float: "right", textAlign: "right", width: "100px"}}>
+                        <Icon
+                            color={item.iconColor}
+                            icon={item.icon}
+                            size={"24px"}
+                            style={{
+                                marginRight: "10px"
+                            }}
+                        />
+                        <span style={{
+                            display: "inline-block",
+                            width: "50px",
+                            fontSize: "15px",
+                            textAlign: "left",
+                            fontWeight: "300",
+                            textOverflow: "ellipsis",
+                            whiteSpace: "nowrap",
+                            overflow: "hidden"
+                        }}>
+                            {item.value}
+                        </span>
+                    </div>
+                </div>
+            );
+        });
+        return trend;
+    },
+
+    renderSingleTab: function (theme, tabParameters) {
+        return (
+            <bootstrap.Tab
+                className="style-single-tab"
+                eventKey={tabParameters.key}
+                key={tabParameters.key}
+                title={tabParameters.title}
+            >
+                <div style={{margin: "15px 0px 0px 10px"}}>
+                    {this.renderTabContent(theme, tabParameters)}
+                </div>
+            </bootstrap.Tab>
+        );
+    },
+
+    renderTabs: function () {
+        const theme = this.getTheme();
+        return (
+            <bootstrap.Tabs
+                id={"trend-tabs"}
+                className="style-tab"
+                onSelect={this.onChangeTabValue}
+            >
+                <Radium.Style
+                    rules={{
+                        "ul": {
+                            display: "flex",
+                            overflow: "hidden",
+                            border: "0px",
+                            margin: "0 -10px",
+                            alignContent: "stretch",
+                            backgroundColor: theme.colors.primary
+                        },
+                        "ul li": {
+                            flexGrow: "4",
+                            justifyContent: "space-arund",
+                            alignItems: "center",
+                            color: theme.colors.white
+                        },
+                        "ul li a": {
+                            lineHeight: "34px",
+                            fontSize: "14px",
+                            textTransform: "uppercase",
+                            padding: "0px 2px"
+                        },
+                        ".nav-tabs > li > a": {
+                            height: "34px",
+                            color: theme.colors.white,
+                            border: "0px",
+                            outline: "none"
+                        },
+                        ".nav-tabs > li.active > a, .nav-tabs > li > a:hover, .nav-tabs > li.active > a:hover, .nav-tabs > li.active > a:focus": {
+                            display: "inline",
+                            height: "28px",
+                            fontSize: "14px",
+                            fontWeight: "400",
+                            color: theme.colors.white,
+                            border: "0px",
+                            borderRadius: "0px",
+                            outline: "none",
+                            backgroundColor: theme.colors.primary,
+                            outlineStyle: "none",
+                            outlineWidth: "0px",
+                            borderBottom: "3px solid" + theme.colors.buttonPrimary
+                        },
+                        ".nav > li > a:hover, .nav > li > a:focus": {
+                            background: theme.colors.transparent
+                        }
+                    }}
+                    scopeSelector=".style-tab"
+                />
+                {
+                    this.getTabParameters().map(parameter => {
+                        return this.renderSingleTab(theme, parameter);
+                    })
+                }
+            </bootstrap.Tabs>
+        );
+    },
+
+    renderTrendStatus: function () {
+        const theme = this.getTheme();
+        return (
+            <div style={styles(theme).dataWrp}>
+                <h2 style={styles(theme).boxTitle}>
+                    {"ANDAMENTO"}
+                </h2>
+                <div>
+                    {this.renderTabs(theme)}
+                </div>
+            </div>
+        );
+    },
+
+    renderSiteRecap: function () {
+        const theme = this.getTheme();
+        const sites = this.getSitesRecap().map(item => {
+            return (
+                <bootstrap.Col xs={6} key={item.key} className="item-col">
+                    <Radium.Style
+                        rules={styles(theme).colItemWrp}
+                        scopeSelector=".item-col"
+                    />
+                    <div style={styles(theme).siteRecapWrp}>
+                        <h2 style={styles(theme).siteRecap}>
+                            {item.data}
+                        </h2>
+                        <span style={styles(theme).siteLabel}>
+                            {item.label}
+                        </span>
+                    </div>
+                </bootstrap.Col>
+            );
+        });
+        return sites;
+    },
+
+    renderSitesRecap: function () {
+        const theme = this.getTheme();
+        // TODO IWWA-834 per i siti, bisogna capire se il controllo sui siti visibili dall'utente sta sul back (publication) o front
+        // (in caso va gestita la publication per leggere il permesso `view-all-sites`)
+        return (
+            <div style={styles(theme).dataWrp}>
+                <h2 style={styles(theme).boxTitle}>
+                    {"SITI"}
+                </h2>
+                <span style={{fontSize: "15px", fontWeight: "300"}}>
+                    {moment().format("ddd D MMM YYYY - [  h] HH:mm")}
+                </span>
+                <bootstrap.Row className="data-row">
+                    <Radium.Style
+                        rules={styles(theme).rowDataWrp}
+                        scopeSelector=".data-row"
+                    />
+                    {this.renderSiteRecap()}
+                </bootstrap.Row>
+            </div>
+        );
+    },
+
+    renderAssetsStatus: function () {
+        const theme = this.getTheme();
+        return (
+            <div style={styles(theme).dataWrp}>
+                <h2 style={styles(theme).boxTitle}>
+                    {"ASSET STATUS"}
+                </h2>
+            </div>
+        );
+    },
+
+    renderAlarmsRecap:  function () {
+        const theme = this.getTheme();
+        return (
+            <div style={styles(theme).dataWrp}>
+                <h2 style={styles(theme).boxTitle}>
+                    {"ALLARMI"}
+                </h2>
+                <bootstrap.Row>
+                    <bootstrap.Col
+                        xs={6}
+                        style={{textAlign: "left", fontWeight: "300"}}
+                    >
+                        <p style={{fontSize: "16px"}}>
+                            {"DIURNI"}
+                        </p>
+                        <p style={{margin: "0"}}>{"Totali: 12"}</p>
+                        <p style={{margin: "0"}}>{"Ultima sett: 10"}</p>
+                        <p style={{margin: "0"}}>{"Ultime 24h: 2"}</p>
+                    </bootstrap.Col>
+                    <bootstrap.Col
+                        xs={6}
+                        style={{textAlign: "left", fontWeight: "300"}}
+                    >
+                        <p style={{fontSize: "16px"}}>
+                            {"NOTTURNI"}
+                        </p>
+                        <p style={{margin: "0"}}>{"Totali: 12"}</p>
+                        <p style={{margin: "0"}}>{"Ultima sett: 10"}</p>
+                        <p style={{margin: "0"}}>{"Ultime 24h: 2"}</p>
+                    </bootstrap.Col>
+                </bootstrap.Row>
+            </div>
+        );
+    },
+
+    renderSearchAction: function () {
+        const theme = this.getTheme();
+        return (
+            <bootstrap.Col xs={12} style={{width: "100%"}}>
+                <div style={{float: "left", width: "calc(100% - 230px)"}}>
+                    <InputFilter
+                        onChange={this.onChangeInputFilter}
+                    />
+                </div>
+                <div style={{float: "right", width: "230px"}}>
+                    <div style={{margin: "20px 0px", height: "auto", float: "right"}}>
+                        <Button style={styles(theme).buttonConfront}>
+                            <Icon
+                                color={theme.colors.iconSiteButton}
+                                icon={"confront"}
+                                size={"30px"}
+                                style={{verticalAlign: "middle"}}
+                            />
+                        </Button>
+                    </div>
+                    <ButtonFilter
+                        activeFilter={this.props.collections}
+                        filterList={multisiteButtonFilter}
+                        onConfirm={this.onChangeInputFilter}
+                    />
+                    <ButtonSortBy
+                        activeSortBy={this.props.collections}
+                        filterList={multisiteButtonSortBy}
+                    />
+                </div>
+            </bootstrap.Col>
+        );
+    },
+
+    renderSidebar: function () {
+        return (
+            <bootstrap.Col xs={12} sm={4}>
+                {this.renderTips()}
+                {this.renderLegend()}
+                {this.renderMap()}
+            </bootstrap.Col>
+        );
     },
 
     renderTips: function () {
@@ -291,137 +662,21 @@ var MultiSite = React.createClass({
         );
     },
 
-    renderAssetsStatus: function () {
-        const theme = this.getTheme();
-        return (
-            <div style={styles(theme).dataWrp}>
-                <h2 style={styles(theme).boxTitle}>
-                    {"ASSET STATUS"}
-                </h2>
-            </div>
-        );
-    },
-
-    renderAbsorptionStatus: function () {
-        const theme = this.getTheme();
-        return (
-            <div style={styles(theme).dataWrp}>
-                <h2 style={styles(theme).boxTitle}>
-                    {"ASSORBIMENTO ISTANTANEO"}
-                </h2>
-            </div>
-        );
-    },
-
-    renderSearchAction: function () {
-        return (
-            <div>
-                <bootstrap.Col xs={12} sm={8} md={9} lg={10}>
-                    <InputFilter
-                        onChange={this.onChangeInputFilter}
-                    />
-                </bootstrap.Col>
-                <bootstrap.Col xs={12} sm={4} md={3} lg={2}
-                    style={{textAlign: "center"}}
-                >
-                    <ButtonFilter
-                        activeFilter={this.props.collections}
-                        filterList={multisiteButtonFilter}
-                        onConfirm={this.onChangeInputFilter}
-                    />
-                    <ButtonSortBy
-                        activeSortBy={this.props.collections}
-                        filterList={multisiteButtonSortBy}
-                    />
-                </bootstrap.Col>
-            </div>
-        );
-    },
-
-    renderAlarmsRecap:  function () {
-        const theme = this.getTheme();
-        return (
-            <div style={styles(theme).dataWrp}>
-                <h2 style={styles(theme).boxTitle}>
-                    {"ALLARMI"}
-                </h2>
-                <bootstrap.Row>
-                    <bootstrap.Col
-                        xs={6}
-                        style={{textAlign: "left", fontWeight: "300"}}
-                    >
-                        <p style={{fontSize: "16px"}}>
-                            {"DIURNI"}
-                        </p>
-                        <p style={{margin: "0"}}>{"Totali: 12"}</p>
-                        <p style={{margin: "0"}}>{"Ultima sett: 10"}</p>
-                        <p style={{margin: "0"}}>{"Ultime 24h: 2"}</p>
-                    </bootstrap.Col>
-                    <bootstrap.Col
-                        xs={6}
-                        style={{textAlign: "left", fontWeight: "300"}}
-                    >
-                        <p style={{fontSize: "16px"}}>
-                            {"NOTTURNI"}
-                        </p>
-                        <p style={{margin: "0"}}>{"Totali: 12"}</p>
-                        <p style={{margin: "0"}}>{"Ultima sett: 10"}</p>
-                        <p style={{margin: "0"}}>{"Ultime 24h: 2"}</p>
-                    </bootstrap.Col>
-                </bootstrap.Row>
-            </div>
-        );
-    },
-
-    renderSiteRecap: function () {
-        const theme = this.getTheme();
-        // TODO IWWA-834 per i siti, bisogna capire se il controllo sui siti visibili dall'utente sta sul back (publication) o front
-        // (in caso va gestita la publication per leggere il permesso `view-all-sites`)
-        return (
-            <div style={styles(theme).dataWrp}>
-                <h2 style={styles(theme).siteRecap}>
-                    {this.getSites().size}
-                </h2>
-                <p style={{fontSize: "20px"}}>
-                    {"SITI MONITORATI"}
-                </p>
-                <span style={{fontSize: "16px", fontWeight: "300"}}>
-                    {moment().format("ddd D MMM YYYY - [  h] HH:mm")}
-                </span>
-            </div>
-        );
-    },
-
-    renderSidebar: function () {
-        return (
-            <bootstrap.Col xs={12} sm={4}>
-                {this.renderTips()}
-                {this.renderLegend()}
-                {this.renderMap()}
-            </bootstrap.Col>
-        );
-    },
-
     renderSites: function () {
         return (
             <bootstrap.Col xs={12} sm={8}>
                 <bootstrap.Row>
-                    <SiteStatus
-                        siteName={"OVS Curno / "}
-                        siteAddress={"via Giuseppe Garibaldi 123"}
-                    />
-                    <SiteStatus
-                        siteName={"OVS Curno / "}
-                        siteAddress={"piazza V Giornate"}
-                    />
-                    <SiteStatus
-                        siteName={"Casa Tiziano Zani / "}
-                        siteAddress={"piazza V Giornate"}
-                    />
-                    <SiteStatus
-                        siteName={"OVS Curno / "}
-                        siteAddress={"piazza V Giornate"}
-                    />
+                    {
+                        this.getSites()
+                            .map((site) => {
+                                return (
+                                    <SiteStatus
+                                        siteName={site.get("name")}
+                                        siteAddress={site.get("address")}
+                                    />
+                                );
+                            })
+                    }
                 </bootstrap.Row>
             </bootstrap.Col>
         );
@@ -437,16 +692,16 @@ var MultiSite = React.createClass({
                         scopeSelector=".data-row"
                     />
                     <DashboardBox>
-                        {this.renderSiteRecap()}
+                        {this.renderSitesRecap()}
+                    </DashboardBox>
+                    <DashboardBox>
+                        {this.renderTrendStatus()}
                     </DashboardBox>
                     <DashboardBox>
                         {this.renderAlarmsRecap()}
                     </DashboardBox>
                     <DashboardBox>
                         {this.renderAssetsStatus()}
-                    </DashboardBox>
-                    <DashboardBox>
-                        {this.renderAbsorptionStatus()}
                     </DashboardBox>
                 </bootstrap.Row>
                 <bootstrap.Row style={styles(theme).searchTools}>
