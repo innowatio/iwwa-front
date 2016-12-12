@@ -90,7 +90,7 @@ var NotificationRow = React.createClass({
                         style={styles(this.getTheme(), open).iconArrowDown}
                     />
                     <p style={styles(this.getTheme()).data}>{date}</p>
-                    <h5 style={styles(this.getTheme()).sensorName}>{this.props.element.get("name")}</h5>
+                    <h5 style={styles(this.getTheme()).sensorName}>{this.props.element.get("title")}</h5>
                 </components.Button>
                 <components.Button
                     className="pull-right"
@@ -100,12 +100,6 @@ var NotificationRow = React.createClass({
                         width: "71px"
                     }}
                 >
-                    <components.Icon
-                        color={colors.iconAlarmsChart}
-                        icon={"chart"}
-                        size={"34px"}
-                        style={styles(this.getTheme()).iconChart}
-                    />
                 </components.Button>
             </div>
         );

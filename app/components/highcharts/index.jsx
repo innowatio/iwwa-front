@@ -131,8 +131,11 @@ var HighCharts = React.createClass({
         const {alarmsData} = this.props;
         const alarmsSeries = alarmsData.map(alarm => {
             const data = alarm.measurementTimes.split(",").map(time => {
-                return [parseInt(time), measurements.find(x => x[0] >= time)[1]];
-            });
+                const measurement = measurements.find(x => x[0] >= time);
+                if (measurement) {
+                    return [parseInt(time), measurements.find(x => x[0] >= time)[1]];
+                }
+            }).filter(x => x);
             return {
                 type: "scatter",
                 name: this.getAlarmLabel(alarm.measurementType),

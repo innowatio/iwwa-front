@@ -2,9 +2,7 @@ import React, {PropTypes} from "react";
 import moment from "moment";
 import IPropTypes from "react-immutable-proptypes";
 import ReactPureRender from "react-addons-pure-render-mixin";
-import {partial} from "ramda";
 import {Link} from "react-router";
-import {Map} from "immutable";
 
 import components from "components";
 import {defaultTheme} from "lib/theme";
@@ -30,7 +28,7 @@ const styles = ({colors}, active) => ({
         verticalAlign: "middle"
     },
     iconAlarmStatus: {
-        backgroundColor: active ? colors.activeAlarm : colors.pausedAlarm,
+        backgroundColor: active ? colors.red : colors.pausedAlarm,
         color: colors.white,
         display: "inline-block",
         height: "49px",
@@ -44,8 +42,10 @@ const styles = ({colors}, active) => ({
 
 var AlarmRow = React.createClass({
     propTypes: {
+        alarmAggregates: IPropTypes.map.isRequired,
         element: IPropTypes.map.isRequired,
         elementId: PropTypes.any.isRequired,
+        onClickAlarmChart: PropTypes.func.isRequired,
         onClickAlarmSetting: PropTypes.func.isRequired
     },
     contextTypes: {
@@ -60,33 +60,52 @@ var AlarmRow = React.createClass({
     getTheme: function () {
         return this.context.theme || defaultTheme;
     },
-    getFormattedDate: function () {
-        const notification = this.props.element.get("notifications").last();
-        if (notification) {
-            const dateLastNotification = notification.get("date") || Map();
-            return ` - ${moment(dateLastNotification).locale("it").format("LLL")}`;
+    getLastTriggerTimestamp: function () {
+        const {
+            alarmAggregates
+        } = this.props;
+        const last = alarmAggregates.sortBy(x => x.get("date")).last();
+        if (last) {
+            const measurementTimes = last.get("measurementTimes").split(",");
+            const lastTime = measurementTimes[measurementTimes.length - 1];
+            return lastTime;
         }
-        return "";
+        return 0;
+    },
+    getLastTrigger: function () {
+        const timestamp = this.getLastTriggerTimestamp();
+        return {
+            timestamp,
+            today: moment(parseInt(timestamp)).format("YYYY-MM-DD") === moment().format("YYYY-MM-DD"),
+            formatted: moment(parseInt(timestamp)).locale("it").format("LLL")
+        };
+    },
+    getAlarmLabel: function (lastTrigger) {
+        const {
+            element
+        } = this.props;
+        const alarmName = element.get("name") || "Allarme";
+        return `${alarmName} ${element.get("threshold")} ${element.get("unitOfMeasurement")} - ${lastTrigger.timestamp > 0 ? lastTrigger.formatted : ""}`;
     },
     render: function () {
         const {colors} = this.getTheme();
-        const active = this.props.element.get("active");
+        const lastTrigger = this.getLastTrigger();
         return (
             <div style={styles(this.getTheme()).headerContainer}>
                 <div style={{float: "left", height: "48px", minWidth: "auto", width: "calc(100% - 200px)"}} >
                     <components.Icon
                         color={colors.iconAlarmAction}
-                        icon={active ? "flag" : "pause"}
+                        icon={lastTrigger.today ? "danger" : "flag"}
                         size={"30px"}
-                        style={styles(this.getTheme(), active).iconAlarmStatus}
+                        style={styles(this.getTheme(), lastTrigger.today).iconAlarmStatus}
                     />
-                    {`${this.props.element.get("name")}${this.getFormattedDate()}`}
+                    {this.getAlarmLabel(lastTrigger)}
                 </div>
                 <div style={{width: "100px", lineHeight: "48px", float: "right"}} >
                     <components.Icon
                         color={colors.iconAlarmAction}
                         icon={"settings"}
-                        onClick={partial(this.props.onClickAlarmSetting, [this.props.elementId])}
+                        onClick={() => this.props.onClickAlarmSetting(this.props.element)}
                         size={"28px"}
                         style={styles(this.getTheme()).iconSettings}
                     />
@@ -94,6 +113,7 @@ var AlarmRow = React.createClass({
                         <components.Icon
                             color={colors.iconAlarmsChart}
                             icon={"chart"}
+                            onClick={() => this.props.onClickAlarmChart(this.props.element)}
                             size={"34px"}
                             style={styles(this.getTheme()).iconChart}
                         />

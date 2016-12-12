@@ -1,36 +1,8 @@
 import {combineReducers} from "redux";
 
 import {
-    MODIFY_EXISTENT_ALARM,
-    RESET_ALARM_FORM_VIEW,
-    CREATE_OR_MODIFY_ALARM_START,
-    CREATION_ALARM_STOP,
-    NUMBER_OF_SELECTED_TABS,
-    FILTER_COLLECTION,
-    RESET_FILTER
+    NUMBER_OF_SELECTED_TABS
 } from "../actions/alarms";
-
-function id (state = null, {type, payload}) {
-    switch (type) {
-        case MODIFY_EXISTENT_ALARM:
-            return payload;
-        case RESET_ALARM_FORM_VIEW:
-            return null;
-        default:
-            return state;
-    }
-}
-
-function statePostAlarm (state = false, {type}) {
-    switch (type) {
-        case CREATE_OR_MODIFY_ALARM_START:
-            return true;
-        case CREATION_ALARM_STOP:
-            return false;
-        default:
-            return state;
-    }
-}
 
 function selectedTab (state = 3, {type, payload}) {
     switch (type) {
@@ -41,6 +13,11 @@ function selectedTab (state = 3, {type, payload}) {
     }
 }
 
+import {
+    FILTER_COLLECTION,
+    RESET_FILTER
+} from "../actions/alarms";
+
 const defaultFilter = {
     alarm: {
         status: "all"
@@ -49,6 +26,7 @@ const defaultFilter = {
         period: "-1"
     }
 };
+
 function filter (state = defaultFilter, {type, payload}) {
     switch (type) {
         case FILTER_COLLECTION:
@@ -63,9 +41,44 @@ function filter (state = defaultFilter, {type, payload}) {
     }
 }
 
+import {
+    SELECT_ALARM,
+    SELECT_ALARM_RESET
+} from "../actions/alarms";
+
+function selectedAlarm (state = {}, {type, payload}) {
+    switch (type) {
+        case SELECT_ALARM:
+            return payload;
+        case SELECT_ALARM_RESET:
+            return {};
+        default:
+            return state;
+    }
+}
+
+import {
+    ALARM_UPSERT_SUCCESS,
+    ALARM_UPSERT_ERROR,
+    ALARM_UPSERT_RESET
+} from "../actions/alarms";
+
+function creationStatus (state = {}, {type}) {
+    switch (type) {
+        case ALARM_UPSERT_SUCCESS:
+            return {success: true};
+        case ALARM_UPSERT_ERROR:
+            return {error: true};
+        case ALARM_UPSERT_RESET:
+            return {};
+        default:
+            return state;
+    }
+}
+
 export const alarms = combineReducers({
-    id,
     filter,
-    statePostAlarm,
-    selectedTab
+    selectedTab,
+    selectedAlarm,
+    creationStatus
 });
