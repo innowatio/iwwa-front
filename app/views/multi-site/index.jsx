@@ -137,11 +137,10 @@ const styles = ({colors}) => ({
         verticalAlign: "middle"
     },
     iconArrowDown: {
-        display: "inline-block",
-        lineHeight: "15px",
-        verticalAlign: "text-top",
-        marginRight: "10px",
-        transform: open ? "rotate(180deg)" : null
+        position: "absolute",
+        right: "15px",
+        top: "18px",
+        transform: open ? null : "rotate(180deg)"
     }
 });
 
@@ -247,7 +246,7 @@ var MultiSite = React.createClass({
             {data: `${this.getSites().size}`, label: "Siti totali", key: "totali"},
             {data: `${this.getSites().size}`, label: "Siti monitorati", key: "monitorati"},
             {data: "1", label: "Real time monitored", key: "realtime"},
-            {data: "1", label: "Remote Control", key: "remote control"}
+            {data: "2", label: "Remote Control", key: "remote control"}
         ];
     },
     onChangeInputFilter: function (input) {
@@ -604,7 +603,7 @@ var MultiSite = React.createClass({
                     color={theme.colors.white}
                     icon={"arrow-down"}
                     size={"16px"}
-                    style={{position: "absolute", right: "15px", top: "18px"}}
+                    style={styles(theme).iconArrowDown}
                 />
                 <bootstrap.Panel className="legend" header="Legenda" eventKey="1" style={{backgroundColor: theme.colors.black}}>
                     <Radium.Style
@@ -668,6 +667,10 @@ var MultiSite = React.createClass({
                 <bootstrap.Row>
                     {
                         this.getSites()
+                            .filter((site) => {
+                                const input = this.state.input;
+                                return (site.get("name") || "").toLowerCase().includes(input.toLowerCase()) || (site.get("address") || "").toLowerCase().includes(input.toLowerCase());
+                            })
                             .map((site) => {
                                 return (
                                     <SiteStatus
