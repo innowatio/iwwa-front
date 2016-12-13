@@ -18,11 +18,13 @@ var ConsumptionChart = React.createClass({
         switch (page) {
             case "year":
                 return {
-                    visibility: "visible"
+                    visibility: "visible",
+                    height: "auto"
                 };
             default:
                 return {
-                    visibility: "hidden"
+                    visibility: "hidden",
+                    height: "0px"
                 };
         }
     },
@@ -52,7 +54,9 @@ var ConsumptionChart = React.createClass({
             title: {
                 text: "Ultimi 12 mesi",
                 style: {
-                    color: colors.consumptionsText
+                    color: colors.consumptionsText,
+                    fontSize: "13px",
+                    fontWeight: "300"
                 }
             },
             credits: {

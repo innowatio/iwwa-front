@@ -9,6 +9,7 @@ import moment from "lib/moment";
 
 var DateCompare = React.createClass({
     propTypes: {
+        alarmsData: PropTypes.arrayOf(PropTypes.object),
         chartState: PropTypes.shape({
             zoom: PropTypes.arrayOf(PropTypes.object),
             charts: PropTypes.arrayOf(PropTypes.object).isRequired
@@ -40,8 +41,12 @@ var DateCompare = React.createClass({
     },
     render: function () {
         const {charts} = this.props.chartState;
+        const {
+            alarmsData
+        } = this.props;
         return (
             <components.HighCharts
+                alarmsData={alarmsData}
                 colors={[charts[0].source.color, this.getTheme().colors.lineCompare]}
                 coordinates={this.getCoordinates()}
                 dateCompare={this.getDatesFromChartState()}

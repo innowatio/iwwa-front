@@ -11,6 +11,7 @@ export const SELECT_DATE_RANGES_COMPARE = "SELECT_DATE_RANGES_COMPARE";
 export const REMOVE_ALL_COMPARE = "REMOVE_ALL_COMPARE";
 export const SET_ZOOM_EXTREMES = "SET_ZOOM_EXTREMES";
 export const RESET_ZOOM = "RESET_ZOOM";
+export const TOGGLE_SHOW_ALARMS = "TOGGLE_ALARMS";
 
 /**
 *   A click on select-tree component for the choice of site
@@ -188,5 +189,14 @@ export function setZoomExtremes (zoomExtremes) {
 export function resetZoom () {
     return {
         type: RESET_ZOOM
+    };
+}
+
+/**
+*   Toggle show alarms
+*/
+export function toggleAlarms () {
+    return {
+        type: TOGGLE_SHOW_ALARMS
     };
 }
