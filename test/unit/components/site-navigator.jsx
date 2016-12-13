@@ -16,40 +16,32 @@ describe("`SiteNavigator` component", () => {
         clock.restore();
     });
 
-    var allowedValues = fromJS({
+    var sites = fromJS({
         "SitoDiTest1": {
             "_id" : "SitoDiTest1",
             "name" : "Sito di Test 1",
             "sensors" : [
                 {
-                    "id" : "IT001",
-                    "type" : "pod",
+                    "id" : "ANZ01",
                     "description" : "Luci e utenze varie",
-                    "children" : [
-                        {
-                            "id" : "ANZ01",
-                            "type" : "pod-anz",
-                            "description" : "Luci e utenze varie"
-                        }
+                    "measurementTypes" : [
+                        "activeEnergy",
+                        "reactiveEnergy",
+                        "maxPower"
                     ]
                 },
                 {
-                    "id" : "IT002",
-                    "type" : "pod",
+                    "id" : "ANZ02",
                     "description" : "Climatizzazione Vendita e Magazzino",
-                    "children" : [
-                        {
-                            "id" : "ANZ02",
-                            "type" : "pod-anz",
-                            "description" : "Climatizzazione Vendita e Magazzino"
-                        }
+                    "measurementTypes" : [
+                        "activeEnergy",
+                        "reactiveEnergy",
+                        "maxPower"
                     ]
                 }
             ],
             "sensorsIds" : [
-                "IT001",
                 "ANZ01",
-                "IT002",
                 "ANZ02"
             ]
         },
@@ -59,23 +51,34 @@ describe("`SiteNavigator` component", () => {
             "sensors" : [
                 {
                     "id" : "ANZ03",
-                    "type" : "pod-anz",
-                    "description" : "Luci e utenze varie"
+                    "description" : "Luci e utenze varie",
+                    "measurementTypes" : [
+                        "activeEnergy",
+                        "reactiveEnergy",
+                        "maxPower"
+                    ]
                 },
                 {
                     "id" : "ANZ04",
-                    "type" : "pod-anz",
-                    "description" : "Climatizzazione Vendita e Magazzino"
+                    "description" : "Climatizzazione Vendita e Magazzino",
+                    "measurementTypes" : [
+                        "activeEnergy",
+                        "reactiveEnergy",
+                        "maxPower"
+                    ]
                 },
                 {
                     "id" : "ANZ05",
-                    "type" : "anz",
                     "description" : "Luci cantina",
                     "children" : [
                         {
                             "id" : "ANZ06",
-                            "type" : "anz",
-                            "description" : "Luci cantina vini"
+                            "description": "Luci cantina vini",
+                            "measurementTypes" : [
+                                "activeEnergy",
+                                "reactiveEnergy",
+                                "maxPower"
+                            ]
                         }
                     ]
                 }
@@ -88,44 +91,54 @@ describe("`SiteNavigator` component", () => {
             ]
         },
         "SitoDiTest3": {
-            "_id" : "SitoDiTest1",
+            "_id" : "SitoDiTest3",
             "name" : "Sito di Test 1",
             "sensors" : [
                 {
                     "id" : "ZTHL01",
-                    "type" : "thl",
                     "description" : "Sensore ambientale 1 area destra",
-                    "children" : []
+                    "measurementTypes" : [
+                        "temperature"
+                    ]
                 },
                 {
                     "id" : "ZTHL02",
-                    "type" : "thl",
                     "description" : "Sensore ambientale 2 area destra",
-                    "children" : []
+                    "measurementTypes" : [
+                        "illuminance"
+                    ]
                 },
                 {
                     "id" : "ZTHL03",
-                    "type" : "thl",
                     "description" : "Sensore ambientale 3 area sinistra",
-                    "children" : []
+                    "measurementTypes" : [
+                        "temperature",
+                        "illuminance",
+                        "humidity"
+                    ]
                 },
                 {
                     "id" : "ZTHL04",
-                    "type" : "thl",
                     "description" : "Sensore ambientale 4 area sinistra",
-                    "children" : []
+                    "measurementTypes" : [
+                        "temperature",
+                        "illuminance",
+                        "humidity"
+                    ]
                 },
                 {
                     "id" : "COOV01",
-                    "type" : "co2",
                     "description" : "Sonda co2 su HVAC01",
-                    "children" : []
+                    "measurementTypes" : [
+                        "co2"
+                    ]
                 },
                 {
                     "id" : "COOV02",
-                    "type" : "co2",
                     "description" : "Sonda co2 su HVAC02",
-                    "children" : []
+                    "measurementTypes" : [
+                        "co2"
+                    ]
                 }
             ]
         }
@@ -133,7 +146,7 @@ describe("`SiteNavigator` component", () => {
 
     var $siteNavigator = $(
         <SiteNavigator
-            allowedValues={allowedValues}
+            allowedValues={sites}
             onChange={onClickSpy}
             path={["SitoDiTest1"]}
         />
@@ -161,23 +174,21 @@ describe("`SiteNavigator` component", () => {
     describe("`getFilterCriteria`", () => {
         const getFilterCriteria = SiteNavigator.prototype.getFilterCriteria;
 
-        it("properly filters unwanted sensor types [returns POD]", () => {
-            const result = getFilterCriteria(allowedValues.getIn(["SitoDiTest1", "sensors"]));
+        it("properly filters unwanted sensor types", () => {
+            const result = getFilterCriteria(sites.getIn(["SitoDiTest1", "sensors"]));
 
             expect(result.size).to.equals(2);
-            expect(result.getIn(["0", "id"])).to.equal("IT001");
-            expect(result.getIn(["1", "id"])).to.equal("IT002");
-        });
+            expect(result.getIn(["0", "id"])).to.equal("ANZ01");
+            expect(result.getIn(["1", "id"])).to.equal("ANZ02");
 
-        it("properly filters unwanted sensor types [pod-anz types]", () => {
-            const result = getFilterCriteria(allowedValues.getIn(["SitoDiTest2", "sensors"]));
+            const resultSite2 = getFilterCriteria(sites.getIn(["SitoDiTest2", "sensors"]));
 
-            expect(result.size).to.equals(1);
-            expect(result.getIn(["0", "id"])).to.equal("ANZ05");
+            expect(resultSite2.size).to.equals(3);
+            expect(resultSite2.getIn(["0", "id"])).to.equal("ANZ03");
         });
 
         it("properly filters unwanted sensor types [environmental types]", () => {
-            expect(getFilterCriteria(allowedValues.getIn(["SitoDiTest3", "sensors"])).size).to.equals(0);
+            expect(getFilterCriteria(sites.getIn(["SitoDiTest3", "sensors"])).size).to.equals(0);
         });
     });
 });

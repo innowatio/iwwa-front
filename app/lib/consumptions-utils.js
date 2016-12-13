@@ -96,7 +96,7 @@ function getTitleAndSubtitle (period) {
                 period,
                 periodTitle: `NEL ${moment(periodDates.start).format("YYYY")} HAI UTILIZZATO`,
                 periodSubtitle: `${moment(periodDates.start).format("YYYY")}`.toUpperCase(),
-                title: "ANNO CORRENTE",
+                title: "ANNO",
                 comparisons: [
                     // {
                     //     key: "year-1y",

@@ -1,129 +1,86 @@
 import axios from "axios";
 import {
     Object as object,
-    Boolean,
     Number,
-    String,
-    list,
-    struct,
-    maybe,
-    union
+    String
 } from "tcomb";
-import {isEmpty} from "ramda";
-import actionTypeValidator from "redux-action-type-validator";
-import moment from "../lib/moment";
 
-import {WRITE_BACKEND_ENDPOINT} from "../lib/config";
+import actionTypeValidator from "redux-action-type-validator";
+
+import {WRITE_API_ENDPOINT} from "../lib/config";
 
 export const DISPLAY_ALARMS_ON_CHART = "DISPLAY_ALARMS_ON_CHART";
-export const MODIFY_EXISTENT_ALARM = "MODIFY_EXISTENT_ALARM";
-export const RESET_ALARM_FORM_VIEW = "RESET_ALARM_FORM_VIEW";
-export const CREATE_OR_MODIFY_ALARM_START = "CREATE_OR_MODIFY_ALARM_START";
-export const CREATION_ALARM_STOP = "CREATION_ALARM_STOP";
+export const SELECT_ALARM_RESET = "SELECT_ALARM_RESET";
 export const NUMBER_OF_SELECTED_TABS = "NUMBER_OF_SELECTED_TABS";
 export const FILTER_COLLECTION = "FILTER_COLLECTION";
 export const RESET_FILTER = "RESET_FILTER";
 
-// TODO: test this function
-function less (time1, time2) {
-    return (
-        moment.utc(time1, "hh:mm").toDate() <
-        moment.utc(time2, "hh:mm").toDate()
-    );
-}
+export const SELECT_ALARM = "SELECT_ALARM";
 
-// TODO: test this function
-function creationRuleAlarm ({repetition, threshold}) {
-    const rule = {
-        $and: []
-    };
-    rule.$and.push({
-        reale: {
-            $gt: parseInt(threshold)
-        }
-    });
-    if (!isEmpty(repetition.weekDays)) {
-        rule.$and.push({
-            "date.weekDay": {
-                $in: repetition.weekDays
-            }
-        });
-    }
-    if (repetition.day) {
-        const day = moment.utc(repetition.day);
-        rule.$and.push({
-            "date.monthDay": day.date(),
-            "date.month": day.month(),
-            "date.year": day.year()
-        });
-    }
-    const timeStart = moment.utc(repetition.timeStart, "hh:mm");
-    const timeEnd = moment.utc(repetition.timeEnd, "hh:mm");
-    if (!less(repetition.timeEnd, repetition.timeStart)) {
-        rule.$and.push({
-            "date.hour": {
-                $lt: timeEnd.hour()
-            }
-        });
-        rule.$and.push({
-            "date.hour": {
-                $gt: timeStart.hour()
-            }
-        });
-    }
-    return rule;
-}
-
-const typeofSubmitAlarmCreationOrChange = actionTypeValidator(
-    struct({
-        active: Boolean,
-        name: maybe(String), // To correct this. If there isn't name, is not possible to submit
-        repetition: struct({
-            weekDays: list(Number),
-            timeEnd: String,
-            timeStart: String
-        }),
-        sito: object,
-        threshold: union([String, Number])
-    }),
-    String,
-    object
-);
-// TODO: test this function
-export function submitAlarmCreationOrChange ({active, name, repetition, sito, threshold}, typeProps, alarmProps) {
-    typeofSubmitAlarmCreationOrChange(...arguments);
-    return dispatch => {
+export function selectAlarm (alarm) {
+    return (dispatch) => {
         dispatch({
-            type: CREATE_OR_MODIFY_ALARM_START
+            type: SELECT_ALARM,
+            payload: alarm
         });
-        const rule = creationRuleAlarm({active, name, repetition, sito, threshold});
+    };
+}
+
+/**
+*   Reset of the alarm form view
+*/
+export function resetAlarmFormView () {
+    return {
+        type: SELECT_ALARM_RESET
+    };
+}
+
+export const ALARM_UPSERT_SUCCESS = "ALARM_UPSERT_SUCCESS";
+export const ALARM_UPSERT_ERROR = "ALARM_UPSERT_ERROR";
+export const ALARM_UPSERT_RESET = "ALARM_UPSERT_RESET";
+
+export function upsertAlarm ({_id, name, userId, sensorId, rule, type, thresholdRule, threshold, unitOfMeasurement, measurementType, email}) {
+    return (dispatch) => {
+
         const alarm = {
-            active,
             name,
-            podId: sito.get("pod"),
-            rule: JSON.stringify(rule),
-            notifications: []
+            userId,
+            sensorId,
+            rule,
+            type,
+            thresholdRule,
+            threshold,
+            unitOfMeasurement,
+            measurementType,
+            email
         };
-        var requestBody;
-        if (typeProps === "update") {
-            requestBody = {
-                method: "/alarms/replace",
-                params: [alarmProps.get("_id"), alarm]
-            };
+
+        dispatch({
+            type: SELECT_ALARM,
+            payload: alarm
+        });
+
+        if (_id) {
+            axios.put(`${WRITE_API_ENDPOINT}/alarms/${_id}`, alarm)
+                .then(() => dispatch({
+                    type: ALARM_UPSERT_SUCCESS
+                }))
+                .catch(() => dispatch({
+                    type: ALARM_UPSERT_ERROR
+                }));
         } else {
-            requestBody = {
-                method: "/alarms/insert",
-                params: [alarm]
-            };
+            axios.post(`${WRITE_API_ENDPOINT}/alarms/`, alarm)
+                .then(() => dispatch({
+                    type: ALARM_UPSERT_SUCCESS
+                }))
+                .catch(() => dispatch({
+                    type: ALARM_UPSERT_ERROR
+                }));
         }
-        var endpoint = WRITE_BACKEND_ENDPOINT + "/alarms";
-        axios.post(endpoint, requestBody)
-            .then(() => dispatch({
-                type: CREATION_ALARM_STOP
-            }))
-            .catch(() => dispatch({
-                type: CREATION_ALARM_STOP
-            }));
+
+        setTimeout(() => dispatch({
+            type: ALARM_UPSERT_RESET
+        }), 2000);
     };
 }
 
@@ -156,53 +113,8 @@ export function filterCollection (filterSelection, collectionToFilter) {
     };
 }
 
-/**
-*   A click on button in alarms to display the alarms point in chart
-*   @param {array} sensorId - id of the sensor referred to by the alarm
-*   @param {array} siteId - id of the site referred to by the alarm
-*   @param {array} alarms - date of the date (in miliseconds unix timestamp)
-*/
-const typeofDisplayAlarmsOnChart = actionTypeValidator(
-    String,
-    String,
-    list(Number)
-);
-export function displayAlarmsOnChart (sensorId, siteId, alarms) {
-    typeofDisplayAlarmsOnChart(...arguments);
-    return {
-        type: DISPLAY_ALARMS_ON_CHART,
-        payload: {
-            sensorId,
-            siteId,
-            alarms
-        }
-    };
-}
-
-/**
-*   A click to modify an alarm
-*   @param {String} alarmId - id of the alarm to modify
-*/
-const typeofModifyExistentAlarm = actionTypeValidator(String);
-export function modifyExistentAlarm (alarmId) {
-    typeofModifyExistentAlarm(...arguments);
-    return {
-        type: MODIFY_EXISTENT_ALARM,
-        payload: alarmId
-    };
-}
-
 export function resetFilter () {
     return {
         type: RESET_FILTER
-    };
-}
-
-/**
-*   Reset of the alarm form view
-*/
-export function resetAlarmFormView () {
-    return {
-        type: RESET_ALARM_FORM_VIEW
     };
 }

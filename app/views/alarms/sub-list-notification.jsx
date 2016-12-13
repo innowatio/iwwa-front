@@ -16,7 +16,8 @@ const styles = ({colors}) => ({
 
 var SubListNotification = React.createClass({
     propTypes: {
-        isExpanded: PropTypes.bool
+        isExpanded: PropTypes.bool,
+        label: PropTypes.string.isRequired
     },
     contextTypes: {
         theme: PropTypes.object
@@ -31,13 +32,16 @@ var SubListNotification = React.createClass({
         return this.context.theme || defaultTheme;
     },
     render: function () {
+        const {
+            label
+        } = this.props;
         return (
             <bootstrap.Panel
                 collapsible={true}
                 expanded={this.props.isExpanded}
                 style={styles(this.getTheme()).panel}
             >
-                {"Consumi maggiori del 41% rispetto alla media - 2 anomalie simili (15.04.16, 08.05.16)"}
+                {label}
             </bootstrap.Panel>
         );
     }
