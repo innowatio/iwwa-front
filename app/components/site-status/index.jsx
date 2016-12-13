@@ -9,29 +9,36 @@ import {
 } from "components";
 
 const styles = (theme) => ({
-    iconOptionBtn: {
-        float: "right",
-        border: 0,
-        backgroundColor: theme.colors.transparent
-    },
     siteWrp: {
         display: "block",
         marginBottom: "20px",
         minHeight: "100px",
-        padding: "10px",
+        padding: "10px 10px",
         textAlign: "left",
         border: `1px solid ${theme.colors.borderContentModal}`,
         backgroundColor: theme.colors.backgroundContentModal
+    },
+    siteNameWrp: {
+        width: "calc(100% - 40px)",
+        float: "left",
+        height: "46px",
+        overflow: "hidden",
+        textOverflow: "ellipsis"
     },
     siteName: {
         fontSize: "20px",
         display: "inline",
         fontWeight: "300"
     },
-    sidebarTitle: {
-        fontSize: "20px",
-        display: "inline",
+    siteAddress: {
+        fontSize: "15px",
         fontWeight: "300"
+    },
+    iconOptionBtn: {
+        width: "30px",
+        float: "right",
+        border: 0,
+        backgroundColor: theme.colors.transparent
     }
 });
 
@@ -65,7 +72,7 @@ var SiteStatus = React.createClass({
                     color={status.iconColor}
                     icon={status.icon}
                     size={"28px"}
-                    style={{verticalAlign: "middle", marginRight: "10px"}}
+                    style={{verticalAlign: "bottom", marginRight: "10px"}}
                 />
             );
         });
@@ -76,11 +83,13 @@ var SiteStatus = React.createClass({
         return (
             <bootstrap.Col xs={12} md={12} lg={6}>
                 <div style={styles(theme).siteWrp}>
-                    <div>
-                        <h2 style={styles(theme).siteName}>
-                            {`${this.props.siteName} / `}
-                        </h2>
-                        <span>{this.props.siteAddress}</span>
+                    <div style={{width: "100%", clear: "both"}}>
+                        <div style={styles(theme).siteNameWrp}>
+                            <h2 style={styles(theme).siteName}>
+                                {`${this.props.siteName} / `}
+                            </h2>
+                            <span style={styles(theme).siteAddress}>{this.props.siteAddress}</span>
+                        </div>
                         <Button
                             className="button-option"
                             onClick={this.props.onClick}
@@ -103,7 +112,7 @@ var SiteStatus = React.createClass({
                             />
                         </Button>
                     </div>
-                    <div style={{marginTop: "15px"}}>
+                    <div style={{width: "100%", clear: "both"}}>
                         {this.renderSiteStatus()}
                     </div>
                 </div>
