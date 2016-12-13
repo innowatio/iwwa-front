@@ -294,7 +294,7 @@ var AlarmForm = React.createClass({
                             bsStyle={"success"}
                             max={600}
                             min={0}
-                            step={5}
+                            step={1}
                             style={styles(theme).inputRange}
                             type="range"
                             onChange={input => this.setState({
