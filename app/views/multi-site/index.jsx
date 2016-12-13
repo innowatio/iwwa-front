@@ -193,7 +193,7 @@ var MultiSite = React.createClass({
     },
     getInitialState: function () {
         return {
-            input: ""
+            search: ""
         };
     },
     componentDidMount: function () {
@@ -267,7 +267,7 @@ var MultiSite = React.createClass({
     },
     getSitesRecap: function () {
         return [
-            {data: `${this.getSites().size}`, label: "Siti totali", key: "totali"},
+            {data: "800", label: "Siti totali", key: "totali"},
             {data: `${this.getSites().size}`, label: "Siti monitorati", key: "monitorati"},
             {data: "1", label: "Real time monitored", key: "realtime"},
             {data: "2", label: "Remote Control", key: "remote control"}
@@ -698,11 +698,11 @@ var MultiSite = React.createClass({
                 <bootstrap.Row>
                     {
                         this.getSites()
-                        .filter((site) => {
-                            const input = this.state.input;
-                            return (site.get("name") || "").toLowerCase().includes(input.toLowerCase()) || (site.get("address") || "").toLowerCase().includes(input.toLowerCase());
+                        .filter(site => {
+                            const input = this.state.search.trim().toLowerCase();
+                            return (site.get("name") || "").toLowerCase().includes(input) || (site.get("address") || "").toLowerCase().includes(input);
                         })
-                        .map((site) => {
+                        .map(site => {
                             return (
                                 <SiteStatus
                                     siteName={site.get("name")}
