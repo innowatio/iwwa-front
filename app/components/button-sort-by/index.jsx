@@ -231,7 +231,7 @@ var ButtonSortBy = React.createClass({
     },
     render: function () {
         return (
-            <div style={{marginTop: "20px", height: "auto", marginBottom: "20px", float: "right"}}>
+            <div style={{height: "auto", float: "right"}}>
                 <components.Popover title={this.renderTitlePopover()}>
                     <div style={styles(this.getTheme()).sortBy}>
                         {"Ordina per:"}
