@@ -25,8 +25,8 @@ const styles = ({colors}) => ({
         textAlign: "center"
     },
     rowDataWrp: {
-        marginRight: "-5px",
-        marginLeft: "-5px"
+        marginRight: "-10px",
+        marginLeft: "-10px"
     },
     dataWrp:{
         minHeight: "200px",
@@ -38,11 +38,23 @@ const styles = ({colors}) => ({
     },
     colItemWrp: {
         height: "auto",
-        paddingRight: "5px",
-        paddingLeft: "5px"
+        paddingRight: "10px",
+        paddingLeft: "10px"
+    },
+    trendText: {
+        height: "30px",
+        lineHeight: "30px",
+        fontSize: "15px",
+        textAlign: "left",
+        fontWeight: "300",
+        textOverflow: "ellipsis",
+        whiteSpace: "nowrap",
+        overflow: "hidden"
     },
     searchTools: {
-        border: `1px solid ${colors.borderContentModal}`,
+        width: "100%",
+        borderTop: `1px solid ${colors.borderContentModal}`,
+        borderBottom: `1px solid ${colors.borderContentModal}`,
         backgroundColor: colors.backgroundContentModal,
         marginBottom: "20px"
     },
@@ -59,7 +71,7 @@ const styles = ({colors}) => ({
     siteRecapWrp: {
         backgroundColor: colors.primary,
         padding: "5px",
-        margin: "3px 0px"
+        margin: "4px 0px"
     },
     siteRecap: {
         fontSize: "40px",
@@ -184,7 +196,6 @@ var MultiSite = React.createClass({
             input: ""
         };
     },
-
     componentDidMount: function () {
         this.props.asteroid.subscribe("sites");
     },
@@ -223,22 +234,35 @@ var MultiSite = React.createClass({
     getTheme: function () {
         return this.context.theme || defaultTheme;
     },
+    getSiteInfo: function () {
+        return [
+            {label: "ID", key: "_id"},
+            {label: "Impiegati", key: "employees"},
+            {label: "Tipologia attività", key: "businessType"},
+            {label: "Area mq", key: "areaInMq"},
+            {label: "Potenza contrattuale", key: "contractualPower"},
+            {label: "Stato", key: "country"},
+            {label: "Indirizzo", key: "address"},
+            {label: "Provincia", key: "province"},
+            {label: "Location", key: "city"}
+        ];
+    },
     getTrendItems: function () {
         const theme = this.getTheme();
         return [
-            {icon: "good", iconColor: theme.colors.iconSiteButton, label: "Comfort:", key: "Comfort", value: "<=>"},
-            {icon: "middling", iconColor: theme.colors.iconSiteButton, label: "Energy consumption", key: "Energy consumption", value: "15%"},
-            {icon: "bad", iconColor: theme.colors.iconSiteButton, label: "Energy budget Kwh/€:", key: "Energy budget", value: "26%"}
+            {icon: "good-o", iconColor: theme.colors.iconActive, label: "Comfort:", key: "Comfort", value: "<=>"},
+            {icon: "middle-o", iconColor: theme.colors.iconMiddleWay, label: "Energy consumption", key: "Energy consumption", value: "15%"},
+            {icon: "bad-o", iconColor: theme.colors.iconInactive, label: "Energy budget Kwh/€:", key: "Energy budget", value: "26%"}
         ];
     },
     getLegendItems: function () {
         const theme = this.getTheme();
         return [
-            {icon: "alert", iconColor: theme.colors.iconSiteButton, label: "Allarme attivo", key: "Allarme"},
-            {icon: "monitoring", iconColor: theme.colors.iconSiteButton, label: "Stato connessione", key: "Connessione"},
-            {icon: "gauge", iconColor: theme.colors.iconSiteButton, label: "Andamento consumi", key: "Consumi"},
-            {icon: "duplicate", iconColor: theme.colors.iconSiteButton, label: "Telecontrollo Innowatio", key: "Telecontrollo"},
-            {icon: "good", iconColor: theme.colors.iconSiteButton, label: "Comfort", key: "Comfort"}
+            {icon: "alarm-o", iconColor: theme.colors.iconActive, label: "Allarme attivo", key: "Allarme"},
+            {icon: "connection-o", iconColor: theme.colors.iconActive, label: "Stato connessione", key: "Connessione"},
+            {icon: "consumption-o", iconColor: theme.colors.iconActive, label: "Andamento consumi", key: "Consumi"},
+            {icon: "remote-control-o", iconColor: theme.colors.iconActive, label: "Telecontrollo Innowatio", key: "Telecontrollo"},
+            {icon: "good-o", iconColor: theme.colors.iconActive, label: "Comfort", key: "Comfort"}
         ];
     },
     getSitesRecap: function () {
@@ -265,6 +289,7 @@ var MultiSite = React.createClass({
     },
 
     renderTabContent: function () {
+        const theme = this.getTheme();
         const trend = this.getTrendItems().map(item => {
             return (
                 <div
@@ -276,33 +301,28 @@ var MultiSite = React.createClass({
                     key={item.key}
                 >
                     <span style={{
-                        fontSize: "15px",
-                        textAlign: "left",
-                        fontWeight: "300",
-                        textOverflow: "ellipsis",
-                        whiteSpace: "nowrap",
-                        overflow: "hidden"
+                        width: "calc(100% - 75px)",
+                        ...styles(theme).trendText
                     }}>
                         {item.label}
                     </span>
-                    <div style={{float: "right", textAlign: "right", width: "100px"}}>
+                    <div style={{float: "right", textAlign: "right", width: "75px"}}>
                         <Icon
                             color={item.iconColor}
                             icon={item.icon}
-                            size={"24px"}
+                            size={"28px"}
                             style={{
-                                marginRight: "10px"
+                                marginRight: "5px",
+                                width: "30px",
+                                height: "30px",
+                                lineHeight: "30px"
                             }}
                         />
                         <span style={{
+                            ...styles(theme).trendText,
+                            width: "40px",
                             display: "inline-block",
-                            width: "50px",
-                            fontSize: "15px",
-                            textAlign: "left",
-                            fontWeight: "300",
-                            textOverflow: "ellipsis",
-                            whiteSpace: "nowrap",
-                            overflow: "hidden"
+                            textAlign: "right"
                         }}>
                             {item.value}
                         </span>
@@ -411,10 +431,10 @@ var MultiSite = React.createClass({
         const theme = this.getTheme();
         const sites = this.getSitesRecap().map(item => {
             return (
-                <bootstrap.Col xs={6} key={item.key} className="item-col">
+                <bootstrap.Col className="subitem-col" xs={6} key={item.key}>
                     <Radium.Style
-                        rules={styles(theme).colItemWrp}
-                        scopeSelector=".item-col"
+                        rules={{paddingLeft: "5px", paddingRight: "5px"}}
+                        scopeSelector=".subitem-col"
                     />
                     <div style={styles(theme).siteRecapWrp}>
                         <h2 style={styles(theme).siteRecap}>
@@ -442,10 +462,10 @@ var MultiSite = React.createClass({
                 <span style={{fontSize: "15px", fontWeight: "300"}}>
                     {moment().format("ddd D MMM YYYY - [  h] HH:mm")}
                 </span>
-                <bootstrap.Row className="data-row">
+                <bootstrap.Row className="row-data">
                     <Radium.Style
-                        rules={styles(theme).rowDataWrp}
-                        scopeSelector=".data-row"
+                        rules={{marginRight: "-5px", marginLeft: "-5px"}}
+                        scopeSelector=".row-data"
                     />
                     {this.renderSiteRecap()}
                 </bootstrap.Row>
@@ -502,8 +522,12 @@ var MultiSite = React.createClass({
     renderSearchAction: function () {
         const theme = this.getTheme();
         return (
-            <bootstrap.Col xs={12} style={{width: "100%"}}>
-                <div style={{float: "left", width: "calc(100% - 230px)"}}>
+            <bootstrap.Col className="item-col" xs={12} style={{...styles(theme).searchTools, width: "100%"}}>
+                <Radium.Style
+                    rules={styles(theme).colItemWrp}
+                    scopeSelector=".item-col"
+                />
+                <div style={{float: "left", width: "calc(100% - 230px)", padding: "0px 5px"}}>
                     <InputFilter
                         onChange={this.onChangeInputFilter}
                     />
@@ -518,16 +542,16 @@ var MultiSite = React.createClass({
                                 style={{verticalAlign: "middle"}}
                             />
                         </Button>
+                        <ButtonFilter
+                            activeFilter={this.props.collections}
+                            filterList={multisiteButtonFilter}
+                            onConfirm={this.onChangeInputFilter}
+                        />
+                        <ButtonSortBy
+                            activeSortBy={this.props.collections}
+                            filterList={multisiteButtonSortBy}
+                        />
                     </div>
-                    <ButtonFilter
-                        activeFilter={this.props.collections}
-                        filterList={multisiteButtonFilter}
-                        onConfirm={this.onChangeInputFilter}
-                    />
-                    <ButtonSortBy
-                        activeSortBy={this.props.collections}
-                        filterList={multisiteButtonSortBy}
-                    />
                 </div>
             </bootstrap.Col>
         );
@@ -584,14 +608,21 @@ var MultiSite = React.createClass({
         const theme = this.getTheme();
         const legend = this.getLegendItems().map(item => {
             return (
-                <li key={item.key} style={{listStyle: "none", marginTop: "5px"}}>
+                <li key={item.key} style={{listStyle: "none"}}>
                     <Icon
                         color={item.iconColor}
                         icon={item.icon}
-                        size={"28px"}
-                        style={{marginRight: "10px", verticalAlign: "middle"}}
+                        size={"36px"}
+                        style={{
+                            display: "inline-block",
+                            height: "42px",
+                            width: "36px",
+                            lineHeight: "36px",
+                            marginRight: "10px",
+                            verticalAlign: "middle"
+                        }}
                     />
-                    <label style={{fontWeight: "300", fontSize: "15px"}}>
+                    <label style={{fontWeight: "300", fontSize: "16px"}}>
                         {item.label}
                     </label>
                 </li>
@@ -667,18 +698,19 @@ var MultiSite = React.createClass({
                 <bootstrap.Row>
                     {
                         this.getSites()
-                            .filter((site) => {
-                                const input = this.state.input;
-                                return (site.get("name") || "").toLowerCase().includes(input.toLowerCase()) || (site.get("address") || "").toLowerCase().includes(input.toLowerCase());
-                            })
-                            .map((site) => {
-                                return (
-                                    <SiteStatus
-                                        siteName={site.get("name")}
-                                        siteAddress={site.get("address")}
-                                    />
-                                );
-                            })
+                        .filter((site) => {
+                            const input = this.state.input;
+                            return (site.get("name") || "").toLowerCase().includes(input.toLowerCase()) || (site.get("address") || "").toLowerCase().includes(input.toLowerCase());
+                        })
+                        .map((site) => {
+                            return (
+                                <SiteStatus
+                                    siteName={site.get("name")}
+                                    siteInfo={this.getSiteInfo()}
+                                    siteAddress={site.get("address")}
+                                />
+                            );
+                        })
                     }
                 </bootstrap.Row>
             </bootstrap.Col>
@@ -691,7 +723,7 @@ var MultiSite = React.createClass({
             <content style={styles(theme).pageContent}>
                 <bootstrap.Row className="data-row">
                     <Radium.Style
-                        rules={styles(theme).rowDataWrp}
+                        rules={{marginRight: "-5px", marginLeft: "-5px", padding: "0 5px"}}
                         scopeSelector=".data-row"
                     />
                     <DashboardBox>
@@ -707,10 +739,18 @@ var MultiSite = React.createClass({
                         {this.renderAssetsStatus()}
                     </DashboardBox>
                 </bootstrap.Row>
-                <bootstrap.Row style={styles(theme).searchTools}>
+                <bootstrap.Row className="search-tool">
+                    <Radium.Style
+                        rules={styles(theme).rowDataWrp}
+                        scopeSelector=".search-tool"
+                    />
                     {this.renderSearchAction()}
                 </bootstrap.Row>
-                <bootstrap.Row>
+                <bootstrap.Row className="site-sidebar">
+                    <Radium.Style
+                        rules={styles(theme).rowDataWrp}
+                        scopeSelector=".site-sidebar"
+                    />
                     {this.renderSites()}
                     {this.renderSidebar()}
                 </bootstrap.Row>
