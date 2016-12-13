@@ -29,18 +29,23 @@ export function selectAlarm (alarm) {
 /**
 *   Reset of the alarm form view
 */
-export function resetAlarmFormView () {
+export function resetSelectAlarm () {
     return {
         type: SELECT_ALARM_RESET
     };
 }
 
+export const ALARM_UPSERT_START = "ALARM_UPSERT_START";
 export const ALARM_UPSERT_SUCCESS = "ALARM_UPSERT_SUCCESS";
 export const ALARM_UPSERT_ERROR = "ALARM_UPSERT_ERROR";
 export const ALARM_UPSERT_RESET = "ALARM_UPSERT_RESET";
 
 export function upsertAlarm ({_id, name, userId, sensorId, rule, type, thresholdRule, threshold, unitOfMeasurement, measurementType, email}) {
     return (dispatch) => {
+
+        dispatch({
+            type: ALARM_UPSERT_START
+        });
 
         const alarm = {
             name,
@@ -61,7 +66,7 @@ export function upsertAlarm ({_id, name, userId, sensorId, rule, type, threshold
         });
 
         if (_id) {
-            axios.put(`${WRITE_API_ENDPOINT}/alarms/${_id}`, alarm)
+            axios.put(`https://${WRITE_API_ENDPOINT}/alarms/${_id}`, alarm)
                 .then(() => dispatch({
                     type: ALARM_UPSERT_SUCCESS
                 }))
@@ -69,7 +74,7 @@ export function upsertAlarm ({_id, name, userId, sensorId, rule, type, threshold
                     type: ALARM_UPSERT_ERROR
                 }));
         } else {
-            axios.post(`${WRITE_API_ENDPOINT}/alarms/`, alarm)
+            axios.post(`https://${WRITE_API_ENDPOINT}/alarms/`, alarm)
                 .then(() => dispatch({
                     type: ALARM_UPSERT_SUCCESS
                 }))

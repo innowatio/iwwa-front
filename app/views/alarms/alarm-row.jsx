@@ -85,7 +85,7 @@ var AlarmRow = React.createClass({
             element
         } = this.props;
         const alarmName = element.get("name") || "Allarme";
-        return `${alarmName} ${element.get("threshold")} ${element.get("unitOfMeasurement")} - ${lastTrigger.timestamp > 0 ? lastTrigger.formatted : ""}`;
+        return `${alarmName} ${element.get("threshold")} ${element.get("unitOfMeasurement")} ${lastTrigger.timestamp > 0 ? lastTrigger.formatted : ""}`;
     },
     render: function () {
         const {colors} = this.getTheme();

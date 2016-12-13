@@ -34,9 +34,9 @@ var AlarmNotificationModal = React.createClass({
     },
     getNotificationOptions: function () {
         return [
-            {label: "Email", key: "mail", action: this.actionPutOrRemoveInArray},
+            {label: "Notifiche App", key: "push", action: this.actionPutOrRemoveInArray},
+            {label: "Email", key: "mail", action: this.actionPutOrRemoveInArray}
             // {label: "Sms", key: "sms", action: this.actionPutOrRemoveInArray},
-            {label: "Notifiche App", key: "push", action: this.actionPutOrRemoveInArray}
         ];
     },
     labelParser: function () {

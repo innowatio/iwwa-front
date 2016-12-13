@@ -1,3 +1,5 @@
+import R from "ramda";
+import Radium from "radium";
 import React, {PropTypes} from "react";
 import ReactPureRender from "react-addons-pure-render-mixin";
 import {
@@ -8,7 +10,9 @@ import {
 import ImmutablePropTypes from "react-immutable-proptypes";
 
 import {
+    AlarmNotificationModal,
     Button,
+    ButtonGroupSelect,
     Icon,
     Popover,
     SelectTree,
@@ -40,23 +44,34 @@ const styleSiteButton = ({colors}) => ({
 });
 
 const defaultState = {
+    _id: undefined,
     name: "",
-    userId: "",
     sensorId: "",
     type: "daily",
     thresholdRule: "{\"$gt\": 300}",
     threshold: 300,
     unitOfMeasurement: "kWh",
     measurementType: "activeEnergy",
-    email: true
+    notifications: ["push"]
 };
+
+const measurementTypeButtonStyle = (theme) => R.merge(styles(theme).buttonSelectChart, {
+    minWidth: "132px",
+    height: "45px",
+    fontSize: "15px",
+    fontWeight: "300",
+    margin: "0 0 0 10px",
+    padding: "0px"
+});
 
 var AlarmForm = React.createClass({
     propTypes: {
         alarm: PropTypes.object,
         onReset: PropTypes.func.isRequired,
         onSubmit: PropTypes.func.isRequired,
-        siti: ImmutablePropTypes.map.isRequired
+        siti: ImmutablePropTypes.map.isRequired,
+        status: PropTypes.string,
+        userId: PropTypes.string
     },
     contextTypes: {
         theme: React.PropTypes.object
@@ -78,8 +93,23 @@ var AlarmForm = React.createClass({
     submit: function () {
         this.props.onSubmit({
             ...this.state,
-            rule: `{\"$and\": [{\"measurementType\": \"${this.state.measurementType}\"}, {\"source\": \"reading\"}]}`
+            rule: `{\"$and\": [{\"measurementType\": \"${this.state.measurementType}\"}, {\"source\": \"reading\"}]}`,
+            userId: this.props.userId,
+            email: R.contains("mail", this.state.notifications)
         });
+    },
+    getSubmitButtonLabel: function () {
+        const {status} = this.props;
+        switch (status) {
+            case "started":
+                return "CREAZIONE IN CORSO";
+            case "success":
+                return "ALLARME CREATO";
+            case "error":
+                return "ERRORE";
+            default:
+                return "CREA";
+        }
     },
     renderAlarmName: function () {
         const theme = this.getTheme();
@@ -99,6 +129,7 @@ var AlarmForm = React.createClass({
         const theme = this.getTheme();
         return (
             <div>
+                <Spacer direction="v" size={40} />
                 <h3 style={styleH3(theme)}>{"Seleziona un punto da monitorare"}</h3>
                 <Row>
                     <Col xs={10}>
@@ -114,16 +145,18 @@ var AlarmForm = React.createClass({
                             arrow="none"
                             hideOnChange={true}
                             title={(
-                                <TooltipIconButton
-                                    buttonClassName={"pull-right"}
-                                    buttonStyle={styleSiteButton(theme)}
-                                    icon={"map"}
-                                    iconColor={theme.colors.iconSiteButton}
-                                    iconSize={"38px"}
-                                    iconStyle={{textAlign: "center", verticalAlign: "middle"}}
-                                    onButtonClick={this.openModal}
-                                    tooltipText={"Visualizza i tuoi punti di misurazione"}
-                                />
+                                <span>
+                                    <TooltipIconButton
+                                        buttonClassName={"pull-right"}
+                                        buttonStyle={styleSiteButton(theme)}
+                                        icon={"map"}
+                                        iconColor={theme.colors.iconSiteButton}
+                                        iconSize={"38px"}
+                                        iconStyle={{textAlign: "center", verticalAlign: "middle"}}
+                                        onButtonClick={this.openModal}
+                                        tooltipText={"Visualizza i tuoi punti di misurazione"}
+                                    />
+                                </span>
                             )}
                         >
                             <SelectTree
@@ -142,18 +175,76 @@ var AlarmForm = React.createClass({
             </div>
         );
     },
-    renderAlarmMeasurementType: function () {
+    renderAlarmVariables: function () {
         const theme = this.getTheme();
+        const allowedValues = [{
+            label: "Energia attiva", key: "activeEnergy"
+        }, {
+            label: "Potenza", key: "maxPower"
+        }, {
+            label: "Energia reattiva", key: "reactiveEnergy"
+        }];
+        const value = allowedValues.find(x => x.key === this.state.measurementType);
         return (
             <div>
-                <h3 style={styleH3(theme)}>{"Tipo di misura"}</h3>
-                <FormControl
-                    style={styles(theme).inputLine}
-                    type="text"
-                    onChange={input => this.setState({measurementType: input.target.value})}
-                    value={this.state.measurementType}
+                <h3 style={styleH3(theme)}>{Globalization.italian.titleAlarmVariables}</h3>
+                <Spacer direction={"v"} size={20} />
+                <ButtonGroupSelect
+                    allowedValues={allowedValues}
+                    getKey={R.prop("key")}
+                    getLabel={R.prop("label")}
+                    onChange={(input) => this.setState({measurementType: input[0].key})}
+                    style={measurementTypeButtonStyle(theme)}
+                    styleToMergeWhenActiveState={{
+                        background: theme.colors.backgroundChartSelectedButton,
+                        color: theme.colors.textSelectButton,
+                        border: `1px solid ${theme.colors.borderChartSelectedButton}`
+                    }}
+                    value={[value]}
                 />
             </div>
+        );
+    },
+    renderAlarmMeasurementType: function () {
+        const theme = this.getTheme();
+        const allowedValues = [{
+            label: "Realtime", key: "realtime"
+        }, {
+            label: "Giornaliero", key: "daily"
+        }, {
+            label: "Mensile", key: "monthly"
+        }];
+        const value = allowedValues.find(x => x.key === this.state.type);
+        return (
+            <div>
+                <h3 style={styleH3(theme)}>{Globalization.italian.typeOfAlarm}</h3>
+                <Spacer direction={"v"} size={20} />
+                <ButtonGroupSelect
+                    allowedValues={allowedValues}
+                    getKey={R.prop("key")}
+                    getLabel={R.prop("label")}
+                    onChange={(input) => this.setState({type: input[0].key})}
+                    style={measurementTypeButtonStyle(theme)}
+                    styleToMergeWhenActiveState={{
+                        background: theme.colors.backgroundChartSelectedButton,
+                        color: theme.colors.textSelectButton,
+                        border: `1px solid ${theme.colors.borderChartSelectedButton}`
+                    }}
+                    value={[value]}
+                />
+            </div>
+        );
+    },
+    renderAlarmNotification: function () {
+        return (
+            <AlarmNotificationModal
+                updateParentState={({notification}) => {
+                    this.setState({
+                        notifications: notification
+                    });
+                }}
+                value={this.state.notifications}
+            />
         );
     },
     renderAlarmUnitOfMeasurement: function () {
@@ -195,6 +286,10 @@ var AlarmForm = React.createClass({
                     </h4>
                     <Spacer direction="v" size={10} />
                     <div className="inputRangeBar">
+                        <Radium.Style
+                            rules={styles(theme).inputRangeBar}
+                            scopeSelector=".inputRangeBar"
+                        />
                         <FormControl
                             bsStyle={"success"}
                             max={600}
@@ -257,7 +352,7 @@ var AlarmForm = React.createClass({
                     border: "0px"
                 }}
             >
-                {"CREA"}
+                {this.getSubmitButtonLabel()}
             </Button>
         );
     },
@@ -282,27 +377,44 @@ var AlarmForm = React.createClass({
     },
     render: function () {
         return (
-            <div className="alarm-form" style={{padding: "25px", height: "100%"}}>
+            <Row className="alarm-form" style={{padding: "25px", height: "100%"}}>
                 <Col lg={12} style={{height: "calc(100vh - 420px)"}}>
-                    <Col lg={6} md={6} xs={12}>
-                        <Row style={{padding: "10px"}}>
+                    <Row>
+                        <Col lg={6} md={6} xs={12}>
+                            <Row style={{padding: "10px"}}>
+                                {this.renderAlarmName()}
+                            </Row>
+                            <Row style={{padding: "10px"}}>
                             {this.renderAlarmSelectSite()}
-                        </Row>
-                        <Row style={{padding: "10px"}}>
-                            {this.renderAlarmName()}
-                        </Row>
-                    </Col>
-                    <Col lg={6} md={6} xs={12}>
-                        <Row style={{padding: "10px"}}>
-                            {this.renderAlarmMeasurementType()}
-                        </Row>
-                        <Row style={{padding: "10px"}}>
-                            {this.renderAlarmUnitOfMeasurement()}
-                        </Row>
-                        <Row style={{padding: "10px"}}>
-                            {this.renderAlarmThreshold()}
-                        </Row>
-                    </Col>
+                            </Row>
+                        </Col>
+
+                        <Col lg={6} md={6} xs={12}>
+                            <Row style={{padding: "10px"}}>
+                                {this.renderAlarmUnitOfMeasurement()}
+                            </Row>
+                            <Row style={{padding: "10px"}}>
+                                {this.renderAlarmThreshold()}
+                            </Row>
+                        </Col>
+                    </Row>
+
+                    <Row>
+                        <Col lg={6} md={6} xs={12}>
+                            <Row style={{padding: "10px"}}>
+                                {this.renderAlarmVariables()}
+                            </Row>
+                            <Row style={{padding: "10px"}}>
+                                {this.renderAlarmNotification()}
+                            </Row>
+                        </Col>
+
+                        <Col lg={6} md={6} xs={12}>
+                            <Row style={{padding: "10px"}}>
+                                {this.renderAlarmMeasurementType()}
+                            </Row>
+                        </Col>
+                    </Row>
                 </Col>
                 <Col style={{paddingTop: "8vh", textAlign: "center"}} xs={12}>
                     <Row style={{padding: "10px"}}>
@@ -310,7 +422,7 @@ var AlarmForm = React.createClass({
                         {this.renderResetButton()}
                     </Row>
                 </Col>
-            </div>
+            </Row>
         );
     }
 });
