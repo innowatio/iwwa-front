@@ -75,7 +75,7 @@ var SiteStatus = React.createClass({
     propTypes: {
         onClick: PropTypes.func,
         siteAddress: PropTypes.string.isRequired,
-        siteInfo: PropTypes.string.isRequired,
+        siteInfo: PropTypes.array.isRequired,
         siteName: PropTypes.string.isRequired
     },
     contextTypes: {
@@ -180,7 +180,7 @@ var SiteStatus = React.createClass({
                 }}>
                     <div style={{width: "100%", ...styles(theme).SiteSecondaryTextWrp}}>
                         <div style={styles(theme).SiteSecondaryText}>
-                            {`${item.label}`}
+                            {`${item.label}: ${item.value}`}
                         </div>
                     </div>
                 </div>

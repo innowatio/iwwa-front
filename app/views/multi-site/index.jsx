@@ -705,12 +705,21 @@ var MultiSite = React.createClass({
                         .map(site => {
                             return (
                                 <SiteStatus
+                                    key={site.get("_id")}
                                     siteName={site.get("name")}
-                                    siteInfo={this.getSiteInfo()}
-                                    siteAddress={site.get("address")}
+                                    siteInfo={
+                                        this.getSiteInfo().map(info => {
+                                            return {
+                                                key: info.key,
+                                                label: info.label,
+                                                value: site.get(info.key) || ""
+                                            };
+                                        })
+                                    }
+                                    siteAddress={site.get("address") || ""}
                                 />
                             );
-                        })
+                        }).toArray()
                     }
                 </bootstrap.Row>
             </bootstrap.Col>

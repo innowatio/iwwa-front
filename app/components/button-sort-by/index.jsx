@@ -222,8 +222,8 @@ var ButtonSortBy = React.createClass({
             <span style={styles(this.getTheme()).titleButtonPopover}>
                 <components.Icon
                     color={colors.iconSortBy}
-                    icon={"arrow-down"}
-                    size={"38px"}
+                    icon={"sort-by"}
+                    size={"32px"}
                     style={styles(this.getTheme()).iconSortBy}
                 />
             </span>
