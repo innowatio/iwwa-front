@@ -74,6 +74,7 @@ const styles = (theme) => ({
 var SiteStatus = React.createClass({
     propTypes: {
         onClick: PropTypes.func,
+        parameterStatus: PropTypes.object.isRequired,
         siteAddress: PropTypes.string.isRequired,
         siteInfo: PropTypes.array.isRequired,
         siteName: PropTypes.string.isRequired
@@ -86,14 +87,26 @@ var SiteStatus = React.createClass({
             open: false
         };
     },
-    getSiteStatus: function () {
+    getColorByStatus: function (status) {
         const theme = this.getTheme();
+        switch (status) {
+            case "ACTIVE":
+                return theme.colors.iconActive;
+            case "ERROR":
+                return theme.colors.iconError;
+            case "WARNING":
+                return theme.colors.iconWarning;
+            default:
+                return theme.colors.iconInactive;
+        }
+    },
+    getSiteStatus: function () {
         return [
-            {icon: "alarm-o", iconColor: theme.colors.iconSiteButton, key: "Allarme"},
-            {icon: "connection-o", iconColor: theme.colors.iconSiteButton, key: "Connessione"},
-            {icon: "consumption-o", iconColor: theme.colors.iconSiteButton, key: "Consumi"},
-            {icon: "remote-control-o", iconColor: theme.colors.iconSiteButton, key: "Telecontrollo"},
-            {icon: "good-o", iconColor: theme.colors.iconSiteButton, key: "Comfort"}
+            {icon: "alarm-o", iconColor: this.getColorByStatus(this.props.parameterStatus.alarm), key: "Allarme"},
+            {icon: "connection-o", iconColor: this.getColorByStatus(this.props.parameterStatus.connection), key: "Connessione"},
+            {icon: "consumption-o", iconColor: this.getColorByStatus(this.props.parameterStatus.consumption), key: "Consumi"},
+            {icon: "remote-control-o", iconColor: this.getColorByStatus(this.props.parameterStatus.remoteControl), key: "Telecontrollo"},
+            {icon: "good-o", iconColor: this.getColorByStatus(this.props.parameterStatus.comfort), key: "Comfort"}
         ];
     },
     getTheme: function () {

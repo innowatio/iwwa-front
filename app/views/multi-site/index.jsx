@@ -251,8 +251,8 @@ var MultiSite = React.createClass({
         const theme = this.getTheme();
         return [
             {icon: "good-o", iconColor: theme.colors.iconActive, label: "Comfort:", key: "Comfort", value: "<=>"},
-            {icon: "middle-o", iconColor: theme.colors.iconMiddleWay, label: "Energy consumption", key: "Energy consumption", value: "15%"},
-            {icon: "bad-o", iconColor: theme.colors.iconInactive, label: "Energy budget Kwh/€:", key: "Energy budget", value: "26%"}
+            {icon: "middle-o", iconColor: theme.colors.iconWarning, label: "Energy consumption", key: "Energy consumption", value: "15%"},
+            {icon: "bad-o", iconColor: theme.colors.iconError, label: "Energy budget Kwh/€:", key: "Energy budget", value: "26%"}
         ];
     },
     getLegendItems: function () {
@@ -706,6 +706,7 @@ var MultiSite = React.createClass({
                             return (
                                 <SiteStatus
                                     key={site.get("_id")}
+                                    parameterStatus={{}}
                                     siteName={site.get("name")}
                                     siteInfo={
                                         this.getSiteInfo().map(info => {
