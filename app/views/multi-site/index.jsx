@@ -2,6 +2,8 @@ import Immutable  from "immutable";
 import React from "react";
 import * as bootstrap from "react-bootstrap";
 import Radium from "radium";
+import {bindActionCreators} from "redux";
+import {selectSingleElectricalSensor} from "actions/chart";
 
 import {connect} from "react-redux";
 import {defaultTheme} from "lib/theme";
@@ -186,7 +188,8 @@ var MultiSite = React.createClass({
     propTypes: {
         asteroid: React.PropTypes.object,
         collections: React.PropTypes.any,
-        multisite: React.PropTypes.object
+        multisite: React.PropTypes.object,
+        selectSingleElectricalSensor: React.PropTypes.func.isRequired
     },
     contextTypes: {
         theme: React.PropTypes.object
@@ -198,6 +201,9 @@ var MultiSite = React.createClass({
     },
     componentDidMount: function () {
         this.props.asteroid.subscribe("sites");
+        this.props.asteroid.subscribe("alarms-aggregates", this.getSites().keys());
+    },
+    componentWillReceiveProps: function () {
     },
     getTitleTab: function (period) {
         switch (period) {
@@ -234,6 +240,11 @@ var MultiSite = React.createClass({
     getTheme: function () {
         return this.context.theme || defaultTheme;
     },
+
+    getAlarmStatus: function () {
+        return "ACTIVE";
+    },
+
     getSiteInfo: function () {
         return [
             {label: "ID", key: "_id"},
@@ -706,7 +717,14 @@ var MultiSite = React.createClass({
                             return (
                                 <SiteStatus
                                     key={site.get("_id")}
-                                    parameterStatus={{}}
+                                    onClickAlarmChart={this.props.selectSingleElectricalSensor}
+                                    parameterStatus={{
+                                        alarm: this.getAlarmStatus(),
+                                        connection: "",
+                                        consumption: "",
+                                        remoteControl: "",
+                                        comfort: ""
+                                    }}
                                     siteName={site.get("name")}
                                     siteInfo={
                                         this.getSiteInfo().map(info => {
@@ -774,4 +792,11 @@ function mapStateToProps (state) {
         collections: state.collections
     };
 }
-module.exports = connect(mapStateToProps)(MultiSite);
+
+function mapDispatchToProps (dispatch) {
+    return {
+        selectSingleElectricalSensor: bindActionCreators(selectSingleElectricalSensor, dispatch)
+    };
+}
+
+module.exports = connect(mapStateToProps, mapDispatchToProps)(MultiSite);

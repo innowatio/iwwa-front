@@ -7,6 +7,7 @@ import {
     Button,
     Icon
 } from "components";
+import {Link} from "react-router";
 
 const styles = (theme) => ({
     siteWrp: {
@@ -35,8 +36,7 @@ const styles = (theme) => ({
         fontWeight: "300"
     },
     SiteSecondaryTextWrp: {
-        padding: "10px 10px",
-        borderBottom: `1px solid ${theme.colors.borderContentModal}`
+        padding: "10px"
     },
     SiteSecondaryText: {
         fontSize: "15px",
@@ -59,6 +59,7 @@ const styles = (theme) => ({
         color: theme.colors.white
     },
     buttonHistoricalConsumption: {
+        display: "block",
         height: "40px",
         width: "40px",
         lineHeight: "44px",
@@ -73,7 +74,8 @@ const styles = (theme) => ({
 
 var SiteStatus = React.createClass({
     propTypes: {
-        onClick: PropTypes.func,
+        key: PropTypes.string,
+        onClickAlarmChart: PropTypes.func,
         parameterStatus: PropTypes.object.isRequired,
         siteAddress: PropTypes.string.isRequired,
         siteInfo: PropTypes.array.isRequired,
@@ -86,6 +88,13 @@ var SiteStatus = React.createClass({
         return {
             open: false
         };
+    },
+    getAlarmInfo: function () {
+        return [
+            {label: "Tot allarmi diurni", value: "4", key: "day alarm"},
+            {label: "Tot allarmi notturni", value: "3", key: "night alarm"},
+            {label: "Ultimo aggiornamento", value: "14.12.2016", key: "last update"}
+        ];
     },
     getColorByStatus: function (status) {
         const theme = this.getTheme();
@@ -128,6 +137,7 @@ var SiteStatus = React.createClass({
     },
     renderPrimaryInfo: function () {
         const theme = this.getTheme();
+        const id = this.props.siteInfo.find(x => x.key === "_id");
         return (
             <div style={styles(theme).siteWrp}>
                 <div style={{width: "100%", clear: "both"}}>
@@ -164,9 +174,10 @@ var SiteStatus = React.createClass({
                         {this.renderSiteStatus()}
                     </div>
                     <div style={{width: "40px", height: "40px", float: "right"}}>
-                        <Button
+                        <Link
+                            to={"/chart/"}
                             style={styles(theme).buttonHistoricalConsumption}
-                            onClick={this.props.onClick}
+                            onClick={() => this.props.onClickAlarmChart([id.value])}
                         >
                             <Icon
                                 color={theme.colors.iconSiteButton}
@@ -174,16 +185,31 @@ var SiteStatus = React.createClass({
                                 size={"22px"}
                                 style={{verticalAlign: "middle"}}
                             />
-                        </Button>
+                        </Link>
                     </div>
                 </div>
             </div>
         );
     },
 
-    renderSecondaryInfo: function () {
+    renderAlarmsInfo: function () {
         const theme = this.getTheme();
-        const secondaryInfo = this.props.siteInfo.map(item => {
+        const alarmBox = this.getAlarmInfo().map(item => {
+            return (
+                <bootstrap.Col key={item.key} xs={12} lg={4} style={{margin: "20px 0px"}}>
+                    <div style={{border: `1px solid ${theme.colors.borderContentModal}`}}>
+                        <span>{item.label}</span>
+                        <p>{item.value}</p>
+                    </div>
+                </bootstrap.Col>
+            );
+        });
+        return alarmBox;
+    },
+
+    renderSiteInfo: function () {
+        const theme = this.getTheme();
+        const siteInfo = this.props.siteInfo.map(item => {
             return (
                 <div key={item.key} style={{
                     borderBottom: `1px solid ${theme.colors.borderContentModal}`,
@@ -199,7 +225,25 @@ var SiteStatus = React.createClass({
                 </div>
             );
         });
-        return secondaryInfo;
+        return siteInfo;
+    },
+
+    renderSecondaryInfo: function () {
+        const theme = this.getTheme();
+        return (
+            <div>
+                <div style={{
+                    borderBottom: `1px solid ${theme.colors.borderContentModal}`,
+                    borderLeft: `1px solid ${theme.colors.borderContentModal}`,
+                    borderRight: `1px solid ${theme.colors.borderContentModal}`,
+                    backgroundColor: theme.colors.backgroundContentModal
+                }}>
+                    {this.renderAlarmsInfo()}
+                    <div style={{clear: "both"}}></div>
+                </div>
+                {this.renderSiteInfo()}
+            </div>
+        );
     },
 
     render: function () {
