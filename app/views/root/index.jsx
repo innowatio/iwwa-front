@@ -30,9 +30,10 @@ const stylesFunction = ({colors}) => ({
         width: "100%",
         top: measures.headerHeight,
         backgroundColor: colors.background,
-        height: `calc(100vh - ${measures.headerHeight})`,
+        height: `calc(100vh - ${measures.headerHeight} - ${measures.footerHeight})`,
         transition: "left 0.3s ease",
-        overflow: "auto"
+        overflow: "auto",
+        marginBottom: measures.footerHeight
     },
     sidebar: {
         position: "absolute",
@@ -50,7 +51,7 @@ const stylesFunction = ({colors}) => ({
         backgroundColor: colors.backgroundFooter,
         color: colors.textFooter,
         fontWeight: 300,
-        lineHeight: "30px",
+        lineHeight: measures.footerHeight,
         height: measures.footerHeight,
         width: "100%",
         bottom: "0px",
