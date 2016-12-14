@@ -13,10 +13,11 @@ const styles = (theme) => ({
     siteWrp: {
         display: "block",
         padding: "8px 10px",
+        position: "relative",
         minHeight: "100px",
         textAlign: "left",
-        border: `1px solid ${theme.colors.borderContentModal}`,
-        backgroundColor: theme.colors.backgroundContentModal
+        border: `1px solid ${theme.colors.borderBoxMultisite}`,
+        backgroundColor: theme.colors.backgroundBoxMultisite
     },
     siteNameWrp: {
         width: "calc(100% - 40px)",
@@ -57,6 +58,12 @@ const styles = (theme) => ({
         lineHeight: "20px",
         fontWeight: "300",
         color: theme.colors.white
+    },
+    singleInfoWrp: {
+        borderBottom: `1px solid ${theme.colors.borderBoxMultisite}`,
+        borderLeft: `1px solid ${theme.colors.borderBoxMultisite}`,
+        borderRight: `1px solid ${theme.colors.borderBoxMultisite}`,
+        backgroundColor: theme.colors.backgroundBoxMultisite
     },
     buttonHistoricalConsumption: {
         display: "block",
@@ -197,7 +204,7 @@ var SiteStatus = React.createClass({
         const alarmBox = this.getAlarmInfo().map(item => {
             return (
                 <bootstrap.Col key={item.key} xs={12} lg={4} style={{margin: "20px 0px"}}>
-                    <div style={{border: `1px solid ${theme.colors.borderContentModal}`}}>
+                    <div style={{border: `1px solid ${theme.colors.borderBoxMultisite}`}}>
                         <span>{item.label}</span>
                         <p>{item.value}</p>
                     </div>
@@ -211,12 +218,7 @@ var SiteStatus = React.createClass({
         const theme = this.getTheme();
         const siteInfo = this.props.siteInfo.map(item => {
             return (
-                <div key={item.key} style={{
-                    borderBottom: `1px solid ${theme.colors.borderContentModal}`,
-                    borderLeft: `1px solid ${theme.colors.borderContentModal}`,
-                    borderRight: `1px solid ${theme.colors.borderContentModal}`,
-                    backgroundColor: theme.colors.backgroundContentModal
-                }}>
+                <div key={item.key} style={styles(theme).singleInfoWrp}>
                     <div style={{width: "100%", ...styles(theme).SiteSecondaryTextWrp}}>
                         <div style={styles(theme).SiteSecondaryText}>
                             {`${item.label}: ${item.value}`}
@@ -232,12 +234,7 @@ var SiteStatus = React.createClass({
         const theme = this.getTheme();
         return (
             <div>
-                <div style={{
-                    borderBottom: `1px solid ${theme.colors.borderContentModal}`,
-                    borderLeft: `1px solid ${theme.colors.borderContentModal}`,
-                    borderRight: `1px solid ${theme.colors.borderContentModal}`,
-                    backgroundColor: theme.colors.backgroundContentModal
-                }}>
+                <div style={styles(theme).singleInfoWrp}>
                     {this.renderAlarmsInfo()}
                     <div style={{clear: "both"}}></div>
                 </div>
@@ -260,6 +257,10 @@ var SiteStatus = React.createClass({
                     <Radium.Style
                         rules={{
                             "": {
+                                position: "absolute",
+                                left: "15px",
+                                right: "15px",
+                                zIndex: "100000",
                                 border: "0",
                                 backgroundColor: theme.colors.transparent,
                                 padding: "0px",

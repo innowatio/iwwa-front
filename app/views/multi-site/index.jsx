@@ -55,9 +55,9 @@ const styles = ({colors}) => ({
     },
     searchTools: {
         width: "100%",
-        borderTop: `1px solid ${colors.borderContentModal}`,
-        borderBottom: `1px solid ${colors.borderContentModal}`,
-        backgroundColor: colors.backgroundContentModal,
+        borderTop: `1px solid ${colors.borderBoxMultisite}`,
+        borderBottom: `1px solid ${colors.borderBoxMultisite}`,
+        backgroundColor: colors.backgroundBoxMultisite,
         marginBottom: "20px"
     },
     buttonConfront: {
@@ -103,18 +103,18 @@ const styles = ({colors}) => ({
         textAlign: "left",
         padding: "15px 20px",
         marginBottom: "20px",
-        borderBottom: `1px solid ${colors.borderContentModal}`,
-        borderRight: `1px solid ${colors.borderContentModal}`,
-        borderLeft: `1px solid ${colors.borderContentModal}`,
-        backgroundColor: colors.backgroundContentModal
+        borderBottom: `1px solid ${colors.borderBoxMultisite}`,
+        borderRight: `1px solid ${colors.borderBoxMultisite}`,
+        borderLeft: `1px solid ${colors.borderBoxMultisite}`,
+        backgroundColor: colors.backgroundBoxMultisite
     },
     legendTitleWrp: {
         padding: "0px",
         borderRadius: "0px",
         textAlign: "left",
         cursor: "pointer",
-        border: `1px solid ${colors.borderContentModal}`,
-        backgroundColor: colors.backgroundContentModal
+        border: `1px solid ${colors.borderBoxMultisite}`,
+        backgroundColor: colors.backgroundBoxMultisite
     },
     legendTitle: {
         display: "block",
@@ -740,6 +740,27 @@ var MultiSite = React.createClass({
                             );
                         }).toArray()
                     }
+                    <SiteStatus
+                        key={"ejkwndejwk"}
+                        onClickAlarmChart={this.props.selectSingleElectricalSensor}
+                        parameterStatus={{
+                            alarm: this.getAlarmStatus(),
+                            connection: "",
+                            consumption: "",
+                            remoteControl: "",
+                            comfort: ""
+                        }}
+                        siteName={"CUrno /.DS_Store"}
+                        siteInfo={
+                            this.getSiteInfo().map(info => {
+                                return {
+                                    key: info.key,
+                                    label: info.label
+                                };
+                            })
+                        }
+                        siteAddress={"Via jewonwieonwo"}
+                    />
                 </bootstrap.Row>
             </bootstrap.Col>
         );
