@@ -377,8 +377,8 @@ var AlarmForm = React.createClass({
     },
     render: function () {
         return (
-            <Row className="alarm-form" style={{padding: "25px", height: "100%"}}>
-                <Col lg={12} style={{height: "calc(100vh - 420px)"}}>
+            <Row className="alarm-form" style={{padding: "20px"}}>
+                <Col lg={12}>
                     <Row>
                         <Col lg={6} md={6} xs={12}>
                             <Row style={{padding: "10px"}}>
@@ -415,9 +415,8 @@ var AlarmForm = React.createClass({
                             </Row>
                         </Col>
                     </Row>
-                </Col>
-                <Col style={{paddingTop: "8vh", textAlign: "center"}} xs={12}>
-                    <Row style={{padding: "10px"}}>
+
+                    <Row style={{padding: "10px", textAlign: "center"}}>
                         {this.renderSubmitButton()}
                         {this.renderResetButton()}
                     </Row>
