@@ -173,6 +173,7 @@ var MonitoringChart = React.createClass({
         };
         if (props.chartState.timeInterval !== "all") {
             plotOptions.series.dataGrouping = {
+                forced: true,
                 units: [this.getTimeInterval(props.chartState.timeInterval)]
             };
         }
