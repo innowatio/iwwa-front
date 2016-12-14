@@ -105,7 +105,7 @@
     "react-toggle": "^2.1.1",
     "react-virtualized": "^8.0.13",
     "react-waypoint": "^2.0.2",
-    "react-widgets": "^3.3.1",
+    "react-widgets": "^3.4.5",
     "redux": "^3.5.2",
     "redux-action-type-validator": "^1.0.2",
     "redux-form": "^6.0.5",

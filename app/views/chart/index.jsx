@@ -1,9 +1,9 @@
 var Immutable  = require("immutable");
 var R          = require("ramda");
 var React      = require("react");
-var moment     = require("moment");
 var bootstrap  = require("react-bootstrap");
 var IPropTypes = require("react-immutable-proptypes");
+import moment from "moment";
 import {connect} from "react-redux";
 import {bindActionCreators} from "redux";
 
@@ -183,14 +183,34 @@ var Chart = React.createClass({
         chart.exportChart();
     },
 
-    exportCsv: function () {
+    exportCsv: function (exportStart, exportEnd) {
+        const sensorId = this.props.chartState.charts[0].sensorId;
+        var csvData = "";
+        console.log(exportStart);
+        console.log(exportEnd);
+        this.props.asteroid.call("getDailyAggregatesByRange", sensorId, exportStart, exportEnd).then(value => {
+            value.forEach(child => {
+                var times = child.measurementTimes.split(",");
+                var values = child.measurementValues.split(",");
+                for (var x=0; x < times.length; x++) {
+                    var date = moment(Number(times[x])).toISOString();
+                    csvData = csvData + child.sensorId + ";" + child.measurementType + ";" + date + ";" + values[x] +"\n";
+                }
+            });
+            const dataTypePrefix = "data:text/csv;base64,";
+            this.openDownloadLink(dataTypePrefix + window.btoa(csvData), "chart.csv");
+        });
+        /*
+        Export chart in CSV
         const exportAPILocation = this.refs.historicalGraph.refs.graphType.refs.highcharts.refs.chart;
         const chart = exportAPILocation.getChart();
         const csvData = chart.getCSV();
+        console.log(csvData);
         const dataTypePrefix = "data:text/csv;base64,";
         this.openDownloadLink(dataTypePrefix + window.btoa(csvData), "chart.csv");
-
+        */
     },
+
     subscribeToMisure: function (props) {
         const chartFilter = props.chartState.charts;
         const dateFirstChartState = chartFilter[0].date;
@@ -613,11 +633,14 @@ var Chart = React.createClass({
         );
     },
     renderExport: function () {
+        const {start, end} = this.props.chartState.charts[0].date;
         return (
             <Export
+                exportStart={start}
+                exportEnd={end}
                 exportPng={this.exportPng}
                 exportCsv={this.exportCsv}
-                title={"SCEGLI IL FORMATO CON CUI SCARICARE I DATI"}
+                title={"SELEZIONA IL RANGE E ESPORTA I DATI"}
             />
         );
     },

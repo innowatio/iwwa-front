@@ -15,6 +15,7 @@ export const colorsDarkTheme = {
     backgroundButtonCalendar: "rgba(0, 0, 0, 0)",
     backgroundButtonBottom: "rgba(0, 0, 0, 0.2)",
     backgroundButtonExport: "#536DFE",
+    backgroundCalendarExport: "#536dfe",
     backgroundButtonOpacity: "rgba(255,255,255,0.2)",
     backgroundCalendarArrowSwitch: "rgba(0, 0, 0, 0)",
     backgroundConfirmModal: "#3e50b4",
