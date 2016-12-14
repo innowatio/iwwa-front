@@ -8,6 +8,7 @@ exports.titleAlarmNotify          = "Attiva notifiche";
 exports.titleAlarmThreshold       = "Soglia allarme";
 exports.titleAlarmActive          = "Attivo";
 exports.titleAlarmRepeat          = "Ripetizione";
+exports.titleAlarmVariables       = "Seleziona variabili";
 
 // Login-modal
 exports.appName                   = "Lucy";

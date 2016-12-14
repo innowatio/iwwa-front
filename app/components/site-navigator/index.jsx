@@ -78,11 +78,21 @@ var SiteNavigator = React.createClass({
         return value.get("description") || value.get("id");
     },
     getFilterCriteria: function (values) {
-        const NOT_VISIBLE_SENSORS = ["POD-ANZ", "ACTIVEENERGY", "REACTIVEENERGY", "MAXPOWER",
-            "THL", "TEMPERATURE", "HUMIDITY", "ILLUMINANCE", "CO2"];
+
+        const notVisibleMeasurements = [
+            "co2",
+            "humidity",
+            "illuminance",
+            "temperature",
+            "weather-cloudeness",
+            "weather-humidity",
+            "weather-temperature",
+            "weather-id"
+        ];
 
         return values.filter((value) => {
-            return NOT_VISIBLE_SENSORS.indexOf((value.get("type") || "").toUpperCase()) < 0;
+            const measurementTypes = value.get("measurementTypes") || Immutable.List();
+            return measurementTypes.toArray().length === 0 || R.difference(measurementTypes.toArray(), notVisibleMeasurements).length > 0;
         });
     },
     getFilteredValues: function () {

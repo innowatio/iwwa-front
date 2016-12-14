@@ -59,7 +59,7 @@ var SensorVariableSelector = React.createClass({
                         return theme.colors.buttonPrimary;
                     }}
                     getKey={(value) => value["_id"]}
-                    getLabel={(value) => value["description"]}
+                    getLabel={(value) => value["description"] || value["name"]}
                     onChange={this.onChangeWithSensorId}
                     value={this.props.allowedValues.find((allowedValue) => allowedValue["_id"] === this.props.value)}
                     style={styles(theme).chartDropdownButton}
