@@ -130,9 +130,10 @@ var HighCharts = React.createClass({
     getAlarmsSeries: function (measurements) {
         const {alarmsData} = this.props;
         const alarmsSeries = alarmsData.map(alarm => {
-            const data = alarm.measurementTimes.split(",").map(time => {
+            const values = alarm.measurementValues.split(",");
+            const data = alarm.measurementTimes.split(",").map((time, index) => {
                 const measurement = measurements.find(x => x[0] >= time);
-                if (measurement) {
+                if (measurement && 1 === parseInt(values[index])) {
                     return [parseInt(time), measurements.find(x => x[0] >= time)[1]];
                 }
             }).filter(x => x);
