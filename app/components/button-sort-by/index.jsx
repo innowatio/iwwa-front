@@ -5,7 +5,11 @@ import ReactPureRender from "react-addons-pure-render-mixin";
 import RadioGroup from "react-radio-group";
 // import get from "lodash.get";
 
-import components from "components";
+import {
+    Icon,
+    Popover
+} from "components";
+
 import {defaultTheme} from "lib/theme";
 
 const styles = ({colors}) => ({
@@ -220,7 +224,7 @@ var ButtonSortBy = React.createClass({
         const {colors} = this.getTheme();
         return (
             <span style={styles(this.getTheme()).titleButtonPopover}>
-                <components.Icon
+                <Icon
                     color={colors.iconSortBy}
                     icon={"sort-by"}
                     size={"32px"}
@@ -232,11 +236,11 @@ var ButtonSortBy = React.createClass({
     render: function () {
         return (
             <div style={{height: "auto", float: "right"}}>
-                <components.Popover title={this.renderTitlePopover()}>
+                <Popover title={this.renderTitlePopover()}>
                     <div style={styles(this.getTheme()).sortBy}>
-                        {"Ordina per:"}
+                        {"Visualizza in ordine di:"}
                     </div>
-                </components.Popover>
+                </Popover>
             </div>
         );
     }

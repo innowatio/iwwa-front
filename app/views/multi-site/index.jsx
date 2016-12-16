@@ -752,27 +752,6 @@ var MultiSite = React.createClass({
                             );
                         }).toArray()
                     }
-                    <SiteStatus
-                        key={"ejkwndejwk"}
-                        onClickAlarmChart={this.props.selectSingleElectricalSensor}
-                        parameterStatus={{
-                            alarm: this.getAlarmStatus(),
-                            connection: "",
-                            consumption: "",
-                            remoteControl: "",
-                            comfort: ""
-                        }}
-                        siteName={"CUrno /.DS_Store"}
-                        siteInfo={
-                            this.getSiteInfo().map(info => {
-                                return {
-                                    key: info.key,
-                                    label: info.label
-                                };
-                            })
-                        }
-                        siteAddress={"Via jewonwieonwo"}
-                    />
                 </bootstrap.Row>
             </bootstrap.Col>
         );
