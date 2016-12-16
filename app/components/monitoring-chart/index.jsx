@@ -390,7 +390,10 @@ var MonitoringChart = React.createClass({
             },
             plotOptions: {
                 ...this.state.config.plotOptions,
-                series: null
+                series: {
+                    ...this.state.config.plotOptions.series,
+                    events: null
+                }
             },
             rangeSelector: {
                 enabled: false
