@@ -4,26 +4,36 @@ var DateTimePicker = require("react-widgets").DateTimePicker;
 import React, {PropTypes} from "react";
 import components from "components";
 import {defaultTheme} from "lib/theme";
+import icons from "lib/icons";
 import moment from "moment";
 import {styles} from "lib/styles";
 var Radium = require("radium");
 
-const buttonExport = (theme) => ({
-    display: "block",
-    width: "260px",
-    height: "260px",
-    borderRadius: "100%",
-    border: "0px",
-    margin: "10% auto",
-    backgroundColor: theme.colors.backgroundButtonExport
-});
-
-const dateTimePickerStyle = () => ({
-    display: "block",
-    width: "220px",
-    height: "32px",
-    border: "0px",
-    margin: "10% auto"
+const exportStyle = (theme) => ({
+    iconArrow: {
+        position: "absolute",
+        right: "8px",
+        top: "12px",
+        lineHeight: "1px"
+    },
+    buttonExport: {
+        display: "block",
+        width: "260px",
+        height: "260px",
+        borderRadius: "100%",
+        border: "0px",
+        margin: "10% auto",
+        backgroundColor: theme.colors.backgroundButtonExport
+    },
+    pickerWrp: {
+        marginHeight: "260px",
+        margin: "10% auto"
+    },
+    dateTimePickerStyle: {
+        display: "block",
+        height: "42px",
+        border: "0px"
+    }
 });
 
 var Export = React.createClass({
@@ -53,7 +63,7 @@ var Export = React.createClass({
             <bootstrap.Col xs={6}>
                 <components.Button
                     onClick={this.props.exportPng}
-                    style={buttonExport(theme)}
+                    style={exportStyle(theme).buttonExport}
                 >
                     <components.Icon
                         color={theme.colors.iconExport}
@@ -67,10 +77,10 @@ var Export = React.createClass({
     },
     renderExportButtonCsv: function (theme) {
         return (
-            <bootstrap.Col xs={6}>
+            <bootstrap.Col xs={12} sm={12} md={6}>
                 <components.Button
                     onClick={() => this.props.exportCsv(this.state.startDate, this.state.endDate)}
-                    style={buttonExport(theme)}
+                    style={exportStyle(theme).buttonExport}
                 >
                     <components.Icon
                         color={theme.colors.iconExport}
@@ -88,71 +98,144 @@ var Export = React.createClass({
         const endDate = moment(this.props.exportEnd).toDate();
         const {colors} = theme;
         return (
-            <div>
+            <div style={{
+                diplay: "flex",
+                flexDirection: "row",
+                justifyContent: "center",
+                alignItems: "center"
+            }}>
                 <Radium.Style
                     rules={{
                         // Calendar CSS
-
-                        "": {
-                            backgroundColor: colors.backgroundCalendarExport,
-                            borderTop: "0px",
-                            borderLeft: "0px",
-                            borderRight: "0px",
-                            borderBottom: "1px solid " + colors.white
+                        ".rw-input": {
+                            height: "42px"
                         },
-                        ":focus":{
+                        ":focus, .rw-state-focus":{
                             outline: "none"
                         },
-                        ".rw-calendar-popup": {
-                            outline: "none"
+                        ".rw-btn-calendar.rw-btn": {
+                            width: "40px",
+                            backgroundImage: `url(${icons.iconArrowRightWhite})`,
+                            backgroundColor: colors.backgroundButtonExport,
+                            borderBottomRightRadius: "4px",
+                            borderTopRightRadius: "4px"
+                        },
+                        ".rw-btn-calendar.rw-btn > .rw-i": {
+                            display: "none"
+                        },
+                        ".rw-widget>.rw-select": {
+                            display: "block",
+                            width: "40px"
+                        },
+                        ".rw-calendar": {
+                            backgroundColor: colors.backgroundContentModal,
+                            border: "1px solid " + colors.borderContentModal
                         },
                         ".rw-widget": {
-                            //background: "none",
-                            backgroundColor: colors.backgroundButtonExport,
-                            outline: "none",
-                            margin: "1px 0px",
-                            paddingBottom: "15px",
-                            borderColor: colors.borderButtonCalendar
+                            width: "100%"
                         },
-                        ".rw-calendar-popup > div > table": {
-                            borderTop: "1px solid " + colors.borderButtonCalendar
+                        ".rw-popup.rw-widget.rw-calendar.rw-widget": {
+                            width: "100%"
+                        },
+                        ".rw-widget.rw-open": {
+                            outline: "none",
+                            width: "100%"
+                        },
+                        ".rw-btn-view.rw-btn": {
+                            backgroundColor: colors.transparent,
+                            color: colors.white,
+                            fontWeight: "300",
+                            textTransform: "uppercase"
+                        },
+                        ".rw-header": {
+                            backgroundColor: colors.secondary,
+                            padding: "20px",
+                            borderBottom: "1px solid " + colors.borderContentModal
+                        },
+                        ".rw-calendar .rw-header > .rw-i": {
+                            color: colors.transparent
+                        },
+                        ".rw-btn, .rw-i": {
+                            color: colors.transparent
+                        },
+                        ".rw-i": {
+                            display: "block",
+                            width: "35px",
+                            height: "30px"
+                        },
+                        ".rw-i-caret-right": {
+                            float: "right",
+                            backgroundPosition: "center right",
+                            backgroundImage: `url(${icons.iconArrowRightWhite})`,
+                            backgroundRepeat: "no-repeat",
+                            color: colors.transparent
+                        },
+                        ".rw-i-caret-left": {
+                            float: "left",
+                            backgroundPosition: "center left",
+                            backgroundImage: `url(${icons.iconArrowLeft})`,
+                            backgroundRepeat: "no-repeat",
+                            color: colors.transparent
+                        },
+                        ".rw-calendar .rw-header .rw-btn-view": {
+                            backgroundColor: colors.transparent,
+                            textTransform: "uppercase"
                         },
                         ".rw-calendar-popup table thead tr": {
-                            border: "0px"
-                        },
-                        ".rw-state-focus": {
-                            background: "none",
-                            outline: "none"
-                        },
-                        ".rw-btn": {
+                            border: "0px",
+                            fontWeight: "300 !important",
                             textTransform: "uppercase",
-                            textAlign: "center",
-                            marginBottom: "10px",
-                            outline: "none",
-                            backgroundColor: colors.backgroundButtonExport
+                            color: colors.white
                         },
-
-                        ".rw-calendar .rw-header .rw-btn-view": {
-                            backgroundColor: colors.backgroundButtonExport
+                        ".rw-calendar-popup table thead tr th": {
+                            fontWeight: "300 !important"
                         },
-
-                        ".rw-select": {
-                            backgroundColor: colors.backgroundButtonExport
+                        ".rw-calendar-grid th": {
+                            paddingTop: "5px",
+                            paddingBottom: "15px"
                         },
-
-                        ".rw-off-range": {
-                            backgroundColor: "#3e50b4"
+                        ".rw-calendar-popup > div > table": {
+                            color: colors.white,
+                            margin: "10px 0",
+                            textTransform: "uppercase",
+                            borderTop: "1px solid " + colors.borderButtonCalendar
+                        },
+                        ".rw-calendar-grid td .rw-btn": {
+                            border: "0",
+                            width: "100%",
+                            margin: "4px 5%",
+                            padding: "0px",
+                            color: colors.white
+                        },
+                        ".rw-calendar .rw-footer .rw-btn": {
+                            backgroundColor: colors.secondary,
+                            padding: "10px",
+                            color: colors.white
+                        },
+                        ".rw-calendar .rw-footer .rw-btn:hover": {
+                            backgroundColor: colors.secondary,
+                            padding: "10px",
+                            color: colors.white
+                        },
+                        ".rw-header .rw-btn-view": {
+                            width: "100%",
+                            margin: "0"
+                        },
+                        ".rw-calendar-grid td .rw-btn.rw-off-range": {
+                            color: colors.secondary
                         },
                         ".rw-now": {
                             border: `1px solid ${colors.buttonPrimary} !important`
                         },
                         ".rw-btn .rw-state-focus": {
-                            border: "1px solid " + colors.borderButtonCalendar,
                             boxShadow: "none",
                             WebkitBoxShadow: "none",
-                            backgroundColor: colors.backgroundContentModal,
                             colors: colors.white,
                             outline: "none"
+                        },
+                        ".rw-state-focus": {
+                            border: "1px solid " + colors.buttonPrimary,
+                            backgroundColor: colors.transparent + " !important"
                         },
                         ".rw-state-focus:hover": {
                             borderColor: colors.borderButtonCalendar,
@@ -175,17 +258,10 @@ var Export = React.createClass({
                             color: colors.white,
                             border: "none"
                         },
-                        ".rw-calendar-grid td .rw-btn": {
-                            borderRadius: "30px",
-                            border: `1px solid ${colors.borderButtonCalendar}`,
-                            width: "90%",
-                            margin: "5px 5%",
-                            padding: "0px",
-                            color: colors.white
-                        },
-                        ".rw-header": {
-                            margin: "15px 10px 10px 10px",
-                            padding: "0px"
+                        ".rw-popup": {
+                            width: "100%",
+                            padding: "0 !important",
+                            borderRadius: "4px"
                         },
                         ".rw-popup .rw-widget .rw-header .rw-btn-view": {
                             backgroundColor: colors.backgroundContentModal,
@@ -194,63 +270,28 @@ var Export = React.createClass({
                             borderRadius: "0px",
                             borderTop: `1px solid ${colors.borderButtonCalendar}`,
                             borderBottom: `1px solid ${colors.borderButtonCalendar}`,
-                            width: "90%",
+                            width: "100%",
+                            padding: "0",
                             height: "34px",
                             color: colors.white,
-                            outline: "none"
-                        },
-                        ".rw-popup .rw-widget .rw-header .rw-btn-left": {
-                            borderTop: `1px solid ${colors.backgroundButtonExport}`,
-                            borderBottom: `1px solid ${colors.backgroundButtonExport}`,
-                            borderLeft: `1px solid ${colors.backgroundButtonExport}`,
-                            borderRight: "0px",
-                            // backgroundImage: `url(${icons.iconArrowLeft})`,
-                            backgroundPosition: "center",
-                            width: "5%",
-                            height: "34px",
-                            backgroundSize: "15px 15px",
-                            backgroundRepeat: "no-repeat",
-                            borderBottomLeftRadius: "30px",
-                            borderTopLeftRadius: "30px",
-                            outline: "none"
-                        },
-                        ".rw-i": {
-                            display: "none"
-                        },
-                        ".rw-widget .rw-header .rw-btn-right": {
-                            borderTop: `1px solid ${colors.backgroundButtonExport}`,
-                            borderBottom: `1px solid ${colors.backgroundButtonExport}`,
-                            borderRight: `1px solid ${colors.backgroundButtonExport}`,
-                            borderLeft: "0px",
-                            // backgroundImage: `url(${icons.iconArrowRightWhite})`,
-                            backgroundPosition: "center",
-                            width: "5%",
-                            height: "34px",
-                            backgroundSize: "15px 15px",
-                            backgroundRepeat: "no-repeat",
-                            borderBottomRightRadius: "30px",
-                            borderTopRightRadius: "30px",
-                            outline: "none"
-                        },
-                        ".rw-calendar-grid .rw-nav-view": {
                             outline: "none"
                         }
                     }}
                 />
-                <bootstrap.Col xs={3}>
+                <bootstrap.Col xs={12} sm={6} md={3} style={exportStyle(theme).pickerWrp}>
                     <DateTimePicker
                         defaultValue={startDate}
                         onChange={(value) => this.setState({startDate: value})}
                         time={false}
-                        style={dateTimePickerStyle(theme)}
+                        style={exportStyle(theme).dateTimePickerStyle}
                     />
                 </bootstrap.Col>
-                <bootstrap.Col xs={3}>
+                <bootstrap.Col xs={12} sm={6} md={3} style={exportStyle(theme).pickerWrp}>
                     <DateTimePicker
                         defaultValue={endDate}
                         onChange={(value) => this.setState({endDate: value})}
                         time={false}
-                        style={dateTimePickerStyle(theme)}
+                        style={exportStyle(theme).dateTimePickerStyle}
                     />
                 </bootstrap.Col>
             </div>
@@ -267,6 +308,7 @@ var Export = React.createClass({
                 {this.renderDateTimePicker(theme)}
                 {this.renderExportButtonCsv(theme)}
                 {/* this.renderExportButtonPng(theme)*/}
+                <div style={{clear: "both"}}></div>
             </div>
         );
     }

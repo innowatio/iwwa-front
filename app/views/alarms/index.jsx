@@ -66,8 +66,7 @@ const alarmButtonFilter = [{
     filter: [
         {label: "TUTTI", key: "all"},
         {label: "ATTIVI", key: "active"},
-        {label: "INATTIVI", key: "inactive"},
-        {label: "IN PAUSA", key: "pause"}
+        {label: "INATTIVI", key: "inactive"}
     ],
     key: "status"
 }];
