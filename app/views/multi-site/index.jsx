@@ -285,6 +285,14 @@ var MultiSite = React.createClass({
             {data: "2", label: "Remote Control", key: "remote control"}
         ];
     },
+    getFilteredSortedSites: function () {
+        const sites = this.getSites();
+        return sites.filter(site => {
+            const input = this.state.search.trim().toLowerCase();
+            const siteSearch = `${site.get("name") || ""} ${site.get("address") || ""}`;
+            return siteSearch.toLowerCase().includes(input);
+        }).toArray();
+    },
     onChangeInputFilter: function (input) {
         this.setState({
             search: input
@@ -710,15 +718,6 @@ var MultiSite = React.createClass({
                 </bootstrap.ResponsiveEmbed>
             </div>
         );
-    },
-
-    getFilteredSortedSites: function () {
-        const sites = this.getSites();
-        return sites.filter(site => {
-            const input = this.state.search.trim().toLowerCase();
-            const siteSearch = `${site.get("name") || ""} ${site.get("address") || ""}`;
-            return siteSearch.toLowerCase().includes(input);
-        }).toArray();
     },
 
     renderSites: function () {

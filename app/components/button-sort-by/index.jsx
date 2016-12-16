@@ -1,13 +1,13 @@
 import React, {PropTypes} from "react";
 import {partial, identity} from "ramda";
-import Radium from "radium";
 import ReactPureRender from "react-addons-pure-render-mixin";
 import RadioGroup from "react-radio-group";
-// import get from "lodash.get";
+import R from "ramda";
 
 import {
     Icon,
-    Popover
+    Popover,
+    ButtonGroupSelect
 } from "components";
 
 import {defaultTheme} from "lib/theme";
@@ -46,99 +46,17 @@ const styles = ({colors}) => ({
     },
     radioStyle: {
         visibility: "hidden"
-    }
-});
-
-var RadioButton = React.createClass({
-    propTypes: {
-        label: PropTypes.string,
-        labelStyle: PropTypes.object,
-        onClick: PropTypes.func,
-        radioComponent: PropTypes.element.isRequired,
-        value: PropTypes.object
     },
-    contextTypes: {
-        theme: React.PropTypes.object
-    },
-    mixin: [ReactPureRender],
-    onClick: function () {
-        this.props.onClick(this.props.value.key);
-    },
-    getTheme: function () {
-        return this.context.theme || defaultTheme;
-    },
-    render: function () {
-        const {colors} = this.getTheme();
-        return (
-            /*
-            *
-                We need to styling to the radio button, so we hide the input radio and
-                we use the label to graphicate it using CSS.
-            *
-            */
-            <div onClick={this.onClick} style={{
-                padding: "2px 0px",
-                borderBottom: "1px solid " + colors.borderDropdown
-            }}>
-                <div className="radio-style">
-                    <Radium.Style
-                        rules={{
-                            "": {
-                                position: "relative",
-                                clear: "both",
-                                width: "28px",
-                                height: "28px",
-                                background: colors.radioButtonBackground,
-                                border: "1px solid " + colors.radioButtonBorder,
-                                margin: "5px 0px",
-                                WebkitBorderRadius: "50px",
-                                MozBorderRadius: "50px",
-                                borderRadius: "50px"
-                            },
-                            "input[type='radio'] + label span": {
-                                width: "300px"
-                            },
-                            "input[type='radio'] + label": {
-                                cursor: "pointer",
-                                position: "absolute",
-                                width: "20px",
-                                height: "20px",
-                                backgroundColor: colors.buttonPrimary,
-
-                                WebkitBorderRadius: "50px",
-                                MozBorderRadius: "50px",
-                                borderRadius: "50px",
-                                left: "4px",
-                                top: "4px"
-                            },
-                            "input[type='radio'] + label:after": {
-                                opacity: "0",
-                                transition: "opacity 0.2s ease-in-out",
-                                content: "''",
-                                position: "absolute",
-                                width: "16px",
-                                height: "16px",
-                                backgroundColor: colors.buttonPrimary,
-
-                                WebkitBorderRadius: "50px",
-                                MozBorderRadius: "50px",
-                                borderRadius: "50px",
-                                top: "1px",
-                                left: "1px"
-                            },
-                            "input[type='radio']:checked + label:after, input[type='radio'] + label:hover::after": {
-                                opacity: "1"
-                            }
-                        }}
-                        scopeSelector=".radio-style"
-                    />
-                    {this.props.radioComponent}
-                    <label style={this.props.labelStyle}>
-                        <div style={{width:"200px"}}>{this.props.label}</div>
-                    </label>
-                </div>
-            </div>
-        );
+    buttonGroupSelect: {
+        background: colors.transparent,
+        border: `1px solid ${colors.borderButtonCalendar}`,
+        color: colors.mainFontColor,
+        width: "17%",
+        minWidth: "200px",
+        height: "41px",
+        marginRight: "8px",
+        fontSize: "14px",
+        fontWeight: "400"
     }
 });
 
@@ -158,31 +76,44 @@ var ButtonSortBy = React.createClass({
     contextTypes: {
         theme: PropTypes.object
     },
-    // getInitialState: function () {
-    //     return {
-    //         sortBy: this.getInitialSelectedValue()
-    //     };
-    // },
-    // mixin: [ReactPureRender],
-    // getInitialSelectedValue: function () {
-    //     return this.props.sortByList.reduce((acc, item) => {
-    //         return {
-    //             ...acc,
-    //             [item.key]: get(`this.props.activeSortBy.${item.key}`) || item.sortBy[0].key
-    //         };
-    //     }, {});
-    // },
+    getInitialState: function () {
+        return {
+            sortBy: this.getInitialSelectedValue(),
+            selectedButton: null,
+            value: undefined
+        };
+    },
+    mixin: [ReactPureRender],
+    getInitialSelectedValue: function () {
+        return "";
+    },
     getTheme: function () {
         return this.context.theme || defaultTheme;
     },
-    // handleChange: function (key, value) {
-    //     this.setState({
-    //         sortBy: {
-    //             ...this.state.sortBy,
-    //             [key]: value
-    //         }
-    //     });
-    // },
+    getButtonSort: function () {
+        return [
+            {label: "Pod", key: "pod"},
+            {label: "Id", key: "id"},
+            {label: "Provincia", key: "prov"},
+            {label: "Data ultimo aggiornamento", key: "aggiornamento"},
+            {label: "Piani", key: "piani"},
+            {label: "Vetrine", key: "vetrine"},
+            {label: "mq Comm", key: "mq"},
+            {label: "mq PdV", key: "mq1"}
+        ];
+    },
+    handleChange: function (key, value) {
+        console.log({
+            key,
+            value
+        });
+        this.setState({
+            sortBy: {
+                ...this.state.sortBy,
+                [key]: value
+            }
+        });
+    },
     renderSortByTableCell: function (Radio, sortByKey, sortBy, index) {
         const inputRadio = <Radio value={sortBy.key} style={styles(this.getTheme()).radioStyle} />;
         return (
@@ -234,12 +165,26 @@ var ButtonSortBy = React.createClass({
         );
     },
     render: function () {
+        const theme = this.getTheme();
         return (
             <div style={{height: "auto", float: "right"}}>
                 <Popover title={this.renderTitlePopover()}>
                     <div style={styles(this.getTheme()).sortBy}>
                         {"Visualizza in ordine di:"}
                     </div>
+                    <ButtonGroupSelect
+                        allowedValues={this.getButtonSort()}
+                        getKey={R.prop("key")}
+                        getLabel={R.prop("label")}
+                        onChange={(input) => console.log({input})}
+                        style={styles(theme).buttonGroupSelect}
+                        styleToMergeWhenActiveState={{
+                            background: theme.colors.buttonPrimary,
+                            color: theme.colors.white,
+                            border: "none"
+                        }}
+                        value={[]}
+                    />
                 </Popover>
             </div>
         );
