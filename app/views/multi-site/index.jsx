@@ -712,49 +712,42 @@ var MultiSite = React.createClass({
         );
     },
 
+    getFilteredSortedSites: function () {
+        const sites = this.getSites();
+        return sites.filter(site => {
+            const input = this.state.search.trim().toLowerCase();
+            const siteSearch = `${site.get("name") || ""} ${site.get("address") || ""}`;
+            return siteSearch.toLowerCase().includes(input);
+        }).toArray();
+    },
+
     renderSites: function () {
-        return (
-            <bootstrap.Col xs={12} sm={8}>
-                <bootstrap.Row>
-                    {
-                        this.getSites()
-                        .filter(site => {
-                            const input = this.state.search.trim().toLowerCase();
-                            return (site.get("name") || "").toLowerCase().includes(input) || (site.get("address") || "").toLowerCase().includes(input);
-                        })
-                        .map(site => {
-                            const siteId = (site.get("_id"));
-                            return (
-                                <SiteStatus
-                                    isOpen={this.state.openPanel === siteId}
-                                    key={siteId}
-                                    onClickAlarmChart={this.props.selectSingleElectricalSensor}
-                                    onClickPanel={this.onClickPanel}
-                                    parameterStatus={{
-                                        alarm: this.getAlarmStatus(),
-                                        connection: "",
-                                        consumption: "",
-                                        remoteControl: "",
-                                        comfort: ""
-                                    }}
-                                    siteName={site.get("name")}
-                                    siteInfo={
-                                        this.getSiteInfo().map(info => {
-                                            return {
-                                                key: info.key,
-                                                label: info.label,
-                                                value: site.get(info.key) || ""
-                                            };
-                                        })
-                                    }
-                                    siteAddress={site.get("address") || ""}
-                                />
-                            );
-                        }).toArray()
-                    }
-                </bootstrap.Row>
-            </bootstrap.Col>
-        );
+        return this.getFilteredSortedSites().map((site, index) => (
+            <SiteStatus
+                isOpen={this.state.openPanel === site.get("_id")}
+                key={index}
+                onClickAlarmChart={this.props.selectSingleElectricalSensor}
+                onClickPanel={this.onClickPanel}
+                parameterStatus={{
+                    alarm: this.getAlarmStatus(),
+                    connection: "",
+                    consumption: "",
+                    remoteControl: "",
+                    comfort: ""
+                }}
+                siteName={site.get("name")}
+                siteInfo={
+                    this.getSiteInfo().map(info => {
+                        return {
+                            key: info.key,
+                            label: info.label,
+                            value: site.get(info.key) || ""
+                        };
+                    })
+                }
+                siteAddress={site.get("address") || ""}
+            />
+        ));
     },
 
     render: function () {
@@ -791,7 +784,11 @@ var MultiSite = React.createClass({
                         rules={styles(theme).rowDataWrp}
                         scopeSelector=".site-sidebar"
                     />
-                    {this.renderSites()}
+                    <bootstrap.Col xs={12} sm={8}>
+                        <bootstrap.Row>
+                            {this.renderSites()}
+                        </bootstrap.Row>
+                    </bootstrap.Col>
                     {this.renderSidebar()}
                 </bootstrap.Row>
             </content>
