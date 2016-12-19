@@ -46,7 +46,7 @@ describe("`alarms` actions", () => {
     describe("`resetAlarmFormView` function", () => {
 
         it("should return the correct object", () => {
-            const ret = alarms.resetAlarmFormView();
+            const ret = alarms.resetSelectAlarm();
             expect(ret).to.deep.equal({
                 type: alarms.SELECT_ALARM_RESET
             });

@@ -58,19 +58,22 @@ function selectedAlarm (state = {}, {type, payload}) {
 }
 
 import {
+    ALARM_UPSERT_START,
     ALARM_UPSERT_SUCCESS,
     ALARM_UPSERT_ERROR,
     ALARM_UPSERT_RESET
 } from "../actions/alarms";
 
-function creationStatus (state = {}, {type}) {
+function creationStatus (state = null, {type}) {
     switch (type) {
+        case ALARM_UPSERT_START:
+            return "started";
         case ALARM_UPSERT_SUCCESS:
-            return {success: true};
+            return "success";
         case ALARM_UPSERT_ERROR:
-            return {error: true};
+            return "error";
         case ALARM_UPSERT_RESET:
-            return {};
+            return null;
         default:
             return state;
     }

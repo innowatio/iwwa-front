@@ -14,10 +14,9 @@ import {
     selectSingleElectricalSensor
 } from "actions/chart";
 import {
-    resetAlarmFormView,
+    resetSelectAlarm,
     numberOfSelectedTabs,
     filterCollection,
-    resetFilter,
     selectAlarm,
     upsertAlarm
 } from "actions/alarms";
@@ -67,8 +66,7 @@ const alarmButtonFilter = [{
     filter: [
         {label: "TUTTI", key: "all"},
         {label: "ATTIVI", key: "active"},
-        {label: "INATTIVI", key: "inactive"},
-        {label: "IN PAUSA", key: "pause"}
+        {label: "INATTIVI", key: "inactive"}
     ],
     key: "status"
 }];
@@ -92,8 +90,7 @@ var Alarms = React.createClass({
         location: React.PropTypes.object,
         numberOfSelectedTabs: React.PropTypes.func.isRequired,
         params: React.PropTypes.object,
-        resetAlarmFormView: React.PropTypes.func.isRequired,
-        resetFilter: React.PropTypes.func,
+        resetSelectAlarm: React.PropTypes.func.isRequired,
         selectAlarm: React.PropTypes.func.isRequired,
         selectSingleElectricalSensor: React.PropTypes.func.isRequired,
         upsertAlarm: React.PropTypes.func.isRequired
@@ -248,9 +245,11 @@ var Alarms = React.createClass({
                         <bootstrap.Tab eventKey={1} title="Impostazione">
                             <components.AlarmForm
                                 alarm={this.props.alarms.selectedAlarm}
-                                onReset={this.props.resetAlarmFormView}
+                                onReset={this.props.resetSelectAlarm}
                                 onSubmit={this.props.upsertAlarm}
                                 siti={this.getSiti()}
+                                status={this.props.alarms.creationStatus}
+                                userId={this.props.asteroid.userId}
                             />
                         </bootstrap.Tab>
                         <bootstrap.Tab
@@ -319,8 +318,7 @@ function mapDispatchToProps (dispatch) {
     return {
         filterCollection: bindActionCreators(filterCollection, dispatch),
         selectSingleElectricalSensor: bindActionCreators(selectSingleElectricalSensor, dispatch),
-        resetAlarmFormView: bindActionCreators(resetAlarmFormView, dispatch),
-        resetFilter: bindActionCreators(resetFilter, dispatch),
+        resetSelectAlarm: bindActionCreators(resetSelectAlarm, dispatch),
         selectAlarm: bindActionCreators(selectAlarm, dispatch),
         upsertAlarm: bindActionCreators(upsertAlarm, dispatch),
         numberOfSelectedTabs: bindActionCreators(numberOfSelectedTabs, dispatch)

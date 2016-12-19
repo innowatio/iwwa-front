@@ -66,9 +66,16 @@ var AlarmRow = React.createClass({
         } = this.props;
         const last = alarmAggregates.sortBy(x => x.get("date")).last();
         if (last) {
+            const measurementValues = last.get("measurementValues").split(",");
             const measurementTimes = last.get("measurementTimes").split(",");
-            const lastTime = measurementTimes[measurementTimes.length - 1];
-            return lastTime;
+            const reversedMeasurements = measurementTimes.map((time, index) => {
+                return {
+                    time: measurementTimes[measurementTimes.length - (index + 1)],
+                    value: parseInt(measurementValues[measurementValues.length - (index + 1)])
+                };
+            });
+            const lastMeasurements = reversedMeasurements.find(x => x.value === 1);
+            return lastMeasurements.time;
         }
         return 0;
     },
@@ -85,7 +92,7 @@ var AlarmRow = React.createClass({
             element
         } = this.props;
         const alarmName = element.get("name") || "Allarme";
-        return `${alarmName} ${element.get("threshold")} ${element.get("unitOfMeasurement")} - ${lastTrigger.timestamp > 0 ? lastTrigger.formatted : ""}`;
+        return `${alarmName} ${element.get("threshold")} ${element.get("unitOfMeasurement")} ${lastTrigger.timestamp > 0 ? lastTrigger.formatted : ""}`;
     },
     render: function () {
         const {colors} = this.getTheme();
