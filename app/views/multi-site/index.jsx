@@ -711,7 +711,7 @@ var MultiSite = React.createClass({
                 />
                 <div style={{width: "525px", height: "250px"}}>
                     <DashboardGoogleMap
-                        sites={this.getSites()}
+                        sites={this.getFilteredSortedSites()}
                     />
                 </div>
             </div>

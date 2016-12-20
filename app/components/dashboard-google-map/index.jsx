@@ -1,6 +1,5 @@
 import GoogleMap from "google-map-react";
-import React from "react";
-import IPropTypes from "react-immutable-proptypes";
+import React, {PropTypes} from "react";
 
 import {GOOGLE_MAP_API_KEY} from "lib/config";
 
@@ -8,7 +7,7 @@ import SiteMarker from "./site-marker";
 
 var DashboardGoogleMap = React.createClass({
     propTypes: {
-        sites: IPropTypes.map.isRequired
+        sites: PropTypes.array.isRequired
     },
     renderSitesMarker: function () {
         return this.props.sites.map(site => {
