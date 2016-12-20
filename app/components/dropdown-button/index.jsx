@@ -1,8 +1,8 @@
-var R          = require("ramda");
-var React      = require("react");
-var bootstrap  = require("react-bootstrap");
-var IPropTypes = require("react-immutable-proptypes");
-var components = require("components");
+import R from "ramda";
+import React from "react";
+import * as bootstrap from "react-bootstrap";
+import IPropTypes from "react-immutable-proptypes";
+import components from "components";
 
 import {defaultTheme} from "lib/theme";
 
@@ -96,8 +96,8 @@ var DropdownButton = React.createClass({
                     borderLeft: "0px",
                     borderRight: "0px",
                     borderTop: (index === 0 ? "0px" : undefined),
-                    borderTopLeftRadius: (index === 0 ? "4px" : undefined),
-                    borderTopRightRadius: (index === 0 ? "4px" : undefined),
+                    borderTopLeftRadius: (index === 0 ? "6px" : undefined),
+                    borderTopRightRadius: (index === 0 ? "6px" : undefined),
                     borderBottom: (index === 2 ? "0px" : undefined),
                     fontSize: "12px",
                     lineHeight: "45px",
@@ -108,7 +108,7 @@ var DropdownButton = React.createClass({
                     outlineWidth: "0px",
                     // This should overwrite the style over that position.
                     ...this.props.style
-                }, itemStyle)}
+                }), itemStyle}
             >
                 {this.imageItem(allowedValue)}
                 {this.props.getLabel(allowedValue)}
