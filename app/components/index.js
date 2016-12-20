@@ -14,6 +14,7 @@ exports.ConfirmModal            = require("./confirm-modal/");
 exports.ConsumptionButtons      = require("./consumption-buttons/");
 exports.ConsumptionChart        = require("./consumption-chart/");
 exports.DashboardBox            = require("./dashboard-box/");
+exports.DashboardGoogleMap      = require("./dashboard-google-map/");
 exports.DateCompare             = require("./date-compare/");
 exports.DateFilter              = require("./date-filter/");
 exports.DeleteWithConfirmButton = require("./delete-with-confirm-button/");

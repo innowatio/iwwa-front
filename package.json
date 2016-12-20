@@ -67,6 +67,7 @@
     "compression": "^1.6.2",
     "express": "^4.13.4",
     "fastclick": "^1.0.6",
+    "google-map-react": "^0.22.0",
     "highcharts": "^4.2.5",
     "highcharts-export-csv": "github:highcharts/export-csv",
     "highcharts-exporting": "^0.1.2",

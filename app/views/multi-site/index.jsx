@@ -13,6 +13,7 @@ import {
     ButtonFilter,
     ButtonSortBy,
     DashboardBox,
+    DashboardGoogleMap,
     Icon,
     InputFilter,
     SiteStatus
@@ -708,14 +709,9 @@ var MultiSite = React.createClass({
                     }}
                     scopeSelector=".map-embed"
                 />
-                <bootstrap.ResponsiveEmbed a16by9={true}>
-                    <iframe
-                        src="https://www.google.com/maps/embed?pb=!1m14!1m12!1m3!1d22121.91644272157!2d9.5555986!3d46.12605785!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!5e0!3m2!1sen!2sit!4v1481041694687"
-                        width="100"
-                        height="100"
-                        frameBorder="0"
-                    />
-                </bootstrap.ResponsiveEmbed>
+                <div style={{width: "525px", height: "250px"}}>
+                    <DashboardGoogleMap />
+                </div>
             </div>
         );
     },
