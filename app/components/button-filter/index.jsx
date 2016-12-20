@@ -27,7 +27,7 @@ const styles = ({colors}) => ({
         margin: "0px",
         border: "1px solid " + colors.borderDropdown,
         backgroundColor: colors.backgroundDropdown,
-        borderRadius: "10px",
+        borderRadius: "6px",
         color: colors.mainFontColor,
         outline: "none",
         fontSize: "15px",

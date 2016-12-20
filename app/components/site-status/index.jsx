@@ -82,7 +82,6 @@ const styles = (theme) => ({
 var SiteStatus = React.createClass({
     propTypes: {
         isOpen: PropTypes.bool,
-        key: PropTypes.string,
         onClickAlarmChart: PropTypes.func,
         onClickPanel: PropTypes.func,
         parameterStatus: PropTypes.object.isRequired,

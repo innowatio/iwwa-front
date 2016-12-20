@@ -721,32 +721,34 @@ var MultiSite = React.createClass({
     },
 
     renderSites: function () {
-        return this.getFilteredSortedSites().map((site, index) => (
-            <SiteStatus
-                isOpen={this.state.openPanel === site.get("_id")}
-                key={index}
-                onClickAlarmChart={this.props.selectSingleElectricalSensor}
-                onClickPanel={this.onClickPanel}
-                parameterStatus={{
-                    alarm: this.getAlarmStatus(),
-                    connection: "",
-                    consumption: "",
-                    remoteControl: "",
-                    comfort: ""
-                }}
-                siteName={site.get("name")}
-                siteInfo={
-                    this.getSiteInfo().map(info => {
-                        return {
-                            key: info.key,
-                            label: info.label,
-                            value: site.get(info.key) || ""
-                        };
-                    })
-                }
-                siteAddress={site.get("address") || ""}
-            />
-        ));
+        return this.getFilteredSortedSites().map((site, index) => {
+            return (
+                <SiteStatus
+                    isOpen={this.state.openPanel === site.get("_id")}
+                    key={index}
+                    onClickAlarmChart={this.props.selectSingleElectricalSensor}
+                    onClickPanel={this.onClickPanel}
+                    parameterStatus={{
+                        alarm: this.getAlarmStatus(),
+                        connection: "",
+                        consumption: "",
+                        remoteControl: "",
+                        comfort: ""
+                    }}
+                    siteName={site.get("name")}
+                    siteInfo={
+                        this.getSiteInfo().map(info => {
+                            return {
+                                key: info.key,
+                                label: info.label,
+                                value: site.get(info.key) || ""
+                            };
+                        })
+                    }
+                    siteAddress={site.get("address") || ""}
+                />
+            );
+        });
     },
 
     render: function () {
