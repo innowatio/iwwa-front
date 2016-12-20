@@ -710,7 +710,9 @@ var MultiSite = React.createClass({
                     scopeSelector=".map-embed"
                 />
                 <div style={{width: "525px", height: "250px"}}>
-                    <DashboardGoogleMap />
+                    <DashboardGoogleMap
+                        sites={this.getSites()}
+                    />
                 </div>
             </div>
         );
