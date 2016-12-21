@@ -11,8 +11,8 @@ var DashboardGoogleMap = React.createClass({
     },
     renderSitesMarker: function () {
         return this.props.sites.map(site => {
-            const latitude = site.get("latitude");
-            const longitude = site.get("longitude");
+            const latitude = site.latitude;
+            const longitude = site.longitude;
             return latitude && longitude ? (
                 <SiteMarker
                     lat={latitude}
