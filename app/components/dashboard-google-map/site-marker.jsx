@@ -1,6 +1,12 @@
-import React from "react";
+import React, {PropTypes} from "react";
 
 var SiteMarker = React.createClass({
+    propTypes: {
+        siteId: PropTypes.string
+    },
+    viewSiteInfo: function () {
+        console.log("triggered");
+    },
     render: function () {
         return (
             <div
