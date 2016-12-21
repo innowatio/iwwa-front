@@ -47,6 +47,7 @@ const stylesFunction = (theme) => ({
         border: "0px none",
         borderRadius: "100%",
         height: "50px",
+        lineHeight: "50px",
         margin: "auto",
         width: "50px",
         marginLeft: "10px"
@@ -256,7 +257,7 @@ var Monitoring = React.createClass({
                 icon={iconName}
                 iconColor={theme.colors.iconHeader}
                 iconSize={"28px"}
-                iconStyle={{lineHeight: "45px"}}
+                iconStyle={{lineHeight: "50px", verticalAlign: "middle"}}
                 isButtonDisabled={disabled}
                 onButtonClick={() => this.getButtonLink(iconName, selected)}
                 tooltipText={tooltip}
@@ -286,8 +287,15 @@ var Monitoring = React.createClass({
         const {asteroid} = this.props;
         return (
             <div>
-                <SectionToolbar>
-                    <div style={{float: "right", height: "58px"}}>
+                <SectionToolbar style={{float: "right"}}>
+                    <div style={{
+                        float: "right",
+                        width: "50px",
+                        marginTop: "3px",
+                        textAlign: "center",
+                        height: "50px",
+                        lineHeight: "50px"
+                    }}>
                         <Popover
                             className="pull-right"
                             hideOnChange={true}
@@ -296,7 +304,7 @@ var Monitoring = React.createClass({
                                     color={theme.colors.iconHeader}
                                     icon={"option"}
                                     size={"32px"}
-                                    style={{lineHeight: "50px"}}
+                                    style={{}}
                                 />
                             }
                         >

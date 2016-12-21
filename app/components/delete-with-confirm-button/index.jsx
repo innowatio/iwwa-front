@@ -56,8 +56,8 @@ var DeleteWithConfirmButton = React.createClass({
                 <TooltipIconButton
                     buttonStyle={stylesFunction(theme).buttonIconStyle}
                     icon={"close"}
-                    iconSize={"28px"}
-                    iconStyle={{lineHeight: "45px"}}
+                    iconSize={"30px"}
+                    iconStyle={{lineHeight: "55px", verticalAlign: "middle"}}
                     isButtonDisabled={this.props.disabled}
                     onButtonClick={this.openConfirmModal}
                     tooltipText={"Elimina"}

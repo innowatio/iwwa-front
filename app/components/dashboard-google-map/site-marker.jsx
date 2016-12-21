@@ -1,25 +1,38 @@
 import React from "react";
+import {defaultTheme} from "lib/theme";
+
+const styles = (theme) => ({
+    pinpointContainer: {
+        position: "absolute",
+        left: -20 / 2,
+        top: -20 / 2
+    },
+    pinpoint: {
+        width: "20px",
+        height: "20px",
+        padding: "4px",
+        mozTransform: "rotate(45deg)",
+        webkitTransform: "rotate(45deg)",
+        backgroundColor: theme.colors.transparent,
+        border: "2px solid " + theme.colors.buttonPrimary,
+        borderRadius: "30px",
+        borderBottomRightRadius: "0px"
+    }
+});
+
+// style={styles(theme).pinpointWrp}
 
 var SiteMarker = React.createClass({
+    getTheme: function () {
+        return this.context.theme || defaultTheme;
+    },
     render: function () {
+        const theme = this.getTheme();
         return (
-            <div
-                style={{
-                    position: "absolute",
-                    width: 40,
-                    height: 40,
-                    left: -40 / 2,
-                    top: -40 / 2,
-                    border: "5px solid #f44336",
-                    borderRadius: 40,
-                    backgroundColor: "white",
-                    textAlign: "center",
-                    color: "#3f51b5",
-                    fontSize: 16,
-                    fontWeight: "bold",
-                    padding: 4
-                }}
-            >
+            <div style={styles(theme).pinpointContainer}>
+                <div style={styles(theme).pinpoint}>
+
+                </div>
             </div>
         );
     }

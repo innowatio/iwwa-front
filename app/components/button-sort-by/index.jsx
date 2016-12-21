@@ -20,6 +20,7 @@ const styles = ({colors}) => ({
         display: "inline-block",
         width: "50px",
         height: "50px",
+        margin: "5px 10px",
         borderRadius: "100%",
         lineHeight: "4",
         backgroundColor: colors.secondary
@@ -69,10 +70,6 @@ var ButtonSortBy = React.createClass({
         ];
     },
     handleChange: function (key, value) {
-        console.log({
-            key,
-            value
-        });
         this.setState({
             sortBy: {
                 ...this.state.sortBy,
@@ -87,7 +84,7 @@ var ButtonSortBy = React.createClass({
                 allowedValues={this.getButtonSort()}
                 getKey={R.prop("key")}
                 getHoverColor={() => {
-                    return colors.buttonPrimary;
+                    return this.sortBy ? colors.buttonPrimary : colors.backgroundDropdown;
                 }}
                 getLabel={R.prop("label")}
                 onChange={this.handleChange}

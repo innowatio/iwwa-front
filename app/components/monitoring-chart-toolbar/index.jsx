@@ -46,8 +46,10 @@ const stylesFunction = (theme, active) => ({
     },
     timeIntervalButtonStyle: {
         marginRight: "5px",
+        padding: "5px",
         textAlign: "left",
-        borderRadius: "15px",
+        borderRadius: "10px",
+        border: "0px",
         backgroundColor: active ? theme.colors.buttonPrimary : theme.colors.iconSearchUser,
         outline: "0px",
         outlineStyle: "none",
@@ -216,7 +218,7 @@ var MonitoringChartToolbar = React.createClass({
                     />
                 </Button>
                 <p style={{
-                    marginBottom: "25px",
+                    marginBottom: "10px",
                     fontSize: "16px",
                     color: theme.colors.navText,
                     fontWeight: "300"
@@ -256,7 +258,7 @@ var MonitoringChartToolbar = React.createClass({
     renderYAxisValuesChange: function (theme) {
         return (
             <div style={{
-                padding: "20px",
+                padding: "15px 20px",
                 borderBottom: "solid 1px",
                 borderColor: theme.colors.white
             }}>
@@ -352,7 +354,7 @@ var MonitoringChartToolbar = React.createClass({
     },
     renderCSVExport: function (theme) {
         return hasRole(this.props.asteroid, DOWNLOAD_CHART_DATA) ? (
-            <div style={{textAlign: "center", padding: "20px", borderBottom: "solid 1px", borderColor: theme.colors.white}}>
+            <div style={{textAlign: "center", padding: "15px 20px"}}>
                 <Button
                     disabled={!this.props.monitoringChartRef}
                     onClick={this.exportSV}
@@ -379,7 +381,7 @@ var MonitoringChartToolbar = React.createClass({
         return (
             <div>
                 <div style={{
-                    padding: "20px",
+                    padding: "15px 20px",
                     textAlign: "center",
                     borderBottom: "solid 1px",
                     borderColor: theme.colors.white
@@ -397,7 +399,7 @@ var MonitoringChartToolbar = React.createClass({
                     </div>
                 </div>
                 <div style={{
-                    padding: "20px",
+                    padding: "15px 20px",
                     textAlign: "center",
                     borderBottom: "solid 1px",
                     borderColor: theme.colors.white
@@ -423,7 +425,11 @@ var MonitoringChartToolbar = React.createClass({
                     </div>
                 </div>
                 {this.renderYAxisValuesChange(theme)}
-                <div style={{textAlign: "center", marginTop: "25px", borderBottom: "solid 1px", borderColor: theme.colors.white}}>
+                <div style={{
+                    textAlign: "center",
+                    marginTop: "15px",
+                    borderBottom: "solid 1px " + theme.colors.white
+                }}>
                     <Col lg={6} md={6} xs={12}>
                         {this.renderFavouriteButton(theme)}
                     </Col>
@@ -450,7 +456,7 @@ var MonitoringChartToolbar = React.createClass({
                             </Button>
                         </Link>
                         <p style={{
-                            marginBottom: "25px",
+                            marginBottom: "15px",
                             fontSize: "16px",
                             color: theme.colors.navText,
                             fontWeight: "300",
@@ -461,7 +467,11 @@ var MonitoringChartToolbar = React.createClass({
                     </Col>
                     <Clearfix>{}</Clearfix>
                 </div>
-                <div style={{textAlign: "center", padding: "20px", borderBottom: "solid 1px", borderColor: theme.colors.white}}>
+                <div style={{
+                    textAlign: "center",
+                    padding: "15px 20px",
+                    borderBottom: "solid 1px " + theme.colors.white
+                }}>
                     <label style={stylesFunction(theme).labelStyle}>
                     {"VEDI SETTIMANA/MESE/ANNO PRECEDENTE:"}
                     </label>

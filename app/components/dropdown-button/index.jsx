@@ -82,7 +82,7 @@ var DropdownButton = React.createClass({
         const {colors} = this.getTheme();
         const itemStyle = {
             backgroundColor: (this.isActive(allowedValue) ?
-                colors.buttonPrimary : colors.transparent),
+                colors.buttonPrimary : colors.backgroundDropdown),
             color: (this.isActive(allowedValue) ?
                 colors.white : colors.textDropdown)
         };
@@ -99,7 +99,8 @@ var DropdownButton = React.createClass({
                     borderTopLeftRadius: (index === 0 ? "6px" : undefined),
                     borderTopRightRadius: (index === 0 ? "6px" : undefined),
                     borderBottom: (index === 2 ? "0px" : undefined),
-                    fontSize: "12px",
+                    fontSize: "15px",
+                    fontWeight: "300",
                     lineHeight: "45px",
                     padding: "2px 20px 2px 10px !important",
                     verticalAlign: "middle",
@@ -118,7 +119,10 @@ var DropdownButton = React.createClass({
     render: function () {
         var items = this.props.allowedValues.map(this.renderButtonOption);
         return (
-            <div>
+            <div style={{
+                fontSize: "15px",
+                fontWeight: "300"
+            }}>
                 {items.toArray ? items.toArray() : items}
             </div>
         );

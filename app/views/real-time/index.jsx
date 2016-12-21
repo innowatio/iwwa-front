@@ -29,7 +29,6 @@ import getLastUpdate from "lib/date-utils";
 const styleSiteButton = ({colors}) => ({
     width: "50px",
     height: "50px",
-    padding: "0px",
     border: "0px",
     borderRadius: "100%",
     margin: "3px 0 0 0",
@@ -177,6 +176,7 @@ var RealTime = React.createClass({
                     <bootstrap.Col
                         key={measure.key}
                         md={4}
+                        sm={6}
                         xs={6}
                         style={{padding: "20px"}}
                     >
@@ -197,9 +197,18 @@ var RealTime = React.createClass({
         const isRealtimeAnytime = this.getRealTimeData();
         if (isRealtimeAnytime.size === 0) {
             return (
-                <div style={styleTextNodata({colors})}>
-                    {"Non sono disponibili dati realtime"}
-                </div>
+                <bootstrap.Col
+                    className="text-center"
+                    style={{
+                        padding: "20px",
+                        color: colors.mainFontColor
+                    }}
+                    xs={12}
+                >
+                    <div style={styleTextNodata({colors})}>
+                        {"Non sono disponibili dati realtime"}
+                    </div>
+                </bootstrap.Col>
             );
         }
 
@@ -233,7 +242,21 @@ var RealTime = React.createClass({
                 unit: unit,
                 value: parseFloat(value).toFixed(2) / 1
             };
-            return this.drawGauge(gaugeParams);
+            return (
+                <bootstrap.Col
+                    className="text-center"
+                    lg={4}
+                    md={4}
+                    sm={6}
+                    style={{
+                        padding: "20px",
+                        color: colors.mainFontColor
+                    }}
+                    xs={12}
+                >
+                    {this.drawGauge(gaugeParams)}
+                </bootstrap.Col>
+            );
         }
     },
     getSites: function () {
@@ -266,7 +289,13 @@ var RealTime = React.createClass({
     },
     getGaugeLabel: function (params) {
         return (
-            <MeasureLabel {...params} />
+            <MeasureLabel
+                {...params}
+                style={{
+                    justifyContent: "center",
+                    alignItems: "center"
+                }}
+            />
         );
     },
     getSensorsData () {
@@ -391,7 +420,8 @@ var RealTime = React.createClass({
                         color: colors.mainFontColor,
                         fontSize: "24px",
                         fontWeight: "400",
-                        textTransform: "uppercase"
+                        textTransform: "uppercase",
+                        marginBottom: "20px"
                     }}
                 >
                     {`${selectedSiteName ? selectedSiteName + " - " : ""}Rilevazioni ambientali`}
@@ -452,19 +482,7 @@ var RealTime = React.createClass({
                             >
                                 {`${selectedSiteName ? selectedSiteName + " - " : ""}Pods`}
                             </h3>
-                            <bootstrap.Col
-                                className="text-center"
-                                lg={4}
-                                md={4}
-                                sm={6}
-                                style={{
-                                    padding: "20px",
-                                    color: theme.colors.mainFontColor
-                                }}
-                                xs={12}
-                            >
-                                {this.drawGaugeTotal()}
-                            </bootstrap.Col>
+                            {this.drawGaugeTotal()}
                             <bootstrap.Col lg={8} md={8} sm={6} xs={12}>
                                 {this.drawGauges()}
                             </bootstrap.Col>

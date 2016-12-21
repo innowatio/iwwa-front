@@ -68,7 +68,7 @@ const styles = ({colors}) => ({
         borderRadius: "100%",
         width: "50px",
         height: "50px",
-        margin: "6px 12px",
+        margin: "5px 10px",
         border: "0"
     },
     siteRecapWrp: {
@@ -709,7 +709,7 @@ var MultiSite = React.createClass({
                     }}
                     scopeSelector=".map-embed"
                 />
-                <div style={{width: "525px", height: "250px"}}>
+                <div style={{height: "350px"}}>
                     <DashboardGoogleMap
                         sites={this.getFilteredSortedSites()}
                     />

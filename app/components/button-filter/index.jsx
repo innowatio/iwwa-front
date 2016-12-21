@@ -18,6 +18,7 @@ const styles = ({colors}) => ({
         display: "inline-block",
         width: "50px",
         height: "50px",
+        margin: "5px 10px",
         borderRadius: "100%",
         lineHeight: "4",
         backgroundColor: colors.secondary
@@ -60,6 +61,7 @@ var RadioButton = React.createClass({
         labelStyle: PropTypes.object,
         onClick: PropTypes.func,
         radioComponent: PropTypes.element.isRequired,
+        style:  PropTypes.object,
         value: PropTypes.object
     },
     contextTypes: {

@@ -69,6 +69,7 @@ var ConfirmModal = React.createClass({
                     style={{
                         display: "inline-block",
                         width: "300px",
+                        height: "300px",
                         textAlign: "center",
                         borderRadius: "100%",
                         backgroundColor: this.props.iconBgColor || colors.backgroundConfirmIcon}}

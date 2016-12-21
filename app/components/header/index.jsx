@@ -8,19 +8,25 @@ import components from "components";
 import {canAccessUsers} from "lib/roles-utils";
 import {EXEC_ENV} from "lib/config";
 
-var stylesFunction = ({colors}) => ({
+var styles = ({colors}) => ({
     base: {
         display: "flex",
         alignItems: "center",
         justifyContent: "space-between",
-        padding: "8px",
+        padding: "0px 8px",
         background: colors.primary,
         height: "100%",
         color: colors.white
     },
+    iconWrp: {
+        display: "block",
+        lineHeight: "30px",
+        backgroundColor: colors.transparent,
+        cursor: "pointer"
+    },
     icon: {
-        cursor: "pointer",
-        alignItems: "center"
+        lineHeight: "30px",
+        verticalAlign: "middle"
     },
     hamburger: {
         cursor: "pointer"
@@ -58,6 +64,7 @@ var Header = React.createClass({
         ];
     },
     renderUserSetting: function () {
+        const theme = this.getTheme();
         const userSetting = this.getUserSettings().find(userSetting => {
             return this.props.userSetting.theme.color === userSetting.key;
         });
@@ -70,8 +77,9 @@ var Header = React.createClass({
                         color={this.getTheme().colors.iconHeader}
                         icon={"settings"}
                         size={"30px"}
-                        style={{lineHeight: "20px", verticalAlign: "middle"}}
+                        style={styles(theme).icon}
                     />}
+                styleButton={{...styles(theme).iconWrp, margin: "0px 10px"}}
             >
                 <components.DropdownSelect
                     allowedValues={this.getUserSettings()}
@@ -86,8 +94,9 @@ var Header = React.createClass({
         ) : null;
     },
     renderAdminPage: function () {
+        const theme = this.getTheme();
         return (canAccessUsers(this.props.asteroid)) && EXEC_ENV !== "cordova" ? (
-            <span style={{marginRight: "15px"}}>
+            <div style={{marginRight: "15px"}}>
                 <bootstrap.OverlayTrigger
                     overlay={<bootstrap.Tooltip id="users" className="buttonInfo">
                         {"Gestione utenti"}
@@ -95,19 +104,20 @@ var Header = React.createClass({
                     placement="bottom"
                     rootClose={true}
                 >
-                    <Link to="/users/" >
+                    <Link to="/users/" style={styles(theme).iconWrp}>
                         <components.Icon
-                            color={this.getTheme().colors.iconHeader}
+                            color={theme.colors.iconHeader}
                             icon={"user"}
                             size={"30px"}
-                            style={{lineHeight: "20px", verticalAlign: "top"}}
+                            style={styles(theme).icon}
                         />
                     </Link>
                 </bootstrap.OverlayTrigger>
-            </span>
+            </div>
         ) : null;
     },
     renderInboxPage: function () {
+        const theme = this.getTheme();
         return this.props.isAuthorizedUser ? (
             <div style={{marginRight: "15px"}}>
                 <bootstrap.OverlayTrigger
@@ -117,12 +127,12 @@ var Header = React.createClass({
                     placement="bottom"
                     rootClose={true}
                 >
-                    <Link to="" >
+                    <Link to="" style={styles(theme).iconWrp}>
                         <components.Icon
-                            color={this.getTheme().colors.iconHeader}
+                            color={theme.colors.iconHeader}
                             icon={"box"}
                             size={"30px"}
-                            style={{lineHeight: "20px", verticalAlign: "middle"}}
+                            style={styles(theme).icon}
                         />
                     </Link>
                 </bootstrap.OverlayTrigger>
@@ -130,6 +140,7 @@ var Header = React.createClass({
         ) : null;
     },
     renderAlarmPage: function () {
+        const theme = this.getTheme();
         return this.props.isAuthorizedUser ? (
             <div style={{marginRight: "15px"}}>
                 <bootstrap.OverlayTrigger
@@ -139,12 +150,12 @@ var Header = React.createClass({
                     placement="bottom"
                     rootClose={true}
                 >
-                    <Link to="" >
+                    <Link to="" style={styles(theme).iconWrp}>
                         <components.Icon
-                            color={this.getTheme().colors.iconHeader}
+                            color={theme.colors.iconHeader}
                             icon={"danger"}
                             size={"28px"}
-                            style={{lineHeight: "20px", verticalAlign: "top"}}
+                            style={styles(theme).icon}
                         />
                     </Link>
                 </bootstrap.OverlayTrigger>
@@ -152,33 +163,34 @@ var Header = React.createClass({
         ) : null;
     },
     renderMenu: function () {
+        const theme = this.getTheme();
         return this.props.isAuthorizedUser ? (
             <components.Icon
                 color={this.getTheme().colors.white}
                 icon={"menu"}
                 onClick={this.props.menuClickAction}
                 size={"46px"}
-                style={{lineHeight: "20px"}}
+                style={styles(theme).icon}
             />
         ) : null;
     },
     render: function () {
-        const styles = stylesFunction(this.getTheme());
+        const theme = this.getTheme();
         return (
-            <div style={styles.base}>
+            <div style={styles(theme).base}>
                 {this.renderMenu()}
-                <span style={merge(styles.base, {marginLeft: "15px"})}>
-                    <Link to="/" >
+                <div style={merge(styles(theme).base, {marginLeft: "15px"})}>
+                    <Link to="/" style={{...styles(theme).iconWrp, padding: "0px"}}>
                         <components.Icon
-                            color={this.getTheme().colors.iconHeader}
+                            color={theme.colors.iconHeader}
                             icon={"innowatio-logo"}
                             size={"40px"}
-                            style={{lineHeight: "20px"}}
+                            style={styles(theme).icon}
                         />
                     </Link>
-                </span>
-                <div style={styles.viewTitle}>
-                    <text style={styles.textTitle}>{this.props.title.toUpperCase()}</text>
+                </div>
+                <div style={styles(theme).viewTitle}>
+                    <text style={styles(theme).textTitle}>{this.props.title.toUpperCase()}</text>
                 </div>
                 {this.renderUserSetting()}
                 {this.renderAdminPage()}
@@ -191,14 +203,14 @@ var Header = React.createClass({
                     placement="bottom"
                     rootClose={true}
                 >
-                    <span onClick={this.props.logout} style={styles.icon}>
+                    <div onClick={this.props.logout} style={styles(theme).iconWrp}>
                         <components.Icon
-                            color={this.getTheme().colors.iconHeader}
+                            color={theme.colors.iconHeader}
                             icon={"logout"}
                             size={"30px"}
-                            style={{lineHeight: "20px", verticalAlign: "middle"}}
+                            style={styles(theme).icon}
                         />
-                    </span>
+                    </div>
                 </bootstrap.OverlayTrigger>
             </div>
         );

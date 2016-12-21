@@ -28,7 +28,7 @@ var DashboardGoogleMap = React.createClass({
                     key: GOOGLE_MAP_API_KEY
                 }}
                 defaultCenter={{lat: 42.0279071, lng: 11.3340147}}
-                defaultZoom={4}
+                defaultZoom={5}
             >
                 {this.renderSitesMarker()}
             </GoogleMap>
