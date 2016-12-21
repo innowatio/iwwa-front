@@ -48,8 +48,7 @@ const measurementTypeButtonStyle = (theme) => R.merge(styles(theme).buttonSelect
     height: "45px",
     fontSize: "15px",
     fontWeight: "300",
-    margin: "0 0 0 10px",
-    padding: "0px"
+    margin: "0 0 0 10px"
 });
 
 const sourceButtonStyle = (theme) => R.merge(styles(theme).buttonSelectChart, {
@@ -62,7 +61,6 @@ const consumptionButtonStyle = ({colors}) => ({
     color: colors.greySubTitle,
     textAlign: "center",
     marginRight: "15px !important",
-    padding: "0px",
     verticalAlign: "middle",
     borderRadius: "22px",
     width: "45px",
@@ -94,9 +92,10 @@ const alarmButtonStyle = ({colors}, isActive) => ({
     backgroundColor: isActive ? colors.backgroundChartSelectedButton : colors.backgroundDanger,
     border: "0px none",
     borderRadius: "100%",
+    display: "inline-block",
+    width: "50px",
     height: "50px",
-    margin: "auto",
-    width: "50px"
+    margin: "auto"
 });
 
 var Chart = React.createClass({
@@ -735,19 +734,28 @@ var Chart = React.createClass({
                             icon={"danger"}
                             onClick={() => this.props.toggleAlarms()}
                             size={"28px"}
-                            style={{lineHeight: "20px"}}
+                            style={{display: "block", width: "50px"}}
                         />
                     </Button>
                     <Popover
                         className="pull-right"
                         hideOnChange={true}
-                        style={{height: "56px", margin: 0}}
+                        style={{
+                            width: "50px",
+                            height: "50px",
+                            textAlign: "center",
+                            lineHeight: "50px",
+                            margin: "auto"
+                        }}
                         title={
                             <Icon
                                 color={theme.colors.iconOption}
                                 icon={"option"}
                                 size={"32px"}
-                                style={{verticalAlign: "middle"}}
+                                style={{
+                                    display: "block",
+                                    width: "50px"
+                                }}
                             />
                         }
                     >
@@ -768,8 +776,7 @@ var Chart = React.createClass({
                     style={R.merge(
                         dateButtonStyle(theme), {
                             borderRadius: "0 20px 20px 0",
-                            left: "0px",
-                            padding: "0px"
+                            left: "0px"
                         })
                     }
                 >
@@ -851,7 +858,7 @@ var Chart = React.createClass({
                 <Button
                     style={
                         R.merge(dateButtonStyle(theme),
-                        {borderRadius: "20px 0 0 20px", right: "0px", padding: "0px"})
+                        {borderRadius: "20px 0 0 20px", right: "0px"})
                     }
                 >
                     <Icon

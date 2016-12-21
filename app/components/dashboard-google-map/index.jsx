@@ -51,7 +51,7 @@ var DashboardGoogleMap = React.createClass({
                     key: GOOGLE_MAP_API_KEY
                 }}
                 center={this.props.center ? this.props.center : {lat: 42.0279071, lng: 11.3340147}}
-                zoom={this.props.zoom ? this.props.zoom : 4}
+                zoom={this.props.zoom ? this.props.zoom : 5}
                 onBoundsChange={this.onBoundsChange}
                 onChildClick={this.onSiteClick}
                 options={{

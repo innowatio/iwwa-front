@@ -22,6 +22,7 @@ var Button = React.createClass({
         return React.cloneElement(button, {
             // If you set color of the background, use background and not backgroundColor
             style: R.merge({
+                padding: "0px",
                 outline: "0px",
                 outlineStyle: "none",
                 outlineWidth: "0px"

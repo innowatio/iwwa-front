@@ -13,7 +13,8 @@ import mergeSiteSensors from "lib/merge-site-sensors";
 const itemsStyle = (theme) => (R.merge(styles(theme).buttonBasicStyle, {
     background: theme.colors.primary,
     color: theme.colors.white,
-    fontSize: "22px",
+    fontSize: "18px",
+    fontWeight: "300",
     border: "0px",
     marginTop: "10px",
     width: "90%",
@@ -30,7 +31,7 @@ const itemsStyleActive = ({colors}) => ({
     position: "relative"
 });
 
-const heightBody = "420px";
+const heightBody = "400px";
 
 var SiteNavigator = React.createClass({
     propTypes: {
@@ -186,7 +187,7 @@ var SiteNavigator = React.createClass({
                     {this.props.title}
                 </h3>
                 <bootstrap.Row>
-                    <bootstrap.Col style={{marginTop: "20px"}} xs={12}>
+                    <bootstrap.Col style={{margin: "20px 0px"}} xs={12}>
                         <div className="search-container">
                             <Radium.Style
                                 rules={{
@@ -246,8 +247,7 @@ var SiteNavigator = React.createClass({
                         position: "relative",
                         overflow: "hidden",
                         paddingRight:"60px",
-                        marginTop: "10px",
-                        padding: "10px",
+                        padding: "5px 10px",
                         height: `calc(100vh - ${heightBody})`,
                         minHeight: "350px"
                     }}
@@ -260,6 +260,7 @@ var SiteNavigator = React.createClass({
                             overflow: "auto",
                             right: "-15px",
                             padding: "15px 20px",
+                            margin: "0px 10px",
                             width: "100%",
                             height: "100%"
                         }}

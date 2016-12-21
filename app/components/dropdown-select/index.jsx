@@ -80,7 +80,6 @@ var DropdownSelect = React.createClass({
                 onMouseLeave={this.mouseLeave}
                 onMouseOver={R.partial(this.mouseOver, [allowedValue])}
                 style={{
-                    ...itemStyle,
                     borderLeft: "0px",
                     borderRight: "0px",
                     borderTop: "0px",
@@ -94,6 +93,7 @@ var DropdownSelect = React.createClass({
                     outlineStyle: "none",
                     outlineWidth: "0px",
                     // This should overwrite the style over that position.
+                    ...itemStyle,
                     ...this.props.style
                 }}
             >
@@ -101,12 +101,11 @@ var DropdownSelect = React.createClass({
             </bootstrap.ListGroupItem>
         );
     },
-    renderTitle: function (allowedValue) {
+    renderTitle: function () {
         const {colors} = this.getTheme();
-        const active = R.equals(this.props.value, allowedValue);
         return (
             <h5 style={{
-                color: (active ? colors.white : colors.mainFontColor),
+                color: colors.mainFontColor,
                 fontSize: "18px",
                 padding: "15px 10px",
                 marginBottom: "0px",

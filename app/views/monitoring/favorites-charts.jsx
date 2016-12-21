@@ -50,7 +50,7 @@ const styles = ({colors}) => ({
         textAlign: "center"
     },
     sectionToolbarIcon: {
-        marginTop: "6px",
+        marginTop: "5px",
         marginRight: "10px",
         backgroundColor: colors.primary,
         width: "43px",

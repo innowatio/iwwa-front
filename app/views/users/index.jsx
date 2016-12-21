@@ -74,7 +74,7 @@ const stylesFunction = ({colors}, active) => ({
         width: "50px",
         padding: "0px",
         textAlign: "center",
-        margin: "0px 5px"
+        marginLeft: "10px"
     },
     buttonIcon: {
         lineHeight: "25px",

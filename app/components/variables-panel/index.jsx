@@ -9,11 +9,13 @@ import getLastUpdate from "lib/date-utils";
 
 var style = (variableColor) => ({
     box: {
-        borderRadius: "28px",
+        maxWidth: "400px",
+        overflow: "hidden",
+        borderRadius: "26px",
         display: "flex",
+        flexDirection: "row",
         height: "65px",
-        margin: "5%",
-        padding: "1% 5%",
+        margin: "0 5%",
         background: variableColor
     }
 });
@@ -58,18 +60,13 @@ var VariablesPanel = React.createClass({
                                 icon={variable.icon}
                                 size={EXEC_ENV === "cordova" ? "48px" : "60px"}
                                 style={{
-                                    lineHeight: EXEC_ENV === "cordova" ? "70px" : "20px",
-                                    width: EXEC_ENV === "cordova" ? "30px" : "45px",
-                                    verticalAlign: "middle"
+                                    lineHeight: "65px",
+                                    margin: "0 6px",
+                                    height: "65px"
                                 }}
                             />
                             <MeasureLabel
                                 id={variable.name || variable._id}
-                                style={{
-                                    paddingLeft: "16px",
-                                    verticalAlign: "text-top",
-                                    minWidth: EXEC_ENV === "cordova" ? "40px" : "45px"
-                                }}
                                 unit={variable.unit}
                                 value={variable.measurementValue.toFixed(2)}
                             />
@@ -82,7 +79,9 @@ var VariablesPanel = React.createClass({
     render: function () {
         return (
             <div style={{width: "100%", height: "110px", overflow: "hidden"}}>
-                <div style={{display: "flex", height: "115%", overflow: "auto"}}>{this.renderVariableBox()}</div>
+                <div style={{display: "flex", height: "115%", overflow: "auto"}}>
+                    {this.renderVariableBox()}
+                </div>
             </div>
         );
     }
