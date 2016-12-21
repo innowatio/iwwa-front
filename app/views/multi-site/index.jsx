@@ -2,6 +2,7 @@ import Immutable  from "immutable";
 import React from "react";
 import * as bootstrap from "react-bootstrap";
 import Radium from "radium";
+import R from "ramda";
 import {bindActionCreators} from "redux";
 import {selectSingleElectricalSensor} from "actions/chart";
 
@@ -163,8 +164,8 @@ const multisiteButtonSortBy = [{
     title: "Visualizza in ordine di:",
     sortBy: [
         {label: "Pod", key: "pod"},
-        {label: "Id", key: "id"},
-        {label: "Provincia", key: "prov"},
+        {label: "Id", key: "_id"},
+        {label: "Provincia", key: "province"},
         {label: "Data ultimo aggiornamento", key: "aggiornamento"},
         {label: "Piani", key: "piani"},
         {label: "Vetrine", key: "vetrine"},
@@ -198,12 +199,14 @@ var MultiSite = React.createClass({
     getInitialState: function () {
         return {
             openPanel: "",
-            search: ""
+            search: "",
+            sortBy: "_id"
         };
     },
     componentDidMount: function () {
         this.props.asteroid.subscribe("sites");
-        this.props.asteroid.subscribe("alarms-aggregates", this.getSites().keys());
+        this.props.asteroid.subscribe("alarms");
+        this.props.asteroid.subscribe("userAlarmsAggregates");
     },
     componentWillReceiveProps: function () {
     },
@@ -243,9 +246,6 @@ var MultiSite = React.createClass({
         return this.context.theme || defaultTheme;
     },
 
-    getAlarmStatus: function () {
-        return "ACTIVE";
-    },
 
     getSiteInfo: function () {
         return [
@@ -286,13 +286,88 @@ var MultiSite = React.createClass({
             {data: "2", label: "Remote Control", key: "remote control"}
         ];
     },
+
+    getSiteAlarmStatus: function (site) {
+
+        // const quarter = 900000;
+        const quarter = 43200000;
+        const threshold = moment.utc().valueOf() - quarter;
+
+        const userAlarmsList = this.props.collections.get("alarms") || Immutable.List();
+        const userAlarmsAggregatesList = this.props.collections.get("alarms-aggregates") || Immutable.List();
+
+        const userAlarms = userAlarmsList.map(x => x.toJS()).toArray();
+        const userAlarmsAggregates = userAlarmsAggregatesList.map(x => x.toJS()).toArray();
+
+        const decoratedAggregates = userAlarmsAggregates.map(aggregate => {
+            const alarmDefinition = userAlarms.find(x => x._id === aggregate.alarmId);
+            const measurementTimes = aggregate.measurementTimes.split(",");
+            const measurementValues = aggregate.measurementValues.split(",");
+            const measurements = measurementTimes.map((time, index) => {
+                return {
+                    time,
+                    value: parseInt(measurementValues[index])
+                };
+            }).filter(x => x.value === 1);
+            return {
+                ...alarmDefinition,
+                ...aggregate,
+                measurements,
+                triggered: R.last(measurements) ? R.last(measurements).time > threshold : false
+            };
+        });
+
+        const siteAndSensors = [
+            site._id,
+            ...site.sensorsIds
+        ];
+
+        const siteAlarms = decoratedAggregates.filter(x => R.contains(x.sensorId, siteAndSensors));
+        if (siteAlarms.length === 0) {
+            return "N.D.";
+        }
+
+        return siteAlarms.find(x => x.triggered) ? "ERROR" : "ACTIVE";
+    },
+
+    getSiteConnectionStatus: function () {
+        return "ACTIVE";
+    },
+
+    getSiteConsumptionStatus: function () {
+        return "N.D.";
+    },
+
+    getSiteRemoteControlStatus: function (site) {
+        return site.remoteControl ? site.remoteControlStatus : "N.D.";
+    },
+
+    getSiteComfortStatus: function (site) {
+        return site.comfortControl ? site.comfortControlStatus : "N.D.";
+    },
+
+    getSiteStatuses: function (site) {
+        return {
+            alarm: this.getSiteAlarmStatus(site),
+            connection: this.getSiteConnectionStatus(site),
+            consumption: this.getSiteConsumptionStatus(),
+            remoteControl: this.getSiteRemoteControlStatus(site),
+            comfort: this.getSiteComfortStatus(site)
+        };
+    },
+
     getFilteredSortedSites: function () {
-        const sites = this.getSites();
-        return sites.filter(site => {
-            const input = this.state.search.trim().toLowerCase();
-            const siteSearch = `${site.get("name") || ""} ${site.get("address") || ""}`;
+        const {
+            search,
+            sortBy
+        } = this.state;
+        const sites = this.getSites().map(x => x.toJS()).toArray();
+        const filtered = sites.filter(site => {
+            const input = search.trim().toLowerCase();
+            const siteSearch = `${site.name || ""} ${site.address || ""}`;
             return siteSearch.toLowerCase().includes(input);
-        }).toArray();
+        });
+        return filtered.filter(x => !!x[sortBy]).sort((x, y) => x[sortBy].toLowerCase() > y[sortBy].toLowerCase() ? 1 : -1);
     },
     onChangeInputFilter: function (input) {
         this.setState({
@@ -577,7 +652,11 @@ var MultiSite = React.createClass({
                             onConfirm={this.onChangeInputFilter}
                         />
                         <ButtonSortBy
-                            activeSortBy={this.props.collections}
+                            onChange={(sortBy) => {
+                                this.setState({
+                                    sortBy
+                                });
+                            }}
                             filterList={multisiteButtonSortBy}
                         />
                     </div>
@@ -719,34 +798,26 @@ var MultiSite = React.createClass({
     },
 
     renderSites: function () {
-        return this.getFilteredSortedSites().map((site, index) => {
-            return (
-                <SiteStatus
-                    isOpen={this.state.openPanel === site.get("_id")}
-                    key={index}
-                    onClickAlarmChart={this.props.selectSingleElectricalSensor}
-                    onClickPanel={this.onClickPanel}
-                    parameterStatus={{
-                        alarm: this.getAlarmStatus(),
-                        connection: "",
-                        consumption: "",
-                        remoteControl: "",
-                        comfort: ""
-                    }}
-                    siteName={site.get("name")}
-                    siteInfo={
-                        this.getSiteInfo().map(info => {
-                            return {
-                                key: info.key,
-                                label: info.label,
-                                value: site.get(info.key) || ""
-                            };
-                        })
-                    }
-                    siteAddress={site.get("address") || ""}
-                />
-            );
-        });
+        return this.getFilteredSortedSites().map((site, index) => (
+            <SiteStatus
+                isOpen={this.state.openPanel === site._id}
+                key={index}
+                onClickAlarmChart={this.props.selectSingleElectricalSensor}
+                onClickPanel={this.onClickPanel}
+                parameterStatus={this.getSiteStatuses(site)}
+                siteName={site.name}
+                siteInfo={
+                    this.getSiteInfo().map(info => {
+                        return {
+                            key: info.key,
+                            label: info.label,
+                            value: site[info.key] || ""
+                        };
+                    })
+                }
+                siteAddress={site.address || ""}
+            />
+        ));
     },
 
     render: function () {

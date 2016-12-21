@@ -31,6 +31,7 @@ var ButtonSortBy = React.createClass({
     propTypes: {
         activeSortBy: PropTypes.object,
         labelStyle: PropTypes.object,
+        onChange: PropTypes.func.isRequired,
         sortByList: PropTypes.arrayOf(PropTypes.shape({
             title: PropTypes.string,
             sortBy: PropTypes.arrayOf(PropTypes.shape({
@@ -60,7 +61,8 @@ var ButtonSortBy = React.createClass({
     getButtonSort: function () {
         return [
             {label: "Pod", key: "pod"},
-            {label: "Id", key: "id"},
+            {label: "Id", key: "_id"},
+            {label: "Nome", key: "name"},
             {label: "Provincia", key: "prov"},
             {label: "Data ultimo aggiornamento", key: "aggiornamento"},
             {label: "Piani", key: "piani"},
@@ -69,13 +71,14 @@ var ButtonSortBy = React.createClass({
             {label: "mq PdV", key: "mq1"}
         ];
     },
-    handleChange: function (key, value) {
+    handleChange: function (sortBy, value) {
         this.setState({
             sortBy: {
                 ...this.state.sortBy,
-                [key]: value
+                [sortBy]: value
             }
         });
+        this.props.onChange(sortBy.key);
     },
     renderSortByButtons: function () {
         const {colors} = this.getTheme();
