@@ -11,8 +11,7 @@ var DashboardGoogleMap = React.createClass({
     },
     renderSitesMarker: function () {
         return this.props.sites.map(site => {
-            const latitude = site.latitude;
-            const longitude = site.longitude;
+            const {latitude, longitude} = site;
             return latitude && longitude ? (
                 <SiteMarker
                     lat={latitude}
@@ -22,6 +21,7 @@ var DashboardGoogleMap = React.createClass({
         });
     },
     render: function () {
+        // position: 10 === google.maps.ControlPosition.BOTTOM_LEFT
         return (
             <GoogleMap
                 bootstrapURLKeys={{
@@ -29,6 +29,12 @@ var DashboardGoogleMap = React.createClass({
                 }}
                 defaultCenter={{lat: 42.0279071, lng: 11.3340147}}
                 defaultZoom={4}
+                options={{
+                    fullscreenControl: true,
+                    fullscreenControlOptions: {
+                        position: 10
+                    }
+                }}
             >
                 {this.renderSitesMarker()}
             </GoogleMap>
