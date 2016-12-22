@@ -10,11 +10,11 @@ import SiteMarker from "./site-marker";
 var DashboardGoogleMap = React.createClass({
     propTypes: {
         center: PropTypes.any,
-        zoom: PropTypes.number,
         onBoundsChange: PropTypes.func,
         onCenterChange: PropTypes.func,
         onZoomChange: PropTypes.func,
-        sites: PropTypes.array.isRequired
+        sites: PropTypes.array.isRequired,
+        zoom: PropTypes.number
     },
     mixins: [PureMixin],
     onBoundsChange: function (center, zoom, bounds, marginBounds) {
