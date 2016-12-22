@@ -205,10 +205,10 @@ var MultiSite = React.createClass({
     },
     componentDidMount: function () {
         this.props.asteroid.subscribe("sites");
-        this.props.asteroid.subscribe("alarms");
-        this.props.asteroid.subscribe("userAlarmsAggregates");
-    },
-    componentWillReceiveProps: function () {
+        this.props.asteroid.subscribe("dashboardAlarms");
+        this.props.asteroid.subscribe("dashboardAlarmsAggregates");
+        this.props.asteroid.subscribe("dashboardDailyMeasurements");
+        this.props.asteroid.subscribe("dashboardRealtimeAggregates");
     },
     getTitleTab: function (period) {
         switch (period) {
@@ -278,6 +278,13 @@ var MultiSite = React.createClass({
             {icon: "good-o", iconColor: theme.colors.iconActive, label: "Comfort", key: "Comfort"}
         ];
     },
+
+    getRealtimeAggregate: function (site, measurementType, filter = () => true) {
+        const realtimeAggregatesList = this.props.collections.get("readings-real-time-aggregates") || Immutable.List();
+        const realtimeAggregates = realtimeAggregatesList.map(x => x.toJS()).toArray();
+        return realtimeAggregates.filter(filter).find(x => x.measurementType === measurementType && R.contains(x.sensorId, site.sensorsIds));
+    },
+
     getSitesRecap: function () {
         return [
             {data: "800", label: "Siti totali", key: "totali"},
@@ -289,18 +296,16 @@ var MultiSite = React.createClass({
 
     getSiteAlarmStatus: function (site) {
 
-        // const quarter = 900000;
-        const quarter = 43200000;
-        const threshold = moment.utc().valueOf() - quarter;
+        const threshold = moment.utc().valueOf() - 86400000;
 
-        const userAlarmsList = this.props.collections.get("alarms") || Immutable.List();
-        const userAlarmsAggregatesList = this.props.collections.get("alarms-aggregates") || Immutable.List();
+        const alarmsList = this.props.collections.get("alarms") || Immutable.List();
+        const alarmsAggregatesList = this.props.collections.get("alarms-aggregates") || Immutable.List();
 
-        const userAlarms = userAlarmsList.map(x => x.toJS()).toArray();
-        const userAlarmsAggregates = userAlarmsAggregatesList.map(x => x.toJS()).toArray();
+        const alarms = alarmsList.map(x => x.toJS()).toArray();
+        const alarmsAggregates = alarmsAggregatesList.map(x => x.toJS()).toArray();
 
-        const decoratedAggregates = userAlarmsAggregates.map(aggregate => {
-            const alarmDefinition = userAlarms.find(x => x._id === aggregate.alarmId);
+        const decoratedAggregates = alarmsAggregates.map(aggregate => {
+            const alarmDefinition = alarms.find(x => x._id === aggregate.alarmId);
             const measurementTimes = aggregate.measurementTimes.split(",");
             const measurementValues = aggregate.measurementValues.split(",");
             const measurements = measurementTimes.map((time, index) => {
@@ -324,42 +329,108 @@ var MultiSite = React.createClass({
 
         const siteAlarms = decoratedAggregates.filter(x => R.contains(x.sensorId, siteAndSensors));
         if (siteAlarms.length === 0) {
-            return "N.D.";
+            return "MISSING";
         }
 
         return siteAlarms.find(x => x.triggered) ? "ERROR" : "ACTIVE";
     },
 
-    getSiteConnectionStatus: function () {
-        return "ACTIVE";
+    getSiteConnectionStatus: function (site) {
+
+        const olderThan = 900000;
+        const threshold = moment.utc().valueOf() - olderThan;
+
+        const realtimeAggregatesList = this.props.collections.get("readings-real-time-aggregates") || Immutable.List();
+        const realtimeAggregates = realtimeAggregatesList.map(x => x.toJS()).toArray();
+
+        for (var index = 0; index < site.sensorsIds.length; index++) {
+            const sensorId = site.sensorsIds[index];
+            const realtime = realtimeAggregates
+                .filter(x => x.sensorId === sensorId)
+                .filter(x => x.measurementTime >= threshold);
+            if (realtime.length > 0) {
+                return "ACTIVE";
+            }
+        }
+
+        return "ERROR";
     },
 
-    getSiteConsumptionStatus: function () {
-        return "N.D.";
+    getSiteConsumptionStatus: function (site) {
+
+        const today = moment().format("YYYY-MM-DD");
+        const yesterday = moment().subtract({days: 1}).format("YYYY-MM-DD");
+        const dailyAggregatesList = this.props.collections.get("readings-daily-aggregates") || Immutable.List();
+        const dailyAggregates = dailyAggregatesList
+            .map(x => x.toJS())
+            .filter(x => R.contains(x.sensorId, site._id))
+            .filter(x => x.day === today || x.day === yesterday)
+            .filter(x => x.measurementType === "activeEnergy")
+            .toArray();
+
+        const activeEnergy = dailyAggregates.find(x => x.source === "reading");
+        const activeEnergyReference = dailyAggregates.find(x => x.source === "reference");
+
+        if (activeEnergy && activeEnergyReference) {
+            const total = activeEnergy.measurementValues.split(",").reduce((total, value) => total + parseFloat(value), 0);
+            const totalReference = activeEnergyReference.measurementValues.split(",").reduce((total, value) => total + parseFloat(value), 0);
+
+            const result = (total - totalReference) / totalReference;
+
+            if (result <= -1 || result >= 1) {
+                return "ERROR";
+            }
+
+            if (result > -1 && result <= -0.05) {
+                return "ACTIVE";
+            }
+
+            if (result > -0.05 && result <= 0.1) {
+                return "WARNING";
+            }
+
+            if (result > 0.1 && result < 1) {
+                return "ERROR";
+            }
+        }
+
+        return "MISSING";
     },
 
     getSiteRemoteControlStatus: function (site) {
-        return site.remoteControl ? site.remoteControlStatus : "N.D.";
+        const telecontrol = this.getRealtimeAggregate(site, "telecontrolLevel");
+        if (telecontrol) {
+            return telecontrol.measurementValue === 1 ? "ACTIVE" : "ERROR";
+        }
+        return "MISSING";
     },
 
     getSiteComfortStatus: function (site) {
-        return site.comfortControl ? site.comfortControlStatus : "N.D.";
+        const threshold = moment.utc().valueOf() - 3600000;
+        const comfort = this.getRealtimeAggregate(site, "comfortLevel", x => {
+            return x.measurementTime >= threshold;
+        });
+        if (comfort) {
+            return comfort.measurementValue === 1 ? "ACTIVE" : "ERROR";
+        }
+        return "MISSING";
     },
 
     getSiteStatuses: function (site) {
         return {
-            alarm: this.getSiteAlarmStatus(site),
-            connection: this.getSiteConnectionStatus(site),
-            consumption: this.getSiteConsumptionStatus(),
-            remoteControl: this.getSiteRemoteControlStatus(site),
-            comfort: this.getSiteComfortStatus(site)
+            alarm: site.alarmsDisabled ? "DISABLED" : this.getSiteAlarmStatus(site),
+            connection: site.connectionDisabled ? "DISABLED" : this.getSiteConnectionStatus(site),
+            consumption: site.consumptionsDisabled ? "DISABLED" : this.getSiteConsumptionStatus(site),
+            remoteControl: site.telecontrolDisabled ? "DISABLED" : this.getSiteRemoteControlStatus(site),
+            comfort: site.comfortDisabled ? "DISABLED" : this.getSiteComfortStatus(site)
         };
     },
 
     getFilteredSortedSites: function () {
         const {
             search,
-            sortBy
+            sortBy,
+            reverseSort
         } = this.state;
         const sites = this.getSites().map(x => x.toJS()).toArray();
         const filtered = sites.filter(site => {
@@ -367,7 +438,9 @@ var MultiSite = React.createClass({
             const siteSearch = `${site.name || ""} ${site.address || ""}`;
             return siteSearch.toLowerCase().includes(input);
         });
-        return filtered.filter(x => !!x[sortBy]).sort((x, y) => x[sortBy].toLowerCase() > y[sortBy].toLowerCase() ? 1 : -1);
+
+        const sorted = filtered.sort((x, y) => x[sortBy] && x[sortBy].toLowerCase() > y[sortBy].toLowerCase() ? 1 : -1);
+        return reverseSort ? R.reverse(sorted) : sorted;
     },
     onChangeInputFilter: function (input) {
         this.setState({
