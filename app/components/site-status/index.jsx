@@ -45,7 +45,7 @@ const styles = (theme) => ({
         textAlign: "left"
     },
     iconOptionBtn: {
-        width: "30px",
+        width: "40px",
         float: "right",
         border: 0,
         backgroundColor: theme.colors.transparent
@@ -87,7 +87,8 @@ var SiteStatus = React.createClass({
         parameterStatus: PropTypes.object.isRequired,
         siteAddress: PropTypes.string.isRequired,
         siteInfo: PropTypes.array.isRequired,
-        siteName: PropTypes.string.isRequired
+        siteName: PropTypes.string.isRequired,
+        tooltip: PropTypes.string.isRequired
     },
     contextTypes: {
         theme: PropTypes.object
@@ -108,17 +109,39 @@ var SiteStatus = React.createClass({
                 return theme.colors.iconError;
             case "WARNING":
                 return theme.colors.iconWarning;
+            case "MISSING":
+                return theme.colors.iconMissing;
             default:
                 return theme.colors.iconInactive;
         }
     },
     getSiteStatus: function () {
         return [
-            {icon: "alarm-o", iconColor: this.getColorByStatus(this.props.parameterStatus.alarm), key: "Allarme"},
-            {icon: "connection-o", iconColor: this.getColorByStatus(this.props.parameterStatus.connection), key: "Connessione"},
-            {icon: "consumption-o", iconColor: this.getColorByStatus(this.props.parameterStatus.consumption), key: "Consumi"},
-            {icon: "remote-control-o", iconColor: this.getColorByStatus(this.props.parameterStatus.remoteControl), key: "Telecontrollo"},
-            {icon: "good-o", iconColor: this.getColorByStatus(this.props.parameterStatus.comfort), key: "Comfort"}
+            {
+                icon: "alarm-o",
+                iconColor: this.getColorByStatus(this.props.parameterStatus.alarm),
+                key: "Allarme"
+            },
+            {
+                icon: "connection-o",
+                iconColor: this.getColorByStatus(this.props.parameterStatus.connection),
+                key: "Connessione"
+            },
+            {
+                icon: "consumption-o",
+                iconColor: this.getColorByStatus(this.props.parameterStatus.consumption),
+                key: "Consumi"
+            },
+            {
+                icon: "remote-control-o",
+                iconColor: this.getColorByStatus(this.props.parameterStatus.remoteControl),
+                key: "Telecontrollo"
+            },
+            {
+                icon: "good-o",
+                iconColor: this.getColorByStatus(this.props.parameterStatus.comfort),
+                key: "Comfort"
+            }
         ];
     },
     getTheme: function () {
@@ -127,13 +150,29 @@ var SiteStatus = React.createClass({
     renderSiteStatus: function () {
         const siteStatus = this.getSiteStatus().map(status => {
             return (
-                <Icon
-                    key={status.key}
-                    color={status.iconColor}
-                    icon={status.icon}
-                    size={"42px"}
-                    style={{display: "inline-block", marginRight: "8px", height: "40px"}}
-                />
+                <bootstrap.OverlayTrigger
+                    overlay={
+                        <bootstrap.Tooltip className="buttonInfo" id={this.props.tooltip}>
+                            {this.props.tooltip}
+                        </bootstrap.Tooltip>
+                    }
+                    placement="bottom"
+                    rootClose={true}
+                >
+                    <span style={{display: "inline-block", height: "40px"}}>
+                        <Icon
+                            key={status.key}
+                            color={status.iconColor}
+                            icon={status.icon}
+                            size={"44px"}
+                            style={{
+                                display: "inline-block",
+                                marginRight: "5px",
+                                height: "45px"
+                            }}
+                        />
+                    </span>
+                </bootstrap.OverlayTrigger>
             );
         });
         return siteStatus;
@@ -167,13 +206,18 @@ var SiteStatus = React.createClass({
                         <Icon
                             color={theme.colors.iconSiteButton}
                             icon={"option"}
-                            size={"24px"}
+                            size={"26px"}
                             style={{verticalAlign: "middle"}}
                         />
                     </Button>
                 </div>
-                <div style={{width: "100%", height: "40px", clear: "both"}}>
-                    <div style={{float: "left", lineHeight: "40px", height: "40px"}}>
+                <div style={{
+                    width: "100%",
+                    display: "flex",
+                    justifyContent: "space-between",
+                    alignItems: "center"
+                }}>
+                    <div style={{float: "left", lineHeight: "40px", height: "45px"}}>
                         {this.renderSiteStatus()}
                     </div>
                     <div style={{width: "40px", height: "40px", float: "right"}}>
