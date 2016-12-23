@@ -1,4 +1,10 @@
-import {equals, head, last, update} from "ramda";
+import {
+    equals,
+    head,
+    last,
+    uniq,
+    update
+} from "ramda";
 import {combineReducers} from "redux";
 import moment from "lib/moment";
 
@@ -130,31 +136,34 @@ function charts (state = defaultChartState, {type, payload}) {
             }].concat([environmentalSensorState]);
         }
         case SELECT_SOURCE: {
+            
             /*
-            *   The source can be `reading` and/or `forecast`.
-            *   Forecast is only for electrical sensor.
-            *   Toggle functionality.
-            */
-            const toggleSource = (
-                state.length > 1 &&
-                equals({...state[0], source: null}, {...state[1], source: null})
-            );
-            if (toggleSource) {
-                return [{
-                    ...state[0],
-                    source: payload[0]
-                }];
-            }
-            const sameSourceToAllStateObj = state.length === 1 && payload.length === 2;
-            return sameSourceToAllStateObj ? payload.map(source => ({
-                ...state[0],
-                alarms: undefined,
-                source
-            })) : state.map(stateObj => ({
-                ...stateObj,
-                alarms: undefined,
-                source: payload[0]
+             *  The source can be `reading` and/or `forecast`
+             *  and/or `reference`.
+             */
+            const sensors = uniq(state.map(sensor => {
+                return sensor.sensorId;
             }));
+
+            const isCompare = sensors.length > 1 ? true : false;
+            if (isCompare) {
+                return state.map(stateObj => {
+                    return {
+                        ...stateObj,
+                        alarms: undefined,
+                        source: payload[0]
+                    };
+                });
+            } else {
+                return payload.map(source => {
+                    return {
+                        ...state[0],
+                        alarms: undefined,
+                        source
+                    };
+                });
+            }
+
         }
         case SELECT_DATE_RANGES: {
             /*

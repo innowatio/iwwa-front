@@ -123,6 +123,7 @@ const structureExpected = struct({
 const typeofSelectSource = actionTypeValidator(
     tuple([
         structureExpected,
+        maybe(structureExpected),
         maybe(structureExpected)
     ])
 );
