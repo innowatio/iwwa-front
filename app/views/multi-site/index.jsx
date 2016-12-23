@@ -282,7 +282,7 @@ var MultiSite = React.createClass({
     getRealtimeAggregate: function (site, measurementType, filter = () => true) {
         const realtimeAggregatesList = this.props.collections.get("readings-real-time-aggregates") || Immutable.List();
         const realtimeAggregates = realtimeAggregatesList.map(x => x.toJS()).toArray();
-        return realtimeAggregates.filter(filter).find(x => x.measurementType === measurementType && R.contains(x.sensorId, site.sensorsIds));
+        return realtimeAggregates.filter(filter).find(x => x.measurementType === measurementType && R.contains(x.sensorId, [site._id, ...site.sensorsIds]));
     },
 
     getSitesRecap: function () {
@@ -337,7 +337,7 @@ var MultiSite = React.createClass({
 
     getSiteConnectionStatus: function (site) {
 
-        const olderThan = 900000;
+        const olderThan = 1800000;
         const threshold = moment.utc().valueOf() - olderThan;
 
         const realtimeAggregatesList = this.props.collections.get("readings-real-time-aggregates") || Immutable.List();
