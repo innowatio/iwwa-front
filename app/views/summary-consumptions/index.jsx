@@ -32,6 +32,7 @@ var styleLeftPane  = () => ({
     paddingBottom: "20px",
     overflow: "hidden"
 });
+
 var styleTabContent  = () => ({
     display: "flex",
     height: "100%",
@@ -39,6 +40,7 @@ var styleTabContent  = () => ({
     justifyContent: "space-between",
     textAlign: "center"
 });
+
 var styleH2 = ({colors}) => ({
     fontSize: "20px",
     lineHeight: "18px",
@@ -55,6 +57,7 @@ var styleH3 = ({colors}) => ({
     color: colors.white,
     margin: "0px"
 });
+
 var styleRoundedDiv = ({colors}) => ({
     borderRadius: "100%",
     margin: "15px auto",
@@ -92,6 +95,7 @@ var styleUnit  = ({colors}) => ({
     padding: "0px",
     color: colors.white
 });
+
 // var styleCongratMessage = ({colors}) => ({
 //     color: colors.white,
 //     width: "95%",
@@ -104,6 +108,7 @@ var styleUnit  = ({colors}) => ({
 //     border: "1px solid " + colors.borderConsumptionSection,
 //     backgroundColor: colors.backgroundConsumptionSection
 // });
+
 var styleRightPane  = ({colors}) => ({
     display: "flex",
     flexDirection: "column",
@@ -112,6 +117,7 @@ var styleRightPane  = ({colors}) => ({
     height: "calc(100vh - 80px)",
     backgroundColor: colors.secondary
 });
+
 var styleSiteButton = ({colors}) => ({
     width: "50px",
     height: "50px",
@@ -123,8 +129,17 @@ var styleSiteButton = ({colors}) => ({
     backgroundColor: colors.primary
 });
 
+var comparisonDiv = ({colors}) => ({
+    padding: "12px",
+    marginBottom: "20px",
+    border: "1px solid " + colors.borderConsumptionSection,
+    backgroundColor: colors.backgroundConsumptionSection,
+    borderRadius: "20px",
+    color: colors.white
+});
+
 var styleProgressBar = ({colors}) => ({
-    height: "14px",
+    height: "16px",
     margin: "auto",
     borderRadius: "35px",
     maxWidth: "100%",
@@ -135,6 +150,22 @@ var styleProgressBarTitleLabel = ({colors}) => ({
     fontSize: "16px",
     fontWeight: "300",
     color: colors.progressBarFont
+});
+
+var stylePeriodComparisonTitleLabel = ({colors}) => ({
+    fontSize: "16px",
+    fontWeight: "300",
+    color: colors.progressBarFont,
+    borderBottom: "1px solid " + colors.borderConsumptionSection,
+    marginBottom: "8px",
+    textAlign: "center"
+});
+
+var stylePeriodComparisonSubTitleLabel = ({
+    fontSize: "12px",
+    fontWeight: "300",
+    marginBottom: "8px",
+    textAlign: "center"
 });
 
 var styleProgressBarMaxLabel = ({colors}) => ({
@@ -184,8 +215,12 @@ var SummaryConsumptions = React.createClass({
     componentDidMount: function () {
         this.props.asteroid.subscribe("sites");
     },
+
     subscribeToConsumptions: function () {
         const periods = [moment().subtract(1, "year").format("YYYY"), moment().format("YYYY")];
+        const dateEnd = moment.utc().format("YYYY-MM-DD");
+        const dateStart = moment.utc().subtract(7, "week").format("YYYY-MM-DD");
+
         periods.map(year => {
             this.props.asteroid.subscribe(
                 "yearlyConsumptions",
@@ -195,6 +230,15 @@ var SummaryConsumptions = React.createClass({
                 "activeEnergy"
             );
         });
+
+        this.props.asteroid.subscribe(
+            "dailyMeasuresBySensor",
+            this.props.consumptions.fullPath[0],
+            dateStart,
+            dateEnd,
+            "reading",
+            "activeEnergy"
+        );
     },
 
     getTheme: function () {
@@ -213,6 +257,50 @@ var SummaryConsumptions = React.createClass({
             .get("consumptions-yearly-aggregates") || Map())
             .filter(agg => agg.get("sensorId") === this.props.consumptions.fullPath[0]);
         return parseFloat(utils.getSumByPeriod(dateRange, aggregates).toFixed(2));
+    },
+
+    getAggregates: function (isPreviousPeriod, key) {
+        var aggregates;
+        if (isPreviousPeriod) {
+            aggregates = (this.props.collections.get("consumptions-yearly-aggregates") || Map())
+                    .filter(agg => agg.get("sensorId") === this.props.consumptions.fullPath[0]);
+        } else {
+            aggregates = (this.props.collections.get("readings-daily-aggregates") || Map())
+                    .filter(agg => agg.get("sensorId") === this.props.consumptions.fullPath[0]);
+        }
+
+        //for calc of avg year remove current year
+        if (key=="year") {
+            aggregates = aggregates.filter(agg => agg.get("year") != moment().format("YYYY"));
+        }
+
+        return aggregates;
+    },
+
+    isPercentageVisible: function (key) {
+        switch (key) {
+            case "today":
+            case "avg-8-prev-today":
+            case "today-7d-toNow":
+            case "week-toNow":
+            case "avg-8w-toNow":
+            case "week-1w-toNow":
+                return true;
+            default:
+                return false;
+        }
+    },
+
+    isDangerEnable: function (key) {
+        switch (key) {
+            case "today":
+            case "yesterday":
+            case "week-toNow":
+            case "week-1w":
+                return true;
+            default:
+                return false;
+        }
     },
 
     closeFullscreenModal: function () {
@@ -334,37 +422,78 @@ var SummaryConsumptions = React.createClass({
         );
     },
 
-    renderPeriodComparisons: function () {
-        const {colors} = this.getTheme();
-        const selectedTab = tabParameters().find(param => param.key === this.state.period);
-        const comparisons = selectedTab.comparisons;
+    renderComparisonsDiv: function (selectedTab, isPreviousPeriod) {
+        const colors = this.getTheme();
+        const aggregates = this.getAggregates(isPreviousPeriod, selectedTab.key);
+        const comparisons = isPreviousPeriod ? (selectedTab.comparisonsPrevPeriod || Map()) : (selectedTab.comparisons || Map());
+        const title = isPreviousPeriod ? this.renderPrevPeriodComparisonsTitle(selectedTab.key) : this.renderPeriodComparisonsTitle(selectedTab.key);
+        const subTitle = isPreviousPeriod ? null : selectedTab.key=="day" || selectedTab.key=="week" ? "(*Aggiornati all'ora corrente)" : null;
 
-        if (comparisons.length>0) {
+        //Calculate values for progress-bar
+        var max = 0;
+        comparisons.map(value => {
+            const now = parseFloat(value.now(aggregates).toFixed(0));
+            max = parseFloat((max < now) ? now : max);
+        });
+
+        if (max > 0) {
             return (
-                <div style={{
-                    padding: "12px",
-                    marginBottom: "20px",
-                    border: "1px solid " + colors.borderConsumptionSection,
-                    backgroundColor: colors.backgroundConsumptionSection,
-                    borderRadius: "20px"
-                }}>
-                    {comparisons.map(partial(this.renderProgressBar, [selectedTab.now]))}
+                <div style={comparisonDiv(colors)}>
+                    <div style={stylePeriodComparisonTitleLabel(colors)}>
+                        <div>{title}</div>
+                        <div  style={stylePeriodComparisonSubTitleLabel}>{subTitle}</div>
+                    </div>
+                    {comparisons.map(partial(this.renderProgressBar, [selectedTab.now, aggregates, max]))}
                 </div>
             );
-        } else {
+        } else if (isPreviousPeriod) {
+            return  (
+                <div style={comparisonDiv(colors)}>{"Non ci sono dati disponibili al momento."}</div>
+            );
+        }
+    },
+
+    renderPeriodComparisons: function () {
+        const selectedTab = tabParameters().find(param => param.key === this.state.period);
+        const {comparisons, comparisonsPrevPeriod} = selectedTab;
+        if (comparisons || comparisonsPrevPeriod) {
             return (
-                <div style={{color: colors.white}}>
-                    {"Non ci sono dati disponibili al momento."}
+                <div>
+                    {this.renderComparisonsDiv(selectedTab, false)}
+                    {this.renderComparisonsDiv(selectedTab, true)}
                 </div>
             );
         }
     },
 
-    renderProgressBar: function (comparisonNow, comparisonParams) {
-        const aggregates = (this.props.collections.get("consumptions-yearly-aggregates") || Map())
-            .filter(agg => agg.get("sensorId") === this.props.consumptions.fullPath[0]);
-        const max = comparisonParams.max(aggregates).toFixed(0);
-        const now = comparisonNow(aggregates).toFixed(0);
+    renderPeriodComparisonsTitle: function (divTitle) {
+        switch (divTitle) {
+            case "day":
+                return "Confronta i consumi di oggi:";
+            case "week":
+                return "Confronta i consumi della settimana:";
+            default:
+                return null;
+        }
+    },
+
+    renderPrevPeriodComparisonsTitle: function (divTitle) {
+        switch (divTitle) {
+            case "day":
+                return "Confronta i consumi di ieri:";
+            case "week":
+                return "Confronta i consumi di settimana scorsa:";
+            case "month":
+                return "Confronta i consumi del mese:";
+            case "year":
+                return "Confronta i consumi dell'anno:";
+            default:
+                return null;
+        }
+    },
+
+    renderProgressBar: function (comparisonNow, aggregates, max, comparisonParams) {
+        const now = comparisonParams.now(aggregates).toFixed(0);
         return parseInt(max) ? this.renderStyledProgressBar(comparisonParams.key, max, now, comparisonParams.title) : null;
     },
 
@@ -373,6 +502,8 @@ var SummaryConsumptions = React.createClass({
         return (
             <div key={key} style={{marginBottom: "15px"}}>
                 <ProgressBar
+                    isDangerEnable={this.isDangerEnable(key)}
+                    isPercentageVisible={this.isPercentageVisible(key)}
                     key={key}
                     max={parseInt(max)}
                     now={parseInt(now)}
@@ -574,6 +705,7 @@ var SummaryConsumptions = React.createClass({
             </div>
         );
     },
+
     render: function () {
         const theme = this.getTheme();
         return (
