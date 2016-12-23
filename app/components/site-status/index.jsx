@@ -87,11 +87,13 @@ var SiteStatus = React.createClass({
         parameterStatus: PropTypes.object.isRequired,
         siteAddress: PropTypes.string.isRequired,
         siteInfo: PropTypes.array.isRequired,
-        siteName: PropTypes.string.isRequired,
-        tooltip: PropTypes.object.isRequired
+        siteName: PropTypes.string.isRequired
     },
     contextTypes: {
         theme: PropTypes.object
+    },
+    getTheme: function () {
+        return this.context.theme || defaultTheme;
     },
     getAlarmInfo: function () {
         return [
@@ -100,27 +102,12 @@ var SiteStatus = React.createClass({
             {label: "Ultimo aggiornamento", value: "14.12.2016", key: "last update"}
         ];
     },
-    getColorByStatus: function (status) {
-        const theme = this.getTheme();
-        switch (status) {
-            case "ACTIVE":
-                return theme.colors.iconActive;
-            case "ERROR":
-                return theme.colors.iconError;
-            case "WARNING":
-                return theme.colors.iconWarning;
-            case "MISSING":
-                return theme.colors.iconMissing;
-            default:
-                return theme.colors.iconInactive;
-        }
-    },
     getSiteStatus: function () {
         return [
             {
                 icon: "alarm-o",
                 iconColor: this.getColorByStatus(this.props.parameterStatus.alarm),
-                key: "allarme"
+                key: "alarm"
             },
             {
                 icon: "connection-o",
@@ -144,8 +131,74 @@ var SiteStatus = React.createClass({
             }
         ];
     },
-    getTheme: function () {
-        return this.context.theme || defaultTheme;
+    getColorByStatus: function (status) {
+        const theme = this.getTheme();
+        switch (status) {
+            case "ACTIVE":
+                return theme.colors.iconActive;
+            case "ERROR":
+                return theme.colors.iconError;
+            case "WARNING":
+                return theme.colors.iconWarning;
+            case "OUTOFRANGE":
+                return theme.colors.iconOutOfRange;
+            case "DISABLED":
+                return theme.colors.iconDisabled;
+            default:
+                return theme.colors.iconInactive;
+        }
+    },
+    getTooltipByStatus: function (status) {
+        switch (status) {
+            case "ACTIVE":
+                return {
+                    alarm: "Non ci sono allarmi attivi",
+                    connection: "Connessione ok",
+                    consumption: "I consumi sono regolari",
+                    remoteControl: "Sito telecontrollato",
+                    comfort: "Livelli di comfort ottimali"
+                };
+            case "ERROR":
+                return {
+                    alarm: "Ci sono allarmi attivi",
+                    connection: "Problemi di connessione",
+                    consumption: "Problemi relativi ai consumi",
+                    remoteControl: "Problemi al telecontrollo",
+                    comfort: "Problemi ai livelli di comfort"
+                };
+            case "WARNING":
+                return {
+                    alarm: "",
+                    connection: "",
+                    consumption: "I consumi non sono ottimali",
+                    remoteControl: "",
+                    comfort: "Livelli di comfort non ottimali"
+                };
+            case "OUTOFRANGE":
+                return {
+                    alarm: "",
+                    connection: "",
+                    consumption: "É necessario verificare i consumi",
+                    remoteControl: "",
+                    comfort: ""
+                };
+            case "DISABLED":
+                return {
+                    alarm: "Allarmi disabilitati",
+                    connection: "Stato connessione non disponibile",
+                    consumption: "Consumi di riferimento non disponibili",
+                    remoteControl: "Telecontro non disponibile",
+                    comfort: "Livelli di comfort non disponibili"
+                };
+            default:
+                return {
+                    alarm: "Allarmi non impostati per questo sito",
+                    connection: "Questo sito non é connesso a Innowatio",
+                    consumption: "Dati non disponibili",
+                    remoteControl: "Sito non telecontrollato da Innowatio",
+                    comfort: "Livelli di comfort controllati da Innowatio"
+                };
+        }
     },
     renderIconStatus: function (status) {
         return (
@@ -163,13 +216,14 @@ var SiteStatus = React.createClass({
         );
     },
     renderSiteStatus: function () {
-        const siteStatus = this.getSiteStatus().map(status => {
-            return this.props.tooltip[status.key] ? (
+        const siteStatus = this.getSiteStatus().map((status) => {
+            const statoIcona = this.props.parameterStatus[status.key];
+            return this.getTooltipByStatus(statoIcona)[status.key] ? (
                 <bootstrap.OverlayTrigger
                     key={status.key}
                     overlay={
                         <bootstrap.Tooltip className="buttonInfo" id={status.key}>
-                            {this.props.tooltip[status.key]}
+                            {this.getTooltipByStatus(statoIcona)[status.key]}
                         </bootstrap.Tooltip>
                     }
                     placement="bottom"

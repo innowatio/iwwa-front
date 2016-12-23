@@ -205,7 +205,7 @@ var MultiSite = React.createClass({
     getInitialState: function () {
         return {
             openPanel: "",
-            search: "cu",
+            search: "",
             sortBy: "_id"
         };
     },
@@ -251,8 +251,6 @@ var MultiSite = React.createClass({
     getTheme: function () {
         return this.context.theme || defaultTheme;
     },
-
-
     getSiteInfo: function () {
         return [
             {label: "ID", key: "_id"},
@@ -389,7 +387,7 @@ var MultiSite = React.createClass({
             const result = (total - totalReference) / totalReference;
 
             if (result <= -1 || result >= 1) {
-                return "ERROR";
+                return "OUTOFRANGE";
             }
 
             if (result > -1 && result <= -0.05) {
@@ -437,51 +435,6 @@ var MultiSite = React.createClass({
         };
     },
 
-    getTooltipByStatus: function (status) {
-        switch (status) {
-            case "ACTIVE":
-                return {
-                    alarm: "Non ci sono allarmi attivi",
-                    connection: "Connessione ok",
-                    consumption: "I consumi sono regolari",
-                    remoteControl: "Sito telecontrollato",
-                    comfort: "Livelli di comfort ottimali"
-                };
-            case "ERROR":
-                return {
-                    alarm: "Ci sono allarmi attivi",
-                    connection: "Problemi di connessione",
-                    consumption: "Problemi relativi ai consumi",
-                    remoteControl: "Problemi al telecontrollo",
-                    comfort: "Problemi ai livelli di comfort"
-                };
-            case "WARNING":
-                return {
-                    alarm: "",
-                    connection: "",
-                    consumption: "",
-                    remoteControl: "",
-                    comfort: "Livelli di comfort non ottimali"
-                };
-            case "MISSING":
-                return {
-                    alarm: "",
-                    connection: "",
-                    consumption: "",
-                    remoteControl: "",
-                    comfort: ""
-                };
-            default:
-                return {
-                    alarm: "Allarmi non attivati per questo sito",
-                    connection: "Questo sito non é connesso a Innowatio",
-                    consumption: "Dati non disponibili",
-                    remoteControl: "Sito non telecontrollato da Innowatio",
-                    comfort: "Livelli di comfort controllati da Innowatio"
-                };
-        }
-    },
-
     getFilteredSortedSites: function () {
         const {
             search,
@@ -498,6 +451,7 @@ var MultiSite = React.createClass({
         const sorted = filtered.sort((x, y) => x[sortBy] && x[sortBy].toLowerCase() > y[sortBy].toLowerCase() ? 1 : -1);
         return reverseSort ? R.reverse(sorted) : sorted;
     },
+    
     onChangeInputFilter: function (input) {
         this.setState({
             search: input
@@ -978,7 +932,6 @@ var MultiSite = React.createClass({
                     })
                 }
                 siteAddress={site.address || ""}
-                tooltip={this.getTooltipByStatus(status)}
             />
         ));
     },
