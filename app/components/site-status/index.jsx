@@ -88,7 +88,7 @@ var SiteStatus = React.createClass({
         siteAddress: PropTypes.string.isRequired,
         siteInfo: PropTypes.array.isRequired,
         siteName: PropTypes.string.isRequired,
-        tooltip: PropTypes.string.isRequired
+        tooltip: PropTypes.object.isRequired
     },
     contextTypes: {
         theme: PropTypes.object
@@ -120,59 +120,71 @@ var SiteStatus = React.createClass({
             {
                 icon: "alarm-o",
                 iconColor: this.getColorByStatus(this.props.parameterStatus.alarm),
-                key: "Allarme"
+                key: "allarme"
             },
             {
                 icon: "connection-o",
                 iconColor: this.getColorByStatus(this.props.parameterStatus.connection),
-                key: "Connessione"
+                key: "connection"
             },
             {
                 icon: "consumption-o",
                 iconColor: this.getColorByStatus(this.props.parameterStatus.consumption),
-                key: "Consumi"
+                key: "consumption"
             },
             {
                 icon: "remote-control-o",
                 iconColor: this.getColorByStatus(this.props.parameterStatus.remoteControl),
-                key: "Telecontrollo"
+                key: "remoteControl"
             },
             {
                 icon: "good-o",
                 iconColor: this.getColorByStatus(this.props.parameterStatus.comfort),
-                key: "Comfort"
+                key: "comfort"
             }
         ];
     },
     getTheme: function () {
         return this.context.theme || defaultTheme;
     },
+    renderIconStatus: function (status) {
+        return (
+            <Icon
+                color={status.iconColor}
+                icon={status.icon}
+                key={status.key}
+                size={"44px"}
+                style={{
+                    display: "inline-block",
+                    height: "45px",
+                    margin: "0 3px"
+                }}
+            />
+        );
+    },
     renderSiteStatus: function () {
         const siteStatus = this.getSiteStatus().map(status => {
-            return (
+            return this.props.tooltip[status.key] ? (
                 <bootstrap.OverlayTrigger
+                    key={status.key}
                     overlay={
-                        <bootstrap.Tooltip className="buttonInfo" id={this.props.tooltip}>
-                            {this.props.tooltip}
+                        <bootstrap.Tooltip className="buttonInfo" id={status.key}>
+                            {this.props.tooltip[status.key]}
                         </bootstrap.Tooltip>
                     }
                     placement="bottom"
                     rootClose={true}
                 >
-                    <span style={{display: "inline-block", height: "40px"}}>
-                        <Icon
-                            key={status.key}
-                            color={status.iconColor}
-                            icon={status.icon}
-                            size={"44px"}
-                            style={{
-                                display: "inline-block",
-                                marginRight: "5px",
-                                height: "45px"
-                            }}
-                        />
+                    <span style={{
+                        display: "inline-block",
+                        width: "51px",
+                        height: "45px"
+                    }}>
+                        {this.renderIconStatus(status)}
                     </span>
                 </bootstrap.OverlayTrigger>
+            ) : (
+                this.renderIconStatus(status)
             );
         });
         return siteStatus;

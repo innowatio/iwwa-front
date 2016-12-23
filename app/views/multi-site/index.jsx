@@ -40,15 +40,22 @@ const styles = ({colors}) => ({
         color: colors.white,
         marginBottom: "10px"
     },
+    emptyBoxWrp:{
+        minHeight: "200px",
+        height: "auto",
+        backgroundColor: colors.backgroundBoxMultisite,
+        border: `1px solid ${colors.borderBoxMultisite}`,
+        marginBottom: "10px"
+    },
     colItemWrp: {
         height: "auto",
         paddingRight: "10px",
         paddingLeft: "10px"
     },
     trendText: {
-        height: "30px",
-        lineHeight: "30px",
-        fontSize: "15px",
+        height: "20px",
+        lineHeight: "20px",
+        fontSize: "14px",
         textAlign: "left",
         fontWeight: "300",
         textOverflow: "ellipsis",
@@ -104,7 +111,6 @@ const styles = ({colors}) => ({
     sidebarLegend: {
         textAlign: "left",
         padding: "15px 20px",
-        marginBottom: "20px",
         borderBottom: `1px solid ${colors.borderBoxMultisite}`,
         borderRight: `1px solid ${colors.borderBoxMultisite}`,
         borderLeft: `1px solid ${colors.borderBoxMultisite}`,
@@ -199,7 +205,7 @@ var MultiSite = React.createClass({
     getInitialState: function () {
         return {
             openPanel: "",
-            search: "",
+            search: "cu",
             sortBy: "_id"
         };
     },
@@ -260,22 +266,28 @@ var MultiSite = React.createClass({
             {label: "Location", key: "city"}
         ];
     },
+    getTrendLabel: function () {
+        return [
+            {label: "Comfort:", key: "Comfort"},
+            {label: "Consumo energetico:", key: "Consumo energetico"}
+        ];
+    },
     getTrendItems: function () {
         const theme = this.getTheme();
         return [
-            {icon: "good-o", iconColor: theme.colors.iconActive, label: "Comfort:", key: "Comfort", value: "<=>"},
-            {icon: "middle-o", iconColor: theme.colors.iconWarning, label: "Energy consumption", key: "Energy consumption", value: "15%"},
-            {icon: "bad-o", iconColor: theme.colors.iconError, label: "Energy budget Kwh/€:", key: "Energy budget", value: "26%"}
+            {icon: "good-o", iconColor: theme.colors.iconActive, key: "good comfort", value: "35%"},
+            {icon: "middle-o", iconColor: theme.colors.iconWarning, key: "middle comfort", value: "25%"},
+            {icon: "bad-o", iconColor: theme.colors.iconError, key: "bad comfort", value: "40%"}
         ];
     },
     getLegendItems: function () {
         const theme = this.getTheme();
         return [
-            {icon: "alarm-o", iconColor: theme.colors.iconActive, label: "Allarme attivo", key: "Allarme"},
-            {icon: "connection-o", iconColor: theme.colors.iconActive, label: "Stato connessione", key: "Connessione"},
-            {icon: "consumption-o", iconColor: theme.colors.iconActive, label: "Andamento consumi", key: "Consumi"},
-            {icon: "remote-control-o", iconColor: theme.colors.iconActive, label: "Telecontrollo Innowatio", key: "Telecontrollo"},
-            {icon: "good-o", iconColor: theme.colors.iconActive, label: "Comfort", key: "Comfort"}
+            {icon: "alarm-o", iconColor: theme.colors.iconLegend, label: "Allarme", key: "Allarme"},
+            {icon: "connection-o", iconColor: theme.colors.iconLegend, label: "Stato connessione", key: "Connessione"},
+            {icon: "consumption-o", iconColor: theme.colors.iconLegend, label: "Andamento consumi", key: "Consumi"},
+            {icon: "remote-control-o", iconColor: theme.colors.iconLegend, label: "Telecontrollo Innowatio", key: "Telecontrollo"},
+            {icon: "good-o", iconColor: theme.colors.iconLegend, label: "Comfort", key: "Comfort"}
         ];
     },
 
@@ -289,8 +301,8 @@ var MultiSite = React.createClass({
         return [
             {data: "800", label: "Siti totali", key: "totali"},
             {data: `${this.getSites().size}`, label: "Siti monitorati", key: "monitorati"},
-            {data: "1", label: "Real time monitored", key: "realtime"},
-            {data: "2", label: "Remote Control", key: "remote control"}
+            {data: "1", label: "Siti in real time", key: "realtime"},
+            {data: "2", label: "Siti in remote control", key: "remote control"}
         ];
     },
 
@@ -357,7 +369,6 @@ var MultiSite = React.createClass({
     },
 
     getSiteConsumptionStatus: function (site) {
-
         const today = moment().format("YYYY-MM-DD");
         const yesterday = moment().subtract({days: 1}).format("YYYY-MM-DD");
         const dailyAggregatesList = this.props.collections.get("readings-daily-aggregates") || Immutable.List();
@@ -426,6 +437,51 @@ var MultiSite = React.createClass({
         };
     },
 
+    getTooltipByStatus: function (status) {
+        switch (status) {
+            case "ACTIVE":
+                return {
+                    alarm: "Non ci sono allarmi attivi",
+                    connection: "Connessione ok",
+                    consumption: "I consumi sono regolari",
+                    remoteControl: "Sito telecontrollato",
+                    comfort: "Livelli di comfort ottimali"
+                };
+            case "ERROR":
+                return {
+                    alarm: "Ci sono allarmi attivi",
+                    connection: "Problemi di connessione",
+                    consumption: "Problemi relativi ai consumi",
+                    remoteControl: "Problemi al telecontrollo",
+                    comfort: "Problemi ai livelli di comfort"
+                };
+            case "WARNING":
+                return {
+                    alarm: "",
+                    connection: "",
+                    consumption: "",
+                    remoteControl: "",
+                    comfort: "Livelli di comfort non ottimali"
+                };
+            case "MISSING":
+                return {
+                    alarm: "",
+                    connection: "",
+                    consumption: "",
+                    remoteControl: "",
+                    comfort: ""
+                };
+            default:
+                return {
+                    alarm: "Allarmi non attivati per questo sito",
+                    connection: "Questo sito non é connesso a Innowatio",
+                    consumption: "Dati non disponibili",
+                    remoteControl: "Sito non telecontrollato da Innowatio",
+                    comfort: "Livelli di comfort controllati da Innowatio"
+                };
+        }
+    },
+
     getFilteredSortedSites: function () {
         const {
             search,
@@ -467,42 +523,67 @@ var MultiSite = React.createClass({
 
     renderTabContent: function () {
         const theme = this.getTheme();
-        const trend = this.getTrendItems().map(item => {
+        const trendData = this.getTrendItems().map(item => {
             return (
                 <div
-                    style={{
-                        display: "flex",
-                        flexDirction: "row",
-                        justifyContent: "space-between"
-                    }}
                     key={item.key}
+                    style={{
+                        // float: "right",
+                        // textAlign: "right",
+                        // width: "75px"
+                        display: "flex",
+                        justifyContent: "space-between",
+                        alignItems: "center"
+                    }}
+                >
+                    <Icon
+                        color={item.iconColor}
+                        icon={item.icon}
+                        size={"28px"}
+                        style={{
+                            marginRight: "5px",
+                            width: "30px",
+                            height: "30px",
+                            lineHeight: "30px"
+                        }}
+                    />
+                    <span style={{
+                        ...styles(theme).trendText,
+                        width: "auto",
+                        display: "inline-block",
+                        textAlign: "center"
+                    }}>
+                        {item.value}
+                    </span>
+                </div>
+            );
+        });
+        const trend = this.getTrendLabel().map(item => {
+            return (
+                <div
+                    key={item.key}
+                    style={{
+                        // justifyContent: "space-between"
+                        flexDirection: "column",
+                        display: "flex",
+                        marginBottom: "10px"
+                    }}
                 >
                     <span style={{
-                        width: "calc(100% - 75px)",
+                        //width: "calc(100% - 75px)",
+                        width: "100%",
                         ...styles(theme).trendText
                     }}>
                         {item.label}
                     </span>
-                    <div style={{float: "right", textAlign: "right", width: "75px"}}>
-                        <Icon
-                            color={item.iconColor}
-                            icon={item.icon}
-                            size={"28px"}
-                            style={{
-                                marginRight: "5px",
-                                width: "30px",
-                                height: "30px",
-                                lineHeight: "30px"
-                            }}
-                        />
-                        <span style={{
-                            ...styles(theme).trendText,
-                            width: "40px",
-                            display: "inline-block",
-                            textAlign: "right"
-                        }}>
-                            {item.value}
-                        </span>
+                    <div style={{
+                        width: "100%",
+                        display: "flex",
+                        flexDirection: "row",
+                        justifyContent: "space-between",
+                        alignItems: "center"
+                    }}>
+                        {trendData}
                     </div>
                 </div>
             );
@@ -518,7 +599,7 @@ var MultiSite = React.createClass({
                 key={tabParameters.key}
                 title={tabParameters.title}
             >
-                <div style={{margin: "15px 0px 0px 10px"}}>
+                <div style={{marginTop: "5px"}}>
                     {this.renderTabContent(theme, tabParameters)}
                 </div>
             </bootstrap.Tab>
@@ -637,7 +718,7 @@ var MultiSite = React.createClass({
                     {"SITI"}
                 </h2>
                 <span style={{fontSize: "15px", fontWeight: "300"}}>
-                    {moment().format("ddd D MMM YYYY - [  h] HH:mm")}
+                    {moment().format("ddd D MMM YYYY")}
                 </span>
                 <bootstrap.Row className="row-data">
                     <Radium.Style
@@ -650,13 +731,21 @@ var MultiSite = React.createClass({
         );
     },
 
-    renderAssetsStatus: function () {
+    // renderAssetsStatus: function () {
+    //     const theme = this.getTheme();
+    //     return (
+    //         <div style={styles(theme).dataWrp}>
+    //             <h2 style={styles(theme).boxTitle}>
+    //                 {"ASSET STATUS"}
+    //             </h2>
+    //         </div>
+    //     );
+    // },
+
+    renderEmptyBox: function () {
         const theme = this.getTheme();
         return (
-            <div style={styles(theme).dataWrp}>
-                <h2 style={styles(theme).boxTitle}>
-                    {"ASSET STATUS"}
-                </h2>
+            <div style={styles(theme).emptyBoxWrp}>
             </div>
         );
     },
@@ -671,10 +760,10 @@ var MultiSite = React.createClass({
                 <bootstrap.Row>
                     <bootstrap.Col
                         xs={6}
-                        style={{textAlign: "left", fontWeight: "300"}}
+                        style={{textAlign: "left", fontWeight: "300", marginTop: "6px"}}
                     >
                         <p style={{fontSize: "16px"}}>
-                            {"DIURNI"}
+                            <b>{"DIURNI"}</b>
                         </p>
                         <p style={{margin: "0"}}>{"Totali: 12"}</p>
                         <p style={{margin: "0"}}>{"Ultima sett: 10"}</p>
@@ -682,10 +771,10 @@ var MultiSite = React.createClass({
                     </bootstrap.Col>
                     <bootstrap.Col
                         xs={6}
-                        style={{textAlign: "left", fontWeight: "300"}}
+                        style={{textAlign: "left", fontWeight: "300", marginTop: "6px"}}
                     >
                         <p style={{fontSize: "16px"}}>
-                            {"NOTTURNI"}
+                            <b>{"NOTTURNI"}</b>
                         </p>
                         <p style={{margin: "0"}}>{"Totali: 12"}</p>
                         <p style={{margin: "0"}}>{"Ultima sett: 10"}</p>
@@ -793,12 +882,12 @@ var MultiSite = React.createClass({
                     <Icon
                         color={item.iconColor}
                         icon={item.icon}
-                        size={"36px"}
+                        size={"40px"}
                         style={{
                             display: "inline-block",
                             height: "42px",
-                            width: "36px",
-                            lineHeight: "36px",
+                            width: "40px",
+                            lineHeight: "40px",
                             marginRight: "10px",
                             verticalAlign: "middle"
                         }}
@@ -889,6 +978,7 @@ var MultiSite = React.createClass({
                     })
                 }
                 siteAddress={site.address || ""}
+                tooltip={this.getTooltipByStatus(status)}
             />
         ));
     },
@@ -912,7 +1002,7 @@ var MultiSite = React.createClass({
                         {this.renderAlarmsRecap()}
                     </DashboardBox>
                     <DashboardBox>
-                        {this.renderAssetsStatus()}
+                        {this.renderEmptyBox()}
                     </DashboardBox>
                 </bootstrap.Row>
                 <bootstrap.Row className="search-tool">
