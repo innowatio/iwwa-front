@@ -47,7 +47,8 @@ export function getMeasurementTypes () {
 export function getSources (theme) {
     return [
         {label: "Reale", color: theme.colors.lineReale, key: "reading"},
-        {label: "Previsionale", color: theme.colors.linePrevisionale, key: "forecast"}
+        {label: "Previsionale", color: theme.colors.linePrevisionale, key: "forecast"},
+        {label: "Riferimento", color: theme.colors.linePrevisionale, key: "reference"}
     ];
 }
 
