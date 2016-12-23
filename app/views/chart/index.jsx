@@ -171,6 +171,7 @@ var Chart = React.createClass({
     openDownloadLink: function (content, name) {
         var encodedUri = encodeURI(content);
         var link = document.createElement("a");
+        link.setAttribute("id", "csvDownload");
         link.setAttribute("href", encodedUri);
         link.setAttribute("download", name);
         link.setAttribute("target", "_blank");
@@ -186,8 +187,6 @@ var Chart = React.createClass({
     exportCsv: function (exportStart, exportEnd) {
         const sensorId = this.props.chartState.charts[0].sensorId;
         var csvData = "";
-        console.log(exportStart);
-        console.log(exportEnd);
         this.props.asteroid.call("getDailyAggregatesByRange", sensorId, exportStart, exportEnd).then(value => {
             value.forEach(child => {
                 var times = child.measurementTimes.split(",");
