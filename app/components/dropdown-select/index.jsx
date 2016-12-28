@@ -14,6 +14,7 @@ var DropdownSelect = React.createClass({
         arrow: React.PropTypes.string,
         arrowColor: React.PropTypes.string,
         getHoverColor: React.PropTypes.func,
+        getIcon: React.PropTypes.func,
         getKey: React.PropTypes.func,
         getLabel: React.PropTypes.func,
         onChange: React.PropTypes.func.isRequired,
@@ -86,8 +87,9 @@ var DropdownSelect = React.createClass({
                     borderBottom: (last ? "0px" : undefined),
                     fontSize: "15px",
                     fontWeight: "300",
+                    lineHeight: "30px",
                     marginBottom: "0px",
-                    padding: "2px 10px !important",
+                    padding: "0px 10px !important",
                     verticalAlign: "middle",
                     outline: "0px",
                     outlineStyle: "none",
@@ -98,6 +100,7 @@ var DropdownSelect = React.createClass({
                 }}
             >
                 {this.props.getLabel(allowedValue)}
+                {this.props.getIcon(allowedValue)}
             </bootstrap.ListGroupItem>
         );
     },

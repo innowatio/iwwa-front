@@ -30,6 +30,7 @@ const styles = ({colors}) => ({
 var ButtonSortBy = React.createClass({
     propTypes: {
         activeSortBy: PropTypes.object,
+        descending: PropTypes.bool,
         labelStyle: PropTypes.object,
         onChange: PropTypes.func.isRequired,
         sortByList: PropTypes.arrayOf(PropTypes.shape({
@@ -39,7 +40,8 @@ var ButtonSortBy = React.createClass({
                 key: PropTypes.string
             })),
             key: PropTypes.string
-        }))
+        })),
+        sortKey: PropTypes.string
     },
     contextTypes: {
         theme: PropTypes.object
@@ -58,42 +60,50 @@ var ButtonSortBy = React.createClass({
     getTheme: function () {
         return this.context.theme || defaultTheme;
     },
+    getIconSortBy: function (allowedValues) {
+        const {colors} = this.getTheme();
+        const type = (allowedValues || {}).type;
+        const order = (allowedValues.key === this.props.sortKey && !this.props.descending) ? "desc" : "asc";
+        return (
+            <Icon
+                color={colors.white}
+                icon={`${type || "number"}-${order || "asc"}`}
+                size={"30px"}
+                style={{
+                    float: "right",
+                    verticalAlign: "text-top",
+                    marginLeft: "10px"
+                }}
+            />
+        );
+    },
     getButtonSort: function () {
         return [
-            {label: "Pod", key: "pod"},
-            {label: "Id", key: "_id"},
-            {label: "Nome", key: "name"},
-            {label: "Provincia", key: "prov"},
-            {label: "Data ultimo aggiornamento", key: "aggiornamento"},
-            {label: "Piani", key: "piani"},
-            {label: "Vetrine", key: "vetrine"},
-            {label: "mq Comm", key: "mq"},
-            {label: "mq PdV", key: "mq1"}
+            {label: "Pod", key: "pod", type: "text"},
+            {label: "Id", key: "_id", type: "text"},
+            {label: "Nome", key: "name", type: "text"},
+            {label: "Provincia", key: "prov", type: "text"},
+            {label: "Data ultimo aggiornamento", key: "aggiornamento", type: "number"},
+            {label: "Piani", key: "piani", type: "number"},
+            {label: "Vetrine", key: "vetrine", type: "number"},
+            {label: "mq Comm", key: "mq", type: "number"},
+            {label: "mq PdV", key: "mq1", type: "number"}
         ];
     },
-    handleChange: function (sortBy, value) {
-        this.setState({
-            sortBy: {
-                ...this.state.sortBy,
-                [sortBy]: value
-            }
-        });
-        this.props.onChange(sortBy.key);
-    },
     renderSortByButtons: function () {
-        const {colors} = this.getTheme();
+        const activeValue = this.getButtonSort().find((value) => {
+            return this.props.sortKey === value.key;
+        });
         return (
             <DropdownSelect
                 allowedValues={this.getButtonSort()}
                 getKey={R.prop("key")}
-                getHoverColor={() => {
-                    return this.sortBy ? colors.buttonPrimary : colors.backgroundDropdown;
-                }}
+                getIcon={this.getIconSortBy}
                 getLabel={R.prop("label")}
-                onChange={this.handleChange}
+                onChange={(sortBy) => this.props.onChange(sortBy.key)}
                 title={"Visualizza in ordine di:"}
-                style={{textAlign: "left"}}
-                value={this.sortBy}
+                style={{textAlign: "left", padding: "5px 10px"}}
+                value={activeValue}
             />
         );
     },

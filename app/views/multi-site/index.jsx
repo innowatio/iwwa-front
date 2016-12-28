@@ -207,7 +207,8 @@ var MultiSite = React.createClass({
             openPanel: "",
             search: "",
             sortBy: "_id",
-            maxItems: 10
+            maxItems: 10,
+            reverseSort: false
         };
     },
     componentDidMount: function () {
@@ -454,12 +455,25 @@ var MultiSite = React.createClass({
         const max = sorted.length < maxItems ? sorted.length : maxItems;
         return reverseSort ? R.reverse(sorted).splice(0, max) : sorted.splice(0, max);
     },
-    
+
     onChangeInputFilter: function (input) {
         this.setState({
             search: input,
             maxItems: 10
         });
+    },
+
+    onChangeSortBy: function (sortBy) {
+        if (sortBy === this.state.sortBy) {
+            this.setState({
+                reverseSort: !this.state.reverseSort
+            });
+        } else {
+            this.setState({
+                sortBy,
+                reverseSort: false
+            });
+        }
     },
 
     onChangeTabValue: function (tabPeriod) {
@@ -745,6 +759,8 @@ var MultiSite = React.createClass({
 
     renderSearchAction: function () {
         const theme = this.getTheme();
+        const sortKey = this.state.sortBy;
+        const descending = this.state.reverseSort;
         return (
             <bootstrap.Col className="item-col" xs={12} style={{...styles(theme).searchTools, width: "100%"}}>
                 <Radium.Style
@@ -772,12 +788,10 @@ var MultiSite = React.createClass({
                             onConfirm={this.onChangeInputFilter}
                         />
                         <ButtonSortBy
-                            onChange={(sortBy) => {
-                                this.setState({
-                                    sortBy
-                                });
-                            }}
+                            descending={descending}
                             filterList={multisiteButtonSortBy}
+                            onChange={this.onChangeSortBy}
+                            sortKey={sortKey}
                         />
                     </div>
                 </div>
