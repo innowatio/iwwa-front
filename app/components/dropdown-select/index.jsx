@@ -40,21 +40,13 @@ var DropdownSelect = React.createClass({
             allowedValue: this.props.value || {}
         };
     },
-    // shouldComponentUpdate: function (nextProps) {
-    //     // TODO: control component update in update theme.
-    //     // FIXME: Check why this component don't change color with context.
-    //     // See react issue: https://github.com/facebook/react/issues/2517
-    //     return !(
-    //         this.props.allowedValues === nextProps.allowedValues &&
-    //         this.props.getKey === nextProps.getKey &&
-    //         this.props.getLabel === nextProps.getLabel &&
-    //         this.props.value === nextProps.value
-    //     );
-    // },
     getTheme: function () {
         return this.context.theme || defaultTheme;
     },
     isActive: function (allowedValue) {
+        return R.equals(this.props.value, allowedValue);
+    },
+    isOver: function (allowedValue) {
         return R.equals(this.state.allowedValue, allowedValue);
     },
     mouseOver: function (item) {
@@ -68,9 +60,9 @@ var DropdownSelect = React.createClass({
     renderButtonOption: function (allowedValue, index) {
         const {colors} = this.getTheme();
         const itemStyle = {
-            backgroundColor: (this.isActive(allowedValue) ?
+            backgroundColor: (this.isActive(allowedValue) || this.isOver(allowedValue) ?
                 colors.buttonPrimary : colors.backgroundDropdown),
-            color: (this.isActive(allowedValue) ?
+            color: (this.isActive(allowedValue) || this.isOver(allowedValue) ?
                 colors.white : colors.textDropdown)
         };
         const last = (index === this.props.allowedValues.length - 1);
@@ -100,7 +92,7 @@ var DropdownSelect = React.createClass({
                 }}
             >
                 {this.props.getLabel(allowedValue)}
-                {this.props.getIcon(allowedValue)}
+                {this.props.getIcon ? this.props.getIcon(allowedValue) : null}
             </bootstrap.ListGroupItem>
         );
     },
