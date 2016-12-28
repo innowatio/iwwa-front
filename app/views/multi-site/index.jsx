@@ -206,7 +206,8 @@ var MultiSite = React.createClass({
         return {
             openPanel: "",
             search: "",
-            sortBy: "_id"
+            sortBy: "_id",
+            maxItems: 10
         };
     },
     componentDidMount: function () {
@@ -437,6 +438,7 @@ var MultiSite = React.createClass({
 
     getFilteredSortedSites: function () {
         const {
+            maxItems,
             search,
             sortBy,
             reverseSort
@@ -449,12 +451,14 @@ var MultiSite = React.createClass({
         });
 
         const sorted = filtered.sort((x, y) => x[sortBy] && x[sortBy].toLowerCase() > y[sortBy].toLowerCase() ? 1 : -1);
-        return reverseSort ? R.reverse(sorted) : sorted;
+        const max = sorted.length < maxItems ? sorted.length : maxItems;
+        return reverseSort ? R.reverse(sorted).splice(0, max) : sorted.splice(0, max);
     },
     
     onChangeInputFilter: function (input) {
         this.setState({
-            search: input
+            search: input,
+            maxItems: 10
         });
     },
 
@@ -784,9 +788,9 @@ var MultiSite = React.createClass({
     renderSidebar: function () {
         return (
             <bootstrap.Col xs={12} sm={4}>
-                {this.renderTips()}
-                {this.renderLegend()}
-                {this.renderMap()}
+                    {this.renderTips()}
+                    {this.renderLegend()}
+                    {this.renderMap()}
             </bootstrap.Col>
         );
     },
@@ -973,6 +977,21 @@ var MultiSite = React.createClass({
                     <bootstrap.Col xs={12} sm={8}>
                         <bootstrap.Row>
                             {this.renderSites()}
+                        </bootstrap.Row>
+                        <bootstrap.Row>
+                            <Button
+                                onClick={() => this.setState({maxItems: this.state.maxItems + 10})}
+                                style={{
+                                    backgroundColor: theme.colors.buttonPrimary,
+                                    color: theme.colors.white,
+                                    width: "230px",
+                                    height: "45px",
+                                    borderRadius: "30px",
+                                    border: "0px"
+                                }}
+                            >
+                                {"CARICA ALTRI"}
+                            </Button>
                         </bootstrap.Row>
                     </bootstrap.Col>
                     {this.renderSidebar()}
