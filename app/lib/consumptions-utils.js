@@ -53,13 +53,13 @@ function getTitleAndSubtitle (period) {
                     title: getLabel("today", today)+"*",
                     now: defaultToNow
                 }, {
-                    key: "avg-8-prev-today",
-                    title: getLabel("avg-8-prev-today", today)+"*",
-                    now: partialRight(utils.getAverageByPeriodToNow, ["days", 7])
-                }, {
                     key: "today-7d-toNow",
                     title: getLabel("today-7d-toNow", today)+"*",
                     now: partial(utils.getSumByPeriodToNow, [utils.getPreviousPeriod("week", period, true)])
+                }, {
+                    key: "avg-8-prev-today",
+                    title: getLabel("avg-8-prev-today", today)+"*",
+                    now: partialRight(utils.getAverageByPeriodToNow, ["days", 7])
                 }],
                 comparisonsPrevPeriod: [{
                     key: "yesterday",
