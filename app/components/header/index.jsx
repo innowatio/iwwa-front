@@ -33,9 +33,12 @@ var styles = ({colors}) => ({
     },
     viewTitle: {
         margin: "auto",
-        fontSize: "20px"
+        fontSize: "20px",
+        width: "100%",
+        textAlign: "center"
     },
     textTitle: {
+        overflow: "hidden",
         marginLeft: "115px",
         borderBottom: `3px solid ${colors.buttonPrimary}`
     }
