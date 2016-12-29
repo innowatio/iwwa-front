@@ -84,6 +84,7 @@ var SiteStatus = React.createClass({
         isOpen: PropTypes.bool,
         onClickAlarmChart: PropTypes.func,
         onClickPanel: PropTypes.func,
+        onClose: PropTypes.func,
         parameterStatus: PropTypes.object.isRequired,
         siteAddress: PropTypes.string.isRequired,
         siteInfo: PropTypes.array.isRequired,
@@ -255,6 +256,29 @@ var SiteStatus = React.createClass({
                         </h2>
                         <span style={styles(theme).siteAddress}>{this.props.siteAddress}</span>
                     </div>
+                    {this.props.onClose ? (
+                        <Button
+                            className="button-option"
+                            onClick={() => this.props.onClose()}
+                            style={styles(theme).iconOptionBtn}
+                        >
+                            <Radium.Style
+                                rules={{
+                                    "": {
+                                        padding: "0px !important",
+                                        margin: "0px !important"
+                                    }
+                                }}
+                                scopeSelector=".button-option"
+                            />
+                            <Icon
+                                color={theme.colors.iconSiteButton}
+                                icon={"close"}
+                                size={"26px"}
+                                style={{verticalAlign: "middle"}}
+                            />
+                        </Button>
+                    ) : null}
                     <Button
                         className="button-option"
                         onClick={() => this.props.onClickPanel(id)}

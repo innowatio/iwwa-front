@@ -15,6 +15,7 @@ import {
     ButtonSortBy,
     DashboardBox,
     DashboardGoogleMap,
+    FullscreenModal,
     Icon,
     InputFilter,
     SiteStatus
@@ -163,6 +164,18 @@ const styles = ({colors}) => ({
         right: "15px",
         top: "18px",
         transform: open ? null : "rotate(180deg)"
+    },
+    titleButtonPopover: {
+        display: "inline-block",
+        position: "relative",
+        top: "-115px",
+        float: "left",
+        width: "50px",
+        height: "50px",
+        margin: "5px 10px",
+        borderRadius: "100%",
+        lineHeight: "4",
+        backgroundColor: colors.secondary
     }
 });
 
@@ -204,11 +217,12 @@ var MultiSite = React.createClass({
     },
     getInitialState: function () {
         return {
+            maxItems: 10,
             openPanel: "",
+            reverseSort: false,
             search: "",
             sortBy: "_id",
-            maxItems: 10,
-            reverseSort: false
+            showMapModal: false
         };
     },
     componentDidMount: function () {
@@ -427,16 +441,6 @@ var MultiSite = React.createClass({
         return "MISSING";
     },
 
-    getSiteStatuses: function (site) {
-        return {
-            alarm: site.alarmsDisabled ? "DISABLED" : this.getSiteAlarmStatus(site),
-            connection: site.connectionDisabled ? "DISABLED" : this.getSiteConnectionStatus(site),
-            consumption: site.consumptionsDisabled ? "DISABLED" : this.getSiteConsumptionStatus(site),
-            remoteControl: site.telecontrolDisabled ? "DISABLED" : this.getSiteRemoteControlStatus(site),
-            comfort: site.comfortDisabled ? "DISABLED" : this.getSiteComfortStatus(site)
-        };
-    },
-
     getFilteredSortedSites: function () {
         const {
             maxItems,
@@ -453,7 +457,20 @@ var MultiSite = React.createClass({
 
         const sorted = filtered.sort((x, y) => x[sortBy] && x[sortBy].toLowerCase() > y[sortBy].toLowerCase() ? 1 : -1);
         const max = sorted.length < maxItems ? sorted.length : maxItems;
-        return reverseSort ? R.reverse(sorted).splice(0, max) : sorted.splice(0, max);
+        const limited = reverseSort ? R.reverse(sorted).splice(0, max) : sorted.splice(0, max);
+
+        return limited.map(site => {
+            return {
+                ...site,
+                status: {
+                    alarm: site.alarmsDisabled ? "DISABLED" : this.getSiteAlarmStatus(site),
+                    connection: site.connectionDisabled ? "DISABLED" : this.getSiteConnectionStatus(site),
+                    consumption: site.consumptionsDisabled ? "DISABLED" : this.getSiteConsumptionStatus(site),
+                    remoteControl: site.telecontrolDisabled ? "DISABLED" : this.getSiteRemoteControlStatus(site),
+                    comfort: site.comfortDisabled ? "DISABLED" : this.getSiteComfortStatus(site)
+                }
+            };
+        });
     },
 
     onChangeInputFilter: function (input) {
@@ -769,6 +786,7 @@ var MultiSite = React.createClass({
                 />
                 <div style={{float: "left", width: "calc(100% - 230px)", padding: "0px 5px"}}>
                     <InputFilter
+                        inputValue={this.state.search}
                         onChange={this.onChangeInputFilter}
                     />
                 </div>
@@ -800,11 +818,25 @@ var MultiSite = React.createClass({
     },
 
     renderSidebar: function () {
+        const {colors} = this.getTheme();
         return (
             <bootstrap.Col xs={12} sm={4}>
+                <bootstrap.Row>
                     {this.renderTips()}
                     {this.renderLegend()}
                     {this.renderMap()}
+                    <span style={styles(this.getTheme()).titleButtonPopover}>
+                        <Icon
+                            onClick={() => this.setState({
+                                showMapModal: true
+                            })}
+                            color={colors.iconTips}
+                            icon={"expand"}
+                            size={"28px"}
+                            style={styles(this.getTheme()).iconTips}
+                        />
+                    </span>
+                </bootstrap.Row>
             </bootstrap.Col>
         );
     },
@@ -938,7 +970,7 @@ var MultiSite = React.createClass({
                 key={index}
                 onClickAlarmChart={this.props.selectSingleElectricalSensor}
                 onClickPanel={this.onClickPanel}
-                parameterStatus={this.getSiteStatuses(site)}
+                parameterStatus={site.status}
                 siteName={site.name}
                 siteInfo={
                     this.getSiteInfo().map(info => {
@@ -1010,6 +1042,29 @@ var MultiSite = React.createClass({
                     </bootstrap.Col>
                     {this.renderSidebar()}
                 </bootstrap.Row>
+                <FullscreenModal
+                    title={"Mappa siti"}
+                    onHide={() => this.setState({showMapModal: !this.state.showMapModal})}
+                    show={this.state.showMapModal}
+                >
+                    <div>
+                        <bootstrap.Row>
+                            <bootstrap.Col xs={12}>
+                                <InputFilter
+                                    inputValue={this.state.search}
+                                    onChange={this.onChangeInputFilter}
+                                />
+                            </bootstrap.Col>
+                        </bootstrap.Row>
+                        <bootstrap.Row>
+                            <bootstrap.Col xs={12} style={{height: "90vh"}}>
+                                <DashboardGoogleMap
+                                    sites={this.getFilteredSortedSites()}
+                                />
+                            </bootstrap.Col>
+                        </bootstrap.Row>
+                    </div>
+                </FullscreenModal>
             </content>
         );
     }

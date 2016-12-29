@@ -1,7 +1,6 @@
 import React, {PropTypes} from "react";
 import {Style} from "radium";
 import * as bootstrap from "react-bootstrap";
-import ReactPureRender from "react-addons-pure-render-mixin";
 
 import components from "components";
 import {defaultTheme} from "lib/theme";
@@ -38,28 +37,51 @@ const defaultStyles = ({colors}) => ({
     }
 });
 
-var InputFilter = React.createClass({
-    propTypes: {
+class InputFilter extends React.Component {
+
+    static propTypes = {
+        inputValue: PropTypes.string,
         onChange: PropTypes.func.isRequired,
         style: PropTypes.object
-    },
-    contextTypes: {
+    }
+
+    static contextTypes = {
         theme: PropTypes.object
-    },
-    getInitialState: function () {
-        return {
+    }
+
+    constructor (props) {
+        super(props);
+        this.state = {
             inputValue: ""
         };
-    },
-    mixin: [ReactPureRender],
-    getTheme: function () {
+    }
+
+    componentWillMount () {
+        const {inputValue} = this.props;
+        if (inputValue) {
+            this.state = {
+                inputValue
+            };
+            this.props.onChange(inputValue);
+        }
+    }
+
+    componentWillReceiveProps (nextProps) {
+        this.state = {
+            inputValue: nextProps.inputValue
+        };
+    }
+
+    getTheme () {
         return this.context.theme || defaultTheme;
-    },
-    onChangeValue: function (event) {
+    }
+
+    onChangeValue (event) {
         this.setState({inputValue: event.target.value});
         this.props.onChange(event.target.value);
-    },
-    render: function () {
+    }
+
+    render () {
         const {colors} = this.getTheme();
         const searchStyle = this.props.style ? this.props.style : defaultStyles(this.getTheme());
         return (
@@ -71,7 +93,7 @@ var InputFilter = React.createClass({
                 <bootstrap.FormGroup style={{display: "table"}}>
                     <bootstrap.FormControl
                         className="input-search"
-                        onChange={this.onChangeValue}
+                        onChange={(event) => this.onChangeValue(event)}
                         placeholder="Ricerca"
                         type="text"
                         value={this.state.inputValue}
@@ -91,6 +113,6 @@ var InputFilter = React.createClass({
             </div>
         );
     }
-});
+}
 
 module.exports = InputFilter;

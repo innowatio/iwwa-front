@@ -10,24 +10,23 @@ import SiteMarker from "./site-marker";
 var DashboardGoogleMap = React.createClass({
     propTypes: {
         center: PropTypes.any,
-        onBoundsChange: PropTypes.func,
         onCenterChange: PropTypes.func,
+        onChange: PropTypes.func,
         onZoomChange: PropTypes.func,
         sites: PropTypes.array.isRequired,
         zoom: PropTypes.number
     },
     mixins: [PureMixin],
-    onBoundsChange: function (center, zoom, bounds, marginBounds) {
-        if (this.props.onBoundsChange) {
-            this.props.onBoundsChange({center, zoom, bounds, marginBounds});
+    onChange: function (center, zoom, bounds, marginBounds) {
+        if (this.props.onChange) {
+            this.props.onChange({center, zoom, bounds, marginBounds});
         } else {
             this.props.onCenterChange(center);
             this.props.onZoomChange(zoom);
         }
     },
     onSiteClick: function (key, childProps) {
-        this.props.onCenterChange([childProps.lat, childProps.lng]);
-        this.refs[childProps.siteId].viewSiteInfo();
+        this.refs[childProps.site._id].viewSiteInfo();
     },
     renderSitesMarker: function () {
         return this.props.sites.map(site => {
@@ -35,10 +34,10 @@ var DashboardGoogleMap = React.createClass({
             return latitude && longitude ? (
                 <SiteMarker
                     key={_id}
-                    siteId={_id}
                     lat={latitude}
                     lng={longitude}
                     ref={_id}
+                    site={site}
                 />
             ) : null;
         });
@@ -52,14 +51,7 @@ var DashboardGoogleMap = React.createClass({
                 }}
                 center={this.props.center ? this.props.center : {lat: 42.0279071, lng: 11.3340147}}
                 zoom={this.props.zoom ? this.props.zoom : 5}
-                onBoundsChange={this.onBoundsChange}
                 onChildClick={this.onSiteClick}
-                options={{
-                    fullscreenControl: true,
-                    fullscreenControlOptions: {
-                        position: 10
-                    }
-                }}
             >
                 {this.renderSitesMarker()}
             </GoogleMap>
