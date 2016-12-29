@@ -12,7 +12,7 @@ const history = (EXEC_ENV === "cordova" ? hashHistory : browserHistory);
 module.exports = (
     <Router history={history}>
         <Route component={views.Root} name="root">
-            <Route component={views.Chart} name="home" path="/" titleView="Storico consumi" />
+            <Route component={views.MultiSite} name="home" path="/" titleView="Dashboard Multisite" />
             <Route component={views.Alarms} name="alarms" path="/alarms/" titleView="Allarmi" />
             <Route component={views.Alarms} name="alarm" path="/alarms/:id" titleView="Allarmi" />
             <Route component={views.Users} name="users" path="/users/" titleView="Amministrazione utenti"
