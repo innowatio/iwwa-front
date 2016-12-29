@@ -23,11 +23,13 @@ import {selectThemeColor} from "actions/user-setting";
 const stylesFunction = ({colors}) => ({
     header: {
         width: "100%",
+        minWidth: "768px",
         height: measures.headerHeight,
         transition: "left 0.3s ease"
     },
     content: {
         width: "100%",
+        minWidth: "768px",
         top: measures.headerHeight,
         backgroundColor: colors.background,
         height: `calc(100vh - ${measures.headerHeight} - ${measures.footerHeight})`,
@@ -54,6 +56,7 @@ const stylesFunction = ({colors}) => ({
         lineHeight: measures.footerHeight,
         height: measures.footerHeight,
         width: "100%",
+        minWidth: "768px",
         bottom: "0px",
         textAlign: "center",
         zIndex: 1042
