@@ -25,6 +25,7 @@ import {
 
 const styles = ({colors}) => ({
     pageContent: {
+        position: "relative",
         display: "block",
         color: colors.white,
         padding: "10px",
@@ -139,7 +140,17 @@ const styles = ({colors}) => ({
         padding: "15px 20px",
         marginBottom: "20px",
         border: `2px dashed ${colors.buttonPrimary}`,
-        backgroundColor: colors.transparent
+        backgroundColor: colors.transparent,
+        borderRadius: "0px !important",
+        color: colors.mainFontColor
+    },
+    alertCloseButton: {
+        textShadow: "0 1px 0 " + colors.transparent,
+        opacity: 1,
+        fontSize: "30px",
+        marginRight: "20px",
+        color: colors.white,
+        fontWeight: "200 !important"
     },
     tipsTitle: {
         fontSize: "20px",
@@ -219,10 +230,12 @@ var MultiSite = React.createClass({
     getInitialState: function () {
         return {
             compareMode: false,
+            legendIsOpen: false,
             maxItems: 10,
             openPanel: "",
             reverseSort: false,
             search: "",
+            selectedSites: [],
             showMapModal: false,
             showCompareMessage: false,
             showTipsMessage: true,
@@ -509,6 +522,30 @@ var MultiSite = React.createClass({
         }
     },
 
+    onSiteClick: function (id) {
+        const {
+            compareMode,
+            selectedSites
+        } = this.state;
+
+        const isSelected = selectedSites.find(selectedId => selectedId === id);
+
+        if (!isSelected && compareMode && selectedSites.length < 2) {
+            this.setState({
+                selectedSites: [
+                    ...this.state.selectedSites,
+                    id
+                ]
+            });
+        }
+
+        if (isSelected) {
+            this.setState({
+                selectedSites: selectedSites.filter(selectedId => selectedId != id)
+            });
+        }
+    },
+
     onCompareClick: function () {
         this.setState({compareMode: !this.state.compareMode}),
         this.setState({showCompareMessage: true});
@@ -521,6 +558,10 @@ var MultiSite = React.createClass({
 
     closeTipsMessage: function () {
         this.setState({showTipsMessage: false});
+    },
+
+    legendIsOpen: function () {
+        this.setState({legendIsOpen: !this.state.legendIsOpen});
     },
 
     getTabParameters: function () {
@@ -798,22 +839,19 @@ var MultiSite = React.createClass({
             return (
                 <bootstrap.Alert
                     className="custom-alert"
-                    bsStyle={"alert"}
                     onDismiss={this.closeCompareMessage}
                 >
                     <Radium.Style
                         rules={{
                             "": {
+                                borderRadius: "0px !important",
+                                color: theme.colors.mainFontColor + " !important",
+                                border: "0px",
                                 backgroundColor: theme.colors.buttonPrimary,
-                                borderRadius: "0px",
                                 marginBottom: "20px"
                             },
                             ".close": {
-                                textShadow: "0 1px 0 " + theme.colors.transparent,
-                                opacity: 1,
-                                fontSize: "30px",
-                                color: theme.colors.white,
-                                fontWeight: "200 !important"
+                                ...styles(theme).alertCloseButton
                             },
                             ".close:hover": {
                                 color: theme.colors.white,
@@ -838,7 +876,7 @@ var MultiSite = React.createClass({
     renderBiggerButton: function (tooltip, iconName, disabled, onClickFunc) {
         const theme = this.getTheme();
         const backgroundStyle = {backgroundColor:
-            (iconName === "clone" ? theme.colors.buttonPrimary : theme.colors.primary)
+            (iconName === "confront" ? theme.colors.buttonPrimary : theme.colors.primary)
         };
         return (
             <TooltipIconButton
@@ -868,22 +906,26 @@ var MultiSite = React.createClass({
     },
 
     renderCompareButtons: function () {
-        return (
-            <div style={{
-                position: "absolute",
-                width: "176px",
-                margin: "0 0 0 85%",
-                textAlign: "center",
-                bottom: "-30px"
-            }}>
-                {this.renderBiggerButton(
-                    "Conferma comparazione", "compare", false, () => this.setState({compareMode: !this.state.compareMode}))
-                }
-                {this.renderBiggerButton(
-                    "Annulla comparazione", "delete", false, () => this.setState({compareMode: !this.state.compareMode}))
-                }
-            </div>
-        );
+        if (this.state.compareMode) {
+            return (
+                <div style={{
+                    position: "fixed",
+                    width: "176px",
+                    margin: "0",
+                    textAlign: "center",
+                    bottom: "40px",
+                    right: "20px",
+                    zIndex: "100"
+                }}>
+                    {this.renderBiggerButton(
+                        "Conferma comparazione", "confront", false, () => this.setState({compareMode: !this.state.compareMode}))
+                    }
+                    {this.renderBiggerButton(
+                        "Annulla comparazione", "delete", false, () => this.setState({compareMode: !this.state.compareMode}))
+                    }
+                </div>
+            );
+        }
     },
 
     renderSearchAction: function () {
@@ -964,7 +1006,6 @@ var MultiSite = React.createClass({
             return (
                 <bootstrap.Alert
                     className="tips-alert"
-                    bsStyle={"alert"}
                     onDismiss={this.closeTipsMessage}
                 >
                     <Radium.Style
@@ -973,12 +1014,7 @@ var MultiSite = React.createClass({
                                 ...styles(theme).sidebarTips
                             },
                             ".close": {
-                                textShadow: "0 1px 0 " + theme.colors.transparent,
-                                opacity: 1,
-                                fontSize: "30px",
-                                marginRight: "20px",
-                                color: theme.colors.white,
-                                fontWeight: "200 !important"
+                                ...styles(theme).alertCloseButton
                             },
                             ".close:hover": {
                                 color: theme.colors.white,
@@ -1009,6 +1045,22 @@ var MultiSite = React.createClass({
         }
     },
 
+    renderLegendHeader: function () {
+        const theme = this.getTheme();
+        const arrow = this.state.legendIsOpen ? "rotate(-180deg)" : null;
+        return (
+            <div>
+                {"Legenda"}
+                <Icon
+                    color={theme.colors.mainFontColor}
+                    icon={"arrow-down"}
+                    size={"16px"}
+                    style={{verticalAlign: "middle", float: "right", transform: arrow}}
+                />
+            </div>
+        );
+    },
+
     renderLegend: function () {
         const theme = this.getTheme();
         const legend = this.getLegendItems().map(item => {
@@ -1034,40 +1086,44 @@ var MultiSite = React.createClass({
             );
         });
         return (
-            <div>
-
-                <bootstrap.Panel className="legend" eventKey="1" style={{backgroundColor: theme.colors.black}}>
-                    <Radium.Style
-                        rules={{
-                            "": {
-                                border: `1px solid ${theme.colors.transparent}`,
-                                backgroundColor: theme.colors.transparent,
-                                padding: "0px",
-                                margin: "0px"
-                            },
-                            ".panel-body": {
-                                padding: "0px",
-                                margin: "0px"
-                            },
-                            ".panel-collapse > .panel-body": {
-                                borderTop: "0px !important"
-                            },
-                            ".panel-heading": {
-                                ...styles(theme).legendTitleWrp
-                            },
-                            ".panel-title > a": {
-                                ...styles(theme).legendTitle
-                            }
-                        }}
-                        scopeSelector=".legend"
-                    />
-                    <div style={styles(theme).sidebarLegend}>
-                        <ul style={{margin: "0", padding: "0 0 0 5px"}}>
-                            {legend}
-                        </ul>
-                    </div>
-                </bootstrap.Panel>
-            </div>
+            <bootstrap.Panel
+                className="legend"
+                collapsible={true}
+                header={this.renderLegendHeader()}
+                onClick={this.legendIsOpen}
+                eventKey="1"
+                style={{backgroundColor: theme.colors.black}}
+            >
+                <Radium.Style
+                    rules={{
+                        "": {
+                            border: `1px solid ${theme.colors.transparent}`,
+                            backgroundColor: theme.colors.transparent,
+                            padding: "0px",
+                            marginBottom: "20px"
+                        },
+                        ".panel-body": {
+                            padding: "0px",
+                            margin: "0px"
+                        },
+                        ".panel-collapse > .panel-body": {
+                            borderTop: "0px !important"
+                        },
+                        ".panel-heading": {
+                            ...styles(theme).legendTitleWrp
+                        },
+                        ".panel-title > a": {
+                            ...styles(theme).legendTitle
+                        }
+                    }}
+                    scopeSelector=".legend"
+                />
+                <div style={styles(theme).sidebarLegend}>
+                    <ul style={{margin: "0", padding: "0 0 0 5px"}}>
+                        {legend}
+                    </ul>
+                </div>
+            </bootstrap.Panel>
         );
     },
 
@@ -1088,13 +1144,17 @@ var MultiSite = React.createClass({
             </div>
         );
     },
-    // onClick={() => this.handleClickSiteStatus(site._id)}
+
     renderSites: function () {
+        const buttonStyle = {
+            cursor: (this.state.compareMode ? "pointer" : "default")
+        };
         return this.getFilteredSortedSites().map((site, index) => (
             <SiteStatus
+                isActive={this.state.selectedSites.find(id => id === site._id)}
                 isOpen={this.state.openPanel === site._id}
                 key={index}
-
+                onClick={(id) => this.onSiteClick(id)}
                 onClickAlarmChart={this.props.selectSingleElectricalSensor}
                 onClickPanel={this.onClickPanel}
                 parameterStatus={site.status}
@@ -1109,6 +1169,7 @@ var MultiSite = React.createClass({
                     })
                 }
                 siteAddress={site.address || ""}
+                style={{...buttonStyle}}
             />
         ));
     },
@@ -1117,6 +1178,7 @@ var MultiSite = React.createClass({
         const theme = this.getTheme();
         return (
             <content style={styles(theme).pageContent}>
+                {this.renderCompareButtons()}
                 <bootstrap.Row className="data-row">
                     <Radium.Style
                         rules={{marginRight: "-5px", marginLeft: "-5px", padding: "0 5px"}}
@@ -1167,7 +1229,6 @@ var MultiSite = React.createClass({
                                 {"CARICA ALTRI"}
                             </Button>
                         </bootstrap.Row>
-                        {this.renderCompareButtons()}
                     </bootstrap.Col>
                     {this.renderSidebar()}
                 </bootstrap.Row>

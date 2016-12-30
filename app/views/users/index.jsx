@@ -275,14 +275,15 @@ var Users = React.createClass({
             return (
                 <bootstrap.Alert
                     className="custom-alert"
-                    bsStyle={"alert"}
                     onDismiss={this.closeCloneMessage}
                 >
                     <Radium.Style
                         rules={{
                             "": {
+                                borderRadius: "0px !important",
+                                color: theme.colors.mainFontColor + " !important",
+                                border: "0px",
                                 backgroundColor: theme.colors.buttonPrimary,
-                                borderRadius: "0px",
                                 margin: "20px 0px"
                             },
                             ".close": {

@@ -84,14 +84,17 @@ const styles = (theme) => ({
 
 var SiteStatus = React.createClass({
     propTypes: {
+        isActive: PropTypes.bool,
         isOpen: PropTypes.bool,
+        onClick: PropTypes.func,
         onClickAlarmChart: PropTypes.func,
         onClickPanel: PropTypes.func,
         onClose: PropTypes.func,
         parameterStatus: PropTypes.object.isRequired,
         siteAddress: PropTypes.string.isRequired,
         siteInfo: PropTypes.array.isRequired,
-        siteName: PropTypes.string.isRequired
+        siteName: PropTypes.string.isRequired,
+        style: PropTypes.object
     },
     contextTypes: {
         theme: PropTypes.object
@@ -204,6 +207,7 @@ var SiteStatus = React.createClass({
                 };
         }
     },
+
     renderIconStatus: function (status) {
         return (
             <Icon
@@ -254,17 +258,22 @@ var SiteStatus = React.createClass({
             borderColor: (this.props.isOpen ?
                 theme.colors.secondary : theme.colors.borderBoxMultisite)
         };
+        const itemStyleActive = {
+            backgroundColor: (this.props.isActive ?
+            theme.colors.buttonPrimary : theme.colors.backgroundBoxMultisite)
+        };
         return (
-            <div
-                style={{...styles(theme).siteWrp, ...itemStyleOpen}}
+            <Button
+                onClick={() => this.props.onClick(id.value)}
+                style={{...styles(theme).siteWrp, ...itemStyleOpen, ...itemStyleActive, ...this.props.style}}
             >
                 <div style={{width: "100%", clear: "both"}}>
-                    <Button style={styles(theme).siteNameWrp}>
+                    <div style={styles(theme).siteNameWrp}>
                         <h2 style={styles(theme).siteName}>
                             {`${this.props.siteName} / `}
                         </h2>
                         <span style={styles(theme).siteAddress}>{this.props.siteAddress}</span>
-                    </Button>
+                    </div>
                     {this.props.onClose ? (
                         <Button
                             className="button-option"
@@ -334,7 +343,7 @@ var SiteStatus = React.createClass({
                         </Link>
                     </div>
                 </div>
-            </div>
+            </Button>
         );
     },
 
