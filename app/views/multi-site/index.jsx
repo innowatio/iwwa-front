@@ -1049,15 +1049,18 @@ var MultiSite = React.createClass({
                 >
                     <div>
                         <bootstrap.Row>
-                            <bootstrap.Col xs={12}>
+                            <bootstrap.Col xs={12} style={{height: "90vh"}}>
                                 <InputFilter
                                     inputValue={this.state.search}
                                     onChange={this.onChangeInputFilter}
+                                    style={{
+                                        position: "relative",
+                                        zIndex: "1",
+                                        width: "500px",
+                                        float: "right",
+                                        margin: "10px"
+                                    }}
                                 />
-                            </bootstrap.Col>
-                        </bootstrap.Row>
-                        <bootstrap.Row>
-                            <bootstrap.Col xs={12} style={{height: "90vh"}}>
                                 <DashboardGoogleMap
                                     sites={this.getFilteredSortedSites()}
                                 />

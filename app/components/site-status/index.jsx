@@ -363,7 +363,7 @@ var SiteStatus = React.createClass({
 
     renderSiteInfo: function () {
         const theme = this.getTheme();
-        const siteInfo = this.props.siteInfo.map(item => {
+        const siteInfo = this.props.siteInfo.filter(x => x.value).map(item => {
             return (
                 <div key={item.key} style={styles(theme).singleInfoWrp}>
                     <div style={{width: "100%", ...styles(theme).SiteSecondaryTextWrp}}>
