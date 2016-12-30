@@ -13,16 +13,19 @@ const styles = (theme) => ({
     siteWrp: {
         display: "block",
         padding: "8px 10px",
+        borderRadius: "0px",
+        width: "100%",
+        color: theme.colors.mainFontColor,
         position: "relative",
         minHeight: "100px",
         textAlign: "left",
-        border: `1px solid ${theme.colors.borderBoxMultisite}`,
-        backgroundColor: theme.colors.backgroundBoxMultisite
+        border: `1px solid ${theme.colors.borderBoxMultisite}`
     },
     siteNameWrp: {
         width: "calc(100% - 40px)",
         float: "left",
         height: "46px",
+        color: theme.colors.mainFontColor,
         marginBottom: "10px",
         overflow: "hidden",
         textOverflow: "ellipsis"
@@ -57,12 +60,12 @@ const styles = (theme) => ({
         fontSize: "20px",
         lineHeight: "20px",
         fontWeight: "300",
-        color: theme.colors.white
+        color: theme.colors.mainFontColor
     },
     singleInfoWrp: {
-        borderBottom: `1px solid ${theme.colors.borderBoxMultisite}`,
-        borderLeft: `1px solid ${theme.colors.borderBoxMultisite}`,
-        borderRight: `1px solid ${theme.colors.borderBoxMultisite}`,
+        borderBottom: `1px solid ${theme.colors.secondary}`,
+        borderLeft: `1px solid ${theme.colors.secondary}`,
+        borderRight: `1px solid ${theme.colors.secondary}`,
         backgroundColor: theme.colors.backgroundBoxMultisite
     },
     buttonHistoricalConsumption: {
@@ -247,15 +250,21 @@ var SiteStatus = React.createClass({
     renderPrimaryInfo: function () {
         const theme = this.getTheme();
         const id = this.props.siteInfo.find(x => x.key === "_id");
+        const itemStyleOpen = {
+            borderColor: (this.props.isOpen ?
+                theme.colors.secondary : theme.colors.borderBoxMultisite)
+        };
         return (
-            <div style={styles(theme).siteWrp}>
+            <div
+                style={{...styles(theme).siteWrp, ...itemStyleOpen}}
+            >
                 <div style={{width: "100%", clear: "both"}}>
-                    <div style={styles(theme).siteNameWrp}>
+                    <Button style={styles(theme).siteNameWrp}>
                         <h2 style={styles(theme).siteName}>
                             {`${this.props.siteName} / `}
                         </h2>
                         <span style={styles(theme).siteAddress}>{this.props.siteAddress}</span>
-                    </div>
+                    </Button>
                     {this.props.onClose ? (
                         <Button
                             className="button-option"

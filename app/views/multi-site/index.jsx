@@ -18,7 +18,8 @@ import {
     FullscreenModal,
     Icon,
     InputFilter,
-    SiteStatus
+    SiteStatus,
+    TooltipIconButton
 } from "components";
 
 
@@ -70,10 +71,9 @@ const styles = ({colors}) => ({
         backgroundColor: colors.backgroundBoxMultisite,
         marginBottom: "20px"
     },
-    buttonConfront: {
+    buttonCompare: {
         display: "block",
         float: "right",
-        backgroundColor: colors.secondary,
         borderRadius: "100%",
         width: "50px",
         height: "50px",
@@ -135,19 +135,11 @@ const styles = ({colors}) => ({
         color: colors.white
     },
     sidebarTips: {
-        position: "relative",
         textAlign: "left",
         padding: "15px 20px",
         marginBottom: "20px",
         border: `2px dashed ${colors.buttonPrimary}`,
         backgroundColor: colors.transparent
-    },
-    buttonCancelTips: {
-        position: "absolute",
-        backgroundColor: colors.transparent,
-        border: "0px",
-        top: "5px",
-        right: "0px"
     },
     tipsTitle: {
         fontSize: "20px",
@@ -176,6 +168,15 @@ const styles = ({colors}) => ({
         borderRadius: "100%",
         lineHeight: "4",
         backgroundColor: colors.secondary
+    },
+    textAlert: {
+        textTransform: "uppercase",
+        padding: "20px 0px",
+        textAlign: "center",
+        color: colors.white,
+        margin: "0px",
+        fontSize: "26px",
+        fontWeight: "300"
     }
 });
 
@@ -217,12 +218,15 @@ var MultiSite = React.createClass({
     },
     getInitialState: function () {
         return {
+            compareMode: false,
             maxItems: 10,
             openPanel: "",
             reverseSort: false,
             search: "",
-            sortBy: "_id",
-            showMapModal: false
+            showMapModal: false,
+            showCompareMessage: false,
+            showTipsMessage: true,
+            sortBy: "_id"
         };
     },
     componentDidMount: function () {
@@ -505,6 +509,20 @@ var MultiSite = React.createClass({
         }
     },
 
+    onCompareClick: function () {
+        this.setState({compareMode: !this.state.compareMode}),
+        this.setState({showCompareMessage: true});
+        window.setTimeout(this.closeCompareMessage, 2500);
+    },
+
+    closeCompareMessage: function () {
+        this.setState({showCompareMessage: false});
+    },
+
+    closeTipsMessage: function () {
+        this.setState({showTipsMessage: false});
+    },
+
     getTabParameters: function () {
         const PERIODS = ["day", "week", "month", "year"];
         return PERIODS.map(period => this.getTitleTab(period));
@@ -774,6 +792,100 @@ var MultiSite = React.createClass({
         );
     },
 
+    renderCompareMessage: function () {
+        const theme = this.getTheme();
+        if (this.state.showCompareMessage) {
+            return (
+                <bootstrap.Alert
+                    className="custom-alert"
+                    bsStyle={"alert"}
+                    onDismiss={this.closeCompareMessage}
+                >
+                    <Radium.Style
+                        rules={{
+                            "": {
+                                backgroundColor: theme.colors.buttonPrimary,
+                                borderRadius: "0px",
+                                marginBottom: "20px"
+                            },
+                            ".close": {
+                                textShadow: "0 1px 0 " + theme.colors.transparent,
+                                opacity: 1,
+                                fontSize: "30px",
+                                color: theme.colors.white,
+                                fontWeight: "200 !important"
+                            },
+                            ".close:hover": {
+                                color: theme.colors.white,
+                                opacity: .5
+                            },
+                            ".close:focus": {
+                                outline: "0px",
+                                outlineStyle: "none",
+                                outlineWidth: "0px"
+                            }
+                        }}
+                        scopeSelector=".custom-alert"
+                    />
+                    <h4 style={styles(theme).textAlert}>
+                        {"SELEZIONA I SITI DA CONFRONTARE"}
+                    </h4>
+                </bootstrap.Alert>
+            );
+        }
+    },
+
+    renderBiggerButton: function (tooltip, iconName, disabled, onClickFunc) {
+        const theme = this.getTheme();
+        const backgroundStyle = {backgroundColor:
+            (iconName === "clone" ? theme.colors.buttonPrimary : theme.colors.primary)
+        };
+        return (
+            <TooltipIconButton
+                buttonStyle={{
+                    ...backgroundStyle,
+                    border: "0px",
+                    borderRadius: "100%",
+                    height: "68px",
+                    width: "68px",
+                    padding: "0px",
+                    textAlign: "center",
+                    margin: "0px 10px"
+                }}
+                icon={iconName}
+                iconColor={theme.colors.white}
+                iconSize={"50px"}
+                iconStyle={{
+                    lineHeight: "25px",
+                    verticalAlign: "middle"
+                }}
+                isButtonDisabled={disabled}
+                onButtonClick={onClickFunc}
+                tooltipPlacement={"top"}
+                tooltipText={tooltip}
+            />
+        );
+    },
+
+    renderCompareButtons: function () {
+        return (
+            <div style={{
+                position: "absolute",
+                width: "176px",
+                margin: "0 0 0 85%",
+                textAlign: "center",
+                bottom: "-30px"
+            }}>
+                {this.renderBiggerButton(
+                    "Conferma comparazione", "compare", false, () => this.setState({compareMode: !this.state.compareMode}))
+                }
+                {this.renderBiggerButton(
+                    "Annulla comparazione", "delete", false, () => this.setState({compareMode: !this.state.compareMode}))
+                }
+            </div>
+        );
+    },
+
     renderSearchAction: function () {
         const theme = this.getTheme();
         const sortKey = this.state.sortBy;
@@ -792,14 +904,21 @@ var MultiSite = React.createClass({
                 </div>
                 <div style={{float: "right", width: "230px"}}>
                     <div style={{margin: "20px 0px", height: "auto", float: "right"}}>
-                        <Button style={styles(theme).buttonConfront}>
-                            <Icon
-                                color={theme.colors.iconSiteButton}
-                                icon={"confront"}
-                                size={"30px"}
-                                style={{verticalAlign: "middle"}}
-                            />
-                        </Button>
+                        <TooltipIconButton
+                            buttonStyle={{
+                                ...styles(theme).buttonCompare,
+                                backgroundColor: this.state.compareMode ?
+                                    theme.colors.buttonPrimary :
+                                    theme.colors.secondary
+                            }}
+                            icon={"confront"}
+                            iconColor={theme.colors.white}
+                            iconSize={"30px"}
+                            iconStyle={{verticalAlign: "middle"}}
+                            isButtonDisabled={false}
+                            onButtonClick={this.onCompareClick}
+                            tooltipText={"Compara due siti tra loro"}
+                        />
                         <ButtonFilter
                             activeFilter={this.props.collections}
                             filterList={multisiteButtonFilter}
@@ -821,61 +940,73 @@ var MultiSite = React.createClass({
         const {colors} = this.getTheme();
         return (
             <bootstrap.Col xs={12} sm={4}>
-                <bootstrap.Row>
-                    {this.renderTips()}
-                    {this.renderLegend()}
-                    {this.renderMap()}
-                    <span style={styles(this.getTheme()).titleButtonPopover}>
-                        <Icon
-                            onClick={() => this.setState({
-                                showMapModal: true
-                            })}
-                            color={colors.iconTips}
-                            icon={"expand"}
-                            size={"28px"}
-                            style={styles(this.getTheme()).iconTips}
-                        />
-                    </span>
-                </bootstrap.Row>
+                {this.renderTips()}
+                {this.renderLegend()}
+                {this.renderMap()}
+                <span style={styles(this.getTheme()).titleButtonPopover}>
+                    <Icon
+                        onClick={() => this.setState({
+                            showMapModal: true
+                        })}
+                        color={colors.iconTips}
+                        icon={"expand"}
+                        size={"28px"}
+                        style={styles(this.getTheme()).iconTips}
+                    />
+                </span>
             </bootstrap.Col>
         );
     },
 
     renderTips: function () {
         const theme = this.getTheme();
-        return (
-            <div style={styles(theme).sidebarTips}>
-                <Button className="button-option" style={styles(theme).buttonCancelTips}>
+        if (this.state.showTipsMessage) {
+            return (
+                <bootstrap.Alert
+                    className="tips-alert"
+                    bsStyle={"alert"}
+                    onDismiss={this.closeTipsMessage}
+                >
                     <Radium.Style
                         rules={{
                             "": {
-                                padding: "0px !important",
-                                margin: "0px !important"
+                                ...styles(theme).sidebarTips
+                            },
+                            ".close": {
+                                textShadow: "0 1px 0 " + theme.colors.transparent,
+                                opacity: 1,
+                                fontSize: "30px",
+                                marginRight: "20px",
+                                color: theme.colors.white,
+                                fontWeight: "200 !important"
+                            },
+                            ".close:hover": {
+                                color: theme.colors.white,
+                                opacity: .5
+                            },
+                            ".close:focus": {
+                                outline: "0px",
+                                outlineStyle: "none",
+                                outlineWidth: "0px"
                             }
                         }}
-                        scopeSelector=".button-option"
+                        scopeSelector=".tips-alert"
                     />
-                    <Icon
-                        color={theme.colors.iconSiteButton}
-                        icon={"delete"}
-                        size={"22px"}
-                        style={{marginRight: "10px", verticalAlign: "middle"}}
-                    />
-                </Button>
-                <h2 style={styles(theme).tipsTitle}>
-                    <Icon
-                        color={theme.colors.iconSiteButton}
-                        icon={"lightbulb"}
-                        size={"40px"}
-                        style={styles(theme).iconTips}
-                    />
-                    {"Suggerimento!"}
-                </h2>
-                <p style={{fontWeight: "300"}}>
-                    {"Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vestibulum est felis, laoreet at molestie sed, tempor sed sem. Sed eu dignissim neque. Praesent augue lorem, porttitor nec elit et, sodales lobortis risus."}
-                </p>
-            </div>
-        );
+                    <h2 style={styles(theme).tipsTitle}>
+                        <Icon
+                            color={theme.colors.iconSiteButton}
+                            icon={"lightbulb"}
+                            size={"40px"}
+                            style={styles(theme).iconTips}
+                        />
+                        {"Suggerimento!"}
+                    </h2>
+                    <p style={{fontWeight: "300"}}>
+                        {"Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vestibulum est felis, laoreet at molestie sed, tempor sed sem. Sed eu dignissim neque. Praesent augue lorem, porttitor nec elit et, sodales lobortis risus."}
+                    </p>
+                </bootstrap.Alert>
+            );
+        }
     },
 
     renderLegend: function () {
@@ -903,14 +1034,9 @@ var MultiSite = React.createClass({
             );
         });
         return (
-            <bootstrap.Accordion style={{position: "relative"}}>
-                <Icon
-                    color={theme.colors.white}
-                    icon={"arrow-down"}
-                    size={"16px"}
-                    style={styles(theme).iconArrowDown}
-                />
-                <bootstrap.Panel className="legend" header="Legenda" eventKey="1" style={{backgroundColor: theme.colors.black}}>
+            <div>
+
+                <bootstrap.Panel className="legend" eventKey="1" style={{backgroundColor: theme.colors.black}}>
                     <Radium.Style
                         rules={{
                             "": {
@@ -941,7 +1067,7 @@ var MultiSite = React.createClass({
                         </ul>
                     </div>
                 </bootstrap.Panel>
-            </bootstrap.Accordion>
+            </div>
         );
     },
 
@@ -962,12 +1088,13 @@ var MultiSite = React.createClass({
             </div>
         );
     },
-
+    // onClick={() => this.handleClickSiteStatus(site._id)}
     renderSites: function () {
         return this.getFilteredSortedSites().map((site, index) => (
             <SiteStatus
                 isOpen={this.state.openPanel === site._id}
                 key={index}
+
                 onClickAlarmChart={this.props.selectSingleElectricalSensor}
                 onClickPanel={this.onClickPanel}
                 parameterStatus={site.status}
@@ -1016,6 +1143,7 @@ var MultiSite = React.createClass({
                     {this.renderSearchAction()}
                 </bootstrap.Row>
                 <bootstrap.Row className="site-sidebar">
+                    {this.renderCompareMessage()}
                     <Radium.Style
                         rules={styles(theme).rowDataWrp}
                         scopeSelector=".site-sidebar"
@@ -1039,6 +1167,7 @@ var MultiSite = React.createClass({
                                 {"CARICA ALTRI"}
                             </Button>
                         </bootstrap.Row>
+                        {this.renderCompareButtons()}
                     </bootstrap.Col>
                     {this.renderSidebar()}
                 </bootstrap.Row>
