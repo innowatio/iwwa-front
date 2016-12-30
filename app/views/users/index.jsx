@@ -1,6 +1,8 @@
 import Immutable from "immutable";
 import R from "ramda";
 import React, {PropTypes} from "react";
+import * as bootstrap from "react-bootstrap";
+import Radium from "radium";
 import IPropTypes from "react-immutable-proptypes";
 import {connect} from "react-redux";
 import {bindActionCreators} from "redux";
@@ -9,7 +11,6 @@ import {
     ConfirmModal,
     CollectionItemList,
     DeleteWithConfirmButton,
-    FullscreenModal,
     MonitoringSensorsAssociator,
     NewUserModal,
     SearchableDraggableModal,
@@ -100,6 +101,15 @@ const stylesFunction = ({colors}, active) => ({
         minHeight: "50px",
         cursor: "pointer",
         fontSize: "16px"
+    },
+    textAlert: {
+        textTransform: "uppercase",
+        padding: "20px 0px",
+        textAlign: "center",
+        color: colors.white,
+        margin: "0px",
+        fontSize: "26px",
+        fontWeight: "300"
     }
 });
 
@@ -180,8 +190,9 @@ var Users = React.createClass({
     onCloneClick: function () {
         this.props.toggleClone();
         this.setState({showCloneMessage: true});
+        window.setTimeout(this.closeCloneMessage, 2500);
     },
-    closeMessageModal: function () {
+    closeCloneMessage: function () {
         this.setState({showCloneMessage: false});
     },
     openSensorsModal: function () {
@@ -258,24 +269,47 @@ var Users = React.createClass({
             </div>
         );
     },
-    renderCloneMessageModal: function () {
+    renderCloneMessage: function () {
         const theme = this.getTheme();
-        return (
-            <FullscreenModal
-                show={this.state.showCloneMessage}
-                onEntered={() => setTimeout(this.closeMessageModal, 2500)}
-                onHide={this.closeMessageModal}
-            >
-                <div style={{
-                    padding: "150px",
-                    textAlign: "center",
-                    color: theme.colors.white,
-                    fontSize: "40px"
-                }}>
-                    {"Seleziona gli utenti che devono ereditare le stesse caratteristiche (sensori e funzioni)"}
-                </div>
-            </FullscreenModal>
-        );
+        if (this.state.showCloneMessage) {
+            return (
+                <bootstrap.Alert
+                    className="custom-alert"
+                    bsStyle={"alert"}
+                    onDismiss={this.closeCloneMessage}
+                >
+                    <Radium.Style
+                        rules={{
+                            "": {
+                                backgroundColor: theme.colors.buttonPrimary,
+                                borderRadius: "0px",
+                                margin: "20px 0px"
+                            },
+                            ".close": {
+                                textShadow: "0 1px 0 " + theme.colors.transparent,
+                                opacity: 1,
+                                fontSize: "30px",
+                                color: theme.colors.white,
+                                fontWeight: "200 !important"
+                            },
+                            ".close:hover": {
+                                color: theme.colors.white,
+                                opacity: .5
+                            },
+                            ".close:focus": {
+                                outline: "0px",
+                                outlineStyle: "none",
+                                outlineWidth: "0px"
+                            }
+                        }}
+                        scopeSelector=".custom-alert"
+                    />
+                    <h4 style={stylesFunction(theme).textAlert}>
+                        {"Seleziona gli utenti che devono ereditare le stesse caratteristiche (sensori e funzioni)"}
+                    </h4>
+                </bootstrap.Alert>
+            );
+        }
     },
     renderBiggerButton: function (tooltip, iconName, disabled, permissions, onClickFunc, active) {
         const theme = this.getTheme();
@@ -321,7 +355,6 @@ var Users = React.createClass({
                     "Annulla clonazione", "delete", false, [MANAGE_USERS],
                     this.props.toggleClone)
                 }
-                {this.renderCloneMessageModal()}
             </div>
         ) : null;
     },
@@ -372,6 +405,7 @@ var Users = React.createClass({
                         }
                     </div>
                 </SectionToolbar>
+                {this.renderCloneMessage()}
                 <div className="table-user">
                     <div style={{
                         width: "98%",
