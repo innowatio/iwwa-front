@@ -83,7 +83,7 @@ var ButtonSortBy = React.createClass({
             {label: "Id", key: "_id", type: "text"},
             {label: "Nome", key: "name", type: "text"},
             {label: "Provincia", key: "prov", type: "text"},
-            {label: "Data ultimo aggiornamento", key: "aggiornamento", type: "number"},
+            {label: "Data ultimo aggiornamento", key: "lastUpdate", type: "number"},
             {label: "Piani", key: "piani", type: "number"},
             {label: "Vetrine", key: "vetrine", type: "number"},
             {label: "mq Comm", key: "mq", type: "number"},

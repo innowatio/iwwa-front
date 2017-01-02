@@ -320,18 +320,6 @@ var MultiSite = React.createClass({
         ];
     },
 
-    getSiteLastUpdate: function (site) {
-
-        const realtimeAggregatesList = this.props.collections.get("readings-real-time-aggregates") || Immutable.List();
-        const realtimeAggregates = realtimeAggregatesList.map(x => x.toJS()).toArray();
-
-        const last = R.last(realtimeAggregates
-            .filter(x => R.contains(x.sensorId, site.sensorsIds))
-            .sort((x, y) => x.measurementTime > y.measurementTime ? 1 : -1));
-
-        return last ? last.measurementTime : 0;
-    },
-
     getSiteAlarmsAggregates: function (site, threshold = 0) {
 
         const alarmsList = this.props.collections.get("alarms") || Immutable.List();
@@ -503,14 +491,21 @@ var MultiSite = React.createClass({
             sortBy,
             reverseSort
         } = this.state;
-        const sites = this.getSites().map(x => x.toJS()).toArray();
+        const sites = this.getSites().map(x => {
+            const site = x.toJS();
+            return {
+                ...site,
+                lastUpdate: site.lastUpdate || 0
+            };
+        }).toArray();
+
         const filtered = sites.filter(site => {
             const input = search.trim().toLowerCase();
             const siteSearch = `${site.name || ""} ${site.address || ""}`;
             return siteSearch.toLowerCase().includes(input);
         });
 
-        const sorted = filtered.sort((x, y) => x[sortBy] && x[sortBy].toLowerCase() > y[sortBy].toLowerCase() ? 1 : -1);
+        const sorted = R.sortBy(x => x[sortBy], filtered);
         const max = sorted.length < maxItems ? sorted.length : maxItems;
         const limited = reverseSort ? R.reverse(sorted).splice(0, max) : sorted.splice(0, max);
 
@@ -521,7 +516,6 @@ var MultiSite = React.createClass({
                     day: "n.d",
                     night: "n.d"
                 },
-                lastUpdate: this.getSiteLastUpdate(site),
                 status: {
                     alarm: site.alarmsDisabled ? "DISABLED" : this.getSiteAlarmStatus(site),
                     connection: site.connectionDisabled ? "DISABLED" : this.getSiteConnectionStatus(site),
