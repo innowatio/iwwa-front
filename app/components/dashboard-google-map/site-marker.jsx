@@ -72,6 +72,7 @@ var SiteMarker = React.createClass({
                             visible: false
                         })}
                         parameterStatus={site.status}
+                        site={site}
                         siteAddress={site.address || ""}
                         siteName={site.name}
                         siteInfo={

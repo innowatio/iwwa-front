@@ -1,6 +1,7 @@
 import React, {PropTypes} from "react";
 import * as bootstrap from "react-bootstrap";
 import Radium from "radium";
+import moment from "moment";
 
 import {defaultTheme} from "lib/theme";
 import {
@@ -86,6 +87,7 @@ var SiteStatus = React.createClass({
         onClickPanel: PropTypes.func,
         onClose: PropTypes.func,
         parameterStatus: PropTypes.object.isRequired,
+        site: PropTypes.object.isRequired,
         siteAddress: PropTypes.string.isRequired,
         siteInfo: PropTypes.array.isRequired,
         siteName: PropTypes.string.isRequired
@@ -97,10 +99,15 @@ var SiteStatus = React.createClass({
         return this.context.theme || defaultTheme;
     },
     getAlarmInfo: function () {
+        const {site} = this.props;
+        const {
+            day,
+            night
+        } = this.props.site.alarmsInfo;
         return [
-            {label: "Tot allarmi diurni", value: "4", key: "day alarm"},
-            {label: "Tot allarmi notturni", value: "3", key: "night alarm"},
-            {label: "Ultimo aggiornamento", value: "14.12.2016", key: "last update"}
+            {label: "Tot allarmi diurni", value: day, key: "day alarm"},
+            {label: "Tot allarmi notturni", value: night, key: "night alarm"},
+            {label: "Ultimo aggiornamento", value: site.lastUpdate ? moment(site.lastUpdate).format("L") : "n.d.", key: "last update"}
         ];
     },
     getSiteStatus: function () {

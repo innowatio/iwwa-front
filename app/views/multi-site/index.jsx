@@ -320,9 +320,19 @@ var MultiSite = React.createClass({
         ];
     },
 
-    getSiteAlarmStatus: function (site) {
+    getSiteLastUpdate: function (site) {
 
-        const threshold = moment.utc().valueOf() - 86400000;
+        const realtimeAggregatesList = this.props.collections.get("readings-real-time-aggregates") || Immutable.List();
+        const realtimeAggregates = realtimeAggregatesList.map(x => x.toJS()).toArray();
+
+        const last = R.last(realtimeAggregates
+            .filter(x => R.contains(x.sensorId, site.sensorsIds))
+            .sort((x, y) => x.measurementTime > y.measurementTime ? 1 : -1));
+
+        return last ? last.measurementTime : 0;
+    },
+
+    getSiteAlarmsAggregates: function (site, threshold = 0) {
 
         const alarmsList = this.props.collections.get("alarms") || Immutable.List();
         const alarmsAggregatesList = this.props.collections.get("alarms-aggregates") || Immutable.List();
@@ -353,7 +363,52 @@ var MultiSite = React.createClass({
             ...site.sensorsIds
         ];
 
-        const siteAlarms = decoratedAggregates.filter(x => R.contains(x.sensorId, siteAndSensors));
+        return decoratedAggregates.filter(x => R.contains(x.sensorId, siteAndSensors));
+    },
+
+    getSiteAlarmsInfo: function (site) {
+
+        const today = moment().startOf("day");
+
+        const todayAlarms = this.getSiteAlarmsAggregates(site, today.valueOf()).filter(x => x.triggered);
+
+        const nightHours = [0, 1, 2, 3, 4, 5];
+
+        const alarmsInfo = todayAlarms.reduce((state, alarm) => {
+            const times = alarm.measurementTimes.split(",");
+            const values = alarm.measurementValues.split(",");
+
+            const measurements = times.map((time, index) => {
+                return {
+                    time: parseInt(time),
+                    value: parseFloat(values[index])
+                };
+            }).filter(x => 1 === x.value);
+
+            const nightTimes = measurements.filter(x => {
+                return R.contains(moment(x.time).hours(), nightHours);
+            });
+
+            return {
+                total: state.total + measurements.length,
+                night: state.night + nightTimes.length
+            };
+        }, {
+            total: 0,
+            night: 0
+        });
+        
+        return {
+            day: alarmsInfo.total - alarmsInfo.night,
+            night: alarmsInfo.night
+        };
+    },
+
+    getSiteAlarmStatus: function (site) {
+
+        const threshold = moment.utc().valueOf() - 86400000;
+
+        const siteAlarms = this.getSiteAlarmsAggregates(site, threshold);
         if (siteAlarms.length === 0) {
             return "MISSING";
         }
@@ -462,6 +517,11 @@ var MultiSite = React.createClass({
         return limited.map(site => {
             return {
                 ...site,
+                alarmsInfo: !site.alarmsDisabled ? this.getSiteAlarmsInfo(site) : {
+                    day: "n.d",
+                    night: "n.d"
+                },
+                lastUpdate: this.getSiteLastUpdate(site),
                 status: {
                     alarm: site.alarmsDisabled ? "DISABLED" : this.getSiteAlarmStatus(site),
                     connection: site.connectionDisabled ? "DISABLED" : this.getSiteConnectionStatus(site),
@@ -971,6 +1031,7 @@ var MultiSite = React.createClass({
                 onClickAlarmChart={this.props.selectSingleElectricalSensor}
                 onClickPanel={this.onClickPanel}
                 parameterStatus={site.status}
+                site={site}
                 siteName={site.name}
                 siteInfo={
                     this.getSiteInfo().map(info => {
