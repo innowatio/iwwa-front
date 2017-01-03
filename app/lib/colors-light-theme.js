@@ -29,6 +29,7 @@ export const colorsLightTheme = {
     backgroundGauge: "#BDBDBD",
     backgroundGaugeBar: "#536DFE",
     backgroundInputSearch: "rgba(255, 255, 255, 0.8)",
+    backgroundIconStatus: "#BDBDBD",
     backgroundLogin: "linear-gradient(235deg,#8a95c8,#7483be,#5b72b3,#4e64a1,#4554a1,#624899,#984898,#eb437f,#d26faa,#b08abc)",
     backgroundMenuSelect: "#eeeeee",
     backgroundModal: "rgba(255, 255, 255, 0.8)",

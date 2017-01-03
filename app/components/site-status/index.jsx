@@ -216,18 +216,39 @@ var SiteStatus = React.createClass({
     },
 
     renderIconStatus: function (status) {
+        const theme = this.getTheme();
+        const itemStyleActive = {
+            backgroundColor: (this.props.isActive ?
+            theme.colors.backgroundIconStatus : null)
+        };
         return (
-            <Icon
-                color={status.iconColor}
-                icon={status.icon}
-                key={status.key}
-                size={"44px"}
-                style={{
-                    display: "inline-block",
-                    height: "45px",
-                    margin: "0 3px"
-                }}
-            />
+            <div className="icon-status">
+                <Radium.Style
+                    rules={{
+                        "": {
+                            height: "40px",
+                            marginTop: "3px"
+                        },
+                        ":before": {
+                            margin: "-3px !important"
+                        }
+                    }}
+                    scopeSelector=".icon-status"
+                />
+                <Icon
+                    color={status.iconColor}
+                    icon={status.icon}
+                    key={status.key}
+                    size={"44px"}
+                    style={{
+                        display: "inline-block",
+                        width: "38px",
+                        height: "38px",
+                        borderRadius: "100%",
+                        ...itemStyleActive
+                    }}
+                />
+            </div>
         );
     },
     renderSiteStatus: function () {
@@ -246,8 +267,7 @@ var SiteStatus = React.createClass({
                 >
                     <span style={{
                         display: "inline-block",
-                        width: "51px",
-                        height: "45px"
+                        marginRight: "15px"
                     }}>
                         {this.renderIconStatus(status)}
                     </span>

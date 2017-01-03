@@ -4,9 +4,10 @@ import * as bootstrap from "react-bootstrap";
 import Radium from "radium";
 import R from "ramda";
 import {bindActionCreators} from "redux";
-import {selectSingleElectricalSensor} from "actions/chart";
+import {selectSingleElectricalSensor, selectMultipleElectricalSensor} from "actions/chart";
 
 import {connect} from "react-redux";
+import {Link} from "react-router";
 import {defaultTheme} from "lib/theme";
 import moment from "lib/moment";
 import {
@@ -222,6 +223,7 @@ var MultiSite = React.createClass({
         asteroid: React.PropTypes.object,
         collections: React.PropTypes.any,
         multisite: React.PropTypes.object,
+        selectMultipleElectricalSensor: React.PropTypes.func.isRequired,
         selectSingleElectricalSensor: React.PropTypes.func.isRequired
     },
     contextTypes: {
@@ -402,7 +404,7 @@ var MultiSite = React.createClass({
             total: 0,
             night: 0
         });
-        
+
         return {
             day: alarmsInfo.total - alarmsInfo.night,
             night: alarmsInfo.night
@@ -604,6 +606,14 @@ var MultiSite = React.createClass({
         this.setState({compareMode: !this.state.compareMode}),
         this.setState({showCompareMessage: true});
         window.setTimeout(this.closeCompareMessage, 2500);
+    },
+
+    onCompareSites: function () {
+        this.props.selectSingleElectricalSensor([this.state.selectedSites[0]]);
+        this.props.selectMultipleElectricalSensor(
+            [this.state.selectedSites[1]]
+        );
+        this.setState({compareMode: false});
     },
 
     closeCompareMessage: function () {
@@ -927,7 +937,7 @@ var MultiSite = React.createClass({
         }
     },
 
-    renderBiggerButton: function (tooltip, iconName, disabled, onClickFunc) {
+    renderTooltipButton: function (tooltip, iconName, disabled, onClickFunc) {
         const theme = this.getTheme();
         const backgroundStyle = {backgroundColor:
             (iconName === "confront" ? theme.colors.buttonPrimary : theme.colors.primary)
@@ -959,6 +969,24 @@ var MultiSite = React.createClass({
         );
     },
 
+    renderBiggerButton: function (tooltip, iconName, disabled, onClickFunc) {
+        const theme = this.getTheme();
+        if (iconName === "confront") {
+            return (
+                <Link
+                    to={"/chart/"}
+                    style={styles(theme).buttonHistoricalConsumption}
+                >
+                    {this.renderTooltipButton(tooltip, iconName, disabled, onClickFunc)}
+                </Link>
+            );
+        } else {
+            return (
+                this.renderTooltipButton(tooltip, iconName, disabled, onClickFunc)
+            );
+        }
+    },
+
     renderCompareButtons: function () {
         if (this.state.compareMode) {
             return (
@@ -972,10 +1000,15 @@ var MultiSite = React.createClass({
                     zIndex: "100"
                 }}>
                     {this.renderBiggerButton(
-                        "Conferma comparazione", "confront", false, () => this.setState({compareMode: !this.state.compareMode}))
-                    }
+                        "Conferma comparazione", "confront", false,
+                        () => this.onCompareSites()
+                    )}
                     {this.renderBiggerButton(
-                        "Annulla comparazione", "delete", false, () => this.setState({compareMode: !this.state.compareMode}))
+                        "Annulla comparazione", "delete", false,
+                        () => this.setState({
+                            compareMode: false,
+                            selectedSites: []
+                        }))
                     }
                 </div>
             );
@@ -1205,7 +1238,7 @@ var MultiSite = React.createClass({
         };
         return this.getFilteredSortedSites().map((site, index) => (
             <SiteStatus
-                isActive={this.state.selectedSites.find(id => id === site._id)}
+                isActive={!!this.state.selectedSites.find(id => id === site._id)}
                 isOpen={this.state.openPanel === site._id}
                 key={index}
                 onClick={(id) => this.onSiteClick(id)}
@@ -1269,7 +1302,7 @@ var MultiSite = React.createClass({
                         <bootstrap.Row>
                             {this.renderSites()}
                         </bootstrap.Row>
-                        <bootstrap.Row>
+                        <bootstrap.Row style={{marginBottom: "20px"}}>
                             <Button
                                 onClick={() => this.setState({maxItems: this.state.maxItems + 10})}
                                 style={{
@@ -1326,7 +1359,8 @@ function mapStateToProps (state) {
 
 function mapDispatchToProps (dispatch) {
     return {
-        selectSingleElectricalSensor: bindActionCreators(selectSingleElectricalSensor, dispatch)
+        selectSingleElectricalSensor: bindActionCreators(selectSingleElectricalSensor, dispatch),
+        selectMultipleElectricalSensor: bindActionCreators(selectMultipleElectricalSensor, dispatch)
     };
 }
 
