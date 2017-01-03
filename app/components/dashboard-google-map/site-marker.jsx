@@ -18,7 +18,7 @@ const styles = (theme) => ({
         padding: "4px",
         MozTransform: "rotate(45deg)",
         WebkitTransform: "rotate(45deg)",
-        backgroundColor: theme.colors.transparent,
+        backgroundColor: theme.colors.buttonPrimary,
         border: "2px solid " + theme.colors.buttonPrimary,
         borderRadius: "30px",
         borderBottomRightRadius: "0px"
@@ -72,6 +72,7 @@ var SiteMarker = React.createClass({
                             visible: false
                         })}
                         parameterStatus={site.status}
+                        site={site}
                         siteAddress={site.address || ""}
                         siteName={site.name}
                         siteInfo={
