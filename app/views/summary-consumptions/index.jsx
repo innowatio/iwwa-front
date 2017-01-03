@@ -26,7 +26,7 @@ import {tabParameters} from "lib/consumptions-utils";
 import {selectSite, selectPeriod} from "actions/consumptions";
 
 var styleLeftPane  = () => ({
-    width: "70%",
+    width: "68%",
     float: "left",
     height: "calc(100vh - 80px)",
     paddingBottom: "20px",
@@ -112,7 +112,7 @@ var styleUnit  = ({colors}) => ({
 var styleRightPane  = ({colors}) => ({
     display: "flex",
     flexDirection: "column",
-    width: "30%",
+    width: "32%",
     overflow: "hidden",
     height: "calc(100vh - 80px)",
     backgroundColor: colors.secondary
@@ -130,7 +130,6 @@ var styleSiteButton = ({colors}) => ({
 });
 
 var comparisonDiv = ({colors}) => ({
-    padding: "12px",
     marginBottom: "20px",
     border: "1px solid " + colors.borderConsumptionSection,
     backgroundColor: colors.backgroundConsumptionSection,
@@ -139,7 +138,7 @@ var comparisonDiv = ({colors}) => ({
 });
 
 var styleProgressBar = ({colors}) => ({
-    height: "16px",
+    height: "15px",
     margin: "auto",
     borderRadius: "35px",
     maxWidth: "100%",
@@ -147,8 +146,11 @@ var styleProgressBar = ({colors}) => ({
 });
 
 var styleProgressBarTitleLabel = ({colors}) => ({
+    display: "inline-block",
     fontSize: "16px",
+    lineHeight: "15px",
     fontWeight: "300",
+    marginBottom: "4px",
     color: colors.progressBarFont
 });
 
@@ -157,15 +159,19 @@ var stylePeriodComparisonTitleLabel = ({colors}) => ({
     fontWeight: "300",
     color: colors.progressBarFont,
     borderBottom: "1px solid " + colors.borderConsumptionSection,
-    marginBottom: "8px",
+    margin: "10px 0px",
+    padding: "0px 10px 10px",
     textAlign: "center"
 });
 
 var stylePeriodComparisonSubTitleLabel = ({
-    fontSize: "12px",
+    fontSize: "13px",
     fontWeight: "300",
-    marginBottom: "8px",
     textAlign: "center"
+});
+
+var stylePeriodComparisonBar =  () => ({
+    padding: "10px 12px 0px 12px"
 });
 
 var styleProgressBarMaxLabel = ({colors}) => ({
@@ -176,13 +182,19 @@ var styleProgressBarMaxLabel = ({colors}) => ({
 });
 
 var rulesProgressBar = ({colors}) => ({
+    ".progress": {
+        whiteSpace: "nowrap"
+    },
     ".progress-bar": {
         color: colors.progressBarFont,
-        fontSize: "10px",
+        fontSize: "11px",
         padding: "0px 5px",
-        lineHeight: "12px",
+        lineHeight: "15px",
+        fontWeight: "200",
         borderRadius: "20px",
-        textAlign: "left"
+        textAlign: "left",
+        WebkitBoxShadow: "none",
+        boxShadow: "none"
     },
     ".progress-bar-danger": {
         backgroundColor: colors.progressBarDanger + "!important",
@@ -441,9 +453,11 @@ var SummaryConsumptions = React.createClass({
                 <div style={comparisonDiv(colors)}>
                     <div style={stylePeriodComparisonTitleLabel(colors)}>
                         <div>{title}</div>
-                        <div  style={stylePeriodComparisonSubTitleLabel}>{subTitle}</div>
+                        <div style={stylePeriodComparisonSubTitleLabel}>{subTitle}</div>
                     </div>
-                    {comparisons.map(partial(this.renderProgressBar, [selectedTab.now, aggregates, max]))}
+                    <div style={stylePeriodComparisonBar(colors)}>
+                        {comparisons.map(partial(this.renderProgressBar, [selectedTab.now, aggregates, max]))}
+                    </div>
                 </div>
             );
         } else if (isPreviousPeriod) {
@@ -500,7 +514,7 @@ var SummaryConsumptions = React.createClass({
     renderStyledProgressBar: function (key, max, now, title) {
         const colors = this.getTheme();
         return (
-            <div key={key} style={{marginBottom: "15px"}}>
+            <div key={key} style={{marginBottom: "25px"}}>
                 <ProgressBar
                     isDangerEnable={this.isDangerEnable(key)}
                     isPercentageVisible={this.isPercentageVisible(key)}
@@ -619,7 +633,7 @@ var SummaryConsumptions = React.createClass({
                             fontWeight: "400"
                         },
                         ".nav-tabs > li.active > a, .nav-tabs > li > a:hover, .nav-tabs > li.active > a:hover, .nav-tabs > li.active > a:focus": {
-                            height: "44px",
+                            height: "40px",
                             fontSize: "17px",
                             fontWeight: "500",
                             color: colors.white,
