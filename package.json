@@ -76,7 +76,7 @@
     "intro.js": "^2.1.0",
     "iwwa-formula-resolver": "^1.3.0",
     "iwwa-icons": "^1.1.2",
-    "iwwa-utils": "^1.0.9",
+    "iwwa-utils": "^1.0.11",
     "lodash.debounce": "^4.0.6",
     "lodash.get": "^4.3.0",
     "lodash.max": "^4.0.1",
