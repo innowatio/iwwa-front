@@ -462,7 +462,15 @@ var SummaryConsumptions = React.createClass({
             );
         } else if (isPreviousPeriod) {
             return  (
-                <div style={comparisonDiv(colors)}>{"Non ci sono dati disponibili al momento."}</div>
+                <div style={{
+                    ...comparisonDiv(colors),
+                    padding:"12",
+                    fontSize: "16px",
+                    fontWeight: "300",
+                    textAlign: "center"
+                }}>
+                    {"Non ci sono dati disponibili al momento."}
+                </div>
             );
         }
     },
