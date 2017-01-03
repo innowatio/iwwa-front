@@ -19,7 +19,7 @@ const styles = (theme) => ({
         MozTransform: "rotate(45deg)",
         WebkitTransform: "rotate(45deg)",
         backgroundColor: theme.colors.buttonPrimary,
-        border: "2px solid " + theme.colors.buttonPrimary,
+        border: "1px solid " + theme.colors.white,
         borderRadius: "30px",
         borderBottomRightRadius: "0px"
     }
