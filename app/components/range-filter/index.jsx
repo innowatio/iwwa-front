@@ -1,5 +1,8 @@
 import React, {PropTypes} from "react";
 import {Slider} from "antd";
+import Radium from "radium";
+
+import {defaultTheme} from "lib/theme";
 
 class RangeFilter extends React.Component {
 
@@ -25,11 +28,29 @@ class RangeFilter extends React.Component {
         this.props.onChange(filter);
     }
 
+    getTheme () {
+        return this.context.theme || defaultTheme;
+    }
+
     render () {
         const {selectedValue} = this.state.filter ? this.state.filter : this.props.filter;
         const value = selectedValue ? selectedValue : [0, 0];
+        const theme = this.getTheme();
         return (
-            <Slider range={true} defaultValue={value} max={300} onChange={(event) => this.onChangeValue(event)}/>
+            <div>
+                <Slider range={true} defaultValue={value} max={300}
+                    onChange={(event) => this.onChangeValue(event)}
+                />
+                <Radium.Style
+                    rules={{
+                        "": {
+                            backgroundColor: theme.colors.primary
+                        }
+
+                    }}
+                    scopeSelector=".ant-slider"
+                />
+            </div>
         );
     }
 }

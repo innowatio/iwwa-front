@@ -96,6 +96,36 @@ var MultiSiteFilter = React.createClass({
         return this.context.theme || defaultTheme;
     },
 
+    getfilter: function (filterType, selectedValue, value) {
+        switch (filterType) {
+            case "range":
+                if (R.sum(selectedValue)==0) {
+                    return true;
+                }
+                return value >= selectedValue[0] && value <= selectedValue[1];
+            case "optionsTime":
+                if (!selectedValue) {
+                    return true;
+                }
+                return moment().diff(moment(value), "days") <= selectedValue;
+            case "number":
+                if (selectedValue < 1) {
+                    return true;
+                }
+                return parseInt(value)==parseInt(selectedValue);
+            case "options":
+                if (selectedValue==null) {
+                    return true;
+                }
+                return value == selectedValue;
+        }
+        if (!selectedValue) {
+            return true;
+        }
+        const input = selectedValue.trim().toLowerCase();
+        return value.toLowerCase().includes(input);
+    },
+
     onConfirmFilter: function () {
         const filterList = this.state.filterList;
         var fn;
@@ -103,59 +133,18 @@ var MultiSiteFilter = React.createClass({
             const {id, selectedValue, isAttribute, filterType} = item;
             if (isAttribute) {
                 fn = (x) => {
-                    if (selectedValue==null || selectedValue < 1) {
-                        return true;
-                    }
                     const filtered = x["attributes"].filter(att => {
                         return att.id==id;
                     })[0];
                     if (!filtered) {
                         return true;
                     }
-                    if (filterType=="number") {
-                        return parseInt(filtered.value)==parseInt(selectedValue);
-                    } else {
-                        const input = selectedValue.trim().toLowerCase();
-                        return filtered.value.toLowerCase().includes(input);
-                    }
+                    return this.getfilter(filterType, selectedValue, filtered.value);
                 };
             } else {
-                switch (filterType) {
-                    case "range":
-                        fn = (x) => {
-                            if (R.sum(selectedValue)==0) {
-                                return true;
-                            }
-                            return x[id] >= selectedValue[0] &&
-                                   x[id] <= selectedValue[1];
-                        };
-                        break;
-                    case "optionsTime":
-                        fn = (x) => {
-                            if (selectedValue==0) {
-                                return true;
-                            }
-                            return moment().diff(moment(x[id]), "days") <= selectedValue;
-                        };
-                        break;
-                    case "number":
-                        fn = (x) => {
-                            if (selectedValue < 1) {
-                                return true;
-                            }
-                            return parseInt(x[id]) == selectedValue;
-                        };
-                        break;
-                    default:
-                        fn = (x) => {
-                            if (selectedValue==null) {
-                                return true;
-                            }
-                            const input = selectedValue.trim().toLowerCase();
-                            return x[id].value.toLowerCase().includes(input);
-                        };
-
-                }
+                fn = (x) => {
+                    return this.getfilter(filterType, selectedValue, x[id]);
+                };
             }
             item.filterFunc = fn;
         });
