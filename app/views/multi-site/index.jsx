@@ -550,11 +550,8 @@ var MultiSite = React.createClass({
                 advancedFiltered = advancedFiltered.filter(item.filterFunc);
             });
         }
-
-        const sorted = R.sortBy(x => x[sortBy], advancedFiltered);
-=======
+        
         const sorted = R.sortBy(x => x[sortBy] && isNaN(x[sortBy]) ? x[sortBy].toLowerCase() : x[sortBy], filtered);
->>>>>>> 51414854f97df4dbbbc281ca0991d2baff286f02
         const max = sorted.length < maxItems ? sorted.length : maxItems;
         const limited = reverseSort ? R.reverse(sorted).splice(0, max) : sorted.splice(0, max);
 
