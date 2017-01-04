@@ -1,62 +1,130 @@
 import GoogleMap from "google-map-react";
-import React, {PropTypes} from "react";
-import controllable from "react-controllables";
-import PureMixin from "react-pure-render/mixin";
+import React, {Component, PropTypes} from "react";
+import supercluster from "points-cluster";
 
 import {GOOGLE_MAP_API_KEY} from "lib/config";
 
+import ClusterMarker from "./cluster-marker";
 import SiteMarker from "./site-marker";
 
-var DashboardGoogleMap = React.createClass({
-    propTypes: {
+class DashboardGoogleMap extends Component {
+
+    static propTypes = {
         center: PropTypes.any,
         onCenterChange: PropTypes.func,
         onChange: PropTypes.func,
         onZoomChange: PropTypes.func,
         sites: PropTypes.array.isRequired,
         zoom: PropTypes.number
-    },
-    mixins: [PureMixin],
-    onChange: function (center, zoom, bounds, marginBounds) {
-        if (this.props.onChange) {
-            this.props.onChange({center, zoom, bounds, marginBounds});
-        } else {
-            this.props.onCenterChange(center);
-            this.props.onZoomChange(zoom);
-        }
-    },
-    onSiteClick: function (key, childProps) {
-        this.refs[childProps.site._id].viewSiteInfo();
-    },
-    renderSitesMarker: function () {
-        return this.props.sites.map(site => {
-            const {_id, latitude, longitude} = site;
-            return latitude && longitude ? (
-                <SiteMarker
-                    key={_id}
-                    lat={latitude}
-                    lng={longitude}
-                    ref={_id}
-                    site={site}
-                />
-            ) : null;
+    }
+
+    constructor (props) {
+        super(props);
+        this.state = {
+            bounds: {
+                nw: {
+                    lat: 85,
+                    lng: -180
+                },
+                se: {
+                    lat: -85,
+                    lng: 180
+                }
+            },
+            clusters: [],
+            center: {
+                lat: 42,
+                lng: 11
+            },
+            zoom: 5
+        };
+    }
+
+    onChange ({bounds, zoom}) {
+        this.setState({
+            zoom,
+            bounds
         });
-    },
-    render: function () {
-        // position: 10 === google.maps.ControlPosition.BOTTOM_LEFT
+    }
+
+    onSiteClick (key, childProps) {
+        if (childProps.sites) {
+            this.setState({
+                zoom: this.state.zoom + 1
+            });
+        } else {
+            const child = this.refs[key];
+            child.toggleSiteInfo();
+        }
+    }
+
+    renderSitesMarker () {
+        const {
+            bounds,
+            zoom
+        } = this.state;
+
+        const {sites} = this.props;
+        const geocoordinates = sites.filter(x => x.latitude && x.longitude).map(x => {
+            return {
+                ...x,
+                lat: x.latitude,
+                lng: x.longitude
+            };
+        });
+
+        const cluster = supercluster(geocoordinates);
+        const clusters = cluster({
+            bounds,
+            zoom
+        });
+
+        return clusters.map((cluster, index) => {
+            const {
+                x,
+                y,
+                numPoints,
+                points
+            } = cluster;
+
+            return numPoints > 1 ? (
+                <ClusterMarker
+                    key={index}
+                    lat={y}
+                    lng={x}
+                    sites={numPoints}
+                />
+            ) : (
+                <SiteMarker
+                    key={index}
+                    lat={y}
+                    lng={x}
+                    ref={index}
+                    site={points[0]}
+                />
+            );
+        });
+    }
+
+    render () {
+        const {
+            center,
+            zoom
+        } = this.props;
         return (
             <GoogleMap
                 bootstrapURLKeys={{
                     key: GOOGLE_MAP_API_KEY
                 }}
-                center={this.props.center ? this.props.center : {lat: 42.0279071, lng: 11.3340147}}
-                zoom={this.props.zoom ? this.props.zoom : 5}
-                onChildClick={this.onSiteClick}
+                center={center ? center : this.state.center}
+                zoom={zoom ? zoom : this.state.zoom}
+                onChange={(mapInfos) => this.onChange(mapInfos)}
+                onChildClick={(key, childProps) => this.onSiteClick(key, childProps)}
             >
                 {this.renderSitesMarker()}
             </GoogleMap>
         );
     }
-});
+}
 
-module.exports = controllable(DashboardGoogleMap, ["center", "zoom"]);
+module.exports = DashboardGoogleMap;

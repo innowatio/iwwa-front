@@ -1,4 +1,4 @@
-import React, {PropTypes} from "react";
+import React, {Component, PropTypes} from "react";
 import {defaultTheme} from "lib/theme";
 
 import {
@@ -25,19 +25,25 @@ const styles = (theme) => ({
     }
 });
 
-// style={styles(theme).pinpointWrp}
+class SiteMarker extends Component {
 
-var SiteMarker = React.createClass({
-    propTypes: {
+    static propTypes = {
         site: PropTypes.object
-    },
-    getInitialState: function () {
-        return {
+    }
+
+    static contextTypes = {
+        theme: PropTypes.object
+    }
+
+    constructor (props) {
+        super(props);
+        this.state = {
             visible: false,
             expanded: false
         };
-    },
-    getSiteInfo: function () {
+    }
+
+    getSiteInfo () {
         return [
             {label: "ID", key: "_id"},
             {label: "Impiegati", key: "employees"},
@@ -49,20 +55,28 @@ var SiteMarker = React.createClass({
             {label: "Provincia", key: "province"},
             {label: "Location", key: "city"}
         ];
-    },
-    getTheme: function () {
+    }
+
+    getTheme () {
         return this.context.theme || defaultTheme;
-    },
-    viewSiteInfo: function () {
+    }
+
+    toggleSiteInfo () {
         this.setState({
             visible: !this.state.visible
         });
-    },
-    render: function () {
+    }
+
+    render () {
         const theme = this.getTheme();
         const {site} = this.props;
         return (
-            <div style={{width: "100vh", color: "white"}}>
+            <div
+                style={{
+                    width: "100vh",
+                    color: "white"
+                }}
+            >
                 {this.state.visible ? (
                     <SiteStatus
                         isOpen={this.state.expanded}
@@ -92,6 +106,6 @@ var SiteMarker = React.createClass({
             </div>
         );
     }
-});
+}
 
 module.exports = SiteMarker;

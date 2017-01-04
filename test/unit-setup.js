@@ -38,5 +38,15 @@ window.APP_CONFIG = {
     READ_BACKEND_ENDPOINT: "",
     WRITE_API_ENDPOINT: ""
 };
+
+// Avoid test for Ant Design in order to manage error Error: matchMedia not present, legacy browsers require a polyfill
+window.matchMedia = window.matchMedia || function () {
+    return {
+        matches : false,
+        addListener : function () {},
+        removeListener: function () {}
+    };
+};
+
 // empty localStorage for tests
 global.localStorage = new MockStorage();
