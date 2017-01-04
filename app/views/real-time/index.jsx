@@ -104,7 +104,12 @@ var RealTime = React.createClass({
     drawGauge: function (params) {
         const {colors} = this.getTheme();
         return (
-            <div style={{margin: "auto", width: R.path(["style", "width"], params) || "200px"}}>
+            <div style={{
+                margin: "auto",
+                width: R.path(["style", "width"],
+                params) || "200px",
+                textAlign: "center"
+            }}>
                 <Gauge
                     valueLabel={this.getGaugeLabel({
                         styleTextLabel: params.styleTextLabel,
@@ -116,16 +121,18 @@ var RealTime = React.createClass({
                 />
                 <div
                     style={{
-                        textAlign: "center",
-                        fontSize: "18px",
+                        fontSize: "calc(11px + .5vw)",
+                        lineHeight: "calc(11px + .5vw)",
                         color: colors.backgroundGaugeBar,
                         textTransform: "uppercase"
                     }}
                 >
                     <div>{params.description}</div>
                     <div style={{
-                        textAlign: "center",
-                        fontSize: "11px",
+                        fontWeight: "300",
+                        fontSize: "calc(7px + .5vw)",
+                        lineHeight: "calc(7px + .5vw)",
+                        margin: "6px 0",
                         color: colors.mainFontColor
                     }}>
                         {params.measurementTime}
@@ -133,8 +140,9 @@ var RealTime = React.createClass({
                 </div>
                 <div
                     style={{
-                        textAlign: "center",
-                        fontSize: "18px",
+                        fontWeight: "300",
+                        fontSize: "calc(10px + .5vw)",
+                        lineHeight: "calc(11px + .5vw)",
                         color: colors.mainFontColor,
                         textTransform: "uppercase"
                     }}
@@ -159,15 +167,14 @@ var RealTime = React.createClass({
                     styleGaugeBar: {stroke: colors.backgroundGaugeBar},
                     stylePointer: {fill: colors.backgroundGaugeBar},
                     styleTextLabel: {
-                        color: colors.textGauge,
-                        fontSize: "30px",
-                        lineHeight: "34px"
+                        color: colors.mainFontColor,
+                        fontSize: "calc(28px + 1vw)",
+                        lineHeight: "40px"
                     },
                     styleTextUnit: {
                         color: colors.textGauge,
-                        fontSize: "18px",
-                        lineHeight: "20px",
-                        marginBottom: "4px"
+                        fontSize: "calc(12px + .5vw)",
+                        lineHeight: "40px"
                     },
                     unit: measure.unit || measure.unitOfMeasurement,
                     value: parseFloat(measure.measurementValue).toFixed(2) / 1 || 0
@@ -175,9 +182,9 @@ var RealTime = React.createClass({
                 return (
                     <bootstrap.Col
                         key={measure.key}
-                        md={4}
-                        sm={6}
-                        xs={6}
+                        lg={4}
+                        md={6}
+                        xs={4}
                         style={{padding: "20px"}}
                     >
                         {this.drawGauge(gaugeParams)}
@@ -199,10 +206,6 @@ var RealTime = React.createClass({
             return (
                 <bootstrap.Col
                     className="text-center"
-                    style={{
-                        padding: "20px",
-                        color: colors.mainFontColor
-                    }}
                     xs={12}
                 >
                     <div style={styleTextNodata({colors})}>
@@ -226,18 +229,17 @@ var RealTime = React.createClass({
                 maximum: 100,
                 minimum: 0,
                 style: {height: "auto", width: "100%"},
-                styleLabel: {top: "-15%"},
+                styleLabel: {top: "-20%"},
                 stylePointer: {fill: colors.backgroundGaugeBar},
                 styleTextLabel: {
-                    color: colors.backgroundGaugeBar,
-                    fontSize: "50px",
+                    color: colors.mainFontColor,
+                    fontSize: "calc(44px + 1vw)",
                     lineHeight: "60px"
                 },
                 styleTextUnit: {
                     color: colors.textGauge,
-                    fontSize: "35px",
-                    lineHeight: "40px",
-                    marginBottom: "4px"
+                    fontSize: "calc(16px + 1vw)",
+                    lineHeight: "60px"
                 },
                 unit: unit,
                 value: parseFloat(value).toFixed(2) / 1
@@ -246,13 +248,14 @@ var RealTime = React.createClass({
                 <bootstrap.Col
                     className="text-center"
                     lg={4}
-                    md={4}
+                    lgOffset={0}
+                    md={5}
+                    mdOffset={0}
                     sm={6}
-                    style={{
-                        padding: "20px",
-                        color: colors.mainFontColor
-                    }}
-                    xs={12}
+                    smOffset={3}
+                    xs={8}
+                    xsOffset={2}
+                    style={{padding: "20px"}}
                 >
                     {this.drawGauge(gaugeParams)}
                 </bootstrap.Col>
@@ -483,7 +486,7 @@ var RealTime = React.createClass({
                                 {`${selectedSiteName ? selectedSiteName + " - " : ""}Pods`}
                             </h3>
                             {this.drawGaugeTotal()}
-                            <bootstrap.Col lg={8} md={8} sm={6} xs={12}>
+                            <bootstrap.Col lg={8} md={7} xs={12}>
                                 {this.drawGauges()}
                             </bootstrap.Col>
                         </div>
