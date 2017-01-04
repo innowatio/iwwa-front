@@ -173,6 +173,7 @@ var MonitoringChart = React.createClass({
         };
         if (props.chartState.timeInterval !== "all") {
             plotOptions.series.dataGrouping = {
+                forced: true,
                 units: [this.getTimeInterval(props.chartState.timeInterval)]
             };
         }
@@ -281,13 +282,13 @@ var MonitoringChart = React.createClass({
         const theme = this.getTheme();
         return {
             backgroundColor: theme.colors.background,
-            height: this.getChartHeight(props)
+            height: this.getChartHeight(props, true)
         };
     },
-    getChartHeight: function (props) {
-        let {year, month, week} = props.chartState.comparisonCharts;
-        let chartCount = year + month + week;
-        return 600 - (chartCount * 100);
+    getChartHeight: function (props, isDefault) {
+        const {year, month, week} = props.chartState.comparisonCharts;
+        const comparisonChartsCount = year + month + week;
+        return (isDefault ? 617 : 500) - (comparisonChartsCount * 100);
     },
     getBasicLineConfig: function () {
         return {};
@@ -359,7 +360,7 @@ var MonitoringChart = React.createClass({
     },
     getComparisonChartConfig: function (period) {
         let chartTitle;
-        const theme = this.getTheme();
+        const {colors} = this.getTheme();
         switch (period) {
             case "year": {
                 chartTitle = "Anno precedente";
@@ -378,6 +379,7 @@ var MonitoringChart = React.createClass({
             ...this.state.config,
             chart: {
                 ...this.state.config.chart,
+                height: this.getChartHeight(this.props, false),
                 zoomType: null
             },
             legend: {
@@ -388,7 +390,10 @@ var MonitoringChart = React.createClass({
             },
             plotOptions: {
                 ...this.state.config.plotOptions,
-                series: null
+                series: {
+                    ...this.state.config.plotOptions.series,
+                    events: null
+                }
             },
             rangeSelector: {
                 enabled: false
@@ -398,11 +403,13 @@ var MonitoringChart = React.createClass({
             },
             title: {
                 style: {
-                    color: theme.colors.white
+                    color: colors.white
                 },
                 text: chartTitle
             },
-            xAxis: null
+            xAxis: {
+                plotBands: this.getWeekendOverlay(this.props.chartDates, colors)
+            }
         };
     },
     synchronizeSeries: function (event) {
