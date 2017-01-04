@@ -1,6 +1,5 @@
 import GoogleMap from "google-map-react";
 import React, {Component, PropTypes} from "react";
-import controllable from "react-controllables";
 import supercluster from "points-cluster";
 
 import {GOOGLE_MAP_API_KEY} from "lib/config";
