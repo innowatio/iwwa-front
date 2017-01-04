@@ -522,7 +522,7 @@ var MultiSite = React.createClass({
         return "MISSING";
     },
 
-    getFilteredSortedSites: function () {
+    getFilteredSortedSites: function (isLimited) {
         const {
             maxItems,
             search,
@@ -550,9 +550,14 @@ var MultiSite = React.createClass({
             });
         }
 
-        const sorted = R.sortBy(x => x[sortBy] && isNaN(x[sortBy]) ? x[sortBy].toLowerCase() : x[sortBy], advancedFiltered);
+        var sorted = R.sortBy(x => x[sortBy] && isNaN(x[sortBy]) ? x[sortBy].toLowerCase() : x[sortBy], advancedFiltered);
         const max = sorted.length < maxItems ? sorted.length : maxItems;
-        const limited = reverseSort ? R.reverse(sorted).splice(0, max) : sorted.splice(0, max);
+
+        //Apply reverse sort
+        sorted = (reverseSort ? R.reverse(sorted) : sorted);
+
+        //apply splice
+        const limited = isLimited ? sorted.splice(0, max) : sorted;
 
         return limited.map(site => {
             return {
@@ -1266,7 +1271,7 @@ var MultiSite = React.createClass({
                 />
                 <div style={{height: "350px"}}>
                     <DashboardGoogleMap
-                        sites={this.getFilteredSortedSites()}
+                        sites={this.getFilteredSortedSites(false)}
                     />
                 </div>
             </div>
@@ -1277,7 +1282,7 @@ var MultiSite = React.createClass({
         const buttonStyle = {
             cursor: (this.state.compareMode ? "pointer" : "default")
         };
-        return this.getFilteredSortedSites().map((site, index) => (
+        return this.getFilteredSortedSites(true).map((site, index) => (
             <SiteStatus
                 isActive={!!this.state.selectedSites.find(id => id === site._id)}
                 isOpen={this.state.openPanel === site._id}
@@ -1381,7 +1386,7 @@ var MultiSite = React.createClass({
                                     }}
                                 />
                                 <DashboardGoogleMap
-                                    sites={this.getFilteredSortedSites()}
+                                    sites={this.getFilteredSortedSites(false)}
                                 />
                             </bootstrap.Col>
                         </bootstrap.Row>
