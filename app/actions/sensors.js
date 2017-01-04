@@ -20,7 +20,7 @@ export const SENSOR_DELETE_SUCCESS = "SENSOR_DELETE_SUCCESS";
 export const SENSOR_UPDATE_SUCCESS = "SENSOR_UPDATE_SUCCESS";
 
 function getSensorObj (collectionItem) {
-    return addMonitoringAttrs({
+    return {
         "name": getSensorLabel(collectionItem),
         "description": collectionItem.get("description"),
         "unitOfMeasurement": collectionItem.get("unitOfMeasurement"),
@@ -31,7 +31,7 @@ function getSensorObj (collectionItem) {
         "siteId": collectionItem.get("siteId"),
         "userId": collectionItem.get("userId"),
         "parentSensorId": collectionItem.get("parentSensorId")
-    });
+    };
 }
 
 function addMonitoringAttrs (sensor) {
@@ -45,6 +45,8 @@ function normalizeSensorData (sensorData) {
     sensorData.createdDate = undefined;
     sensorData.lastModifiedDate = undefined;
     sensorData.isDeleted = undefined;
+    sensorData.measurementType = undefined;
+    sensorData.measurementTypes = undefined;
     sensorData.createdByUser = true;
     sensorData.virtual = true;
     if (sensorData.unitOfMeasurement instanceof Object) {
@@ -95,7 +97,8 @@ function buildFormulas (formulaItems) {
             start: "1970-01-01T00:00:00.000Z",
             end: "3000-01-01T00:00:00.000Z",
             variables: Array.from(variables),
-            measurementType: []
+            measurementType: [],
+            sampleDeltaInMS: 60000
         }];
     }
 }
