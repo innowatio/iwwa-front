@@ -10,15 +10,17 @@ import {connect} from "react-redux";
 import {Link} from "react-router";
 import {defaultTheme} from "lib/theme";
 import moment from "lib/moment";
+import {multisiteDefaultFilter} from "lib/multi-site-default-filter";
+
 import {
     Button,
-    ButtonFilter,
     ButtonSortBy,
     DashboardBox,
     DashboardGoogleMap,
     FullscreenModal,
     Icon,
     InputFilter,
+    MultiSiteFilter,
     SiteStatus,
     TooltipIconButton
 } from "components";
@@ -207,17 +209,6 @@ const multisiteButtonSortBy = [{
     key: "sortBy"
 }];
 
-const multisiteButtonFilter = [{
-    title: "Quali siti vuoi visualizzare?",
-    filter: [
-        {label: "TUTTI", key: "tutti"},
-        {label: "IN ALLARME", key: "allarme"},
-        {label: "CONNESSI", key: "connessi"},
-        {label: "NON CONNESSI", key: "non connessi"}
-    ],
-    key: "filter"
-}];
-
 var MultiSite = React.createClass({
     propTypes: {
         asteroid: React.PropTypes.object,
@@ -229,6 +220,7 @@ var MultiSite = React.createClass({
     contextTypes: {
         theme: React.PropTypes.object
     },
+
     getInitialState: function () {
         return {
             compareMode: false,
@@ -246,11 +238,17 @@ var MultiSite = React.createClass({
     },
     componentDidMount: function () {
         this.props.asteroid.subscribe("sites");
+        this.props.asteroid.subscribe("filters");
         this.props.asteroid.subscribe("dashboardAlarms");
         this.props.asteroid.subscribe("dashboardAlarmsAggregates");
         this.props.asteroid.subscribe("dashboardDailyMeasurements");
         this.props.asteroid.subscribe("dashboardRealtimeAggregates");
     },
+
+    componentWillReceiveProps: function () {
+        this.getFilters();
+    },
+
     getTitleTab: function (period) {
         switch (period) {
             case "day":
@@ -280,12 +278,15 @@ var MultiSite = React.createClass({
                 };
         }
     },
+
     getSites: function () {
         return this.props.collections.get("sites") || Immutable.Map();
     },
+
     getTheme: function () {
         return this.context.theme || defaultTheme;
     },
+
     getSiteInfo: function () {
         return [
             {label: "ID", key: "_id"},
@@ -299,12 +300,29 @@ var MultiSite = React.createClass({
             {label: "Location", key: "city"}
         ];
     },
+
+    getFilters: function () {
+        const filters = this.props.collections.get("filters") || Immutable.Map();
+        const filterResult =[];
+        filters.forEach(filter => {
+            filterResult.push({
+                id: filter.get("_id"),
+                label: filter.get("label"),
+                selectedValue: "",
+                filterType: filter.get("filterType"),
+                isAttribute: true
+            });
+        });
+        this.setState({filterList: R.concat(multisiteDefaultFilter, filterResult)});
+    },
+
     getTrendLabel: function () {
         return [
             {label: "Comfort:", key: "Comfort"},
             {label: "Consumo energetico:", key: "Consumo energetico"}
         ];
     },
+
     getTrendItems: function () {
         const theme = this.getTheme();
         return [
@@ -313,6 +331,7 @@ var MultiSite = React.createClass({
             {icon: "bad-o", iconColor: theme.colors.iconError, key: "bad comfort", value: "40%"}
         ];
     },
+
     getLegendItems: function () {
         const theme = this.getTheme();
         return [
@@ -508,7 +527,8 @@ var MultiSite = React.createClass({
             maxItems,
             search,
             sortBy,
-            reverseSort
+            reverseSort,
+            filterToApply
         } = this.state;
         const sites = this.getSites().map(x => {
             const site = x.toJS();
@@ -524,7 +544,14 @@ var MultiSite = React.createClass({
             return siteSearch.toLowerCase().includes(input);
         });
 
-        const sorted = R.sortBy(x => x[sortBy], filtered);
+        var advancedFiltered = filtered;
+        if (filterToApply) {
+            filterToApply.forEach(item => {
+                advancedFiltered = advancedFiltered.filter(item.filterFunc);
+            });
+        }
+
+        const sorted = R.sortBy(x => x[sortBy], advancedFiltered);
         const max = sorted.length < maxItems ? sorted.length : maxItems;
         const limited = reverseSort ? R.reverse(sorted).splice(0, max) : sorted.splice(0, max);
 
@@ -550,6 +577,12 @@ var MultiSite = React.createClass({
         this.setState({
             search: input,
             maxItems: 10
+        });
+    },
+
+    onApplyMultiSiteFilter: function (value) {
+        this.setState({
+            filterToApply: value
         });
     },
 
@@ -1015,6 +1048,19 @@ var MultiSite = React.createClass({
         }
     },
 
+    renderMultiSiteFilter: function () {
+        if (this.state.filterList) {
+            const filterList = this.state.filterList;
+            return (
+                <MultiSiteFilter
+                    activeFilter={this.props.collections}
+                    filterList={filterList}
+                    onConfirm={this.onApplyMultiSiteFilter}
+                />
+            );
+        }
+    },
+
     renderSearchAction: function () {
         const theme = this.getTheme();
         const sortKey = this.state.sortBy;
@@ -1048,11 +1094,7 @@ var MultiSite = React.createClass({
                             onButtonClick={this.onCompareClick}
                             tooltipText={"Compara due siti tra loro"}
                         />
-                        <ButtonFilter
-                            activeFilter={this.props.collections}
-                            filterList={multisiteButtonFilter}
-                            onConfirm={this.onChangeInputFilter}
-                        />
+                    {this.renderMultiSiteFilter()}
                         <ButtonSortBy
                             descending={descending}
                             filterList={multisiteButtonSortBy}
