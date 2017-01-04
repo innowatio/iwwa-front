@@ -66,8 +66,7 @@ const styles = (theme) => ({
     singleInfoWrp: {
         borderBottom: `1px solid ${theme.colors.secondary}`,
         borderLeft: `1px solid ${theme.colors.secondary}`,
-        borderRight: `1px solid ${theme.colors.secondary}`,
-        backgroundColor: theme.colors.backgroundBoxMultisite
+        borderRight: `1px solid ${theme.colors.secondary}`
     },
     buttonHistoricalConsumption: {
         display: "block",
@@ -214,6 +213,18 @@ var SiteStatus = React.createClass({
                 };
         }
     },
+    getSiteWrpBackground: function () {
+        const theme = this.getTheme();
+        if (this.props.isOpen && this.props.isActive) {
+            return theme.colors.buttonPrimary;
+        } else if (this.props.isOpen) {
+            return theme.colors.backgroundBoxMultisiteOpen;
+        } else if (this.props.isActive) {
+            return theme.colors.buttonPrimary;
+        } else {
+            return theme.colors.backgroundBoxMultisite;
+        }
+    },
 
     renderIconStatus: function (status) {
         const theme = this.getTheme();
@@ -285,14 +296,15 @@ var SiteStatus = React.createClass({
             borderColor: (this.props.isOpen ?
                 theme.colors.secondary : theme.colors.borderBoxMultisite)
         };
-        const itemStyleActive = {
-            backgroundColor: (this.props.isActive ?
-            theme.colors.buttonPrimary : theme.colors.backgroundBoxMultisite)
-        };
         return (
             <Button
                 onClick={() => this.props.onClick(id.value)}
-                style={{...styles(theme).siteWrp, ...itemStyleOpen, ...itemStyleActive, ...this.props.style}}
+                style={{
+                    ...styles(theme).siteWrp,
+                    ...this.props.style,
+                    ...itemStyleOpen,
+                    backgroundColor: this.getSiteWrpBackground(theme)
+                }}
             >
                 <div style={{width: "100%", clear: "both"}}>
                     <div style={styles(theme).siteNameWrp}>
@@ -303,7 +315,7 @@ var SiteStatus = React.createClass({
                     </div>
                     {this.props.onClose ? (
                         <Button
-                            className="button-option"
+                            className="button-close"
                             onClick={() => this.props.onClose()}
                             style={styles(theme).iconOptionBtn}
                         >
@@ -314,7 +326,7 @@ var SiteStatus = React.createClass({
                                         margin: "0px !important"
                                     }
                                 }}
-                                scopeSelector=".button-option"
+                                scopeSelector=".button-close"
                             />
                             <Icon
                                 color={theme.colors.iconSiteButton}
@@ -326,7 +338,10 @@ var SiteStatus = React.createClass({
                     ) : null}
                     <Button
                         className="button-option"
-                        onClick={() => this.props.onClickPanel(id)}
+                        onClick={evt => {
+                            evt.stopPropagation();
+                            this.props.onClickPanel(id);
+                        }}
                         style={styles(theme).iconOptionBtn}
                     >
                         <Radium.Style
@@ -408,9 +423,14 @@ var SiteStatus = React.createClass({
 
     renderSiteInfo: function () {
         const theme = this.getTheme();
+        const itemStyleOpen = {
+            backgroundColor: (this.props.isOpen ?
+                theme.colors.backgroundBoxMultisiteOpen : theme.colors.backgroundBoxMultisite),
+            boxShadow: "0px 8px 6px " + theme.colors.backgroundBoxMultisiteOpen
+        };
         const siteInfo = this.props.siteInfo.filter(x => x.value).map(item => {
             return (
-                <div key={item.key} style={styles(theme).singleInfoWrp}>
+                <div key={item.key} style={{...styles(theme).singleInfoWrp, ...itemStyleOpen}}>
                     <div style={{width: "100%", ...styles(theme).SiteSecondaryTextWrp}}>
                         <div style={styles(theme).SiteSecondaryText}>
                             {`${item.label}: ${item.value}`}
@@ -424,9 +444,13 @@ var SiteStatus = React.createClass({
 
     renderSecondaryInfo: function () {
         const theme = this.getTheme();
+        const itemStyleOpen = {
+            backgroundColor: (this.props.isOpen ?
+                theme.colors.backgroundBoxMultisiteOpen : theme.colors.backgroundBoxMultisite)
+        };
         return (
             <div>
-                <div style={styles(theme).singleInfoWrp}>
+                <div style={{...styles(theme).singleInfoWrp, ...itemStyleOpen}}>
                     {this.renderAlarmsInfo()}
                     <div style={{clear: "both"}}></div>
                 </div>
@@ -452,7 +476,7 @@ var SiteStatus = React.createClass({
                                 position: "absolute",
                                 left: "15px",
                                 right: "15px",
-                                zIndex: "1000",
+                                zIndex: "100",
                                 border: "0",
                                 backgroundColor: theme.colors.transparent,
                                 padding: "0px",

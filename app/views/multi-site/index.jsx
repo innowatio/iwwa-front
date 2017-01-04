@@ -635,8 +635,9 @@ var MultiSite = React.createClass({
     },
 
     onCompareClick: function () {
-        this.setState({compareMode: !this.state.compareMode}),
-        this.setState({showCompareMessage: true});
+        !this.state.compareMode ? this.setState({showCompareMessage: true}) : null;
+        this.setState({compareMode: !this.state.compareMode, selectedSites: []}),
+        this.state.openPanel ? this.setState({openPanel: ""}) : null,
         window.setTimeout(this.closeCompareMessage, 2500);
     },
 
@@ -1109,7 +1110,7 @@ var MultiSite = React.createClass({
     renderSidebar: function () {
         const {colors} = this.getTheme();
         return (
-            <bootstrap.Col xs={12} sm={4}>
+            <bootstrap.Col xs={12} sm={5} md={4}>
                 {this.renderTips()}
                 {this.renderLegend()}
                 {this.renderMap()}
@@ -1339,7 +1340,7 @@ var MultiSite = React.createClass({
                         rules={styles(theme).rowDataWrp}
                         scopeSelector=".site-sidebar"
                     />
-                    <bootstrap.Col xs={12} sm={8}>
+                    <bootstrap.Col xs={12} sm={7} md={8}>
                         <bootstrap.Row>
                             {this.renderSites()}
                         </bootstrap.Row>
