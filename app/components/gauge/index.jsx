@@ -7,18 +7,15 @@ import {defaultTheme} from "lib/theme";
 const styles = {
     container: {
         display: "inline-block",
-        position: "relative",
-        width: "200px",
-        height: "100px"
+        position: "relative"
     },
     label: {
         position: "absolute",
-        top: "-15%",
+        top: "-10%",
         left: "0px",
         height: "100%",
         width: "100%",
         display: "flex",
-        textAlign: "left",
         justifyContent: "center",
         alignItems: "flex-end"
     }

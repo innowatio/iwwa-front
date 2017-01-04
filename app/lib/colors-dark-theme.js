@@ -13,6 +13,7 @@ export const colorsDarkTheme = {
     backgroundArrowPopoverTop: "#3B3B75",
     backgroundAlarmsRowHover: "#28282A",
     backgroundBoxMultisite: "#28282A",
+    backgroundBoxMultisiteOpen: "#202020",
     backgroundButtonCalendar: "rgba(0, 0, 0, 0)",
     backgroundButtonBottom: "rgba(0, 0, 0, 0.2)",
     backgroundButtonExport: "#536DFE",

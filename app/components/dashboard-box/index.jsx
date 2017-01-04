@@ -27,8 +27,7 @@ var DashboardBox = React.createClass({
         return (
             <bootstrap.Col
                 md={3}
-                sm={6}
-                xs={12}
+                xs={6}
                 className="data-col"
             >
                 <Radium.Style

@@ -4,18 +4,17 @@ var bootstrap       = require("react-bootstrap");
 
 var MeasureLabel = require("components/").MeasureLabel;
 import {defaultTheme} from "lib/theme";
-import {EXEC_ENV} from "lib/config";
 import getLastUpdate from "lib/date-utils";
 
 var style = (variableColor) => ({
     box: {
         maxWidth: "400px",
         overflow: "hidden",
-        borderRadius: "26px",
         display: "flex",
         flexDirection: "row",
+        borderRadius: "26px",
         height: "65px",
-        margin: "0 5%",
+        margin: "0 1vw",
         background: variableColor
     }
 });
@@ -42,10 +41,9 @@ var VariablesPanel = React.createClass({
                     key={variable.key}
                     style={{
                         width: (
-                            EXEC_ENV === "cordova" ?
-                            (this.props.numberOfConsumptionSensor > 3 ? "30%" : "33%") :
-                            (this.props.numberOfConsumptionSensor > 3 ? "23%" : "25%")
+                            this.props.numberOfConsumptionSensor > 3 ? "23%" : "25%"
                         ),
+                        minWidth: "calc(310px + 1.3vw)",
                         flex: "1 0 auto"
                     }}
                 >
@@ -58,10 +56,10 @@ var VariablesPanel = React.createClass({
                             <components.Icon
                                 color={this.getTheme().colors.iconConsumptionVariable}
                                 icon={variable.icon}
-                                size={EXEC_ENV === "cordova" ? "48px" : "60px"}
+                                size={"calc(45px + 1vw)"}
                                 style={{
-                                    lineHeight: "65px",
-                                    margin: "0 6px",
+                                    lineHeight: "75px",
+                                    margin: "0 .6vw",
                                     height: "65px"
                                 }}
                             />

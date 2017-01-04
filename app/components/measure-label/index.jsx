@@ -2,21 +2,20 @@ import R from "ramda";
 import Radium from "radium";
 import React  from "react";
 
-import {EXEC_ENV} from "lib/config";
 import {defaultTheme} from "lib/theme";
 
 var styleLabelValue = ({colors}) => ({
     color: colors.labelAmbientalSurveys,
-    fontSize: EXEC_ENV === "cordova" ? "36px" : "40px",
+    fontSize: "calc(30px + 1vw)",
+    marginRight: "5px",
     fontWeight: "500",
-    lineHeight: "35px",
-    marginRight: "5px"
+    lineHeight: "35px"
 });
 
 var styleLabelUnit = ({colors}) => ({
     color: colors.labelAmbientalSurveys,
-    fontSize: EXEC_ENV === "cordova" ? "20px" : "30px",
-    marginTop: EXEC_ENV === "cordova" ? "5px" : "0px",
+    fontSize: "calc(18px + 1vw)",
+    marginTop: "4px",
     lineHeight: "35px",
     display: "inline-block",
     verticalAlign: "text-bottom",
@@ -42,25 +41,6 @@ var MeasureLabel = React.createClass({
     getTheme: function () {
         return this.context.theme || defaultTheme;
     },
-    mapNumberFontSize: function (number) {
-        var fontSize = "34px";
-        if (number > "99") {
-            fontSize = "28px";
-        }
-        if (number > "99.99") {
-            fontSize = "24px";
-        }
-        if (number > "999.99") {
-            fontSize = "22px";
-        }
-        if (number > "9999.99") {
-            fontSize = "18px";
-        }
-        if (number > "99999.99") {
-            fontSize = "16px";
-        }
-        return fontSize;
-    },
     renderIdGauge: function () {
         const {colors} = this.getTheme();
         return (
@@ -81,16 +61,16 @@ var MeasureLabel = React.createClass({
     },
     render: function () {
         const theme = this.getTheme();
-        const fontSize = this.mapNumberFontSize();
-        console.log(fontSize);
         return (
-            <div id="text" style={{margin: "5px 0", width: "calc(100% - 85px)"}}>
+            <div
+                id="text"
+                style={{margin: "5px 0", width: "calc(100% - 90px)", minWidth: "220px"}}
+            >
                 <div style={R.merge(styleTextDiv, this.props.style || {})}>
                     <div
                         className="labelValue"
                         style={
                             R.merge(
-                                fontSize,
                                 styleLabelValue(theme),
                                 this.props.styleTextLabel || {}
                             )
