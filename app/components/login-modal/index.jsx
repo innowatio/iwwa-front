@@ -1,10 +1,10 @@
 import Radium from "radium";
-import React, {PropTypes} from "react";
+import React, {Component, PropTypes} from "react";
+import {Link} from "react-router";
 
 import components from "components";
 import assetsPathTo from "lib/assets-path-to";
 import LoginView from "./login-view";
-import PasswordResetView from "./password-reset-view";
 import string from "lib/string-it";
 import {defaultTheme} from "lib/theme";
 
@@ -82,64 +82,45 @@ const stylesFunction = ({colors}) => ({
         textAlign: "center",
         fontSize: "24px",
         fontWeight: "300",
+        textDecoration: "none",
         ":hover": {
             textDecoration: "underline"
         }
     }
 });
 
-var LoginModal = React.createClass({
-    propTypes: {
+class LoginModal extends Component {
+
+    static propTypes = {
         asteroid: PropTypes.object.isRequired,
         isOpen: PropTypes.bool.isRequired
-    },
-    contextTypes: {
+    }
+
+    static contextTypes = {
         theme: PropTypes.object
-    },
-    getInitialState: function () {
-        return {
-            activeView: "login"
-        };
-    },
-    componentWillMount: function () {
+    }
+
+    componentWillMount () {
         this.attachModalOpenClass(this.props);
-    },
-    componentWillReceiveProps: function (props) {
+    }
+
+    componentWillReceiveProps (props) {
         this.attachModalOpenClass(props);
-    },
-    getTheme: function () {
+    }
+
+    getTheme () {
         return this.context.theme || defaultTheme;
-    },
-    attachModalOpenClass: function (props) {
+    }
+
+    attachModalOpenClass (props) {
         if (props.isOpen) {
             document.body.classList.add("modal-open");
         } else {
             document.body.classList.remove("modal-open");
         }
-    },
-    switchView: function () {
-        this.setState({
-            activeView: (
-                this.state.activeView === "login" ?
-                "passwordReset" :
-                "login"
-            )
-        });
-    },
-    renderActiveView: function () {
-        return (this.state.activeView === "login" ?
-            <LoginView asteroid={this.props.asteroid}/> :
-            <PasswordResetView asteroid={this.props.asteroid} />
-        );
-    },
-    renderViewSwitcherText: function () {
-        return (
-            this.state.activeView === "login" ?
-            string.forgetPassword :
-            string.returnToLogin
-        );
-    },
-    render: function () {
+    }
+
+    render () {
         const styles = stylesFunction(this.getTheme());
         return this.props.isOpen ? (
             <div style={styles.overlay}>
@@ -164,11 +145,17 @@ var LoginModal = React.createClass({
                         </div>
                         <components.Spacer direction="v" size={64} />
                         <div style={styles.activeView}>
-                            {this.renderActiveView()}
+                            <LoginView asteroid={this.props.asteroid}/>
                         </div>
                         <components.Spacer direction="v" size={16} />
-                        <div onClick={this.switchView} style={styles.viewSwitcher}>
-                            {this.renderViewSwitcherText()}
+                        <div style={styles.viewSwitcher}>
+                            <Link
+                                target="_blank"
+                                to="https://sso.innowatio.it/password"
+                                style={{color: "white"}}
+                            >
+                                {string.forgetPassword}
+                            </Link>
                         </div>
                         <components.Spacer direction="v" size={20} />
                     </div>
@@ -176,6 +163,6 @@ var LoginModal = React.createClass({
             </div>
         ) : null;
     }
-});
+}
 
 module.exports = Radium(LoginModal);
