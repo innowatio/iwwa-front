@@ -13,6 +13,7 @@ import moment from "lib/moment";
 import {multisiteDefaultFilter} from "lib/multi-site-default-filter";
 
 import {
+    AlarmsRecap,
     Button,
     ButtonSortBy,
     DashboardBox,
@@ -901,38 +902,10 @@ var MultiSite = React.createClass({
     },
 
     renderAlarmsRecap:  function () {
-        const theme = this.getTheme();
-        return (
-            <div style={styles(theme).dataWrp}>
-                <h2 style={styles(theme).boxTitle}>
-                    {"ALLARMI"}
-                </h2>
-                <bootstrap.Row>
-                    <bootstrap.Col
-                        xs={6}
-                        style={{textAlign: "left", fontWeight: "300", marginTop: "6px"}}
-                    >
-                        <p style={{fontSize: "16px"}}>
-                            <b>{"DIURNI"}</b>
-                        </p>
-                        <p style={{margin: "0"}}>{"Totali: 12"}</p>
-                        <p style={{margin: "0"}}>{"Ultima sett: 10"}</p>
-                        <p style={{margin: "0"}}>{"Ultime 24h: 2"}</p>
-                    </bootstrap.Col>
-                    <bootstrap.Col
-                        xs={6}
-                        style={{textAlign: "left", fontWeight: "300", marginTop: "6px"}}
-                    >
-                        <p style={{fontSize: "16px"}}>
-                            <b>{"NOTTURNI"}</b>
-                        </p>
-                        <p style={{margin: "0"}}>{"Totali: 12"}</p>
-                        <p style={{margin: "0"}}>{"Ultima sett: 10"}</p>
-                        <p style={{margin: "0"}}>{"Ultime 24h: 2"}</p>
-                    </bootstrap.Col>
-                </bootstrap.Row>
-            </div>
-        );
+        const alarmsAggregates = this.props.collections.get("alarms-aggregates") || Immutable.Map();
+        return alarmsAggregates ? (
+            <AlarmsRecap alarmsAggregates={alarmsAggregates}/>
+        ) : null;
     },
 
     renderCompareMessage: function () {
