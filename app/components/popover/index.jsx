@@ -88,12 +88,13 @@ var Popover = React.createClass({
         return (
             <bootstrap.Popover
                 className="multiselect-popover"
-                id={"popover"}
+                id="popover"
             >
                 <Style
                     rules={{
                         "": {
-                            padding: "0px",
+                            ...this.props.style,
+                            position: "absolute",
                             borderRadius: "6px",
                             maxWidth: "500px",
                             backgroundColor: colors.backgroundDropdown,
@@ -101,6 +102,7 @@ var Popover = React.createClass({
                             marginTop: this.props.arrow === "none" ? "0px !important" : "",
                             boxShadow: "none",
                             WebkitBoxShadow: "none",
+                            padding: "0px",
                             border: "0px"
                         },
                         ".popover-content": {
@@ -129,12 +131,10 @@ var Popover = React.createClass({
             </bootstrap.Popover>
         );
     },
+
     render: function () {
         return (
-            <div style={{
-                ...this.props.style,
-                position: "relative"
-            }}>
+            <div style={{...this.props.style, position: "relative"}}>
                 <div ref="buttonOverlay">
                     {this.renderButton()}
                 </div>
@@ -151,5 +151,6 @@ var Popover = React.createClass({
         );
     }
 });
+
 
 module.exports = Popover;

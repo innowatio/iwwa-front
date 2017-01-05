@@ -4,6 +4,7 @@ import * as bootstrap from "react-bootstrap";
 import R from "ramda";
 import {Collapse} from "antd";
 import moment from "moment";
+import Radium from "radium";
 
 import {
     Icon,
@@ -39,7 +40,7 @@ const styles = ({colors}) => ({
         color: colors.mainFontColor,
         outline: "none",
         fontSize: "15px",
-        padding: "15px 10px"
+        paddingBottom: "10px"
     },
     labelStyle: {
         marginBottom: "0px",
@@ -180,21 +181,113 @@ var MultiSiteFilter = React.createClass({
         }
     },
 
-    renderAccordion: function (value) {
-        const {id, label} = value;
+    renderHeader: function (value) {
+        const {label} = value;
         return (
-            <Collapse accordion={true} key={id}>
-                <Collapse.Panel header={label} key={id}>
-                    <div>{this.renderFilterByType(value)}</div>
+            <span>{label}</span>
+        );
+    },
+
+    renderAccordion: function (value) {
+        const {colors} = this.getTheme();
+        const {id} = value;
+        return (
+            <Collapse accordion={true} key={id} style={{
+                backgroundColor: colors.transparent,
+                marginBottom: "0px",
+                border: "0px",
+                borderRadius: "0px",
+                borderBottom: "1px solid " + colors.white
+            }}>
+                <Collapse.Panel header={this.renderHeader(value)} key={id}>
+                    {this.renderFilterByType(value)}
                 </Collapse.Panel>
             </Collapse>
         );
     },
 
     renderFilter: function () {
+        const {colors} = this.getTheme();
         return (
             <div style={styles(this.getTheme()).filter}>
-                <bootstrap.FormGroup>
+                <bootstrap.FormGroup className="collapsible-filter">
+                    <Radium.Style
+                        rules={{
+                            ".ant-collapse": {
+                                padding: "0px"
+                            },
+                            ".ant-radio-group label": {
+                                width: "100% !important",
+                                display: "inline-block"
+                            },
+                            ".ant-collapse > .ant-collapse-item > .ant-collapse-header": {
+                                color: colors.white,
+                                fontSize: "16px",
+                                fontWeight: "300",
+                                padding: "0px 30px 0px 10px",
+                                height: "44px",
+                                lineHeight: "44px"
+                            },
+                            ".ant-collapse > .ant-collapse-item > .ant-collapse-header .arrow": {
+                                color: colors.white,
+                                fontSize: "20px !important",
+                                left: "85%",
+                                width: "35px",
+                                height: "auto",
+                                lineHeight: "44px"
+                            },
+                            ".ant-collapse-content": {
+                                backgroundColor: colors.transparent,
+                                color: colors.white,
+                                fontSize: "14px",
+                                fontWeight: "300"
+                            },
+                            ".ant-radio-wrapper": {
+                                fontSize: "14px",
+                                fontWeight: "300"
+                            },
+                            ".ant-collapse-item:last-child > .ant-collapse-content": {
+                                borderRadius: "0px"
+                            },
+                            ".ant-radio-wrapper:hover .ant-radio .ant-radio-inner, .ant-radio:hover .ant-radio-inner, .ant-radio-focused .ant-radio-inner": {
+                                borderColor: colors.buttonPrimary
+                            },
+                            ".ant-radio-checked .ant-radio-inner": {
+                                borderColor: colors.buttonPrimary
+                            },
+                            ".ant-radio-inner": {
+                                width: "20px",
+                                height: "20px"
+                            },
+                            ".ant-radio-inner:after": {
+                                backgroundColor: colors.buttonPrimary,
+                                left: "4px",
+                                top: "4px",
+                                width: "10px",
+                                height: "10px",
+                                borderRadius: "8px"
+                            },
+                            ".ant-collapse-content > .ant-collapse-content-box": {
+                                paddingTop: "0px"
+                            },
+                            "input.form-control": {
+                                backgroundColor: colors.transparent,
+                                border: "0px",
+                                borderBottom: "1px solid " + colors.white,
+                                color: colors.secondary,
+                                padding: "0px",
+                                borderRadius: "0px"
+                            },
+                            "input.form-control:focus": {
+                                boxShadow: "none",
+                                WebkitBoxShadow: "none"
+                            }
+                            // "input[type='number']": {
+                            //     border: "0px !important"
+                            // }
+                        }}
+                        scopeSelector={".collapsible-filter"}
+                    />
                     {this.props.filterList.map(this.renderAccordion)}
                 </bootstrap.FormGroup>
                 <ButtonConfirmAndReset
@@ -223,8 +316,8 @@ var MultiSiteFilter = React.createClass({
 
     render: function () {
         return (
-            <div style={{height: "auto", float: "right"}}>
-                <Popover title={this.renderTitlePopover()} >
+            <div style={{height: "auto", float: "right", position: "relative"}}>
+                <Popover title={this.renderTitlePopover()}>
                     {this.renderFilter()}
                 </Popover>
             </div>

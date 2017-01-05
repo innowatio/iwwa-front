@@ -35,7 +35,7 @@ class RangeFilter extends React.Component {
     render () {
         const {selectedValue} = this.state.filter ? this.state.filter : this.props.filter;
         const value = selectedValue ? selectedValue : [0, 0];
-        const theme = this.getTheme();
+        const {colors} = this.getTheme();
         return (
             <div>
                 <Slider range={true} defaultValue={value} max={300}
@@ -44,9 +44,30 @@ class RangeFilter extends React.Component {
                 <Radium.Style
                     rules={{
                         "": {
-                            backgroundColor: theme.colors.primary
+                            height: "8px",
+                            borderRadius: "4x",
+                            border: "0px",
+                            backgroundColor: colors.white
+                        },
+                        ".ant-slider-step": {
+                            height: "8px"
+                        },
+                        ".ant-slider-handle:active": {
+                            boxShadow: "none",
+                            backgroundColor: colors.transparent
+                        },
+                        ".ant-slider-handle": {
+                            backgroundColor: colors.buttonPrimary,
+                            border: "0px",
+                            marginTop: "-3px"
+                        },
+                        ".ant-slider-track": {
+                            backgroundColor: colors.primary,
+                            height: "8px"
+                        },
+                        ".ant-slider": {
+                            backgroundColor: colors.transparent
                         }
-
                     }}
                     scopeSelector=".ant-slider"
                 />

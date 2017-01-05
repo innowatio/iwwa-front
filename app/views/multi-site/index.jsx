@@ -1061,6 +1061,7 @@ var MultiSite = React.createClass({
                     activeFilter={this.props.collections}
                     filterList={filterList}
                     onConfirm={this.onApplyMultiSiteFilter}
+                    onReset={!this.state.filterList}
                 />
             );
         }
@@ -1099,7 +1100,7 @@ var MultiSite = React.createClass({
                             onButtonClick={this.onCompareClick}
                             tooltipText={"Compara due siti tra loro"}
                         />
-                    {this.renderMultiSiteFilter()}
+                        {this.renderMultiSiteFilter()}
                         <ButtonSortBy
                             descending={descending}
                             filterList={multisiteButtonSortBy}
@@ -1115,7 +1116,7 @@ var MultiSite = React.createClass({
     renderSidebar: function () {
         const {colors} = this.getTheme();
         return (
-            <bootstrap.Col xs={12} sm={5} md={4}>
+            <bootstrap.Col xs={12} sm={6} lg={4}>
                 {this.renderTips()}
                 {this.renderLegend()}
                 {this.renderMap()}
@@ -1345,7 +1346,7 @@ var MultiSite = React.createClass({
                         rules={styles(theme).rowDataWrp}
                         scopeSelector=".site-sidebar"
                     />
-                    <bootstrap.Col xs={12} sm={7} md={8}>
+                    <bootstrap.Col xs={12} sm={6} lg={8}>
                         <bootstrap.Row>
                             {this.renderSites()}
                         </bootstrap.Row>
