@@ -410,10 +410,15 @@ var SiteStatus = React.createClass({
                         display: "flex",
                         flexDirection: "column",
                         justifyContent: "center",
-                        alignItems: "center"
+                        alignItems: "center",
+                        textAlign: "center"
                     }}>
-                        <span style={{fontWeight: "300", lineHeight: "20px"}}>{item.label}</span>
-                        <p style={{fontWeight: "300", fontSize: "18px", margin: "0"}}>{item.value}</p>
+                        <span style={{fontWeight: "300", fontSize: "15px", lineHeight: "16px"}}>
+                            {item.label}
+                        </span>
+                        <p style={{fontWeight: "300", fontSize: "18px", lineHeight: "30px", margin: "0"}}>
+                            {item.value}
+                        </p>
                     </div>
                 </bootstrap.Col>
             );
@@ -462,7 +467,7 @@ var SiteStatus = React.createClass({
     render: function () {
         const theme = this.getTheme();
         return (
-            <bootstrap.Col xs={12} md={12} lg={6} style={{marginBottom: "20px"}}>
+            <bootstrap.Col xs={12} lg={6} style={{marginBottom: "20px"}}>
                 {this.renderPrimaryInfo()}
                 <bootstrap.Panel
                     className="site"
