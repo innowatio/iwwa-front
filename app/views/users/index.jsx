@@ -153,6 +153,7 @@ var Users = React.createClass({
     },
     componentDidMount: function () {
         this.props.asteroid.subscribe("sensors");
+        this.props.asteroid.subscribe("sites");
         this.props.asteroid.subscribe("groups");
         this.props.asteroid.subscribe("roles");
     },
@@ -181,8 +182,8 @@ var Users = React.createClass({
     getTheme: function () {
         return this.context.theme || defaultTheme;
     },
-    getAllUsers: function () {
-        return this.props.collections.get("users") || Immutable.Map();
+    getCollection: function (collection) {
+        return this.props.collections.get(collection) || Immutable.Map();
     },
     closeSensorsModal: function () {
         this.resetAndOpenModal(false);
@@ -231,7 +232,7 @@ var Users = React.createClass({
         if (found) {
             return true;
         } else {
-            const children = getChildren(element.get("_id"), this.getAllUsers());
+            const children = getChildren(element.get("_id"), this.getCollection("users"));
             return children.some(child => this.searchFilter(child, search));
         }
     },
@@ -257,7 +258,7 @@ var Users = React.createClass({
             <div style={stylesFunction(theme).listItems}>
                 <UserRow
                     asteroid={this.props.asteroid}
-                    getChildren={userId => getChildren(userId, this.getAllUsers())}
+                    getChildren={userId => getChildren(userId, this.getCollection("users"))}
                     indent={0}
                     isSelected={this.getIsSelectedFunc("selectedUsers")}
                     isSelectedToClone={this.getIsSelectedFunc("selectedUsersToClone")}
@@ -401,7 +402,7 @@ var Users = React.createClass({
                         {hasRole(this.props.asteroid, MANAGE_USERS) ?
                             <DeleteWithConfirmButton
                                 disabled={selectedUsers.length < 1 || cloneMode || this.isLoggedUserSelected()}
-                                onConfirm={() => this.props.deleteUsers(selectedUsers, this.getAllUsers())}
+                                onConfirm={() => this.props.deleteUsers(selectedUsers, this.getCollection("users"))}
                             /> : null
                         }
                     </div>
@@ -428,7 +429,7 @@ var Users = React.createClass({
                             margin: "0px 20px"
                         }}>
                             <CollectionItemList
-                                collections={geUsersForManagement(this.getAllUsers())}
+                                collections={geUsersForManagement(this.getCollection("users"))}
                                 filter={this.searchFilter}
                                 headerComponent={this.renderUserList}
                                 hover={true}
@@ -483,7 +484,7 @@ var Users = React.createClass({
                 />
                 {this.renderCloneButtons()}
                 <SearchableDraggableModal
-                    collection={this.props.collections.get("sites").map(x => {
+                    collection={this.getCollection("sites").map(x => {
                         return {
                             ...x.toJS(),
                             id: x.get("_id")
