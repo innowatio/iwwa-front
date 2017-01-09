@@ -1362,7 +1362,7 @@ var MultiSite = React.createClass({
                                     border: "0px"
                                 }}
                             >
-                                {"CARICA ALTRI"}
+                                {"MOSTRA ALTRI"}
                             </Button>
                         </bootstrap.Row>
                     </bootstrap.Col>
