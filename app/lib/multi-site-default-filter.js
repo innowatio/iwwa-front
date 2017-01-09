@@ -25,7 +25,7 @@ export const multisiteDefaultFilter = [
         isAttribute: false
     }, { */
         id: "areaInMq",
-        label: "MQ commerciabili",
+        label: "Mq commerciali",
         selectedValue: "",
         filterType: "range",
         isAttribute: false
