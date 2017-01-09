@@ -13,6 +13,7 @@ import moment from "lib/moment";
 import {multisiteDefaultFilter} from "lib/multi-site-default-filter";
 
 import {
+    AlarmsRecap,
     Button,
     ButtonSortBy,
     DashboardBox,
@@ -22,7 +23,9 @@ import {
     InputFilter,
     MultiSiteFilter,
     SiteStatus,
-    TooltipIconButton
+    SiteRecap,
+    TooltipIconButton,
+    TrendStatus
 } from "components";
 
 
@@ -83,29 +86,6 @@ const styles = ({colors}) => ({
         height: "50px",
         margin: "5px 10px",
         border: "0"
-    },
-    siteRecapWrp: {
-        backgroundColor: colors.primary,
-        padding: "5px",
-        margin: "4px 0px"
-    },
-    siteRecap: {
-        fontSize: "40px",
-        lineHeight: "30px",
-        fontWeight: "600",
-        margin: "0"
-    },
-    siteLabel: {
-        display: "inline-block",
-        overflow: "hidden",
-        width: "95%",
-        verticalAlign: "middle",
-        height: "20px",
-        lineHeight: "20px",
-        fontSize: "13px",
-        fontWeight: "300",
-        textOverflow: "ellipsis",
-        whiteSpace: "nowrap"
     },
     boxTitle: {
         fontSize: "20px",
@@ -249,36 +229,6 @@ var MultiSite = React.createClass({
         this.getFilters();
     },
 
-    getTitleTab: function (period) {
-        switch (period) {
-            case "day":
-                return {
-                    key: "day",
-                    title: "GIORNO"
-                };
-            case "week":
-                return {
-                    key: "week",
-                    title: "SETTIMANA"
-                };
-            case "month":
-                return {
-                    key: "month",
-                    title: "MESE"
-                };
-            case "year":
-                return {
-                    key: "year",
-                    title: "ANNO"
-                };
-            default:
-                return {
-                    key: "",
-                    title: ""
-                };
-        }
-    },
-
     getSites: function () {
         return this.props.collections.get("sites") || Immutable.Map();
     },
@@ -316,22 +266,6 @@ var MultiSite = React.createClass({
         this.setState({filterList: R.concat(multisiteDefaultFilter, filterResult)});
     },
 
-    getTrendLabel: function () {
-        return [
-            {label: "Comfort:", key: "Comfort"},
-            {label: "Consumo energetico:", key: "Consumo energetico"}
-        ];
-    },
-
-    getTrendItems: function () {
-        const theme = this.getTheme();
-        return [
-            {icon: "good-o", iconColor: theme.colors.iconActive, key: "good comfort", value: "35%"},
-            {icon: "middle-o", iconColor: theme.colors.iconWarning, key: "middle comfort", value: "25%"},
-            {icon: "bad-o", iconColor: theme.colors.iconError, key: "bad comfort", value: "40%"}
-        ];
-    },
-
     getLegendItems: function () {
         const theme = this.getTheme();
         return [
@@ -347,15 +281,6 @@ var MultiSite = React.createClass({
         const realtimeAggregatesList = this.props.collections.get("readings-real-time-aggregates") || Immutable.List();
         const realtimeAggregates = realtimeAggregatesList.map(x => x.toJS()).toArray();
         return realtimeAggregates.filter(filter).find(x => x.measurementType === measurementType && R.contains(x.sensorId, [site._id, ...site.sensorsIds]));
-    },
-
-    getSitesRecap: function () {
-        return [
-            {data: "800", label: "Siti totali", key: "totali"},
-            {data: `${this.getSites().size}`, label: "Siti monitorati", key: "monitorati"},
-            {data: "1", label: "Siti in real time", key: "realtime"},
-            {data: "2", label: "Siti in remote control", key: "remote control"}
-        ];
     },
 
     getSiteAlarmsAggregates: function (site, threshold = 0) {
@@ -666,218 +591,16 @@ var MultiSite = React.createClass({
         this.setState({legendIsOpen: !this.state.legendIsOpen});
     },
 
-    getTabParameters: function () {
-        const PERIODS = ["day", "week", "month", "year"];
-        return PERIODS.map(period => this.getTitleTab(period));
-    },
-
-    renderTabContent: function () {
-        const theme = this.getTheme();
-        const trendData = this.getTrendItems().map(item => {
-            return (
-                <div
-                    key={item.key}
-                    style={{
-                        // float: "right",
-                        // textAlign: "right",
-                        // width: "75px"
-                        display: "flex",
-                        justifyContent: "space-between",
-                        alignItems: "center"
-                    }}
-                >
-                    <Icon
-                        color={item.iconColor}
-                        icon={item.icon}
-                        size={"28px"}
-                        style={{
-                            marginRight: "5px",
-                            width: "30px",
-                            height: "30px",
-                            lineHeight: "30px"
-                        }}
-                    />
-                    <span style={{
-                        ...styles(theme).trendText,
-                        width: "auto",
-                        display: "inline-block",
-                        textAlign: "center"
-                    }}>
-                        {item.value}
-                    </span>
-                </div>
-            );
-        });
-        const trend = this.getTrendLabel().map(item => {
-            return (
-                <div
-                    key={item.key}
-                    style={{
-                        // justifyContent: "space-between"
-                        flexDirection: "column",
-                        display: "flex",
-                        marginBottom: "10px"
-                    }}
-                >
-                    <span style={{
-                        //width: "calc(100% - 75px)",
-                        width: "100%",
-                        ...styles(theme).trendText
-                    }}>
-                        {item.label}
-                    </span>
-                    <div style={{
-                        width: "100%",
-                        display: "flex",
-                        flexDirection: "row",
-                        justifyContent: "space-between",
-                        alignItems: "center"
-                    }}>
-                        {trendData}
-                    </div>
-                </div>
-            );
-        });
-        return trend;
-    },
-
-    renderSingleTab: function (theme, tabParameters) {
-        return (
-            <bootstrap.Tab
-                className="style-single-tab"
-                eventKey={tabParameters.key}
-                key={tabParameters.key}
-                title={tabParameters.title}
-            >
-                <div style={{marginTop: "5px"}}>
-                    {this.renderTabContent(theme, tabParameters)}
-                </div>
-            </bootstrap.Tab>
-        );
-    },
-
-    renderTabs: function () {
-        const theme = this.getTheme();
-        return (
-            <bootstrap.Tabs
-                id={"trend-tabs"}
-                className="style-tab"
-                onSelect={this.onChangeTabValue}
-            >
-                <Radium.Style
-                    rules={{
-                        "ul": {
-                            display: "flex",
-                            overflow: "hidden",
-                            border: "0px",
-                            margin: "0 -10px",
-                            alignContent: "stretch",
-                            backgroundColor: theme.colors.primary
-                        },
-                        "ul li": {
-                            flexGrow: "4",
-                            justifyContent: "space-arund",
-                            alignItems: "center",
-                            color: theme.colors.white
-                        },
-                        "ul li a": {
-                            lineHeight: "34px",
-                            fontSize: "14px",
-                            textTransform: "uppercase",
-                            padding: "0px 2px"
-                        },
-                        ".nav-tabs > li > a": {
-                            height: "34px",
-                            color: theme.colors.white,
-                            border: "0px",
-                            outline: "none"
-                        },
-                        ".nav-tabs > li.active > a, .nav-tabs > li > a:hover, .nav-tabs > li.active > a:hover, .nav-tabs > li.active > a:focus": {
-                            display: "inline",
-                            height: "28px",
-                            fontSize: "14px",
-                            fontWeight: "400",
-                            color: theme.colors.white,
-                            border: "0px",
-                            borderRadius: "0px",
-                            outline: "none",
-                            backgroundColor: theme.colors.primary,
-                            outlineStyle: "none",
-                            outlineWidth: "0px",
-                            borderBottom: "3px solid" + theme.colors.buttonPrimary
-                        },
-                        ".nav > li > a:hover, .nav > li > a:focus": {
-                            background: theme.colors.transparent
-                        }
-                    }}
-                    scopeSelector=".style-tab"
-                />
-                {
-                    this.getTabParameters().map(parameter => {
-                        return this.renderSingleTab(theme, parameter);
-                    })
-                }
-            </bootstrap.Tabs>
-        );
-    },
-
     renderTrendStatus: function () {
-        const theme = this.getTheme();
         return (
-            <div style={styles(theme).dataWrp}>
-                <h2 style={styles(theme).boxTitle}>
-                    {"ANDAMENTO"}
-                </h2>
-                <div>
-                    {this.renderTabs(theme)}
-                </div>
-            </div>
+            <TrendStatus />
         );
-    },
-
-    renderSiteRecap: function () {
-        const theme = this.getTheme();
-        const sites = this.getSitesRecap().map(item => {
-            return (
-                <bootstrap.Col className="subitem-col" xs={6} key={item.key}>
-                    <Radium.Style
-                        rules={{paddingLeft: "5px", paddingRight: "5px"}}
-                        scopeSelector=".subitem-col"
-                    />
-                    <div style={styles(theme).siteRecapWrp}>
-                        <h2 style={styles(theme).siteRecap}>
-                            {item.data}
-                        </h2>
-                        <span style={styles(theme).siteLabel}>
-                            {item.label}
-                        </span>
-                    </div>
-                </bootstrap.Col>
-            );
-        });
-        return sites;
     },
 
     renderSitesRecap: function () {
-        const theme = this.getTheme();
-        // TODO IWWA-834 per i siti, bisogna capire se il controllo sui siti visibili dall'utente sta sul back (publication) o front
-        // (in caso va gestita la publication per leggere il permesso `view-all-sites`)
+        const sites = this.getSites();
         return (
-            <div style={styles(theme).dataWrp}>
-                <h2 style={styles(theme).boxTitle}>
-                    {"SITI"}
-                </h2>
-                <span style={{fontSize: "15px", fontWeight: "300"}}>
-                    {moment().format("ddd D MMM YYYY")}
-                </span>
-                <bootstrap.Row className="row-data">
-                    <Radium.Style
-                        rules={{marginRight: "-5px", marginLeft: "-5px"}}
-                        scopeSelector=".row-data"
-                    />
-                    {this.renderSiteRecap()}
-                </bootstrap.Row>
-            </div>
+            <SiteRecap sites={sites}/>
         );
     },
 
@@ -901,38 +624,10 @@ var MultiSite = React.createClass({
     },
 
     renderAlarmsRecap:  function () {
-        const theme = this.getTheme();
-        return (
-            <div style={styles(theme).dataWrp}>
-                <h2 style={styles(theme).boxTitle}>
-                    {"ALLARMI"}
-                </h2>
-                <bootstrap.Row>
-                    <bootstrap.Col
-                        xs={6}
-                        style={{textAlign: "left", fontWeight: "300", marginTop: "6px"}}
-                    >
-                        <p style={{fontSize: "16px"}}>
-                            <b>{"DIURNI"}</b>
-                        </p>
-                        <p style={{margin: "0"}}>{"Totali: 12"}</p>
-                        <p style={{margin: "0"}}>{"Ultima sett: 10"}</p>
-                        <p style={{margin: "0"}}>{"Ultime 24h: 2"}</p>
-                    </bootstrap.Col>
-                    <bootstrap.Col
-                        xs={6}
-                        style={{textAlign: "left", fontWeight: "300", marginTop: "6px"}}
-                    >
-                        <p style={{fontSize: "16px"}}>
-                            <b>{"NOTTURNI"}</b>
-                        </p>
-                        <p style={{margin: "0"}}>{"Totali: 12"}</p>
-                        <p style={{margin: "0"}}>{"Ultima sett: 10"}</p>
-                        <p style={{margin: "0"}}>{"Ultime 24h: 2"}</p>
-                    </bootstrap.Col>
-                </bootstrap.Row>
-            </div>
-        );
+        const alarmsAggregates = this.props.collections.get("alarms-aggregates") || Immutable.Map();
+        return alarmsAggregates ? (
+            <AlarmsRecap alarmsAggregates={alarmsAggregates}/>
+        ) : null;
     },
 
     renderCompareMessage: function () {

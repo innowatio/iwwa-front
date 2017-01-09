@@ -97,13 +97,38 @@ var MultiSiteFilter = React.createClass({
         return this.context.theme || defaultTheme;
     },
 
+    cleanReangeValue: function (value) {
+        value = value.replace(" o più", "");
+        value = value.replace("più di ", "");
+        value = value.replace("meno di ", "");
+        return parseInt(value);
+    },
+
+    getRange: function (selectedValue, value) {
+        const stringValue = value.toString();
+        if (stringValue.indexOf("-")>-1) {
+            const values = stringValue.split("-");
+            return values[0]>=selectedValue[0] && values[1]<=selectedValue[1];
+        } else if (stringValue.indexOf(" o più")>-1) {
+            value = this.cleanReangeValue(value);
+            return value <= selectedValue[1];
+        } else if (stringValue.indexOf("più di ")>-1) {
+            value = this.cleanReangeValue(value);
+            return value <= selectedValue[1];
+        } else if (stringValue.indexOf("meno di ", "")>-1) {
+            value = this.cleanReangeValue(value);
+            return value >= selectedValue[1];
+        }
+        return value >= selectedValue[0] && value <= selectedValue[1];
+    },
+
     getfilter: function (filterType, selectedValue, value) {
         switch (filterType) {
             case "range":
                 if (R.sum(selectedValue)==0) {
                     return true;
                 }
-                return value >= selectedValue[0] && value <= selectedValue[1];
+                return this.getRange(selectedValue, value);
             case "optionsTime":
                 if (!selectedValue) {
                     return true;
@@ -134,9 +159,16 @@ var MultiSiteFilter = React.createClass({
             const {id, selectedValue, isAttribute, filterType} = item;
             if (isAttribute) {
                 fn = (x) => {
-                    const filtered = x["attributes"].filter(att => {
+                    var attributes = x["attributes"];
+
+                    if (!attributes) { //if attribute is not present in the site
+                        attributes =[{id, value:undefined}];
+                    }
+
+                    const filtered = attributes.filter(att => {
                         return att.id==id;
                     })[0];
+
                     if (!filtered) {
                         return true;
                     }
@@ -144,6 +176,9 @@ var MultiSiteFilter = React.createClass({
                 };
             } else {
                 fn = (x) => {
+                    if (x[id]==undefined) { //if value to filter is not set in the site
+                        x[id]=undefined;
+                    }
                     return this.getfilter(filterType, selectedValue, x[id]);
                 };
             }
