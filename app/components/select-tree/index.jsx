@@ -109,7 +109,10 @@ var SelectTree = React.createClass({
                         textOverflow: "ellipsis",
                         overflow: "hidden",
                         whiteSpace: "nowrap",
-                        border: "0px",
+                        borderBottom: "1px solid " + colors.mainFontColor,
+                        fontSize: "16px",
+                        fontWeight: "300",
+                        padding: "6px 10px",
                         backgroundColor: allowedValue === this.state.value ? colors.primary : colors.backgroundSelectSearch,
                         color: colors.mainFontColor
                     }}
@@ -192,7 +195,7 @@ var SelectTree = React.createClass({
                             zIndex: "10"
                         },
                         ".panel-group": {
-                            paddingTop: "10px",
+                            paddingTop: "0px",
                             marginBottom: "0px"
                         },
                         ".panel-title": {
@@ -242,8 +245,8 @@ var SelectTree = React.createClass({
                     style={{
                         maxHeight: "300px",
                         border: "1px solid " + colors.borderSelectSearch,
-                        borderRadius: "10px",
-                        overflow: "hidden"
+                        borderRadius: "6px",
+                        overflow: "auto"
                     }}
                 >
                     {panelOfSite}
