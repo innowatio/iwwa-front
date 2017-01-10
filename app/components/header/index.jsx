@@ -90,7 +90,7 @@ var Header = React.createClass({
                     getKey={prop("key")}
                     getLabel={prop("label")}
                     onChange={this.props.selectThemeColor}
-                    style={{textAlign: "center"}}
+                    style={{textAlign: "center", padding: "5px 15px"}}
                     value={userSetting}
                 />
             </components.Popover>
