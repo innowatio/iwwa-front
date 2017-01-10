@@ -105,7 +105,7 @@ var MultiSiteFilter = React.createClass({
     },
 
     getRange: function (selectedValue, value) {
-        const stringValue = value.toString();
+        const stringValue = value ? value.toString() :"";
         if (stringValue.indexOf("-")>-1) {
             const values = stringValue.split("-");
             return values[0]>=selectedValue[0] && values[1]<=selectedValue[1];
@@ -149,7 +149,7 @@ var MultiSiteFilter = React.createClass({
             return true;
         }
         const input = selectedValue.trim().toLowerCase();
-        return value.toLowerCase().includes(input);
+        return value ? value.toLowerCase().includes(input) : false;
     },
 
     onConfirmFilter: function () {
