@@ -22,7 +22,7 @@ export const colorsLightTheme = {
     backgroundCalendarArrowSwitch: "#3e50b4",
     backgroundConfirmModal: "#3e50b4",
     backgroundConfirmIcon: "#536DFE",
-    backgroundConsumptionSection: "#ffffff",
+    backgroundConsumptionSection: "rgba(255, 255, 255, 0.8)",
     backgroundContentModal: "rgba(255, 255, 255, 0.8)",
     backgroundDanger: "#3e50b4",
     backgroundDangerActive: "#eb2953",

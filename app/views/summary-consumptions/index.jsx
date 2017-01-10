@@ -46,7 +46,7 @@ var styleH2 = ({colors}) => ({
     lineHeight: "18px",
     fontWeight: "400",
     textTransform: "uppercase",
-    color: colors.white
+    color: colors.mainFontColor
 });
 
 var styleH3 = ({colors}) => ({
@@ -54,7 +54,7 @@ var styleH3 = ({colors}) => ({
     lineHeight: "15px",
     fontWeight: "300",
     textTransform: "uppercase",
-    color: colors.white,
+    color: colors.mainFontColor,
     margin: "0px"
 });
 

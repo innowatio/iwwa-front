@@ -140,7 +140,7 @@ var RadioButton = React.createClass({
                     />
                     {this.props.radioComponent}
                     <label style={this.props.labelStyle}>
-                        <div style={{width:"200px"}}>{this.props.label}</div>
+                        <div style={{width:"200px", fontSize: "16px"}}>{this.props.label}</div>
                     </label>
                 </div>
             </div>

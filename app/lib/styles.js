@@ -3,6 +3,12 @@ import color from "color";
 import measures from "lib/measures";
 
 export const styles = (theme) => ({
+    pageContent: {
+        position: "relative",
+        display: "block",
+        color: theme.colors.white,
+        textAlign: "center"
+    },
     titleFullScreenModal: {
         color: theme.colors.mainFontColor,
         marginTop: "0px",
@@ -24,14 +30,13 @@ export const styles = (theme) => ({
         width: "100%",
         height: "100%"
     },
-    chartDropdownButton: {
-        border: "1px solid " + theme.colors.borderDropdown,
+    chartDropdownSelect: {
         backgroundColor: theme.colors.backgroundDropdown,
         color: theme.colors.white,
         outline: "none",
         fontSize: "15px",
         fontWeight: "300",
-        padding: "3px 10px"
+        whiteSpace: "nowrap"
     },
     chartPopover:{
         background: theme.colors.backgroundDropdown
