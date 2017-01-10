@@ -43,10 +43,10 @@ var ConfirmModal = React.createClass({
                     textTransform: "uppercase"
                 }}
             >
-                <label style={{width: "100%", fontWeight: 400}}>
+                <label style={{width: "100%", fontSize: "30px", fontWeight: 400}}>
                     {this.props.title}
                 </label>
-                <label style={{width: "100%", fontWeight: 400}}>
+                <label style={{width: "100%", fontSize: "30px", fontWeight: 400}}>
                     {this.props.subtitle}
                 </label>
             </Modal.Header>
