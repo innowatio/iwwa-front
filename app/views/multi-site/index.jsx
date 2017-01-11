@@ -304,7 +304,7 @@ var MultiSite = React.createClass({
 
         const siteAndSensors = [
             site._id,
-            ...site.sensorsIds
+            ...site.sensorsIds || []
         ];
 
         return decoratedAggregates.filter(x => R.contains(x.sensorId, siteAndSensors));
@@ -448,7 +448,6 @@ var MultiSite = React.createClass({
     },
 
     getFilteredSortedSites: function () {
-        //const start = moment().valueOf();
         const {
             search,
             sortBy,
@@ -496,9 +495,6 @@ var MultiSite = React.createClass({
                 }
             };
         });
-        /* console.log({
-            benchmark: `${moment().valueOf() - start} ms`
-        }); */
 
         return returnValue;
     },
@@ -989,6 +985,12 @@ var MultiSite = React.createClass({
                 <div style={{height: "350px"}}>
                     <DashboardGoogleMap
                         sites={sites}
+                        onChange={({zoom, center}) => {
+                            this.setState({
+                                zoom,
+                                center
+                            });
+                        }}
                     />
                 </div>
             </div>
@@ -1108,6 +1110,14 @@ var MultiSite = React.createClass({
                                     />
                                     <DashboardGoogleMap
                                         sites={sites}
+                                        zoom={this.state.zoom}
+                                        center={this.state.center}
+                                        onChange={({zoom, center}) => {
+                                            this.setState({
+                                                zoom,
+                                                center
+                                            });
+                                        }}
                                     />
                                 </div>
                             </bootstrap.Col>
