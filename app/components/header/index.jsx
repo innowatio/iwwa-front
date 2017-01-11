@@ -182,7 +182,7 @@ var Header = React.createClass({
         return (
             <div style={styles(theme).base}>
                 {this.renderMenu()}
-                <div style={merge(styles(theme).base, {marginLeft: "15px"})}>
+                <div style={merge(styles(theme).base, {marginLeft: "10px"})}>
                     <Link to="/" style={{...styles(theme).iconWrp, padding: "0px"}}>
                         <components.Icon
                             color={theme.colors.iconHeader}

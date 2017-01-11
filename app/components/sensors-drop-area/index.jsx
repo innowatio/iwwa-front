@@ -71,7 +71,7 @@ var SensorsDropArea = React.createClass({
         return (
             <label style={{
                 width: "100%",
-                color: theme.colors.white,
+                color: theme.colors.mainFontColor,
                 fontSize: "14px",
                 textAlign: "center"
             }}>
@@ -163,7 +163,7 @@ var SensorsDropArea = React.createClass({
                     }}
                 >
                     <Icon
-                        color={colors.mainFontColor}
+                        color={colors.white}
                         icon={"delete"}
                         size={"15px"}
                         style={{
@@ -206,10 +206,10 @@ var SensorsDropArea = React.createClass({
                 border: "1px solid " + theme.colors.borderContentModal,
                 borderRadius: "20px",
                 background: theme.colors.backgroundContentModal,
-                margin: "30px 0px 40px 0px",
-                minHeight: "210px",
+                margin: "30px 0px 30px 0px",
+                minHeight: "220px",
                 overflow: "auto",
-                padding: "20px 10px",
+                padding: "10px",
                 verticalAlign: "middle"
             }}>
                 {this.props.sensors.length > 0 ? this.renderSensors(theme) : this.renderMessage(theme)}

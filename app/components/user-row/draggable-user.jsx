@@ -19,7 +19,7 @@ const hoverStyle = ({colors}) => ({
 });
 
 function getColor (colors, open, confirmed, prepend) {
-    return prepend + (open ? colors.buttonPrimary : (confirmed ? colors.white : colors.greySubTitle));
+    return prepend + (open ? colors.buttonPrimary : (confirmed ? colors.mainFontColor : colors.greySubTitle));
 }
 
 const styles = ({colors}, open, confirmed) => ({
@@ -84,7 +84,7 @@ var DraggableUser = React.createClass({
                 }}
             >
                 <Icon
-                    color={theme.colors.mainFontColor}
+                    color={theme.colors.white}
                     icon={"arrow-down"}
                     size={"14px"}
                     style={styles(theme, this.props.isChildrenOpen, this.props.isConfirmed).iconArrow}
@@ -119,7 +119,7 @@ var DraggableUser = React.createClass({
                         lineHeight: "28px"
                     }}>
                         <Icon
-                            color={theme.colors.white}
+                            color={theme.colors.mainFontColor}
                             icon={"danger"}
                             size={"16px"}
                         />

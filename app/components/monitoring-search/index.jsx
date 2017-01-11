@@ -267,7 +267,7 @@ var MonitoringSearch = React.createClass({
                             },
                             ".Select-option.is-selected, .Select-option:hover": {
                                 backgroundColor: theme.colors.buttonPrimary,
-                                color: theme.colors.white
+                                color: theme.colors.white + " !important"
                             }
                         }}
                         scopeSelector=".search-container"
@@ -293,8 +293,10 @@ var MonitoringSearch = React.createClass({
                         backgroundColor: theme.colors.primary,
                         border: "1px solid " + theme.colors.iconSearchUser
                     }}>
-                        <div style={{width: "100%", fontSize: "20px", fontWeight: "400", marginBottom: "10px"}}>
-                            <label>{"Riepilogo ricerca"}</label>
+                        <div style={{width: "100%"}}>
+                            <label style={{fontSize: "18px", fontWeight: "300", marginBottom: "10px"}}>
+                                {"Riepilogo ricerca"}
+                            </label>
                         </div>
 
                         <div style={{textAlign: "left", minHeight: "100px"}}>

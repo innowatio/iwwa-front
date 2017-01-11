@@ -9,6 +9,7 @@ const styles = (theme) => ({
         padding: "0px 10px",
         borderRadius: "35px",
         marginRight: "5px",
+        fontSize: "13px",
         color: theme.colors.primaryTagsColor,
         border: "solid 1px " + theme.colors.primaryTagsColor
     },
@@ -23,8 +24,9 @@ const styles = (theme) => ({
         padding: "0px 10px",
         borderRadius: "35px",
         marginRight: "5px",
-        color: theme.colors.white,
-        border: "solid 1px " + theme.colors.white
+        fontSize: "13px",
+        color: theme.colors.mainFontColor,
+        border: "solid 1px " + theme.colors.mainFontColor
     }
 });
 

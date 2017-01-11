@@ -26,7 +26,7 @@ const buttonBottomStyle = ({colors}) => ({
     width: "40%",
     height: "40px",
     fontSize: "14px",
-    color: colors.white,
+    color: colors.mainFontColor,
     backgroundColor: colors.transparent,
     textTransform: "uppercase",
     fontWeight: "400",
@@ -215,7 +215,7 @@ var MonitoringWorkArea = React.createClass({
                                 hoverStyle={hoverStyle(theme)}
                                 initialVisibleRow={20}
                                 lazyLoadButtonStyle={lazyLoadButtonStyle(theme)}
-                                lazyLoadLabel={"Carica altri"}
+                                lazyLoadLabel={"Mostra altri"}
                                 selectionButtonStyleContainer={selectionButtonStyleContainer(theme)}
                                 selectAll={{
                                     label: "Seleziona tutti",

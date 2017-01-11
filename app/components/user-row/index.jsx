@@ -84,7 +84,7 @@ var UserRow = React.createClass({
         const children = this.props.getChildren(this.props.user.get("_id"));
         return (
             <div style={styles(theme).container}>
-                <div style={{color: theme.colors.white}}>
+                <div style={{color: theme.colors.mainFontColor}}>
                     <DraggableUser
                         asteroid={this.props.asteroid}
                         hasChildren={children && children.size > 0}

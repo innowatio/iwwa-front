@@ -313,9 +313,6 @@ var MultiSiteFilter = React.createClass({
                             ".ant-collapse-content > .ant-collapse-content-box": {
                                 paddingTop: "0px"
                             },
-                            "input": {
-                                color: colors.mainFontColor
-                            },
                             "input.form-control": {
                                 backgroundColor: colors.transparent,
                                 border: "0px",

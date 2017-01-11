@@ -135,7 +135,7 @@ var MonitoringFavoritesCharts = React.createClass({
                         hoverStyle={styles(theme).hoverStyle}
                         lazyLoadButtonStyle={styles(theme).lazyLoadButtonStyle}
                         lazyLoadButtonStyleContainer={styles(theme).lazyLoadButtonStyleContainer}
-                        lazyLoadLabel={"Carica altri"}
+                        lazyLoadLabel={"Mostra altri"}
                         showFilterInput={true}
                     />
                 </div>

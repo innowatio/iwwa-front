@@ -16,7 +16,7 @@ import {defaultTheme} from "lib/theme";
 
 const stylesFunction = ({colors}) => ({
     modalTitleStyle: {
-        color: colors.white,
+        color: colors.mainFontColor,
         display: "inherit",
         marginBottom: "50px",
         textAlign: "center",
@@ -83,7 +83,7 @@ var UserRolesAssociator = React.createClass({
                     this.props.onHide();
                 }}
                 show={this.state.showSaveGroupModal}
-                usersState={this.props.usersState}    
+                usersState={this.props.usersState}
             />
         );
     },
@@ -100,7 +100,7 @@ var UserRolesAssociator = React.createClass({
                                 <div>
                                     <Button
                                         style={{
-                                            color: isToggled ? colors.buttonPrimary : colors.white,
+                                            color: isToggled ? colors.buttonPrimary : colors.mainFontColor,
                                             textTransform: "uppercase",
                                             fontSize: "18px",
                                             fontWeight: "300",
@@ -119,9 +119,10 @@ var UserRolesAssociator = React.createClass({
                     <Col
                         xs={6}
                         style={{
-                            borderLeft: "1px solid " + colors.white,
+                            borderLeft: "1px solid " + colors.mainFontColor,
+                            minHeight: "calc(100vh - 450px)",
                             marginTop: "10px",
-                            color: colors.white,
+                            color: colors.mainFontColor,
                             fontWeight: 300
                         }}
                     >
@@ -129,7 +130,7 @@ var UserRolesAssociator = React.createClass({
                             return (
                                 <div style={{
                                     padding: "2px 10px",
-                                    border: "1px solid " + colors.white,
+                                    border: "1px solid " + colors.mainFontColor,
                                     borderRadius: "30px",
                                     marginBottom: "8px",
                                     float: "left",
@@ -176,7 +177,7 @@ var UserRolesAssociator = React.createClass({
         return hasRole(asteroid, MANAGE_USERS) || hasRole(asteroid, CREATE_GROUPS) ? (
             <Tab eventKey={2} title="Assegnazione funzioni manuale">
                 <Row style={{margin: "20px"}}>
-                    <Col md={6} style={{marginTop: "10px", color: theme.colors.white, fontWeight: 300}}>
+                    <Col md={6} style={{marginTop: "10px", color: theme.colors.mainFontColor, fontWeight: 300}}>
                         <p style={{fontSize: "18px"}}>{"FUNZIONI ASSEGNATE"}</p>
                         <RoleDropArea
                             addRole={this.props.addRole}
@@ -187,15 +188,16 @@ var UserRolesAssociator = React.createClass({
                     <Col
                         md={6}
                         style={{
-                            borderLeft: "1px solid " + theme.colors.white,
+                            borderLeft: "1px solid " + theme.colors.mainFontColor,
+                            minHeight: "calc(100vh - 450px)",
                             marginTop: "10px",
-                            color: theme.colors.white,
+                            color: theme.colors.mainFontColor,
                             fontWeight: 300
                         }}
                     >
                         <p style={{fontSize: "18px"}}>{"FUNZIONI DISPONIBILI"}</p>
                         <div style={{
-                            color: theme.colors.white,
+                            color: theme.colors.mainFontColor,
                             fontSize: "14px",
                             fontWeight: "300"
                         }}>
@@ -255,10 +257,10 @@ var UserRolesAssociator = React.createClass({
                                         border: "0px",
                                         height: "55px",
                                         backgroundColor: theme.colors.transparent,
-                                        borderBottom: "1px solid " + theme.colors.white
+                                        borderBottom: "1px solid " + theme.colors.mainFontColor
                                     },
                                     "ul li": {
-                                        color: theme.colors.white,
+                                        color: theme.colors.mainFontColor,
                                         margin: "0 1.5%"
                                     },
                                     "ul li a": {
@@ -270,7 +272,7 @@ var UserRolesAssociator = React.createClass({
                                     },
                                     ".nav-tabs > li > a": {
                                         height: "44px",
-                                        color: theme.colors.white,
+                                        color: theme.colors.mainFontColor,
                                         border: "0px",
                                         outline: "none",
                                         borderBottom: "3px solid" + theme.colors.transparent
@@ -282,7 +284,7 @@ var UserRolesAssociator = React.createClass({
                                         height: "44px",
                                         fontSize: "17px",
                                         fontWeight: "500",
-                                        color: theme.colors.white,
+                                        color: theme.colors.mainFontColor,
                                         border: "0px",
                                         borderRadius: "0px",
                                         outline: "none",
