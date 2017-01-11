@@ -61,16 +61,6 @@ const styles = ({colors}) => ({
         paddingRight: "10px",
         paddingLeft: "10px"
     },
-    trendText: {
-        height: "20px",
-        lineHeight: "20px",
-        fontSize: "14px",
-        textAlign: "left",
-        fontWeight: "300",
-        textOverflow: "ellipsis",
-        whiteSpace: "nowrap",
-        overflow: "hidden"
-    },
     searchTools: {
         width: "100%",
         borderTop: `1px solid ${colors.borderBoxMultisite}`,
@@ -116,7 +106,7 @@ const styles = ({colors}) => ({
         fontSize: "20px",
         lineHeight: "20px",
         fontWeight: "300",
-        color: colors.white
+        color: colors.mainFontColor
     },
     sidebarTips: {
         textAlign: "left",
@@ -134,6 +124,9 @@ const styles = ({colors}) => ({
         marginRight: "20px",
         color: colors.white,
         fontWeight: "200 !important"
+    },
+    suggestionCloseButton: {
+        color: colors.mainFontColor
     },
     tipsTitle: {
         fontSize: "20px",
@@ -447,9 +440,16 @@ var MultiSite = React.createClass({
         return "MISSING";
     },
 
-    getFilteredSortedSites: function (isLimited) {
+    limitSites: function (sites) {
+        const {maxItems} = this.state;
+        //apply splice
+        const max = sites.length < maxItems ? sites.length : maxItems;
+        return sites.splice(0, max);
+    },
+
+    getFilteredSortedSites: function () {
+        //const start = moment().valueOf();
         const {
-            maxItems,
             search,
             sortBy,
             reverseSort,
@@ -476,15 +476,11 @@ var MultiSite = React.createClass({
         }
 
         var sorted = R.sortBy(x => x[sortBy] && isNaN(x[sortBy]) ? x[sortBy].toLowerCase() : x[sortBy], advancedFiltered);
-        const max = sorted.length < maxItems ? sorted.length : maxItems;
 
         //Apply reverse sort
         sorted = (reverseSort ? R.reverse(sorted) : sorted);
 
-        //apply splice
-        const limited = isLimited ? sorted.splice(0, max) : sorted;
-
-        return limited.map(site => {
+        const returnValue =  sorted.map(site => {
             return {
                 ...site,
                 alarmsInfo: !site.alarmsDisabled ? this.getSiteAlarmsInfo(site) : {
@@ -500,6 +496,11 @@ var MultiSite = React.createClass({
                 }
             };
         });
+        /* console.log({
+            benchmark: `${moment().valueOf() - start} ms`
+        }); */
+
+        return returnValue;
     },
 
     onChangeInputFilter: function (input) {
@@ -592,6 +593,11 @@ var MultiSite = React.createClass({
     },
 
     renderTrendStatus: function () {
+        /* const dailyAggregatesList = this.props.collections.get("readings-daily-aggregates") || Immutable.List();
+        const dailyAggregates = dailyAggregatesList
+        .filter(x => x.measurementType === "comfortLevel" && x.day)
+        .filter(x => moment(x.day).format("YYYY") == moment().format("YYYY"))
+        .toArray(); */
         return (
             <TrendStatus />
         );
@@ -689,7 +695,7 @@ var MultiSite = React.createClass({
                 }}
                 icon={iconName}
                 iconColor={theme.colors.white}
-                iconSize={"50px"}
+                iconSize={"46px"}
                 iconStyle={{
                     lineHeight: "25px",
                     verticalAlign: "middle"
@@ -707,9 +713,18 @@ var MultiSite = React.createClass({
         if (iconName === "confront") {
             return (
                 <Link
+                    className="btn-hover"
                     to={"/chart/"}
-                    style={styles(theme).buttonHistoricalConsumption}
+                    style={{backgroundColor: theme.colors.transparent}}
                 >
+                    <Radium.Style
+                        rules={{
+                            "": {
+                                backgroundColor: theme.colors.transparent
+                            }
+                        }}
+                        scopeSelector=".btn-hover"
+                    />
                     {this.renderTooltipButton(tooltip, iconName, disabled, onClickFunc)}
                 </Link>
             );
@@ -808,13 +823,13 @@ var MultiSite = React.createClass({
         );
     },
 
-    renderSidebar: function () {
+    renderSidebar: function (sites) {
         const {colors} = this.getTheme();
         return (
             <bootstrap.Col xs={12} sm={6} lg={4}>
                 {this.renderTips()}
                 {this.renderLegend()}
-                {this.renderMap()}
+                {this.renderMap(sites)}
                 <span style={styles(this.getTheme()).titleButtonPopover}>
                     <Icon
                         onClick={() => this.setState({
@@ -844,10 +859,11 @@ var MultiSite = React.createClass({
                                 ...styles(theme).sidebarTips
                             },
                             ".close": {
-                                ...styles(theme).alertCloseButton
+                                ...styles(theme).alertCloseButton,
+                                ...styles(theme).suggestionCloseButton
                             },
                             ".close:hover": {
-                                color: theme.colors.white,
+                                color: theme.colors.mainFontColor,
                                 opacity: .5
                             },
                             ".close:focus": {
@@ -860,7 +876,7 @@ var MultiSite = React.createClass({
                     />
                     <h2 style={styles(theme).tipsTitle}>
                         <Icon
-                            color={theme.colors.iconSiteButton}
+                            color={theme.colors.mainFontColor}
                             icon={"lightbulb"}
                             size={"40px"}
                             style={styles(theme).iconTips}
@@ -909,7 +925,11 @@ var MultiSite = React.createClass({
                             verticalAlign: "middle"
                         }}
                     />
-                    <label style={{fontWeight: "300", fontSize: "16px"}}>
+                    <label style={{
+                        fontWeight: "300",
+                        fontSize: "16px",
+                        color: theme.colors.mainFontColor
+                    }}>
                         {item.label}
                     </label>
                 </li>
@@ -922,7 +942,6 @@ var MultiSite = React.createClass({
                 header={this.renderLegendHeader()}
                 onClick={this.legendIsOpen}
                 eventKey="1"
-                style={{backgroundColor: theme.colors.black}}
             >
                 <Radium.Style
                     rules={{
@@ -930,7 +949,8 @@ var MultiSite = React.createClass({
                             border: `1px solid ${theme.colors.transparent}`,
                             backgroundColor: theme.colors.transparent,
                             padding: "0px",
-                            marginBottom: "20px"
+                            marginBottom: "20px",
+                            borderRadius: "0px"
                         },
                         ".panel-body": {
                             padding: "0px",
@@ -957,7 +977,7 @@ var MultiSite = React.createClass({
         );
     },
 
-    renderMap: function () {
+    renderMap: function (sites) {
         return (
             <div className="map-embed" style={{marginBottom: "30px"}}>
                 <Radium.Style
@@ -968,18 +988,19 @@ var MultiSite = React.createClass({
                 />
                 <div style={{height: "350px"}}>
                     <DashboardGoogleMap
-                        sites={this.getFilteredSortedSites(false)}
+                        sites={sites}
                     />
                 </div>
             </div>
         );
     },
 
-    renderSites: function () {
+    renderSites: function (sites) {
         const buttonStyle = {
             cursor: (this.state.compareMode ? "pointer" : "default")
         };
-        return this.getFilteredSortedSites(true).map((site, index) => (
+
+        return sites.map((site, index) => (
             <SiteStatus
                 isActive={!!this.state.selectedSites.find(id => id === site._id)}
                 isOpen={this.state.openPanel === site._id}
@@ -1007,6 +1028,9 @@ var MultiSite = React.createClass({
 
     render: function () {
         const theme = this.getTheme();
+
+        const sites = this.getFilteredSortedSites();
+        const sitesLimited = this.limitSites(sites);
         return (
             <content style={styles(theme).pageContent}>
                 {this.renderCompareButtons()}
@@ -1043,7 +1067,7 @@ var MultiSite = React.createClass({
                     />
                     <bootstrap.Col xs={12} sm={6} lg={8}>
                         <bootstrap.Row>
-                            {this.renderSites()}
+                            {this.renderSites(sitesLimited)}
                         </bootstrap.Row>
                         <bootstrap.Row style={{marginBottom: "20px"}}>
                             <Button
@@ -1057,11 +1081,11 @@ var MultiSite = React.createClass({
                                     border: "0px"
                                 }}
                             >
-                                {"CARICA ALTRI"}
+                                {"MOSTRA ALTRI"}
                             </Button>
                         </bootstrap.Row>
                     </bootstrap.Col>
-                    {this.renderSidebar()}
+                    {this.renderSidebar(sites)}
                 </bootstrap.Row>
                 <FullscreenModal
                     title={"Mappa siti"}
@@ -1083,7 +1107,7 @@ var MultiSite = React.createClass({
                                     }}
                                 />
                                 <DashboardGoogleMap
-                                    sites={this.getFilteredSortedSites(false)}
+                                    sites={sites}
                                 />
                             </bootstrap.Col>
                         </bootstrap.Row>

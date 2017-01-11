@@ -45,16 +45,15 @@ class RangeFilter extends React.Component {
                     rules={{
                         "": {
                             height: "8px",
-                            borderRadius: "4x",
-                            border: "0px",
-                            backgroundColor: colors.white
+                            borderRadius: "4px",
+                            border: "0px"
                         },
                         ".ant-slider-step": {
                             height: "8px"
                         },
                         ".ant-slider-handle:active": {
                             boxShadow: "none",
-                            backgroundColor: colors.transparent
+                            backgroundColor: colors.backgroundRangeFilter + " !important"
                         },
                         ".ant-slider-handle": {
                             backgroundColor: colors.buttonPrimary,
@@ -64,9 +63,6 @@ class RangeFilter extends React.Component {
                         ".ant-slider-track": {
                             backgroundColor: colors.primary,
                             height: "8px"
-                        },
-                        ".ant-slider": {
-                            backgroundColor: colors.transparent
                         }
                     }}
                     scopeSelector=".ant-slider"

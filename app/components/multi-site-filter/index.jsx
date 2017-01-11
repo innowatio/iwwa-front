@@ -5,12 +5,13 @@ import R from "ramda";
 import {Collapse} from "antd";
 import moment from "moment";
 import Radium from "radium";
+import icons from "lib/icons";
 
 import {
     Icon,
     OptionsFilter,
     ButtonConfirmAndReset,
-    Popover,
+    PopoverScrollable,
     RangeFilter,
     ValueFilter
 } from "components";
@@ -53,10 +54,10 @@ const styles = ({colors}) => ({
     },
     confirmButtonStyle: {
         width: "auto",
-        height: "45px",
-        lineHeight: "45px",
+        height: "38px",
+        lineHeight: "38px",
         border: "0px",
-        padding: "0px 20px",
+        padding: "0px 15px",
         fontSize: "14px",
         backgroundColor: colors.buttonPrimary,
         color: colors.white
@@ -219,7 +220,13 @@ var MultiSiteFilter = React.createClass({
     renderHeader: function (value) {
         const {label} = value;
         return (
-            <span>{label}</span>
+            <p style={{
+                overflow: "hidden",
+                whiteSpace: "nowrap",
+                textOverflow: "ellipsis"
+            }}>
+                {label}
+            </p>
         );
     },
 
@@ -249,22 +256,23 @@ var MultiSiteFilter = React.createClass({
                     <Radium.Style
                         rules={{
                             ".ant-collapse": {
-                                padding: "0px"
+                                padding: "0px",
+                                borderBottomColor: colors.borderDropdown + " !important"
                             },
                             ".ant-radio-group label": {
                                 width: "100% !important",
                                 display: "inline-block"
                             },
                             ".ant-collapse > .ant-collapse-item > .ant-collapse-header": {
-                                color: colors.white,
+                                color: colors.mainFontColor,
                                 fontSize: "16px",
                                 fontWeight: "300",
-                                padding: "0px 30px 0px 10px",
+                                padding: "0px 40px 0px 16px",
                                 height: "44px",
                                 lineHeight: "44px"
                             },
                             ".ant-collapse > .ant-collapse-item > .ant-collapse-header .arrow": {
-                                color: colors.white,
+                                color: colors.mainFontColor,
                                 fontSize: "20px !important",
                                 left: "85%",
                                 width: "35px",
@@ -273,7 +281,7 @@ var MultiSiteFilter = React.createClass({
                             },
                             ".ant-collapse-content": {
                                 backgroundColor: colors.transparent,
-                                color: colors.white,
+                                color: colors.mainFontColor,
                                 fontSize: "14px",
                                 fontWeight: "300"
                             },
@@ -305,10 +313,14 @@ var MultiSiteFilter = React.createClass({
                             ".ant-collapse-content > .ant-collapse-content-box": {
                                 paddingTop: "0px"
                             },
+                            "input": {
+                                color: colors.mainFontColor
+                            },
                             "input.form-control": {
                                 backgroundColor: colors.transparent,
                                 border: "0px",
-                                borderBottom: "1px solid " + colors.white,
+                                fontSize: "16px",
+                                borderBottom: "1px solid " + colors.mainFontColor,
                                 color: colors.secondary,
                                 padding: "0px",
                                 borderRadius: "0px"
@@ -316,10 +328,34 @@ var MultiSiteFilter = React.createClass({
                             "input.form-control:focus": {
                                 boxShadow: "none",
                                 WebkitBoxShadow: "none"
+                            },
+                            "input[type='number']": {
+                                border: "0px !important",
+                                backgroundColor: colors.backgroundInputRange,
+                                padding: "0 5px",
+                                width: "100px",
+                                fontSize: "18px",
+                                position: "relative"
+                            },
+                            "input[type='number']::-webkit-outer-spin-button, input[type='number']::-webkit-inner-spin-button": {
+                                WebkitAppearance: "none",
+                                backgroundColor: colors.transparent,
+                                backgroundImage: `url(${icons.iconArrowUpDown})`,
+                                cursor: "pointer",
+                                backgroundRepeat: "none",
+                                backgroundPosition: "top left",
+                                width: "30px",
+                                border: "0px",
+                                opacity: ".7",
+                                position: "absolute",
+                                top: 0,
+                                right: 0,
+                                bottom: 0
+                            },
+                            "input[type='number']::-webkit-inner-spin-button:hover, input[type='number']::-webkit-inner-spin-button:active": {
+                                boxShadow: "none",
+                                opacity: "1"
                             }
-                            // "input[type='number']": {
-                            //     border: "0px !important"
-                            // }
                         }}
                         scopeSelector={".collapsible-filter"}
                     />
@@ -352,9 +388,9 @@ var MultiSiteFilter = React.createClass({
     render: function () {
         return (
             <div style={{height: "auto", float: "right", position: "relative"}}>
-                <Popover title={this.renderTitlePopover()}>
+                <PopoverScrollable title={this.renderTitlePopover()}>
                     {this.renderFilter()}
-                </Popover>
+                </PopoverScrollable>
             </div>
         );
     }

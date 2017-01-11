@@ -40,7 +40,7 @@ var SensorVariableSelector = React.createClass({
                 styleButton={{width: "45px"}}
                 title={
                     <components.Icon
-                        color={theme.colors.white}
+                        color={theme.colors.mainFontColor}
                         icon={"option-horizontal"}
                         size={"16px"}
                         style={{

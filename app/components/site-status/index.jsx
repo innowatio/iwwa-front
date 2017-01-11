@@ -40,13 +40,14 @@ const styles = (theme) => ({
         fontSize: "15px",
         fontWeight: "300"
     },
-    SiteSecondaryTextWrp: {
+    siteSecondaryTextWrp: {
         padding: "10px"
     },
-    SiteSecondaryText: {
+    siteSecondaryText: {
         fontSize: "15px",
         fontWeight: "300",
-        textAlign: "left"
+        textAlign: "left",
+        color: theme.colors.mainFontColor
     },
     iconOptionBtn: {
         width: "40px",
@@ -228,10 +229,6 @@ var SiteStatus = React.createClass({
 
     renderIconStatus: function (status) {
         const theme = this.getTheme();
-        const itemStyleActive = {
-            backgroundColor: (this.props.isActive ?
-            theme.colors.backgroundIconStatus : null)
-        };
         return (
             <div className="icon-status">
                 <Radium.Style
@@ -256,7 +253,7 @@ var SiteStatus = React.createClass({
                         width: "38px",
                         height: "38px",
                         borderRadius: "100%",
-                        ...itemStyleActive
+                        backgroundColor: theme.colors.backgroundIconStatus
                     }}
                 />
             </div>
@@ -269,7 +266,7 @@ var SiteStatus = React.createClass({
                 <bootstrap.OverlayTrigger
                     key={status.key}
                     overlay={
-                        <bootstrap.Tooltip className="buttonInfo" id={status.key}>
+                        <bootstrap.Tooltip className="buttonInfo" id={status.key} style={{zIndex: "100000 !important"}}>
                             {this.getTooltipByStatus(statoIcona)[status.key]}
                         </bootstrap.Tooltip>
                     }
@@ -296,6 +293,10 @@ var SiteStatus = React.createClass({
             borderColor: (this.props.isOpen ?
                 theme.colors.secondary : theme.colors.borderBoxMultisite)
         };
+        const itemStyleActive = {
+            color: (this.props.isActive ?
+                theme.colors.white : theme.colors.mainFontColor)
+        };
         return (
             <Button
                 onClick={() => this.props.onClick(id.value)}
@@ -308,10 +309,10 @@ var SiteStatus = React.createClass({
             >
                 <div style={{width: "100%", clear: "both"}}>
                     <div style={styles(theme).siteNameWrp}>
-                        <h2 style={styles(theme).siteName}>
+                        <h2 style={{...styles(theme).siteName, ...itemStyleActive}}>
                             {`${this.props.siteName} / `}
                         </h2>
-                        <span style={styles(theme).siteAddress}>{this.props.siteAddress}</span>
+                        <span style={{...styles(theme).siteAddress, ...itemStyleActive}}>{this.props.siteAddress}</span>
                     </div>
                     {this.props.onClose ? (
                         <Button
@@ -321,15 +322,15 @@ var SiteStatus = React.createClass({
                         >
                             <Radium.Style
                                 rules={{
-                                    "": {
-                                        padding: "0px !important",
-                                        margin: "0px !important"
+                                    ".btn:active": {
+                                        WebkitBoxShadow: "none !important",
+                                        boxShadow: "none !important"
                                     }
                                 }}
                                 scopeSelector=".button-close"
                             />
                             <Icon
-                                color={theme.colors.iconSiteButton}
+                                color={theme.colors.mainFontColor}
                                 icon={"close"}
                                 size={"26px"}
                                 style={{verticalAlign: "middle"}}
@@ -346,15 +347,15 @@ var SiteStatus = React.createClass({
                     >
                         <Radium.Style
                             rules={{
-                                "": {
-                                    padding: "0px !important",
-                                    margin: "0px !important"
+                                ".btn:active": {
+                                    WebkitBoxShadow: "none !important",
+                                    boxShadow: "none !important"
                                 }
                             }}
                             scopeSelector=".button-option"
                         />
                         <Icon
-                            color={theme.colors.iconSiteButton}
+                            color={this.props.isActive ? theme.colors.white : theme.colors.mainFontColor}
                             icon={"option"}
                             size={"26px"}
                             style={{verticalAlign: "middle"}}
@@ -404,19 +405,29 @@ var SiteStatus = React.createClass({
                         scopeSelector=".col"
                     />
                     <div style={{
-                        border: `1px solid ${theme.colors.borderBoxMultisite}`,
+                        border: `1px solid ${theme.colors.borderBoxAlarmMultisite}`,
                         minHeight: "95px",
                         padding: "10px",
                         display: "flex",
                         flexDirection: "column",
                         justifyContent: "center",
                         alignItems: "center",
-                        textAlign: "center"
+                        textAlign: "center",
+                        color: theme.colors.mainFontColor
                     }}>
-                        <span style={{fontWeight: "300", fontSize: "15px", lineHeight: "16px"}}>
+                        <span style={{
+                            fontWeight: "300",
+                            fontSize: "15px",
+                            lineHeight: "16px"
+                        }}>
                             {item.label}
                         </span>
-                        <p style={{fontWeight: "300", fontSize: "18px", lineHeight: "30px", margin: "0"}}>
+                        <p style={{
+                            fontWeight: "300",
+                            fontSize: "18px",
+                            lineHeight: "30px",
+                            margin: "0"
+                        }}>
                             {item.value}
                         </p>
                     </div>
@@ -431,13 +442,13 @@ var SiteStatus = React.createClass({
         const itemStyleOpen = {
             backgroundColor: (this.props.isOpen ?
                 theme.colors.backgroundBoxMultisiteOpen : theme.colors.backgroundBoxMultisite),
-            boxShadow: "0px 8px 6px " + theme.colors.backgroundBoxMultisiteOpen
+            boxShadow: "0px 6px 6px " + theme.colors.shadowBoxMultisiteOpen
         };
         const siteInfo = this.props.siteInfo.filter(x => x.value).map(item => {
             return (
                 <div key={item.key} style={{...styles(theme).singleInfoWrp, ...itemStyleOpen}}>
-                    <div style={{width: "100%", ...styles(theme).SiteSecondaryTextWrp}}>
-                        <div style={styles(theme).SiteSecondaryText}>
+                    <div style={{width: "100%", ...styles(theme).siteSecondaryTextWrp}}>
+                        <div style={styles(theme).siteSecondaryText}>
                             {`${item.label}: ${item.value}`}
                         </div>
                     </div>

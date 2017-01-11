@@ -17,7 +17,16 @@ const styles = ({colors}) => ({
         color: colors.white,
         marginBottom: "10px"
     },
-
+    trendText: {
+        height: "20px",
+        lineHeight: "20px",
+        fontSize: "14px",
+        textAlign: "left",
+        fontWeight: "300",
+        textOverflow: "ellipsis",
+        whiteSpace: "nowrap",
+        overflow: "hidden"
+    },
     boxTitle: {
         fontSize: "20px",
         margin: "0px 0px 10px 0px",

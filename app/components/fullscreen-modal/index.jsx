@@ -122,7 +122,7 @@ var FullscreenModal = React.createClass({
                 />
                 <Modal.Header style={{textAlign: "center"}}>
                     <label style={{
-                        color: colors.white,
+                        color: colors.mainFontColor,
                         fontSize: "30px",
                         fontWeight: 400,
                         textAlign: "center",
