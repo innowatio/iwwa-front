@@ -771,7 +771,7 @@ var MultiSite = React.createClass({
                     activeFilter={this.props.collections}
                     filterList={filterList}
                     onConfirm={this.onApplyMultiSiteFilter}
-                    onReset={!this.state.filterList}
+                    onReset={() => console.log("reset")}
                 />
             );
         }
@@ -1028,7 +1028,6 @@ var MultiSite = React.createClass({
 
     render: function () {
         const theme = this.getTheme();
-
         const sites = this.getFilteredSortedSites();
         const sitesLimited = this.limitSites(sites);
         return (
@@ -1095,20 +1094,22 @@ var MultiSite = React.createClass({
                     <div>
                         <bootstrap.Row>
                             <bootstrap.Col xs={12} style={{height: "90vh"}}>
-                                <InputFilter
-                                    inputValue={this.state.search}
-                                    onChange={this.onChangeInputFilter}
-                                    style={{
-                                        position: "relative",
-                                        zIndex: "1",
-                                        width: "500px",
-                                        float: "right",
-                                        margin: "10px"
-                                    }}
-                                />
-                                <DashboardGoogleMap
-                                    sites={sites}
-                                />
+                                <div style={{height: "90vh", border: "1px solid " + theme.colors.borderBoxMultisite}}>
+                                    <InputFilter
+                                        inputValue={this.state.search}
+                                        onChange={this.onChangeInputFilter}
+                                        style={{
+                                            position: "relative",
+                                            zIndex: "1",
+                                            width: "500px",
+                                            float: "right",
+                                            margin: "10px"
+                                        }}
+                                    />
+                                    <DashboardGoogleMap
+                                        sites={sites}
+                                    />
+                                </div>
                             </bootstrap.Col>
                         </bootstrap.Row>
                     </div>
