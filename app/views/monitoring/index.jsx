@@ -136,7 +136,7 @@ var Monitoring = React.createClass({
     getButtonLink: function (iconName, selected) {
         switch (iconName) {
             case "duplicate":
-                this.props.cloneSensors(selected);
+                this.props.cloneSensors(getLoggedUser(this.props.asteroid), selected);
                 break;
             case "edit":
                 this.onClickEditSensor();
@@ -174,8 +174,8 @@ var Monitoring = React.createClass({
                 description: "",
                 unitOfMeasurement: "",
                 aggregationType: "",
-                siteId: "",
-                userId: "",
+                siteReference: "",
+                userReference: "",
                 primaryTags: this.getParentsPrimaryTags(this.props.sensorsState.workAreaSensors),
                 tags: []
             };
@@ -217,10 +217,11 @@ var Monitoring = React.createClass({
         });
     },
     onSaveForm: function () {
+        const user = getLoggedUser(this.props.asteroid);
         if (this.state.editSensor) {
-            this.props.editSensor(...arguments);
+            this.props.editSensor(user, ...arguments);
         } else {
-            this.props.addSensor(...arguments);
+            this.props.addSensor(user, ...arguments);
         }
         this.openConfirmModal();
     },
