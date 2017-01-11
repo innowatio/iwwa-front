@@ -422,7 +422,7 @@ var MultiSite = React.createClass({
     },
 
     getSiteRemoteControlStatus: function (site) {
-        const telecontrol = this.getRealtimeAggregate(site, "telecontrolLevel");
+        const telecontrol = this.getRealtimeAggregate(site, "telecontrol");
         if (telecontrol) {
             return telecontrol.measurementValue === 1 ? "ACTIVE" : "ERROR";
         }
