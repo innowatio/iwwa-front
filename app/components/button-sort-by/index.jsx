@@ -4,7 +4,7 @@ import R from "ramda";
 
 import {
     Icon,
-    Popover,
+    PopoverScrollable,
     DropdownSelect
 } from "components";
 
@@ -66,11 +66,12 @@ var ButtonSortBy = React.createClass({
         const order = (allowedValues.key === this.props.sortKey && !this.props.descending) ? "desc" : "asc";
         return (
             <Icon
-                color={colors.white}
+                color={colors.mainFontColor}
                 icon={`${type || "number"}-${order || "asc"}`}
                 size={"30px"}
                 style={{
                     float: "right",
+                    display: "inline",
                     verticalAlign: "text-top",
                     marginLeft: "10px"
                 }}
@@ -86,8 +87,8 @@ var ButtonSortBy = React.createClass({
             {label: "Data ultimo aggiornamento", key: "lastUpdate", type: "number"},
             {label: "Piani", key: "piani", type: "number"},
             {label: "Vetrine", key: "vetrine", type: "number"},
-            {label: "mq Comm", key: "mq", type: "number"},
-            {label: "mq PdV", key: "mq1", type: "number"}
+            {label: "Mq Comm", key: "mq", type: "number"},
+            {label: "Mq PdV", key: "mq1", type: "number"}
         ];
     },
     renderSortByButtons: function () {
@@ -123,12 +124,12 @@ var ButtonSortBy = React.createClass({
     render: function () {
         return (
             <div style={{height: "auto", float: "right"}}>
-                <Popover
+                <PopoverScrollable
                     hideOnChange={true}
                     title={this.renderTitlePopover()}
                 >
                     {this.renderSortByButtons()}
-                </Popover>
+                </PopoverScrollable>
             </div>
         );
     }

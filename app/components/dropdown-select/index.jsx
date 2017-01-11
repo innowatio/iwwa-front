@@ -86,6 +86,7 @@ var DropdownSelect = React.createClass({
                     outline: "0px",
                     outlineStyle: "none",
                     outlineWidth: "0px",
+                    whiteSpace: "nowrap",
                     // This should overwrite the style over that position.
                     ...itemStyle,
                     ...this.props.style
