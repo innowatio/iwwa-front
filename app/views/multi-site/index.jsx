@@ -216,6 +216,7 @@ var MultiSite = React.createClass({
         this.props.asteroid.subscribe("dashboardAlarmsAggregates");
         this.props.asteroid.subscribe("dashboardDailyMeasurements");
         this.props.asteroid.subscribe("dashboardRealtimeAggregates");
+        this.props.asteroid.subscribe("dashboardYearlyConsumptions");
     },
 
     componentWillReceiveProps: function () {
@@ -440,11 +441,11 @@ var MultiSite = React.createClass({
         return "MISSING";
     },
 
-    limitSites: function (sites) {
+    limitSites: function (values) {
         const {maxItems} = this.state;
         //apply splice
-        const max = sites.length < maxItems ? sites.length : maxItems;
-        return sites.splice(0, max);
+        const max = values.length < maxItems ? values.length : maxItems;
+        return values.slice(0, max);
     },
 
     getFilteredSortedSites: function () {
@@ -478,7 +479,6 @@ var MultiSite = React.createClass({
 
         //Apply reverse sort
         sorted = (reverseSort ? R.reverse(sorted) : sorted);
-
         const returnValue =  sorted.map(site => {
             return {
                 ...site,
@@ -495,7 +495,6 @@ var MultiSite = React.createClass({
                 }
             };
         });
-
         return returnValue;
     },
 
@@ -509,6 +508,12 @@ var MultiSite = React.createClass({
     onApplyMultiSiteFilter: function (value) {
         this.setState({
             filterToApply: value
+        });
+    },
+
+    onResetMultiSiteFilter: function () {
+        this.setState({
+            filterToApply: this.state.filterList
         });
     },
 
@@ -589,13 +594,9 @@ var MultiSite = React.createClass({
     },
 
     renderTrendStatus: function () {
-        /* const dailyAggregatesList = this.props.collections.get("readings-daily-aggregates") || Immutable.List();
-        const dailyAggregates = dailyAggregatesList
-        .filter(x => x.measurementType === "comfortLevel" && x.day)
-        .filter(x => moment(x.day).format("YYYY") == moment().format("YYYY"))
-        .toArray(); */
+        const statusAggregate = this.props.collections.get("consumptions-yearly-aggregates") || Immutable.List();
         return (
-            <TrendStatus />
+            <TrendStatus statusAggregate={statusAggregate}/>
         );
     },
 
@@ -767,7 +768,7 @@ var MultiSite = React.createClass({
                     activeFilter={this.props.collections}
                     filterList={filterList}
                     onConfirm={this.onApplyMultiSiteFilter}
-                    onReset={() => console.log("reset")}
+                    onReset={this.onResetMultiSiteFilter}
                 />
             );
         }
@@ -820,6 +821,7 @@ var MultiSite = React.createClass({
     },
 
     renderSidebar: function (sites) {
+
         const {colors} = this.getTheme();
         return (
             <bootstrap.Col xs={12} sm={6} lg={4}>
@@ -1032,6 +1034,7 @@ var MultiSite = React.createClass({
         const theme = this.getTheme();
         const sites = this.getFilteredSortedSites();
         const sitesLimited = this.limitSites(sites);
+
         return (
             <content style={styles(theme).pageContent}>
                 {this.renderCompareButtons()}
