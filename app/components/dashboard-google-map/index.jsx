@@ -13,7 +13,6 @@ class DashboardGoogleMap extends Component {
         center: PropTypes.any,
         onCenterChange: PropTypes.func,
         onChange: PropTypes.func,
-        onZoomChange: PropTypes.func,
         sites: PropTypes.array.isRequired,
         zoom: PropTypes.number
     }
@@ -40,17 +39,37 @@ class DashboardGoogleMap extends Component {
         };
     }
 
-    onChange ({bounds, zoom}) {
+    onChange ({bounds, zoom, center}) {
         this.setState({
             zoom,
             bounds
         });
+        const {onChange} = this.props;
+        if (onChange) {
+            onChange({
+                zoom,
+                center
+            });
+        }
     }
 
     onSiteClick (key, childProps) {
         if (childProps.sites) {
+
+            this.props.onChange({
+                zoom: this.state.zoom + 5,
+                center: {
+                    lat: childProps.lat,
+                    lng: childProps.lng
+                }
+            });
+
             this.setState({
-                zoom: this.state.zoom + 1
+                zoom: this.state.zoom + 5,
+                center: {
+                    lat: childProps.lat,
+                    lng: childProps.lng
+                }
             });
         } else {
             const child = this.refs[key];
@@ -76,7 +95,7 @@ class DashboardGoogleMap extends Component {
         const cluster = supercluster(geocoordinates);
         const clusters = cluster({
             bounds,
-            zoom
+            zoom: zoom + 1
         });
 
         return clusters.map((cluster, index) => {
@@ -92,6 +111,7 @@ class DashboardGoogleMap extends Component {
                     key={index}
                     lat={y}
                     lng={x}
+                    ref={index}
                     sites={numPoints}
                 />
             ) : (
