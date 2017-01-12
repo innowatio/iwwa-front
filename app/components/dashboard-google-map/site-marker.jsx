@@ -60,6 +60,14 @@ class SiteMarker extends Component {
     getTheme () {
         return this.context.theme || defaultTheme;
     }
+    //
+    // getCustomStyle () {
+    //     return {
+    //         fontSize: "11px",
+    //         padding: "5px",
+    //
+    //     }
+    // }
 
     toggleSiteInfo () {
         this.setState({
@@ -78,27 +86,43 @@ class SiteMarker extends Component {
                 }}
             >
                 {this.state.visible ? (
-                    <SiteStatus
-                        isOpen={this.state.expanded}
-                        key={site._id}
-                        onClickPanel={() => this.setState({expanded: !this.state.expanded})}
-                        onClose={() => this.setState({
-                            visible: false
-                        })}
-                        parameterStatus={site.status}
-                        site={site}
-                        siteAddress={site.address || ""}
-                        siteName={site.name}
-                        siteInfo={
-                            this.getSiteInfo().map(info => {
-                                return {
-                                    key: info.key,
-                                    label: info.label,
-                                    value: site[info.key] || ""
-                                };
-                            })
-                        }
-                    />
+                    <div style={{width: "350px"}}>
+                        <SiteStatus
+                            fontNameSize={{fontSize: "14px"}}
+                            fontNameWidth={{width: "calc(100% - 80px)"}}
+                            fontStatusSize={{fontSize: "12px"}}
+                            iconStatusSize={"34px"}
+                            iconStatusStyle={{
+                                width: "32px",
+                                height: "32px",
+                                lineHeight: "32px",
+                                borderRadius: "100%"
+                            }}
+                            isOpen={this.state.expanded}
+                            key={site._id}
+                            onClick={() => {}}
+                            onClickPanel={() => this.setState({expanded: !this.state.expanded})}
+                            onClose={() => this.setState({
+                                visible: false
+                            })}
+                            paddingStatusDiv={{padding: "5px"}}
+                            parameterStatus={site.status}
+                            shownInMap={true}
+                            site={site}
+                            siteAddress={site.address || ""}
+                            siteName={site.name}
+                            siteInfo={
+                                this.getSiteInfo().map(info => {
+                                    return {
+                                        key: info.key,
+                                        label: info.label,
+                                        value: site[info.key] || ""
+                                    };
+                                })
+                            }
+                            style={{padding: "5px 8px 0px 8px"}}
+                        />
+                    </div>
                 ) : null}
                 <div style={styles(theme).pinpointContainer}>
                     <div style={styles(theme).pinpoint} />

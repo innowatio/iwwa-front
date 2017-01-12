@@ -166,6 +166,13 @@ const styles = ({colors}) => ({
         margin: "0px",
         fontSize: "26px",
         fontWeight: "300"
+    },
+    iconStatusStyle: {
+        width: "38px",
+        height: "38px",
+        lineHeight: "44px",
+        borderRadius: "100%",
+        backgroundColor: colors.backgroundIconStatus
     }
 });
 
@@ -998,19 +1005,27 @@ var MultiSite = React.createClass({
     },
 
     renderSites: function (sites) {
+        const theme = this.getTheme();
         const buttonStyle = {
             cursor: (this.state.compareMode ? "pointer" : "default")
         };
 
         return sites.map((site, index) => (
             <SiteStatus
+                fontNameSize={{fontSize: "20px"}}
+                fontNameWidth={{width: "calc(100% - 40px)"}}
+                fontStatusSize={{fontSize: "15px"}}
+                iconStatusSize={"44px"}
+                iconStatusStyle={styles(theme).iconStatusStyle}
                 isActive={!!this.state.selectedSites.find(id => id === site._id)}
                 isOpen={this.state.openPanel === site._id}
                 key={index}
                 onClick={(id) => this.onSiteClick(id)}
                 onClickAlarmChart={this.props.selectSingleElectricalSensor}
                 onClickPanel={this.onClickPanel}
+                paddingStatusDiv={{padding: "8px 10px"}}
                 parameterStatus={site.status}
+                shownInMap={false}
                 site={site}
                 siteName={site.name}
                 siteInfo={
@@ -1023,7 +1038,7 @@ var MultiSite = React.createClass({
                     })
                 }
                 siteAddress={site.address || ""}
-                style={{...buttonStyle}}
+                style={{...buttonStyle, padding: "8px 10px"}}
             />
         ));
     },
