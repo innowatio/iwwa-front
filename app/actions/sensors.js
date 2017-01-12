@@ -48,11 +48,9 @@ function normalizeSensorData (sensorData) {
     sensorData.measurementType = undefined;
     sensorData.measurementTypes = undefined;
     sensorData.virtual = true;
-    //TODO remove for unitOfMeasurement inside formula...
-    // if (sensorData.unitOfMeasurement instanceof Object) {
-    //     sensorData.unitOfMeasurement = sensorData.unitOfMeasurement.value;
-    // }
-    //TODO remove for aggregationType inside formula...
+    if (sensorData.unitOfMeasurement instanceof Object) {
+        sensorData.unitOfMeasurement = sensorData.unitOfMeasurement.value;
+    }
     if (sensorData.aggregationType instanceof Object) {
         sensorData.aggregationType = sensorData.aggregationType.value;
     }
@@ -72,7 +70,7 @@ function insertSensor (requestBody, dispatch, user) {
         }));
 }
 
-function buildFormulas (sensorData, formulaItems) {
+function buildFormulas (formulaItems) {
     if (formulaItems && formulaItems.length > 0) {
         let formula = "";
         let variables = new Set();
@@ -94,25 +92,17 @@ function buildFormulas (sensorData, formulaItems) {
                 }
             }
         });
-        //TODO put unitOfMeasurement
-        // if (sensorData.unitOfMeasurement instanceof Object) {
-        //     sensorData.unitOfMeasurement = sensorData.unitOfMeasurement.value;
-        // }
-        //TODO put aggregationType
-        // if (sensorData.aggregationType instanceof Object) {
-        //     sensorData.aggregationType = sensorData.aggregationType.value;
-        // }
         return [{
             formula: formula,
             start: "1970-01-01T00:00:00.000Z",
             end: "3000-01-01T00:00:00.000Z",
-            //TODO understand measurementType
             variables: Array.from(variables).map(v => ({
                 measurementType: "",
                 sensorId: v,
                 symbol: v
             })),
-            measurementType: [],
+            measurementType: "",
+            measurementUnit: "",
             measurementSample: 60000
         }];
     }
@@ -196,13 +186,13 @@ function callEditSensor (sensorData, sensorId) {
 export const editSensor = (user, sensorData, formulaItems, sensor) => {
     if (sensor.get("userId")) {
         let id = sensor.get("_id");
-        sensorData.formulas = buildFormulas(sensorData, formulaItems);
+        sensorData.formulas = buildFormulas(formulaItems);
         sensorData.id = id;
         sensorData.parentSensorId = sensor.get("parentSensorId");
         return callEditSensor(sensorData, id);
     } else {
         sensorData.parentSensorId = getSensorId(sensor);
-        sensorData.formulas = buildFormulas(sensorData, [{
+        sensorData.formulas = buildFormulas([{
             type: Types.SENSOR,
             sensor: sensor
         }]);
