@@ -1,6 +1,6 @@
 import React, {PropTypes} from "react";
 import {Link} from "react-router";
-import {merge, prop} from "ramda";
+import {prop} from "ramda";
 import * as bootstrap from "react-bootstrap";
 
 import {defaultTheme} from "lib/theme";
@@ -15,7 +15,7 @@ var styles = ({colors}) => ({
         justifyContent: "space-between",
         padding: "0px 8px",
         background: colors.primary,
-        height: "100%",
+        height: "50px",
         color: colors.white
     },
     iconWrp: {
@@ -34,7 +34,7 @@ var styles = ({colors}) => ({
     viewTitle: {
         margin: "auto",
         fontSize: "20px",
-        width: "100%",
+        width: "auto",
         textAlign: "center"
     },
     textTitle: {
@@ -182,7 +182,7 @@ var Header = React.createClass({
         return (
             <div style={styles(theme).base}>
                 {this.renderMenu()}
-                <div style={merge(styles(theme).base, {marginLeft: "10px"})}>
+                <div style={{marginLeft: "10px"}}>
                     <Link to="/" style={{...styles(theme).iconWrp, padding: "0px"}}>
                         <components.Icon
                             color={theme.colors.iconHeader}

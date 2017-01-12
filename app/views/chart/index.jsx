@@ -722,54 +722,57 @@ var Chart = React.createClass({
         const {alarms} = this.props.chartState;
         return (
             <div style={styles(theme).pageContent}>
-                <div style={styles(theme).titlePage}>
+                <div style={{...styles(theme).titlePage, justifyContent: "space-between", flexDirection: "row",
+                alignItems: "center"}}>
                     {/* Title Page */}
                     <div style={{
                         fontSize: "18px",
-                        marginBottom: "0px",
-                        paddingTop: "16px",
-                        width: "calc(100vw - 120px)",
-                        textAlign: "left"
+                        justifyContent: "space-between",
+                        alignItems: "center"
                     }}>
                         {this.getTitleForChart().toUpperCase()}
                     </div>
-                    <Button style={alarmButtonStyle(theme, alarms.show)}>
-                        <Icon
-                            color={theme.colors.iconHeader}
-                            icon={"danger"}
-                            onClick={() => this.props.toggleAlarms()}
-                            size={"28px"}
-                            style={{display: "block", width: "50px"}}
-                        />
-                    </Button>
-                    <Popover
-                        className="pull-right"
-                        hideOnChange={true}
-                        title={
+                    <div style={{
+                        display: "flex", flexDirection: "row"
+                    }}>
+                        <Button style={alarmButtonStyle(theme, alarms.show)}>
                             <Icon
-                                color={theme.colors.iconOption}
-                                icon={"option"}
-                                size={"32px"}
-                                style={{
-                                    display: "block",
-                                    width: "50px",
-                                    height: "60px",
-                                    lineHeight: "60px"
-                                }}
+                                color={theme.colors.iconHeader}
+                                icon={"danger"}
+                                onClick={() => this.props.toggleAlarms()}
+                                size={"28px"}
+                                style={{display: "block", width: "50px"}}
                             />
-                        }
-                    >
-                        <DropdownButton
-                            allowedValues={parameters.getChartSetting(this.getTheme())}
-                            getColor={R.prop("color")}
-                            getHoverColor={R.prop("hoverColor")}
-                            getIcon={R.prop("iconClass")}
-                            getKey={R.prop("key")}
-                            getLabel={R.prop("label")}
-                            onChange={this.onChangeWidget}
-                            style={styles(theme).chartDropdownButton}
-                        />
-                    </Popover>
+                        </Button>
+                        <Popover
+                            className="pull-right"
+                            hideOnChange={true}
+                            title={
+                                <Icon
+                                    color={theme.colors.iconOption}
+                                    icon={"option"}
+                                    size={"32px"}
+                                    style={{
+                                        width: "50px",
+                                        height: "50px",
+                                        lineHeight: "50px"
+                                    }}
+                                />
+                            }
+                            style={{width: "50px"}}
+                        >
+                            <DropdownButton
+                                allowedValues={parameters.getChartSetting(this.getTheme())}
+                                getColor={R.prop("color")}
+                                getHoverColor={R.prop("hoverColor")}
+                                getIcon={R.prop("iconClass")}
+                                getKey={R.prop("key")}
+                                getLabel={R.prop("label")}
+                                onChange={this.onChangeWidget}
+                                style={styles(theme).chartDropdownButton}
+                            />
+                        </Popover>
+                    </div>
                 </div>
                 {/* Button Left and Right arrow */}
                 <Button

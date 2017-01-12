@@ -121,11 +121,9 @@ var styleRightPane  = ({colors}) => ({
 var styleSiteButton = ({colors}) => ({
     width: "50px",
     height: "50px",
-    padding: "0px",
     border: "0px",
     borderRadius: "100%",
-    clear: "both",
-    margin: "3px 25px 0 0",
+    margin: "3px 25px 0",
     backgroundColor: colors.primary
 });
 
