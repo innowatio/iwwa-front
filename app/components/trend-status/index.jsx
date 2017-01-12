@@ -148,11 +148,9 @@ class TrendStatus extends React.Component {
                         {item.label}
                     </span>
                     <div style={{
-                        width: "100%",
                         display: "flex",
                         flexDirection: "row",
-                        justifyContent: "space-between",
-                        alignItems: "center"
+                        justifyContent: "space-between"
                     }}>
                         {trendData}
                     </div>
