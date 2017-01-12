@@ -1042,12 +1042,28 @@ var MultiSite = React.createClass({
             />
         ));
     },
-
+    renderButtonLoad: function (totalNumberOfSites, numberOfDisplayedSites) {
+        const theme = this.getTheme();
+        return totalNumberOfSites > numberOfDisplayedSites ? (
+            <Button
+                onClick={() => this.setState({maxItems: this.state.maxItems + 10})}
+                style={{
+                    backgroundColor: theme.colors.buttonPrimary,
+                    color: theme.colors.white,
+                    width: "230px",
+                    height: "45px",
+                    borderRadius: "30px",
+                    border: "0px"
+                }}
+            >
+                {"MOSTRA ALTRI"}
+            </Button>
+        ) : null;
+    },
     render: function () {
         const theme = this.getTheme();
         const sites = this.getFilteredSortedSites();
         const sitesLimited = this.limitSites(sites);
-
         return (
             <content style={styles(theme).pageContent}>
                 {this.renderCompareButtons()}
@@ -1087,19 +1103,7 @@ var MultiSite = React.createClass({
                             {this.renderSites(sitesLimited)}
                         </bootstrap.Row>
                         <bootstrap.Row style={{marginBottom: "20px"}}>
-                            <Button
-                                onClick={() => this.setState({maxItems: this.state.maxItems + 10})}
-                                style={{
-                                    backgroundColor: theme.colors.buttonPrimary,
-                                    color: theme.colors.white,
-                                    width: "230px",
-                                    height: "45px",
-                                    borderRadius: "30px",
-                                    border: "0px"
-                                }}
-                            >
-                                {"MOSTRA ALTRI"}
-                            </Button>
+                            {this.renderButtonLoad(sites.length, sitesLimited.length)}
                         </bootstrap.Row>
                     </bootstrap.Col>
                     {this.renderSidebar(sites)}
