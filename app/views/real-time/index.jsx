@@ -31,7 +31,7 @@ const styleSiteButton = ({colors}) => ({
     height: "50px",
     border: "0px",
     borderRadius: "100%",
-    margin: "3px 0 0 0",
+    marginRight: "15px",
     backgroundColor: colors.primary
 });
 const styleTextNodata = ({colors}) => ({
@@ -168,7 +168,7 @@ var RealTime = React.createClass({
                     stylePointer: {fill: colors.backgroundGaugeBar},
                     styleTextLabel: {
                         color: colors.mainFontColor,
-                        fontSize: "calc(28px + 1vw)",
+                        fontSize: "calc(22px + 1vw)",
                         lineHeight: "40px"
                     },
                     styleTextUnit: {
@@ -233,7 +233,7 @@ var RealTime = React.createClass({
                 stylePointer: {fill: colors.backgroundGaugeBar},
                 styleTextLabel: {
                     color: colors.mainFontColor,
-                    fontSize: "calc(44px + 1vw)",
+                    fontSize: "calc(40px + 1vw)",
                     lineHeight: "60px"
                 },
                 styleTextUnit: {
@@ -443,12 +443,8 @@ var RealTime = React.createClass({
         return (
             <div>
                 {/* Title page */}
-                <div style={styles(this.getTheme()).titlePage}>
-                    <div style={{fontSize: "18px", marginBottom: "0px", paddingTop: "18px", width: "100%"}}>
-                    </div>
-                    <bootstrap.Col sm={4}>
-                        {this.renderButton()}
-                    </bootstrap.Col>
+                <div style={{...styles(theme).titlePage, alignItems: "center", justifyContent: "flex-end"}}>
+                    {this.renderButton()}
                 </div>
                 <div style={styles(theme).mainDivStyle, {position: "relative"}}>
                     {this.renderConsumptionPanel(numberOfConsumptionSensor)}
