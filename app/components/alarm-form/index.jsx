@@ -346,7 +346,8 @@ var AlarmForm = React.createClass({
                 style={{
                     backgroundColor: colors.buttonPrimary,
                     color: colors.white,
-                    width: "230px",
+                    width: "200px",
+                    marginRight: "20px",
                     height: "45px",
                     borderRadius: "30px",
                     border: "0px"

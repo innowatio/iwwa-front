@@ -45,6 +45,7 @@ var SearchPanel = React.createClass({
         });
     },
     renderReset: function () {
+        const theme = this.getTheme();
         const {
             onReset,
             searchFilters
@@ -53,7 +54,7 @@ var SearchPanel = React.createClass({
             <Button
                 onClick={onReset}
                 style={{
-                    color: "white",
+                    color: theme.colors.white,
                     borderRadius: "30px",
                     fontWeight: "300",
                     height: "45px",
@@ -63,7 +64,7 @@ var SearchPanel = React.createClass({
                     paddingRight: "20px",
                     fontSize: "20px",
                     border: "0px",
-                    backgroundColor: "#ec4882"
+                    backgroundColor: theme.colors.buttonPrimary
                 }}
             >
                 {"Reset"}
@@ -71,6 +72,7 @@ var SearchPanel = React.createClass({
         ) : null;
     },
     render: function () {
+        const theme = this.getTheme();
         const {
             confirmLabel,
             onConfirm,
@@ -79,7 +81,7 @@ var SearchPanel = React.createClass({
         return (
             <div className="search-container">
                 {this.renderSearchInputFields()}
-                <label style={{fontSize: "20px", fontWeight: "400", marginBottom: "10px"}}>
+                <label style={{fontSize: "18px", fontWeight: "300", marginBottom: "10px"}}>
                     {"Riepilogo ricerca"}
                 </label>
                 <TagList
@@ -89,7 +91,7 @@ var SearchPanel = React.createClass({
                 <Button
                     onClick={onConfirm}
                     style={{
-                        color: "white",
+                        color: theme.colors.white,
                         borderRadius: "30px",
                         fontWeight: "300",
                         height: "45px",
@@ -99,7 +101,7 @@ var SearchPanel = React.createClass({
                         paddingRight: "20px",
                         fontSize: "20px",
                         border: "0px",
-                        backgroundColor: "#ec4882"
+                        backgroundColor: theme.colors.buttonPrimary
                     }}
                 >
                     {confirmLabel ? confirmLabel.toUpperCase() : "OK"}

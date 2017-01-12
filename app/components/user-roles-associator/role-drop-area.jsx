@@ -47,7 +47,7 @@ var RoleDropArea = React.createClass({
                                 textAlign: "center",
                                 textDecoration: "none",
                                 marginLeft: "10px",
-                                color: colors.white,
+                                color: colors.mainFontColor,
                                 cursor: "pointer"
                             }}
                         >

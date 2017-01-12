@@ -12,7 +12,7 @@ const styles = ({colors}, open) => ({
         height: "50px",
         borderTop: "1px solid " + colors.borderAlarmsRow,
         clear: "both",
-        padding: "0px"
+        padding: "8px 5px"
     },
     iconArrowDown: {
         display: "inline-block",

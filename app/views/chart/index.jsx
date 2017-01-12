@@ -721,10 +721,16 @@ var Chart = React.createClass({
         const variables = this.getConsumptionVariablesFromFullPath(this.props.chartState.charts[0].fullPath);
         const {alarms} = this.props.chartState;
         return (
-            <div>
+            <div style={styles(theme).pageContent}>
                 <div style={styles(theme).titlePage}>
                     {/* Title Page */}
-                    <div style={{fontSize: "18px", marginBottom: "0px", paddingTop: "16px", width: "100%"}}>
+                    <div style={{
+                        fontSize: "18px",
+                        marginBottom: "0px",
+                        paddingTop: "16px",
+                        width: "calc(100vw - 120px)",
+                        textAlign: "left"
+                    }}>
                         {this.getTitleForChart().toUpperCase()}
                     </div>
                     <Button style={alarmButtonStyle(theme, alarms.show)}>
@@ -739,13 +745,6 @@ var Chart = React.createClass({
                     <Popover
                         className="pull-right"
                         hideOnChange={true}
-                        style={{
-                            width: "50px",
-                            height: "50px",
-                            textAlign: "center",
-                            lineHeight: "50px",
-                            margin: "auto"
-                        }}
                         title={
                             <Icon
                                 color={theme.colors.iconOption}
@@ -753,7 +752,9 @@ var Chart = React.createClass({
                                 size={"32px"}
                                 style={{
                                     display: "block",
-                                    width: "50px"
+                                    width: "50px",
+                                    height: "60px",
+                                    lineHeight: "60px"
                                 }}
                             />
                         }

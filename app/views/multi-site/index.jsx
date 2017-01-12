@@ -304,7 +304,7 @@ var MultiSite = React.createClass({
 
         const siteAndSensors = [
             site._id,
-            ...site.sensorsIds
+            ...site.sensorsIds || []
         ];
 
         return decoratedAggregates.filter(x => R.contains(x.sensorId, siteAndSensors));
@@ -422,7 +422,7 @@ var MultiSite = React.createClass({
     },
 
     getSiteRemoteControlStatus: function (site) {
-        const telecontrol = this.getRealtimeAggregate(site, "telecontrolLevel");
+        const telecontrol = this.getRealtimeAggregate(site, "telecontrol");
         if (telecontrol) {
             return telecontrol.measurementValue === 1 ? "ACTIVE" : "ERROR";
         }
@@ -448,7 +448,6 @@ var MultiSite = React.createClass({
     },
 
     getFilteredSortedSites: function () {
-        //const start = moment().valueOf();
         const {
             search,
             sortBy,
@@ -496,9 +495,6 @@ var MultiSite = React.createClass({
                 }
             };
         });
-        /* console.log({
-            benchmark: `${moment().valueOf() - start} ms`
-        }); */
 
         return returnValue;
     },
@@ -771,7 +767,7 @@ var MultiSite = React.createClass({
                     activeFilter={this.props.collections}
                     filterList={filterList}
                     onConfirm={this.onApplyMultiSiteFilter}
-                    onReset={!this.state.filterList}
+                    onReset={() => console.log("reset")}
                 />
             );
         }
@@ -989,6 +985,12 @@ var MultiSite = React.createClass({
                 <div style={{height: "350px"}}>
                     <DashboardGoogleMap
                         sites={sites}
+                        onChange={({zoom, center}) => {
+                            this.setState({
+                                zoom,
+                                center
+                            });
+                        }}
                     />
                 </div>
             </div>
@@ -1028,7 +1030,6 @@ var MultiSite = React.createClass({
 
     render: function () {
         const theme = this.getTheme();
-
         const sites = this.getFilteredSortedSites();
         const sitesLimited = this.limitSites(sites);
         return (
@@ -1095,20 +1096,30 @@ var MultiSite = React.createClass({
                     <div>
                         <bootstrap.Row>
                             <bootstrap.Col xs={12} style={{height: "90vh"}}>
-                                <InputFilter
-                                    inputValue={this.state.search}
-                                    onChange={this.onChangeInputFilter}
-                                    style={{
-                                        position: "relative",
-                                        zIndex: "1",
-                                        width: "500px",
-                                        float: "right",
-                                        margin: "10px"
-                                    }}
-                                />
-                                <DashboardGoogleMap
-                                    sites={sites}
-                                />
+                                <div style={{height: "90vh", border: "1px solid " + theme.colors.borderBoxMultisite}}>
+                                    <InputFilter
+                                        inputValue={this.state.search}
+                                        onChange={this.onChangeInputFilter}
+                                        style={{
+                                            position: "relative",
+                                            zIndex: "1",
+                                            width: "500px",
+                                            float: "right",
+                                            margin: "10px"
+                                        }}
+                                    />
+                                    <DashboardGoogleMap
+                                        sites={sites}
+                                        zoom={this.state.zoom}
+                                        center={this.state.center}
+                                        onChange={({zoom, center}) => {
+                                            this.setState({
+                                                zoom,
+                                                center
+                                            });
+                                        }}
+                                    />
+                                </div>
                             </bootstrap.Col>
                         </bootstrap.Row>
                     </div>

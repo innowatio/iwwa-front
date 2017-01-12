@@ -134,7 +134,7 @@ var comparisonDiv = ({colors}) => ({
     border: "1px solid " + colors.borderConsumptionSection,
     backgroundColor: colors.backgroundConsumptionSection,
     borderRadius: "20px",
-    color: colors.white
+    color: colors.mainFontColor
 });
 
 var styleProgressBar = ({colors}) => ({

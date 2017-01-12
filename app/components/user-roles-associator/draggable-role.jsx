@@ -18,7 +18,7 @@ var DraggableRole = React.createClass({
         return connectDragSource(
             <div style={{
                 padding: "2px 10px",
-                border: "1px solid " + colors.white,
+                border: "1px solid " + colors.mainFontColor,
                 borderRadius: "30px",
                 marginBottom: "8px",
                 float: "left",

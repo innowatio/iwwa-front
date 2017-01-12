@@ -7,7 +7,7 @@ import {
 
 const stylesFunction = ({colors}) => ({
     modalTitleStyle: {
-        color: colors.white,
+        color: colors.mainFontColor,
         display: "inherit",
         marginBottom: "50px",
         textAlign: "center",

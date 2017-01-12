@@ -298,7 +298,7 @@ var SiteStatus = React.createClass({
                 theme.colors.white : theme.colors.mainFontColor)
         };
         return (
-            <Button
+            <div
                 onClick={() => this.props.onClick(id.value)}
                 style={{
                     ...styles(theme).siteWrp,
@@ -322,6 +322,10 @@ var SiteStatus = React.createClass({
                         >
                             <Radium.Style
                                 rules={{
+                                    "": {
+                                        WebkitBoxShadow: "none !important",
+                                        boxShadow: "none !important"
+                                    },
                                     ".btn:active": {
                                         WebkitBoxShadow: "none !important",
                                         boxShadow: "none !important"
@@ -347,6 +351,10 @@ var SiteStatus = React.createClass({
                     >
                         <Radium.Style
                             rules={{
+                                "": {
+                                    WebkitBoxShadow: "none !important",
+                                    boxShadow: "none !important"
+                                },
                                 ".btn:active": {
                                     WebkitBoxShadow: "none !important",
                                     boxShadow: "none !important"
@@ -386,7 +394,7 @@ var SiteStatus = React.createClass({
                         </Link>
                     </div>
                 </div>
-            </Button>
+            </div>
         );
     },
 

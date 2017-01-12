@@ -436,7 +436,7 @@ var Users = React.createClass({
                                 hoverStyle={{}}
                                 initialVisibleRow={20}
                                 lazyLoadButtonStyle={lazyLoadButtonStyle(theme)}
-                                lazyLoadLabel={"Carica altri"}
+                                lazyLoadLabel={"Mostra altri"}
                                 showFilterInput={true}
                                 sort={R.partialRight(this.sortByUsername, [true])}
                             />

@@ -1,5 +1,6 @@
 import React, {PropTypes} from "react";
 import {DragSource} from "react-dnd";
+import {defaultTheme} from "lib/theme";
 
 import {Types} from "lib/dnd-utils";
 
@@ -15,7 +16,11 @@ var DraggableItem = React.createClass({
         label: PropTypes.string.isRequired,
         onClick: PropTypes.func.isRequired
     },
+    getTheme: function () {
+        return this.context.theme || defaultTheme;
+    },
     render: function () {
+        const {colors} = this.getTheme();
         const {
             item,
             label,
@@ -27,7 +32,7 @@ var DraggableItem = React.createClass({
                 <Button
                     onClick={() => onClick(item)}
                     style={{
-                        color: "white",
+                        color: colors.mainFontColor,
                         borderRadius: "30px",
                         fontWeight: "300",
                         width: "100%",
@@ -38,10 +43,10 @@ var DraggableItem = React.createClass({
                         paddingRight: "20px",
                         fontSize: "20px",
                         border: "0px",
-                        backgroundColor: item.selected ? "#ec4882" : "gray"
+                        backgroundColor: item.selected ? colors.buttonPrimary : colors.textGrey
                     }}
                 >
-                {label}
+                    {label}
                 </Button>
             </div>
         );
