@@ -6,7 +6,7 @@ export const multisiteDefaultFilter = [
         options: [
             {label: "TUTTI", key: null},
             {label: "CONNESSI", key: "active"},
-            {label: "NON CONNESSI", key: "error,warning,missing,undefined"}
+            {label: "NON CONNESSI", key: "error"}
         ],
         selectedValue: null,
         filterType: "optionsStatus",
@@ -28,7 +28,7 @@ export const multisiteDefaultFilter = [
         options: [
             {label: "TUTTI", key: null},
             {label: "IN COMFORT", key: "active"},
-            {label: "NON IN COMFORT", key: "error,warning,missing,undefined"}
+            {label: "NON IN COMFORT", key: "error,warning"}
         ],
         selectedValue: null,
         filterType: "optionsStatus",
