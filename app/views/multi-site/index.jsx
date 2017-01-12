@@ -1,13 +1,15 @@
 import Immutable  from "immutable";
-import React from "react";
-import * as bootstrap from "react-bootstrap";
+import get from "lodash.get";
 import Radium from "radium";
 import R from "ramda";
-import {bindActionCreators} from "redux";
-import {selectSingleElectricalSensor, selectMultipleElectricalSensor} from "actions/chart";
-
+import React from "react";
+import * as bootstrap from "react-bootstrap";
 import {connect} from "react-redux";
 import {Link} from "react-router";
+import {bindActionCreators} from "redux";
+
+import {selectSingleElectricalSensor, selectMultipleElectricalSensor} from "actions/chart";
+
 import {defaultTheme} from "lib/theme";
 import moment from "lib/moment";
 import {multisiteDefaultFilter} from "lib/multi-site-default-filter";
@@ -358,28 +360,18 @@ var MultiSite = React.createClass({
             return "MISSING";
         }
 
-        return siteAlarms.find(x => x.triggered) ? "ERROR" : "ACTIVE";
+        return siteAlarms.find(x => x.triggered) ? "error" : "active";
     },
 
     getSiteConnectionStatus: function (site) {
+        const threshold = moment.utc().valueOf() - 1800000;
 
-        const olderThan = 1800000;
-        const threshold = moment.utc().valueOf() - olderThan;
-
-        const realtimeAggregatesList = this.props.collections.get("readings-real-time-aggregates") || Immutable.List();
-        const realtimeAggregates = realtimeAggregatesList.map(x => x.toJS()).toArray();
-
-        for (var index = 0; index < site.sensorsIds.length; index++) {
-            const sensorId = site.sensorsIds[index];
-            const realtime = realtimeAggregates
-                .filter(x => x.sensorId === sensorId)
-                .filter(x => x.measurementTime >= threshold);
-            if (realtime.length > 0) {
-                return "ACTIVE";
-            }
+        const lastUpdate = get(site, "lastUpdate", 0);
+        if (!lastUpdate) {
+            return "missing";
         }
 
-        return "ERROR";
+        return lastUpdate > threshold ? "active" : "error";
     },
 
     getSiteConsumptionStatus: function (site) {
@@ -403,42 +395,43 @@ var MultiSite = React.createClass({
             const result = (total - totalReference) / totalReference;
 
             if (result <= -1 || result >= 1) {
-                return "OUTOFRANGE";
+                return "unexpected";
             }
 
             if (result > -1 && result <= -0.05) {
-                return "ACTIVE";
+                return "active";
             }
 
             if (result > -0.05 && result <= 0.1) {
-                return "WARNING";
+                return "warning";
             }
 
             if (result > 0.1 && result < 1) {
-                return "ERROR";
+                return "error";
             }
         }
 
         return "MISSING";
     },
 
-    getSiteRemoteControlStatus: function (site) {
-        const telecontrol = this.getRealtimeAggregate(site, "telecontrol");
-        if (telecontrol) {
-            return telecontrol.measurementValue === 1 ? "ACTIVE" : "ERROR";
+    getSiteTelecontrolStatus: function (site) {
+        const telecontrol = get(site, "status.telecontrol");
+        if (!telecontrol) {
+            return "missing";
         }
-        return "MISSING";
+
+        return telecontrol.value;
     },
 
     getSiteComfortStatus: function (site) {
         const threshold = moment.utc().valueOf() - 3600000;
-        const comfort = this.getRealtimeAggregate(site, "comfortLevel", x => {
-            return x.measurementTime >= threshold;
-        });
-        if (comfort) {
-            return comfort.measurementValue === 1 ? "ACTIVE" : "ERROR";
+
+        const comfort = get(site, "status.comfort");
+        if (!comfort) {
+            return "missing";
         }
-        return "MISSING";
+
+        return comfort.time > threshold ? comfort.value : "missing";
     },
 
     limitSites: function (values) {
@@ -449,6 +442,8 @@ var MultiSite = React.createClass({
     },
 
     getFilteredSortedSites: function () {
+
+        const start = moment().valueOf();
         const {
             search,
             sortBy,
@@ -487,14 +482,17 @@ var MultiSite = React.createClass({
                     night: "n.d"
                 },
                 status: {
-                    alarm: site.alarmsDisabled ? "DISABLED" : this.getSiteAlarmStatus(site),
-                    connection: site.connectionDisabled ? "DISABLED" : this.getSiteConnectionStatus(site),
-                    consumption: site.consumptionsDisabled ? "DISABLED" : this.getSiteConsumptionStatus(site),
-                    remoteControl: site.telecontrolDisabled ? "DISABLED" : this.getSiteRemoteControlStatus(site),
-                    comfort: site.comfortDisabled ? "DISABLED" : this.getSiteComfortStatus(site)
+                    alarm: site.alarmsDisabled ? "disabled" : this.getSiteAlarmStatus(site),
+                    connection: site.connectionDisabled ? "disabled" : this.getSiteConnectionStatus(site),
+                    consumption: site.consumptionsDisabled ? "disabled" : this.getSiteConsumptionStatus(site),
+                    remoteControl: site.telecontrolDisabled ? "disabled" : this.getSiteTelecontrolStatus(site),
+                    comfort: site.comfortDisabled ? "disabled" : this.getSiteComfortStatus(site)
                 }
             };
         });
+
+        console.log(`benchmark: ${moment().valueOf() - start} ms`);
+
         return returnValue;
     },
 

@@ -148,15 +148,15 @@ var SiteStatus = React.createClass({
     getColorByStatus: function (status) {
         const theme = this.getTheme();
         switch (status) {
-            case "ACTIVE":
+            case "active":
                 return theme.colors.iconActive;
-            case "ERROR":
+            case "error":
                 return theme.colors.iconError;
-            case "WARNING":
+            case "warning":
                 return theme.colors.iconWarning;
-            case "OUTOFRANGE":
+            case "unexpected":
                 return theme.colors.iconOutOfRange;
-            case "DISABLED":
+            case "disabled":
                 return theme.colors.iconDisabled;
             default:
                 return theme.colors.iconInactive;
@@ -164,7 +164,7 @@ var SiteStatus = React.createClass({
     },
     getTooltipByStatus: function (status) {
         switch (status) {
-            case "ACTIVE":
+            case "active":
                 return {
                     alarm: "Non ci sono allarmi attivi",
                     connection: "Connessione ok",
@@ -172,7 +172,7 @@ var SiteStatus = React.createClass({
                     remoteControl: "Sito telecontrollato",
                     comfort: "Livelli di comfort ottimali"
                 };
-            case "ERROR":
+            case "error":
                 return {
                     alarm: "Ci sono allarmi attivi",
                     connection: "Problemi di connessione",
@@ -180,7 +180,7 @@ var SiteStatus = React.createClass({
                     remoteControl: "Problemi al telecontrollo",
                     comfort: "Problemi ai livelli di comfort"
                 };
-            case "WARNING":
+            case "warning":
                 return {
                     alarm: "",
                     connection: "",
@@ -188,7 +188,7 @@ var SiteStatus = React.createClass({
                     remoteControl: "",
                     comfort: "Livelli di comfort non ottimali"
                 };
-            case "OUTOFRANGE":
+            case "unexpected":
                 return {
                     alarm: "",
                     connection: "",
@@ -196,7 +196,7 @@ var SiteStatus = React.createClass({
                     remoteControl: "",
                     comfort: ""
                 };
-            case "DISABLED":
+            case "disabled":
                 return {
                     alarm: "Allarmi disabilitati",
                     connection: "Stato connessione non disponibile",
