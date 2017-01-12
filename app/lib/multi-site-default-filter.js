@@ -1,29 +1,39 @@
 
 export const multisiteDefaultFilter = [
-    {/*
-        id: "siteBehavior",
-        label: "Quali siti vuoi visualizzare?",
+    {
+        id: "status.telecontrol",
+        label: "Connessione",
         options: [
-            {label: "TUTTI", key: "Tutti"},
-            {label: "IN ALLARME", key: "In allarme"},
-            {label: "CONNESSI", key: "Connessi"},
-            {label: "NON CONNESSI", key: "Non connessi"}
+            {label: "TUTTI", key: null},
+            {label: "CONNESSI", key: "active"},
+            {label: "NON CONNESSI", key: "error,warning,missing,undefined"}
         ],
-        selectedValue: "Tutti",
-        filterType: "options",
+        selectedValue: null,
+        filterType: "optionsStatus",
         isAttribute: false
     }, {
-        id: "comfort",
+        id: "status.alarms",
+        label: "Allarmi",
+        options: [
+            {label: "TUTTI", key: null},
+            {label: "IN ALLARME", key: "error"},
+            {label: "NON IN ALLARME", key: "active"}
+        ],
+        selectedValue: null,
+        filterType: "optionsStatus",
+        isAttribute: false
+    }, {
+        id: "status.comfort",
         label: "Comfort",
         options: [
             {label: "TUTTI", key: null},
-            {label: "IN COMFORT", key: true},
-            {label: "NON IN COMFORT", key: false}
+            {label: "IN COMFORT", key: "active"},
+            {label: "NON IN COMFORT", key: "error,warning,missing,undefined"}
         ],
         selectedValue: null,
-        filterType: "options",
+        filterType: "optionsStatus",
         isAttribute: false
-    }, { */
+    }, {
         id: "areaInMq",
         label: "Mq commerciali",
         selectedValue: "",
@@ -47,7 +57,7 @@ export const multisiteDefaultFilter = [
             {label: "TUTTI", key: 0},
             {label: "OGGI", key: 1},
             {label: "ULTIMI 7 GIORNI", key: 7},
-            {label: "ULTIMI 30 GIORNI", key: 8}
+            {label: "ULTIMI 30 GIORNI", key: 30}
         ],
         selectedValue: 0,
         filterType: "optionsTime",
