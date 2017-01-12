@@ -89,9 +89,14 @@ class AlarmsRecap extends React.Component {
 
     renderColumn (data, type) {
         const theme = this.getTheme();
+        // Removed for performance issue
+        //const total = data.total[type];
+        //const week = data.week[type];
+        /*
+        <p style={{margin: "0"}}>{"Totali: "}{total}</p>
+        <p style={{margin: "0"}}>{"Ultima sett: "}{week}</p>
+        */
 
-        const total = data.total[type];
-        const week = data.week[type];
         const day = data.day[type];
         const title = type=="daytime" ? "DIURNI" : "NOTTURNI";
         return (
@@ -99,8 +104,7 @@ class AlarmsRecap extends React.Component {
                 <p style={{fontSize: "16px"}}>
                     <b>{title}</b>
                 </p>
-                <p style={{margin: "0"}}>{"Totali: "}{total}</p>
-                <p style={{margin: "0"}}>{"Ultima sett: "}{week}</p>
+
                 <p style={{margin: "0"}}>{"Ultime 24h: "}{day}</p>
             </bootstrap.Col>
         );
