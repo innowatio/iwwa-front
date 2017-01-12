@@ -280,6 +280,7 @@ var SiteStatus = React.createClass({
                     }
                     placement="bottom"
                     rootClose={true}
+                    trigger={["hover", "click"]}
                 >
                     <span style={{
                         display: "inline-block",
