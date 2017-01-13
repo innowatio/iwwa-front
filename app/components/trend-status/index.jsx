@@ -1,7 +1,11 @@
-import React from "react";
+import React, {PropTypes} from "react";
 import * as bootstrap from "react-bootstrap";
 import Radium from "radium";
+import moment from "moment";
+import Immutable from "immutable";
+import R from "ramda";
 
+import utils from "iwwa-utils";
 import {defaultTheme} from "lib/theme";
 
 import {
@@ -35,7 +39,18 @@ const styles = ({colors}) => ({
     }
 });
 
+const DAILY_COMFORT = 24;
+
 class TrendStatus extends React.Component {
+
+    static propTypes = {
+        statusAggregate: PropTypes.object.isRequired
+    }
+
+    constructor (props) {
+        super(props);
+        this.state ={};
+    }
 
     getTheme () {
         return this.context.theme || defaultTheme;
@@ -78,30 +93,122 @@ class TrendStatus extends React.Component {
 
     getTrendLabel () {
         return [
-            {label: "Comfort:", key: "Comfort"},
-            {label: "Consumo energetico:", key: "Consumo energetico"}
+            {label: "Comfort:", key: "comfort"},
+            {label: "Consumo energetico:", key: "energy"}
         ];
     }
 
-    getTrendItems () {
+    getNumberOfReadings (key, defaultReadings) {
+        switch (key) {
+            case "week":
+                return defaultReadings * 7;
+            case "month":
+                return defaultReadings * moment().daysInMonth();
+            case "year":
+                return defaultReadings * moment().endOf("year").diff(moment().startOf("year"), "days");
+        }
+        return defaultReadings;
+    }
+
+    getComfort (key) {
+        var comfort ={red: 0, yellow: 0, green: 0, total:0};
+        var nComfort = this.getNumberOfReadings(key, DAILY_COMFORT);
+
+        if (this.props.statusAggregate.size>0) {
+            var dateRange = utils.getTimeRangeByPeriod(key);
+            this.props.statusAggregate.filter(value =>{
+                return value.get("year")==moment().format("YYYY") &&
+                value.get("measurementType")=="comfort";
+            }).forEach(value => {
+                const tot = parseFloat(utils.getSumByPeriod(dateRange, Immutable.Map({value})).toFixed(0));
+                switch (Math.round(tot/nComfort)) {
+                    case 0:
+                        comfort.red +=1;
+                        break;
+                    case 1:
+                        comfort.yellow +=1;
+                        break;
+                    case 2:
+                        comfort.green +=1;
+                        break;
+                    default:
+                }
+                comfort.total +=1;
+            });
+        }
+        return comfort;
+    }
+
+    getReference (key) {
+        var reference ={red: 0, yellow: 0, green: 0, purple:0, total:0};
+
+        if (this.props.statusAggregate.size>0) {
+            const dateRange = utils.getTimeRangeByPeriod(key);
+            const data = this.props.statusAggregate.filter(value =>{
+                return value.get("year") === moment().format("YYYY") &&
+                value.get("measurementType") === "activeEnergy";
+            });
+            data.forEach(() => {
+                const readingMap = data.filter(value =>{
+                    return value.get("source") === "reading";
+                });
+
+                const referenceMap = data.filter(value =>{
+                    return value.get("source") === "reference";
+                });
+                const referenceTot = parseFloat(utils.getSumByPeriod(dateRange, readingMap).toFixed(2));
+                const readingTot = parseFloat(utils.getSumByPeriod(dateRange, referenceMap).toFixed(2));
+                const result = (readingTot-referenceTot) / referenceTot;
+
+                if (result <= -1) {
+                    reference.purple += 1;
+                } else if (result > -1 && result <= -0.05) {
+                    reference.green += 1;
+                } else if (result > -0.05 && result <= 0.1) {
+                    reference.yellow += 1;
+                } else if (result > 0.1 && result < 1) {
+                    reference.red += 1;
+                } else {
+                    reference.purple += 1;
+                }
+                reference.total+= 1;
+            });
+        }
+        return reference;
+    }
+
+    getTrendItems (key, item) {
         const theme = this.getTheme();
+        const value = (item =="comfort") ? this.getComfort(key) : this.getReference(key);
+        const green = (value.green / value.total * 100).toFixed(0);
+        const yellow = (value.yellow / value.total * 100).toFixed(0);
+        const red = (value.red / value.total * 100).toFixed(0);
         return [
-            {icon: "good-o", iconColor: theme.colors.iconActive, key: "good comfort", value: "35%"},
-            {icon: "middle-o", iconColor: theme.colors.iconWarning, key: "middle comfort", value: "25%"},
-            {icon: "bad-o", iconColor: theme.colors.iconError, key: "bad comfort", value: "40%"}
+            {
+                icon: "good-o",
+                iconColor: theme.colors.iconActive,
+                key: "good comfort",
+                value: (isNaN(green) ? 0 : green) + "%"
+            }, {
+                icon: "middle-o",
+                iconColor: theme.colors.iconWarning,
+                key: "middle comfort",
+                value: (isNaN(yellow) ? 0 : yellow) + "%"
+            }, {
+                icon: "bad-o",
+                iconColor: theme.colors.iconError,
+                key: "bad comfort",
+                value: (isNaN(red) ? 0 : red) + "%"}
         ];
     }
 
-    renderTabContent () {
+    getTrendData (tabParameters, item) {
         const theme = this.getTheme();
-        const trendData = this.getTrendItems().map(item => {
+        const trendData = this.getTrendItems(tabParameters.key, item).map(item => {
             return (
                 <div
                     key={item.key}
                     style={{
-                        // float: "right",
-                        // textAlign: "right",
-                        // width: "75px"
                         display: "flex",
                         justifyContent: "space-between",
                         alignItems: "center"
@@ -129,19 +236,22 @@ class TrendStatus extends React.Component {
                 </div>
             );
         });
+        return trendData;
+    }
+
+    renderTabContent (tabParameters) {
+        const theme = this.getTheme();
         const trend = this.getTrendLabel().map(item => {
             return (
                 <div
                     key={item.key}
                     style={{
-                        // justifyContent: "space-between"
                         flexDirection: "column",
                         display: "flex",
                         marginBottom: "10px"
                     }}
                 >
                     <span style={{
-                        //width: "calc(100% - 75px)",
                         width: "100%",
                         ...styles(theme).trendText
                     }}>
@@ -152,7 +262,7 @@ class TrendStatus extends React.Component {
                         flexDirection: "row",
                         justifyContent: "space-between"
                     }}>
-                        {trendData}
+                        {this.getTrendData(tabParameters, item.key)}
                     </div>
                 </div>
             );
@@ -169,7 +279,7 @@ class TrendStatus extends React.Component {
                 title={tabParameters.title}
             >
                 <div style={{marginTop: "5px"}}>
-                    {this.renderTabContent(theme, tabParameters)}
+                    {this.renderTabContent(tabParameters)}
                 </div>
             </bootstrap.Tab>
         );
@@ -241,8 +351,9 @@ class TrendStatus extends React.Component {
     }
 
     render () {
+        const start = moment().valueOf();
         const theme = this.getTheme();
-        return (
+        var result = (
             <div style={styles(theme).dataWrp}>
                 <h2 style={styles(theme).boxTitle}>
                     {"ANDAMENTO"}
@@ -252,8 +363,9 @@ class TrendStatus extends React.Component {
                 </div>
             </div>
         );
+        console.log(`benchmark trend: ${moment().valueOf() - start} ms`);
+        return result;
     }
-
 }
 
 module.exports = TrendStatus;

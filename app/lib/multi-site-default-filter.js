@@ -2,11 +2,11 @@
 export const multisiteDefaultFilter = [
     {
         id: "status.telecontrol",
-        label: "Connessione",
+        label: "Telecontrollo",
         options: [
             {label: "TUTTI", key: null},
-            {label: "CONNESSI", key: "active"},
-            {label: "NON CONNESSI", key: "error"}
+            {label: "ATTIVI", key: "active"},
+            {label: "NON ATTIVI", key: "error"}
         ],
         selectedValue: null,
         filterType: "optionsStatus",
