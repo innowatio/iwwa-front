@@ -3,7 +3,6 @@ import * as bootstrap from "react-bootstrap";
 import Radium from "radium";
 import moment from "moment";
 import Immutable from "immutable";
-import R from "ramda";
 
 import utils from "iwwa-utils";
 import {defaultTheme} from "lib/theme";
