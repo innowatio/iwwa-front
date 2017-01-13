@@ -584,7 +584,11 @@ var MultiSite = React.createClass({
             });
         }
 
-        if (isSelected) {
+        if (isSelected && selectedSites.length < 2) {
+            this.setState({
+                selectedSites: ""
+            });
+        } else if (isSelected && selectedSites.length === 2) {
             this.setState({
                 selectedSites: selectedSites.filter(selectedId => selectedId != id)
             });
@@ -594,8 +598,7 @@ var MultiSite = React.createClass({
     onCompareClick: function () {
         !this.state.compareMode ? this.setState({showCompareMessage: true}) : null;
         this.setState({compareMode: !this.state.compareMode, selectedSites: []}),
-        this.state.openPanel ? this.setState({openPanel: ""}) : null,
-        window.setTimeout(this.closeCompareMessage, 2500);
+        this.state.openPanel ? this.setState({openPanel: ""}) : null;
     },
 
     onCompareSites: function () {
@@ -607,6 +610,7 @@ var MultiSite = React.createClass({
     },
 
     closeCompareMessage: function () {
+        console.log("closeCompareMessage");
         this.setState({showCompareMessage: false});
     },
 
@@ -721,7 +725,7 @@ var MultiSite = React.createClass({
 
     renderBiggerButton: function (tooltip, iconName, disabled, onClickFunc) {
         const theme = this.getTheme();
-        if (iconName === "confront") {
+        if (iconName === "confront" && !disabled) {
             return (
                 <Link
                     className="btn-hover"
@@ -759,7 +763,7 @@ var MultiSite = React.createClass({
                     zIndex: "100"
                 }}>
                     {this.renderBiggerButton(
-                        "Conferma comparazione", "confront", false,
+                        "Conferma comparazione", "confront", this.state.selectedSites.length < 2,
                         () => this.onCompareSites()
                     )}
                     {this.renderBiggerButton(
