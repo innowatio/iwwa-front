@@ -1,13 +1,15 @@
 import Immutable  from "immutable";
-import React from "react";
-import * as bootstrap from "react-bootstrap";
+import get from "lodash.get";
 import Radium from "radium";
 import R from "ramda";
-import {bindActionCreators} from "redux";
-import {selectSingleElectricalSensor, selectMultipleElectricalSensor} from "actions/chart";
-
+import React from "react";
+import * as bootstrap from "react-bootstrap";
 import {connect} from "react-redux";
 import {Link} from "react-router";
+import {bindActionCreators} from "redux";
+
+import {selectSingleElectricalSensor, selectMultipleElectricalSensor} from "actions/chart";
+
 import {defaultTheme} from "lib/theme";
 import moment from "lib/moment";
 import {multisiteDefaultFilter} from "lib/multi-site-default-filter";
@@ -164,6 +166,13 @@ const styles = ({colors}) => ({
         margin: "0px",
         fontSize: "26px",
         fontWeight: "300"
+    },
+    iconStatusStyle: {
+        width: "38px",
+        height: "38px",
+        lineHeight: "44px",
+        borderRadius: "100%",
+        backgroundColor: colors.backgroundIconStatus
     }
 });
 
@@ -216,6 +225,7 @@ var MultiSite = React.createClass({
         this.props.asteroid.subscribe("dashboardAlarmsAggregates");
         this.props.asteroid.subscribe("dashboardDailyMeasurements");
         this.props.asteroid.subscribe("dashboardRealtimeAggregates");
+        this.props.asteroid.subscribe("dashboardYearlyConsumptions");
     },
 
     componentWillReceiveProps: function () {
@@ -357,28 +367,18 @@ var MultiSite = React.createClass({
             return "MISSING";
         }
 
-        return siteAlarms.find(x => x.triggered) ? "ERROR" : "ACTIVE";
+        return siteAlarms.find(x => x.triggered) ? "error" : "active";
     },
 
     getSiteConnectionStatus: function (site) {
+        const threshold = moment().valueOf() - 1800000;
 
-        const olderThan = 1800000;
-        const threshold = moment().valueOf() - olderThan;
-
-        const realtimeAggregatesList = this.props.collections.get("readings-real-time-aggregates") || Immutable.List();
-        const realtimeAggregates = realtimeAggregatesList.map(x => x.toJS()).toArray();
-
-        for (var index = 0; index < site.sensorsIds.length; index++) {
-            const sensorId = site.sensorsIds[index];
-            const realtime = realtimeAggregates
-                .filter(x => x.sensorId === sensorId)
-                .filter(x => x.measurementTime >= threshold);
-            if (realtime.length > 0) {
-                return "ACTIVE";
-            }
+        const lastUpdate = get(site, "lastUpdate", 0);
+        if (!lastUpdate) {
+            return "missing";
         }
 
-        return "ERROR";
+        return lastUpdate > threshold ? "active" : "error";
     },
 
     getSiteConsumptionStatus: function (site) {
@@ -402,31 +402,32 @@ var MultiSite = React.createClass({
             const result = (total - totalReference) / totalReference;
 
             if (result <= -1 || result >= 1) {
-                return "OUTOFRANGE";
+                return "unexpected";
             }
 
             if (result > -1 && result <= -0.05) {
-                return "ACTIVE";
+                return "active";
             }
 
             if (result > -0.05 && result <= 0.1) {
-                return "WARNING";
+                return "warning";
             }
 
             if (result > 0.1 && result < 1) {
-                return "ERROR";
+                return "error";
             }
         }
 
         return "MISSING";
     },
 
-    getSiteRemoteControlStatus: function (site) {
-        const telecontrol = this.getRealtimeAggregate(site, "telecontrol");
-        if (telecontrol) {
-            return telecontrol.measurementValue === 1 ? "ACTIVE" : "ERROR";
+    getSiteTelecontrolStatus: function (site) {
+        const telecontrol = get(site, "status.telecontrol");
+        if (!telecontrol) {
+            return "missing";
         }
-        return "MISSING";
+
+        return telecontrol.value;
     },
 
     getSiteComfortStatus: function (site) {
@@ -437,17 +438,20 @@ var MultiSite = React.createClass({
         if (comfort) {
             return comfort.measurementValue === 1 ? "ACTIVE" : "ERROR";
         }
-        return "MISSING";
+
+        return comfort.time > threshold ? comfort.value : "missing";
     },
 
-    limitSites: function (sites) {
+    limitSites: function (values) {
         const {maxItems} = this.state;
         //apply splice
-        const max = sites.length < maxItems ? sites.length : maxItems;
-        return sites.splice(0, max);
+        const max = values.length < maxItems ? values.length : maxItems;
+        return values.slice(0, max);
     },
 
     getFilteredSortedSites: function () {
+
+        const start = moment().valueOf();
         const {
             search,
             sortBy,
@@ -478,7 +482,6 @@ var MultiSite = React.createClass({
 
         //Apply reverse sort
         sorted = (reverseSort ? R.reverse(sorted) : sorted);
-
         const returnValue =  sorted.map(site => {
             return {
                 ...site,
@@ -487,14 +490,16 @@ var MultiSite = React.createClass({
                     night: "n.d"
                 },
                 status: {
-                    alarm: site.alarmsDisabled ? "DISABLED" : this.getSiteAlarmStatus(site),
-                    connection: site.connectionDisabled ? "DISABLED" : this.getSiteConnectionStatus(site),
-                    consumption: site.consumptionsDisabled ? "DISABLED" : this.getSiteConsumptionStatus(site),
-                    remoteControl: site.telecontrolDisabled ? "DISABLED" : this.getSiteRemoteControlStatus(site),
-                    comfort: site.comfortDisabled ? "DISABLED" : this.getSiteComfortStatus(site)
+                    alarm: site.alarmsDisabled ? "disabled" : this.getSiteAlarmStatus(site),
+                    connection: site.connectionDisabled ? "disabled" : this.getSiteConnectionStatus(site),
+                    consumption: site.consumptionsDisabled ? "disabled" : this.getSiteConsumptionStatus(site),
+                    remoteControl: site.telecontrolDisabled ? "disabled" : this.getSiteTelecontrolStatus(site),
+                    comfort: site.comfortDisabled ? "disabled" : this.getSiteComfortStatus(site)
                 }
             };
         });
+
+        console.log(`benchmark: ${moment().valueOf() - start} ms`);
 
         return returnValue;
     },
@@ -509,6 +514,12 @@ var MultiSite = React.createClass({
     onApplyMultiSiteFilter: function (value) {
         this.setState({
             filterToApply: value
+        });
+    },
+
+    onResetMultiSiteFilter: function () {
+        this.setState({
+            filterToApply: this.state.filterList
         });
     },
 
@@ -589,13 +600,9 @@ var MultiSite = React.createClass({
     },
 
     renderTrendStatus: function () {
-        /* const dailyAggregatesList = this.props.collections.get("readings-daily-aggregates") || Immutable.List();
-        const dailyAggregates = dailyAggregatesList
-        .filter(x => x.measurementType === "comfortLevel" && x.day)
-        .filter(x => moment(x.day).format("YYYY") == moment().format("YYYY"))
-        .toArray(); */
+        const statusAggregate = this.props.collections.get("consumptions-yearly-aggregates") || Immutable.List();
         return (
-            <TrendStatus />
+            <TrendStatus statusAggregate={statusAggregate}/>
         );
     },
 
@@ -767,7 +774,7 @@ var MultiSite = React.createClass({
                     activeFilter={this.props.collections}
                     filterList={filterList}
                     onConfirm={this.onApplyMultiSiteFilter}
-                    onReset={() => console.log("reset")}
+                    onReset={this.onResetMultiSiteFilter}
                 />
             );
         }
@@ -820,6 +827,7 @@ var MultiSite = React.createClass({
     },
 
     renderSidebar: function (sites) {
+
         const {colors} = this.getTheme();
         return (
             <bootstrap.Col xs={12} sm={6} lg={4}>
@@ -998,19 +1006,27 @@ var MultiSite = React.createClass({
     },
 
     renderSites: function (sites) {
+        const theme = this.getTheme();
         const buttonStyle = {
             cursor: (this.state.compareMode ? "pointer" : "default")
         };
 
         return sites.map((site, index) => (
             <SiteStatus
+                fontNameSize={{fontSize: "20px"}}
+                fontNameWidth={{width: "calc(100% - 40px)"}}
+                fontStatusSize={{fontSize: "15px"}}
+                iconStatusSize={"44px"}
+                iconStatusStyle={styles(theme).iconStatusStyle}
                 isActive={!!this.state.selectedSites.find(id => id === site._id)}
                 isOpen={this.state.openPanel === site._id}
                 key={index}
                 onClick={(id) => this.onSiteClick(id)}
                 onClickAlarmChart={this.props.selectSingleElectricalSensor}
                 onClickPanel={this.onClickPanel}
+                paddingStatusDiv={{padding: "8px 10px"}}
                 parameterStatus={site.status}
+                shownInMap={false}
                 site={site}
                 siteName={site.name}
                 siteInfo={
@@ -1023,11 +1039,28 @@ var MultiSite = React.createClass({
                     })
                 }
                 siteAddress={site.address || ""}
-                style={{...buttonStyle}}
+                style={{...buttonStyle, padding: "8px 10px"}}
             />
         ));
     },
-
+    renderButtonLoad: function (totalNumberOfSites, numberOfDisplayedSites) {
+        const theme = this.getTheme();
+        return totalNumberOfSites > numberOfDisplayedSites ? (
+            <Button
+                onClick={() => this.setState({maxItems: this.state.maxItems + 10})}
+                style={{
+                    backgroundColor: theme.colors.buttonPrimary,
+                    color: theme.colors.white,
+                    width: "230px",
+                    height: "45px",
+                    borderRadius: "30px",
+                    border: "0px"
+                }}
+            >
+                {"MOSTRA ALTRI"}
+            </Button>
+        ) : null;
+    },
     render: function () {
         const theme = this.getTheme();
         const sites = this.getFilteredSortedSites();
@@ -1071,19 +1104,7 @@ var MultiSite = React.createClass({
                             {this.renderSites(sitesLimited)}
                         </bootstrap.Row>
                         <bootstrap.Row style={{marginBottom: "20px"}}>
-                            <Button
-                                onClick={() => this.setState({maxItems: this.state.maxItems + 10})}
-                                style={{
-                                    backgroundColor: theme.colors.buttonPrimary,
-                                    color: theme.colors.white,
-                                    width: "230px",
-                                    height: "45px",
-                                    borderRadius: "30px",
-                                    border: "0px"
-                                }}
-                            >
-                                {"MOSTRA ALTRI"}
-                            </Button>
+                            {this.renderButtonLoad(sites.length, sitesLimited.length)}
                         </bootstrap.Row>
                     </bootstrap.Col>
                     {this.renderSidebar(sites)}

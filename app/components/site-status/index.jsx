@@ -13,7 +13,6 @@ import {Link} from "react-router";
 const styles = (theme) => ({
     siteWrp: {
         display: "block",
-        padding: "8px 10px",
         borderRadius: "0px",
         width: "100%",
         color: theme.colors.mainFontColor,
@@ -23,7 +22,6 @@ const styles = (theme) => ({
         border: `1px solid ${theme.colors.borderBoxMultisite}`
     },
     siteNameWrp: {
-        width: "calc(100% - 40px)",
         float: "left",
         height: "46px",
         color: theme.colors.mainFontColor,
@@ -32,19 +30,13 @@ const styles = (theme) => ({
         textOverflow: "ellipsis"
     },
     siteName: {
-        fontSize: "20px",
         display: "inline",
         fontWeight: "300"
     },
     siteAddress: {
-        fontSize: "15px",
         fontWeight: "300"
     },
-    siteSecondaryTextWrp: {
-        padding: "10px"
-    },
     siteSecondaryText: {
-        fontSize: "15px",
         fontWeight: "300",
         textAlign: "left",
         color: theme.colors.mainFontColor
@@ -85,13 +77,20 @@ const styles = (theme) => ({
 
 var SiteStatus = React.createClass({
     propTypes: {
+        fontNameSize: PropTypes.object,
+        fontNameWidth: PropTypes.object,
+        fontStatusSize: PropTypes.object,
+        iconStatusSize: PropTypes.string,
+        iconStatusStyle: PropTypes.object,
         isActive: PropTypes.bool,
         isOpen: PropTypes.bool,
         onClick: PropTypes.func,
         onClickAlarmChart: PropTypes.func,
         onClickPanel: PropTypes.func,
         onClose: PropTypes.func,
+        paddingStatusDiv: PropTypes.object,
         parameterStatus: PropTypes.object.isRequired,
+        shownInMap: PropTypes.bool,
         site: PropTypes.object.isRequired,
         siteAddress: PropTypes.string.isRequired,
         siteInfo: PropTypes.array.isRequired,
@@ -100,6 +99,22 @@ var SiteStatus = React.createClass({
     },
     contextTypes: {
         theme: PropTypes.object
+    },
+    getDefaultProps: function () {
+        return {
+            fontNameSize: "20px",
+            fontNameWidth: "calc(100% - 40px)",
+            fontStatusSize: "15px",
+            paddingStatusDiv: "8px 10px",
+            iconStatusSize: "44px",
+            iconStatusStyle: {
+                display: "inline-block",
+                borderRadius: "100%",
+                width: "38px",
+                height: "38px"
+            },
+            shownInMap: false
+        };
     },
     getTheme: function () {
         return this.context.theme || defaultTheme;
@@ -148,15 +163,15 @@ var SiteStatus = React.createClass({
     getColorByStatus: function (status) {
         const theme = this.getTheme();
         switch (status) {
-            case "ACTIVE":
+            case "active":
                 return theme.colors.iconActive;
-            case "ERROR":
+            case "error":
                 return theme.colors.iconError;
-            case "WARNING":
+            case "warning":
                 return theme.colors.iconWarning;
-            case "OUTOFRANGE":
+            case "unexpected":
                 return theme.colors.iconOutOfRange;
-            case "DISABLED":
+            case "disabled":
                 return theme.colors.iconDisabled;
             default:
                 return theme.colors.iconInactive;
@@ -164,7 +179,7 @@ var SiteStatus = React.createClass({
     },
     getTooltipByStatus: function (status) {
         switch (status) {
-            case "ACTIVE":
+            case "active":
                 return {
                     alarm: "Non ci sono allarmi attivi",
                     connection: "Connessione ok",
@@ -172,7 +187,7 @@ var SiteStatus = React.createClass({
                     remoteControl: "Sito telecontrollato",
                     comfort: "Livelli di comfort ottimali"
                 };
-            case "ERROR":
+            case "error":
                 return {
                     alarm: "Ci sono allarmi attivi",
                     connection: "Problemi di connessione",
@@ -180,7 +195,7 @@ var SiteStatus = React.createClass({
                     remoteControl: "Problemi al telecontrollo",
                     comfort: "Problemi ai livelli di comfort"
                 };
-            case "WARNING":
+            case "warning":
                 return {
                     alarm: "",
                     connection: "",
@@ -188,7 +203,7 @@ var SiteStatus = React.createClass({
                     remoteControl: "",
                     comfort: "Livelli di comfort non ottimali"
                 };
-            case "OUTOFRANGE":
+            case "unexpected":
                 return {
                     alarm: "",
                     connection: "",
@@ -196,7 +211,7 @@ var SiteStatus = React.createClass({
                     remoteControl: "",
                     comfort: ""
                 };
-            case "DISABLED":
+            case "disabled":
                 return {
                     alarm: "Allarmi disabilitati",
                     connection: "Stato connessione non disponibile",
@@ -228,7 +243,6 @@ var SiteStatus = React.createClass({
     },
 
     renderIconStatus: function (status) {
-        const theme = this.getTheme();
         return (
             <div className="icon-status">
                 <Radium.Style
@@ -247,14 +261,8 @@ var SiteStatus = React.createClass({
                     color={status.iconColor}
                     icon={status.icon}
                     key={status.key}
-                    size={"44px"}
-                    style={{
-                        display: "inline-block",
-                        width: "38px",
-                        height: "38px",
-                        borderRadius: "100%",
-                        backgroundColor: theme.colors.backgroundIconStatus
-                    }}
+                    size={this.props.iconStatusSize}
+                    style={{...this.props.iconStatusStyle, display: "inline-block"}}
                 />
             </div>
         );
@@ -266,12 +274,13 @@ var SiteStatus = React.createClass({
                 <bootstrap.OverlayTrigger
                     key={status.key}
                     overlay={
-                        <bootstrap.Tooltip className="buttonInfo" id={status.key} style={{zIndex: "100000 !important"}}>
+                        <bootstrap.Tooltip className="buttonInfo" id={status.key}>
                             {this.getTooltipByStatus(statoIcona)[status.key]}
                         </bootstrap.Tooltip>
                     }
                     placement="bottom"
                     rootClose={true}
+                    trigger={["hover", "click"]}
                 >
                     <span style={{
                         display: "inline-block",
@@ -308,11 +317,21 @@ var SiteStatus = React.createClass({
                 }}
             >
                 <div style={{width: "100%", clear: "both"}}>
-                    <div style={styles(theme).siteNameWrp}>
-                        <h2 style={{...styles(theme).siteName, ...itemStyleActive}}>
+                    <div style={{...this.props.fontNameWidth, ...styles(theme).siteNameWrp}}>
+                        <h2 style={{
+                            ...styles(theme).siteName,
+                            ...itemStyleActive,
+                            ...this.props.fontNameSize
+                        }}>
                             {`${this.props.siteName} / `}
                         </h2>
-                        <span style={{...styles(theme).siteAddress, ...itemStyleActive}}>{this.props.siteAddress}</span>
+                        <span style={{
+                            ...this.props.fontStatusSize,
+                            ...styles(theme).siteAddress,
+                            ...itemStyleActive
+                        }}>
+                            {this.props.siteAddress}
+                        </span>
                     </div>
                     {this.props.onClose ? (
                         <Button
@@ -382,7 +401,12 @@ var SiteStatus = React.createClass({
                     <div style={{width: "40px", height: "40px", float: "right"}}>
                         <Link
                             to={"/chart/"}
-                            style={styles(theme).buttonHistoricalConsumption}
+                            style={{
+                                ...styles(theme).buttonHistoricalConsumption,
+                                lineHeight: "44px",
+                                ...this.props.iconStatusStyle,
+                                backgroundColor: theme.colors.primary
+                            }}
                             onClick={() => this.props.onClickAlarmChart([id.value])}
                         >
                             <Icon
@@ -415,26 +439,26 @@ var SiteStatus = React.createClass({
                     <div style={{
                         border: `1px solid ${theme.colors.borderBoxAlarmMultisite}`,
                         minHeight: "95px",
-                        padding: "10px",
                         display: "flex",
                         flexDirection: "column",
                         justifyContent: "center",
                         alignItems: "center",
                         textAlign: "center",
-                        color: theme.colors.mainFontColor
+                        color: theme.colors.mainFontColor,
+                        ...this.props.paddingStatusDiv
                     }}>
                         <span style={{
                             fontWeight: "300",
-                            fontSize: "15px",
-                            lineHeight: "16px"
+                            lineHeight: "16px",
+                            ...this.props.fontStatusSize
                         }}>
                             {item.label}
                         </span>
                         <p style={{
                             fontWeight: "300",
-                            fontSize: "18px",
                             lineHeight: "30px",
-                            margin: "0"
+                            margin: "0",
+                            ...this.props.fontNameSize
                         }}>
                             {item.value}
                         </p>
@@ -455,8 +479,8 @@ var SiteStatus = React.createClass({
         const siteInfo = this.props.siteInfo.filter(x => x.value).map(item => {
             return (
                 <div key={item.key} style={{...styles(theme).singleInfoWrp, ...itemStyleOpen}}>
-                    <div style={{width: "100%", ...styles(theme).siteSecondaryTextWrp}}>
-                        <div style={styles(theme).siteSecondaryText}>
+                    <div style={{width: "100%", ...this.props.paddingStatusDiv}}>
+                        <div style={{...styles(theme).siteSecondaryText, ...this.props.fontStatusSize}}>
                             {`${item.label}: ${item.value}`}
                         </div>
                     </div>
@@ -486,7 +510,7 @@ var SiteStatus = React.createClass({
     render: function () {
         const theme = this.getTheme();
         return (
-            <bootstrap.Col xs={12} lg={6} style={{marginBottom: "20px"}}>
+            <bootstrap.Col xs={12} lg={this.props.shownInMap ? 12 : 6} style={{marginBottom: "20px"}}>
                 {this.renderPrimaryInfo()}
                 <bootstrap.Panel
                     className="site"
@@ -500,7 +524,7 @@ var SiteStatus = React.createClass({
                                 position: "absolute",
                                 left: "15px",
                                 right: "15px",
-                                zIndex: "100",
+                                zIndex: "1",
                                 border: "0",
                                 backgroundColor: theme.colors.transparent,
                                 padding: "0px",

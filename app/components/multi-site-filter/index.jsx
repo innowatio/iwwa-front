@@ -6,6 +6,7 @@ import {Collapse} from "antd";
 import moment from "moment";
 import Radium from "radium";
 import icons from "lib/icons";
+import get from "lodash.get";
 
 import {
     Icon,
@@ -81,7 +82,7 @@ var MultiSiteFilter = React.createClass({
             filterType: PropTypes.string
         })),
         onConfirm: PropTypes.func.isRequired,
-        onReset: PropTypes.func
+        onReset: PropTypes.func.isRequired
     },
     contextTypes: {
         theme: PropTypes.object
@@ -118,7 +119,7 @@ var MultiSiteFilter = React.createClass({
             return value <= selectedValue[1];
         } else if (stringValue.indexOf("meno di ", "")>-1) {
             value = this.cleanReangeValue(value);
-            return value >= selectedValue[1];
+            return  value>=selectedValue[1];
         }
         return value >= selectedValue[0] && value <= selectedValue[1];
     },
@@ -145,6 +146,14 @@ var MultiSiteFilter = React.createClass({
                     return true;
                 }
                 return value == selectedValue;
+            case "optionsStatus":
+                var val = get(value, "value", "missing");
+                if (selectedValue==null) {
+                    return true;
+                } else if (selectedValue.indexOf(",")>-1) {
+                    return R.contains(val, selectedValue.split(","));
+                }
+                return val == selectedValue;
         }
         if (!selectedValue) {
             return true;
@@ -177,15 +186,17 @@ var MultiSiteFilter = React.createClass({
                 };
             } else {
                 fn = (x) => {
-                    if (x[id]==undefined) { //if value to filter is not set in the site
-                        x[id]=undefined;
-                    }
-                    return this.getfilter(filterType, selectedValue, x[id]);
+                    const value = get(x, id, undefined);
+                    return this.getfilter(filterType, selectedValue, value);
                 };
             }
             item.filterFunc = fn;
         });
         this.props.onConfirm(filterList);
+    },
+
+    onResetFilter: function () {
+        this.props.onConfirm(null);
     },
 
     onChangeFilter: function (filter) {
@@ -203,6 +214,7 @@ var MultiSiteFilter = React.createClass({
         switch (value.filterType) {
             case "options":
             case "optionsTime":
+            case "optionsStatus":
                 return (
                     <OptionsFilter filter={value} onChange={this.onChangeFilter}/>
                 );
@@ -362,7 +374,7 @@ var MultiSiteFilter = React.createClass({
                     confirmButtonStyle={styles(this.getTheme()).confirmButtonStyle}
                     labelConfirmButton={"APPLICA FILTRI"}
                     onConfirm={this.onConfirmFilter}
-                    onReset={this.props.onReset}
+                    onReset={this.onResetFilter}
                 />
             </div>
         );
