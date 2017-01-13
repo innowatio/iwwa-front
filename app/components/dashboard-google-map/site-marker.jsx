@@ -10,7 +10,8 @@ const styles = (theme) => ({
         position: "absolute",
         left: -20 / 2,
         top: -20 / 2,
-        cursor: "help"
+        cursor: "help",
+        zIndex: 1
     },
     pinpoint: {
         width: "20px",
@@ -86,17 +87,12 @@ class SiteMarker extends Component {
                 }}
             >
                 {this.state.visible ? (
-                    <div style={{width: "350px"}}>
+                    <div style={{width: "320px", marginTop: "-20px", marginLeft: "10px"}}>
                         <SiteStatus
-                            fontNameSize={{fontSize: "14px"}}
-                            fontNameWidth={{width: "calc(100% - 80px)"}}
-                            fontStatusSize={{fontSize: "12px"}}
-                            iconStatusSize={"34px"}
                             iconStatusStyle={{
-                                width: "32px",
-                                height: "32px",
-                                lineHeight: "32px",
-                                borderRadius: "100%"
+                                width: "30px",
+                                height: "30px",
+                                lineHeight: "30px"
                             }}
                             isOpen={this.state.expanded}
                             key={site._id}
@@ -105,7 +101,6 @@ class SiteMarker extends Component {
                             onClose={() => this.setState({
                                 visible: false
                             })}
-                            paddingStatusDiv={{padding: "5px"}}
                             parameterStatus={site.status}
                             shownInMap={true}
                             site={site}
@@ -120,7 +115,7 @@ class SiteMarker extends Component {
                                     };
                                 })
                             }
-                            style={{padding: "5px 8px 0px 8px"}}
+                            style={{zIndex: "2", padding: "5px 8px 0px 8px"}}
                         />
                     </div>
                 ) : null}

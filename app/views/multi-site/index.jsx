@@ -170,9 +170,7 @@ const styles = ({colors}) => ({
     iconStatusStyle: {
         width: "38px",
         height: "38px",
-        lineHeight: "44px",
-        borderRadius: "100%",
-        backgroundColor: colors.backgroundIconStatus
+        lineHeight: "40px"
     }
 });
 
@@ -1025,10 +1023,6 @@ var MultiSite = React.createClass({
 
         return sites.map((site, index) => (
             <SiteStatus
-                fontNameSize={{fontSize: "20px"}}
-                fontNameWidth={{width: "calc(100% - 40px)"}}
-                fontStatusSize={{fontSize: "15px"}}
-                iconStatusSize={"44px"}
                 iconStatusStyle={styles(theme).iconStatusStyle}
                 isActive={!!this.state.selectedSites.find(id => id === site._id)}
                 isOpen={this.state.openPanel === site._id}
@@ -1036,7 +1030,6 @@ var MultiSite = React.createClass({
                 onClick={(id) => this.onSiteClick(id)}
                 onClickAlarmChart={this.props.selectSingleElectricalSensor}
                 onClickPanel={this.onClickPanel}
-                paddingStatusDiv={{padding: "8px 10px"}}
                 parameterStatus={site.status}
                 shownInMap={false}
                 site={site}

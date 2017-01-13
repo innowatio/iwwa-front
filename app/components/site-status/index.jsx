@@ -23,7 +23,7 @@ const styles = (theme) => ({
     },
     siteNameWrp: {
         float: "left",
-        height: "46px",
+        width: "calc(100% - 40px)",
         color: theme.colors.mainFontColor,
         marginBottom: "10px",
         overflow: "hidden",
@@ -47,29 +47,31 @@ const styles = (theme) => ({
         border: 0,
         backgroundColor: theme.colors.transparent
     },
-    siteTitle: {
-        display: "block",
-        width: "100%",
-        padding: "15px",
-        fontSize: "20px",
-        lineHeight: "20px",
-        fontWeight: "300",
-        color: theme.colors.mainFontColor
-    },
     singleInfoWrp: {
         borderBottom: `1px solid ${theme.colors.secondary}`,
         borderLeft: `1px solid ${theme.colors.secondary}`,
         borderRight: `1px solid ${theme.colors.secondary}`
     },
+    alarmBoxWrp: {
+        border: `1px solid ${theme.colors.borderBoxAlarmMultisite}`,
+        display: "flex",
+        flexDirection: "column",
+        justifyContent: "center",
+        alignItems: "center",
+        textAlign: "center",
+        color: theme.colors.mainFontColor
+        // padding: this.props.shownInMap ? "5px" : "8px 10px"
+    },
     buttonHistoricalConsumption: {
         display: "block",
-        height: "40px",
-        width: "40px",
-        lineHeight: "44px",
+        height: "38px",
+        width: "38px",
+        lineHeight: "40px",
         textAlign: "center",
         verticalAlign: "middle",
         borderRadius: "100%",
         padding: "0px",
+        marginTop: "3px",
         border: "0px",
         backgroundColor: theme.colors.primary
     }
@@ -77,10 +79,6 @@ const styles = (theme) => ({
 
 var SiteStatus = React.createClass({
     propTypes: {
-        fontNameSize: PropTypes.object,
-        fontNameWidth: PropTypes.object,
-        fontStatusSize: PropTypes.object,
-        iconStatusSize: PropTypes.string,
         iconStatusStyle: PropTypes.object,
         isActive: PropTypes.bool,
         isOpen: PropTypes.bool,
@@ -88,7 +86,6 @@ var SiteStatus = React.createClass({
         onClickAlarmChart: PropTypes.func,
         onClickPanel: PropTypes.func,
         onClose: PropTypes.func,
-        paddingStatusDiv: PropTypes.object,
         parameterStatus: PropTypes.object.isRequired,
         shownInMap: PropTypes.bool,
         site: PropTypes.object.isRequired,
@@ -102,16 +99,10 @@ var SiteStatus = React.createClass({
     },
     getDefaultProps: function () {
         return {
-            fontNameSize: "20px",
-            fontNameWidth: "calc(100% - 40px)",
-            fontStatusSize: "15px",
-            paddingStatusDiv: "8px 10px",
-            iconStatusSize: "44px",
             iconStatusStyle: {
-                display: "inline-block",
-                borderRadius: "100%",
                 width: "38px",
-                height: "38px"
+                height: "38px",
+                lineHeight: "40px"
             },
             shownInMap: false
         };
@@ -242,13 +233,33 @@ var SiteStatus = React.createClass({
         }
     },
 
+    renderButtonArrow: function () {
+        return (
+            <div style={{
+                content: "",
+                display: "block",
+                position: "absolute",
+                zIndex: "100",
+                left: "-13px",
+                top: "13px",
+                width: "0px",
+                height: "0px",
+                marginRight: "-1px",
+                borderStyle: "solid",
+                borderWidth: "8px 0 8px 13px",
+                WebkitTransform: "rotate(180deg)",
+                borderColor: "transparent transparent transparent " + this.getTheme().colors.backgroundBoxMultisite}} />
+        );
+    },
+
     renderIconStatus: function (status) {
+        const theme = this.getTheme();
         return (
             <div className="icon-status">
                 <Radium.Style
                     rules={{
                         "": {
-                            height: "40px",
+                            height: this.props.shownInMap ? "30px" : "40px",
                             marginTop: "3px"
                         },
                         ":before": {
@@ -261,8 +272,13 @@ var SiteStatus = React.createClass({
                     color={status.iconColor}
                     icon={status.icon}
                     key={status.key}
-                    size={this.props.iconStatusSize}
-                    style={{...this.props.iconStatusStyle, display: "inline-block"}}
+                    size={this.props.shownInMap ? "36px" : "44px"}
+                    style={{
+                        ...this.props.iconStatusStyle,
+                        borderRadius: "100%",
+                        display: "inline-block",
+                        backgroundColor: theme.colors.backgroundIconStatus
+                    }}
                 />
             </div>
         );
@@ -316,17 +332,21 @@ var SiteStatus = React.createClass({
                     backgroundColor: this.getSiteWrpBackground(theme)
                 }}
             >
+                {this.props.shownInMap ? this.renderButtonArrow() : undefined}
                 <div style={{width: "100%", clear: "both"}}>
-                    <div style={{...this.props.fontNameWidth, ...styles(theme).siteNameWrp}}>
+                    <div style={{
+                        height: this.props.shownInMap ? "36px" : "46px",
+                        ...styles(theme).siteNameWrp
+                    }}>
                         <h2 style={{
+                            fontSize: this.props.shownInMap ? "14px" : "20px",
                             ...styles(theme).siteName,
-                            ...itemStyleActive,
-                            ...this.props.fontNameSize
+                            ...itemStyleActive
                         }}>
                             {`${this.props.siteName} / `}
                         </h2>
                         <span style={{
-                            ...this.props.fontStatusSize,
+                            fontSize: this.props.shownInMap ? "12px" : "15px",
                             ...styles(theme).siteAddress,
                             ...itemStyleActive
                         }}>
@@ -366,7 +386,10 @@ var SiteStatus = React.createClass({
                             evt.stopPropagation();
                             this.props.onClickPanel(id);
                         }}
-                        style={styles(theme).iconOptionBtn}
+                        style={{
+                            ...styles(theme).iconOptionBtn,
+                            marginTop: this.props.shownInMap ? "10px" : "0"
+                        }}
                     >
                         <Radium.Style
                             rules={{
@@ -389,35 +412,30 @@ var SiteStatus = React.createClass({
                         />
                     </Button>
                 </div>
-                <div style={{
-                    width: "100%",
-                    display: "flex",
-                    justifyContent: "space-between",
-                    alignItems: "center"
-                }}>
-                    <div style={{float: "left", lineHeight: "40px", height: "45px"}}>
-                        {this.renderSiteStatus()}
-                    </div>
-                    <div style={{width: "40px", height: "40px", float: "right"}}>
-                        <Link
-                            to={"/chart/"}
-                            style={{
-                                ...styles(theme).buttonHistoricalConsumption,
-                                lineHeight: "44px",
-                                ...this.props.iconStatusStyle,
-                                backgroundColor: theme.colors.primary
-                            }}
-                            onClick={() => this.props.onClickAlarmChart([id.value])}
-                        >
-                            <Icon
-                                color={theme.colors.iconSiteButton}
-                                icon={"history"}
-                                size={"22px"}
-                                style={{verticalAlign: "middle"}}
-                            />
-                        </Link>
-                    </div>
+
+                <div style={{float: "left", lineHeight: "40px", height: "45px"}}>
+                    {this.renderSiteStatus()}
                 </div>
+                <div style={{
+                    display: this.props.shownInMap ? "none" : "block",
+                    width: "40px",
+                    height: "45px",
+                    float: "right"
+                }}>
+                    <Link
+                        to={"/chart/"}
+                        style={styles(theme).buttonHistoricalConsumption}
+                        onClick={() => this.props.onClickAlarmChart([id.value])}
+                    >
+                        <Icon
+                            color={theme.colors.iconSiteButton}
+                            icon={"history"}
+                            size={"22px"}
+                            style={{verticalAlign: "middle"}}
+                        />
+                    </Link>
+                </div>
+                <div style={{clear: "both"}}></div>
             </div>
         );
     },
@@ -437,20 +455,13 @@ var SiteStatus = React.createClass({
                         scopeSelector=".col"
                     />
                     <div style={{
-                        border: `1px solid ${theme.colors.borderBoxAlarmMultisite}`,
-                        minHeight: "95px",
-                        display: "flex",
-                        flexDirection: "column",
-                        justifyContent: "center",
-                        alignItems: "center",
-                        textAlign: "center",
-                        color: theme.colors.mainFontColor,
-                        ...this.props.paddingStatusDiv
+                        ...styles(theme).alarmBoxWrp,
+                        minHeight: this.props.shownInMap ? "75px" : "95px"
                     }}>
                         <span style={{
                             fontWeight: "300",
                             lineHeight: "16px",
-                            ...this.props.fontStatusSize
+                            fontSize: this.props.shownInMap ? "12px" : "15px"
                         }}>
                             {item.label}
                         </span>
@@ -458,7 +469,7 @@ var SiteStatus = React.createClass({
                             fontWeight: "300",
                             lineHeight: "30px",
                             margin: "0",
-                            ...this.props.fontNameSize
+                            fontSize: this.props.shownInMap ? "14px" : "16px"
                         }}>
                             {item.value}
                         </p>
@@ -479,8 +490,14 @@ var SiteStatus = React.createClass({
         const siteInfo = this.props.siteInfo.filter(x => x.value).map(item => {
             return (
                 <div key={item.key} style={{...styles(theme).singleInfoWrp, ...itemStyleOpen}}>
-                    <div style={{width: "100%", ...this.props.paddingStatusDiv}}>
-                        <div style={{...styles(theme).siteSecondaryText, ...this.props.fontStatusSize}}>
+                    <div style={{
+                        width: "100%",
+                        padding: this.props.shownInMap ? "5px" : "6px 10px"
+                    }}>
+                        <div style={{
+                            fontSize: this.props.shownInMap ? "12px" : "15px",
+                            ...styles(theme).siteSecondaryText
+                        }}>
                             {`${item.label}: ${item.value}`}
                         </div>
                     </div>
@@ -536,12 +553,6 @@ var SiteStatus = React.createClass({
                             },
                             ".panel-collapse > .panel-body": {
                                 borderTop: "0px !important"
-                            },
-                            ".panel-title > a": {
-                                ...styles(theme).siteTitle
-                            },
-                            ".panel-title": {
-                                marginBottom: "0px !important"
                             }
                         }}
                         scopeSelector=".site"
