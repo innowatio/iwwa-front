@@ -100,7 +100,7 @@ var ButtonGroupSelect = React.createClass({
                 position: "absolute",
                 zIndex: "100",
                 left: "100%",
-                top: "20px",
+                top: "18px",
                 width: "0px",
                 height: "0px",
                 marginLeft: "-1px",

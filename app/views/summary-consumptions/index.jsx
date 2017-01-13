@@ -462,7 +462,7 @@ var SummaryConsumptions = React.createClass({
             return  (
                 <div style={{
                     ...comparisonDiv(colors),
-                    padding:"12",
+                    padding: "12px",
                     fontSize: "16px",
                     fontWeight: "300",
                     textAlign: "center"

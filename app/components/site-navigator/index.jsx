@@ -1,9 +1,9 @@
-var bootstrap       = require("react-bootstrap");
-var Immutable       = require("immutable");
-var IPropTypes      = require("react-immutable-proptypes");
-var R               = require("ramda");
-var Radium          = require("radium");
-var React           = require("react");
+import * as bootstrap from "react-bootstrap";
+import Immutable from "immutable";
+import IPropTypes from "react-immutable-proptypes";
+import R from "ramda";
+import Radium from "radium";
+import React from "react";
 
 import components from "components";
 import {defaultTheme} from "lib/theme";
@@ -13,20 +13,20 @@ import mergeSiteSensors from "lib/merge-site-sensors";
 const itemsStyle = (theme) => (R.merge(styles(theme).buttonBasicStyle, {
     background: theme.colors.primary,
     color: theme.colors.white,
-    fontSize: "18px",
+    fontSize: "calc(5px + .9vw)",
     fontWeight: "300",
     border: "0px",
     marginTop: "10px",
     width: "90%",
     minWidth: "100px",
-    padding: "14px",
-    borderRadius: "20px"
+    padding: "16px",
+    borderRadius: "15px"
 }));
 
 const itemsStyleActive = ({colors}) => ({
     background: colors.buttonPrimary,
     color: colors.white,
-    borderRadius: "20px",
+    borderRadius: "15px",
     display: "inline-block",
     position: "relative"
 });
@@ -183,6 +183,7 @@ var SiteNavigator = React.createClass({
         const theme = this.getTheme();
         return (
             <div style={{padding: "20px"}}>
+
                 <h3 className="text-center" style={styles(theme).titleFullScreenModal}>
                     {this.props.title}
                 </h3>
@@ -258,9 +259,8 @@ var SiteNavigator = React.createClass({
                         style={{
                             position: "absolute",
                             overflow: "auto",
-                            right: "-15px",
-                            padding: "15px 20px",
-                            margin: "0px 10px",
+                            right: "-25px",
+                            margin: "0px 25px",
                             width: "100%",
                             height: "100%"
                         }}
@@ -272,7 +272,6 @@ var SiteNavigator = React.createClass({
                                     top: "0px",
                                     bottom: "0px",
                                     left: "0px",
-                                    right: "-20px",
                                     overflow: "auto",
                                     width: "100%"
                                 }
@@ -284,38 +283,56 @@ var SiteNavigator = React.createClass({
                 </bootstrap.Col>
                 <bootstrap.Col
                     style={{
+                        position: "relative",
                         overflow: "hidden",
                         height: `calc(100vh - ${heightBody})`,
                         minHeight: "350px",
-                        borderRadius: "20px",
+                        borderRadius: "15px",
                         border: `1px solid ${theme.colors.borderContentModal}`,
                         backgroundColor: theme.colors.backgroundContentModal
                     }}
                     xs={8}
                 >
-                    <div
-                        className="site-navigator-child"
-                        style={{
-                            position: "absolute",
-                            overflow: "auto",
-                            right: "-15px",
-                            padding: "15px 20px",
-                            width: "100%",
-                            height: "100%"
-                        }}
-                    >
-                        <Radium.Style
-                            rules={{
-                                ".btn-group-vertical": {
-                                    width: "30%",
-                                    minWidth: "100px"
-                                },
-                                "button.btn": itemsStyle(theme),
-                                "button.btn.active": itemsStyleActive
+                    <div style={{
+                        position: "absolute",
+                        overflow: "auto",
+                        top: "10px",
+                        bottom: "10px",
+                        left: "0px",
+                        right: "-25px"
+                    }}>
+                        <div
+                            className="site-navigator-child"
+                            style={{
+                                position: "absolute",
+                                overflow: "auto",
+                                right: "-25px",
+                                bottom: "-25px",
+                                top: "0px",
+                                left: "0px",
+                                padding: "15px 20px",
+                                width: "120%",
+                                height: "100%"
                             }}
-                            scopeSelector=".site-navigator-child"
-                        />
-                        {this.renderSitesChildren()}
+                        >
+                            <Radium.Style
+                                rules={{
+                                    ".btn-group-vertical": {
+                                        width: "33%",
+                                        clear: "both",
+                                        minWidth: "100px",
+                                        height: "100%"
+                                    },
+                                    "button.btn": itemsStyle(theme),
+                                    "button.btn.active": itemsStyleActive,
+                                    "button.btn p": {
+                                        whiteSpace: "normal !important"
+                                    }
+                                }}
+                                scopeSelector=".site-navigator-child"
+                            />
+                            {this.renderSitesChildren()}
+                        </div>
                     </div>
                 </bootstrap.Col>
             </div>

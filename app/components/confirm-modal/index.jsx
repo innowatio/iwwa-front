@@ -163,6 +163,7 @@ var ConfirmModal = React.createClass({
                             borderRadius: "0px",
                             height: "100%",
                             width: "100%",
+                            minWidth: "768px",
                             overflow: "auto"
                         },
                         ".modal-header": {
