@@ -340,52 +340,28 @@ var MultiSite = React.createClass({
 
     getSiteAlarmsInfo: function (site) {
 
-        const today = moment().startOf("day");
+        const threshold = moment.utc().startOf("day").valueOf();
 
-        const todayAlarms = this.getSiteAlarmsAggregates(site, today.valueOf()).filter(x => x.triggered);
-
-        const nightHours = [0, 1, 2, 3, 4, 5];
-
-        const alarmsInfo = todayAlarms.reduce((state, alarm) => {
-            const times = alarm.measurementTimes.split(",");
-            const values = alarm.measurementValues.split(",");
-
-            const measurements = times.map((time, index) => {
-                return {
-                    time: parseInt(time),
-                    value: parseFloat(values[index])
-                };
-            }).filter(x => 1 === x.value);
-
-            const nightTimes = measurements.filter(x => {
-                return R.contains(moment(x.time).hours(), nightHours);
-            });
-
+        const alarms = get(site, "status.alarms", 0);
+        if (!alarms || alarms.time < threshold) {
             return {
-                total: state.total + measurements.length,
-                night: state.night + nightTimes.length
+                day: 0,
+                night: 0
             };
-        }, {
-            total: 0,
-            night: 0
-        });
-
-        return {
-            day: alarmsInfo.total - alarmsInfo.night,
-            night: alarmsInfo.night
-        };
+        } else {
+            return alarms.count;
+        }
     },
 
     getSiteAlarmStatus: function (site) {
-
         const threshold = moment.utc().valueOf() - 86400000;
 
-        const siteAlarms = this.getSiteAlarmsAggregates(site, threshold);
-        if (siteAlarms.length === 0) {
-            return "MISSING";
+        const siteAlarms = get(site, "status.alarms");
+        if (!siteAlarms) {
+            return "missing";
         }
 
-        return siteAlarms.find(x => x.triggered) ? "error" : "active";
+        return siteAlarms.time > threshold ? siteAlarms.value : "missing";
     },
 
     getSiteConnectionStatus: function (site) {
