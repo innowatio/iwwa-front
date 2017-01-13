@@ -45,6 +45,7 @@ var HighCharts = React.createClass({
         this.setZoom();
         ReactHighcharts.Highcharts.setOptions({
             global: {
+                timezoneOffset: new Date().getTimezoneOffset(),
                 useUTC: false
             }
         });
@@ -104,12 +105,12 @@ var HighCharts = React.createClass({
     getWeekendOverlay: function () {
         var weekendOverlay = [];
         const date = this.props.dateFilter || this.props.dateCompare[0];
-        const dayInFilter = moment.utc(date.end).diff(moment.utc(date.start), "days");
-        const firstSaturday = moment.utc(date.start).isoWeekday(6);
+        const dayInFilter = moment(date.end).diff(moment(date.start), "days");
+        const firstSaturday = moment(date.start).isoWeekday(6);
         for (var i=0; i<=dayInFilter/7; i++) {
             weekendOverlay.push({
-                from: moment.utc(firstSaturday).add({day: i * 7}).startOf("day").valueOf(),
-                to: moment.utc(firstSaturday).add({day: 1 + (i * 7)}).endOf("day").valueOf(),
+                from: moment(firstSaturday).add({day: i * 7}).startOf("day").valueOf(),
+                to: moment(firstSaturday).add({day: 1 + (i * 7)}).endOf("day").valueOf(),
                 color: this.getTheme().colors.graphUnderlay
             });
         }
@@ -129,7 +130,7 @@ var HighCharts = React.createClass({
     },
     getAlarmsSeries: function (measurements) {
         const {alarmsData} = this.props;
-        const alarmsSeries = alarmsData.map(alarm => {
+        return alarmsData.map(alarm => {
             const values = alarm.measurementValues.split(",");
             const data = alarm.measurementTimes.split(",").map((time, index) => {
                 const measurement = measurements.find(x => x[0] >= time);
@@ -148,7 +149,6 @@ var HighCharts = React.createClass({
                 data
             };
         });
-        return alarmsSeries;
     },
     getSeries: function () {
         const {isComparationActive, isDateCompareActive} = this.props;
@@ -172,7 +172,6 @@ var HighCharts = React.createClass({
                 ]
             }
         }));
-
         const alarmSeries = this.getAlarmsSeries(series[0] ? series[0].data : []);
 
         return [
@@ -182,7 +181,7 @@ var HighCharts = React.createClass({
     },
     getConfig: function () {
         const {colors} = this.getTheme();
-        let config = {
+        return {
             chart: {
                 backgroundColor: colors.background,
                 events: {
@@ -226,7 +225,6 @@ var HighCharts = React.createClass({
             // Override with custom config
             ...this.props.config
         };
-        return config;
     },
     render: function () {
         return (

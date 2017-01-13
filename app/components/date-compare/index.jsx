@@ -36,7 +36,7 @@ var DateCompare = React.createClass({
     },
     selectedCheckboxDate: function (allowedValue) {
         this.props.onChange({
-            dateOne: moment.utc().valueOf(),
+            dateOne: moment().valueOf(),
             // Set the default period
             period: allowedValue
         });

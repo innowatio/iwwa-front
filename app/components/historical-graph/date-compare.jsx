@@ -35,8 +35,8 @@ var DateCompare = React.createClass({
     getXLabels: function () {
         const dates = this.getDatesFromChartState();
         return [
-            moment.utc(dates[0].start).format("DD-MMM-YYYY"),
-            moment.utc(dates[1].start).format("DD-MMM-YYYY")
+            moment(dates[0].start).format("DD-MMM-YYYY"),
+            moment(dates[1].start).format("DD-MMM-YYYY")
         ];
     },
     render: function () {

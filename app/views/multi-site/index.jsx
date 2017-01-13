@@ -350,7 +350,7 @@ var MultiSite = React.createClass({
 
     getSiteAlarmStatus: function (site) {
 
-        const threshold = moment.utc().valueOf() - 86400000;
+        const threshold = moment().valueOf() - 86400000;
 
         const siteAlarms = this.getSiteAlarmsAggregates(site, threshold);
         if (siteAlarms.length === 0) {
@@ -363,7 +363,7 @@ var MultiSite = React.createClass({
     getSiteConnectionStatus: function (site) {
 
         const olderThan = 1800000;
-        const threshold = moment.utc().valueOf() - olderThan;
+        const threshold = moment().valueOf() - olderThan;
 
         const realtimeAggregatesList = this.props.collections.get("readings-real-time-aggregates") || Immutable.List();
         const realtimeAggregates = realtimeAggregatesList.map(x => x.toJS()).toArray();
@@ -430,7 +430,7 @@ var MultiSite = React.createClass({
     },
 
     getSiteComfortStatus: function (site) {
-        const threshold = moment.utc().valueOf() - 3600000;
+        const threshold = moment().valueOf() - 3600000;
         const comfort = this.getRealtimeAggregate(site, "comfortLevel", x => {
             return x.measurementTime >= threshold;
         });

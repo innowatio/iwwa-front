@@ -22,7 +22,7 @@ export function getStringPeriod (date) {
     if (date.type === "dateCompare") {
         return getDateComparePeriod(date);
     } else {
-        return `${moment.utc(date.end).format("MMMM YYYY")}`;
+        return `${moment(date.end).format("MMMM YYYY")}`;
     }
 }
 
@@ -35,7 +35,7 @@ function getSiteName (siteId, collections) {
 }
 
 function getDateComparePeriod (date) {
-    const momentNow = moment.utc();
+    const momentNow = moment();
     switch (date.period.key) {
         case "7 days before":
             return `${momentNow.format("DD MMMM YYYY")} CON ${momentNow.subtract({days: 7}).format("DD MMMM YYYY")}`;
@@ -43,9 +43,9 @@ function getDateComparePeriod (date) {
         case "years":
             return `${momentNow.format("MMMM YYYY")} CON ${momentNow.subtract(1, date.period.key).format("MMMM YYYY")}`;
         case "week":
-            return `DAL ${moment.utc().subtract({days: 14}).format("DD MMMM YYYY")}
-            AL ${moment.utc().subtract({days: 7}).format("DD MMMM YYYY")}` +
-            ` E DAL ${moment.utc().subtract({days: 7}).format("DD MMMM YYYY")}
+            return `DAL ${moment().subtract({days: 14}).format("DD MMMM YYYY")}
+            AL ${moment().subtract({days: 7}).format("DD MMMM YYYY")}` +
+            ` E DAL ${moment().subtract({days: 7}).format("DD MMMM YYYY")}
             AD OGGI`;
         default:
             return `${momentNow.format("DD MMMM YYYY")} CON ${momentNow.subtract(1, date.period.key).format("DD MMMM YYYY")}`;

@@ -33,10 +33,10 @@ describe("`getDateRangesCompare` function", () => {
         it("the two object in array begin in Monday and end in Sunday", () => {
             inputArray.forEach(inputObj => {
                 const ret = getDateRangesCompare(inputObj);
-                expect(moment.utc(ret[0].start).weekday()).to.equal(1);
-                expect(moment.utc(ret[1].start).weekday()).to.equal(1);
-                expect(moment.utc(ret[0].end).weekday()).to.equal(0);
-                expect(moment.utc(ret[1].end).weekday()).to.equal(0);
+                expect(moment(ret[0].start).weekday()).to.equal(1);
+                expect(moment(ret[1].start).weekday()).to.equal(1);
+                expect(moment(ret[0].end).weekday()).to.equal(0);
+                expect(moment(ret[1].end).weekday()).to.equal(0);
             });
         });
 
@@ -47,10 +47,10 @@ describe("`getDateRangesCompare` function", () => {
                 *   Add one week because the start/end can been 1 week in the
                 *   previous/following month.
                 */
-                const startFirstObj = moment.utc(inputObj.dateOne);
+                const startFirstObj = moment(inputObj.dateOne);
                 expect(ret[0].start).to.be.at.most(startFirstObj.startOf("month").valueOf());
                 expect(ret[0].end).to.be.at.least(startFirstObj.endOf("month").valueOf());
-                const startSecondObj = moment.utc(inputObj.dateOne).subtract({year: 1});
+                const startSecondObj = moment(inputObj.dateOne).subtract({year: 1});
                 expect(ret[1].start).to.be.at.most(startSecondObj.startOf("month").valueOf());
                 expect(ret[1].end).to.be.at.least(startSecondObj.endOf("month").valueOf());
             });
@@ -63,11 +63,11 @@ describe("`getDateRangesCompare` function", () => {
                 *   Add one week because the start/end can be 1 week in the
                 *   previous/following month.
                 */
-                expect(moment.utc(ret[0].start).add({week: 1}).format("YYYY-MM")).to.be.equal(
-                    moment.utc(inputObj.dateOne).format("YYYY-MM")
+                expect(moment(ret[0].start).add({week: 1}).format("YYYY-MM")).to.be.equal(
+                    moment(inputObj.dateOne).format("YYYY-MM")
                 );
-                expect(moment.utc(ret[1].start).add({weeks: 2}).format("YYYY-MM")).to.be.equal(
-                    moment.utc(inputObj.dateOne).subtract({year: 1}).startOf("month").format("YYYY-MM")
+                expect(moment(ret[1].start).add({weeks: 2}).format("YYYY-MM")).to.be.equal(
+                    moment(inputObj.dateOne).subtract({year: 1}).startOf("month").format("YYYY-MM")
                 );
             });
         });
@@ -100,11 +100,11 @@ describe("`getDateRangesCompare` function", () => {
         it("the two object in array begin in Monday and end in Sunday", () => {
             inputArray.forEach(inputObj => {
                 const ret = getDateRangesCompare(inputObj);
-                expect(moment.utc(ret[0].start).weekday()).to.equal(1);
-                expect(moment.utc(ret[1].start).weekday()).to.equal(1);
+                expect(moment(ret[0].start).weekday()).to.equal(1);
+                expect(moment(ret[1].start).weekday()).to.equal(1);
                 // Zero is equal to Sunday
-                expect(moment.utc(ret[0].end).weekday()).to.equal(0);
-                expect(moment.utc(ret[1].end).weekday()).to.equal(0);
+                expect(moment(ret[0].end).weekday()).to.equal(0);
+                expect(moment(ret[1].end).weekday()).to.equal(0);
             });
         });
 
@@ -115,10 +115,10 @@ describe("`getDateRangesCompare` function", () => {
                 *   Add one week because the start/end can been 1 week in the
                 *   previous/following month.
                 */
-                const startFirstObj = moment.utc(inputObj.dateOne);
+                const startFirstObj = moment(inputObj.dateOne);
                 expect(ret[0].start).to.be.at.most(startFirstObj.startOf("month").valueOf());
                 expect(ret[0].end).to.be.at.least(startFirstObj.endOf("month").valueOf());
-                const startSecondObj = moment.utc(inputObj.dateOne).subtract({month: 1});
+                const startSecondObj = moment(inputObj.dateOne).subtract({month: 1});
                 expect(ret[1].start).to.be.at.most(startSecondObj.startOf("month").valueOf());
                 expect(ret[1].end).to.be.at.least(startSecondObj.endOf("month").valueOf());
             });
@@ -152,11 +152,11 @@ describe("`getDateRangesCompare` function", () => {
         it("return at the first place in array today, and in the second yesterday", () => {
             inputArray.forEach(inputObj => {
                 const ret = getDateRangesCompare(inputObj);
-                expect(moment.utc(ret[0].start).format("DD")).to.equal(
-                    moment.utc(inputObj.dateOne).format("DD")
+                expect(moment(ret[0].start).format("DD")).to.equal(
+                    moment(inputObj.dateOne).format("DD")
                 );
-                expect(moment.utc(ret[1].start).format("DD")).to.equal(
-                    moment.utc(inputObj.dateOne).subtract({day: 1}).startOf("day").format("DD")
+                expect(moment(ret[1].start).format("DD")).to.equal(
+                    moment(inputObj.dateOne).subtract({day: 1}).startOf("day").format("DD")
                 );
             });
         });
@@ -164,11 +164,11 @@ describe("`getDateRangesCompare` function", () => {
         it("return at the first place in array today [from 00:00 to 23:59]", () => {
             inputArray.forEach(inputObj => {
                 const ret = getDateRangesCompare(inputObj);
-                expect(moment.utc(ret[0].start).format("DD-HH:mm")).to.equal(
-                    moment.utc(inputObj.dateOne).startOf("day").format("DD-HH:mm")
+                expect(moment(ret[0].start).format("DD-HH:mm")).to.equal(
+                    moment(inputObj.dateOne).startOf("day").format("DD-HH:mm")
                 );
-                expect(moment.utc(ret[0].end).endOf("day").format("DD-HH:mm")).to.equal(
-                    moment.utc(inputObj.dateOne).endOf("day").format("DD-HH:mm")
+                expect(moment(ret[0].end).endOf("day").format("DD-HH:mm")).to.equal(
+                    moment(inputObj.dateOne).endOf("day").format("DD-HH:mm")
                 );
             });
         });
@@ -176,11 +176,11 @@ describe("`getDateRangesCompare` function", () => {
         it("return at the second place in array yesterday [from 00:00 to 23:59]", () => {
             inputArray.forEach(inputObj => {
                 const ret = getDateRangesCompare(inputObj);
-                expect(moment.utc(ret[1].start).format("DD-HH:mm")).to.equal(
-                    moment.utc(inputObj.dateOne).subtract({day: 1}).startOf("day").format("DD-HH:mm")
+                expect(moment(ret[1].start).format("DD-HH:mm")).to.equal(
+                    moment(inputObj.dateOne).subtract({day: 1}).startOf("day").format("DD-HH:mm")
                 );
-                expect(moment.utc(ret[1].end).endOf("day").format("DD-HH:mm")).to.equal(
-                    moment.utc(inputObj.dateOne).subtract({day: 1}).endOf("day").format("DD-HH:mm")
+                expect(moment(ret[1].end).endOf("day").format("DD-HH:mm")).to.equal(
+                    moment(inputObj.dateOne).subtract({day: 1}).endOf("day").format("DD-HH:mm")
                 );
             });
         });
@@ -213,17 +213,17 @@ describe("`getDateRangesCompare` function", () => {
         it("return at the first place in array today, and in the second the same day one week before", () => {
             inputArray.forEach(inputObj => {
                 const ret = getDateRangesCompare(inputObj);
-                expect(moment.utc(ret[0].start).format("DD")).to.equal(
-                    moment.utc(inputObj.dateOne).format("DD")
+                expect(moment(ret[0].start).format("DD")).to.equal(
+                    moment(inputObj.dateOne).format("DD")
                 );
-                expect(moment.utc(ret[0].start).weekday()).to.equal(
-                    moment.utc(inputObj.dateOne).weekday()
+                expect(moment(ret[0].start).weekday()).to.equal(
+                    moment(inputObj.dateOne).weekday()
                 );
-                expect(moment.utc(ret[1].start).format("DD")).to.equal(
-                    moment.utc(inputObj.dateOne).subtract({week: 1}).startOf("day").format("DD")
+                expect(moment(ret[1].start).format("DD")).to.equal(
+                    moment(inputObj.dateOne).subtract({week: 1}).startOf("day").format("DD")
                 );
-                expect(moment.utc(ret[1].start).weekday()).to.equal(
-                    moment.utc(inputObj.dateOne).subtract({week: 1}).startOf("day").weekday()
+                expect(moment(ret[1].start).weekday()).to.equal(
+                    moment(inputObj.dateOne).subtract({week: 1}).startOf("day").weekday()
                 );
             });
         });
@@ -231,11 +231,11 @@ describe("`getDateRangesCompare` function", () => {
         it("return at the first place in array today [from 00:00 to 23:59]", () => {
             inputArray.forEach(inputObj => {
                 const ret = getDateRangesCompare(inputObj);
-                expect(moment.utc(ret[0].start).format("DD-HH:mm")).to.equal(
-                    moment.utc(inputObj.dateOne).startOf("day").format("DD-HH:mm")
+                expect(moment(ret[0].start).format("DD-HH:mm")).to.equal(
+                    moment(inputObj.dateOne).startOf("day").format("DD-HH:mm")
                 );
-                expect(moment.utc(ret[0].end).endOf("day").format("DD-HH:mm")).to.equal(
-                    moment.utc(inputObj.dateOne).endOf("day").format("DD-HH:mm")
+                expect(moment(ret[0].end).endOf("day").format("DD-HH:mm")).to.equal(
+                    moment(inputObj.dateOne).endOf("day").format("DD-HH:mm")
                 );
             });
         });
@@ -243,11 +243,11 @@ describe("`getDateRangesCompare` function", () => {
         it("return at the second place in array the same day as today one week before [from 00:00 to 23:59]", () => {
             inputArray.forEach(inputObj => {
                 const ret = getDateRangesCompare(inputObj);
-                expect(moment.utc(ret[1].start).format("DD-HH:mm")).to.equal(
-                    moment.utc(inputObj.dateOne).subtract({week: 1}).startOf("day").format("DD-HH:mm")
+                expect(moment(ret[1].start).format("DD-HH:mm")).to.equal(
+                    moment(inputObj.dateOne).subtract({week: 1}).startOf("day").format("DD-HH:mm")
                 );
-                expect(moment.utc(ret[1].end).endOf("day").format("DD-HH:mm")).to.equal(
-                    moment.utc(inputObj.dateOne).subtract({week: 1}).endOf("day").format("DD-HH:mm")
+                expect(moment(ret[1].end).endOf("day").format("DD-HH:mm")).to.equal(
+                    moment(inputObj.dateOne).subtract({week: 1}).endOf("day").format("DD-HH:mm")
                 );
             });
         });
@@ -280,28 +280,28 @@ describe("`getDateRangesCompare` function", () => {
         it("return in the first place of the array the current week", () => {
             inputArray.forEach(inputObj => {
                 const ret = getDateRangesCompare(inputObj);
-                expect(moment.utc(ret[0].start).format("DD")).to.equal(
-                    moment.utc(inputObj.dateOne).startOf("isoWeek").format("DD")
+                expect(moment(ret[0].start).format("DD")).to.equal(
+                    moment(inputObj.dateOne).startOf("isoWeek").format("DD")
                 );
-                expect(moment.utc(ret[0].start).isoWeekday()).to.equal(1);
-                expect(moment.utc(ret[0].end).format("DD")).to.equal(
-                    moment.utc(inputObj.dateOne).endOf("isoWeek").format("DD")
+                expect(moment(ret[0].start).isoWeekday()).to.equal(1);
+                expect(moment(ret[0].end).format("DD")).to.equal(
+                    moment(inputObj.dateOne).endOf("isoWeek").format("DD")
                 );
-                expect(moment.utc(ret[0].end).isoWeekday()).to.equal(7);
+                expect(moment(ret[0].end).isoWeekday()).to.equal(7);
             });
         });
 
         it("return in the second place of the array the following week", () => {
             inputArray.forEach(inputObj => {
                 const ret = getDateRangesCompare(inputObj);
-                expect(moment.utc(ret[1].start).format("DD")).to.equal(
-                    moment.utc(inputObj.dateOne).subtract({week: 1}).startOf("isoWeek").format("DD")
+                expect(moment(ret[1].start).format("DD")).to.equal(
+                    moment(inputObj.dateOne).subtract({week: 1}).startOf("isoWeek").format("DD")
                 );
-                expect(moment.utc(ret[1].start).isoWeekday()).to.equal(1);
-                expect(moment.utc(ret[1].end).format("DD")).to.equal(
-                    moment.utc(inputObj.dateOne).subtract({week: 1}).endOf("isoWeek").format("DD")
+                expect(moment(ret[1].start).isoWeekday()).to.equal(1);
+                expect(moment(ret[1].end).format("DD")).to.equal(
+                    moment(inputObj.dateOne).subtract({week: 1}).endOf("isoWeek").format("DD")
                 );
-                expect(moment.utc(ret[1].end).isoWeekday()).to.equal(7);
+                expect(moment(ret[1].end).isoWeekday()).to.equal(7);
             });
         });
 

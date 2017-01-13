@@ -11,8 +11,8 @@ describe("HighCharts component", () => {
         const instance = {
             props: {
                 dateFilter: {
-                    start: moment.utc().startOf("month"), // Thu Jan 01 1970 01:00:00 GMT+0100 (CET)
-                    end: moment.utc().endOf("month") // Sun Feb 01 1970 00:59:59 GMT+0100 (CET)
+                    start: moment().startOf("month"), // Thu Jan 01 1970 01:00:00 GMT+0100 (CET)
+                    end: moment().endOf("month") // Sun Feb 01 1970 00:59:59 GMT+0100 (CET)
                 }
             },
             getTheme: sinon.stub().returns({colors: {
@@ -46,8 +46,8 @@ describe("HighCharts component", () => {
         it("should return an the correct object from saturday to sunday", () => {
             const ret = getWeekendOverlay.call(instance);
             ret.forEach(dataObject => {
-                expect(moment.utc(dataObject.from).isoWeekday()).to.equal(6);
-                expect(moment.utc(dataObject.to).isoWeekday()).to.equal(7);
+                expect(moment(dataObject.from).isoWeekday()).to.equal(6);
+                expect(moment(dataObject.to).isoWeekday()).to.equal(7);
                 expect(dataObject.color).to.equal("color");
             });
         });

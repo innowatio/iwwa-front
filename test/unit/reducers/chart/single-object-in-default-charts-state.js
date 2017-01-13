@@ -165,10 +165,10 @@ describe("`chart` reducer", () => {
                     }
                 };
                 const ret = charts(chartState, valuePassedFromAction);
-                const startOne = moment.utc(valuePassedFromAction.payload.dateOne)
+                const startOne = moment(valuePassedFromAction.payload.dateOne)
                     .startOf("month").subtract({days: 2}).weekday(1).valueOf();
-                const startTwo = moment.utc(valuePassedFromAction.payload.dateOne).startOf("day")
-                    .subtract({weeks: moment.utc().weeksInYear()}).weekday(1).valueOf();
+                const startTwo = moment(valuePassedFromAction.payload.dateOne).startOf("day")
+                    .subtract({weeks: moment().weeksInYear()}).weekday(1).valueOf();
                 expect(ret).to.deep.equal([{
                     ...defaultChartStateObject,
                     date: {
@@ -178,7 +178,7 @@ describe("`chart` reducer", () => {
                             key: "years"
                         },
                         start: startOne,
-                        end: moment.utc(startOne).add({weeks: 5}).endOf("isoWeek").valueOf()
+                        end: moment(startOne).add({weeks: 5}).endOf("isoWeek").valueOf()
                     }
                 }, {
                     ...defaultChartStateObject,
@@ -189,7 +189,7 @@ describe("`chart` reducer", () => {
                             key: "years"
                         },
                         start: startTwo,
-                        end: moment.utc(startTwo).add({weeks: 5}).endOf("isoWeek").valueOf()
+                        end: moment(startTwo).add({weeks: 5}).endOf("isoWeek").valueOf()
                     }
                 }]);
             });
@@ -361,8 +361,8 @@ describe("`chart` reducer", () => {
                     sensorId: "sensorId",
                     fullPath: ["site1"],
                     date: {
-                        start: moment.utc(1516543214890).startOf("month").valueOf(),
-                        end: moment.utc(1516543214890).endOf("month").valueOf(),
+                        start: moment(1516543214890).startOf("month").valueOf(),
+                        end: moment(1516543214890).endOf("month").valueOf(),
                         type: "dateFilter",
                         valueType: {}
                     }

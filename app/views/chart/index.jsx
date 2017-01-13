@@ -218,31 +218,32 @@ var Chart = React.createClass({
         if (dateFirstChartState.type === "dateCompare") {
             const dateSecondChartState = chartFilter[1].date;
             dateStart = [
-                moment.utc(dateFirstChartState.start).format("YYYY-MM-DD"),
-                moment.utc(dateSecondChartState.start).format("YYYY-MM-DD")
+                moment(dateFirstChartState.start).format("YYYY-MM-DD"),
+                moment(dateSecondChartState.start).format("YYYY-MM-DD")
             ];
             dateEnd = [
-                moment.utc(dateFirstChartState.end).format("YYYY-MM-DD"),
-                moment.utc(dateSecondChartState.end).format("YYYY-MM-DD")
+                moment(dateFirstChartState.end).format("YYYY-MM-DD"),
+                moment(dateSecondChartState.end).format("YYYY-MM-DD")
             ];
         // Query for date-filter
         } else if (dateFirstChartState.type === "dateFilter") {
-            dateStart = moment.utc(dateFirstChartState.start).format("YYYY-MM-DD");
-            dateEnd = moment.utc(dateFirstChartState.end).format("YYYY-MM-DD");
+            dateStart = moment(dateFirstChartState.start).format("YYYY-MM-DD");
+            dateEnd = moment(dateFirstChartState.end).format("YYYY-MM-DD");
         } else {
             // If no data is selected, is displayed the past month.
-            dateStart = moment.utc().startOf("month").format("YYYY-MM-DD");
-            dateEnd = moment.utc().endOf("month").format("YYYY-MM-DD");
+            dateStart = moment().startOf("month").format("YYYY-MM-DD");
+            dateEnd = moment().endOf("month").format("YYYY-MM-DD");
         }
         const sensors = chartFilter.map(singleSelection => singleSelection.sensorId);
         const measurementTypes = chartFilter.map(singleSelection => singleSelection.measurementType.key);
         const sources = chartFilter.map(singleSelection => singleSelection.source.key);
+        // Need workaround to consider local datetime
         sensors[0] && sensors.forEach((sensorId, idx) => {
             props.asteroid.subscribe(
                 "dailyMeasuresBySensor",
                 sensorId,
-                R.is(Array, dateStart) ? dateStart[idx] : dateStart,
-                R.is(Array, dateEnd) ? dateEnd[idx] : dateEnd,
+                moment(R.is(Array, dateStart) ? dateStart[idx] : dateStart).subtract(1, "days").format("YYYY-MM-DD"),
+                moment(R.is(Array, dateEnd) ? dateEnd[idx] : dateEnd).add(1, "days").format("YYYY-MM-DD"),
                 sources[idx],
                 measurementTypes[idx]
             );
@@ -269,19 +270,16 @@ var Chart = React.createClass({
 
             const decoratedAggregates = alarmsAggregates.map(aggregate => {
                 const siteAlarms = alarmsUser.find(x => x.get("_id") === aggregate.get("alarmId"));
-                const decorated = {
+                return {
                     ...siteAlarms.toJS(),
                     ...aggregate.toJS()
                 };
-                return decorated;
             }).toArray();
 
-            const filteredSensors = decoratedAggregates
+            return decoratedAggregates
                 .filter(x => x.sensorId === site)
                 .filter(x => x.measurementType === measurementType.key)
-                .filter(x => start <= moment.utc(x.date).valueOf() && moment.utc(x.date).valueOf() <= end);
-
-            return filteredSensors;
+                .filter(x => start <= moment(x.date).valueOf() && moment(x.date).valueOf() <= end);
         }
         return [];
     },
@@ -350,32 +348,9 @@ var Chart = React.createClass({
         var number = goForward ? 1 : -1;
         var diff = Math.round(moment.duration(date.end - date.start).asDays());
         var dateRange = {};
-        switch (diff) {
-            case 1:
-                dateRange.end = moment.utc(date.end).add({
-                    days: number
-                }).valueOf();
-                dateRange.start = moment.utc(date.start).add({
-                    days: number
-                }).valueOf();
-                break;
-            case 7:
-                dateRange.end = moment.utc(date.end).add({
-                    weeks: number
-                }).valueOf();
-                dateRange.start = moment.utc(date.start).add({
-                    weeks: number
-                }).valueOf();
-                break;
-            default:
-                dateRange.end = moment.utc(date.end).add({
-                    months: number
-                }).valueOf();
-                dateRange.start = moment.utc(date.start).add({
-                    months: number
-                }).valueOf();
-                break;
-        }
+        const addend = diff === 1 ? {days: number} : (diff === 7) ? {weeks: number} : {months: number};
+        dateRange.start = moment(date.start).add(addend).valueOf();
+        dateRange.end = (diff !== 1 && diff !== 7 ? moment(dateRange.start).endOf("month") : moment(date.end).add(addend)).valueOf();
         switch (date.type) {
             case "dateFilter":
                 this.props.selectDateRanges({
@@ -508,11 +483,11 @@ var Chart = React.createClass({
                     this.state.value ||
                     (chartFilter[0].date.type === "dateCompare" &&  {
                         period: chartFilter[0].date.period,
-                        dateOne: moment.utc().valueOf()
+                        dateOne: moment().valueOf()
                     }) || {
                         // Set the default value to pass.
                         period: parameters.getDateCompare()[0],
-                        dateOne: moment.utc().valueOf()
+                        dateOne: moment().valueOf()
                     }
                 );
                 this.props.resetZoom();
