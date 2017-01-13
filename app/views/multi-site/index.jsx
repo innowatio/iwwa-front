@@ -218,6 +218,7 @@ var MultiSite = React.createClass({
             sortBy: "_id"
         };
     },
+
     componentDidMount: function () {
         this.props.asteroid.subscribe("sites");
         this.props.asteroid.subscribe("filters");
@@ -230,6 +231,31 @@ var MultiSite = React.createClass({
 
     componentWillReceiveProps: function () {
         this.getFilters();
+    },
+
+    shouldComponentUpdate: function (nextProps, nextState) {
+
+        if (!R.equals(this.state, nextState)) {
+            return true;
+        }
+
+        if (!R.equals(this.props.collections.get("sites"), nextProps.collections.get("sites"))) {
+            return true;
+        }
+
+        if (!R.equals(this.props.collections.get("filters"), nextProps.collections.get("filters"))) {
+            return true;
+        }
+
+        if (!R.equals(this.props.collections.get("alarms-aggregates"), nextProps.collections.get("alarms-aggregates"))) {
+            return true;
+        }
+
+        if (!R.equals(this.props.collections.get("alarms"), nextProps.collections.get("alarms"))) {
+            return true;
+        }
+
+        return false;
     },
 
     getSites: function () {
@@ -278,12 +304,6 @@ var MultiSite = React.createClass({
             {icon: "remote-control-o", iconColor: theme.colors.iconLegend, label: "Telecontrollo Innowatio", key: "Telecontrollo"},
             {icon: "good-o", iconColor: theme.colors.iconLegend, label: "Comfort", key: "Comfort"}
         ];
-    },
-
-    getRealtimeAggregate: function (site, measurementType, filter = () => true) {
-        const realtimeAggregatesList = this.props.collections.get("readings-real-time-aggregates") || Immutable.List();
-        const realtimeAggregates = realtimeAggregatesList.map(x => x.toJS()).toArray();
-        return realtimeAggregates.filter(filter).find(x => x.measurementType === measurementType && R.contains(x.sensorId, [site._id, ...site.sensorsIds]));
     },
 
     getSiteAlarmsAggregates: function (site, threshold = 0) {
@@ -418,7 +438,7 @@ var MultiSite = React.createClass({
             }
         }
 
-        return "MISSING";
+        return "missing";
     },
 
     getSiteTelecontrolStatus: function (site) {
@@ -611,17 +631,6 @@ var MultiSite = React.createClass({
             <SiteRecap sites={sites}/>
         );
     },
-
-    // renderAssetsStatus: function () {
-    //     const theme = this.getTheme();
-    //     return (
-    //         <div style={styles(theme).dataWrp}>
-    //             <h2 style={styles(theme).boxTitle}>
-    //                 {"ASSET STATUS"}
-    //             </h2>
-    //         </div>
-    //     );
-    // },
 
     renderEmptyBox: function () {
         const theme = this.getTheme();
