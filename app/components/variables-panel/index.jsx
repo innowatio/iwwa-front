@@ -95,14 +95,7 @@ var VariablesPanel = React.createClass({
         const theme = this.getTheme();
         const numberOfItem = this.getItemToShow();
         var settings = {
-            // customPaging: function () {
-            //     return (
-            //         <a style={{display: "block", float: "left", color: theme.colors.white}}>
-            //             {"•"}
-            //         </a>
-            //     );
-            // },
-            arrow: true,
+            arrow: false,
             dots: true,
             dotsClass: "slick-dots",
             infinite: false,
@@ -111,13 +104,10 @@ var VariablesPanel = React.createClass({
             slidesToScroll: numberOfItem - 1,
             swipeToSilde: true,
             lazyLoad: true,
-            autoplay: true,
-            autoplaySpeed: 4000,
-            // focusOnSelect: true,
+            autoplay: false,
+            focusOnSelect: true,
             draggable: true,
             variableWidth: true
-            //nextArrow: <SampleNextArrow />,
-            //prevArrow: <SamplePrevArrow />
         };
         return (
             <div className={"slick-style"} style={{width: "100%", height: "125px", overflow: "hidden"}}>

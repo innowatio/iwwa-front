@@ -477,7 +477,7 @@ var RealTime = React.createClass({
                                     textTransform: "uppercase"
                                 }}
                             >
-                                {`${selectedSiteName ? selectedSiteName + " - " : ""}Pods`}
+                                {`${selectedSiteName ? selectedSiteName : ""}`}
                             </h3>
                             {this.drawGaugeTotal()}
                             <bootstrap.Col lg={8} md={7} xs={12}>
