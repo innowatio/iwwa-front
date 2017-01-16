@@ -1,14 +1,17 @@
 var React     = require("react");
+var Slider    = require("react-slick");
 var components = require("components");
 var bootstrap       = require("react-bootstrap");
 
 var MeasureLabel = require("components/").MeasureLabel;
 import {defaultTheme} from "lib/theme";
 import getLastUpdate from "lib/date-utils";
+import Radium from "radium";
 
 var style = (variableColor) => ({
     box: {
         maxWidth: "400px",
+        minWidth: "calc(320px + 1.3vw)",
         overflow: "hidden",
         display: "flex",
         flexDirection: "row",
@@ -30,22 +33,36 @@ var VariablesPanel = React.createClass({
     contextTypes: {
         theme: React.PropTypes.object
     },
+    getInitialState: function () {
+        return {
+            innerWidth: window.innerWidth
+        };
+    },
+    componentWillMount: function () {
+        window.addEventListener("resize", this.handleResize);
+    },
+    componentWillUnmount () {
+        window.removeEventListener("resize", this.handleResize);
+    },
+    handleResize () {
+        this.setState({
+            innerWidth: window.innerWidth
+        });
+    },
     getTheme: function () {
         return this.context.theme || defaultTheme;
     },
+    getItemToShow: function () {
+        return Math.ceil(this.state.innerWidth / 400);
+    },
+
     renderVariableBox: function () {
         return this.props.values.map((variable) => {
             const updateTitle = getLastUpdate(variable.measurementTime);
             return (
                 <div
                     key={variable.key}
-                    style={{
-                        width: (
-                            this.props.numberOfConsumptionSensor > 3 ? "23%" : "25%"
-                        ),
-                        minWidth: "calc(310px + 1.3vw)",
-                        flex: "1 0 auto"
-                    }}
+                    style={{display: "inline-block"}}
                 >
                     <bootstrap.OverlayTrigger
                         overlay={<bootstrap.Tooltip id="lastUpdate" className="lastUpdate">{updateTitle}</bootstrap.Tooltip>}
@@ -75,11 +92,57 @@ var VariablesPanel = React.createClass({
         });
     },
     render: function () {
+        const theme = this.getTheme();
+        const numberOfItem = this.getItemToShow();
+        var settings = {
+            // customPaging: function () {
+            //     return (
+            //         <a style={{display: "block", float: "left", color: theme.colors.white}}>
+            //             {"•"}
+            //         </a>
+            //     );
+            // },
+            arrow: true,
+            dots: true,
+            dotsClass: "slick-dots",
+            infinite: false,
+            speed: 500,
+            slidesToShow: numberOfItem,
+            slidesToScroll: numberOfItem - 1,
+            swipeToSilde: true,
+            lazyLoad: true,
+            autoplay: true,
+            autoplaySpeed: 4000,
+            // focusOnSelect: true,
+            draggable: true,
+            variableWidth: true
+            //nextArrow: <SampleNextArrow />,
+            //prevArrow: <SamplePrevArrow />
+        };
         return (
-            <div style={{width: "100%", height: "110px", overflow: "hidden"}}>
-                <div style={{display: "flex", height: "115%", overflow: "auto"}}>
+            <div className={"slick-style"} style={{width: "100%", height: "125px", overflow: "hidden"}}>
+                <Radium.Style
+                    rules={{
+                        ".slick-dots li.slick-active button:before": {
+                            opacity: 1
+                        },
+                        ".slick-dots li button:before": {
+                            fontSize: "50px",
+                            lineHeight: "20px",
+                            color: theme.colors.backgroundSlickDots
+                        },
+                        ".slick-dots li button": {
+                            padding: "0px"
+                        },
+                        ".slick-dots": {
+                            bottom: "-40px"
+                        }
+                    }}
+                    scopeSelector=".slick-style"
+                />
+                <Slider {...settings}>
                     {this.renderVariableBox()}
-                </div>
+                </Slider>
             </div>
         );
     }

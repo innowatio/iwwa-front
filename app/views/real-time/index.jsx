@@ -408,10 +408,9 @@ var RealTime = React.createClass({
         return numberOfConsumptionSensor > 0 ? (
             <div
                 style={{
-                    position: "absolute",
-                    top: "20px",
-                    left: "0px",
+                    marginTop: "20px",
                     width: "100%",
+                    height: "auto",
                     backgroundColor: colors.backgroundRealTimeButton,
                     borderTop: "1px solid " + colors.borderRealTimeButton,
                     borderBottom: "1px solid " + colors.borderRealTimeButton
@@ -451,8 +450,7 @@ var RealTime = React.createClass({
                     <div
                         style={{
                             position: "relative",
-                            top: numberOfConsumptionSensor > 0 ? "220px" : "20px",
-                            margin: "0px 30px 0px 30px",
+                            margin: "20px 30px 0px 30px",
                             height: numberOfConsumptionSensor > 0 ? "calc(100vh - 395px)" : "calc(100vh - 175px)",
                             overflow: "hidden",
                             backgroundColor: theme.colors.backgroundRealTimeSection,
