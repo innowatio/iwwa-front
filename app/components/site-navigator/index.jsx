@@ -260,7 +260,7 @@ var SiteNavigator = React.createClass({
                             position: "absolute",
                             overflow: "auto",
                             right: "-25px",
-                            margin: "0px 25px",
+                            margin: "0px 5px",
                             width: "100%",
                             height: "100%"
                         }}
@@ -272,6 +272,7 @@ var SiteNavigator = React.createClass({
                                     top: "0px",
                                     bottom: "0px",
                                     left: "0px",
+                                    right: "-25px",
                                     overflow: "auto",
                                     width: "100%"
                                 }
@@ -296,8 +297,8 @@ var SiteNavigator = React.createClass({
                     <div style={{
                         position: "absolute",
                         overflow: "auto",
-                        top: "10px",
-                        bottom: "10px",
+                        top: "0px",
+                        bottom: "-25px",
                         left: "0px",
                         right: "-25px"
                     }}>
@@ -310,7 +311,7 @@ var SiteNavigator = React.createClass({
                                 bottom: "-25px",
                                 top: "0px",
                                 left: "0px",
-                                padding: "15px 20px",
+                                padding: "15px 20px 30px 20px",
                                 width: "120%",
                                 height: "100%"
                             }}
@@ -321,7 +322,9 @@ var SiteNavigator = React.createClass({
                                         width: "33%",
                                         clear: "both",
                                         minWidth: "100px",
-                                        height: "100%"
+                                        height: "100%",
+                                        padding: "0px",
+                                        margin: "0px"
                                     },
                                     "button.btn": itemsStyle(theme),
                                     "button.btn.active": itemsStyleActive,

@@ -5,6 +5,7 @@ import {connect} from "react-redux";
 import {bindActionCreators} from "redux";
 import get from "lodash.get";
 import pkg from "../../../package.json";
+import Radium from "radium";
 
 import components from "components";
 
@@ -158,7 +159,16 @@ var Root = React.createClass({
         const user = getLoggedUser(asteroid);
         return (
             <StyleRoot>
-                <div style={{backgroundColor: this.getTheme().background}}>
+                <div className="scrollbars" style={{backgroundColor: this.getTheme().background}}>
+                    <Radium.Style
+                        rules={{
+                            "::-webkit-scrollbar": {
+                                width: "0px",
+                                height: "0px"
+                            }
+                        }}
+                        scopeSelector=".scrollbars"
+                    />
                     {this.renderSideNav(styles)}
                     <div style={styles.header}>
                         <components.Header
