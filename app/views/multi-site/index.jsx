@@ -572,7 +572,6 @@ var MultiSite = React.createClass({
     },
 
     closeCompareMessage: function () {
-        console.log("closeCompareMessage");
         this.setState({showCompareMessage: false});
     },
 
@@ -1070,7 +1069,19 @@ var MultiSite = React.createClass({
                     />
                     <bootstrap.Col xs={12} sm={6} lg={8}>
                         <bootstrap.Row>
-                            {this.renderSites(sitesLimited)}
+                            {(
+                                sites.length === 0 ?
+                                    <span style={{
+                                        color: theme.colors.buttonPrimary,
+                                        opacity: 1,
+                                        fontSize: "20px",
+                                        fontWeight: "600",
+                                        padding: "30px"
+                                    }}>
+                                        {"Nessun sito trovato"}
+                                    </span> :
+                                this.renderSites(sitesLimited)
+                            )}
                         </bootstrap.Row>
                         <bootstrap.Row style={{marginBottom: "20px"}}>
                             {this.renderButtonLoad(sites.length, sitesLimited.length)}
