@@ -1,6 +1,6 @@
 import Immutable from "immutable";
 import {evaluateFormula} from "iwwa-formula-resolver";
-import {addIndex, map, memoize} from "ramda";
+import {addIndex, filter, map, memoize} from "ramda";
 import moment from "lib/moment";
 
 const mapIndexed = addIndex(map);
@@ -16,15 +16,17 @@ export default memoize(function readingsDailyAggregatesToHighchartsData (aggrega
     const sortedAggregate = aggregates.sortBy(x => x.get("day"));
     const chartData = map(chartState => {
         const {date, formula} = chartState;
-        const duration = moment(date.end).diff(date.start, "days");
+        const elapsedStart = moment(date.start).subtract(1, "days");
+        const elapsedEnd = moment(date.end).add(1, "days");
+        const duration = elapsedEnd.diff(elapsedStart, "days");
         var data = [];
         for (var i = 0; i <= duration; i++) {
-            const day = moment.utc(date.start).add({days: i});
             if (formula) {
-                buildFormulaData(day, chartState, sortedAggregate, data, allSensors);
+                buildFormulaData(elapsedStart, chartState, sortedAggregate, data, allSensors);
             } else {
-                buildSimpleData(day, chartState, sortedAggregate, data);
+                buildSimpleData(elapsedStart, chartState, sortedAggregate, data);
             }
+            elapsedStart.add({days: 1});
         }
         return data;
     }, chartsState);
@@ -43,7 +45,7 @@ function buildSimpleData (day, chartState, sortedAggregate, data) {
         `${sensorId}-${day.format("YYYY-MM-DD")}-${source.key}-${measurementType.key}`
     );
     populateData(data, day, aggregate, () => {
-        return getMeasurement(aggregate);
+        return getMeasurement(aggregate, chartState.date);
     });
 }
 
@@ -65,23 +67,26 @@ function buildFormulaData (day, chartState, sortedAggregate, data, allSensors) {
     });
     populateData(data, day, hasSomeAggregates, () => {
         let result = evaluateFormula({formula: formula.get("formula")}, sensorsData);
-        return getMeasurement(Immutable.fromJS(result));
+        return getMeasurement(Immutable.fromJS(result), chartState.date);
     });
 }
 
 function populateData (data, day, condition, populateFunc) {
     if (condition) {
         data.push(...populateFunc());
-    } else if (day.isBefore(moment.utc())) {
+    } else if (day.isBefore(moment())) {
         data.push([day.startOf("day").valueOf(), 0]);
         data.push([day.endOf("day").valueOf(), 0]);
     }
 }
 
-function getMeasurement (aggregate) {
+function getMeasurement (aggregate, date) {
     const times = aggregate.get("measurementTimes").split(",");
     const values = aggregate.get("measurementValues").split(",");
-    return mapIndexed((value, valueIndex) => {
-        return [parseInt(times[valueIndex]), parseFloat(value)];
-    }, values);
+    return filter(el => el, mapIndexed((value, valueIndex) => {
+        const time = parseInt(times[valueIndex]);
+        if (time >= date.start && time <= date.end) {
+            return [time, parseFloat(value)];
+        }
+    }, values));
 }

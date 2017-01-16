@@ -228,8 +228,8 @@ var SummaryConsumptions = React.createClass({
 
     subscribeToConsumptions: function () {
         const periods = [moment().subtract(1, "year").format("YYYY"), moment().format("YYYY")];
-        const dateEnd = moment.utc().format("YYYY-MM-DD");
-        const dateStart = moment.utc().subtract(7, "week").format("YYYY-MM-DD");
+        const dateEnd = moment().format("YYYY-MM-DD");
+        const dateStart = moment().subtract(7, "week").format("YYYY-MM-DD");
 
         periods.map(year => {
             this.props.asteroid.subscribe(

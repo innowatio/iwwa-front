@@ -41,7 +41,7 @@ var SourcesAndSensorsCompare = React.createClass({
     getDateFilter: function () {
         return (
             isEmpty(this.props.chartState.charts[0].date) ?
-            {start: moment.utc().startOf("month").valueOf(), end: moment.utc().endOf("month").valueOf()} :
+            {start: moment().startOf("month").valueOf(), end: moment().endOf("month").valueOf()} :
             this.props.chartState.charts[0].date
         );
     },

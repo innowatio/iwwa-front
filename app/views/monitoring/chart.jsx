@@ -57,10 +57,10 @@ var MonitoringChartView = React.createClass({
         return typeof sensor === "string" ? allSensor.get(sensor) : sensor;
     },
     getStartDate: function (props) {
-        return moment.utc().subtract(props.monitoringChart.dataMonthsSpan.backward, "months").startOf("month");
+        return moment().subtract(props.monitoringChart.dataMonthsSpan.backward, "months").startOf("month");
     },
     getEndDate: function (props) {
-        return moment.utc().add(props.monitoringChart.dataMonthsSpan.forward, "months").endOf("month");
+        return moment().add(props.monitoringChart.dataMonthsSpan.forward, "months").endOf("month");
     },
     getUnitOfMeasurement: function (sensor) {
         return sensor.get("unitOfMeasurement") ? sensor.get("unitOfMeasurement") : "indefinito";

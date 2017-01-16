@@ -45,7 +45,7 @@ describe("`DateCompare` component", () => {
         $($dateCompare.find(Button)[0]).trigger("click");
         expect(onClickSpy).to.have.callCount(1);
         expect(onClickSpy).to.have.calledWith({
-            dateOne: moment.utc().valueOf(),
+            dateOne: moment().valueOf(),
             period: allowedValues[0]
         });
     });

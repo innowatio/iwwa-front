@@ -339,8 +339,7 @@ var MultiSite = React.createClass({
     },
 
     getSiteAlarmsInfo: function (site) {
-
-        const threshold = moment.utc().startOf("day").valueOf();
+        const threshold = moment().startOf("day").valueOf();
 
         const alarms = get(site, "status.alarms", 0);
         if (!alarms || alarms.time < threshold) {
@@ -354,7 +353,7 @@ var MultiSite = React.createClass({
     },
 
     getSiteAlarmStatus: function (site) {
-        const threshold = moment.utc().valueOf() - 86400000;
+        const threshold = moment().valueOf() - 86400000;
 
         const siteAlarms = get(site, "status.alarms");
         if (!siteAlarms) {
@@ -365,7 +364,7 @@ var MultiSite = React.createClass({
     },
 
     getSiteConnectionStatus: function (site) {
-        const threshold = moment.utc().valueOf() - 1800000;
+        const threshold = moment().valueOf() - 1800000;
 
         const lastUpdate = get(site, "lastUpdate", 0);
         if (!lastUpdate) {
@@ -425,11 +424,12 @@ var MultiSite = React.createClass({
     },
 
     getSiteComfortStatus: function (site) {
-        const threshold = moment.utc().valueOf() - 3600000;
-
-        const comfort = get(site, "status.comfort");
-        if (!comfort) {
-            return "missing";
+        const threshold = moment().valueOf() - 3600000;
+        const comfort = this.getRealtimeAggregate(site, "comfortLevel", x => {
+            return x.measurementTime >= threshold;
+        });
+        if (comfort) {
+            return comfort.measurementValue === 1 ? "ACTIVE" : "ERROR";
         }
 
         return comfort.time > threshold ? comfort.value : "missing";

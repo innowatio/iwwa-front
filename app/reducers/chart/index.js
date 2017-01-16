@@ -32,8 +32,8 @@ const defaultChartState = [{
     sensorId: null,
     fullPath: [],
     date: {
-        start: moment.utc().startOf("month").valueOf(),
-        end: moment.utc().endOf("month").valueOf(),
+        start: moment().startOf("month").valueOf(),
+        end: moment().endOf("month").valueOf(),
         valueType: {label: "calendario", key: "calendar"},
         type: "dateFilter"
     },
@@ -210,8 +210,8 @@ function charts (state = defaultChartState, {type, payload}) {
                 sensorId: payload.sensorId,
                 fullPath: [payload.siteId],
                 date: {
-                    start: moment.utc(alarmDate).startOf("month").valueOf(),
-                    end: moment.utc(alarmDate).endOf("month").valueOf(),
+                    start: moment(alarmDate).startOf("month").valueOf(),
+                    end: moment(alarmDate).endOf("month").valueOf(),
                     valueType: {},
                     type: "dateFilter"
                 }

@@ -16,7 +16,7 @@ describe("readingsDailyAggregatesToHighchartsData", () => {
             const _id = `${sensorId}-${day}-reading-activeEnergy`;
             const values = measurementsString(idx % 5 + 1);
             const times = values.split(",").map((value, index) => {
-                return moment.utc(day).add({minutes: index}).valueOf();
+                return moment(day).add({minutes: index}).valueOf();
             });
             return [_id, {
                 _id,
@@ -42,8 +42,8 @@ describe("readingsDailyAggregatesToHighchartsData", () => {
                 key: "activeEnergy"
             },
             date: {
-                start: moment.utc("2015-02-01").valueOf(),
-                end: moment.utc("2015-02-28").valueOf(),
+                start: moment("2015-02-01").valueOf(),
+                end: moment("2015-02-28").valueOf(),
                 type: "dateFilter"
             }
         },
@@ -56,8 +56,8 @@ describe("readingsDailyAggregatesToHighchartsData", () => {
                 key: "activeEnergy"
             },
             date: {
-                start: moment.utc("2015-02-01").valueOf(),
-                end: moment.utc("2015-02-28").valueOf(),
+                start: moment("2015-02-01").valueOf(),
+                end: moment("2015-02-28").valueOf(),
                 type: "dateFilter"
             }
         }
@@ -73,8 +73,8 @@ describe("readingsDailyAggregatesToHighchartsData", () => {
                 key: "activeEnergy"
             },
             date: {
-                start: moment.utc("2015-03-28").subtract(4, "weeks").valueOf(),
-                end: moment.utc("2015-03-28").valueOf(),
+                start: moment("2015-03-28").subtract(4, "weeks").valueOf(),
+                end: moment("2015-03-28").valueOf(),
                 type: "dateCompare",
                 period: {label: "Mese", key: "months"}
             }
@@ -88,8 +88,8 @@ describe("readingsDailyAggregatesToHighchartsData", () => {
                 key: "activeEnergy"
             },
             date: {
-                start: moment.utc("2015-03-28").subtract(8, "weeks").valueOf(),
-                end: moment.utc("2015-03-28").subtract(4, "weeks").valueOf(),
+                start: moment("2015-03-28").subtract(8, "weeks").valueOf(),
+                end: moment("2015-03-28").subtract(4, "weeks").valueOf(),
                 type: "dateCompare",
                 period: {label: "Mese", key: "months"}
             }
@@ -99,8 +99,8 @@ describe("readingsDailyAggregatesToHighchartsData", () => {
     const filtersSourcesAndSensors = [{
         ...filtersDateCompare[0],
         date: {
-            start: moment.utc("2015-03-01").valueOf(),
-            end: moment.utc("2015-03-03").valueOf(),
+            start: moment("2015-03-01").valueOf(),
+            end: moment("2015-03-03").valueOf(),
             type: "dateFilter"
         }
     }];
@@ -146,11 +146,11 @@ describe("readingsDailyAggregatesToHighchartsData", () => {
                 );
 
                 res.forEach((resource, resIndex) => {
-                    const startTime = filtersSourcesAndSensors[resIndex].date.start;
-                    const endTime = filtersSourcesAndSensors[resIndex].date.end;
-                    resource.data.forEach((data) => {
-                        expect(data[0]).to.be.within(moment.utc(startTime).valueOf(), moment.utc(endTime).endOf("day").valueOf());
-                        expect(data[1]).to.equal(2);
+                    const startTime = moment(filtersSourcesAndSensors[resIndex].date.start).valueOf();
+                    const endTime = moment(filtersSourcesAndSensors[resIndex].date.end).endOf("day").valueOf();
+                    resource.data.forEach(data => {
+                        // due to a workaround, unit test has values not between start and end time
+                        expect(data[1]).to.equal(data[0] < startTime || data[0] > endTime ? 0 : 2);
                     });
                 });
             });

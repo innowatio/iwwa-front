@@ -135,7 +135,7 @@ var MultiSiteFilter = React.createClass({
                 if (!selectedValue) {
                     return true;
                 }
-                return moment().diff(moment.utc(value), "days") <= selectedValue;
+                return moment().diff(moment(value), "days") <= selectedValue;
             case "number":
                 if (selectedValue < 1) {
                     return true;

@@ -82,7 +82,7 @@ function getTitleAndSubtitle (period) {
                 now: defaultToNow,
                 period,
                 periodTitle: "QUESTA SETTIMANA HAI UTILIZZATO",
-                periodSubtitle: `${moment.utc(periodDates.start).format("DD")} - ${moment.utc(periodDates.end).format("DD MMMM YYYY")}`.toUpperCase(),
+                periodSubtitle: `${moment(periodDates.start).format("DD")} - ${moment(periodDates.end).format("DD MMMM YYYY")}`.toUpperCase(),
                 title: "SETTIMANA CORRENTE",
                 comparisons: [{
                     key: "week-toNow",
@@ -114,19 +114,19 @@ function getTitleAndSubtitle (period) {
                 now: defaultToNow,
                 period,
                 periodTitle: "QUESTO MESE HAI UTILIZZATO",
-                periodSubtitle: `${moment.utc(periodDates.start).format("MMMM YYYY")}`,
+                periodSubtitle: `${moment(periodDates.start).format("MMMM YYYY")}`,
                 title: "MESE CORRENTE",
                 comparisonsPrevPeriod: [{
                     key: "month-1m",
-                    title: `${moment.utc(previousPeriodDates.start).format("MMMM YYYY")}`.toUpperCase(),
+                    title: `${moment(previousPeriodDates.start).format("MMMM YYYY")}`.toUpperCase(),
                     now: partial(utils.getSumByPeriod, [previousPeriodDates])
                 }, {
                     key: "month-2m",
-                    title: `${moment.utc(previousPeriod2Dates.start).format("MMMM YYYY")}`.toUpperCase(),
+                    title: `${moment(previousPeriod2Dates.start).format("MMMM YYYY")}`.toUpperCase(),
                     now: partial(utils.getSumByPeriod, [previousPeriod2Dates])
                 }, {
                     key: "month-3m",
-                    title: `${moment.utc(previousPeriod3Dates.start).format("MMMM YYYY")}`.toUpperCase(),
+                    title: `${moment(previousPeriod3Dates.start).format("MMMM YYYY")}`.toUpperCase(),
                     now: partial(utils.getSumByPeriod, [previousPeriod3Dates])
                 }
             ]
