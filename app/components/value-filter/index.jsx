@@ -29,7 +29,7 @@ class ValueFilter extends React.Component {
         const {id, label, selectedValue, filterType} = this.state.filter ? this.state.filter : this.props.filter;
         return (
             <bootstrap.FormControl id={id} className="input-search" placeholder={label}
-                type={filterType} value={selectedValue} onChange={(event) => this.onChangeValue(event)}
+                type={filterType} min={0} value={selectedValue} onChange={(event) => this.onChangeValue(event)}
             />
         );
     }

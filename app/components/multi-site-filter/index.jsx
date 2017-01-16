@@ -90,7 +90,8 @@ var MultiSiteFilter = React.createClass({
 
     getInitialState: function () {
         return {
-            filterList: this.props.filterList
+            filterList: this.props.filterList,
+            closeFilterPopup: false
         };
     },
 
@@ -193,10 +194,12 @@ var MultiSiteFilter = React.createClass({
             item.filterFunc = fn;
         });
         this.props.onConfirm(filterList);
+        this.closePopover();
     },
 
     onResetFilter: function () {
         this.props.onConfirm(null);
+        this.closePopover();
     },
 
     onChangeFilter: function (filter) {
@@ -243,20 +246,10 @@ var MultiSiteFilter = React.createClass({
     },
 
     renderAccordion: function (value) {
-        const {colors} = this.getTheme();
-        const {id} = value;
         return (
-            <Collapse accordion={true} key={id} style={{
-                backgroundColor: colors.transparent,
-                marginBottom: "0px",
-                border: "0px",
-                borderRadius: "0px",
-                borderBottom: "1px solid " + colors.white
-            }}>
-                <Collapse.Panel header={this.renderHeader(value)} key={id}>
-                    {this.renderFilterByType(value)}
-                </Collapse.Panel>
-            </Collapse>
+            <Collapse.Panel header={this.renderHeader(value)} key={value.id}>
+                {this.renderFilterByType(value)}
+            </Collapse.Panel>
         );
     },
 
@@ -368,7 +361,15 @@ var MultiSiteFilter = React.createClass({
                         }}
                         scopeSelector={".collapsible-filter"}
                     />
-                    {this.props.filterList.map(this.renderAccordion)}
+                    <Collapse accordion={true} style={{
+                        backgroundColor: colors.transparent,
+                        marginBottom: "0px",
+                        border: "0px",
+                        borderRadius: "0px",
+                        borderBottom: "1px solid " + colors.white
+                    }}>
+                        {this.props.filterList.map(this.renderAccordion)}
+                    </Collapse>
                 </bootstrap.FormGroup>
                 <ButtonConfirmAndReset
                     confirmButtonStyle={styles(this.getTheme()).confirmButtonStyle}
@@ -397,7 +398,12 @@ var MultiSiteFilter = React.createClass({
     render: function () {
         return (
             <div style={{height: "auto", float: "right", position: "relative"}}>
-                <PopoverScrollable title={this.renderTitlePopover()}>
+                <PopoverScrollable
+                    ref={popover => {
+                        this.closePopover = popover && popover.closePopover || R.identity;
+                    }}
+                    title={this.renderTitlePopover()}
+                >
                     {this.renderFilter()}
                 </PopoverScrollable>
             </div>

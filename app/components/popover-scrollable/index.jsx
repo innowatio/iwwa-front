@@ -18,6 +18,7 @@ const styles = ({colors}) => ({
 
 var Popover = React.createClass({
     propTypes: {
+        addOnClickCloseToChild: PropTypes.func,
         arrow: PropTypes.string,
         arrowColor: PropTypes.string,
         children: PropTypes.element,
