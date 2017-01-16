@@ -92,8 +92,8 @@ class TrendStatus extends React.Component {
 
     getTrendLabel () {
         return [
-            {label: "Comfort:", key: "comfort"},
-            {label: "Consumo energetico:", key: "energy"}
+            {label: "Comfort:", key: "comfort", iconGood: "good-o", iconMiddle: "middle-o", iconBad: "bad-o"},
+            {label: "Consumo energetico:", key: "energy", iconGood: "consumption-o", iconMiddle: "consumption-o", iconBad: "consumption-o"}
         ];
     }
 
@@ -176,34 +176,34 @@ class TrendStatus extends React.Component {
         return reference;
     }
 
-    getTrendItems (key, item) {
+    getTrendItems (tabKey, item) {
         const theme = this.getTheme();
-        const value = (item =="comfort") ? this.getComfort(key) : this.getReference(key);
+        const value = (item.key === "comfort") ? this.getComfort(tabKey) : this.getReference(tabKey);
         const green = (value.green / value.total * 100).toFixed(0);
         const yellow = (value.yellow / value.total * 100).toFixed(0);
         const red = (value.red / value.total * 100).toFixed(0);
         return [
             {
-                icon: "good-o",
+                icon: item.iconGood,
                 iconColor: theme.colors.iconActive,
-                key: "good comfort",
+                key: "good",
                 value: (isNaN(green) ? 0 : green) + "%"
             }, {
-                icon: "middle-o",
+                icon: item.iconMiddle,
                 iconColor: theme.colors.iconWarning,
-                key: "middle comfort",
+                key: "middle",
                 value: (isNaN(yellow) ? 0 : yellow) + "%"
             }, {
-                icon: "bad-o",
+                icon: item.iconBad,
                 iconColor: theme.colors.iconError,
-                key: "bad comfort",
+                key: "bad",
                 value: (isNaN(red) ? 0 : red) + "%"}
         ];
     }
 
-    getTrendData (tabParameters, item) {
+    getTrendData (tabParameters, trendItem) {
         const theme = this.getTheme();
-        const trendData = this.getTrendItems(tabParameters.key, item).map(item => {
+        const trendData = this.getTrendItems(tabParameters.key, trendItem).map(item => {
             return (
                 <div
                     key={item.key}
@@ -261,7 +261,7 @@ class TrendStatus extends React.Component {
                         flexDirection: "row",
                         justifyContent: "space-between"
                     }}>
-                        {this.getTrendData(tabParameters, item.key)}
+                        {this.getTrendData(tabParameters, item)}
                     </div>
                 </div>
             );

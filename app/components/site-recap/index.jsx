@@ -63,8 +63,8 @@ class SiteRecap extends React.Component {
         return [
             {data: "800", label: "Siti totali", key: "totali"},
             {data: `${this.props.sites.size}`, label: "Siti monitorati", key: "monitorati"},
-            {data: "1", label: "Siti in real time", key: "realtime"},
-            {data: "2", label: "Siti in remote control", key: "remote control"}
+            {data: "3", label: "Siti in real time", key: "realtime"},
+            {data: "1", label: "Siti in remote control", key: "remote control"}
         ];
     }
 
