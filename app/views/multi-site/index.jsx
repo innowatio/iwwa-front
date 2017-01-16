@@ -232,28 +232,19 @@ var MultiSite = React.createClass({
     },
 
     shouldComponentUpdate: function (nextProps, nextState) {
-
         if (!R.equals(this.state, nextState)) {
             return true;
         }
-
         if (!R.equals(this.props.collections.get("sites"), nextProps.collections.get("sites"))) {
             return true;
         }
-
         if (!R.equals(this.props.collections.get("filters"), nextProps.collections.get("filters"))) {
             return true;
         }
-
         if (!R.equals(this.props.collections.get("alarms-aggregates"), nextProps.collections.get("alarms-aggregates"))) {
             return true;
         }
-
-        if (!R.equals(this.props.collections.get("alarms"), nextProps.collections.get("alarms"))) {
-            return true;
-        }
-
-        return false;
+        return !R.equals(this.props.collections.get("alarms"), nextProps.collections.get("alarms"));
     },
 
     getSites: function () {
@@ -305,7 +296,6 @@ var MultiSite = React.createClass({
     },
 
     getSiteAlarmsAggregates: function (site, threshold = 0) {
-
         const alarmsList = this.props.collections.get("alarms") || Immutable.List();
         const alarmsAggregatesList = this.props.collections.get("alarms-aggregates") || Immutable.List();
 
@@ -339,7 +329,7 @@ var MultiSite = React.createClass({
     },
 
     getSiteAlarmsInfo: function (site) {
-        const threshold = moment().startOf("day").valueOf();
+        const threshold = moment.utc().startOf("day").valueOf();
 
         const alarms = get(site, "status.alarms", 0);
         if (!alarms || alarms.time < threshold) {
@@ -353,7 +343,7 @@ var MultiSite = React.createClass({
     },
 
     getSiteAlarmStatus: function (site) {
-        const threshold = moment().valueOf() - 86400000;
+        const threshold = moment.utc().valueOf() - 86400000;
 
         const siteAlarms = get(site, "status.alarms");
         if (!siteAlarms) {
@@ -364,7 +354,7 @@ var MultiSite = React.createClass({
     },
 
     getSiteConnectionStatus: function (site) {
-        const threshold = moment().valueOf() - 1800000;
+        const threshold = moment.utc().valueOf() - 1800000;
 
         const lastUpdate = get(site, "lastUpdate", 0);
         if (!lastUpdate) {
@@ -375,8 +365,8 @@ var MultiSite = React.createClass({
     },
 
     getSiteConsumptionStatus: function (site) {
-        const today = moment().format("YYYY-MM-DD");
-        const yesterday = moment().subtract({days: 1}).format("YYYY-MM-DD");
+        const today = moment.utc().format("YYYY-MM-DD");
+        const yesterday = moment.utc().subtract({days: 1}).format("YYYY-MM-DD");
         const dailyAggregatesList = this.props.collections.get("readings-daily-aggregates") || Immutable.List();
         const dailyAggregates = dailyAggregatesList
             .map(x => x.toJS())
@@ -424,12 +414,10 @@ var MultiSite = React.createClass({
     },
 
     getSiteComfortStatus: function (site) {
-        const threshold = moment().valueOf() - 3600000;
-        const comfort = this.getRealtimeAggregate(site, "comfortLevel", x => {
-            return x.measurementTime >= threshold;
-        });
-        if (comfort) {
-            return comfort.measurementValue === 1 ? "ACTIVE" : "ERROR";
+        const threshold = moment.utc().valueOf() - 3600000;
+        const comfort = get(site, "status.comfort");
+        if (!comfort) {
+            return "missing";
         }
 
         return comfort.time > threshold ? comfort.value : "missing";
