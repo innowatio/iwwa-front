@@ -17,7 +17,7 @@ const itemsStyle = (theme) => (R.merge(styles(theme).buttonBasicStyle, {
     fontWeight: "300",
     border: "0px",
     marginTop: "10px",
-    width: "90%",
+    width: "80%",
     minWidth: "100px",
     padding: "16px",
     borderRadius: "15px"
@@ -297,10 +297,11 @@ var SiteNavigator = React.createClass({
                     <div style={{
                         position: "absolute",
                         overflow: "auto",
-                        top: "0px",
-                        bottom: "-25px",
+                        top: "10px",
                         left: "0px",
-                        right: "-25px"
+                        bottom: "-25px",
+                        right: "-25px",
+                        height: "100%"
                     }}>
                         <div
                             className="site-navigator-child"
@@ -311,9 +312,10 @@ var SiteNavigator = React.createClass({
                                 bottom: "-25px",
                                 top: "0px",
                                 left: "0px",
-                                padding: "15px 20px 30px 20px",
+                                padding: "10px 20px 30px 20px",
                                 width: "120%",
-                                height: "100%"
+                                minHeight: "100%",
+                                height: "auto !important"
                             }}
                         >
                             <Radium.Style
