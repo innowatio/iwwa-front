@@ -324,6 +324,7 @@ var SiteStatus = React.createClass({
     renderPrimaryInfo: function () {
         const theme = this.getTheme();
         const id = this.props.siteInfo.find(x => x.key === "_id");
+        const defaultSensor = this.props.siteInfo.find(x => x.key === "defaultSensor");
         const itemStyleOpen = {
             borderColor: (this.props.isOpen ?
                 theme.colors.secondary : theme.colors.borderBoxMultisite)
@@ -435,7 +436,7 @@ var SiteStatus = React.createClass({
                     <Link
                         to={"/chart/"}
                         style={styles(theme).buttonHistoricalConsumption}
-                        onClick={() => this.props.onClickAlarmChart([id.value])}
+                        onClick={() => this.props.onClickAlarmChart(defaultSensor ? [id.value, defaultSensor.value] : [id.value])}
                     >
                         <Icon
                             color={theme.colors.iconSiteButton}

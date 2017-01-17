@@ -258,6 +258,7 @@ var MultiSite = React.createClass({
     getSiteInfo: function () {
         return [
             {label: "ID", key: "_id"},
+            {label: "Sensore predefinito", key: "defaultSensor"},
             {label: "Impiegati", key: "employees"},
             {label: "Tipologia attività", key: "businessType"},
             {label: "Area mq", key: "areaInMq"},
@@ -564,10 +565,17 @@ var MultiSite = React.createClass({
     },
 
     onCompareSites: function () {
-        this.props.selectSingleElectricalSensor([this.state.selectedSites[0]]);
-        this.props.selectMultipleElectricalSensor(
-            [this.state.selectedSites[1]]
-        );
+
+        const {selectedSites} = this.state;
+        const site = selectedSites[0];
+        const siteCompare = selectedSites[1];
+
+        const sitePath = (site) => {
+            return site.defaultSensor ? [site, site.defaultSensor] : [site];
+        };
+
+        this.props.selectSingleElectricalSensor(sitePath(site));
+        this.props.selectMultipleElectricalSensor(sitePath(siteCompare));
         this.setState({compareMode: false});
     },
 
