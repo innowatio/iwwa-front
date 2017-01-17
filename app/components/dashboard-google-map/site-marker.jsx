@@ -29,6 +29,7 @@ const styles = (theme) => ({
 class SiteMarker extends Component {
 
     static propTypes = {
+        attributes: PropTypes.object,
         site: PropTypes.object
     }
 
@@ -89,6 +90,7 @@ class SiteMarker extends Component {
                 {this.state.visible ? (
                     <div style={{width: "320px", marginTop: "-20px", marginLeft: "10px"}}>
                         <SiteStatus
+                            attributes={this.props.attributes}
                             iconStatusStyle={{
                                 width: "30px",
                                 height: "30px",

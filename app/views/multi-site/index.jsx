@@ -964,6 +964,7 @@ var MultiSite = React.createClass({
     },
 
     renderMap: function (sites) {
+        const filters = this.props.collections.get("filters") || Immutable.List();
         return (
             <div className="map-embed" style={{marginBottom: "30px"}}>
                 <Radium.Style
@@ -974,6 +975,7 @@ var MultiSite = React.createClass({
                 />
                 <div style={{height: "350px"}}>
                     <DashboardGoogleMap
+                        attributes={filters}
                         sites={sites}
                         onChange={({zoom, center}) => {
                             this.setState({
@@ -991,7 +993,7 @@ var MultiSite = React.createClass({
         const theme = this.getTheme();
         const buttonStyle = {cursor: (this.state.compareMode ? "pointer" : "default")};
         const filters = this.props.collections.get("filters") || Immutable.List();
-    
+
         return sites.map((site, index) => (
             <SiteStatus
                 attributes={filters}
@@ -1042,6 +1044,7 @@ var MultiSite = React.createClass({
         const theme = this.getTheme();
         const sites = this.getFilteredSortedSites();
         const sitesLimited = this.limitSites(sites);
+        const filters = this.props.collections.get("filters") || Immutable.List();
         return (
             <content style={styles(theme).pageContent}>
                 {this.renderCompareButtons()}
@@ -1119,6 +1122,7 @@ var MultiSite = React.createClass({
                                         }}
                                     />
                                     <DashboardGoogleMap
+                                        attributes={filters}
                                         sites={sites}
                                         zoom={this.state.zoom}
                                         center={this.state.center}

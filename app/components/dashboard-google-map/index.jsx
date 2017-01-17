@@ -10,6 +10,7 @@ import SiteMarker from "./site-marker";
 class DashboardGoogleMap extends Component {
 
     static propTypes = {
+        attributes: PropTypes.object,
         center: PropTypes.any,
         onCenterChange: PropTypes.func,
         onChange: PropTypes.func,
@@ -116,6 +117,7 @@ class DashboardGoogleMap extends Component {
                 />
             ) : (
                 <SiteMarker
+                    attributes={this.props.attributes}
                     key={index}
                     lat={y}
                     lng={x}
