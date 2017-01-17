@@ -1,5 +1,6 @@
 import React, {PropTypes} from "react";
 import * as bootstrap from "react-bootstrap";
+import R from "ramda";
 import Radium from "radium";
 import moment from "moment";
 import Immutable from "immutable";
@@ -147,13 +148,17 @@ class TrendStatus extends React.Component {
                 return value.get("year") === moment().format("YYYY") &&
                 value.get("measurementType") === "activeEnergy";
             });
-            data.forEach(() => {
-                const readingMap = data.filter(value =>{
-                    return value.get("source") === "reading";
-                });
 
+            const sensorsIds = R.uniq(data.map(x => x.get("sensorId")).toArray());
+
+            sensorsIds.forEach(sensor => {
+                const readingMap = data.filter(value =>{
+                    return value.get("source") === "reading" &&
+                        value.get("sensorId") === sensor;
+                });
                 const referenceMap = data.filter(value =>{
-                    return value.get("source") === "reference";
+                    return value.get("source") === "reference" &&
+                        value.get("sensorId") === sensor;
                 });
                 const referenceTot = parseFloat(utils.getSumByPeriod(dateRange, readingMap).toFixed(2));
                 const readingTot = parseFloat(utils.getSumByPeriod(dateRange, referenceMap).toFixed(2));

@@ -79,6 +79,7 @@ const styles = (theme) => ({
 
 var SiteStatus = React.createClass({
     propTypes: {
+        attributes: PropTypes.object,
         iconStatusStyle: PropTypes.object,
         isActive: PropTypes.bool,
         isOpen: PropTypes.bool,
@@ -110,6 +111,15 @@ var SiteStatus = React.createClass({
     getTheme: function () {
         return this.context.theme || defaultTheme;
     },
+
+    getAttributeLabel:function (id) {
+        const item = this.props.attributes.find(x => {
+            return x.get("_id") === id;
+        });
+
+        return item ? item.get("label") : id;
+    },
+
     getAlarmInfo: function () {
         const {site} = this.props;
         const {
@@ -314,6 +324,7 @@ var SiteStatus = React.createClass({
     renderPrimaryInfo: function () {
         const theme = this.getTheme();
         const id = this.props.siteInfo.find(x => x.key === "_id");
+        const defaultSensor = this.props.siteInfo.find(x => x.key === "defaultSensor");
         const itemStyleOpen = {
             borderColor: (this.props.isOpen ?
                 theme.colors.secondary : theme.colors.borderBoxMultisite)
@@ -425,7 +436,7 @@ var SiteStatus = React.createClass({
                     <Link
                         to={"/chart/"}
                         style={styles(theme).buttonHistoricalConsumption}
-                        onClick={() => this.props.onClickAlarmChart([id.value])}
+                        onClick={() => this.props.onClickAlarmChart(defaultSensor.value ? [id.value, defaultSensor.value] : [id.value])}
                     >
                         <Icon
                             color={theme.colors.iconSiteButton}
@@ -507,6 +518,34 @@ var SiteStatus = React.createClass({
         return siteInfo;
     },
 
+    renderSiteAttributes: function () {
+        const theme = this.getTheme();
+        const itemStyleOpen = {
+            backgroundColor: (this.props.isOpen ?
+                theme.colors.backgroundBoxMultisiteOpen : theme.colors.backgroundBoxMultisite),
+            boxShadow: "0px 6px 6px " + theme.colors.shadowBoxMultisiteOpen
+        };
+        const siteAttributes = this.props.site.attributes ? this.props.site.attributes.map(item => {
+            const attributeLabel = this.getAttributeLabel(item.id);
+            return (
+                <div key={item.id} style={{...styles(theme).singleInfoWrp, ...itemStyleOpen}}>
+                    <div style={{
+                        width: "100%",
+                        padding: this.props.shownInMap ? "5px" : "6px 10px"
+                    }}>
+                        <div style={{
+                            fontSize: this.props.shownInMap ? "12px" : "15px",
+                            ...styles(theme).siteSecondaryText
+                        }}>
+                            {`${attributeLabel}: ${item.value}`}
+                        </div>
+                    </div>
+                </div>
+            );
+        }): null;
+        return siteAttributes;
+    },
+
     renderSecondaryInfo: function () {
         const theme = this.getTheme();
         const itemStyleOpen = {
@@ -520,6 +559,7 @@ var SiteStatus = React.createClass({
                     <div style={{clear: "both"}}></div>
                 </div>
                 {this.renderSiteInfo()}
+                {this.renderSiteAttributes()}
             </div>
         );
     },

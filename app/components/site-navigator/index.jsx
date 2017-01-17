@@ -134,8 +134,9 @@ var SiteNavigator = React.createClass({
         }
     },
     onClickParent: function (value) {
-        const site = this.getKeyParent(value[0]);
-        this.props.onChange([site]);
+        const siteId = this.getKeyParent(value[0]);
+        const site = value[0].toJS();
+        this.props.onChange(site.defaultSensor ? [siteId, site.defaultSensor] : [siteId]);
     },
     getValue: function () {
         const self = this;

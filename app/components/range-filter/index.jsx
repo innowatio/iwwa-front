@@ -38,7 +38,7 @@ class RangeFilter extends React.Component {
         const {colors} = this.getTheme();
         return (
             <div>
-                <Slider range={true} defaultValue={value} max={300}
+                <Slider range={true} defaultValue={value} max={2000}
                     onChange={(event) => this.onChangeValue(event)}
                 />
                 <Radium.Style
