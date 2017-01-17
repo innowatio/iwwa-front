@@ -28,8 +28,8 @@ function getSensorObj (collectionItem) {
         "formulas": collectionItem.get("formulas"),
         "primaryTags": collectionItem.get("primaryTags"),
         "tags": collectionItem.get("tags"),
-        "siteId": collectionItem.get("siteId"),
-        "userId": collectionItem.get("userId"),
+        "siteReference": collectionItem.get("siteReference"),
+        "userReference": collectionItem.get("userReference"),
         "parentSensorId": collectionItem.get("parentSensorId")
     };
 }
@@ -47,7 +47,6 @@ function normalizeSensorData (sensorData) {
     sensorData.isDeleted = undefined;
     sensorData.measurementType = undefined;
     sensorData.measurementTypes = undefined;
-    sensorData.createdByUser = true;
     sensorData.virtual = true;
     if (sensorData.unitOfMeasurement instanceof Object) {
         sensorData.unitOfMeasurement = sensorData.unitOfMeasurement.value;
@@ -57,9 +56,10 @@ function normalizeSensorData (sensorData) {
     }
 }
 
-function insertSensor (requestBody, dispatch) {
+function insertSensor (requestBody, dispatch, user) {
     var endpoint = "http://" + WRITE_API_ENDPOINT + "/sensors";
     let sensor = addMonitoringAttrs(requestBody);
+    sensor.userId = user.get("_id");
     axios.post(endpoint, sensor)
         .then(() => dispatch({
             type: SENSOR_CREATION_SUCCESS,
@@ -96,9 +96,14 @@ function buildFormulas (formulaItems) {
             formula: formula,
             start: "1970-01-01T00:00:00.000Z",
             end: "3000-01-01T00:00:00.000Z",
-            variables: Array.from(variables),
-            measurementType: [],
-            sampleDeltaInMS: 60000
+            variables: Array.from(variables).map(v => ({
+                measurementType: "",
+                sensorId: v,
+                symbol: v
+            })),
+            measurementType: "",
+            measurementUnit: "",
+            measurementSample: 60000
         }];
     }
 }
@@ -111,17 +116,17 @@ export const addSensorToWorkArea = (sensor) => getBasicObject(ADD_SENSOR_TO_WORK
 
 export const removeSensorFromWorkArea = (sensorId) => getBasicObject(REMOVE_SENSOR_FROM_WORK_AREA, sensorId);
 
-export const addSensor = (sensor, formulaItems) => {
+export const addSensor = (user, sensor, formulaItems) => {
     sensor.formulas = buildFormulas(formulaItems);
     return dispatch => {
         dispatch({
             type: "ADDING_SENSOR"
         });
-        insertSensor(sensor, dispatch);
+        insertSensor(sensor, dispatch, user);
     };
 };
 
-export const cloneSensors = (sensors) => {
+export const cloneSensors = (user, sensors) => {
     return dispatch => {
         dispatch({
             type: "CLONING_SENSORS"
@@ -133,7 +138,7 @@ export const cloneSensors = (sensors) => {
                 type: Types.SENSOR,
                 sensor: el
             }]);
-            insertSensor(sensor, dispatch);
+            insertSensor(sensor, dispatch, user);
         });
     };
 };
@@ -144,7 +149,7 @@ export const deleteSensors = (sensors) => {
             type: "DELETING_SENSORS"
         });
         sensors.forEach(sensor => {
-            if (sensor.get("createdByUser")) {
+            if (sensor.get("userId")) {
                 let id = sensor.get("_id");
                 var endpoint = "http://" + WRITE_API_ENDPOINT + "/sensors/" + id;
                 axios.delete(endpoint)
@@ -178,8 +183,8 @@ function callEditSensor (sensorData, sensorId) {
     };
 }
 
-export const editSensor = (sensorData, formulaItems, sensor) => {
-    if (sensor.get("createdByUser")) {
+export const editSensor = (user, sensorData, formulaItems, sensor) => {
+    if (sensor.get("userId")) {
         let id = sensor.get("_id");
         sensorData.formulas = buildFormulas(formulaItems);
         sensorData.id = id;
@@ -195,7 +200,7 @@ export const editSensor = (sensorData, formulaItems, sensor) => {
             dispatch({
                 type: "OVERRIDING_SENSOR"
             });
-            insertSensor(sensorData, dispatch);
+            insertSensor(sensorData, dispatch, user);
         };
     }
 };

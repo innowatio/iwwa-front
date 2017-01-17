@@ -257,12 +257,12 @@ var SensorForm = React.createClass({
                             component={this.renderSelectInputField}
                         />
                         <Field
-                            name="siteId"
+                            name="siteReference"
                             label="Referenza sito"
                             component={this.renderInputTextField}
                         />
                         <Field
-                            name="userId"
+                            name="userReference"
                             label="Referenza cliente"
                             component={this.renderInputTextField}
                         />
