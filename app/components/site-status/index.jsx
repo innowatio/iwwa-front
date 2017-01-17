@@ -113,11 +113,11 @@ var SiteStatus = React.createClass({
     },
 
     getAttributeLabel:function (id) {
-        const item =this.props.attributes.filter(x =>{
+        const item = this.props.attributes.find(x => {
             return x.get("_id") === id;
-        }).map(x => x.toJS()).toArray();
-        const label =item[0].label;
-        return label ? label : id;
+        });
+
+        return item ? item.get("label") : id;
     },
 
     getAlarmInfo: function () {
@@ -436,7 +436,7 @@ var SiteStatus = React.createClass({
                     <Link
                         to={"/chart/"}
                         style={styles(theme).buttonHistoricalConsumption}
-                        onClick={() => this.props.onClickAlarmChart(defaultSensor ? [id.value, defaultSensor.value] : [id.value])}
+                        onClick={() => this.props.onClickAlarmChart(defaultSensor.value ? [id.value, defaultSensor.value] : [id.value])}
                     >
                         <Icon
                             color={theme.colors.iconSiteButton}
