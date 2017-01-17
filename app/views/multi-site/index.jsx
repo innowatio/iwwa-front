@@ -980,12 +980,12 @@ var MultiSite = React.createClass({
 
     renderSites: function (sites) {
         const theme = this.getTheme();
-        const buttonStyle = {
-            cursor: (this.state.compareMode ? "pointer" : "default")
-        };
-
+        const buttonStyle = {cursor: (this.state.compareMode ? "pointer" : "default")};
+        const filters = this.props.collections.get("filters") || Immutable.List();
+    
         return sites.map((site, index) => (
             <SiteStatus
+                attributes={filters}
                 iconStatusStyle={styles(theme).iconStatusStyle}
                 isActive={!!this.state.selectedSites.find(id => id === site._id)}
                 isOpen={this.state.openPanel === site._id}
