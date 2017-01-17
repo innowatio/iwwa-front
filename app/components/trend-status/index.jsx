@@ -116,9 +116,10 @@ class TrendStatus extends React.Component {
 
         if (this.props.statusAggregate.size>0) {
             var dateRange = utils.getTimeRangeByPeriod(key);
+
             this.props.statusAggregate.filter(value =>{
-                return value.get("year")==moment().format("YYYY") &&
-                value.get("measurementType")=="comfort";
+                return value.get("year") === moment().format("YYYY") &&
+                value.get("measurementType") === "comfort";
             }).forEach(value => {
                 const tot = parseFloat(utils.getSumByPeriod(dateRange, Immutable.Map({value})).toFixed(0));
                 switch (Math.round(tot/nComfort)) {

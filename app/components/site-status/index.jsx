@@ -113,11 +113,14 @@ var SiteStatus = React.createClass({
     },
 
     getAttributeLabel:function (id) {
-        const item = this.props.attributes.find(x => {
-            return x.get("_id") === id;
-        });
+        if (this.props.attributes) {
+            const item = this.props.attributes.find(x => {
+                return x.get("_id") === id;
+            });
 
-        return item ? item.get("label") : id;
+            return item ? item.get("label") : id;
+        }
+        return id;
     },
 
     getAlarmInfo: function () {
