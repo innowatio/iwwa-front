@@ -558,7 +558,7 @@ var MultiSite = React.createClass({
     },
 
     onCompareClick: function () {
-        !this.state.compareMode ? this.setState({showCompareMessage: true}) : null;
+        !this.state.compareMode ? this.setState({showCompareMessage: true}) : this.setState({showCompareMessage: false});
         this.setState({compareMode: !this.state.compareMode, selectedSites: []}),
         this.state.openPanel ? this.setState({openPanel: ""}) : null;
     },
@@ -731,7 +731,8 @@ var MultiSite = React.createClass({
                         "Annulla comparazione", "delete", false,
                         () => this.setState({
                             compareMode: false,
-                            selectedSites: []
+                            selectedSites: [],
+                            showCompareMessage: false
                         }))
                     }
                 </div>

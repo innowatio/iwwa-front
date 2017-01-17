@@ -273,8 +273,8 @@ var MultiSiteFilter = React.createClass({
                                 fontSize: "16px",
                                 fontWeight: "300",
                                 padding: "0px 40px 0px 16px",
-                                height: "44px",
-                                lineHeight: "44px"
+                                height: "40px",
+                                lineHeight: "40px"
                             },
                             ".ant-collapse > .ant-collapse-item > .ant-collapse-header .arrow": {
                                 color: colors.mainFontColor,
@@ -282,7 +282,7 @@ var MultiSiteFilter = React.createClass({
                                 left: "85%",
                                 width: "35px",
                                 height: "auto",
-                                lineHeight: "44px"
+                                lineHeight: "40px"
                             },
                             ".ant-collapse-content": {
                                 backgroundColor: colors.transparent,
