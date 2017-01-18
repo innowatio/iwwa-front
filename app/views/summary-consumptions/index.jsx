@@ -64,7 +64,7 @@ var styleRoundedDiv = ({colors}) => ({
     width: "300px",
     height: "300px",
     padding: "70px 10px 80px 10px",
-    backgroundColor: colors.secondary
+    backgroundColor: colors.buttonPrimary
 });
 
 var styleRoundedDivYear = ({colors}) => ({
@@ -73,7 +73,7 @@ var styleRoundedDivYear = ({colors}) => ({
     width: "120px",
     height: "120px",
     padding: "35px 5px 25px 5px",
-    backgroundColor: colors.secondary
+    backgroundColor: colors.buttonPrimary
 });
 
 var styleMeasure  = ({colors}) => ({

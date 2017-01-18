@@ -83,7 +83,7 @@ var VariablesPanel = React.createClass({
                             <MeasureLabel
                                 id={variable.name || variable._id}
                                 unit={variable.unit}
-                                value={variable.measurementValue.toFixed(2)}
+                                value={parseFloat(variable.measurementValue.toFixed(2))}
                             />
                         </div>
                     </bootstrap.OverlayTrigger>
@@ -95,18 +95,14 @@ var VariablesPanel = React.createClass({
         const theme = this.getTheme();
         const numberOfItem = this.getItemToShow();
         var settings = {
-            arrow: false,
+            arrows: false,
             dots: true,
-            dotsClass: "slick-dots",
             infinite: false,
-            speed: 500,
+            speed: 800,
             slidesToShow: numberOfItem,
             slidesToScroll: numberOfItem - 1,
             swipeToSilde: true,
             lazyLoad: true,
-            autoplay: false,
-            focusOnSelect: true,
-            draggable: true,
             variableWidth: true
         };
         return (

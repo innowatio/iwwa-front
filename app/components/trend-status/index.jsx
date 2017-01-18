@@ -1,5 +1,6 @@
 import React, {PropTypes} from "react";
 import * as bootstrap from "react-bootstrap";
+import R from "ramda";
 import Radium from "radium";
 import moment from "moment";
 import Immutable from "immutable";
@@ -115,9 +116,10 @@ class TrendStatus extends React.Component {
 
         if (this.props.statusAggregate.size>0) {
             var dateRange = utils.getTimeRangeByPeriod(key);
+
             this.props.statusAggregate.filter(value =>{
-                return value.get("year")==moment().format("YYYY") &&
-                value.get("measurementType")=="comfort";
+                return value.get("year") === moment().format("YYYY") &&
+                value.get("measurementType") === "comfort";
             }).forEach(value => {
                 const tot = parseFloat(utils.getSumByPeriod(dateRange, Immutable.Map({value})).toFixed(0));
                 switch (Math.round(tot/nComfort)) {
@@ -147,13 +149,17 @@ class TrendStatus extends React.Component {
                 return value.get("year") === moment().format("YYYY") &&
                 value.get("measurementType") === "activeEnergy";
             });
-            data.forEach(() => {
-                const readingMap = data.filter(value =>{
-                    return value.get("source") === "reading";
-                });
 
+            const sensorsIds = R.uniq(data.map(x => x.get("sensorId")).toArray());
+
+            sensorsIds.forEach(sensor => {
+                const readingMap = data.filter(value =>{
+                    return value.get("source") === "reading" &&
+                        value.get("sensorId") === sensor;
+                });
                 const referenceMap = data.filter(value =>{
-                    return value.get("source") === "reference";
+                    return value.get("source") === "reference" &&
+                        value.get("sensorId") === sensor;
                 });
                 const referenceTot = parseFloat(utils.getSumByPeriod(dateRange, readingMap).toFixed(2));
                 const readingTot = parseFloat(utils.getSumByPeriod(dateRange, referenceMap).toFixed(2));

@@ -74,6 +74,15 @@ export const styles = (theme) => ({
         padding: "10px",
         height: measures.mainComponentHeight
     },
+    mainDivStyleScroll: {
+        width: "98%",
+        marginLeft: "1%",
+        marginTop: "1%",
+        borderRadius: "3px",
+        overflow: "auto",
+        padding: "10px",
+        height: "100%"
+    },
     titlePage: {
         width: "100%",
         color: theme.colors.titlePage,

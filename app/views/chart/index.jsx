@@ -697,8 +697,12 @@ var Chart = React.createClass({
         const {alarms} = this.props.chartState;
         return (
             <div style={styles(theme).pageContent}>
-                <div style={{...styles(theme).titlePage, justifyContent: "space-between", flexDirection: "row",
-                alignItems: "center"}}>
+                <div style={{
+                    ...styles(theme).titlePage,
+                    justifyContent: "space-between",
+                    flexDirection: "row",
+                    alignItems: "center"
+                }}>
                     {/* Title Page */}
                     <div style={{
                         fontSize: "18px",
@@ -767,7 +771,7 @@ var Chart = React.createClass({
                     />
                 </Button>
                 {/* Button top chart */}
-                <div style={styles(theme).mainDivStyle}>
+                <div style={styles(theme).mainDivStyleScroll}>
                     <bootstrap.Col sm={12} style={styles(theme).colVerticalPadding}>
                         {this.renderChartResetButton()}
                         <span className="pull-right" style={{display: "flex"}}>

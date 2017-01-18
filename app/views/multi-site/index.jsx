@@ -258,6 +258,7 @@ var MultiSite = React.createClass({
     getSiteInfo: function () {
         return [
             {label: "ID", key: "_id"},
+            {label: "Sensore predefinito", key: "defaultSensor"},
             {label: "Impiegati", key: "employees"},
             {label: "Tipologia attività", key: "businessType"},
             {label: "Area mq", key: "areaInMq"},
@@ -558,16 +559,23 @@ var MultiSite = React.createClass({
     },
 
     onCompareClick: function () {
-        !this.state.compareMode ? this.setState({showCompareMessage: true}) : null;
+        !this.state.compareMode ? this.setState({showCompareMessage: true}) : this.setState({showCompareMessage: false});
         this.setState({compareMode: !this.state.compareMode, selectedSites: []}),
         this.state.openPanel ? this.setState({openPanel: ""}) : null;
     },
 
     onCompareSites: function () {
-        this.props.selectSingleElectricalSensor([this.state.selectedSites[0]]);
-        this.props.selectMultipleElectricalSensor(
-            [this.state.selectedSites[1]]
-        );
+
+        const {selectedSites} = this.state;
+        const site = selectedSites[0];
+        const siteCompare = selectedSites[1];
+
+        const sitePath = (site) => {
+            return site.defaultSensor ? [site, site.defaultSensor] : [site];
+        };
+
+        this.props.selectSingleElectricalSensor(sitePath(site));
+        this.props.selectMultipleElectricalSensor(sitePath(siteCompare));
         this.setState({compareMode: false});
     },
 
@@ -731,7 +739,8 @@ var MultiSite = React.createClass({
                         "Annulla comparazione", "delete", false,
                         () => this.setState({
                             compareMode: false,
-                            selectedSites: []
+                            selectedSites: [],
+                            showCompareMessage: false
                         }))
                     }
                 </div>
@@ -955,6 +964,7 @@ var MultiSite = React.createClass({
     },
 
     renderMap: function (sites) {
+        const filters = this.props.collections.get("filters") || Immutable.List();
         return (
             <div className="map-embed" style={{marginBottom: "30px"}}>
                 <Radium.Style
@@ -965,6 +975,7 @@ var MultiSite = React.createClass({
                 />
                 <div style={{height: "350px"}}>
                     <DashboardGoogleMap
+                        attributes={filters}
                         sites={sites}
                         onChange={({zoom, center}) => {
                             this.setState({
@@ -980,12 +991,12 @@ var MultiSite = React.createClass({
 
     renderSites: function (sites) {
         const theme = this.getTheme();
-        const buttonStyle = {
-            cursor: (this.state.compareMode ? "pointer" : "default")
-        };
+        const buttonStyle = {cursor: (this.state.compareMode ? "pointer" : "default")};
+        const filters = this.props.collections.get("filters") || Immutable.List();
 
         return sites.map((site, index) => (
             <SiteStatus
+                attributes={filters}
                 iconStatusStyle={styles(theme).iconStatusStyle}
                 isActive={!!this.state.selectedSites.find(id => id === site._id)}
                 isOpen={this.state.openPanel === site._id}
@@ -1033,6 +1044,7 @@ var MultiSite = React.createClass({
         const theme = this.getTheme();
         const sites = this.getFilteredSortedSites();
         const sitesLimited = this.limitSites(sites);
+        const filters = this.props.collections.get("filters") || Immutable.List();
         return (
             <content style={styles(theme).pageContent}>
                 {this.renderCompareButtons()}
@@ -1110,6 +1122,7 @@ var MultiSite = React.createClass({
                                         }}
                                     />
                                     <DashboardGoogleMap
+                                        attributes={filters}
                                         sites={sites}
                                         zoom={this.state.zoom}
                                         center={this.state.center}
