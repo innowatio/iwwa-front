@@ -161,7 +161,7 @@ export function extractSensorsFromFormula (sensor, allSensors, extractedSensors 
 }
 
 export function reduceFormula (sensor, allSensors) {
-    if (!sensor.get("formulas")) {
+    if (!sensor.get("formulas") || !sensor.get("formulas").size > 0) {
         return null;
     }
     const result = reduceFormulaData(sensor, allSensors);
@@ -177,7 +177,7 @@ export function reduceFormula (sensor, allSensors) {
 
 function reduceFormulaData (sensor, allSensors, variables = [], formula) {
     if (sensor) {
-        const sensorFormula = sensor.get("formulas") ? sensor.get("formulas").first() : null;
+        const sensorFormula = sensor.get("formulas") && sensor.get("formulas").size > 0 ? sensor.get("formulas").first() : null;
         if (sensorFormula) {
             formula = sensorFormula.get("formula");
             sensorFormula.get("variables").forEach(item => {

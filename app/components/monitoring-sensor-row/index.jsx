@@ -104,7 +104,7 @@ var SensorRow = React.createClass({
     },
     renderInfoButton: function (sensor) {
         const theme = this.getTheme();
-        const sensorFormula = sensor.get("formulas") ? sensor.get("formulas").first().get("formula") : null;
+        const sensorFormula = sensor.get("formulas") && sensor.get("formulas").size > 0 ? sensor.get("formulas").first().get("formula") : null;
         const tooltipText = (
             <label>
                 {sensor.get("description")}
