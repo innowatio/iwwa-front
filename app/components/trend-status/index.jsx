@@ -161,8 +161,9 @@ class TrendStatus extends React.Component {
                     return value.get("source") === "reference" &&
                         value.get("sensorId") === sensor;
                 });
-                const referenceTot = parseFloat(utils.getSumByPeriod(dateRange, readingMap).toFixed(2));
-                const readingTot = parseFloat(utils.getSumByPeriod(dateRange, referenceMap).toFixed(2));
+
+                const referenceTot = parseFloat(utils.getSumByPeriod(dateRange, referenceMap).toFixed(2));
+                const readingTot = parseFloat(utils.getSumByPeriod(dateRange, readingMap).toFixed(2));
                 const result = (readingTot-referenceTot) / referenceTot;
 
                 if (result <= -1) {
