@@ -1,8 +1,9 @@
-var Immutable  = require("immutable");
-var R          = require("ramda");
-var React      = require("react");
-var bootstrap  = require("react-bootstrap");
-var IPropTypes = require("react-immutable-proptypes");
+import Immutable from "immutable";
+import {subscribeDaily} from "iwwa-utils";
+import R from "ramda";
+import React from "react";
+import {Col} from "react-bootstrap";
+import IPropTypes from "react-immutable-proptypes";
 import moment from "moment";
 import {connect} from "react-redux";
 import {bindActionCreators} from "redux";
@@ -202,51 +203,57 @@ var Chart = React.createClass({
         });
     },
 
-    subscribeToMisure: function (props) {
-        const chartFilter = props.chartState.charts;
+    getMisureSubscribeDates: function (chartFilter) {
+        var res = {};
         const dateFirstChartState = chartFilter[0].date;
-        var dateStart;
-        var dateEnd;
         // Query for date-compare
         if (dateFirstChartState.type === "dateCompare") {
             const dateSecondChartState = chartFilter[1].date;
-            dateStart = [
+            res.dateStart = [
                 moment(dateFirstChartState.start).format("YYYY-MM-DD"),
                 moment(dateSecondChartState.start).format("YYYY-MM-DD")
             ];
-            dateEnd = [
+            res.dateEnd = [
                 moment(dateFirstChartState.end).format("YYYY-MM-DD"),
                 moment(dateSecondChartState.end).format("YYYY-MM-DD")
             ];
         // Query for date-filter
         } else if (dateFirstChartState.type === "dateFilter") {
-            dateStart = moment(dateFirstChartState.start).format("YYYY-MM-DD");
-            dateEnd = moment(dateFirstChartState.end).format("YYYY-MM-DD");
+            res.dateStart = moment(dateFirstChartState.start).format("YYYY-MM-DD");
+            res.dateEnd = moment(dateFirstChartState.end).format("YYYY-MM-DD");
         } else {
             // If no data is selected, is displayed the past month.
-            dateStart = moment().startOf("month").format("YYYY-MM-DD");
-            dateEnd = moment().endOf("month").format("YYYY-MM-DD");
+            res.dateStart = moment().startOf("month").format("YYYY-MM-DD");
+            res.dateEnd = moment().endOf("month").format("YYYY-MM-DD");
         }
+        return res;
+    },
+
+    subscribeToMisure: function (props) {
+        const self = this;
+        const chartFilter = props.chartState.charts;
         const sensors = chartFilter.map(singleSelection => singleSelection.sensorId);
         const measurementTypes = chartFilter.map(singleSelection => singleSelection.measurementType.key);
         const sources = chartFilter.map(singleSelection => singleSelection.source.key);
         // Need workaround to consider local datetime
         sensors[0] && sensors.forEach((sensorId, idx) => {
-            props.asteroid.subscribe(
-                "dailyMeasuresBySensor",
-                sensorId,
-                moment(R.is(Array, dateStart) ? dateStart[idx] : dateStart).subtract(1, "days").format("YYYY-MM-DD"),
-                moment(R.is(Array, dateEnd) ? dateEnd[idx] : dateEnd).add(1, "days").format("YYYY-MM-DD"),
-                sources[idx],
-                measurementTypes[idx]
-            );
-
-            props.asteroid.subscribe(
-                "alarmsAggregates",
-                measurementTypes[idx],
-                R.is(Array, dateStart) ? dateStart[idx] : dateStart,
-                R.is(Array, dateEnd) ? dateEnd[idx] : dateEnd
-            );
+            subscribeDaily(() => {
+                const res = self.getMisureSubscribeDates(chartFilter);
+                props.asteroid.subscribe(
+                    "dailyMeasuresBySensor",
+                    sensorId,
+                    moment(R.is(Array, res.dateStart) ? res.dateStart[idx] : res.dateStart).subtract(1, "days").format("YYYY-MM-DD"),
+                    moment(R.is(Array, res.dateEnd) ? res.dateEnd[idx] : res.dateEnd).add(1, "days").format("YYYY-MM-DD"),
+                    sources[idx],
+                    measurementTypes[idx]
+                );
+                props.asteroid.subscribe(
+                    "alarmsAggregates",
+                    measurementTypes[idx],
+                    R.is(Array, res.dateStart) ? res.dateStart[idx] : res.dateStart,
+                    R.is(Array, res.dateEnd) ? res.dateEnd[idx] : res.dateEnd
+                );
+            });
         });
     },
     getAlarmsData: function () {
@@ -765,7 +772,7 @@ var Chart = React.createClass({
                 </Button>
                 {/* Button top chart */}
                 <div style={styles(theme).mainDivStyleScroll}>
-                    <bootstrap.Col sm={12} style={styles(theme).colVerticalPadding}>
+                    <Col sm={12} style={styles(theme).colVerticalPadding}>
                         {this.renderChartResetButton()}
                         <span className="pull-right" style={{display: "flex"}}>
                             <ButtonGroupSelect
@@ -784,9 +791,9 @@ var Chart = React.createClass({
                                 value={this.selectedSources()}
                             />
                         </span>
-                    </bootstrap.Col>
+                    </Col>
                     {/* Chart and widget modal */}
-                    <bootstrap.Col className="modal-container" sm={12}>
+                    <Col className="modal-container" sm={12}>
                         {this.renderFullscreenModal()}
                         {this.renderConfirmModal()}
                         <HistoricalGraph
@@ -799,9 +806,9 @@ var Chart = React.createClass({
                             resetZoom={this.props.resetZoom}
                             setZoomExtremes={this.props.setZoomExtremes}
                         />
-                    </bootstrap.Col>
+                    </Col>
                     {/* Button bottom chart */}
-                    <bootstrap.Col sm={12}>
+                    <Col sm={12}>
                         <span className="pull-left" style={{display: "flex", width: "auto"}}>
                             <ConsumptionButtons
                                 allowedValues={variables}
@@ -828,7 +835,7 @@ var Chart = React.createClass({
                                 value={[this.props.chartState.charts[0].measurementType]}
                             />
                         </span>
-                    </bootstrap.Col>
+                    </Col>
                 </div>
                 <Button
                     style={

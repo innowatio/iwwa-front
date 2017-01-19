@@ -77,12 +77,8 @@ var DateFilter = React.createClass({
         return this.context.theme || defaultTheme;
     },
     setMonthlyDate: function (dateValue) {
-        const startDate = moment(dateValue).add({minutes: moment(dateValue).utcOffset()}).valueOf();
-        // Add one day to avoid to go in the past month.
-        const endDate = moment(dateValue)
-            .add({minutes: moment(dateValue).utcOffset()})
-            .endOf("month")
-            .valueOf();
+        const startDate = moment(dateValue).valueOf();
+        const endDate = moment(dateValue).endOf("month").valueOf();
         this.props.onChange({
             start: startDate,
             end: endDate,

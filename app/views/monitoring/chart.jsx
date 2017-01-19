@@ -1,3 +1,4 @@
+import {subscribeDaily} from "iwwa-utils";
 import React, {PropTypes} from "react";
 import IPropTypes from "react-immutable-proptypes";
 import {connect} from "react-redux";
@@ -66,20 +67,23 @@ var MonitoringChartView = React.createClass({
         return sensor.get("unitOfMeasurement") ? sensor.get("unitOfMeasurement") : "indefinito";
     },
     subscribeToSensorsData: function (props) {
+        const self = this;
         const sensors = props.monitoringChart.sensorsToDraw;
-        let allSensors = this.getAllSensors();
+        let allSensors = self.getAllSensors();
         sensors[0] && sensors.forEach((sensor) => {
-            let sensorObj = this.getSensorObj(sensor, allSensors);
+            let sensorObj = self.getSensorObj(sensor, allSensors);
             let sensors = extractSensorsFromFormula(sensorObj, allSensors);
-            sensors.forEach((sensor) => {
-                props.asteroid.subscribe(
-                    "dailyMeasuresBySensor",
-                    sensor.get("_id"),
-                    this.getStartDate(props).format("YYYY-MM-DD"),
-                    this.getEndDate(props).format("YYYY-MM-DD"),
-                    "reading",
-                    sensor.get("measurementType")
-                );
+            sensors.forEach(sensor => {
+                subscribeDaily(() => {
+                    props.asteroid.subscribe(
+                        "dailyMeasuresBySensor",
+                        sensor.get("_id"),
+                        self.getStartDate(props).format("YYYY-MM-DD"),
+                        self.getEndDate(props).format("YYYY-MM-DD"),
+                        "reading",
+                        sensor.get("measurementType")
+                    );
+                });
             });
         });
     },

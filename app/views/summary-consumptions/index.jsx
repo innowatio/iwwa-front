@@ -1,4 +1,5 @@
 import {Map} from "immutable";
+import utils, {subscribeDaily} from "iwwa-utils";
 import get from "lodash.get";
 import Radium from "radium";
 import * as bootstrap from "react-bootstrap";
@@ -6,7 +7,6 @@ import React from "react";
 import IPropTypes from "react-immutable-proptypes";
 import moment from "moment";
 import "moment/locale/it";
-import utils from "iwwa-utils";
 
 import {partial, is} from "ramda";
 import {
@@ -20,7 +20,6 @@ import {
 } from "components";
 import {connect} from "react-redux";
 import {bindActionCreators} from "redux";
-//import icons from "lib/icons";
 import {defaultTheme} from "lib/theme";
 import {tabParameters} from "lib/consumptions-utils";
 import {selectSite, selectPeriod} from "actions/consumptions";
@@ -227,28 +226,29 @@ var SummaryConsumptions = React.createClass({
     },
 
     subscribeToConsumptions: function () {
-        const periods = [moment().subtract(1, "year").format("YYYY"), moment().format("YYYY")];
-        const dateEnd = moment().format("YYYY-MM-DD");
-        const dateStart = moment().subtract(7, "week").format("YYYY-MM-DD");
-
-        periods.map(year => {
+        const self = this;
+        subscribeDaily(() => {
+            const periods = [moment().subtract(1, "year").format("YYYY"), moment().format("YYYY")];
+            const dateEnd = moment().format("YYYY-MM-DD");
+            const dateStart = moment().subtract(7, "week").format("YYYY-MM-DD");
+            periods.map(year => {
+                self.props.asteroid.subscribe(
+                    "yearlyConsumptions",
+                    self.props.consumptions.fullPath[0],
+                    year,
+                    "reading",
+                    "activeEnergy"
+                );
+            });
             this.props.asteroid.subscribe(
-                "yearlyConsumptions",
-                this.props.consumptions.fullPath[0],
-                year,
+                "dailyMeasuresBySensor",
+                self.props.consumptions.fullPath[0],
+                dateStart,
+                dateEnd,
                 "reading",
                 "activeEnergy"
             );
         });
-
-        this.props.asteroid.subscribe(
-            "dailyMeasuresBySensor",
-            this.props.consumptions.fullPath[0],
-            dateStart,
-            dateEnd,
-            "reading",
-            "activeEnergy"
-        );
     },
 
     getTheme: function () {

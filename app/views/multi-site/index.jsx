@@ -1,4 +1,5 @@
 import Immutable  from "immutable";
+import {subscribeDaily} from "iwwa-utils";
 import get from "lodash.get";
 import Radium from "radium";
 import R from "ramda";
@@ -218,13 +219,16 @@ var MultiSite = React.createClass({
     },
 
     componentDidMount: function () {
-        this.props.asteroid.subscribe("sites");
-        this.props.asteroid.subscribe("filters");
-        this.props.asteroid.subscribe("dashboardAlarms");
-        this.props.asteroid.subscribe("dashboardAlarmsAggregates");
-        this.props.asteroid.subscribe("dashboardDailyMeasurements");
-        this.props.asteroid.subscribe("dashboardRealtimeAggregates");
-        this.props.asteroid.subscribe("dashboardYearlyConsumptions");
+        const self = this;
+        self.props.asteroid.subscribe("sites");
+        self.props.asteroid.subscribe("filters");
+        self.props.asteroid.subscribe("dashboardAlarms");
+        self.props.asteroid.subscribe("dashboardRealtimeAggregates");
+        subscribeDaily(() => {
+            self.props.asteroid.subscribe("dashboardAlarmsAggregates");
+            self.props.asteroid.subscribe("dashboardDailyMeasurements");
+            self.props.asteroid.subscribe("dashboardYearlyConsumptions");
+        });
     },
 
     componentWillReceiveProps: function () {
