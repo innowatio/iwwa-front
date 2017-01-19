@@ -216,7 +216,7 @@ export function getMonitoringSensors (sensorsCollection, viewAll, userSensors) {
         }
     });
     const complete = decorateWithMeasurementInfo(sensorsCollection.filter(
-        sensor => !sensor.get("isDeleted") && sensor.get("type") !== "pod"
+        sensor => !sensor.get("isDeleted")
     ), originalToHide);
     return viewAll ? complete : complete.filter(
         sensor => userSensors && userSensors.indexOf(getSensorId(sensor)) >= 0
