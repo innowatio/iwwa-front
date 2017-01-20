@@ -17,7 +17,7 @@ import {
 } from "../actions/sensors";
 
 import {Types} from "lib/dnd-utils";
-import {formulaToOperator, getRightFormula, getSensorId} from "lib/sensors-utils";
+import {formulaToOperator, getRightFormula, getSensorId, getVariableSensorId} from "lib/sensors-utils";
 import {addOrRemove, remove} from "./utils";
 
 const defaultState = {
@@ -53,7 +53,7 @@ function parseSensorFormula (sensor) {
     };
     const formulaObj = getRightFormula(sensor);
     if (formulaObj) {
-        result.sensors = formulaObj.get("variables").map(v => v.get("sensorId") + "-" + v.get("measurementType")).toArray();
+        result.sensors = formulaObj.get("variables").map(v => getVariableSensorId(v)).toArray();
         result.formulaItems = populateFormulaItems(formulaObj);
     }
     return result;
@@ -77,7 +77,7 @@ function populateFormulaItems (formulaObj) {
         }
         const v = variables.find(v => v.get("symbol") === el);
         return {
-            sensor: v ? v.get("sensorId") + "-" + v.get("measurementType") : el,
+            sensor: v ? getVariableSensorId(v) : el,
             type: Types.SENSOR
         };
     }, decomposed);

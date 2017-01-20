@@ -97,13 +97,13 @@ export const sensorOptions = {
     aggregationType: [
         {value: "average", label: "Media dei valori"},
         {value: "sum", label: "Somma dei valori"},
-        {value: "lastValue", label: "Ultimo valore"}
+        {value: "newest", label: "Ultimo valore"}
     ]
 };
 
 export function getAggregationFunction (aggregationType) {
     switch (aggregationType) {
-        case "lastValue":
+        case "newest":
             return (values) => {
                 if (values && values.length > 0) {
                     return values[values.length - 1];
@@ -145,6 +145,10 @@ export function getSensorId (sensor) {
     return sensor.get("_id") + (sensor.get("measurementType") ? "-" + sensor.get("measurementType") : "");
 }
 
+export function getVariableSensorId (variable) {
+    return variable.get("sensorId") + (variable.get("measurementType") ? "-" + variable.get("measurementType") : "");
+}
+
 export function getReadableSensorFormula (sensor) {
     const formulaObj = getRightFormula(sensor);
     if (formulaObj) {
@@ -155,7 +159,7 @@ export function getReadableSensorFormula (sensor) {
                 return el;
             } else {
                 const v = variables.find(v => v.get("symbol") === el);
-                return v ? v.get("sensorId") + "-" + v.get("measurementType") : el;
+                return v ? getVariableSensorId(v) : el;
             }
         }, decomposed));
     }
@@ -165,7 +169,7 @@ export function getReadableSensorFormula (sensor) {
 export function getRightFormula (sensor) {
     const sensorFormulas = sensor.get("formulas");
     if (!R.isNil(sensorFormulas) && sensorFormulas.size > 0) {
-        return sensorFormulas.find(f => f.get("measurementType") === sensor.get("measurementType"));
+        return sensor.get("measurementType") ? sensorFormulas.find(f => f.get("measurementType") === sensor.get("measurementType")) : sensorFormulas.first();
     }
     return null;
 }
@@ -175,7 +179,7 @@ export function extractSensorsFromFormula (sensor, allSensors, extractedSensors 
         const formulaObj = getRightFormula(sensor);
         if (formulaObj) {
             formulaObj.get("variables").forEach(v => {
-                const sensorId = v.get("sensorId") + "-" + v.get("measurementType");
+                const sensorId = getVariableSensorId(v);
                 extractSensorsFromFormula(allSensors.get(sensorId), allSensors, extractedSensors);
             });
         } else {
@@ -206,7 +210,7 @@ function reduceFormulaData (sensor, allSensors, variables = [], formula, symbol)
         if (formulaObj) {
             formula = formulaObj.get("formula");
             formulaObj.get("variables").forEach(v => {
-                const sensorId = v.get("sensorId") + "-" + v.get("measurementType");
+                const sensorId = getVariableSensorId(v);
                 const sensorSymbol = v.get("symbol");
                 const reduced = reduceFormulaData(allSensors.get(sensorId), allSensors, variables, formula, sensorSymbol);
                 if (reduced.formula) {
