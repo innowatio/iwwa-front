@@ -53,20 +53,20 @@ function buildFormulaData (day, chartState, sortedAggregate, data, allSensors) {
     const {source, formula} = chartState;
     let sensorsData = [];
     let hasSomeAggregates = false;
-    formula.get("variables").forEach(sensorId => {
-        let sensor = allSensors.get(sensorId);
+    formula.get("variables").forEach(v => {
+        const sensor = allSensors.get(v.sensorId);
         const aggregate = sortedAggregate.get(
             `${sensor.get("_id")}-${day.format("YYYY-MM-DD")}-${source.key}-${sensor.get("measurementType")}`
         );
         sensorsData.push({
-            sensorId: sensorId,
+            symbol: v.symbol,
             measurementTimes: aggregate ? aggregate.get("measurementTimes") : "",
             measurementValues: aggregate ? aggregate.get("measurementValues"): ""
         });
         hasSomeAggregates = hasSomeAggregates || aggregate;
     });
     populateData(data, day, hasSomeAggregates, () => {
-        let result = evaluateFormula({formula: formula.get("formula")}, sensorsData);
+        const result = evaluateFormula({formula: formula.get("formula")}, sensorsData);
         return getMeasurement(Immutable.fromJS(result), chartState.date);
     });
 }

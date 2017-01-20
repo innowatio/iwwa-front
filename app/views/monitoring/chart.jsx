@@ -69,10 +69,10 @@ var MonitoringChartView = React.createClass({
     subscribeToSensorsData: function (props) {
         const self = this;
         const sensors = props.monitoringChart.sensorsToDraw;
-        let allSensors = self.getAllSensors();
-        sensors[0] && sensors.forEach((sensor) => {
-            let sensorObj = self.getSensorObj(sensor, allSensors);
-            let sensors = extractSensorsFromFormula(sensorObj, allSensors);
+        const allSensors = self.getAllSensors();
+        sensors[0] && sensors.forEach(sensor => {
+            const sensorObj = self.getSensorObj(sensor, allSensors);
+            const sensors = extractSensorsFromFormula(sensorObj, allSensors);
             sensors.forEach(sensor => {
                 subscribeDaily(() => {
                     props.asteroid.subscribe(

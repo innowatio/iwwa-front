@@ -86,7 +86,7 @@ var SensorForm = React.createClass({
     renderSensorAggregation: function () {
         let {showSensorAggregator, sensorState, currentSensor} = this.props;
         if (showSensorAggregator || sensorState.formulaItems.length > 0 ||
-            (currentSensor && currentSensor.get("formulas") && currentSensor.get("formulas").size == 1)) {
+            (currentSensor && currentSensor.get("formulas") && currentSensor.get("formulas").size > 0)) {
             return (
                 <SensorAggregator
                     allSensors={this.props.allSensors}

@@ -7,7 +7,7 @@ import {partial} from "ramda";
 
 import {Types} from "lib/dnd-utils";
 import {hasRole, VIEW_FORMULA_DETAILS} from "lib/roles-utils";
-import {getSensorLabel} from "lib/sensors-utils";
+import {getReadableSensorFormula, getSensorLabel} from "lib/sensors-utils";
 import {defaultTheme} from "lib/theme";
 import {Icon, TagList, TooltipIconButton} from "components";
 
@@ -104,12 +104,12 @@ var SensorRow = React.createClass({
     },
     renderInfoButton: function (sensor) {
         const theme = this.getTheme();
-        const sensorFormula = sensor.get("formulas") && sensor.get("formulas").size > 0 ? sensor.get("formulas").first().get("formula") : null;
+        const sensorFormula = hasRole(this.props.asteroid, VIEW_FORMULA_DETAILS) ? getReadableSensorFormula(sensor) : null;
         const tooltipText = (
             <label>
                 {sensor.get("description")}
                 <br />
-                {sensorFormula && hasRole(this.props.asteroid, VIEW_FORMULA_DETAILS) ? sensorFormula : null}
+                {sensorFormula}
             </label>
         );
         return (

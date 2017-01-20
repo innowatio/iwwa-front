@@ -145,13 +145,38 @@ export function getSensorId (sensor) {
     return sensor.get("_id") + (sensor.get("measurementType") ? "-" + sensor.get("measurementType") : "");
 }
 
+export function getReadableSensorFormula (sensor) {
+    const formulaObj = getRightFormula(sensor);
+    if (formulaObj) {
+        const variables = formulaObj.get("variables");
+        const decomposed = f.decomposeFormula({formula: formulaObj.get("formula")}, variables.toJS());
+        return R.join("", R.map(el => {
+            if (formulaToOperator[el] || !isNaN(el)) {
+                return el;
+            } else {
+                const v = variables.find(v => v.get("symbol") === el);
+                return v ? v.get("sensorId") + "-" + v.get("measurementType") : el;
+            }
+        }, decomposed));
+    }
+    return null;
+}
+
+export function getRightFormula (sensor) {
+    const sensorFormulas = sensor.get("formulas");
+    if (!R.isNil(sensorFormulas) && sensorFormulas.size > 0) {
+        return sensorFormulas.find(f => f.get("measurementType") === sensor.get("measurementType"));
+    }
+    return null;
+}
+
 export function extractSensorsFromFormula (sensor, allSensors, extractedSensors = []) {
     if (sensor) {
-        if (sensor.get("formulas") && sensor.get("formulas").size > 0) {
-            sensor.get("formulas").forEach(formula => {
-                formula.get("variables").forEach(item => {
-                    extractSensorsFromFormula(allSensors.get(item), allSensors, extractedSensors);
-                });
+        const formulaObj = getRightFormula(sensor);
+        if (formulaObj) {
+            formulaObj.get("variables").forEach(v => {
+                const sensorId = v.get("sensorId") + "-" + v.get("measurementType");
+                extractSensorsFromFormula(allSensors.get(sensorId), allSensors, extractedSensors);
             });
         } else {
             extractedSensors.push(sensor);
@@ -165,7 +190,7 @@ export function reduceFormula (sensor, allSensors) {
         return null;
     }
     const result = reduceFormulaData(sensor, allSensors);
-    const formula = sensor.get("formulas").first();
+    const formula = getRightFormula(sensor);
     return Immutable.Map({
         formula: result.formula,
         variables: result.variables,
@@ -175,20 +200,25 @@ export function reduceFormula (sensor, allSensors) {
     });
 }
 
-function reduceFormulaData (sensor, allSensors, variables = [], formula) {
+function reduceFormulaData (sensor, allSensors, variables = [], formula, symbol) {
     if (sensor) {
-        const sensorFormula = sensor.get("formulas") && sensor.get("formulas").size > 0 ? sensor.get("formulas").first() : null;
-        if (sensorFormula) {
-            formula = sensorFormula.get("formula");
-            sensorFormula.get("variables").forEach(item => {
-                const reduced = reduceFormulaData(allSensors.get(item), allSensors, variables, formula);
+        const formulaObj = getRightFormula(sensor);
+        if (formulaObj) {
+            formula = formulaObj.get("formula");
+            formulaObj.get("variables").forEach(v => {
+                const sensorId = v.get("sensorId") + "-" + v.get("measurementType");
+                const sensorSymbol = v.get("symbol");
+                const reduced = reduceFormulaData(allSensors.get(sensorId), allSensors, variables, formula, sensorSymbol);
                 if (reduced.formula) {
-                    formula = sensorFormula.get("formula").replace(new RegExp(item, "g"), reduced.formula);
+                    formula = formulaObj.get("formula").replace(new RegExp(sensorSymbol, "g"), reduced.formula);
                 }
             });
         } else {
             formula = null;
-            variables.push(getSensorId(sensor));
+            variables.push({
+                sensorId: getSensorId(sensor),
+                symbol: symbol
+            });
         }
     }
     return {

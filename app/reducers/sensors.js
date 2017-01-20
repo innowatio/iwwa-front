@@ -17,7 +17,7 @@ import {
 } from "../actions/sensors";
 
 import {Types} from "lib/dnd-utils";
-import {formulaToOperator, getSensorId} from "lib/sensors-utils";
+import {formulaToOperator, getRightFormula, getSensorId} from "lib/sensors-utils";
 import {addOrRemove, remove} from "./utils";
 
 const defaultState = {
@@ -51,21 +51,17 @@ function parseSensorFormula (sensor) {
         formulaItems: [],
         sensors: []
     };
-    let sensorFormulas = sensor.get("formulas");
-    if (!R.isNil(sensorFormulas) && sensorFormulas.size == 1) {
-        const formulaObj = sensorFormulas.first();
-        const formula = {formula: formulaObj.get("formula")};
-        result.sensors = formulaObj.get("variables").toArray();
-        const sensors = R.map(v => {
-            return {sensorId: v};
-        }, result.sensors);
-        result.formulaItems = populateFormulaItems(formula, sensors);
+    const formulaObj = getRightFormula(sensor);
+    if (formulaObj) {
+        result.sensors = formulaObj.get("variables").map(v => v.get("sensorId") + "-" + v.get("measurementType")).toArray();
+        result.formulaItems = populateFormulaItems(formulaObj);
     }
     return result;
 }
 
-function populateFormulaItems (formula, sensors) {
-    let decomposed = decomposeFormula(formula, sensors);
+function populateFormulaItems (formulaObj) {
+    const variables = formulaObj.get("variables");
+    const decomposed = decomposeFormula({formula: formulaObj.get("formula")}, variables.toJS());
     return R.map(el => {
         if (formulaToOperator[el]) {
             return {
@@ -79,8 +75,9 @@ function populateFormulaItems (formula, sensors) {
                 type: Types.NUMBER
             };
         }
+        const v = variables.find(v => v.get("symbol") === el);
         return {
-            sensor: el,
+            sensor: v ? v.get("sensorId") + "-" + v.get("measurementType") : el,
             type: Types.SENSOR
         };
     }, decomposed);

@@ -59,7 +59,7 @@ var DraggableSensor = React.createClass({
                 textOverflow: "ellipsis",
                 whiteSpace: "nowrap"
             }}>
-                {sensor ? getSensorLabel(sensor) + " - " + sensor.get("description") : "undefined sensor"}
+                {sensor ? getSensorLabel(sensor) + (sensor.get("description") ? " - " + sensor.get("description") : "") : "undefined sensor"}
             </label>
         );
     }
