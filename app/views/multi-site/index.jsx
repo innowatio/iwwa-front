@@ -987,6 +987,7 @@ var MultiSite = React.createClass({
                                 center
                             });
                         }}
+                        onClickShowChart={this.props.selectSingleElectricalSensor}
                     />
                 </div>
             </div>
@@ -1006,7 +1007,7 @@ var MultiSite = React.createClass({
                 isOpen={this.state.openPanel === site._id}
                 key={index}
                 onClick={(id) => this.onSiteClick(id)}
-                onClickAlarmChart={this.props.selectSingleElectricalSensor}
+                onClickShowChart={this.props.selectSingleElectricalSensor}
                 onClickPanel={this.onClickPanel}
                 parameterStatus={site.status}
                 shownInMap={false}
@@ -1136,6 +1137,7 @@ var MultiSite = React.createClass({
                                                 center
                                             });
                                         }}
+                                        onClickShowChart={this.props.selectSingleElectricalSensor}
                                     />
                                 </div>
                             </bootstrap.Col>

@@ -1,6 +1,6 @@
 import React, {Component, PropTypes} from "react";
-import {defaultTheme} from "lib/theme";
 
+import {defaultTheme} from "lib/theme";
 import {
     SiteStatus
 } from "components";
@@ -30,6 +30,7 @@ class SiteMarker extends Component {
 
     static propTypes = {
         attributes: PropTypes.object,
+        onClickShowChart: PropTypes.func,
         site: PropTypes.object
     }
 
@@ -48,6 +49,7 @@ class SiteMarker extends Component {
     getSiteInfo () {
         return [
             {label: "ID", key: "_id"},
+            {label: "Sensore predefinito", key: "defaultSensor"},
             {label: "Impiegati", key: "employees"},
             {label: "Tipologia attività", key: "businessType"},
             {label: "Area mq", key: "areaInMq"},
@@ -99,6 +101,7 @@ class SiteMarker extends Component {
                             isOpen={this.state.expanded}
                             key={site._id}
                             onClick={() => {}}
+                            onClickShowChart={this.props.onClickShowChart}
                             onClickPanel={() => this.setState({expanded: !this.state.expanded})}
                             onClose={() => this.setState({
                                 visible: false

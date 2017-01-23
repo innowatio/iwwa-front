@@ -84,8 +84,8 @@ var SiteStatus = React.createClass({
         isActive: PropTypes.bool,
         isOpen: PropTypes.bool,
         onClick: PropTypes.func,
-        onClickAlarmChart: PropTypes.func,
         onClickPanel: PropTypes.func,
+        onClickShowChart: PropTypes.func,
         onClose: PropTypes.func,
         parameterStatus: PropTypes.object.isRequired,
         shownInMap: PropTypes.bool,
@@ -324,10 +324,107 @@ var SiteStatus = React.createClass({
         });
         return siteStatus;
     },
+
+    renderAlarmsInfo: function () {
+        const theme = this.getTheme();
+        const alarmBox = this.getAlarmInfo().map(item => {
+            return (
+                <bootstrap.Col className="col" key={item.key} xs={4} style={{margin: "20px 0px"}}>
+                    <Radium.Style
+                        rules={{
+                            "": {
+                                paddingLeft: "6px",
+                                paddingRight: "6px"
+                            }
+                        }}
+                        scopeSelector=".col"
+                    />
+                    <div style={{
+                        ...styles(theme).alarmBoxWrp,
+                        minHeight: this.props.shownInMap ? "75px" : "95px"
+                    }}>
+                        <span style={{
+                            fontWeight: "300",
+                            lineHeight: "16px",
+                            fontSize: this.props.shownInMap ? "12px" : "15px"
+                        }}>
+                            {item.label}
+                        </span>
+                        <p style={{
+                            fontWeight: "300",
+                            lineHeight: "30px",
+                            margin: "0",
+                            fontSize: this.props.shownInMap ? "14px" : "16px"
+                        }}>
+                            {item.value}
+                        </p>
+                    </div>
+                </bootstrap.Col>
+            );
+        });
+        return alarmBox;
+    },
+
+    renderSiteInfo: function () {
+        const theme = this.getTheme();
+        const itemStyleOpen = {
+            backgroundColor: (this.props.isOpen ?
+                theme.colors.backgroundBoxMultisiteOpen : theme.colors.backgroundBoxMultisite),
+            boxShadow: "0px 6px 6px " + theme.colors.shadowBoxMultisiteOpen
+        };
+        const siteInfo = this.props.siteInfo.filter(x => x.value).map(item => {
+            return (
+                <div key={item.key} style={{...styles(theme).singleInfoWrp, ...itemStyleOpen}}>
+                    <div style={{
+                        width: "100%",
+                        padding: this.props.shownInMap ? "5px" : "6px 10px"
+                    }}>
+                        <div style={{
+                            fontSize: this.props.shownInMap ? "12px" : "15px",
+                            ...styles(theme).siteSecondaryText
+                        }}>
+                            {`${item.label}: ${item.value}`}
+                        </div>
+                    </div>
+                </div>
+            );
+        });
+        return siteInfo;
+    },
+
+    renderSiteAttributes: function () {
+        const theme = this.getTheme();
+        const itemStyleOpen = {
+            backgroundColor: (this.props.isOpen ?
+                theme.colors.backgroundBoxMultisiteOpen : theme.colors.backgroundBoxMultisite),
+            boxShadow: "0px 6px 6px " + theme.colors.shadowBoxMultisiteOpen
+        };
+        const siteAttributes = this.props.site.attributes ? this.props.site.attributes.map(item => {
+            const attributeLabel = this.getAttributeLabel(item.id);
+            return (
+                <div key={item.id} style={{...styles(theme).singleInfoWrp, ...itemStyleOpen}}>
+                    <div style={{
+                        width: "100%",
+                        padding: this.props.shownInMap ? "5px" : "6px 10px"
+                    }}>
+                        <div style={{
+                            fontSize: this.props.shownInMap ? "12px" : "15px",
+                            ...styles(theme).siteSecondaryText
+                        }}>
+                            {`${attributeLabel}: ${item.value}`}
+                        </div>
+                    </div>
+                </div>
+            );
+        }): null;
+        return siteAttributes;
+    },
+
     renderPrimaryInfo: function () {
         const theme = this.getTheme();
         const id = this.props.siteInfo.find(x => x.key === "_id");
         const defaultSensor = this.props.siteInfo.find(x => x.key === "defaultSensor");
+
         const itemStyleOpen = {
             borderColor: (this.props.isOpen ?
                 theme.colors.secondary : theme.colors.borderBoxMultisite)
@@ -431,7 +528,7 @@ var SiteStatus = React.createClass({
                     {this.renderSiteStatus()}
                 </div>
                 <div style={{
-                    display: this.props.shownInMap ? "none" : "block",
+                    display: "block",
                     width: "40px",
                     height: "45px",
                     float: "right"
@@ -439,7 +536,7 @@ var SiteStatus = React.createClass({
                     <Link
                         to={"/chart/"}
                         style={styles(theme).buttonHistoricalConsumption}
-                        onClick={() => this.props.onClickAlarmChart(defaultSensor.value ? [id.value, defaultSensor.value] : [id.value])}
+                        onClick={() => this.props.onClickShowChart(defaultSensor.value ? [id.value, defaultSensor.value] : [id.value])}
                     >
                         <Icon
                             color={theme.colors.iconSiteButton}
@@ -452,101 +549,6 @@ var SiteStatus = React.createClass({
                 <div style={{clear: "both"}}></div>
             </div>
         );
-    },
-
-    renderAlarmsInfo: function () {
-        const theme = this.getTheme();
-        const alarmBox = this.getAlarmInfo().map(item => {
-            return (
-                <bootstrap.Col className="col" key={item.key} xs={4} style={{margin: "20px 0px"}}>
-                    <Radium.Style
-                        rules={{
-                            "": {
-                                paddingLeft: "6px",
-                                paddingRight: "6px"
-                            }
-                        }}
-                        scopeSelector=".col"
-                    />
-                    <div style={{
-                        ...styles(theme).alarmBoxWrp,
-                        minHeight: this.props.shownInMap ? "75px" : "95px"
-                    }}>
-                        <span style={{
-                            fontWeight: "300",
-                            lineHeight: "16px",
-                            fontSize: this.props.shownInMap ? "12px" : "15px"
-                        }}>
-                            {item.label}
-                        </span>
-                        <p style={{
-                            fontWeight: "300",
-                            lineHeight: "30px",
-                            margin: "0",
-                            fontSize: this.props.shownInMap ? "14px" : "16px"
-                        }}>
-                            {item.value}
-                        </p>
-                    </div>
-                </bootstrap.Col>
-            );
-        });
-        return alarmBox;
-    },
-
-    renderSiteInfo: function () {
-        const theme = this.getTheme();
-        const itemStyleOpen = {
-            backgroundColor: (this.props.isOpen ?
-                theme.colors.backgroundBoxMultisiteOpen : theme.colors.backgroundBoxMultisite),
-            boxShadow: "0px 6px 6px " + theme.colors.shadowBoxMultisiteOpen
-        };
-        const siteInfo = this.props.siteInfo.filter(x => x.value).map(item => {
-            return (
-                <div key={item.key} style={{...styles(theme).singleInfoWrp, ...itemStyleOpen}}>
-                    <div style={{
-                        width: "100%",
-                        padding: this.props.shownInMap ? "5px" : "6px 10px"
-                    }}>
-                        <div style={{
-                            fontSize: this.props.shownInMap ? "12px" : "15px",
-                            ...styles(theme).siteSecondaryText
-                        }}>
-                            {`${item.label}: ${item.value}`}
-                        </div>
-                    </div>
-                </div>
-            );
-        });
-        return siteInfo;
-    },
-
-    renderSiteAttributes: function () {
-        const theme = this.getTheme();
-        const itemStyleOpen = {
-            backgroundColor: (this.props.isOpen ?
-                theme.colors.backgroundBoxMultisiteOpen : theme.colors.backgroundBoxMultisite),
-            boxShadow: "0px 6px 6px " + theme.colors.shadowBoxMultisiteOpen
-        };
-        const siteAttributes = this.props.site.attributes ? this.props.site.attributes.map(item => {
-            const attributeLabel = this.getAttributeLabel(item.id);
-            return (
-                <div key={item.id} style={{...styles(theme).singleInfoWrp, ...itemStyleOpen}}>
-                    <div style={{
-                        width: "100%",
-                        padding: this.props.shownInMap ? "5px" : "6px 10px"
-                    }}>
-                        <div style={{
-                            fontSize: this.props.shownInMap ? "12px" : "15px",
-                            ...styles(theme).siteSecondaryText
-                        }}>
-                            {`${attributeLabel}: ${item.value}`}
-                        </div>
-                    </div>
-                </div>
-            );
-        }): null;
-        return siteAttributes;
     },
 
     renderSecondaryInfo: function () {
