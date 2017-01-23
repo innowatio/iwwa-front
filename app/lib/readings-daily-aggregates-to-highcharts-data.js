@@ -2,6 +2,7 @@ import Immutable from "immutable";
 import {evaluateFormula} from "iwwa-formula-resolver";
 import {addIndex, filter, map, memoize} from "ramda";
 import moment from "lib/moment";
+import {isValidFormula} from "lib/sensors-utils";
 
 const mapIndexed = addIndex(map);
 
@@ -52,7 +53,7 @@ function buildSimpleData (day, chartState, sortedAggregate, data) {
 function buildFormulaData (day, chartState, sortedAggregate, data, allSensors) {
     const {source, formula} = chartState;
     let sensorsData = [];
-    let hasSomeAggregates = false;
+    let hasSomeAggregates = true;
     formula.get("variables").forEach(v => {
         const sensor = allSensors.get(v.sensorId);
         const aggregate = sortedAggregate.get(
@@ -63,12 +64,16 @@ function buildFormulaData (day, chartState, sortedAggregate, data, allSensors) {
             measurementTimes: aggregate ? aggregate.get("measurementTimes") : "",
             measurementValues: aggregate ? aggregate.get("measurementValues"): ""
         });
-        hasSomeAggregates = hasSomeAggregates || aggregate;
+        hasSomeAggregates = hasSomeAggregates && aggregate;
     });
-    populateData(data, day, hasSomeAggregates, () => {
+    populateData(data, day, hasSomeAggregates && canEvaluateFormula(formula), () => {
         const result = evaluateFormula({formula: formula.get("formula")}, sensorsData);
         return getMeasurement(Immutable.fromJS(result), chartState.date);
     });
+}
+
+function canEvaluateFormula (formulaObj) {
+    return isValidFormula(formulaObj);
 }
 
 function populateData (data, day, condition, populateFunc) {

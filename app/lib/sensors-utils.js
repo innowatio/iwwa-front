@@ -166,6 +166,15 @@ export function getReadableSensorFormula (sensor) {
     return null;
 }
 
+export function isValidFormula (formulaObj) {
+    const formula = formulaObj.get("formula");
+    let isValid = true;
+    formulaObj.get("variables").forEach(v => {
+        isValid = isValid && formula.indexOf(v.symbol) >= 0;
+    });
+    return isValid;
+}
+
 export function getRightFormula (sensor) {
     const sensorFormulas = sensor.get("formulas");
     if (!R.isNil(sensorFormulas) && sensorFormulas.size > 0) {

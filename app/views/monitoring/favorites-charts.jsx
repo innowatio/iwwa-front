@@ -1,4 +1,5 @@
 import Immutable from "immutable";
+import R from "ramda";
 import React, {PropTypes} from "react";
 import IPropTypes from "react-immutable-proptypes";
 import {connect} from "react-redux";
@@ -75,6 +76,12 @@ var MonitoringFavoritesCharts = React.createClass({
     },
     componentDidMount: function () {
         this.props.asteroid.subscribe("favoriteChartsByType", MONITORING_CHART_TYPE);
+    },
+    shouldComponentUpdate: function (nextProps, nextState) {
+        if (!R.equals(this.state, nextState)) {
+            return true;
+        }
+        return !R.equals(this.props.collections.get("favorite-charts"), nextProps.collections.get("favorite-charts"));
     },
     getTheme: function () {
         return this.context.theme || defaultTheme;

@@ -1,4 +1,5 @@
 import {subscribeDaily} from "iwwa-utils";
+import R from "ramda";
 import React, {PropTypes} from "react";
 import IPropTypes from "react-immutable-proptypes";
 import {connect} from "react-redux";
@@ -47,6 +48,18 @@ var MonitoringChartView = React.createClass({
     },
     componentWillReceiveProps: function (props) {
         this.subscribeToSensorsData(props);
+    },
+    shouldComponentUpdate: function (nextProps, nextState) {
+        if (!R.equals(this.state, nextState)) {
+            return true;
+        }
+        if (!R.equals(this.props.collections.get("sensors"), nextProps.collections.get("sensors"))) {
+            return true;
+        }
+        if (!R.equals(this.props.collections.get("readings-daily-aggregates"), nextProps.collections.get("readings-daily-aggregates"))) {
+            return true;
+        }
+        return !R.equals(this.props.monitoringChart, nextProps.monitoringChart);
     },
     getTheme: function () {
         return this.context.theme || defaultTheme;

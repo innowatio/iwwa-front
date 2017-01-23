@@ -130,6 +130,15 @@ var Monitoring = React.createClass({
             nextProps.assignSensorsToUsers([user], sensors);
         }
     },
+    shouldComponentUpdate: function (nextProps, nextState) {
+        if (!R.equals(this.state, nextState)) {
+            return true;
+        }
+        if (!R.equals(this.props.collections.get("sensors"), nextProps.collections.get("sensors"))) {
+            return true;
+        }
+        return !R.equals(this.props.sensorsState, nextProps.sensorsState);
+    },
     getTheme: function () {
         return this.context.theme || defaultTheme;
     },

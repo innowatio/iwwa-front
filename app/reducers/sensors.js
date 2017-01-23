@@ -108,7 +108,7 @@ export function sensors (state = defaultState, action) {
             break;
         }
         case GET_FORMULA_ITEMS: {
-            let result = parseSensorFormula(state.selectedSensors[0]);
+            const result = parseSensorFormula(state.selectedSensors[0]);
             newState.current.formulaItems = result.formulaItems;
             newState.workAreaSensors = result.sensors;
             break;
