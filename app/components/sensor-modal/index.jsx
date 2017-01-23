@@ -144,6 +144,9 @@ var SensorForm = React.createClass({
     },
     renderSelectInputField: function (field) {
         const theme = this.getTheme();
+        console.log(field.name);
+        console.log(sensorOptions[field.name]);
+        console.log(field.input.value);
         return (
             <div className={(field.meta.touched && field.meta.error ? " has-error" : "")}>
                 <div
