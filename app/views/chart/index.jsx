@@ -187,13 +187,16 @@ var Chart = React.createClass({
     exportCsv: function (exportStart, exportEnd) {
         const {sensorId, measurementType} = this.props.chartState.charts[0];
         var csvData = "";
-        this.props.asteroid.call("getDailyAggregatesByRange", sensorId, exportStart, exportEnd).then(value => {
+        const utcOffset = moment().utcOffset();
+        this.props.asteroid.call("getDailyAggregatesByRange", sensorId, exportStart, exportEnd, utcOffset).then(value => {
             value.forEach(child => {
                 var times = child.measurementTimes.split(",");
                 var values = child.measurementValues.split(",");
                 for (var x=0; x < times.length; x++) {
                     var date = moment(Number(times[x])).local().format();
-                    if (measurementType.key === child.measurementType) {
+                    if (measurementType.key === child.measurementType &&
+                        (moment(exportStart).format("YYYY-MM-DD") == moment(date).format("YYYY-MM-DD") ||
+                        moment(exportEnd).format("YYYY-MM-DD") == moment(date).format("YYYY-MM-DD"))) {
                         csvData = csvData + child.sensorId + ";" + child.measurementType + ";" + date + ";" + values[x] +"\n";
                     }
                 }
