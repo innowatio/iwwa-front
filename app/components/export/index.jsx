@@ -281,7 +281,7 @@ var Export = React.createClass({
                 <bootstrap.Col xs={12} sm={6} md={3} style={exportStyle(theme).pickerWrp}>
                     <DateTimePicker
                         defaultValue={startDate}
-                        onChange={(value) => this.setState({startDate: value})}
+                        onChange={(value) => this.setState({startDate: parseInt(moment(value).format("x"))})}
                         time={false}
                         style={exportStyle(theme).dateTimePickerStyle}
                     />
@@ -289,7 +289,7 @@ var Export = React.createClass({
                 <bootstrap.Col xs={12} sm={6} md={3} style={exportStyle(theme).pickerWrp}>
                     <DateTimePicker
                         defaultValue={endDate}
-                        onChange={(value) => this.setState({endDate: value})}
+                        onChange={(value) => this.setState({endDate: parseInt(moment(value).format("x"))})}
                         time={false}
                         style={exportStyle(theme).dateTimePickerStyle}
                     />
