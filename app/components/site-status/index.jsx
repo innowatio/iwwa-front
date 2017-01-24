@@ -64,9 +64,6 @@ const styles = (theme) => ({
     },
     buttonHistoricalConsumption: {
         display: "block",
-        height: "38px",
-        width: "38px",
-        lineHeight: "40px",
         textAlign: "center",
         verticalAlign: "middle",
         borderRadius: "100%",
@@ -313,7 +310,7 @@ var SiteStatus = React.createClass({
                 >
                     <span style={{
                         display: "inline-block",
-                        marginRight: "15px"
+                        marginRight: this.props.shownInMap ? "10px" : "15px"
                     }}>
                         {this.renderIconStatus(status)}
                     </span>
@@ -528,20 +525,28 @@ var SiteStatus = React.createClass({
                     {this.renderSiteStatus()}
                 </div>
                 <div style={{
+                    position: this.props.shownInMap ? "absolute" : "inherit",
+                    top: this.props.shownInMap ? "50px" : "",
+                    right: this.props.shownInMap ? "43px" : "",
                     display: "block",
-                    width: "40px",
-                    height: "45px",
+                    width: this.props.shownInMap ? "35px" : "40px",
+                    height: this.props.shownInMap ? "35px" : "45px",
                     float: "right"
                 }}>
                     <Link
                         to={"/chart/"}
-                        style={styles(theme).buttonHistoricalConsumption}
+                        style={{
+                            ...styles(theme).buttonHistoricalConsumption,
+                            height: this.props.shownInMap ? "31px" : "38px",
+                            width: this.props.shownInMap ? "31px" : "38px",
+                            lineHeight: this.props.shownInMap ? "33px" : "40px"
+                        }}
                         onClick={() => this.props.onClickShowChart(defaultSensor.value ? [id.value, defaultSensor.value] : [id.value])}
                     >
                         <Icon
                             color={theme.colors.iconSiteButton}
                             icon={"history"}
-                            size={"22px"}
+                            size={this.props.shownInMap ? "18px" : "22px"}
                             style={{verticalAlign: "middle"}}
                         />
                     </Link>

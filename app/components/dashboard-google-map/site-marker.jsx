@@ -90,7 +90,7 @@ class SiteMarker extends Component {
                 }}
             >
                 {this.state.visible ? (
-                    <div style={{width: "320px", marginTop: "-20px", marginLeft: "10px"}}>
+                    <div style={{width: "330px", marginTop: "-20px", marginLeft: "10px"}}>
                         <SiteStatus
                             attributes={this.props.attributes}
                             iconStatusStyle={{
