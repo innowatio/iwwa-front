@@ -142,7 +142,6 @@ class TrendStatus extends React.Component {
 
     getReference (key) {
         var reference ={red: 0, yellow: 0, green: 0, purple:0, total:0};
-
         if (this.props.statusAggregate.size>0) {
             const dateRange = utils.getTimeRangeByPeriod(key);
             const data = this.props.statusAggregate.filter(value =>{
@@ -164,20 +163,22 @@ class TrendStatus extends React.Component {
 
                 const referenceTot = parseFloat(utils.getSumByPeriod(dateRange, referenceMap).toFixed(2));
                 const readingTot = parseFloat(utils.getSumByPeriod(dateRange, readingMap).toFixed(2));
-                const result = (readingTot-referenceTot) / referenceTot;
 
-                if (result <= -1) {
-                    reference.purple += 1;
-                } else if (result > -1 && result <= -0.05) {
-                    reference.green += 1;
-                } else if (result > -0.05 && result <= 0.1) {
-                    reference.yellow += 1;
-                } else if (result > 0.1 && result < 1) {
-                    reference.red += 1;
-                } else {
-                    reference.purple += 1;
+                if (referenceTot != 0) {
+                    const result = (readingTot-referenceTot) / referenceTot;
+                    if (result <= -1) {
+                        reference.purple += 1;
+                    } else if (result > -1 && result <= -0.05) {
+                        reference.green += 1;
+                    } else if (result > -0.05 && result <= 0.1) {
+                        reference.yellow += 1;
+                    } else if (result > 0.1 && result < 1) {
+                        reference.red += 1;
+                    } else {
+                        reference.purple += 1;
+                    }
+                    reference.total+= 1;
                 }
-                reference.total+= 1;
             });
         }
         return reference;
