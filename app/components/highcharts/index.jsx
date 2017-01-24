@@ -219,6 +219,9 @@ var HighCharts = React.createClass({
             },
             series: this.getSeries(),
             title: null,
+            tooltip: {
+                valueDecimals: 2
+            },
             xAxis: this.getXAxis(),
             yAxis: this.getYAxis(),
 
