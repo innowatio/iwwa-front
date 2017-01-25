@@ -76,7 +76,7 @@
     "immutable": "^3.8.1",
     "intro.js": "^2.1.0",
     "iwwa-formula-resolver": "^2.0.0",
-    "iwwa-icons": "^1.1.2",
+    "iwwa-icons": "^1.1.3",
     "iwwa-utils": "^1.2.1",
     "lodash.debounce": "^4.0.6",
     "lodash.get": "^4.3.0",
