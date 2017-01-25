@@ -14,7 +14,7 @@ const stylesFunction = ({colors}) => ({
         marginLeft: "10px"
     },
     modalTitleStyle: {
-        color: colors.white,
+        color: colors.mainFontColor,
         display: "inherit",
         marginBottom: "50px",
         textAlign: "center",
@@ -55,7 +55,7 @@ var DeleteWithConfirmButton = React.createClass({
             <div style={{display: "inline"}}>
                 <TooltipIconButton
                     buttonStyle={stylesFunction(theme).buttonIconStyle}
-                    icon={"close"}
+                    icon={"trash"}
                     iconSize={"30px"}
                     iconStyle={{lineHeight: "55px", verticalAlign: "middle"}}
                     isButtonDisabled={this.props.disabled}
@@ -74,7 +74,7 @@ var DeleteWithConfirmButton = React.createClass({
                     <div style={{textAlign: "center"}}>
                         <div>
                             <label style={stylesFunction(theme).modalTitleStyle}>
-                                {"Sei sicuro di voler cancellare questo elemento?"}
+                                {"Sei sicuro di voler ELIMINARE questo elemento?"}
                             </label>
                         </div>
                     </div>
