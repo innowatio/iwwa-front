@@ -155,11 +155,22 @@ var SiteStatus = React.createClass({
                 key: "remoteControl"
             },
             {
-                icon: "good-o",
+                icon: this.getComfortIcon(),
                 iconColor: this.getColorByStatus(this.props.parameterStatus.comfort),
                 key: "comfort"
             }
         ];
+    },
+    getComfortIcon: function () {
+        const iconColor = this.getColorByStatus(this.props.parameterStatus.comfort);
+        const theme = this.getTheme();
+        if (iconColor === theme.colors.iconInactive || iconColor === theme.colors.iconActive) {
+            return "good-o";
+        } else if (iconColor === theme.colors.iconWarning) {
+            return "middle-o";
+        } else {
+            return "bad-o";
+        }
     },
     getColorByStatus: function (status) {
         const theme = this.getTheme();
