@@ -3,6 +3,7 @@ import React, {PropTypes} from "react";
 
 import components from "components";
 
+import asteroid from "lib/asteroid";
 import assetsPathTo from "lib/assets-path-to";
 import string from "lib/string-it";
 import {defaultTheme} from "lib/theme";
@@ -71,11 +72,22 @@ const stylesFunction = ({colors}) => ({
         }
     },
     content: {
-        width: "50%",
+        width: "90%",
         height: "40%",
         position: "relative",
         margin: "auto",
         textAlign: "center"
+    },
+    logoutButton: {
+        background: colors.buttonPrimary,
+        color: colors.white,
+        height: "78px",
+        width: "300px",
+        margin: "auto",
+        borderRadius: "30px",
+        border: "0px none",
+        fontSize: "30px",
+        marginTop: "40px"
     }
 });
 
@@ -85,6 +97,9 @@ var UnauthorizedModal = React.createClass({
     },
     contextTypes: {
         theme: PropTypes.object
+    },
+    logout: function () {
+        asteroid.logout();
     },
     getTheme: function () {
         return this.context.theme || defaultTheme;
@@ -119,6 +134,14 @@ var UnauthorizedModal = React.createClass({
                                 <br />
                                 {"Si prega di contattare l'amministratore per ottenere i permessi."}
                             </h2>
+                            <components.Button
+                                block={true}
+                                bsSize="large"
+                                onClick={this.logout}
+                                style={styles.logoutButton}
+                            >
+                                {"LOGOUT"}
+                            </components.Button>
                         </div>
                     </div>
                 </div>
