@@ -3,7 +3,6 @@ import React, {Component, PropTypes} from "react";
 import supercluster from "points-cluster";
 
 import {GOOGLE_MAP_API_KEY} from "lib/config";
-
 import ClusterMarker from "./cluster-marker";
 import SiteMarker from "./site-marker";
 
@@ -14,6 +13,7 @@ class DashboardGoogleMap extends Component {
         center: PropTypes.any,
         onCenterChange: PropTypes.func,
         onChange: PropTypes.func,
+        onClickShowChart:PropTypes.func,
         sites: PropTypes.array.isRequired,
         zoom: PropTypes.number
     }
@@ -121,6 +121,7 @@ class DashboardGoogleMap extends Component {
                     key={index}
                     lat={y}
                     lng={x}
+                    onClickShowChart={this.props.onClickShowChart}
                     ref={index}
                     site={points[0]}
                 />

@@ -75,6 +75,9 @@ var ConsumptionChart = React.createClass({
                     text: "Consumi"
                 }
             },
+            tooltip: {
+                valueDecimals: 0
+            },
             legend: {
                 itemStyle: {
                     color: colors.consumptionsText
