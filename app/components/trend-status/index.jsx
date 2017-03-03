@@ -39,7 +39,7 @@ const styles = ({colors}) => ({
     }
 });
 
-const DAILY_COMFORT = 24;
+const DAILY_COMFORT = 96;
 
 class TrendStatus extends React.Component {
 
