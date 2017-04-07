@@ -223,7 +223,6 @@ var MultiSite = React.createClass({
         self.props.asteroid.subscribe("sites");
         self.props.asteroid.subscribe("filters");
         self.props.asteroid.subscribe("dashboardAlarms");
-        self.props.asteroid.subscribe("dashboardRealtimeAggregates");
         subscribeDaily(() => {
             self.props.asteroid.subscribe("dashboardAlarmsAggregates");
             self.props.asteroid.subscribe("dashboardDailyMeasurements");
@@ -249,6 +248,19 @@ var MultiSite = React.createClass({
             return true;
         }
         return !R.equals(this.props.collections.get("alarms"), nextProps.collections.get("alarms"));
+    },
+
+    componentWillUnmount: function () {
+        console.log("I will unmount someting someting");
+        const self = this;
+        self.props.asteroid.unsubscribe("sites");
+        self.props.asteroid.unsubscribe("filters");
+        self.props.asteroid.unsubscribe("dashboardAlarms");
+        subscribeDaily(() => {
+            self.props.asteroid.unsubscribe("dashboardAlarmsAggregates");
+            self.props.asteroid.unsubscribe("dashboardDailyMeasurements");
+            self.props.asteroid.unsubscribe("dashboardYearlyConsumptions");
+        });
     },
 
     getSites: function () {
